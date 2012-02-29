@@ -1,0 +1,42 @@
+<table>
+  <tr>
+    <th><%= link_to "Author", "#", {:onclick => "order('citations.author')"} -%><span id="citations.author"></span></th>
+    <th><%= link_to "Year", "#", {:onclick => "order('citations.year')"} -%><span id="citations.year"></span></th>
+    <th><%= link_to "Title", "#", {:onclick => "order('citations.title')"} -%><span id="citations.title"></span></th>
+    <th><%= link_to "Journal", "#", {:onclick => "order('citations.Jjurnal')"} -%><span id="citations.journal"></span></th>
+    <th><%= link_to "Vol", "#", {:onclick => "order('citations.vol')"} -%><span id="citations.vol"></span></th>
+    <th><%= link_to "Pg", "#", {:onclick => "order('citations.pg')"} -%><span id="citations.pg"></span></th>
+    <th><%= link_to "Url", "#", {:onclick => "order('citations.url')"} -%><span id="citations.url"></span></th>
+    <th><%= link_to "Pdf", "#", {:onclick => "order('citations.pdf')"} -%><span id="citations.pdf"></span></th>
+  </tr>
+
+<% @citations.each do |citation| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and citation.id == @search.to_i%>>
+    <td><%=h citation.author %></td>
+    <td><%=h citation.year %></td>
+    <td><%=h citation.title %></td>
+    <td><%=h citation.journal %></td>
+    <td><%=h citation.vol %></td>
+    <td><%=h citation.pg %></td>
+    <td><%= link_to_unless citation.url.blank?, 'link', citation.url do
+              ""
+            end %></td>
+    <td><%= link_to_unless citation.pdf.blank?, 'link', citation.pdf do
+              ""
+            end %></td>
+    <td><%= link_to 'Show', citation %></td>
+    <% if current_user.page_access_level <= 3 %>
+      <td><%= link_to 'Use', :controller => :application, :action => 'use_citation', :id => citation.id  %></td>
+      <td><%= link_to 'Edit', edit_citation_path(citation) %></td>
+    <% end %>
+    <% if current_user.page_access_level == 1 %>
+      <td><%= link_to 'Destroy', citation, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% end %>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @citations, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+

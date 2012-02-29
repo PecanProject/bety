@@ -1,0 +1,18 @@
+<p>
+  <b>Variable:</b>
+  <%= link_to_if @covariate.variable, @covariate.variable, @covariate.variable %>
+</p>
+
+<p>
+  <b>Species, trait, treatment, and citation associated with this covariate:</b>
+  <%= link_to_if @covariate.trait, @covariate.trait, @covariate.trait %>
+</p>
+
+<p>
+  <b>Level:</b>
+  <%=h @covariate.level %>
+</p>
+
+
+<%= link_to 'Edit', edit_covariate_path(@covariate) %> |
+<%= link_to 'Back', covariates_path %>

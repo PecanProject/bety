@@ -1,0 +1,49 @@
+
+<% if @trait.nil? %>
+<p>Sorry trait does not exists or you do not have access</p>
+<% else %>
+<p>
+  <b>ID:</b>
+  <%=h @trait.id -%>
+</p>
+
+<p>
+  <b>Site:</b>
+  <%=h "#{@trait.site.sitename}, (#{@trait.site.lat}, #{@trait.site.lon})" if @trait.site %>
+</p>
+
+<p>
+  <b>Species:</b>
+  <%=h @trait.specie.scientificname if @trait.specie %>
+</p>
+
+<p>
+  <b title="author,year">Citation:</b>
+  <%=h "#{@trait.citation.author}, #{@trait.citation.year}" if @trait.citation %>
+</p>
+
+<p>
+  <b title="name,month,year">Treatment:</b>
+  <%=h "#{@trait.treatment.name}, #{@trait.date.month}, #{@trait.date.year}" if @trait.treatment %>
+</p>
+
+<p>
+  <b title="name">Trait:</b>
+  <%=h @trait.variable.name if @trait.variable %>
+</p>
+
+<p>
+  <b>Mean:</b>
+  <%=h @trait.mean %>
+</p>
+
+<% if logged_in? %>
+<p>
+  <b>User:</b>
+  <%=h @trait.user.name if @trait.user %>
+</p>
+<% end %>
+
+<%= link_to 'Edit', edit_trait_path(@trait) %> |
+<% end %>
+<%= link_to 'Back', traits_path %>

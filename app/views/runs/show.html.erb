@@ -1,0 +1,58 @@
+<p>
+  <b>Model:</b>
+  <%= link_to_if @run.model, @run.model, @run.model %>
+</p>
+
+<p>
+  <b>Site:</b>
+  <%= link_to_if @run.site, @run.site, @run.site %>
+</p>
+
+<p>
+  <b>Start Time:</b>
+  <%=h @run.start_time %>
+</p>
+
+<p>
+  <b>Finsh Time:</b>
+  <%=h @run.finish_time %>
+</p>
+
+<p>
+  <b>Started at:</b>
+  <%=h @run.started_at %>
+</p>
+
+<p>
+  <b>Finshed at:</b>
+  <%=h @run.finished_at %>
+</p>
+<p>
+  <b>Ensemble:</b>
+  <%= link_to_if @raw.ensemble, @raw.ensemble, @raw.ensemble %>
+</p>
+
+
+<p>
+  <b>Outdir:</b>
+  <%=h @run.outdir %>
+</p>
+
+<p>
+  <b>Outprefix:</b>
+  <%=h @run.outprefix %>
+</p>
+
+<p>
+  <b>Setting:</b>
+  <%=h @run.setting %>
+</p>
+
+<p>
+  <b>Parameter List:</b>
+  <%=h @run.parameter_list %>
+</p>
+
+
+<%= link_to 'Edit', edit_run_path(@run) %> |
+<%= link_to 'Back', runs_path %>

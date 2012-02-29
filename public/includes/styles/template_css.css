@@ -1,0 +1,1039 @@
+/* screen-layout.css */
+
+
+
+/* Hide some stuff from the visual layout */
+
+hr, 						/* hide accessibility HRs */
+div#imark,					/* hide accessibility I-mark */
+div#navigation h2,			/* hide accesibility H2s */
+div#section h2,
+.access,					/* hide other accessibility elements */
+div#banner a.las, 			/* hide LAS link */
+body.home div#content h1 	/* hide homepage h1 */
+{
+	position: absolute;
+	left: 0;
+	top: -500px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	margin: 0;
+}
+
+div#content hr, 					/* unhide HRs in content */
+body.internal div#navigation h2		/* unhide internal H2 */
+{
+	position: relative;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+}
+
+
+
+/* Clearfix */
+
+div#navigation:after, 
+div#section ul:after, 
+div#content-wrapper:after,
+div#footer:after,
+body.home div#home-intro:after
+{
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+	line-height: 1px;
+	height: 0;
+	font-size: 1px;
+}
+
+div#navigation,
+div#section ul, 
+div#content,
+div#footer,
+body.home div#content-wrapper,
+body.home div#home-intro
+{
+	display: inline-block;
+}
+
+html[xmlns] div#navigation,
+html[xmlns] div#section ul, 
+html[xmlns] div#content,
+html[xmlns] div#footer,
+html[xmlns] body.home div#content-wrapper,
+html[xmlns] body.home div#home-intro
+{
+	display: block;
+}
+
+* html div#navigation,
+* html div#section ul, 
+* html div#content, 
+* html div#footer,
+* html body.home div#content-wrapper,
+* html body.home div#home-intro
+{
+	height: 1%;
+}
+
+
+
+/* Page layout */
+
+body {
+	background: #fff;
+	text-align: center;
+}
+
+/* title */
+
+div#banner {
+	/*width: 820px;*/
+	height: 142px;
+	background: transparent;
+}
+
+div#banner-wrapper {
+	position: relative;
+	width: 900px;
+	height: 140px;
+	margin: 0 auto;
+	background: transparent  bottom right no-repeat;
+}
+
+div#banner a.logo {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	display: block; 
+	width: 213px;
+	height: 109px;
+	text-indent: -9999em;
+	background: transparent url(../images/EBI-Logo.jpg) top left no-repeat;
+}
+
+div#banner a.bety-db {
+	position: absolute;
+	left: 250px;
+	top: 50px;
+	display: block;
+	width: 497px;
+	height: 74px;
+	text-indent: -9999em;
+	background: transparent url(../images/bety-db.png) top left no-repeat;
+}
+
+
+div#banner a.lab:link, div#banner a.lab:visited {
+	background-position: 0 0;
+}
+div#banner a.lab:hover, div#banner a.lab:active {
+	background-position: 0 0px;
+}
+
+div#banner ul{
+        position: absolute;
+        display: block;
+        top: 10px;
+        right: 0px;
+        width:544px;
+        padding-right:15px;
+        color:#439539;
+        font-family:verdana, Arial, Helvetica, sans-serif;
+        font-weight:bold;
+        font-size:10px;
+}
+
+div#banner li{
+        float:right;
+        text-decoration:none;
+        color:#439539;
+        margin:0px;
+        display:block;
+        padding-left:10px;
+        padding-right:10px;
+        text-align:center;
+        list-style:none;
+}
+
+div#banner li a{text-decoration:none; color:#439539;}
+div#banner li a:hover{text-decoration:underline; color:#117BC0;}
+
+
+div#banner a.illinois:link, div#banner a.illinois:visited {
+	background-position: 0 0;
+}
+div#banner a.illinois:hover, div#banner a.illinois:active {
+	background-position: 0 0;
+}
+
+/* main navigation */
+
+div#navigation {
+	min-width: 800px;
+	padding-bottom: 1px;
+	font-family: Georgia, Georgia Ref, serif;
+	font-size: 1.4em;
+}
+
+div#navigation-wrapper {
+	position: relative;
+	top: 0px;
+	width: 1000px;
+	margin: 0 auto;
+	padding: 0;
+	padding-bottom: 1px;
+	text-align: left;
+        background: #b5b5b5 repeat;
+        border: 1px white solid;
+}
+
+
+/* secondary page content */
+
+div#content {
+	background: white;
+	min-width: 820px;
+        padding-top: 50px;
+}
+
+div#content-wrapper {
+	width: 780px;
+	margin: 0 auto;
+	padding: 0.7em 0 2.0em 0;
+	text-align: left;
+}
+
+/* footer */
+
+div#footer {
+	min-width: 820px;
+	background: white;
+}
+
+div#footer-wrapper {
+        position: relative;
+	width: 850px;
+	margin: 0 auto;
+	padding: 0.7em 0 1.4em 0;
+	text-align: center;
+	color: #034c84;
+}
+
+div#footer p {
+	margin-top: 0.65em;
+	margin-bottom: 0.65em;
+} 
+
+div#footer-wrapper ul{
+        text-align: center;
+        width: 480px;
+        padding-left: 200px;
+        margin: 0px;
+}
+
+div#footer-wrapper li#end{
+        text-decoration:none;
+        border: 0px;
+        color:#5c5c5c;
+}
+
+div#footer-wrapper li{
+        float:left;
+        text-decoration:none;
+        color:#5c5c5c;
+        margin:0px;
+        display:block;
+        text-align:center;
+        list-style:none;
+        padding-left:10px;
+        padding-right:10px;
+        border-right-width: 1px;
+        border-right-style: solid;
+        border-right-color: #5c5c5c;
+}
+
+div#footer-wrapper li a{
+        text-decoration:none;
+        color:#5c5c5c;
+}
+
+
+div#footer-wrapper li a:hover{
+        text-decoration:underline;
+        color:#0068b3;
+}
+
+
+/* Tables */
+
+div#content-wrapper caption, th, td {
+	padding: 0.3em 0.8em;
+	margin: 0;
+}
+
+div#content-wrapper caption {
+	font-size: 0.85em;
+	text-align: center;
+}
+
+div#content-wrapper table {
+	border: 1px solid #b3b3b3;
+        margin-bottom: 50px;
+}
+
+div#content-wrapper th {
+	border-bottom: 1px solid #0e4783;
+	border-right: 1px solid #195799;
+	background: #2161a5;
+	color: #fff;
+	font-weight: bold;
+}
+
+div#content-wrapper th[scope="row"] {
+	border-bottom: 1px solid #e2e2e2;
+	border-right: 1px solid #f6f6f6;
+	background: #F7F6F2;
+	color: #000;
+	font-weight: normal;
+}
+
+div#content-wrapper td {
+	border-bottom: 1px solid #e2e2e2;
+	border-right: 1px solid #f6f6f6;
+}
+
+/* alt row */
+
+div#content-wrapper tr.alt td {
+	border-bottom: 1px solid #dad8c9;
+	border-right: 1px solid #eeece4;
+	background: #f6f5f0;
+}
+
+div#content-wrapper tr.alt th[scope="row"] {
+	border-bottom: 1px solid #dad8c9;
+	border-right: 1px solid #eeece4;
+	background: #F1F0E9;
+	color: #000;
+}
+         
+
+div#content-wrapper div#index-image {
+        float: right;
+        clear: both;
+	background: #F1F0E9;
+        padding: 10px;
+        margin: 10px;
+}
+
+.centered {
+	text-align: center;
+}
+
+div#process_container {
+        text-align:center;
+        height: 20px;
+        width: 100%;
+        clear: left;
+}
+div#process_container div#back {
+        width: 33%;
+        float: left;
+        text-align: left;
+}
+
+div#process_container div#new {
+        width: 33%;
+        float: left;
+        text-align: center;
+}
+
+div#process_container div#forward {
+        width: 33%;
+        float: left;
+        text-align: right;
+}
+
+        
+
+/* ********************End Pat CSS********************** */
+
+
+ul {
+margin-left:0px;
+padding-left:5px;
+text-align:left;
+}
+
+
+/* *********************** END LAYOUT SETTINGS *********************** */
+
+
+/* *********************** POLL SETTINGS  *********************** */
+
+.dsmodule {
+margin:0px;
+padding:0px;
+}
+
+.dsfeed img{
+border: 0px;
+padding-left:10px;
+padding-bottom:5px;
+}
+
+.dsmessage{
+}
+
+
+
+/* *********************** FONT/GENERAL SETTINGS      *********************** */
+.style1 {color: #999999}
+
+h1 {
+font-family:"Times New Roman", Times, serif;
+font-size:22px;
+color:#000000;
+margin-top:-10px;
+}
+
+h2 {
+font-family:Geneva, Arial, Helvetica, sans-serif;
+font-size:14pt;
+font-weight:bold;
+color:#439539;
+text-transform:uppercase;
+padding-top:15px;
+padding-bottom:0px;
+}
+
+h3 {
+font-family:Geneva, Arial, Helvetica, sans-serif;
+font-size:12px;
+font-weight:bold;
+color:#0bab0a;
+text-transform:uppercase;
+}
+
+.section {
+font-family:Geneva, Arial, Helvetica, sans-serif;
+font-size:12px;
+font-weight:bold;
+color:#0bab0a;
+text-transform:uppercase;
+}
+
+
+.intro {
+font-family:verdana, arial, helvetica, sans-serif;
+font-size:11px;
+color:#000000;
+line-height:14px;
+}
+
+.update {
+font-family:Georgia, "Times New Roman", Times, serif;
+font-size:11px;
+color:#cccccc;
+font-weight:700;
+margin-bottom:6px;
+}
+
+
+
+/* *********************** END GENERAL SETTINGS *********************** */
+
+/* *********************** END GENERAL SETTINGS *********************** */
+
+
+
+#navbar {
+background-image:url(http://www.energybiosciencesinstitute.org/images/mainNav-bg.gif); 
+width:100%; 
+height:27px;
+margin-top:119px;
+}
+
+
+.mainNav {
+width:990px;
+height:26px;
+float:left;
+background-image:url(http://www.energybiosciencesinstitute.org/images/nav-bg.gif);
+font-family:Geneva, Arial, Helvetica, sans-serif;
+font-size:12px;
+font-weight:bold;
+color:#FFFFFF;
+}
+.mainNav li{
+float:left;
+margin-left:42px;
+display:block;
+padding-top:5px;
+padding-bottom:2px;
+padding-left:6px;
+padding-right:6px;
+text-align:center;
+text-transform:uppercase;
+text-shadow:#333333;
+}
+
+/* *********************** END NAVIGATION SETTINGS *********************** */
+
+/* *********************** STANDARD MODULE TABLE  ********************* */
+
+table.moduletable {
+	width: 100%;
+	padding: 0px;
+	margin: 0px;
+        text-align:left;
+}
+
+table.moduletable th { 
+	font: bold 14px Tahoma, Arial, Helvetica, sans-serif;
+	letter-spacing: +0px;
+	line-height: 20px;
+	color: #4891ba;
+	text-transform: uppercase;
+	text-align: left;
+}
+
+table.moduletable td {margin-bottom: 15px; margin-left:0px; padding: 0px;}
+
+table.moduletable-bkmark {
+	width: 100%;
+	padding: 0px;
+	margin: 0px;
+}
+
+table.moduletable-bkmark th { 
+	font: bold 14px Tahoma, Arial, Helvetica, sans-serif;
+	letter-spacing: +0px;
+	line-height: 20px;
+	color: #4891ba;
+	text-transform: uppercase;
+	text-align: left;
+}
+
+table.moduletable-bkmark tr{margin-bottom: 15px; padding: 0px;}
+
+table.moduletable-bkmark2 {
+	width: 100%;
+	padding: 0px;
+	margin: 0px;
+        margin-left: 10px;
+}
+
+table.moduletable-bkmark2 th { 
+	font: bold 14px Tahoma, Arial, Helvetica, sans-serif;
+	letter-spacing: +0px;
+	line-height: 20px;
+	color: #4891ba;
+	text-transform: uppercase;
+	text-align: left;
+}
+
+table.moduletable-bkmark2 tr{margin-bottom: 15px; padding: 0px;}
+	
+
+/* Custom Modules */
+
+table.moduletable-relart {
+	width: 100%;
+	padding: 0px;
+	margin-left: 240px;
+}
+
+table.moduletable-relart th { 
+	font: bold 14px Geneva, Arial, Helvetica, sans-serif;
+	letter-spacing: +0px;
+	line-height: 20px;
+	color: #000000;
+	text-transform: uppercase;
+	text-align: left;
+}
+
+table.moduletable-relart td {height: 18px; margin: 0px; padding: 0px; }
+table.moduletable-relart td a {color:#959595; }
+table.moduletable-relart li {list-style-type:disc; color:#959595; padding-left:0px; margin-left:10px; padding-bottom:5px; }
+
+table.moduletable-innews {
+	width: 165px;
+	padding: 0px;
+	margin: 0px;
+}
+
+table.moduletable-innews th {font: bold 14px Geneva, Arial, Helvetica, sans-serif; letter-spacing:0px; line-height: 20px; color: #000000; text-transform: uppercase; text-align: left;}
+
+table.moduletable-innews td {height: 18px; margin: 0px; padding: 0px; font: 12px Geneva, Arial, Helvetica, sans-serif; }
+table.moduletable-innews td a {color:#117BC0; }
+table.moduletable-innews li {list-style-type:disc; color:#117BC0; padding-left:0px; margin-left:6px; padding-bottom:10px; }
+
+
+table.moduletable-upevents {width: 175px; padding: 0px;	margin-left: 34px; padding-top:15px; text-align:left; }
+table.moduletable-upevents th {font: bold 13px Geneva, Arial, Helvetica, sans-serif; color: #333333; text-transform: uppercase; text-align: left; margin-bottom:-5px;}
+table.moduletable-upevents td {margin: 0px; padding: 0px; font: 12px Geneva, Arial, Helvetica, sans-serif; }
+table.moduletable-upevents td a {color:#333333; font-weight:bold;}
+table.moduletable-upevents li {list-style-type:none; padding-top:5px;padding-bottom:5px;}
+table.moduletable-upevents ul {padding:0px; margin:0px;}
+
+table.moduletable-carboncalc {width: 100%; margin-left:0px; margin-top: 30px; }
+table.moduletable-carboncalc img{border:0px; }
+div.mod_contentitem {margin-top: 10px;}
+
+
+.latestnews, .mostread {
+	list-style: none;
+	margin: 2px 1px;
+}
+
+
+li.latestnews. li.mostread {
+	margin: 0px;
+}
+
+
+li.latestnews a, li.mostread a {
+	color: #117bc0;
+	text-decoration: none;
+}
+
+
+
+li.latestnews a:hover, li.mostread a:hover {
+	color: #0bab0a;
+	text-decoration: underline;
+}
+
+.search {
+	margin: 0px;
+	padding: 0px;
+}
+
+.search .button {
+	background-color: #00aac0a;
+	border: none;
+	color: #fff;
+	font: bold 12px Tahoma, Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	margin: 1px 10px;
+	padding: 1px;
+        vertical-align: middle;
+}
+
+.search .button:hover {
+	color: #117bc0;
+}
+
+
+.inputbox {
+	background-color: #ffffff;
+	border: 1px solid #666;
+	padding: 1px;
+	width: 225px;
+	vertical-align: middle;
+}
+
+
+.search .inputbox:hover {
+	background-color: #fff;
+	padding: 1px;
+}
+
+/* End Custom Modules */
+
+/* *********************** END MODULE TABLE  ********************* */
+
+
+
+/* *********************** CONTENT - SECTIONS & CATEGORIES *********************** */
+
+.contentheading {
+	padding: 5px 0px 0px 0px;
+	line-height: 18px;
+	font: normal 18px Tahoma, Arial, Helvetica, sans-serif;
+	letter-spacing: -1px;
+	color: #439539;
+	width: 100%;
+}
+
+
+
+/* content title and links */
+
+.contentpagetitle {background-color : White; }
+
+a.contentpagetitle,a.contentpagetitle:link, a.contentpagetitle:visited 
+
+{text-decoration: none;font-weight: normal; color: #117bc0;border-bottom: 0px;}
+
+a.contentpagetitle:hover {color: #000;border-bottom: 0px dashed #ccc; text-decoration: none;}
+
+
+
+/* top box like a category description */
+
+.contentdescription {
+
+	background-color : White;
+
+	padding: 10px 0px;
+
+}
+
+
+
+/* Main Body Text */
+
+.contentpane {background: White;}
+
+
+
+.contentpaneopen { background-color: White; line-height: 17px;}
+
+.contentpaneopen img {    border: 1px solid #000000;    margin-top: 0px;    margin-right: 20px;    margin-bottom: 30px;    margin-left: 0px; }
+
+.contentpaneopen a {color:#439539; text-decoration:underline; text-transform:uppercase;}
+
+.contentpaneopen a:hover{color:#005CB9; text-decoration:underline; text-transform:uppercase;}
+
+
+/* Main Body Text */
+
+
+
+/* article rating */
+
+.content_rating {font-weight: normal;font-size:.8em;}
+
+.content_vote {font-weight: normal;font-size: .8em;}
+
+
+
+/* icons */
+
+.buttonheading{font-size: 12px;}
+
+.pop-ups {float: right;}
+
+a.pop-up {border-bottom: 0;}
+
+
+
+/* Dates */
+
+.createdate {color: #ccc; font-size: 11px; font-weight: normal;}
+
+.modifydate {color: #ccc; font-size: 11px; font-weight: normal; font-style: italic;}
+
+.newsfeeddate {font-size: 11px; color: #ccc; font-weight: normal;}
+
+/* Dates */
+
+
+
+/* Writen by Authors name */
+
+.small { 
+
+/*	color: #ccc;*/
+
+	font-size: 11px;
+
+	line-height: 17px;
+
+	margin: 0px; padding: 0px;
+
+}
+
+
+
+/* Page navigation links "<<< 1 of 10 next >>>" */
+
+.pagenav { 
+
+	font-size: 11px; 
+
+	color: #ccc;
+
+}
+
+.pagebar{font-size: 12px;}
+
+.pagenav_prev{font-size: 11px; color: #ccc; }
+
+.pagenav_next{font-size: 11px; color: #ccc; }
+
+a.pagenav {color: #439539; text-decoration: none; font-weight: bold; }
+
+a.pagenav:hover {color: #117bc0; text-decoration: underline; }
+
+.pagenavcounter{	height: 15px;  }
+
+.back_button a {font-size: 12px; height: 15px; clear: both; display: block; color: #666; text-decoration: none; font-weight: bold; }
+
+.back_button a:hover {
+
+	color: #000;
+
+	text-decoration: none;
+
+}
+
+
+
+/* Read more link */
+
+.readon {
+	font-size: 11px; 
+	color: #439539;
+	font-weight: bold;
+	text-decoration: none;
+        margin-left:236px;
+}
+
+
+
+.readon:hover {
+
+	text-decoration: underline;
+
+	color: #439539;
+
+}
+
+
+
+/* Article index   */
+
+table.contenttoc {
+
+	padding: 0px;
+
+	margin: 2px;
+
+	font-size: 12px;
+
+	}
+
+	
+
+table.contenttoc th {
+
+background: #fffff; 
+
+color: #fff;
+
+}
+
+	
+
+table.contenttoc td {padding: 2px;}
+
+
+
+/* Links article index */
+
+	a.toclink:hover, a.toclink:visited, a.toclink:link {	height: 18px; }
+
+/* End Article index  */
+
+
+
+/*  component heading */
+
+.componentheading {
+
+	text-align:left;
+
+	margin-top: 15px;
+
+	background-color: #fff;
+
+	line-height: 30px;
+
+	font: normal 20px Tahoma, Arial, Helvetica, sans-serif;
+
+	letter-spacing: -1px;
+
+	color: #4891ba;
+
+	width: 100%;
+
+}
+
+
+
+/* Sectiontable Table types listings Faqs's, weblink etc..*/
+
+.sectiontableheader {
+	background-color : #fff;
+	color : #333;
+	font-weight : bold;
+	border-collapse: collapse;
+	font-size: 11px;
+        height:50px;
+        padding-bottom:25px;
+        margin-bottom:25px;
+	}
+
+
+
+/* Table odd and Even Rows */
+
+.sectiontableentry1{
+	background-color: #fff;
+	font-size: 11px; 
+	height:25px;
+        margin:0px; 
+}
+
+
+
+.sectiontableentry2{
+	background-color: #fff;
+	font-size: 11px; 
+	height:25px;
+        margin:0px;
+}
+
+
+
+.sectiontablefooter {
+
+	height: 18px; 
+
+}
+
+/* End Sectiontable */
+
+
+
+/* Category */
+
+td.categoryb {font: bold 11px Geneva, Arial, Helvetica, sans-serif;
+	color: #333;
+        width:160px;
+        height:30px;
+	text-align: left;margin-bottom: 20px;}
+       
+
+a.categoryb:link, a.categoryb:visited {
+font-weight: normal;
+color: #333333;
+font-size: 12px;
+margin-top: 10px;
+margin-bottom: 10px;
+height:80px;
+}
+
+a.categoryb:hover  {color: #439539; text-decoration:underline;height:80px; }
+
+
+
+/* End category */
+
+
+
+/* blogsection */
+
+.blog {background-color : #FFFFFF;}
+
+.blogsection{	height: 18px; color: #15abe6; text-decoration: none; }
+
+.blogsection:hover {
+
+	color: #4891ba;
+
+	text-decoration: underline;
+
+}
+
+.blog_more{	clear: both; display: block; width: 480px; padding: 10px 0px; }
+
+.blog_heading {	height: 18px;  }
+
+/* space from bottom of article */
+
+.article_seperator{background-color : #FFFFFF; display:none;}
+
+/* End blogsection */
+
+
+
+/* Search Form Module*/
+
+.search {height: 18px;}
+
+/* results if not search google */
+
+.searchintro{height: 18px;}
+
+/*Search Form keyword highlight*/
+
+.highlight {
+
+border: 1px dashed #A2BF06;
+
+background: #F5FF96;
+
+padding: 0px 2px 0px 2px;}
+
+/* End Search Form */
+
+tr.sectiontableentry1 td {
+height:50px;
+vertical-align:middle;
+}
+
+tr.sectiontableentry2 td {
+height:50px;
+vertical-align:middle;
+}
+
+/* wrapper title */
+
+.wrapper{background-color : #FFFFFF;}
+
+/* *********************** END CONTENT - SECTIONS & CATEGORIES *********************** */
+
+/* *********************** IMG CAPTIONS *********************** */
+.arc90_imgcaption { 
+text-align: center; 
+border: 1px solid #DDD; 
+padding-left: 3px; 
+padding-right: 3px; 
+padding-top: 3px; 
+margin:0; 
+width: 9em; 
+} 
+
+.arc90_imgcaptionTXT { 
+font-size: .8em; 
+color: #666; 
+text-align: left; 
+} 
+
+.floatl { 
+float: left; 
+text-align:center;
+margin-right: 1em; 
+} 
+
+.floatr { 
+float: right; 
+margin-left: 1em; 
+}
+
+/* *********************** END IMG CAPTIONS *********************** */
+
+#task_button {float:left;}
+
+div.notvisible {
+  display:none;
+}

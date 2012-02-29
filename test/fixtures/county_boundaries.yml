@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  county: 
+  lat: 9.99
+  lng: 9.99
+  censusid: 1
+
+two:
+  county: 
+  lat: 9.99
+  lng: 9.99
+  censusid: 1

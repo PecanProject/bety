@@ -1,0 +1,24 @@
+<h1>Listing pfts</h1>
+
+<table>
+  <tr>
+    <th><%= link_to "Name", "#", {:onclick => "order('pfts.name')"} -%><span id="pfts.name"></span></th>
+    <th><%= link_to "Definition", "#", {:onclick => "order('pfts.definition')"} -%><span id="pfts.definition"></span></th>
+  </tr>
+
+<% @pfts.each do |pft| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and pft.id == @search.to_i%>>
+    <td><%=h pft.name %></td>
+    <td><%=h pft.definition %></td>
+    <td><%= link_to 'Show', pft %></td>
+    <td><%= link_to 'Edit', edit_pft_path(pft) %></td>
+    <td><%= link_to 'Destroy', pft, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+
+<%= will_paginate @priors, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+

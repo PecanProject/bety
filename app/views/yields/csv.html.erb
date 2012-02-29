@@ -1,0 +1,45 @@
+<% form_for :dump, :url=>{ :action => "csv_import"}, :html => { :multipart => true } do |f| -%>
+<table>
+  <tr>
+    <td colspan=2>Sequence of fields must be:<br />
+      <i>site id,species id,citation id,treatment id,cultivar id,date,date loc,mean,n,stat name,stat,notes</i>
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>Before upload:<br />    
+      --Remove header row<br />
+      --Date can be either Julian or the format must be...<br />
+      yyyy/mm/dd<br />
+      or using abbreviated month names (Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)<br />
+      yyyy/Month/dd<br />
+      if Julian format should be yyyy-ddd
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>To create a template csv file with the appropiate related table information, create a new yield entry using the new yield entry page. <%= link_to "New Yield", new_yield_path %><br />
+        Once created append ".csv" to the url after "new"<br />
+        <br />
+        Example:<br />
+        https://ebi-forecast.igb.uiuc.edu/yields/new?id=34501864<br />
+        becomes<br/>
+        https://ebi-forecast.igb.uiuc.edu/yields/new.csv?id=34501864
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label for="dump_file">
+        Select a CSV File :
+      </label>
+    </td>
+    <td >
+      <%= f.file_field :file -%>
+    </td>
+  </tr>
+  <tr>
+    <td colspan='2'>
+      <%= submit_tag 'Submit' -%>
+    </td>
+  </tr>
+</table>
+<% end -%>
+

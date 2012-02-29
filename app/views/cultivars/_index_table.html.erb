@@ -1,0 +1,29 @@
+<h1>Listing cultivars</h1>
+
+<table>
+  <tr>
+    <th><%= link_to "Species", "#", {:onclick => "order('species.scientificname')"} -%><span id="species.scientificname"></span></th>
+    <th><%= link_to "Previous ID", "#", {:onclick => "order('cultivars.previous_id')"} -%><span id="cultivars.previous_id"></span></th>
+    <th><%= link_to "Name", "#", {:onclick => "order('cultivars.name')"} -%><span id="cultivars.name"></span></th>
+    <th><%= link_to "Ecotype", "#", {:onclick => "order('cultivars.ecotype')"} -%><span id="cultivars.ecotype"></span></th>
+    <th><%= link_to "Notes", "#", {:onclick => "order('cultivars.notes')"} -%><span id="cultivars.notes"></span></th>
+  </tr>
+
+<% @cultivars.each do |cultivar| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and cultivar.id == @search.to_i%>>
+    <td><%= link_to_if cultivar.specie, cultivar.specie, cultivar.specie %></td>
+    <td><%=h cultivar.previous_id %></td>
+    <td><%=h cultivar.name %></td>
+    <td><%=h cultivar.ecotype %></td>
+    <td><%=h cultivar.notes %></td>
+    <td><%= link_to 'Show', cultivar %></td>
+    <td><%= link_to 'Edit', edit_cultivar_path(cultivar) %></td>
+    <td><%= link_to 'Destroy', cultivar, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @cultivars, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+

@@ -1,0 +1,42 @@
+<p>
+  <b>Citation:</b>
+  <%= link_to_if @management.citation, @management.citation, @management.citation %>
+</p>
+
+<p>
+  <b>Date:</b>
+  <%=h @management.date %>
+</p>
+
+<p>
+  <b>Date Level of Confidence:</b>
+  <%=h $dateloc_drop.invert[@management.dateloc.to_s] %>
+</p>
+
+<p>
+  <b>Management Type:</b>
+  <%=h @management.mgmttype %>
+</p>
+
+<p>
+  <b>Level:</b>
+  <%=h @management.level %>
+</p>
+
+<p>
+  <b>Units:</b>
+  <%=h @management.units %>
+</p>
+
+<p>
+  <b>Notes:</b>
+  <%=h @management.notes %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @management.user %>
+</p>
+
+<%= link_to 'Edit', edit_management_path(@management) %> |
+<%= link_to 'Back', managements_path %>

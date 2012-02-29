@@ -1,0 +1,331 @@
+
+      <% if @fullscreen -%>
+      <div id="map_canvas" style=" width: 100%; height: 800px"></div>
+      <% else -%>
+      <div id="map_canvas" style=" width: 750px; height: 600px"></div>
+      <% end -%>
+ 
+      <% if @fullscreen -%>
+        <div style="width:100%;margin-top:5px;">
+      <% else -%>
+        <div style="width:750px;margin-top:5px;">
+      <% end -%>
+          <div style="width:200px;float:left">
+            <table cellpadding="0" cellspacing="0" class="moduletable">
+              <tr>
+                <td>
+                  <script type="text/javascript">
+                    var download_MENU_ITEMS = [
+                      ['Download Yield Means','',{'tw':'0','sb':'Download Yield Means'},
+                      ['Miscanthus','',{'tw':'0','sb':'Miscanthus'},
+                      ['County','/bety/miscanthus_county_avg_yield.csv',{'tw':'0','sb':'County'}],
+                      ['Gridded','/bety/miscanthusyield.csv',{'tw':'0','sb':'Gridded'}]]]
+                    ];
+                  </script>
+                  <div style="position:relative; top:0px; left:0px; min-height:26px;">
+                    <div style="position:absolute; top:0px; width: 200px; height:26px;">
+                      <script type="text/javascript">
+                        new menu (download_MENU_ITEMS, [{height:26,width:200,block_top:0,block_left:0,top:0,left:155,hide_delay:600,expd_delay:100,css:{outer:["topmenu_l0oout","topmenu_l0oover"],inner:["topmenu_l0iout","topmenu_l0iover"]}},{height:26,width:155,block_top:26,block_left:0,top:26,left:0,css:{outer:["topmenu_l1oout","topmenu_l1oover"],inner:["topmenu_l1iout","topmenu_l1iover"]}},{block_top:0,block_left:155}])
+                      </script>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div style="width:200px;float:right">
+            <table cellpadding="0" cellspacing="0" class="moduletable">
+              <tr>
+                <td>
+                  <script type="text/javascript">
+                    var download_MENU_ITEMS = [
+                      <% if @fullscreen -%>
+                      ['Exit fullscreen','/bety/maps/location_yields',{'tw':'0','sb':'Exit fullscreen'}]
+                      <% else -%>
+                      ['Fullscreen','/bety/maps/location_yields?fullscreen=true',{'tw':'0','sb':'Fullscreen'}]
+                      <% end -%>
+                    ];
+                  </script>
+                  <div style="position:relative; top:0px; left:0px; min-height:26px;">
+                    <div style="position:absolute; top:0px; width: 200px; height:26px;">
+                      <script type="text/javascript">
+                        new menu (download_MENU_ITEMS, [{height:26,width:200,block_top:0,block_left:0,top:0,left:155,hide_delay:600,expd_delay:100,css:{outer:["topmenu_l0oout","topmenu_l0oover"],inner:["topmenu_l0iout","topmenu_l0iover"]}},{height:26,width:155,block_top:26,block_left:0,top:26,left:0,css:{outer:["topmenu_l1oout","topmenu_l1oover"],inner:["topmenu_l1iout","topmenu_l1iover"]}},{block_top:0,block_left:155}])
+                      </script>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+
+      <br /><br /><br />
+    <script type="text/javascript">
+   overlayTypeOptions = [{
+    getTileUrl: function(coord, zoom) {
+        var normalizedCoord = getNormalizedCoord(coord, zoom);
+        if (!normalizedCoord) {
+          return null;
+        }
+        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/miscanthus/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+    },
+    tileSize: new google.maps.Size(256, 256),
+    isPng: true,
+    maxZoom: 9,
+    minZoom: 2,
+    name: "Miscanthus"
+  },<% if logged_in? and current_user.page_access_level <= 2  -%> {
+    getTileUrl: function(coord, zoom) {
+        var normalizedCoord = getNormalizedCoord(coord, zoom);
+        if (!normalizedCoord) {
+          return null;
+        }
+        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+    },
+    tileSize: new google.maps.Size(256, 256),
+    isPng: true,
+    maxZoom: 9,
+    minZoom: 2,
+    name: "Poplar"
+  }, {
+    getTileUrl: function(coord, zoom) {
+        var normalizedCoord = getNormalizedCoord(coord, zoom);
+        if (!normalizedCoord) {
+          return null;
+        }
+        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+    },
+    tileSize: new google.maps.Size(256, 256),
+    isPng: true,
+    maxZoom: 9,
+    minZoom: 2,
+    name: "Switchgrass"
+  }, {
+    getTileUrl: function(coord, zoom) {
+        var normalizedCoord = getNormalizedCoord(coord, zoom);
+        if (!normalizedCoord) {
+          return null;
+        }
+        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/miscanthus_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+    },
+    tileSize: new google.maps.Size(256, 256),
+    isPng: true,
+    maxZoom: 9,
+    minZoom: 2,
+    name: "Miscanthus - Poplar"
+  }, {
+    getTileUrl: function(coord, zoom) {
+        var normalizedCoord = getNormalizedCoord(coord, zoom);
+        if (!normalizedCoord) {
+          return null;
+        }
+        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/miscanthus_switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+    },
+    tileSize: new google.maps.Size(256, 256),
+    isPng: true,
+    maxZoom: 9,
+    minZoom: 2,
+    name: "Miscanthus - Switchgrass"
+  }, {
+    getTileUrl: function(coord, zoom) {
+        var normalizedCoord = getNormalizedCoord(coord, zoom);
+        if (!normalizedCoord) {
+          return null;
+        }
+        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/switchgrass_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+    },
+    tileSize: new google.maps.Size(256, 256),
+    isPng: true,
+    maxZoom: 9,
+    minZoom: 2,
+    name: "Switchgrass - Poplar"
+  }<% end -%>];
+
+  var styles = [{
+    featureType: "poi",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
+      ]
+  }];
+
+
+  function initialize() {
+    var myLatlng = new google.maps.LatLng(40.44,-95.98);
+    var myOptions = {
+      center: myLatlng,
+      zoom: 4,
+      streetViewControl: false,
+      zoomControl: true,
+      zoomControlOptions : {
+        style: google.maps.ZoomControlStyle.SMALL
+      },
+      mapTypeControlOptions: {
+        <% if logged_in? and current_user.page_access_level <= 2  -%>
+        mapTypeIds: ['Miscanthus','Poplar','Switchgrass','Miscanthus-Poplar','Miscanthus-Switchgrass','Switchgrass-Poplar'],
+        <% else -%>
+        mapTypeIds: ['Miscanthus'],
+        <% end -%>
+        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+      },
+      maxZoom: 9,
+      minZoom: 2
+    };
+
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    map.mapTypes.set('Miscanthus',new google.maps.StyledMapType(styles, { name: 'Miscanthus' }));
+    <% if logged_in? and current_user.page_access_level <= 2 %>
+    map.mapTypes.set('Poplar',new google.maps.StyledMapType(styles, { name: 'Poplar' }));
+    map.mapTypes.set('Switchgrass',new google.maps.StyledMapType(styles, { name: 'Switchgrass' }));
+    map.mapTypes.set('Miscanthus-Poplar',new google.maps.StyledMapType(styles, { name: 'Miscanthus-Poplar' }));
+    map.mapTypes.set('Miscanthus-Switchgrass',new google.maps.StyledMapType(styles, { name: 'Miscanthus-Switchgrass' }));
+    map.mapTypes.set('Switchgrass-Poplar',new google.maps.StyledMapType(styles, { name: 'Switchgrass-Poplar' }));
+    <% end %>
+    google.maps.event.addListener(map, 'maptypeid_changed', function() {
+      change_overlay(this.mapTypeId);
+    });
+
+    map.setMapTypeId('Miscanthus');
+
+ 
+    var geocoder = new google.maps.Geocoder();
+    //infowindow = new google.maps.InfoWindow();
+    //var contentString = "";
+    var circle;
+
+    var res;
+
+    google.maps.event.addListener(map,'click',function(event) {
+      geocoder.geocode({'latLng': event.latLng}, function(results, status) {
+        var county;
+        var state;
+        if (status == google.maps.GeocoderStatus.OK) {
+          for(i=0;i<results[0].address_components.length;i++) { 
+            if(results[0].address_components[i].types[0] == "administrative_area_level_2") { 
+              county = results[0].address_components[i].long_name
+            }
+            if(results[0].address_components[i].types[0] == "administrative_area_level_1") { 
+              state = results[0].address_components[i].long_name
+            }
+          }
+          if (county && state) {
+            <%= remote_function :url => {:action => "location_yields_lookup"},:type => :synchronous, :with => "'county='+county+'&state='+state+'&crop='+map.mapTypeId", :update => 'contentString'  %>
+            infowindow = document.createElement('DIV');
+            infowindow.innerHTML = '<div id="gmapinfowindowclose"><img src="http://maps.gstatic.com/intl/en_us/mapfiles/iw_close.gif"></div><div id="gmapinfowindowcontent">'+contentString+'</div>';
+            infowindow.setAttribute("id","gmapinfowindow");
+
+
+            map.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear();
+            map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(infowindow);
+            google.maps.event.addDomListenerOnce($('gmapinfowindowclose'),'click',function() {
+              map.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear();
+            });
+            //infowindow.setPosition(event.latLng);
+            //infowindow.setContent(contentString);
+            //infowindow.open(map);
+          }
+        } else {
+          alert("Geocoder failed due to: " + status);
+        }
+      });
+    });
+    google.maps.event.addListenerOnce(map,'tilesloaded',function(event) {
+      $$('div[title="Change map style"]')[0].getOffsetParent().id = "mapTypeControl";
+    });
+    <% if !@county.nil? %>
+    var marker = [];
+  
+     <% @county.county_boundaries.each do |c|
+        next if ![503657,503971,504021].include?(c.id) %>
+        var point = new google.maps.LatLng(<%= c.lat %>,<%= c.lng %>);
+        marker[<%= c.id -%>] = new google.maps.Marker({
+          position: point,
+          title: <%= "\"#{c.id}\"" -%> ,
+          map: map
+        });
+    <% end %>
+    <% end %>
+
+  }
+
+  function overlay_scale(crop){
+    var controlUI = document.createElement('DIV');
+    controlUI.innerHTML = '<img src="/bety/'+crop+'-scale.png"></img>';
+    controlUI.setAttribute("id","gmapscale");
+
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].clear();
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlUI);
+  }
+
+  function change_overlay(crop){
+    //map.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear();
+    map.overlayMapTypes.clear();
+    switch (crop) {
+      case 'Miscanthus':
+        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[0]));
+        overlay_scale("miscanthus");
+        break;
+      <% if logged_in? and current_user.page_access_level <= 2  -%>
+      case 'Poplar':
+        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[1]));
+        overlay_scale("poplar");
+        break;
+      case 'Switchgrass':
+        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[2]));
+        overlay_scale("switchgrass");
+        break;
+      case 'Miscanthus-Poplar':
+        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[3]));
+        overlay_scale("miscanthus_poplar");
+        break;
+      case 'Miscanthus-Switchgrass':
+        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[4]));
+        overlay_scale("miscanthus_switchgrass");
+        break;
+      case 'Switchgrass-Poplar':
+        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[5]));
+        overlay_scale("switchgrass_poplar");
+        break;
+      <% end -%>
+      default:
+        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[0]));
+        overlay_scale("miscanthus");
+        break;
+    }
+  }
+
+  // Normalizes the coords that tiles repeat across the x axis (horizontally)
+  // like the standard Google map tiles.
+  function getNormalizedCoord(coord, zoom) {
+    var x = coord.x;
+    var y = coord.y;
+
+    
+    // tile range in one direction range is dependent on zoom level
+    // 0 = 1 tile, 1 = 2 tiles, 2 = 4 tiles, 3 = 8 tiles, etc
+    var tileRange = 1 << zoom;
+
+    // don't repeat across y-axis (vertically)
+    if (y < 0 || y >= tileRange) {
+      return null;
+    }
+
+    // repeat across x-axis
+    if (x < 0 || x >= tileRange) {
+      return null;
+      x = (x % tileRange + tileRange) % tileRange;
+    }
+
+    return {
+      x: x,
+      y: y
+    };
+  }
+  initialize();
+//]]>
+    </script>
+
+
+  

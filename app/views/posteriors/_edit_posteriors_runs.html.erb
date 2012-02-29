@@ -1,0 +1,34 @@
+<table width="100%">
+  <tr>
+    <td width="50%"><h3>Existing Runs Relationships</h3></td>
+    <td width="50%"><h3>Add Run Relationship(s)</h3></td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Model</th>
+          <th>Site</th>
+        </tr>
+        <% @posterior.runs.each do |c| %>
+        <tr>
+          <td><%= link_to_remote "X", :url => { :action => :rem_posteriors_runs, :posterior_id => @posterior.id, :run_id => c.id }, :confirm => 'Are you sure?'%></td>
+          <td><%= link_to "edit", edit_run_path(c.id) %></td>
+          <td><%= link_to_if c.model, c.model, c.model %></td>
+          <td><%= link_to_if c.model, c.site, c.site %></td>
+        </tr>
+        <% end %>
+      </table>
+    </td>
+    <td>
+      <% form_remote_tag :url => { :controller => :posteriors, :action => 'edit_posteriors_runs'} do |f| %>
+      <%= collection_select( :run, :id, Run.all.reject { |r| @posterior.runs.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
+      <%= hidden_field_tag 'posterior_id', @posterior.id %>
+      <br /><br />
+      <%= submit_tag "Select" %>
+      <% end %>
+    </td>
+  </tr>
+</table>

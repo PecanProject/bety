@@ -1,0 +1,25 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  citation_id: 1
+  variable_id: MyString
+  phylogeny: MyString
+  pft: MyString
+  distn: MyString
+  parama: 9.99
+  paramb: 9.99
+  paramc: 9.99
+  n: 1
+  notes: MyText
+
+two:
+  citation_id: 1
+  variable_id: MyString
+  phylogeny: MyString
+  pft: MyString
+  distn: MyString
+  parama: 9.99
+  paramb: 9.99
+  paramc: 9.99
+  n: 1
+  notes: MyText

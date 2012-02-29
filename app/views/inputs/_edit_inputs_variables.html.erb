@@ -1,0 +1,32 @@
+<table width="100%">
+  <tr>
+    <td width="50%"><h3>Existing Variables Relationships</h3></td>
+    <td width="50%"><h3>Add Variable Relationship(s)</h3></td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Name - Units</th>
+        </tr>
+        <% @input.variables.each do |variable| %>
+        <tr>
+          <td><%= link_to_remote "X", :url => { :action => :rem_inputs_variables, :input_id => @input.id, :variable_id => variable.id }, :confirm => 'Are you sure?'%></td>
+          <td><%= link_to "edit", edit_variable_path(variable) %></td>
+          <td><%= link_to variable, variable %></td>
+        </tr>
+        <% end %>
+      </table>
+    </td>
+    <td>
+      <% form_remote_tag :url => { :controller => :inputs, :action => 'edit_inputs_variables'} do |f| %>
+      <%= collection_select( :variable, :id, Variable.all.reject { |r| @input.variables.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
+      <%= hidden_field_tag 'input_id', @input.id %>
+      <br /><br />
+      <%= submit_tag "Select" %>
+      <% end %>
+    </td>
+  </tr>
+</table>

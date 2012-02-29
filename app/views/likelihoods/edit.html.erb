@@ -1,0 +1,40 @@
+<h1>Editing likelihood</h1>
+
+<% form_for(@likelihood) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :run %><br />
+    <%= f.select :run, Run.all.collect { |p| [ p.select_default, p.id] } %>
+  </p>
+  <p>
+    <%= f.label :variable %><br />
+    <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }, {} -%>
+  </p>
+  <p>
+    <%= f.label :input %><br />
+    <%= f.select :input_id, Input.all.collect { |p| [ p.select_default, p.id] } %>
+  </p>
+  <p>
+    <%= f.label :loglikelihood %><br />
+    <%= f.text_field :loglikelihood %>
+  </p>
+  <p>
+    <%= f.label :n_eff %><br />
+    <%= f.text_field :n_eff %>
+  </p>
+  <p>
+    <%= f.label :weight %><br />
+    <%= f.text_field :weight %>
+  </p>
+  <p>
+    <%= f.label :residual %><br />
+    <%= f.text_field :residual %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @likelihood %> |
+<%= link_to 'Back', likelihoods_path %>

@@ -1,0 +1,103 @@
+<% if session['citation'].nil? %>
+  <h2>Please choose a citation to work with first. <%= link_to 'Citations', citations_path %></h2>
+<% elsif @treatments.length == 0 %>
+  <h2> There are no treatments associated with this citation. Please create a treatment that is associated with this citation first. <%= link_to 'Treatments', treatments_path %></h2>
+<% elsif @sites.length == 0 %>
+  <h2> There are no sites associated with this citation. Please create a site that is associated with this citation first. <%= link_to 'Sites', sites_path %></h2>
+<% else %>
+
+  <% if !@trait_old.nil? %>
+  <h2>Add a covariate for the previous trait <%= link_to "[new]", new_covariate_path(:trait_id => @trait_old) %></h2>
+  <% end %>
+
+  <h1>New trait <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node20.html?min" }) %></h1>
+  
+  
+  <% form_for @trait,:html => { :multipart => true } do |f| %>
+    <%= f.error_messages %>
+
+    <p>
+      <%= f.label :mean %><br />
+      <%= f.text_field :mean %>
+    </p>
+    <p>
+      <%= f.label :stat %> <%= link_to_prototype_window(image_tag("help.gif"), "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node22.html?min" }) %><br />
+      <%= f.text_field :stat %>
+    </p>
+    <p>
+      <%= f.label :statname %><br />
+      <%= f.select :statname, ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD"] %>
+    </p>
+    <p>
+      <%= f.label :date %><br />
+      <%= f.date_select :date, { :start_year => 1900, :end_year => Time.now.year, :include_blank => "0000", :default => "0000"} %>
+    </p>
+    <p>
+      <%= f.label :site_id %><br />
+      <%= f.select :site_id, @sites.collect { |p| [ p.select_default, p.id ] }, {} %>
+    </p>
+
+    <%= render :partial => "species/species_search" %>
+
+    
+    <p>
+      <%= f.label :entity_id %><br />
+      <%= f.select :entity_id, Entity.all.collect { |p| [ p.select_default, p.id ] }, { :include_blank => true} %>
+   </p>
+
+    <p>
+      <%= f.label :cultivar_id %><br />
+      <%= f.select :cultivar_id, Cultivar.all(:joins => :specie, :order => 'species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true} %>
+  
+    </p>
+    <p>
+      <%= f.label :treatment_id %><br />
+      <%= f.select :treatment_id, @treatments.collect { |p| [ p.select_default, p.id ] }, {} -%>
+    </p>
+    <p>
+      <%= f.label :variable_id, "trait" %><br />
+      <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }.sort { |a,b| a[0].split(': ')[1] <=> b[0].split(': ')[1] }, {} -%>
+    </p>
+    <p>
+      <%= f.label :dateloc, "Date Level of Confidence" %> <%= link_to_prototype_window(image_tag("help.gif"), "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node21.html?min" }) %><br />
+      <%= f.select :dateloc, options_for_select($dateloc_drop.sort,f.object.dateloc.to_s) %>
+    </p>
+    <p>
+      <%= f.label :time %><br />
+      <%= f.time_select :time, { :include_blank => true }  %>
+    </p>
+    <p>
+      <%= f.label :timeloc %><br />
+      <%= f.select :timeloc, options_for_select($timeloc_drop.sort,f.object.timeloc.to_s) %>
+    </p>
+    <p>
+      <%= f.label :n %><br />
+      <%= f.text_field :n %>
+    </p>
+    <p>
+      <%= f.label :notes %><br />
+      <%= f.text_area :notes %>
+    </p>
+    <p>
+      <%= f.label :access_level %><br />
+      <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :selected => 2 %>
+    </p>
+    <h3>Add a covariate to this trait</h3>
+    <p><em>Leave blank if not adding a covariate</em></p>
+    <p>
+      <%= label_tag :variable_id %><br />
+      <%= select_tag 'covariate[variable_id]', options_for_select(["",""] + Variable.all(:order => 'name').collect { |p| [ p.name_units, p.id ] }) %>
+    </p>
+    <p>
+      <%= label_tag :level %><br />
+      <%= text_field_tag 'covariate[level]' %>
+    </p>
+    <p>
+      Your user_id <%= current_user.id %><br />
+      <%= f.hidden_field :citation_id, :value => session['citation'] %>
+      <%= f.submit 'Create' %>
+    </p>
+  <% end %>
+<% end %>
+
+<%= link_to 'Back', traits_path %>

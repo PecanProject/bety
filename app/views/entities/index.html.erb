@@ -1,0 +1,24 @@
+<h1>Listing entities</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Parent</th>
+    <th>Notes</th>
+  </tr>
+
+<% @entities.each do |entity| %>
+  <tr>
+    <td><%=h entity.name %></td>
+    <td><%= link_to_if entity.parent, entity.parent, entity.parent %></td>
+    <td><%=h entity.notes %></td>
+    <td><%= link_to 'Show', entity %></td>
+    <td><%= link_to 'Edit', edit_entity_path(entity) %></td>
+    <td><%= link_to 'Destroy', entity, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New entity', new_entity_path %>

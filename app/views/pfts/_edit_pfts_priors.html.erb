@@ -1,0 +1,42 @@
+<table width="100%">
+  <tr>
+    <td width="50%"><h3>Existing Priors Relationships</h3></td>
+    <td width="50%"><h3>Add Prior Relationship(s)</h3></td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Variable</th>
+          <th>Distribution</th>
+          <th>Param a</th>
+          <th>Param b</th>
+          <th>Phylogeny</th>
+          <th>Citation</th>
+        </tr>
+        <% @pft.priors.each do |c| %>
+        <tr>
+          <td><%= link_to_remote "X", :url => { :controller => :pfts, :action => :rem_pfts_priors, :id => @pft.id, :prior => c }, :confirm => 'Are you sure?'%></td>
+          <td><%= link_to "edit", edit_prior_path(c.prior_id) %></td>
+          <td><%= link_to_if c.variable, c.variable, c.variable %></td>
+          <td><%=h c.distn %></td>
+          <td><%=h sprintf("%#1.2f", c.parama) %></td>
+          <td><%=h sprintf("%#1.2f", c.paramb) %></td>
+          <td><%=h c.phylogeny %></td>
+          <td><%= link_to_if c.citation, c.citation, c.citation %></td>
+        </tr>
+        <% end %>
+      </table>
+    </td>
+    <td>
+      <% form_remote_tag :url => {:controller => :pfts, :action => 'edit_pfts_priors' } do %>
+      <%= collection_select( :prior, :id, Prior.all.reject { |r| @pft.priors.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
+      <%= hidden_field_tag 'id', @pft.id %>
+      <br /><br />
+      <%= submit_tag "Select" %>
+      <% end %>
+    </td>
+  </tr>
+</table>

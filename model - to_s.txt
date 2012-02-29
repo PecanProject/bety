@@ -1,0 +1,22 @@
+citation   - author_year_title          ("#{author_year} #{(title || "NA")[0..19]}...")
+covariate  - NONE
+cultivar   - sn_name                    ("#{specie} #{name}")
+entity     - name
+format     - name_mimetype              ("#{name} #{mime_type}")
+input      - site                       site
+likelihood - variable_site_runid        ("#{variable} #{site} #{run_id}")
+management - date_type_level            ("#{date} - #{type} : #{level}")
+model      - modelname_revision         ("#{model_name} #{revision}")
+pft        - name_definition            ("#{name} #{definition[0..19]}")
+posterior  - pft_createdat              ("#{pft} #{created_at.to_s(:db)}")
+prior      - varname_cit                ("#{variable} - #{citation} - #{phylogeny}")
+raw        - site_filepath              ("#{site} #{filepath}")
+run        - model_site                 ("#{model} #{site}")
+service    - NONE
+site       - sitename_state_country     (...)
+specie     - genus_species              (scientificname || "#{genus} #{species}")
+trait      - specie_treat_cultivar      ("#{specie} - #{variable} - #{treatment} - #{citation}")
+treatment  - name_definition_w_citation ("#{name} : #{(definition || "NA")[0..19]} - #{citations.collect(&:author_year).join(',')}")
+variable   - name_units                 ("#{name} - #{units}")
+yield      - id
+

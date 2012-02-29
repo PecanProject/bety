@@ -1,0 +1,18 @@
+<p>
+  <b>Name:</b>
+  <%=h @entity.name %>
+</p>
+
+<p>
+  <b>Notes:</b>
+  <%=h @entity.notes %>
+</p>
+
+<p>
+  <b>Parent:</b>
+  <%= link_to_if @entity.parent, @entity.parent, @entity.parent %>
+</p>
+
+
+<%= link_to 'Edit', edit_entity_path(@entity) %> |
+<%= link_to 'Back', entities_path %>

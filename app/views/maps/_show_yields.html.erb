@@ -1,0 +1,33 @@
+<h2>Yields for <%= @site.sitename_state_country %></h2>
+<%- if @yields_logged_in > 0 -%>
+<em><%= @yields_logged_in %> additional traits with account</em>
+<%- end -%>
+<%- if @yields.length == 0 -%>
+<em>Sorry no public yield records for this site</em>
+<%- else -%>
+
+<br>
+
+<table>
+  <tr>
+    <th>View Yield Data</th>
+    <th>Site</th>
+    <th>Species</th>
+    <th>Citation</th>
+    <th>Cultivar</th>
+    <th>Treatment</th>
+  </tr>
+  <% @yields.each do |yields| %>
+  <tr>
+    <td><%= link_to "Yield Data", :action => :yields, :site => yields.site_id %></td>
+    <td><%= link_to_if yields.site, yields.site, yields.site %></td>
+    <td><%= link_to_if yields.specie, yields.specie, yields.specie %></td>
+    <td><%= link_to_if yields.citation, yields.citation, yields.citation %></td>
+    <td><%= link_to_if yields.cultivar, yields.cultivar, yields.cultivar %></td>
+    <td><%= link_to_if yields.treatment, yields.treatment, yields.treatment %></td>
+  </tr>
+  <% end %>
+</table>
+<br />
+
+<%- end -%>

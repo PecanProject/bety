@@ -1,0 +1,23 @@
+
+<table>
+  <tr>
+    <th><%= link_to "USDA Symbol", "#", {:onclick => "order('species.AcceptedSymbol')"} -%><span id="species.AcceptedSymbol"></span></th>
+    <th><%= link_to "Latin Name", "#", {:onclick => "order('species.scientificname')"} -%><span id="species.scientificname"></span></th>
+    <th><%= link_to "Common Name", "#", {:onclick => "order('species.commonname')"} -%><span id="species.commonname"></span></th>
+  </tr>
+
+<% @species.each do |species| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and species.id == @search.to_i%>>
+    <td><%= link_to_unless species.AcceptedSymbol.blank?, species.AcceptedSymbol, "http://plants.usda.gov/java/profile?symbol=#{species.AcceptedSymbol}" %></td>
+    <td><em><%=h species %></em></td>
+    <td><%=h species.commonname %></td>
+    <td><%= link_to 'Show', species %></td>
+    <td><%= link_to 'Edit', edit_species_path(species) %></td>
+    <td><%= link_to 'Destroy', species, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @species, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                      :complete => "Element.hide('spinner')",
+                      :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>

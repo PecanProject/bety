@@ -1,0 +1,35 @@
+<table width="100%">
+  <tr>
+    <td width="50%"><h3>Existing Treatments Relationships</h3></td>
+    <td width="50%"><h3>Add Treatment Relationship(s)</h3></td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Name</th>
+          <th>Def</th>
+          <th></th>
+        </tr>
+        <% @management.treatments.each do |c| %>
+        <tr>
+          <td><%= link_to_remote "X", :url => { :action => :rem_managements_treatments, :id => @management.id, :treatment => c }, :confirm => 'Are you sure?'%></td>
+          <td><%= link_to "edit", edit_treatment_path(c.treatment_id) %></td>
+          <td><%= c.name %></td>
+          <td><%= c.definition %></td>
+        </tr>
+        <% end %>
+      </table>
+    </td>
+    <td>
+      <% form_remote_tag :url => { :controller => :managements, :action => 'edit_managements_treatments'} do |f| %>
+      <%= collection_select( :treatment, :id, Treatment.all.reject { |r| @management.treatments.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
+      <%= hidden_field_tag 'id', @management.id %>
+      <br /><br />
+      <%= submit_tag "Select" %>
+      <% end %>
+    </td>
+  </tr>
+</table>

@@ -1,0 +1,42 @@
+<h1>New management <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node19.html?min" }) %></h1>
+
+
+<% form_for(@management) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :date %><br />
+    <%= f.date_select :date,{ :start_year => 1900, :include_blank => true }  %>
+  </p>
+  <p>
+    <%= f.label :dateloc, "Date Level of Confidence" %><br />
+    <%= f.select :dateloc, options_for_select($dateloc_drop.sort) %>
+  </p>
+  <p>
+    <%= f.label :mgmttype, "Management Type" %><br />
+    <%= f.select :mgmttype, [ 'burned', 'coppice', 'cultivated', 'cultivated or grazed', 'fertilization_Ca', 'fertilization_K', 'fertilization_N', 'fertilization_P', 'fertilization_other', 'grazed', 'fungicide', 'harvest', 'herbicide', 'irrigation', 'light', 'pesticide', 'planting density (plants / m2)', 'row spacing', 'seeding', 'tillage' ] %>
+  </p>
+  <p>
+    <%= f.label :level %><br />
+    <%= f.text_field :level %>
+  </p>
+  <p>
+    <%= f.label :units %><br />
+    <%= f.text_field :units %>
+  </p>
+  <p>
+    <%= f.label :notes %><br />
+    <%= f.text_area :notes %>
+  </p>
+  <p>
+    <%= f.label :user %><br />
+    <%=h current_user.default_select %>
+  </p>
+  <p>
+    <%= f.hidden_field :citation_id, :value => session["citation"] %>
+    <%= hidden_field_tag :treatment, @treatment %>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', managements_path %>

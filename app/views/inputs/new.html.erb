@@ -1,0 +1,67 @@
+<h1>New input</h1>
+
+<% form_for(@input) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :site %><br />
+    <%= f.select :site_id, Site.all.collect { |p| [ p.select_default, p.id ] }, {} %>
+  </p>
+  <p>
+    <%= f.label :format %><br />
+    <%= f.select :format_id, Format.all.collect { |p| [ p.select_default, p.id ] }, {} -%>
+  </p>
+<a style="text-decoration: none" href="#" onclick="showHide('new_formats');$('input_format_id').disabled = !$('input_format_id').disabled" id="show_new_formats">[+] New Format</a>
+<br/>
+<br/>
+
+<div id="new_formats" class="hidden notvisible">
+<h1>New format</h1>
+
+<% f.fields_for :format do |ff| %>
+
+  <p>
+    <%= ff.label :mime_type %><br />
+    <%= ff.select :mime_type, Mimetype.all(:order => "id desc").collect(&:type_string), {:include_blank => true } %><br />
+    <%= ff.label :new_mime_type %>: <%= text_field_tag :mime_type_other %>
+  </p>
+  <p>
+    <%= ff.label :dataformat %><br />
+    <%= ff.text_area :dataformat %>
+  </p>
+  <p>
+    <%= ff.label :notes %><br />
+    <%= ff.text_area :notes %>
+  </p>
+<% end %>
+</div>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :filepath %><br />
+    <%= f.text_field :filepath %>
+  </p>
+  <p>
+    <%= f.label :start_date %><br />
+    <%= f.datetime_select :start_date, { :start_year => 1900, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
+  </p>
+  <p>
+    <%= f.label :end_date %><br />
+    <%= f.datetime_select :end_date, { :start_year => 1900, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
+  </p>
+  <p>
+    <%= f.label :raw %><br />
+    <%= f.select :raw_id, Raw.all.collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } -%>
+  </p>
+  <p>
+    <%= f.label :notes %><br />
+    <%= f.text_area :notes %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', inputs_path %>

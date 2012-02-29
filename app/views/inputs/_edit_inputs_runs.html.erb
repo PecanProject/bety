@@ -1,0 +1,34 @@
+<table width="100%">
+  <tr>
+    <td width="50%"><h3>Existing Runs Relationships</h3></td>
+    <td width="50%"><h3>Add Run Relationship(s)</h3></td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Model</th>
+          <th>Site</th>
+        </tr>
+        <% @input.runs.each do |c| %>
+        <tr>
+          <td><%= link_to_remote "X", :url => { :action => :rem_inputs_runs, :input_id => @input.id, :run_id => c.id }, :confirm => 'Are you sure?'%></td>
+          <td><%= link_to "edit", edit_run_path(c.id) %></td>
+          <td><%= link_to_if c.model, c.model, c.model %></td>
+          <td><%= link_to_if c.site, c.site, c.site %></td>
+        </tr>
+        <% end %>
+      </table>
+    </td>
+    <td>
+      <% form_remote_tag :url => { :controller => :inputs, :action => 'edit_inputs_runs'} do |f| %>
+      <%= collection_select( :run, :id, Run.all.reject { |r| @input.runs.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
+      <%= hidden_field_tag 'input_id', @input.id %>
+      <br /><br />
+      <%= submit_tag "Select" %>
+      <% end %>
+    </td>
+  </tr>
+</table>

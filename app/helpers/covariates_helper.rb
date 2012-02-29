@@ -1,0 +1,2 @@
+module CovariatesHelper
+end

@@ -1,0 +1,55 @@
+<table>
+  <tr>
+    <th><%= link_to "Trait", "#", {:onclick => "order('variables.name')"} -%><span id="variables.name"></span></th>
+    <th><%= link_to "Species", "#", {:onclick => "order('species.genus')"} -%><span id="species.genus"></span></th>
+    <th><%= link_to "Mean", "#", {:onclick => "order('traits.mean')"} -%><span id="traits.mean"></span></th>
+    <th><%= link_to "N", "#", {:onclick => "order('traits.n')"} -%><span id="traits.n"></span></th>
+    <th><%= link_to "Stat", "#", {:onclick => "order('traits.stat')"} -%><span id="traits.stat"></span></th>
+    <th><%= link_to "Statname", "#", {:onclick => "order('traits.statname')"} -%><span id="traits.statname"></span></th>
+    <th><%= link_to "Citation", "#", {:onclick => "order('citations.author')"} -%><span id="citations.author"></span></th>
+    <th><%= link_to "Site", "#", {:onclick => "order('sites.sitename')"} -%><span id="sites.sitename"></span></th>
+    <th><%= link_to "Treatment", "#", {:onclick => "order('treatment.name')"} -%><span id="treatment.name"></span></th>
+  </tr>
+
+<% @traits.each do |trait| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and trait.id == @search.to_i%>>
+    <td><%= link_to_if trait.variable, trait.variable, trait.variable %></td>
+    <td><%= link_to_if trait.specie, trait.specie, trait.specie %></td>
+    <td><%=h trait.mean %></td>
+    <td><%=h trait.n %></td>
+    <td><%=h trait.stat %></td>
+    <td><%=h trait.statname %></td>
+    <td><%= link_to_if trait.citation, trait.citation, trait.citation %></td>
+    <td><%= link_to_if trait.site, trait.site, trait.site %></td>
+    <td><%= link_to_if trait.treatment, trait.treatment, trait.treatment %></td>
+    <% if ( current_user.access_level < trait.access_level ) or ( trait.user_id == current_user.id ) or ( current_user.page_access_level <= 2 ) %>
+    <td><%= select_tag 'checked-'+trait.id.to_s, options_for_select([["checked;failed QA/QC",-1],["unchecked",0],["checked; passed QA/QC",1]],trait.checked) -%><span id='checked_notify-<%= trait.id %>'></span></td>
+    <% end %>
+    <% if ( current_user.access_level < trait.access_level ) or ( current_user.access_level = trait.access_level and trait.checked ) or ( trait.user_id == current_user.id ) or ( current_user.page_access_level <= 2 )%>
+      <td>Access Level<%=  select_tag "access_level-" + trait.id.to_s,options_for_select([["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]],trait.access_level) -%></td>
+    <% end%>
+    <td><%= link_to 'Show', trait %></td>
+    <td><%= link_to 'Edit', edit_trait_path(trait) %></td>
+    <% if current_user.page_access_level <= 2 or trait.user_id == current_user.id %>
+    <td><%= link_to 'Destroy', trait, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% end %>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @traits, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+
+<br />
+
+<% @traits.each do |trait| %>
+   <%= observe_field("access_level-" + trait.id.to_s,
+                  :frequency => 1,
+                  :with => "'id=' + #{trait.id} + '&trait[access_level]=' + Form.Element.getValue('access_level-#{trait.id.to_s}')",
+                  :url => { :action => :access_level }) %>
+   <%= observe_field("checked-" + trait.id.to_s,
+                  :frequency => 1,
+                  :with => "'id=' + #{trait.id} + '&trait[checked]=' + Form.Element.getValue('checked-#{trait.id.to_s}')",
+                  :url => { :action => :checked }) %>
+<% end %>

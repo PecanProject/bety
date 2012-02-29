@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  trait_id: 1
+  variable_id: 1
+  level: 9.99
+
+two:
+  trait_id: 1
+  variable_id: 1
+  level: 9.99

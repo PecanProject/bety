@@ -1,0 +1,23 @@
+<p>
+  <b>Model name:</b>
+  <%=h @model.model_name %>
+</p>
+
+<p>
+  <b>Model path:</b>
+  <%=h @model.model_path %>
+</p>
+
+<p>
+  <b>Revision:</b>
+  <%=h @model.revision %>
+</p>
+
+<p>
+  <b>Parent:</b>
+  <%= link_to_if @model.parent, @model.parent, @model.parent %>
+</p>
+
+
+<%= link_to 'Edit', edit_model_path(@model) %> |
+<%= link_to 'Back', models_path %>

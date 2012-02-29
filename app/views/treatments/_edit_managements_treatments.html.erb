@@ -1,0 +1,40 @@
+<table width="100%">
+  <tr>
+    <% if !@management.nil? %>
+    <td width="50%"><h3>Existing Managements Relationships</h3></td>
+    <td width="50%"><h3>Add Management Relationship(s)</h3></td>
+    <% else %>
+    <td width="50%"><h3>Managements</h3></td>
+    <% end %>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Date</th>
+          <th>Date LOC</th>
+          <th>Type</th>
+        </tr>
+        <% @treatment.managements.each do |c| %>
+        <tr>
+          <td><%= link_to_remote "X", :url => { :action => :rem_managements_treatments, :id => @treatment.id, :management => c.id }, :confirm => 'Are you sure?'%></td>
+          <td><%= link_to "edit", edit_management_path(c.management_id) %></td>
+          <td><%= c.date %></td>
+          <td><%= c.dateloc %></td>
+          <td><%= c.type %></td>
+        </tr>
+        <% end %>
+      </table>
+    </td>
+    <td>
+      <% form_remote_tag :url => { :controller => :treatments, :action => 'edit_managements_treatments'} do |f| %>
+      <%= collection_select( :management, :id, Management.all.reject { |r| @treatment.managements.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
+      <%= hidden_field_tag 'id', @treatment.id %>
+      <br /><br />
+      <%= submit_tag "Select" %>
+      <% end %>
+    </td>
+  </tr>
+</table>

@@ -1,0 +1,24 @@
+<table>
+  <tr>
+    <th><%= link_to "Name", "#", {:onclick => "order('variables.name')"} -%><span id="variables.name"></span></th>
+    <th><%= link_to "Description", "#", {:onclick => "order('variables.description')"} -%><span id="variables.description"></span></th>
+    <th><%= link_to "Units", "#", {:onclick => "order('variables.units')"} -%><span id="variables.units"></span></th>
+    <th><%= link_to "Notes", "#", {:onclick => "order('variables.notes')"} -%><span id="variables.notes"></span></th>
+  </tr>
+
+<% @variables.each do |variable| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and variable.id == @search.to_i%>>
+    <td><%=h variable.name %></td>
+    <td><%=h variable.description %></td>
+    <td><%=h variable.units %></td>
+    <td><%=h variable.notes %></td>
+    <td><%= link_to 'Show', variable %></td>
+    <td><%= link_to 'Edit', edit_variable_path(variable) %></td>
+    <td><%= link_to 'Destroy', variable, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @variables, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>

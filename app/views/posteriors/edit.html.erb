@@ -1,0 +1,35 @@
+
+<a style="text-decoration: none" href="#" onclick="showHide('edit_posteriors_runs')" id="show_edit_posteriors_runs">[+] View Related Runs</a>
+<br/>
+<br/>
+<div style="display:none" id="edit_posteriors_runs" class="hidden">
+  <%= render 'edit_posteriors_runs' %>
+</div>
+<hr />
+<br />
+<br />
+
+<h1>Editing posterior</h1>
+
+<% form_for(@posterior) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :pft %><br />
+    <%= f.select :pft_id, Pft.all.collect { |p| [ p.select_default, p.id] } %>
+  </p>
+  <p>
+    <%= f.label :filename %><br />
+    <%= f.text_field :filename %>
+  </p>
+  <p>
+    <%= f.label :parent %><br />
+    <%= f.select :parent_id, Posterior.all.collect{ |p| [ p.select_default, p.id] }, {:include_blank => true } %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @posterior %> |
+<%= link_to 'Back', posteriors_path %>

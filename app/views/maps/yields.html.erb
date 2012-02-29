@@ -1,0 +1,33 @@
+
+<h1>Listing yields for <%= @title %></h1>
+
+<table>
+  <tr>
+    <th>Species</th>
+    <th>Cultivar</th>
+    <th>Mean</th>
+    <th>N</th>
+    <th>Stat Name</th>
+    <th>Stat</th>
+    <th>Citation</th>
+    <th>Site</th>
+    <th>Treatment</th>
+  </tr>
+
+<% @yields.each do |y| %>
+  <tr>
+    <td><%= link_to_if y.specie, y.specie, y.specie %></td>
+    <td><%= link_to_if y.cultivar, y.cultivar, y.cultivar %></td>
+    <td><%=h y.mean %></td>
+    <td><%=h y.n %></td>
+    <td><%=h y.statname %></td>
+    <td><%=h y.stat %></td>
+    <td><%= link_to_if y.citation, y.citation, y.citation %></td>
+    <td><%= link_to_if y.site, y.site, y.site %></td>
+    <td><%= link_to_if y.treatment, y.treatment, y.treatment %></td>
+  </tr>
+<% end %>
+</table>
+<%= will_paginate @yields %>
+<br />
+<%= link_to 'CSV Format', sanitize("#{url_for(:action => 'yields')}.csv?site=#{params[:site]}") %>

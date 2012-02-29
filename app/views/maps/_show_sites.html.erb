@@ -1,0 +1,31 @@
+
+<table>
+  <tr>
+    <th>City</th>
+    <th>State</th>
+    <th>Country</th>
+    <th>Latitude</th>
+    <th>Longitude</th>
+    <th>Mean Annual Temperature (°C)</th>
+    <th>Mean Annual Precipitation (mm/yr)</th>
+    <th>Elevation (m)</th>
+  </tr>
+<% if @sites
+      @sites.each do |site| %>
+  <tr>
+    <td><%=h site.city  -%></td>
+    <td><%=h site.state -%></td>
+    <td><%=h site.country -%></td>
+    <td><%=h site.lat -%></td>
+    <td><%=h site.lon -%></td>
+    <td><%=h site.mat -%></td>
+    <td><%=h site.map -%></td>
+    <td><%=h site.masl -%></td>
+  </tr>
+    <% end %>
+  <% else %>
+  <tr>
+    <td colspan='9'>Sorry no sites found near that location</td>
+  </tr>
+<% end %>
+</table>

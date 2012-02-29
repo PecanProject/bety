@@ -1,0 +1,63 @@
+<table width="100%">
+  <tr>
+    <td width="50%"><h3>Existing Managements Relationships</h3></td>
+    <td width="50%"><h3>Add Management Relationship(s)</h3></td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Date</th>
+          <th>Date LOC</th>
+          <th>Type</th>
+        </tr>
+        <% @treatment.managements.each do |c| %>
+        <tr>
+          <td><%= link_to "X", { :controller => :managements, :action => :rem_managements_treatments, :id => c.id, :treatment => @treatment }, :confirm => 'Are you sure?'%></td>
+          <td><%= link_to "edit", edit_management_path(c.management_id) %></td>
+          <td><%= c.date %></td>
+          <td><%= c.dateloc %></td>
+          <td><%= c.type %></td>
+        </tr>
+        <% end %>
+      </table>
+    </td>
+    <td>
+      <% form_for(@treatment) do |f| %>
+      <%= collection_select( :management, :id, @treatment.managements.length > 0 ? Management.all(:conditions => [ "id NOT IN (?) ", @treatment.managements.collect(&:id)]) : Management.all(), :id, :date_type_level, {}, { :multiple => true } )%>
+      <br /><br />
+      <%= submit_tag "Select" %>
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+<hr>
+
+
+<h1>Editing treatment</h1>
+
+<% form_for(@treatment) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :definition %><br />
+    <%= f.text_field :definition %>
+  </p>
+  <p>
+    <%= f.label :control %><br />
+    <%= f.select :control, [["True",1],["False",0]], { :include_blank => true } %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @treatment %> |
+<%= link_to 'Back', treatments_path %>

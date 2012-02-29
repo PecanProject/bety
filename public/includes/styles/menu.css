@@ -1,0 +1,381 @@
+/** IE bugs: a:link, a:visited, a:hover need to be styled as well; does not display separator... workaround? */
+
+/** customize colors here */
+
+a.mainlevel-suckerfish-horizontal, a.mainlevel_active-suckerfish-horizontal, a.mainlevel_current-suckerfish-horizontal,
+
+a.mainlevel-suckerfish-horizontal:link, a.mainlevel_active-suckerfish-horizontal:link, a.mainlevel_current-suckerfish-horizontal:link,
+
+a.mainlevel-suckerfish-horizontal:visited, a.mainlevel_active-suckerfish-horizontal:visited, a.mainlevel_current-suckerfish-horizontal:visited {
+
+	background-color: #00adef;
+
+	color: white;
+
+        border-bottom: 1px solid #0083b7;
+
+        border-top: 1px solid #81D5F7;
+
+       
+
+}
+
+
+
+a.mainlevel-suckerfish-horizontal:hover, a.mainlevel_active-suckerfish-horizontal:hover, a.mainlevel_current-suckerfish-horizontal:hover {
+
+	background-color: #0aac0a;
+
+	color: #ffffff;
+
+	border-bottom: 1px solid #0083b7;
+
+        border-top: 1px solid #81D5F7;
+
+}
+
+
+
+a.sublevel-suckerfish-horizontal, a.sublevel_active-suckerfish-horizontal, a.sublevel_current-suckerfish-horizontal,
+
+a.sublevel-suckerfish-horizontal:link, a.sublevel_active-suckerfish-horizontal:link, a.sublevel_current-suckerfish-horizontal:link,
+
+a.sublevel-suckerfish-horizontal:visited, a.sublevel_active-suckerfish-horizontal:visited, a.sublevel_current-suckerfish-horizontal:visited {
+
+	background-color: #0aac0a;
+
+	color: #ffffff;
+
+	border-bottom: 1px solid #ffffff;
+
+}
+
+
+
+a.sublevel-suckerfish-horizontal:hover, a.sublevel_active-suckerfish-horizontal:hover, a.sublevel_current-suckerfish-horizontal:hover {
+
+	background-color: #DCD03F;
+
+	color: #fff;
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal ul ul a.sublevel-suckerfish-horizontal, ul.mainlevel-suckerfish-horizontal ul ul a.sublevel_active-suckerfish-horizontal, ul.mainlevel-suckerfish-horizontal ul ul a.sublevel_current-suckerfish-horizontal,
+
+ul.mainlevel-suckerfish-horizontal ul ul a.sublevel-suckerfish-horizontal:link, ul.mainlevel-suckerfish-horizontal ul ul a.sublevel_active-suckerfish-horizontal:link, ul.mainlevel-suckerfish-horizontal ul ul a.sublevel_current-suckerfish-horizontal:link,
+
+ul.mainlevel-suckerfish-horizontal ul ul a.sublevel-suckerfish-horizontal:visited, ul.mainlevel-suckerfish-horizontal ul ul a.sublevel_active-suckerfish-horizontal:visited, ul.mainlevel-suckerfish-horizontal ul ul a.sublevel_current-suckerfish-horizontal:visited {
+
+	background-color: #f5f5f5;
+
+	color: 454545;
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal ul ul a.sublevel-suckerfish-horizontal:hover, ul.mainlevel-suckerfish-horizontal ul ul a.sublevel_active-suckerfish-horizontal:hover, ul.mainlevel-suckerfish-horizontal ul ul a.sublevel_current-suckerfish-horizontal:hover {
+
+	background-color: #E0E0E0;
+
+	color: #117bc0;
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal ul .expanded {
+
+	background-color: #0aac0a;
+
+        font-size:10px;
+
+	color: #fff;
+
+        width:180px;
+
+       	height: 22px;
+
+	line-height: 22px;
+
+        font-size:9px;
+
+        
+
+}
+
+
+
+
+
+/** customize style / layout here */
+
+
+
+a.mainlevel-suckerfish-horizontal, a.mainlevel_active-suckerfish-horizontal, a.mainlevel_current-suckerfish-horizontal, span.mainlevel-suckerfish-horizontal,
+
+a.mainlevel-suckerfish-horizontal:link, a.mainlevel_active-suckerfish-horizontal:link, a.mainlevel_current-suckerfish-horizontal:link,
+
+a.mainlevel-suckerfish-horizontal:visited, a.mainlevel_active-suckerfish-horizontal:visited, a.mainlevel_current-suckerfish-horizontal:visited,
+
+a.mainlevel-suckerfish-horizontal:hover, a.mainlevel_active-suckerfish-horizontal:hover, a.mainlevel_current-suckerfish-horizontal:hover,
+
+a.sublevel-suckerfish-horizontal, a.sublevel_active-suckerfish-horizontal, a.sublevel_current-suckerfish-horizontal, span.sublevel-suckerfish-horizontal,
+
+a.sublevel-suckerfish-horizontal:link, a.sublevel_active-suckerfish-horizontal:link, a.sublevel_current-suckerfish-horizontal:link,
+
+a.sublevel-suckerfish-horizontal:visited, a.sublevel_active-suckerfish-horizontal:visited, a.sublevel_current-suckerfish-horizontal:visited,
+
+a.sublevel-suckerfish-horizontal:hover, a.sublevel_active-suckerfish-horizontal:hover, a.sublevel_current-suckerfish-horizontal:hover{
+
+	font-weight: bold;
+
+	font-size: 100%;
+
+	text-align: left;
+
+	text-decoration: none;
+
+        text-transform:uppercase;
+
+	display: block;
+
+      	padding: 0em 23px 0.2em 23px;	/* top, right, bottom, left */
+
+	height: 22px;
+
+	line-height: 22px;
+
+	
+
+}
+
+
+
+a.mainlevel-suckerfish-horizontal, a.mainlevel_active-suckerfish-horizontal, a.mainlevel_current-suckerfish-horizontal, span.mainlevel-suckerfish-horizontal {
+
+	float: left;
+
+	width: auto;
+
+}
+
+
+
+a.sublevel-suckerfish-horizontal, a.sublevel_active-suckerfish-horizontal, a.sublevel_current-suckerfish-horizontal, span.sublevel-suckerfish-horizontal{
+
+	margin:0px;
+
+	font-size: 90%;
+
+        border-top: 0px solid white;
+
+        background-color: #0aac0a;
+
+	color: #fff;
+
+        width:180px;
+
+        padding: 0em 23px 0.2em 23px;	/* top, right, bottom, left */
+
+       	height: 22px;
+
+	line-height: 22px;
+
+}
+
+
+
+#active_menu-suckerfish-horizontal,
+
+a.mainlevel_active-suckerfish-horizontal, a.mainlevel_current-suckerfish-horizontal,
+
+a.mainlevel_active-suckerfish-horizontal:link, a.mainlevel_current-suckerfish-horizontal:link,
+
+a.mainlevel_active-suckerfish-horizontal:visited, a.mainlevel_current-suckerfish-horizontal:visited,
+
+a.mainlevel_active-suckerfish-horizontal:hover, a.mainlevel_current-suckerfish-horizontal:hover,
+
+a.sublevel_active-suckerfish-horizontal, a.sublevel_current-suckerfish-horizontal,
+
+a.sublevel_active-suckerfish-horizontal:link, a.sublevel_current-suckerfish-horizontal:link,
+
+a.sublevel_active-suckerfish-horizontal:visited, a.sublevel_current-suckerfish-horizontal:visited,
+
+a.sublevel_active-suckerfish-horizontal:hover, a.sublevel_current-suckerfish-horizontal:hover {
+
+	font-weight: bold;
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal, .mainlevel-suckerfish-horizontal ul {
+
+	padding: 0;
+
+	margin-left:31.5px;
+
+        margin-top:-12px;
+
+	list-style: none;
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal {
+
+	width: auto;
+
+	z-index: 101;
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal ul {
+
+	z-index: 102;
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal ul ul {
+
+	z-index: 103;
+
+}
+
+
+
+
+
+ul.mainlevel-suckerfish-horizontal li {
+
+	padding: 0;
+
+	margin: 0;
+
+	background: none;
+
+	list-style: none;
+
+	float: left;
+
+	position: relative;
+
+	margin-right: 1px;
+
+        border-left: 1px solid #0083b7;
+
+	
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal li li {
+
+	position: relative;
+
+	width: 13em;
+
+	margin: 0;
+
+	
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal li li ul {
+
+	left: 10em;
+
+	top: 0;
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal ul {
+
+	display: none;
+
+	position: absolute; 
+
+	top: 1.65em;
+
+	left: 0;
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal li > ul {
+
+	top: 2.50em;
+
+	left: 0;
+
+	
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal li:hover ul,
+
+ul.mainlevel-suckerfish-horizontal li.hover ul {
+
+	display: block;
+
+}
+
+
+
+
+
+ul.mainlevel-suckerfish-horizontal li:hover ul ul,
+
+ul.mainlevel-suckerfish-horizontal li.hover ul ul {
+
+	display: none;
+
+}
+
+
+
+ul.mainlevel-suckerfish-horizontal li:hover ul li:hover ul,
+
+ul.mainlevel-suckerfish-horizontal li.hover ul li.hover ul {
+
+	display: block;
+
+}
+
+
+
+
+
+ul.mainlevel-suckerfish-horizontal, ul.mainlevel-suckerfish-horizontal li li {
+
+	clear: left;
+
+}
+
+
+
+/** separator */
+
+span.mainlevel-suckerfish-horizontal, span.sublevel-suckerfish-horizontal {
+
+	border-width: 1px;
+
+	padding: 5px;
+
+}

@@ -1,0 +1,26 @@
+
+<hr width="50%">
+
+<p>
+  <b>Name:</b>
+  <%=h @treatment.name %>
+</p>
+
+<p>
+  <b>Def:</b>
+  <%=h @treatment.definition %>
+</p>
+
+<p>
+  <b>Control:</b>
+  <%=h @treatment.control ? "Yes" : "No"  %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @treatment.user  %>
+</p>
+
+
+<%= link_to 'Edit', edit_treatment_path(@treatment) %> |
+<%= link_to 'Back', treatments_path %>

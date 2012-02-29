@@ -1,0 +1,31 @@
+<h1>Editing cultivar <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node31.html?min" }) %></h1>
+
+<% form_for(@cultivar) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :previous_id %><br />
+    <%= f.text_field :previous_id %>
+  </p>
+
+  <%= render :partial => "species/species_search" %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :ecotype %><br />
+    <%= f.text_field :ecotype %>
+  </p>
+  <p>
+    <%= f.label :notes %><br />
+    <%= f.text_area :notes %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @cultivar %> |
+<%= link_to 'Back', cultivars_path %>

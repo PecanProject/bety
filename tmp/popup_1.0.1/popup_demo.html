@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Popup Demo</title>
+  <script src="prototype.js" type="text/javascript"></script>
+  <script src="effects.js" type="text/javascript"></script>
+  <script src="dragdrop.js" type="text/javascript"></script>
+  <script src="popup.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="popup.css" type="text/css" />
+</head>
+
+<body>
+  <h1>DOM Popup Demo</h1>
+
+  <p>This demo is (by motivation) functional rather than beautiful -- use CSS
+  to tart it up.</p>
+
+  <ol>
+    <li>
+      <p>A small <span id="popup_link_1" class="popup_link">auto-close
+        tooltip</span> style popup.</p>
+    </li>
+
+    <li>
+      <p>A <span id="popup_link_2" class="popup_link">draggable click-to-close
+        popup</span>.</p>
+    </li>
+
+    <li>
+      <p>A second <span id="popup_link_3" class="popup_link">draggable
+        click-to-close popup</span> to demonstrate overlapping popus.</p>
+    </li>
+
+    <li>
+      <p>An image preview <a id="popup_link_4" href="#">click-to-open modal popup</a>.
+      </p>
+    </li>
+
+    <li>
+      <p>A <a id="popup_link_6" href="#">Dropdown menu &#9662;</a>.</p>
+    </li>
+
+    <li>
+      <p>Stacked <a id="popup_link_8" href="#">modal message boxes</a>.</p>
+    </li>
+
+  </ol>
+
+  <p>DOM Popup webpage:
+  <a href="http://www.methods.co.nz/popup/popup.html">http://www.methods.co.nz/popup/popup.html</a>
+  </p>
+
+  <div id="popup_1" class="popup">
+    <h3>Lorum Ipsum</h3>
+    <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
+    consectetur, adipisci velit...</p>
+    <p>This popup auto-opens and auto-closes.</p>
+  </div>
+  <script type="text/javascript">
+    //<![CDATA[
+    new Popup('popup_1','popup_link_1')
+    //]]>
+  </script>
+
+  <div id="popup_2" class="popup popup_draghandle">
+    <h3>Lorum Ipsum</h3>
+    <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
+    consectetur, adipisci velit...</p>
+    <p>This popup auto-opens but is manually closed.</p>
+    <p>Drag anywhere on this popup to move it.</p>
+    <p><a class="popup_closebox" href="#">Close box</a></p>
+  </div>
+  <script type="text/javascript">
+    //<![CDATA[
+    new Popup('popup_2','popup_link_2')
+    //]]>
+  </script>
+
+  <div id="popup_3" class="popup">
+    <h3>Lorum Ipsum</h3>
+    <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
+    consectetur, adipisci velit...</p>
+    <p>This popup auto-opens but is manually closed.</p>
+    <p>Use the drag handle element to drag it.</p>
+    <p>You can have nested <span id="popup_link_5" class="popup_link">popups</span>.</p>
+    <p><a class="popup_draghandle" href="#">Drag handle</a></p>
+    <p><a class="popup_closebox" href="#">Close box</a></p>
+  </div>
+  <script type="text/javascript">
+    //<![CDATA[
+    new Popup('popup_3','popup_link_3')
+    //]]>
+  </script>
+
+  <div id="popup_4" class="popup">
+    <img class="popup_closebox" src="image.jpg" alt="Image" />
+    <p><a class="popup_closebox" href="#">Close</a> (clicking the image also closes)</p>
+  </div>
+  <script type="text/javascript">
+    //<![CDATA[
+    new Popup('popup_4','popup_link_4',{modal:true,duration:1})
+    //]]>
+  </script>
+
+  <div id="popup_5" class="popup">
+    <h3>Lorum Ipsum</h3>
+    <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
+    consectetur, adipisci velit...</p>
+    <p>This popup auto-opens and auto-closes.</p>
+  </div>
+  <script type="text/javascript">
+    //<![CDATA[
+    new Popup('popup_5','popup_link_5')
+    //]]>
+  </script>
+
+  <div id="popup_6" class="popup">
+    <p><a href="http://www.prototypejs.org/">Prototype website</a></p>
+    <p><a href="http://script.aculo.us/">Script.aculo.us website</a></p>
+    <p><a id="popup_link_7" href="#">Modal image popup</a></p>
+  </div>
+  <script type="text/javascript">
+    //<![CDATA[
+    new Popup('popup_6','popup_link_6',{position:'below',trigger:'click'})
+    //]]>
+  </script>
+
+  <div id="popup_7" class="popup">
+    <img class="popup_closebox" src="image.jpg" alt="Image" />
+    <p><a class="popup_closebox" href="#">Close</a> (clicking the image also closes)</p>
+  </div>
+  <script type="text/javascript">
+    //<![CDATA[
+    new Popup('popup_7','popup_link_7',{modal:true,duration:1})
+    //]]>
+  </script>
+
+  <div id="popup_8" class="popup" style="width:400px">
+    <h3>Message</h3>
+    <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
+    consectetur, adipisci velit...</p>
+    <p>Modal popups can be stacked,
+    <span id="popup_link_9" class="popup_link">click here</span>
+    to open another modal popup.
+    </p>
+    <form action="">
+        <input class="popup_closebox" type="button" value="OK" />
+    </form>
+  </div>
+  <script type="text/javascript">
+    //<![CDATA[
+    new Popup('popup_8','popup_link_8',{modal:true,position:'20%,15%'})
+    //]]>
+  </script>
+
+  <div id="popup_9" class="popup" style="width:400px">
+    <h3>Second Message</h3>
+    <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
+    consectetur, adipisci velit...</p>
+    <form action="">
+        <input class="popup_closebox" type="button" value="OK" />
+    </form>
+  </div>
+  <script type="text/javascript">
+    //<![CDATA[
+    new Popup('popup_9','popup_link_9',{modal:true,position:'25%,20%'})
+    //]]>
+  </script>
+
+</body>
+</html>

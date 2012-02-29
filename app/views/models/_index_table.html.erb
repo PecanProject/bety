@@ -1,0 +1,25 @@
+
+<table>
+  <tr>
+    <th><%= link_to "Model name", "#", {:onclick => "order('models.model_name')"} -%><span id="models.model_name"></span></th>
+    <th><%= link_to "Model path", "#", {:onclick => "order('models.model_path')"} -%><span id="models.model_path"></span></th>
+    <th><%= link_to "Revision", "#", {:onclick => "order('models.revision')"} -%><span id="models.revision"></span></th>
+    <th>Parent</th>
+  </tr>
+
+<% @models.each do |model| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and model.id == @search.to_i%>>
+    <td><%=h model.model_name %></td>
+    <td><%=h model.model_path %></td>
+    <td><%=h model.revision %></td>
+    <td><%= link_to_if model.parent, model.parent, model.parent %></td>
+    <td><%= link_to 'Show', model %></td>
+    <td><%= link_to 'Edit', edit_model_path(model) %></td>
+    <td><%= link_to 'Destroy', model, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @models, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>

@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Adding a Site</TITLE>
+<META NAME="description" CONTENT="Adding a Site">
+<META NAME="keywords" CONTENT="dbdocumentation_data_entry">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="dbdocumentation_data_entry.css">
+
+<LINK REL="next" HREF="node18.html">
+<LINK REL="previous" HREF="node15.html">
+<LINK REL="up" HREF="node14.html">
+<LINK REL="next" HREF="node17.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html254"
+  HREF="node17.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/bety/images/next.png"></A> 
+<A NAME="tex2html252"
+  HREF="node14.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/bety/images/up.png"></A> 
+<A NAME="tex2html246"
+  HREF="node15.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/bety/images/prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html255"
+  HREF="node17.html">Site Location</A>
+<B> Up:</B> <A NAME="tex2html253"
+  HREF="node14.html">BETYdb: Entering new data</A>
+<B> Previous:</B> <A NAME="tex2html247"
+  HREF="node15.html">Adding a Citation</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00072000000000000000">
+Adding a Site</A>
+</H2>
+ Each experiment is conducted at a unique site.
+ In the context of BETY, the term 'site' refers to a specific location and it is common for many sites to be located within the same experimental station.
+ By creating distinct records for multiple sites, it is possible to differentiate among independent studies.  
+
+<P>
+
+<OL>
+<LI>Before adding a site, search to make sure that site is not already entered in database.
+</LI>
+<LI>search for the site given latitude and longitude
+  
+<UL>
+<LI>if an institution name or city and state are given, try to locate the site on Google Maps
+</LI>
+<LI>if a site name is given, try to locate the site using a combination of Google and Google Maps
+</LI>
+<LI>if latitude and longitude are given in the paper, search by lat and lon, this will return all sites within <SPAN CLASS="MATH"><IMG
+ WIDTH="29" HEIGHT="35" ALIGN="MIDDLE" BORDER="0"
+ SRC="/bety/images/img17.png"
+ ALT="$ \pm1$"></SPAN> degree lat and long.
+</LI>
+<LI>if an existing site is plausibly the same site as the one mentioned in the paper, it will be necessary to check other papers linked to the existing site. 
+    
+<UL>
+<LI>use the same site if the previous study uses the <SPAN  CLASS="textit">exact same location</SPAN> and experimental setup. 
+</LI>
+<LI>create a new site if the study was conducted in a different fields (i.e., not the exact same location).
+</LI>
+<LI>create a new site if one study was conducted in a greenhouse and another in a field.
+</LI>
+<LI>do not use distinct sites for seed source in a common garden experiment (see 'When not to enter a new site' below) 
+    
+</LI>
+</UL>
+</LI>
+</UL> 
+</LI>
+<LI>to use an existing site, click 'edit' for the site, and then select current citation under 'add citation relatinships' 
+</LI>
+<LI>if site does not exist, add a new site.
+</LI>
+</OL>
+
+<P>
+[inline]<SPAN  CLASS="textbf">When not to enter a new site:</SPAN> When plants (or seeds) are collected from multiple locations and then grown in the same location, this is called a 'common garden experiment'. In this case, the location of the study is included as site information. Information about the seed source can be entered as a distinct cultivar.
+
+<P>
+<DL>
+<DT><STRONG>Site name*</STRONG></DT>
+<DD>Site identifier, sufficient to uniquely identify the site within the paper
+</DD>
+<DT><STRONG>City</STRONG></DT>
+<DD>Nearest city
+</DD>
+<DT><STRONG>State</STRONG></DT>
+<DD>State, if site is in US
+</DD>
+<DT><STRONG>Country*</STRONG></DT>
+<DD>
+</DD>
+<DT><STRONG>Longitude*</STRONG></DT>
+<DD>
+</DD>
+<DT><STRONG>Latitude*</STRONG></DT>
+<DD>Latitude and Longitude must be in decimal form. To convert minute-second to decimal degrees, see the equation in tab:traitconversion. 
+</DD>
+<DT><STRONG>Greenhouse*</STRONG></DT>
+<DD>set Greenhouse = TRUE if plants were grown in a greenhouse, growth chamber, or pots. If a 'warming chamber' or 'greenhouse' is used as the experimental manipulation, but is not used in the control treatments, Greenhouse = FALSE.
+</DD>
+<DT><STRONG>Soil</STRONG></DT>
+<DD>Soil class is entered as a categorical variable that describes the texture. If percent clay, sand, and silt are given, fig:soiltexture can be used to look up the class.
+</DD>
+<DT><STRONG>SOM</STRONG></DT>
+<DD>Soil organic matter (% by weight)  
+</DD>
+<DT><STRONG>MAT</STRONG></DT>
+<DD>Mean Annual Temperature (<SPAN CLASS="MATH"><IMG
+ WIDTH="12" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="/bety/images/img18.png"
+ ALT="$ ^o$"></SPAN>C)
+</DD>
+<DT><STRONG>MAP</STRONG></DT>
+<DD>Mean Annual Precipitation (mm)
+</DD>
+<DT><STRONG>MASL</STRONG></DT>
+<DD>Elevation (meters above sea level, m)   
+</DD>
+<DT><STRONG>Notes</STRONG></DT>
+<DD>site details not included above
+</DD>
+<DT><STRONG>Soilnotes</STRONG></DT>
+<DD>soil details not included above  
+</DD>
+<DT><STRONG>Rooting Zone Depth</STRONG></DT>
+<DD>Depth of rooting zones in meters      
+</DD>
+<DT><STRONG>Depth to Water Table</STRONG></DT>
+<DD>Depth to water table in meters
+</DD>
+</DL>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:soiltexture"></A><A NAME="726"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 2:</STRONG>
+http://soils.usda.gov/education/resources/lessons/texture/USDA soil classification. </CAPTION>
+<TR><TD><IMG
+  WIDTH="400" HEIGHT="419" ALIGN="BOTTOM" BORDER="0"
+ SRC="/bety/images/./soiltexture.png"
+ ALT="Image soiltexture"></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="fig:sites_new"></A><A NAME="727"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
+http://ebi-forecast.igb.uiuc.edu/bety/sites/newForm for entering a new site. </CAPTION>
+<TR><TD><IMG
+  WIDTH="400" HEIGHT="413" ALIGN="BOTTOM" BORDER="0"
+ SRC="/bety/images/./sites_new.png"
+ ALT="Image sites_new"></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html256"
+  HREF="node17.html">Site Location</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html254"
+  HREF="node17.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/bety/images/next.png"></A> 
+<A NAME="tex2html252"
+  HREF="node14.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/bety/images/up.png"></A> 
+<A NAME="tex2html246"
+  HREF="node15.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/bety/images/prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html255"
+  HREF="node17.html">Site Location</A>
+<B> Up:</B> <A NAME="tex2html253"
+  HREF="node14.html">BETYdb: Entering new data</A>
+<B> Previous:</B> <A NAME="tex2html247"
+  HREF="node15.html">Adding a Citation</A></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+David
+2011-10-07
+</ADDRESS>
+</BODY>
+</HTML>

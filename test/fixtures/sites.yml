@@ -1,0 +1,41 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  citation_id: 1
+  usgsmuid: MyString
+  city: MyString
+  state: MyString
+  country: MyString
+  lat: 9.99
+  lon: 9.99
+  gdd: 1
+  firstkillingfrost: 2010-03-17
+  mat: 1
+  map: 1
+  masl: 1
+  soil: MyString
+  zrt: 9.99
+  zh2o: 9.99
+  som: 9.99
+  notes: MyText
+  soilnotes: MyText
+
+two:
+  citation_id: 1
+  usgsmuid: MyString
+  city: MyString
+  state: MyString
+  country: MyString
+  lat: 9.99
+  lon: 9.99
+  gdd: 1
+  firstkillingfrost: 2010-03-17
+  mat: 1
+  map: 1
+  masl: 1
+  soil: MyString
+  zrt: 9.99
+  zh2o: 9.99
+  som: 9.99
+  notes: MyText
+  soilnotes: MyText

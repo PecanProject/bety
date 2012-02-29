@@ -1,0 +1,1187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.1.0" />
+<style type="text/css">
+/* Debug borders */
+p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
+/*
+  border: 1px solid red;
+*/
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+}
+
+strong {
+  font-weight: bold;
+}
+
+tt {
+  color: navy;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  font-family: sans-serif;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  border-bottom: 2px solid silver;
+  padding-top: 0.5em;
+}
+
+div.sectionbody {
+  font-family: serif;
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+span#author {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+span#email {
+}
+span#revision {
+  font-family: sans-serif;
+}
+
+div#footer {
+  font-family: sans-serif;
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+div#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+div#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+div#preamble,
+div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-right: 10%;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+
+div.listingblock {
+  margin-right: 0%;
+}
+div.listingblock > div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock > div.content {
+  padding-left: 2.0em;
+}
+
+div.attribution {
+  text-align: right;
+}
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 2px solid silver;
+}
+
+div.exampleblock > div.content {
+  border-left: 2px solid silver;
+  padding: 0.5em;
+}
+
+div.verseblock div.content {
+  white-space: pre;
+}
+
+div.imageblock div.content { padding-left: 0; }
+div.imageblock img { border: 1px solid silver; }
+span.image img { border-style: none; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: italic;
+}
+dd > *:first-child {
+  margin-top: 0;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.olist2 {
+  list-style-type: lower-alpha;
+}
+
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead {
+  font-family: sans-serif;
+  font-weight: bold;
+}
+tfoot {
+  font-weight: bold;
+}
+
+div.hlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+td.hlist1 {
+  vertical-align: top;
+  font-style: italic;
+  padding-right: 0.8em;
+}
+td.hlist2 {
+  vertical-align: top;
+}
+
+@media print {
+  div#footer-badges { display: none; }
+}
+
+div#toctitle {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+/* Workarounds for IE6's broken and incomplete CSS2. */
+
+div.sidebar-content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+div.sidebar-title, div.image-title {
+  font-family: sans-serif;
+  font-weight: bold;
+  margin-top: 0.0em;
+  margin-bottom: 0.5em;
+}
+
+div.listingblock div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock-content {
+  padding-left: 2.0em;
+}
+
+div.exampleblock-content {
+  border-left: 2px solid silver;
+  padding-left: 0.5em;
+}
+
+/* IE6 sets dynamically generated links as visited. */
+div#toc a:visited { color: blue; }
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){generateToc(2)}
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, October 2006. License: GPL */
+
+function getText(el) {
+  var text = "";
+  for (var i = el.firstChild; i != null; i = i.nextSibling) {
+    if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+      text += i.data;
+    else if (i.firstChild != null)
+      text += getText(i);
+  }
+  return text;
+}
+
+function TocEntry(el, text, toclevel) {
+  this.element = el;
+  this.text = text;
+  this.toclevel = toclevel;
+}
+
+function tocEntries(el, toclevels) {
+  var result = new Array;
+  var re = new RegExp('[hH]([2-'+(toclevels+1)+'])');
+  // Function that scans the DOM tree for header elements (the DOM2
+  // nodeIterator API would be a better technique but not supported by all
+  // browsers).
+  var iterate = function (el) {
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+        var mo = re.exec(i.tagName)
+        if (mo)
+          result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+        iterate(i);
+      }
+    }
+  }
+  iterate(el);
+  return result;
+}
+
+// This function does the work. toclevels = 1..4.
+function generateToc(toclevels) {
+  var toc = document.getElementById("toc");
+  var entries = tocEntries(document.getElementsByTagName("body")[0], toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "toc" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+}
+/*]]>*/
+</script>
+<title>DOM Popup Kit</title>
+</head>
+<body>
+<div id="header">
+<h1>DOM Popup Kit</h1>
+<span id="author">Stuart Rackham</span><br />
+<span id="email"><tt>&lt;<a href="mailto:srackham@methods.co.nz">srackham@methods.co.nz</a>&gt;</tt></span><br />
+<span id="revision">version 1.0.1,</span>
+March 2007
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<p>A lightweight general purpose JavaScript DOM element popup class.</p>
+<p>This single class can create tooltips, dropdown menus, modal and
+non-modal popup elements.  Popups can be draggable and have auto-close
+or click-to-close functionality. Scriptaculous effects can be applied
+when opening and closing popups. Behavior can be customized with over
+a dozen options, but the defaults are reasonable and options are often
+not required.</p>
+<p>The script is Prototype based and uses Scriptaculous effects and dragdrop
+libraries (which come by default in Ruby on Rails projects).</p>
+<p>Also included are examples showing how to use DOM Popups with Ruby on
+Rails to create rich information popups and modal forms (AJAX and
+non-AJAX).</p>
+<p>Take a look at the <a href="popup_demo.html">demo page</a> to see DOM popups
+in action.</p>
+</div>
+</div>
+<h2>Credits</h2>
+<div class="sectionbody">
+<p>DOM popup was inspired by:</p>
+<div class="hlist"><table>
+<tr>
+<td class="hlist1">
+Lightbox2
+</td>
+<td class="hlist2">
+<a href="http://www.huddletogether.com/projects/lightbox2/">http://www.huddletogether.com/projects/lightbox2/</a>
+</td>
+</tr>
+<tr>
+<td class="hlist1">
+Lightbox Gone Wild
+</td>
+<td class="hlist2">
+<a href="http://particletree.com/features/lightbox-gone-wild/">http://particletree.com/features/lightbox-gone-wild/</a>
+</td>
+</tr>
+<tr>
+<td class="hlist1">
+Tooltip
+</td>
+<td class="hlist2">
+<a href="http://blog.innerewut.de/pages/tooltip">http://blog.innerewut.de/pages/tooltip</a>
+</td>
+</tr>
+<tr>
+<td class="hlist1">
+Prototype library
+</td>
+<td class="hlist2">
+<a href="http://www.prototypejs.org/">http://www.prototypejs.org/</a>
+</td>
+</tr>
+<tr>
+<td class="hlist1">
+Scriptaculous library
+</td>
+<td class="hlist2">
+<a href="http://script.aculo.us/">http://script.aculo.us/</a>
+</td>
+</tr>
+</table></div>
+<p>DOM popup uses:</p>
+<ul>
+<li>
+<p>
+The <tt>getPageSize()</tt> function from Lightbox v2.02 by Lokesh Dhakar
+  (<a href="http://www.huddletogether.com/projects/lightbox2/">http://www.huddletogether.com/projects/lightbox2/</a>).
+</p>
+</li>
+<li>
+<p>
+Adapted the modal overlay technique used in Lightbox v2.02 by Lokesh
+  Dhakar (<a href="http://www.huddletogether.com/projects/lightbox2/">http://www.huddletogether.com/projects/lightbox2/</a>).
+</p>
+</li>
+</ul>
+<p>Finally, DOM Popups would not have been possible without the help of
+<a href="http://www.getfirebug.com/">Firebug</a> &#8212; if you program JavaScript
+and/or CSS and value your sanity you need this tool.</p>
+</div>
+<h2>Download</h2>
+<div class="sectionbody">
+<p>A tarball containing script, CSS and documentation files can be
+downloaded here <a href="http://www.methods.co.nz/popup/popup_1.0.1.tar.gz">http://www.methods.co.nz/popup/popup_1.0.1.tar.gz</a>.</p>
+</div>
+<h2>How it works</h2>
+<div class="sectionbody">
+<p>Popups are created by instantiating JavaScript <tt>Popup</tt> objects on your
+browser page.  When the nominated DOM event (normally <tt>mouseover</tt> or
+<tt>click</tt>) triggers a popup the nominated DOM element appears on the
+browser page.</p>
+<dl>
+<dt>
+popup
+</dt>
+<dd>
+<p>
+  The DOM element that pops up.
+</p>
+</dd>
+<dt>
+trigger
+</dt>
+<dd>
+<p>
+  The DOM event that activates the popup.
+</p>
+</dd>
+<dt>
+link
+</dt>
+<dd>
+<p>
+  The DOM element which triggers the popup.
+</p>
+</dd>
+<dt>
+auto-open
+</dt>
+<dd>
+<p>
+  If the trigger event is <tt>mouseover</tt> then the popup opens
+  automatically once the mouse cursor enters the link (see also the
+  <tt>enter_delay</tt> option).
+</p>
+</dd>
+<dt>
+auto-close
+</dt>
+<dd>
+<p>
+  If the popup has no closebox elements the it will close
+  automatically once the mouse cursor is outside the link and the
+  popup (see also the <tt>leave_delay</tt> option).
+</p>
+</dd>
+<dt>
+click-to-close
+</dt>
+<dd>
+<p>
+  A popup that is closed by clicking one of its closebox elements.
+</p>
+</dd>
+<dt>
+anonymous popup
+</dt>
+<dd>
+<p>
+  A popup created without a link. Anonymous popups are opened
+  programmatically.
+</p>
+</dd>
+</dl>
+<p>The <tt>Popup</tt> class is defined in the <a href="popup.js">popup.js</a> script, a basic
+examples CSS file <a href="popup.css">popup.css</a> is also included.</p>
+</div>
+<h2>Requirements</h2>
+<div class="sectionbody">
+<div class="hlist"><table>
+<tr>
+<td class="hlist1">
+<a href="http://www.prototypejs.org/">Prototype JavaScript library</a>
+</td>
+<td class="hlist2">
+<tt>prototype.js</tt>
+</td>
+</tr>
+<tr>
+<td class="hlist1">
+<a href="http://script.aculo.us/">Scriptaculous JavaScript libraries</a>
+</td>
+<td class="hlist2">
+<tt>effects.js</tt>, <tt>dragdrop.js</tt>
+</td>
+</tr>
+</table></div>
+</div>
+<h2>Browser compatibility</h2>
+<div class="sectionbody">
+<ul>
+<li>
+<p>
+So far only tested on Firefox2, IE7 and IE6.
+</p>
+</li>
+<li>
+<p>
+Don't have access to Safari.
+</p>
+</li>
+<li>
+<p>
+Doesn't behave in Konqueror 3.5.5.
+</p>
+</li>
+</ul>
+</div>
+<h2>Usage</h2>
+<div class="sectionbody">
+<p>This section describes how to use the Popup class, the <em>Using Popups
+with Rails</em> section shows how this is applied in a Rails environment.</p>
+<p>The best way to get a feel for the popup is to take a look at the demo
+page <a href="popup_demo.html">popup_demo.html</a>.</p>
+<p>To create a popup instantiate a <tt>Popup</tt> object with this JavaScript
+statement:</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>new Popup(popup, link, options);</tt></pre>
+</div></div>
+<p><tt>link</tt> and <tt>popup</tt> are DOM elements, <tt>options</tt> is an optional object
+specifying popup options. For example:</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>new Popup('popup_4','popup_link_4',{modal:true});</tt></pre>
+</div></div>
+<h3>Popup options</h3>
+<dl>
+<dt>
+modal
+</dt>
+<dd>
+<p>
+  If <tt>true</tt> underlying page control interaction is disabled. Default
+  <tt>false</tt>.
+</p>
+</dd>
+<dt>
+hidden
+</dt>
+<dd>
+<p>
+  Initial visibility of popup. Default <tt>true</tt>.
+</p>
+</dd>
+<dt>
+trigger
+</dt>
+<dd>
+<p>
+  The link event that opens the popup. Can be any DOM event type that
+  the link is capable of generating however <tt>'click'</tt> and
+  <tt>'mouseover'</tt> are the usual ones.  Defaults to <tt>'click'</tt> if
+  <em>modal</em> is true else defaults to <tt>'mouseover'</tt>.
+</p>
+</dd>
+<dt>
+position
+</dt>
+<dd>
+<p>
+  <tt>'auto'</tt>, <tt>'center'</tt>, <tt>'below'</tt> or <tt>'x,y'</tt> where <tt>x</tt> and <tt>y</tt>
+  can be either numbers (pixel units) or valid CSS left or top
+  property values. If <em>modal</em> is true defaults to <tt>'center'</tt> else
+  defaults to <tt>'auto'</tt>.
+</p>
+</dd>
+<dt>
+effect
+</dt>
+<dd>
+<p>
+  <tt>'fade'</tt>, <tt>'blink'</tt>, <tt>'slide'</tt>. Default <tt>'fade'</tt> (but see Bugs below).
+</p>
+</dd>
+<dt>
+duration
+</dt>
+<dd>
+<p>
+  Effect show/hide duration in seconds. Default 0.5.
+</p>
+</dd>
+<dt>
+show_duration, hide_duration
+</dt>
+<dd>
+<p>
+  Can be applied to override <em>duration</em> option for separate show and
+  hide durations.
+</p>
+</dd>
+<dt>
+opacity
+</dt>
+<dd>
+<p>
+  Opacity of modal overlay. Default 0.5.
+</p>
+</dd>
+<dt>
+closebox
+</dt>
+<dd>
+<p>
+  CSS class name of click-to-close elements. Default
+  <tt>'popup_closebox'</tt>.  Multiple closebox elements are allowed.
+</p>
+</dd>
+<dt>
+draghandle
+</dt>
+<dd>
+<p>
+  CSS class name of drag handle elements. Default
+  <tt>'popup_draghandle'</tt>.  Multiple draghandle elements are allowed.
+</p>
+</dd>
+<dt>
+cursor_margin
+</dt>
+<dd>
+<p>
+  Distance of popup from cursor in pixels when position is <tt>'auto'</tt>.
+  Default 5.
+</p>
+</dd>
+<dt>
+show_delay
+</dt>
+<dd>
+<p>
+  Milliseconds delay before auto-open is triggered. Eliminates
+  unnecessary popup activation when the mouse passes over the link.
+  Default 500.
+</p>
+</dd>
+<dt>
+hide_delay
+</dt>
+<dd>
+<p>
+  Milliseconds delay before auto-close is triggered. Default 200.
+</p>
+</dd>
+</dl>
+<p>The following options can be set globally on the <tt>Popup</tt> object:
+<em>duration</em>, <em>show_duration</em>, <em>hide_duration</em>, <em>opacity</em>, <em>show_delay</em>,
+<em>hide_delay</em>, <em>cursor_margin</em>. For example <tt>Popup.duration = 0.1</tt> will
+set the the <em>duration</em> option to 0.1 in all subsequently created
+<tt>Popup</tt> objects.</p>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<ul>
+<li>
+<p>
+Popup objects must be created <strong>after</strong> the corresponding popup
+  element has been created, this normally means placing the JavaScript
+  <em>new Popup</em> statement after the popup element markup in the
+  document.
+</p>
+</li>
+<li>
+<p>
+Do <strong>not</strong> use the same popup element in more than one Popup. Doing so
+  will register the same element related user interface events in
+  multiple Popup objects &#8212; when a user interface event occurs it will
+  be handled in <strong>all</strong> associated Popup objects and result in
+  unpredictable behavior.
+</p>
+</li>
+</ul>
+</td>
+</tr></table>
+</div>
+<h3>Controlling and creating popups programmatically</h3>
+<p>In addition to user interaction the Popup <tt>show()</tt> and <tt>hide()</tt>
+functions can be used to programmatically show and hide popup objects.
+Use the popup element's <tt>popup</tt> property to access the popup object.
+Here's an example:</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>$('new_author_using_ajax_popup').popup.hide();</tt></pre>
+</div></div>
+<p>You can also create anonymous popups from your JavaScript code (an
+anonymous popup doesn't have a link element). Here's an example:</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>new Popup('message_popup',null,{modal:true});</tt></pre>
+</div></div>
+<p>Which can now be opened with:</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>$('message_popup').popup.show();</tt></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Don't programmatically open popups with the <tt>'auto'</tt>
+<em>position</em> option &#8212; this option uses event mouse coordinates which
+will not be available.</td>
+</tr></table>
+</div>
+</div>
+<h2>Using Popups with Rails</h2>
+<div class="sectionbody">
+<p>The examples presented here were tested under Rails 1.2.1 and Ruby
+1.8.5.</p>
+<p>First off you need to put the popup script and stylesheet into your
+page layouts:</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;%= javascript_include_tag :defaults %&gt;
+&lt;%= stylesheet_link_tag 'popup.css' %&gt;
+&lt;%= javascript_include_tag 'popup.js' %&gt;</tt></pre>
+</div></div>
+<p>The <tt>javascript_include_tag :defaults</tt> includes the required Prototype
+and Scriptaculous libraries.</p>
+<h3>A Record Popup</h3>
+<p>In this example we generate a popup containing details of an article
+record stored in the <tt>Article</tt> model. The popup link looks like:</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;p&gt;&lt;span id="article_link_&lt;%= article.id %&gt;" class="popup_link"&gt;&lt;%= article.title %&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;%= render :partial =&gt; 'article_popup', :locals =&gt; {:article =&gt; article} %&gt;</tt></pre>
+</div></div>
+<p>The draggable auto-close popup is generated by the
+<tt>./app/views/articles/_article_popup.rhtml</tt> partial:</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;div id="article_popup_&lt;%= article.id %&gt;" class="popup popup_draghandle" style="display:none"&gt;
+  &lt;p&gt;
+    &lt;b&gt;Title:&lt;/b&gt;
+    &lt;%=h article.title %&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;b&gt;Summary:&lt;/b&gt;
+    &lt;%=h article.summary %&gt;
+  &lt;/p&gt;
+&lt;/div&gt;
+&lt;%= javascript_tag "new Popup('article_popup_#{article.id}','article_link_#{article.id}')" %&gt;</tt></pre>
+</div></div>
+<p>The <tt>new Popup</tt> JavaScript statement associates the popup contents
+with it's linking element. Here's a screenshot:</p>
+<div class="imageblock">
+<div class="content">
+<img src="popup_screenshot_6.png" alt="popup_screenshot_6.png"/>
+</div>
+</div>
+<h3>Creating a new Record using a modal form</h3>
+<p>It's often useful to be able to create a related record without having
+to leave the current page. This example uses a modal popup form to
+create a new author record.</p>
+<p>Here's the click-to-open popup link to bring up the modal form:</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;p&gt;&lt;span id="new_author_link" class="popup_link"&gt;New Author&lt;/span&gt;&lt;/p&gt;
+&lt;%= render :partial =&gt; 'authors/new_author_popup' %&gt;</tt></pre>
+</div></div>
+<p>Here's the <tt>./app/views/authors/_new_author_popup.rhtml</tt> partial that
+renders the popup form:</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;div id="new_author_popup" class="popup" style="display:none"&gt;
+
+  &lt;h1&gt;New author&lt;/h1&gt;
+
+  &lt;% form_for(:author, :url =&gt; authors_path) do |f| %&gt;
+    &lt;p&gt;
+      &lt;b&gt;First name&lt;/b&gt;&lt;br /&gt;
+      &lt;%= f.text_field :first_name %&gt;
+    &lt;/p&gt;
+
+    &lt;p&gt;
+      &lt;b&gt;Last name&lt;/b&gt;&lt;br /&gt;
+      &lt;%= f.text_field :last_name %&gt;
+    &lt;/p&gt;
+
+    &lt;p&gt;
+    &lt;%= submit_tag 'Create', :class =&gt; 'popup_closebox' %&gt;
+    &lt;%= tag :input, :type =&gt; 'button', :value =&gt; 'Cancel', :class =&gt; 'popup_closebox' %&gt;
+    &lt;%= hidden_field_tag :back, :value =&gt; request.path %&gt;
+    &lt;/p&gt;
+  &lt;% end %&gt;
+
+&lt;/div&gt;
+&lt;%= javascript_tag "new Popup('new_author_popup','new_author_link',{modal:true})" %&gt;</tt></pre>
+</div></div>
+<ul>
+<li>
+<p>
+The popup is created with the <tt>modal</tt> option.
+</p>
+</li>
+<li>
+<p>
+Both the submit and cancel buttons are popup close boxes.
+</p>
+</li>
+</ul>
+<p>When the <em>Create</em> button is pressed the popup form closes and a
+and the form parameters are posted to the author controller's <tt>create</tt>
+action. Note how the hidden <tt>:back</tt> field is used by the author
+controller's <tt>create</tt> action to redirect back to the originating page.</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt><strong>def</strong> create
+  @author = Author.new(params[:author])
+  respond_to <strong>do</strong> |format|
+    <strong>if</strong> @author.save
+      flash[:notice] = 'Author was successfully created.'
+      format.html <strong>do</strong>
+        <strong>if</strong> params[:back]
+          redirect_to params[:back]
+        <strong>else</strong>
+          redirect_to author_url(@author)
+        <strong>end</strong>
+      <strong>end</strong>
+      format.xml  { head :created, :location =&gt; author_url(@author) }
+    <strong>else</strong>
+      format.html <strong>do</strong>
+        <strong>if</strong> params[:back]
+          flash[:notice] = 'Error creating author.'
+          redirect_to params[:back]
+        <strong>else</strong>
+          render :action =&gt; 'new'
+        <strong>end</strong>
+      <strong>end</strong>
+      format.xml  { render :xml =&gt; @author.errors.to_xml }
+    <strong>end</strong>
+  <strong>end</strong>
+<strong>end</strong></tt></pre>
+</div></div>
+<h3>Creating a new Record using a modal form, AJAX and RJS templates</h3>
+<p>Here's where things get interesting &#8212; this time we submit the form
+using AJAX and then poke a response back into the originating page
+using an RJS template. The example also illustrates how to invoke
+modal information popups programmatically.</p>
+<p>The click-to-open popup link on the originating page is similar to the
+previous example with the addition of:</p>
+<ul>
+<li>
+<p>
+The <tt>new_author</tt> paragraph element which is a placeholder for the
+  server response.
+</p>
+</li>
+<li>
+<p>
+The <tt>app/views/partials/_message_popup.rhtml</tt> partial which is an
+  information message popup.
+</p>
+</li>
+</ul>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;p id="new_author"&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;span id="new_author_using_ajax_link" class="popup_link"&gt;New Author using AJAX&lt;/span&gt;&lt;/p&gt;
+&lt;%= render :partial =&gt; 'authors/new_author_using_ajax_popup' %&gt;
+&lt;%= render :partial =&gt; 'partials/message_popup' %&gt;</tt></pre>
+</div></div>
+<p>Here's the <tt>app/views/authors/_new_author_using_ajax_popup.rhtml</tt>
+partial that renders the popup form. Again similar to previous example
+but using AJAX to submit the form:</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;div id="new_author_using_ajax_popup" class="popup" style="display:none"&gt;
+
+  &lt;h1&gt;New author&lt;/h1&gt;
+
+  &lt;% form_remote_for(:author, :url =&gt; authors_path,
+                     :loading =&gt; "Element.show('popup_spinner');Form.disable('author_form');",
+                     :complete =&gt; "Element.hide('popup_spinner');Form.enable('author_form');",
+                     :html =&gt; {:id =&gt; 'author_form'}
+                    ) do |f| %&gt;
+    &lt;p&gt;
+      &lt;b&gt;First name&lt;/b&gt;&lt;br /&gt;
+      &lt;%= f.text_field :first_name %&gt;
+    &lt;/p&gt;
+
+    &lt;p&gt;
+      &lt;b&gt;Last name&lt;/b&gt;&lt;br /&gt;
+      &lt;%= f.text_field :last_name %&gt;
+    &lt;/p&gt;
+
+    &lt;p&gt;
+    &lt;%= submit_tag 'Create' %&gt;
+    &lt;%= tag :input, :type =&gt; 'button', :value =&gt; 'Cancel', :class =&gt; 'popup_closebox' %&gt;
+    &lt;%= image_tag 'spinner.gif', :id =&gt; 'popup_spinner', :style =&gt; 'display:none' %&gt;
+    &lt;/p&gt;
+  &lt;% end %&gt;
+
+&lt;/div&gt;
+&lt;%= javascript_tag "new Popup('new_author_using_ajax_popup','new_author_using_ajax_link',{modal:true})" %&gt;</tt></pre>
+</div></div>
+<ul>
+<li>
+<p>
+Note the use of <tt>:loading</tt> and <tt>:complete</tt> options to disable the
+  form and give the user some feedback while waiting for the server
+  response.
+</p>
+</li>
+<li>
+<p>
+Unlike the previous non-AJAX example the <em>Create</em> submit button is
+  not a popup close box &#8212; the form stays open and displays feedback
+  until the server response arrives.
+</p>
+</li>
+</ul>
+<p>Here is the Author controller's <tt>create</tt> action, it's very similar to
+the previous example but in this case the response is generated by
+inline RJS templates:</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt><strong>def</strong> create
+  @author = Author.new(params[:author])
+  respond_to <strong>do</strong> |format|
+    <strong>if</strong> @author.save
+      format.html <strong>do</strong>
+        flash[:notice] = 'Author was successfully created.'
+        <strong>if</strong> params[:back]
+          redirect_to params[:back]
+        <strong>else</strong>
+          redirect_to author_url(@author)
+        <strong>end</strong>
+      <strong>end</strong>
+      format.js <strong>do</strong>
+        render :update <strong>do</strong> |page|
+          page.form.reset 'author_form'
+          page &lt;&lt; "$('new_author_using_ajax_popup').popup.hide();"
+          page.replace_html 'new_author', "&lt;b&gt;New author:&lt;/b&gt; <i>#{@author.first_name} #{@author.last_name}"</i>
+          page.visual_effect :highlight, 'new_author'
+          page.replace_html 'message_popup_message', 'New author created.'
+          page &lt;&lt; "$('message_popup').popup.show();"
+        <strong>end</strong>
+      <strong>end</strong>
+      format.xml  { head :created, :location =&gt; author_url(@author) }
+    <strong>else</strong>
+      format.html <strong>do</strong>
+        <strong>if</strong> params[:back]
+          flash[:notice] = 'Error creating author.'
+          redirect_to params[:back]
+        <strong>else</strong>
+          render :action =&gt; 'new'
+        <strong>end</strong>
+      <strong>end</strong>
+      format.js <strong>do</strong>
+        render :update <strong>do</strong> |page|
+          page.replace_html 'message_popup_message', 'An error occurred.'
+          page &lt;&lt; "$('message_popup').popup.show();"
+        <strong>end</strong>
+      <strong>end</strong>
+      format.xml  { render :xml =&gt; @author.errors.to_xml }
+    <strong>end</strong>
+  <strong>end</strong>
+<strong>end</strong></tt></pre>
+</div></div>
+<p>Because <tt>form_remote_for</tt> posts a JavaScript request it is routed to
+the <tt>format.js</tt> sections, then the RJS template generates JavaScript
+which is sent back to and executed by the waiting browser. If the new
+record is saved without errors then:</p>
+<ul>
+<li>
+<p>
+The popup form is reset and hidden.
+</p>
+</li>
+<li>
+<p>
+The new author's name is inserted into the <tt>new_author</tt> paragraph
+  which is then briefly highlighted.
+</p>
+</li>
+<li>
+<p>
+The <em>New author created</em> modal <tt>message_popup</tt> has it's message set
+  and is the displayed.
+</p>
+</li>
+</ul>
+<p>The last step is probably not necessary, it's just there to
+demonstrate how to trigger a popup from the server.</p>
+<p>If the record cannot be saved the the user is presented with an error
+message an the form is left open ready for corrections and
+resubmission.</p>
+<p>These screenshots illustrate sequence:</p>
+<div class="imageblock">
+<div class="content">
+<img src="popup_screenshot_1.png" alt="popup_screenshot_1.png"/>
+</div>
+<div class="image-title">The popup form link</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="popup_screenshot_2.png" alt="popup_screenshot_2.png"/>
+</div>
+<div class="image-title">Modal AJAX form</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="popup_screenshot_3.png" alt="popup_screenshot_3.png"/>
+</div>
+<div class="image-title">Modal confirmation popup (note the updated <tt>new_author</tt> element on the background form)</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="popup_screenshot_4.png" alt="popup_screenshot_4.png"/>
+</div>
+<div class="image-title">The error message popup</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="popup_screenshot_5.png" alt="popup_screenshot_5.png"/>
+</div>
+<div class="image-title">After an error your are returned to the modal form</div>
+</div>
+<p>Here's the <tt>app/views/partials/_message_popup.rhtml</tt> partial used to
+create the anonymous message popup:</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;div id="message_popup" class="popup" style="width:400px"&gt;
+  &lt;p id="message_popup_message"&gt;&lt;/p&gt;
+  &lt;form action=""&gt;
+      &lt;input class="popup_closebox" type="button" value="OK" /&gt;
+  &lt;/form&gt;
+&lt;/div&gt;
+&lt;%= javascript_tag "new Popup('message_popup',null,{modal:true})" %&gt;</tt></pre>
+</div></div>
+<ul>
+<li>
+<p>
+The message Popup object is created without a link (the Popup link
+  argument is <tt>null</tt>) because this popup is triggered programmatically
+  by the server response and not by user interaction.
+</p>
+</li>
+<li>
+<p>
+As with any markup, popup elements don't have to be put in separate
+  partials, but partials are a nice reuse mechanism allowing you to
+  use the same popup anywhere in your application.
+</p>
+</li>
+</ul>
+</div>
+<h2>Bugs</h2>
+<div class="sectionbody">
+<ul>
+<li>
+<p>
+The <em>slide</em>, <em>grow</em> and <em>blind</em> effects have been observed to
+  trigger phantom popup opens and other weird behavior when used with
+  auto-open popups. If you experience problems use <em>fade</em> (the
+  default) instead.
+</p>
+</li>
+<li>
+<p>
+If the link element of an auto-open popup has a bottom border then under
+  some circumstances moving across the border into the link fires spurious
+  mouseout events causing the popup to open then immediately close again.
+  The problem affects Firefox but not IE6 or IE7. I haven't figured the
+  exact circumstances but it seems to be links inside table cells. If you
+  approach the link from above the problem does not occur.
+</p>
+</li>
+</ul>
+</div>
+<h2>Feedback</h2>
+<div class="sectionbody">
+<p>Please send your bugs, comments and suggestions to me, Stuart Rackham,
+at <a href="mailto:srackham@methods.co.nz">srackham@methods.co.nz</a>.</p>
+</div>
+<h2>CHANGELOG</h2>
+<div class="sectionbody">
+<dl>
+<dt>
+2007-03-20 1.0.1 release
+</dt>
+<dd>
+<ul>
+<li>
+<p>
+Documentation errata and clarifications.
+</p>
+</li>
+</ul>
+</dd>
+<dt>
+2007-03-16: 1.0.0 release
+</dt>
+<dd>
+</dd>
+</dl>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.1<br />
+Last updated 20-Mar-2007 10:43:52 NZDT
+</div>
+</div>
+</body>
+</html>

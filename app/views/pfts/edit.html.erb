@@ -1,0 +1,44 @@
+
+<a style="text-decoration: none" href="#" onclick="showHide('edit_pfts_priors')" id="show_edit_pfts_priors">[+] View Related Priors</a>
+<br/>
+<br/>
+<div id="edit_pfts_priors" class="hidden notvisible">
+  <%= render 'edit_pfts_priors' %>
+</div>
+
+<hr />
+<br />
+<br />
+
+
+<a style="text-decoration: none" href="#" onclick="showHide('edit2_pfts_species')" id="show_edit2_pfts_species">[+] View Related Species</a>
+<br/>
+<br/>
+<div id="edit2_pfts_species" class="hidden notvisible">
+  <%= render 'edit2_pfts_species' %>
+</div>
+
+<hr />
+<br />
+<br />
+
+<h1>Editing pft <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node29.html?min" }) %></h1>
+
+<% form_for(@pft) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :definition %><br />
+    <%= f.text_area :definition %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @pft %> |
+<%= link_to 'Back', pfts_path %>

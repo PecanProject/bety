@@ -1,0 +1,28 @@
+<p>
+  <b>Species:</b>
+  <%= link_to_if @cultivar.specie,@cultivar.specie, @cultivar.specie %>
+</p>
+
+<p>
+  <b>Previous ID:</b>
+  <%=h @cultivar.previous_id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%=h @cultivar.name %>
+</p>
+
+<p>
+  <b>Ecotype:</b>
+  <%=h @cultivar.ecotype %>
+</p>
+
+<p>
+  <b>Notes:</b>
+  <%=h @cultivar.notes %>
+</p>
+
+
+<%= link_to 'Edit', edit_cultivar_path(@cultivar) %> |
+<%= link_to 'Back', cultivars_path %>

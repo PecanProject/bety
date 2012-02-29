@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  lat: 9.99
+  lon: 9.99
+  yield: 9.99
+  species: MyString
+
+two:
+  lat: 9.99
+  lon: 9.99
+  yield: 9.99
+  species: MyString

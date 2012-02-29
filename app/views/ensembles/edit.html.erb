@@ -1,0 +1,16 @@
+<h1>Editing ensemble</h1>
+
+<% form_for(@ensemble) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :notes %><br />
+    <%= f.text_area :notes %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @ensemble %> |
+<%= link_to 'Back', ensembles_path %>

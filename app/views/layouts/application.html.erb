@@ -1,0 +1,205 @@
+<%# logger.info request.to_yaml %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;>charset=iso-8859-1" />
+  <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />
+  <meta name="keywords" content="biofuel,biofuels,bioenergy,bioscience,biosciences,miscanthus,switchgrass,ethanol,alternative energy"> 
+  <title>Energy Biosciences Institute</title>
+  <meta name="description" content="The Energy Biosciences Institute (EBI) is a new research and development organization that harnesses advanced knowledge in biology, the physical sciences, engineering, and environmental and social sciences to devise viable solutions to global energy challenges and reduce the impact of fossil fuels to global warming.  The worlds first research institution solely dedicated to the new field of energy bioscience, is initially focusing on the development of next-generation biofuels, but will also look into various applications of biology to the energy sector." />
+  <meta name="keywords" content="biofuel, biofuels, bioenergy, miscanthus, switchgrass, alternative energy, ethanol" />
+  <meta name="Generator" content="Joomla! - Copyright (C) 2005 - 2007 Open Source Matters. All rights reserved." />
+  <meta name="robots" content="index, follow" />
+
+  <link rel="stylesheet" href="/bety/stylesheets/scaffold.css" type="text/css" />
+  <%= javascript_include_tag :all, :cache => "cache/all" %>
+
+  <% if ['sites','maps','visitors'].include?(params[:controller]) %>
+
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script> 
+  <!--script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAPDXibh0Ct5qeTjwb_CxJtRS9gVzyFzPv7IPkHqaHBvoC5L78cxSgvWIi1gPiS0G0Y2HaRozqznly3g" type="text/javascript"></script-->
+  <% end %>
+
+  <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />	
+  <%= stylesheet_link_tag 'themes/default' %>
+  <%= stylesheet_link_tag 'themes/alphacube' %>
+  <%= javascript_include_tag 'window'%>
+
+</head>
+<body>
+  <!--[if IE ]>
+    <style>
+    ul.mainlevel-suckerfish-horizontal, .mainlevel-suckerfish-horizontal ul {
+      margin-left:32px;
+      margin-top:0px;
+    }
+    
+    table.moduletable-upevents {
+      margin-left: 10px;
+      padding-top:18px;
+    }
+        
+    </style>
+  <![endif]-->
+  <div id="banner">
+    <div id="banner-wrapper">
+      <a class="logo" href="http://www.energybiosciencesinstitute.org/index.php" title="EBI">EBI</a>
+      <a class="bety-db" href="/bety/" title="BETY-DB">BETY-DB</a>
+      <ul>
+        <li><a href="/bety/contacts/" title="Contact US">Contact Us</a></li>
+        <li>|</li>
+        <li><a href="/bety/" title="Home">Home</a></li>
+      </ul>
+    </div><!-- end banner-wrapper -->
+  </div><!-- end banner -->
+
+  <div id="navigation">
+    <div id="navigation-wrapper">
+      <table cellpadding="0" cellspacing="0" class="moduletable">
+        <tr>
+          <td>
+            <script type="text/javascript">
+              var betydb_MENU_ITEMS = [
+              <% if logged_in? %>
+                ['BETY-DB','/bety/',{'tw':'0','sb':'BETY-DB'},
+                ['Citations','/bety/citations/',{'tw':'0','sb':'Citations'},
+                ['New','/bety/citations/new',{'tw':'0','sb':'New'}],],
+                ['Covariates','/bety/covariates/',{'tw':'0','sb':'Covariates'},
+                ['New','/bety/covariates/new',{'tw':'0','sb':'New'}],],
+                ['Cultivars','/bety/cultivars/',{'tw':'0','sb':'Cultivars'},
+                ['New','/bety/cultivars/new',{'tw':'0','sb':'New'}],],
+                ['Ensembles','/bety/ensembles/',{'tw':'0','sb':'Ensembles'},
+                ['New','/bety/ensembles/new',{'tw':'0','sb':'New'}],],
+                ['Entities','/bety/entities/',{'tw':'0','sb':'Entities'},
+                ['New','/bety/entities/new',{'tw':'0','sb':'New'}],],
+                ['Formats','/bety/formats/',{'tw':'0','sb':'Formats'},
+                ['New','/bety/formats/new',{'tw':'0','sb':'New'}],],
+                ['Managements','/bety/managements/',{'tw':'0','sb':'Managements'},
+                ['New','/bety/managements/new',{'tw':'0','sb':'New'}],],
+                ['PFTs','/bety/pfts/',{'tw':'0','sb':'PFTs'},
+                ['New','/bety/pfts/new',{'tw':'0','sb':'New'}],],
+                ['Priors','/bety/priors/',{'tw':'0','sb':'Priors'},
+                ['New','/bety/priors/new',{'tw':'0','sb':'New'}],],
+                ['Raw Data','/bety/raws/',{'tw':'0','sb':'Raw Data'},
+                ['New','/bety/raws/new',{'tw':'0','sb':'New'}],],
+                ['Sites','/bety/sites/',{'tw':'0','sb':'Sites'},
+                ['New','/bety/sites/new',{'tw':'0','sb':'New'}],],
+                ['Species','/bety/species/',{'tw':'0','sb':'Species'},
+                ['New','/bety/species/new',{'tw':'0','sb':'New'}],],
+                ['Traits','/bety/traits/',{'tw':'0','sb':'Traits'},
+                ['New','/bety/traits/new',{'tw':'0','sb':'New'}],
+                ['CSV','/bety/traits.csv',{'tw':'0','sb':'CSV'}],],
+                ['Treatments','/bety/treatments/',{'tw':'0','sb':'Treatments'},
+                ['New','/bety/treatments/new',{'tw':'0','sb':'New'}],],
+                ['Variables','/bety/variables/',{'tw':'0','sb':'Variables'},
+                ['New','/bety/variables/new',{'tw':'0','sb':'New'}],],
+                ['Yields','/bety/yields/',{'tw':'0','sb':'Yields'},
+                ['New','/bety/yields/new',{'tw':'0','sb':'New'}],
+                ['CSV','/bety/yields.csv',{'tw':'0','sb':'CSV'}],],],
+                ['New Record','/bety/citations/',{'tw':'0','sb':'New Record'},
+                ['Citations','/bety/citations/',{'tw':'0','sb':'Citations'}],
+                ['Sites','/bety/sites/',{'tw':'0','sb':'Sites'}],
+                ['Treatments','/bety/treatments/',{'tw':'0','sb':'Treatments'}],
+                ['Traits','/bety/traits/',{'tw':'0','sb':'Traits'}],
+                ['Yields','/bety/yields/',{'tw':'0','sb':'Yields'}],],
+              <% end %>
+                ['Documentation','/bety/',{'tw':'0','sb':'Documentation'},
+                ['Users Guide','/bety/dbdocumentation_users.pdf',{'tw':'0','sb':'Users Guide'}],
+                ['Data Entry Guide','/bety/dbdocumentation_data_entry.pdf',{'tw':'0','sb':'Data Entry Guide'}],],
+                <% if authorized?("index","RunsController") -%>
+                ['Model-Runs','/bety/',{'tw':'0','sb':'Model-Runs'},
+                ['Posteriors','/bety/posteriors/',{'tw':'0','sb':'Posteriors'}],
+                ['Runs','/bety/runs/',{'tw':'0','sb':'Runs'}],
+                ['Likelihoods','/bety/likelihoods/',{'tw':'0','sb':'likelihoods'}],
+                ['Models','/bety/models/',{'tw':'0','sb':'Models'}],
+                ['Inputs','/bety/inputs/',{'tw':'0','sb':'Inputs'},
+                ['New','/bety/inputs/new',{'tw':'0','sb':'New'}],],],
+                <% end -%>
+                <% if logged_in? -%>
+                ['Admin','/bety/',{'tw':'0','sb':'Admin'},
+                ['Users','/bety/users/',{'tw':'0','sb':'Users'}],
+                ['Errors','/redmine/projects/bety-db/issues/new',{'tw':'0','sb':'Errors'}],
+                ['Location Yields','/bety/maps/location_yields/',{'tw':'0','sb':'Location Yields'}],],
+                <% end -%>
+                <% if logged_in? -%>
+                ['Log out','/bety/logout',{'tw':'0','sb':'Log out'}],
+                <% else -%>
+                ['Log in','/bety/login',{'tw':'0','sb':'Log in'}],
+                ['Create Account','/bety/signup',{'tw':'0','sb':'Create Account'}],
+                <% end -%>
+                
+              ];
+            </script>
+            <div style="position:relative; top:0px; left:0px; width:auto; min-height:26px;">
+                <div style="position:absolute; top:0px; width:930px; left:50%; margin-left:-465px; height:26px;">
+                  <script type="text/javascript">
+                    new menu (betydb_MENU_ITEMS, topmenu_MENU_POS);
+                  </script>
+                </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div><!-- end navigation-wrapper -->
+  </div><!-- end navigation -->
+  <div id="content">
+    <div id="content-wrapper">
+
+      <hr>
+      <% if !session['citation'].nil? and Citation.exists?(session['citation']) %>
+        <h5 class="centered">Citation: <%= link_to Citation.find(session['citation']).author_year_title, citation_url( session['citation']) %> <%= link_to '[remove]', :controller => "application", :action => "remove_citation" %> </h5>
+      <% elsif !session['citation'].nil? and !Citation.exists?(session['citation'])
+           session['citation'] = nil
+      %>
+        <hr>
+        
+      <% end %>
+      <% if flash[:notice] %>
+        <h5 class="centered"><%= flash[:notice] %></h5>
+        <% flash[:notice] = nil %>
+        <hr>
+      <% end %>
+
+      <br />
+      <%= yield  %>
+      
+      <br />
+
+      <%= render :partial => "users/user_bar" %>
+    </div><!-- end content-wrapper -->
+  </div><!-- end content -->
+
+  <div id="footer">
+    <div id="footer-wrapper">
+      <div id="footer-divide"></div>
+      <div id="footer-logos">
+        <div id="bp-logo"><a href="http://www.bp.com" title="BP"><span>BP</span></a></div>
+        <div id="illinois-logo"><a href="http://illinois.edu" title="Illinois"><span>Illinois</span></a></div>
+        <div id="berkeley-logo"><a href="http://www.berkeley.edu" title="Berkeley"><span>Berkeley</span></a></div>
+        <div id="lbl-logo"><a href="http://www.lbl.gov" title="LBL"><span>LBL</span></a></div>
+      </div>
+      <div id="footer-divide"></div>
+      <br>
+      <div id=footer-copyright>
+        <div id="google_translate_element"></div>
+        <script>
+            function googleTranslateElementInit() {
+              new google.translate.TranslateElement({
+              pageLanguage: 'en',
+              layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+              }, 'google_translate_element');
+            }
+        </script>
+        <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+      </div>
+      <br>
+      <div id="footer-divide"></div>
+      <br>
+      <div>
+        <p width="480px">David LeBauer, Dan Wang, and Michael Dietze, 2010. Biofuel Ecophysiological Traits and Yields Database Version 1.0. Energy Biosciences Institute, Urbana, IL</p>
+      </div>
+    </div><!-- end footer-wrapper -->
+  </div><!-- end footer -->
+</body>
+</html>

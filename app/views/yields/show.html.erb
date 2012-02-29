@@ -1,0 +1,74 @@
+<% if @yield.nil? %>
+<p>Sorry yield record does not exists or you do not have access</p>
+<% else %>
+
+<p>
+  <b>Citation:</b>
+  <%= link_to_if @yield.citation, @yield.citation, @yield.citation %>
+</p>
+<p>
+  <b>Site:</b>
+  <%=link_to_if @yield.site, @yield.site, @yield.site %>
+</p>
+
+<p>
+  <b>Species:</b>
+  <%=link_to_if @yield.specie, @yield.specie, @yield.specie %>
+</p>
+
+<p>
+  <b>Treatment:</b>
+  <%=link_to_if @yield.treatment, @yield.treatment, @yield.treatment %>
+</p>
+
+<p>
+  <b>Cultivar:</b>
+  <%=link_to_if @yield.cultivar, @yield.cultivar, @yield.cultivar %>
+</p>
+
+<% if logged_in? %>
+<p>
+  <b>User:</b>
+  <%=h @yield.user %>
+</p>
+<% end %>
+
+<p>
+  <b>Date:</b>
+  <%=h @yield.date %>
+</p>
+
+<p>
+  <b>Dateloc:</b>
+  <%=h @yield.dateloc %>
+</p>
+
+<p>
+  <b>Mean:</b>
+  <%=h @yield.mean %>
+</p>
+
+<p>
+  <b>Stat:</b>
+  <%=h @yield.stat %>
+</p>
+
+<p>
+  <b>Stat Name:</b>
+  <%=h @yield.statname %>
+</p>
+
+<p>
+  <b>N:</b>
+  <%=h @yield.n %>
+</p>
+
+<p>
+  <b>Notes:</b>
+  <%=h @yield.notes %>
+</p>
+
+
+<%= link_to 'Edit', edit_yield_path(@yield) %> |
+<% end %>
+<%= link_to 'Back', yields_path %>

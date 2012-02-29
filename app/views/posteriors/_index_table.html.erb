@@ -1,0 +1,23 @@
+
+<table>
+  <tr>
+    <th><%= link_to "Pft", "#", {:onclick => "order('pfts.name')"} -%><span id="pfts.name"></span></th>
+    <th><%= link_to "Filename", "#", {:onclick => "order('posteriors.filename')"} -%><span id="posteriors.filename"></span></th>
+    <th>Parent</th>
+  </tr>
+
+<% @posteriors.each do |posterior| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and posterior.id == @search.to_i%>>
+    <td><%= link_to_if posterior.pft, posterior.pft, posterior.pft %></td>
+    <td><%=h posterior.filename %></td>
+    <td><%= link_to_if posterior.parent, posterior.parent, posterior.parent %></td>
+    <td><%= link_to 'Show', posterior %></td>
+    <td><%= link_to 'Edit', edit_posterior_path(posterior) %></td>
+    <td><%= link_to 'Destroy', posterior, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @posteriors, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>

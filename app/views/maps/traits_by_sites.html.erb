@@ -1,0 +1,40 @@
+<h1>Listing traits for <%= @site.sitename_state_country %></h1>
+
+<table>
+  <tr>
+    <th>Site</th>
+    <th>Species</th>
+    <th>Citation</th>
+    <th>Cultivar</th>
+    <th>Treatment</th>
+    <th>Date</th>
+    <th>Dateloc</th>
+    <th>Time</th>
+    <th>Timeloc</th>
+    <th>Mean</th>
+    <th>N</th>
+    <th>Statname</th>
+    <th>Stat</th>
+    <th>Notes</th>
+  </tr>
+
+<% @traits.each do |trait| %>
+<% next if !logged_in? and !trait.checked %>
+    <td><%= link_to_if trait.site,trait.site, trait.site %></td>
+    <td><%= link_to_if trait.specie,trait.specie, trait.specie %></td>
+    <td><%= link_to_if trait.citation,trait.citation, trait.citation %></td>
+    <td><%= link_to_if trait.cultivar,trait.cultivar, trait.cultivar %></td>
+    <td><%= link_to_if trait.treatment,trait.treatment, trait.treatment %></td>
+    <td><%=h trait.date_pretty %></td>
+    <td><%=h trait.dateloc %></td>
+    <td><%=h trait.time_pretty %></td>
+    <td><%=h trait.timeloc %></td>
+    <td><%=h trait.mean %></td>
+    <td><%=h trait.n %></td>
+    <td><%=h trait.statname %></td>
+    <td><%=h trait.stat %></td>
+    <td><%=h trait.notes %></td>
+  </tr>
+<% end %>
+</table>
+

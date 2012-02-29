@@ -1,0 +1,47 @@
+ <h1>Listing inputs</h1>
+
+<table>
+  <tr>
+    <th><%= link_to "Site", "#", {:onclick => "order('sites.sitename')"} -%><span id="sites.sitename"></span></th>
+    <th>Variables</th>
+    <th><%= link_to "Name", "#", {:onclick => "order('inputs.name')"} -%><span id="inputs.name"></span></th>
+    <th><%= link_to "Filepath", "#", {:onclick => "order('inputs.filepath')"} -%><span id="inputs.filepath"></span></th>
+    <th><%= link_to "Start Date", "#", {:onclick => "order('inputs.start_date')"} -%><span id="inputs.start_date"></span></th>
+    <th><%= link_to "End Date", "#", {:onclick => "order('inputs.end_date')"} -%><span id="inputs.end_date"></span></th>
+    <th><%= link_to "Format", "#", {:onclick => "order('formats.name')"} -%><span id="formats.name"></span></th>
+    <th><%= link_to "Raw", "#", {:onclick => "order('raws.filepath')"} -%><span id="raws.filepath"></span></th>
+    <th><%= link_to "Notes", "#", {:onclick => "order('inputs.notes')"} -%><span id="inputs.notes"></span></th>
+    <th><%= link_to "Created at", "#", {:onclick => "order('inputs.created_at')"} -%><span id="inputs.created_at"></span></th>
+    <th><%= link_to "Updated at", "#", {:onclick => "order('inputs.updated_at')"} -%><span id="inputs.updated_at"></span></th>
+  </tr>
+
+  <% @inputs.each do |input| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and input.id == @search.to_i%>>
+    <td><%= link_to_if input.site, input.site, input.site -%></td>
+    <td><% input.variables.each do |iv| -%>
+        <%= link_to iv,iv -%>,<br />
+        <% end -%></td>
+    <td><%=h input.name -%></td>
+    <td><%=h input.filepath -%></td>
+    <td><%=h input.start_date -%></td>
+    <td><%=h input.end_date -%></td>
+    <td><%= link_to_if input.format, input.format, input.format -%></td>
+    <td><%= link_to_if input.raw, input.raw, input.raw -%></td>
+    <td><%=h input.notes -%></td>
+    <td><%=h input.created_at -%></td>
+    <td><%=h input.updated_at -%></td>
+    <td><%= link_to "Show", input -%></td>
+    <td><%= link_to "Edit", edit_input_path(input) -%></td>
+    <td><%= link_to 'Destroy', input, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+  <% end %>
+
+</table>
+
+<%= will_paginate @priors, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+
+
+
+

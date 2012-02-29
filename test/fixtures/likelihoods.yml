@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  run: 
+  variable: 
+  input: 
+  loglikelihood: 9.99
+  n_eff: 9.99
+  weight: 9.99
+  residual: 9.99
+
+two:
+  run: 
+  variable: 
+  input: 
+  loglikelihood: 9.99
+  n_eff: 9.99
+  weight: 9.99
+  residual: 9.99

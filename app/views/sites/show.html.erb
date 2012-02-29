@@ -1,0 +1,112 @@
+<h3>Citations</h3>
+<table>
+  <tr>
+    <th>Author, Year, Title</th>
+  </tr>
+<% @site.citations.each do |citation| %>
+  <tr>
+    <td><%= link_to citation, citation %></td>
+  </tr>
+<% end %>
+</table>
+
+<hr>
+
+<p><span id="site_link_<%= @site.id %>" class="popup_link">Map</span><br />
+      <%#= render :partial => "site_popup", :locals => {:site => @site } %>
+</p>
+
+
+<p>
+  <b>Site Name:</b>
+  <%=h @site.sitename %>
+</p>
+
+<p>
+  <b>City:</b>
+  <%=h @site.city %>
+</p>
+
+<p>
+  <b>State:</b>
+  <%=h @site.state %>
+</p>
+
+<p>
+  <b>Country:</b>
+  <%=h @site.country %>
+</p>
+
+<p>
+  <b>Lat:</b>
+  <%=h @site.lat %>
+</p>
+
+<p>
+  <b>Lon:</b>
+  <%=h @site.lon %>
+</p>
+
+<p>
+  <b>Mean Annual Temperature (°C)</b>
+  <%=h @site.mat %>
+</p>
+
+<p>
+  <b>Mean Annual Precipitation (mm/yr):</b>
+  <%=h @site.map %>
+</p>
+
+<p>
+  <b>Elevation (m):</b>
+  <%=h @site.masl %>
+</p>
+
+<p>
+  <b>Soil:</b>
+  <%=h @site.soil %>
+</p>
+
+<p>
+  <b>Local Time:</b>
+  <%=h @site.local_time %>
+</p>
+
+<p>
+  <b>% Clay:</b>
+  <%=h @site.clay_pct %>
+</p>
+
+<p>
+  <b>% Sand:</b>
+  <%=h @site.sand_pct %>
+</p>
+
+<p>
+  <b>Greenhouse:</b>
+  <%= @site.greenhouse ? "True" : "False" %>
+</p>
+
+<p>
+  <b>Som:</b>
+  <%=h @site.som %>
+</p>
+
+<p>
+  <b>Notes:</b>
+  <%=h @site.notes %>
+</p>
+
+<p>
+  <b>Soilnotes:</b>
+  <%=h @site.soilnotes %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @site.user %>
+</p>
+
+
+<%= link_to 'Edit', edit_site_path(@site) %> |
+<%= link_to 'Back', sites_path %>

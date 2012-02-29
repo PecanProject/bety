@@ -1,0 +1,30 @@
+<h1>Editing covariate <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node24.html?min" }) %></h1>
+
+  <p><%= link_to_prototype_window("Extracting information from tables and graphs", "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node25.html?min" }) %><br />
+<%= link_to_prototype_window("Extracting data from a figure using R", "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node26.html?min" }) %><br />
+<%= link_to_prototype_window("Extracting data from a figure using GetData", "help_popup4", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node27.html?min" }) %></p>
+
+<% form_for(@covariate) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :variable_id %><br />
+    <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }, {:selected => @covariate.variable_id.to_i } %>
+
+  </p>
+
+  <%= render :partial => "traits/trait_search" %>
+
+  <p>
+  </p>
+  <p>
+    <%= f.label :level %><br />
+    <%= f.text_field :level %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @covariate %> |
+<%= link_to 'Back', covariates_path %>

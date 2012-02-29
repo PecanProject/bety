@@ -1,0 +1,60 @@
+<a style="text-decoration: none" href="#" onclick="showHide('edit_citations_sites')" id="show_edit_citations_sites">[+] View Related Sites</a>
+<br/>
+<br/>
+<div id="edit_citations_sites" class="hidden notvisible">
+<%= render 'edit_citations_sites' %>
+</div>
+
+<hr>
+<br />
+<br />
+
+
+<h1>Editing citation <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node15.html?min" }) %></h1>
+
+<% form_for(@citation) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :author %><br />
+    <%= f.text_field :author %>
+  </p>
+  <p>
+    <%= f.label :year %><br />
+    <%= f.text_field :year %>
+  </p>
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :journal %><br />
+    <%= f.text_field :journal %>
+  </p>
+  <p>
+    <%= f.label :vol %><br />
+    <%= f.text_field :vol %>
+  </p>
+  <p>
+    <%= f.label :pg %><br />
+    <%= f.text_field :pg %>
+  </p>
+  <p>
+    <%= f.label :url %><br />
+    <%= f.text_field :url %>
+  </p>
+  <p>
+    <%= f.label :pdf %><br />
+    <%= f.text_field :pdf %>
+  </p>
+  <p>
+    <%= f.label :user %><br />
+    <%= @citation.user %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @citation %> |
+<%= link_to 'Back', citations_path %>

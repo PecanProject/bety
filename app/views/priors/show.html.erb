@@ -1,0 +1,43 @@
+<p>
+  <b>Citation:</b>
+  <%= link_to_if @prior.citation, @prior.citation, @prior.citation %>
+</p>
+
+<p>
+  <b>Variable:</b>
+  <%= link_to_if @prior.variable, @prior.variable, @prior.variable %>
+</p>
+
+<p>
+  <b>Phylogeny:</b>
+  <%=h @prior.phylogeny %>
+</p>
+
+<p>
+  <b>Distn:</b>
+  <%=h @prior.distn %>
+</p>
+
+<p>
+  <b>Parama:</b>
+  <%=h @prior.parama %>
+</p>
+
+<p>
+  <b>Paramb:</b>
+  <%=h @prior.paramb %>
+</p>
+
+<p>
+  <b>N:</b>
+  <%=h @prior.n %>
+</p>
+
+<p>
+  <b>Notes:</b>
+  <%=h @prior.notes %>
+</p>
+
+
+<%= link_to 'Edit', edit_prior_path(@prior) %> |
+<%= link_to 'Back', priors_path %>

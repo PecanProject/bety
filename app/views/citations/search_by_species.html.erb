@@ -1,0 +1,40 @@
+<h3>Search results</h3>
+
+<table>
+  <tr>
+    <th>Author</th>
+    <th>Year</th>
+    <th>Title</th>
+    <th>Journal</th>
+    <th>Vol</th>
+    <th>Pg</th>
+    <th>Url</th>
+    <th>Pdf</th>
+  </tr>
+
+<% @match.each do |citation| %>
+  <tr>
+    <td><%=h citation.author %></td>
+    <td><%=h citation.year %></td>
+    <td><%=h citation.title %></td>
+    <td><%=h citation.journal %></td>
+    <td><%=h citation.vol %></td>
+    <td><%=h citation.pg %></td>
+    <td><%= link_to_unless citation.url.blank?, 'link', citation.url do
+              ""
+            end %></td>
+    <td><%= link_to_unless citation.url.blank?, 'link', citation.pdf do
+              ""
+            end %></td>
+    <td><%= link_to 'Show', citation %></td>
+    <% if current_user.page_access_level <= 2 %>
+      <td><%= link_to 'Use', :controller => :application, :action => 'use_citation', :id => citation.id  %></td>
+      <td><%= link_to 'Edit', edit_citation_path(citation) %></td>
+    <% end %>
+    <% if current_user.page_access_level == 1 %>
+      <td><%= link_to 'Destroy', citation, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% end %>
+  </tr>
+<% end %>
+</table>
+

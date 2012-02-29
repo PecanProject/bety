@@ -1,0 +1,143 @@
+<a style="text-decoration: none" href="#" onclick="showHide('edit_covariates_traits')" id="show_edit_cvariates_traits">[+] View Covariates</a>
+<br/>
+<br/>
+
+<div id="edit_covariates_traits" class="hidden notvisible">
+<table width="100%">
+  <tr>
+    <td width="100%"><h3>Existing Covariates <%= link_to "[new]", new_covariate_path(:trait_id => @trait.id) %></h3></td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Variable</th>
+          <th>Level</th>
+          <th></th>
+        </tr>
+        <% @trait.covariates.each do |c| %>
+        <tr>
+          <td><%= link_to 'X', c, :confirm => 'Are you sure?', :method => :delete %></td>
+          <td><%= link_to "edit", edit_covariate_path(c.id) %></td>
+          <td><%= link_to_if c.variable, c.variable, c.variable %></td>
+          <td><%= c.level %></td>
+        </tr>
+        <% end %>
+      </table>
+    </td>
+  </tr>
+</table>
+</div>
+<hr />
+<br />
+<br />
+
+<h1>Editing trait <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node20.html?min" }) %></h1>
+
+<% form_for(@trait) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :site_id, "Site" %><br />
+    <%= f.select :site_id, Site.all(:order => 'city').collect { |p| [ p.select_default, p.id ] }, {} %>
+  </p>
+
+  <%= render :partial => "species/species_search" %>
+
+  <p>
+    <%= f.label :citation_id %><br />
+    <%= f.select :citation_id, Citation.all(:order => 'author').collect { |p| [ p.select_default, p.id ] }, {} %>
+  </p>
+  </p>
+  <p>
+    <%= f.label :cultivar_id %><br />
+    <%= f.select :cultivar_id, Cultivar.all(:joins => :specie, :order => 'species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
+  </p>
+  <p>
+    <%= f.label :variable_id, "Trait" %><br />
+    <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }.sort { |a,b| a[0].split(': ')[1] <=> b[0].split(': ')[1] }, {} %>
+  </p>
+  <p>
+    <%= f.label :treatment_id, "Treatment" %><br />
+    <%= f.select :treatment_id, Treatment.all(:joins => :citations, :order => 'name').collect { |p| [ p.select_default, p.id ] }, {} %>
+  </p>
+  <p>
+    <%= f.label :entity_id, "Entity" %><br />
+    <%= f.select :entity_id, Entity.all().collect { |p| [ p.select_default, p.id ] }, {:include_blank => true} %>
+  </p>
+  <p>
+    <%= f.label :user_id %><br />
+    <%= f.text_field :user_id, :disabled => "Disabled" %>
+  </p>
+  <p>
+    <%= f.label :date %><br />
+    <%= f.date_select :date, { :start_year => 1900, :end_year => Time.now.year, :include_blank => "0000", :default => "0000"} %>
+  </p>
+  <p>
+    <%= f.label :dateloc, "Date Level of Confidence" %> <%= link_to_prototype_window(image_tag("help.gif"), "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node21.html?min" }) %><br />
+    <%= f.select :dateloc, options_for_select($dateloc_drop.sort,f.object.dateloc.to_s) %>
+  </p>
+  <p>
+    <%= f.label :time %><br />
+    <%= f.time_select :time, { :include_blank => true } %>
+  </p>
+  <p>
+    <%= f.label :timeloc %><br />
+    <%= f.select :timeloc, options_for_select($timeloc_drop.sort,f.object.timeloc.to_s) %>
+  </p>
+  <p>
+    <%= f.label :mean %><br />
+    <%= f.text_field :mean %>
+  </p>
+  <p>
+    <%= f.label :n %><br />
+    <%= f.text_field :n %>
+  </p>
+  <p>
+    <%= f.label :stat %>  <%= link_to_prototype_window(image_tag("help.gif"), "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node22.html?min" }) %><br />
+    <%= f.text_field :stat %>
+  </p>
+  <p>
+    <%= f.label :statname %><br />
+    <%= f.select :statname, ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD"] %>
+  </p>
+  <p>
+    <%= f.label :access_level %><br />
+    <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]]%>
+  </p>
+  <p>
+    <%= f.label :notes %><br />
+    <%= f.text_area :notes %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<div id="explain" style="display: none">* = This field for this Trait is NULL in the database. We do not allow this field to be blank, so if you update the record incorrect values might be saved.</div>
+
+<style>
+  .red_back {
+    background-color: red;
+  }
+</style>
+
+<script>
+  function missingFields(id) {
+    id = "label[for=" + id + "]";
+    if (typeof $$(id)[0] != "undefined") {
+      $$(id)[0].addClassName('red_back');
+      $$(id)[0].innerText += "*";
+      $('explain').show();
+    }
+  }
+<% ['site_id','citation_id','variable_id','treatment_id','dateloc','specie_id'].each do |column| %>
+<%= "  missingFields(\"trait_#{column}\");" if @trait[column.to_sym].nil? %>
+<% end %>
+
+</script>
+
+<%= link_to 'Show', @trait %> |
+<%= link_to 'Back', traits_path %>

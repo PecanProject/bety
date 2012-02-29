@@ -1,0 +1,35 @@
+
+
+<table>
+  <tr>
+    <th><%= link_to "Site Name", "#", {:onclick => "order('sites.sitename')"} -%><span id="sites.sitename"></span></th>
+    <th><%= link_to "City", "#", {:onclick => "order('sites.city')"} -%><span id="sites.city"></span></th>
+    <th><%= link_to "State", "#", {:onclick => "order('sites.state')"} -%><span id="sites.state"></span></th>
+    <th><%= link_to "Country", "#", {:onclick => "order('sites.country')"} -%><span id="sites.country"></span></th>
+    <th><%= link_to "Lat", "#", {:onclick => "order('sites.lat')"} -%><span id="sites.lat"></span></th>
+    <th><%= link_to "Lon", "#", {:onclick => "order('sites.lon')"} -%><span id="sites.lon"></span></th>
+  </tr>
+
+<% @sites.each do |site| %>
+  <tr id="site-<%= site.id.to_s %>"<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and site.id == @search.to_i%>>
+    <td><%=h site.sitename %></td>
+    <td><%=h site.city %></td>
+    <td><%=h site.state %></td>
+    <td><%=h site.country %></td>
+    <td><%=h site.lat %></td>
+    <td><%=h site.lon %></td>
+    <td><%= link_to_prototype_window("map", "#{site.id}", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :title =>  "#{site.sitename}", :draggable => "true", :wiredDrag => "true", :url => "/bety/sites/map?id=#{site.id}" }) %> <br />
+
+    </td>
+    <% if !session["citation"].nil? %>
+    <td><%= link_to_remote 'Link', :url => {:action => "linked", :id => site.id }%></td>
+    <% end %>
+    <td><%= link_to 'Show', site %></td>
+    <td><%= link_to 'Edit', edit_site_path(site) %></td>
+    <td><%= link_to 'Destroy', site, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+<%= will_paginate @sites, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>

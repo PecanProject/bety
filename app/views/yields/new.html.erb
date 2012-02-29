@@ -1,0 +1,102 @@
+<% if session['citation'].nil? %>
+  <h2>Please choose a citation to work with first. <%= link_to 'Citations', citations_path %></h2>
+<% elsif @treatments.length == 0 %>
+  <h2> There are no treatments associated with this citation. Please create a treatment that is associated with this citation first. <%= link_to 'Treatments', treatments_path %></h2>
+<% elsif @sites.length == 0 %>
+  <h2> There are no sites associated with this citation. Please create a site that is associated with this citation first. <%= link_to 'Sites', sites_path %></h2>
+<% else %>
+
+<h1>New yield <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node23.html?min" }) %></h1>
+
+<table>
+  <% form_for(@yield) do |f| %>
+    <%= f.error_messages %>
+  
+    <tr>
+      <td>
+      <%= f.label :mean %><br />
+      <%= f.text_field :mean, :size => 8 %>
+      </td>
+      <td>
+      <%= f.label :statistic %><br />
+      <%= f.text_field :stat, :size => 8 %>
+      </td>
+      <td>
+      <%= f.label "stat name" %><br />
+      <%= f.select :statname, ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD"] %>
+      </td>
+      <td>
+      <%= f.label :n %><br />
+      <%= f.text_field :n, :size => 8 %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=4>
+      <%= f.label :date %><br />
+      <%= f.date_select :date, :defualt => nil, :order => [:day, :month, :year], :add_month_numbers => true, :include_blank => true, :start_year => 1900, :end_year => Time.now.year %><br />
+      or <%= f.label "julian day (1-365)" %>/year -- <em>leave empty if selecting a date above<br />
+      <%= text_field_tag "julianday" %> / <%= text_field_tag "julianyear" %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=4>
+      <%= f.label :site_id %><br />
+      <%= f.select :site_id, @sites.collect { |p| [ p.select_default, p.id ] }, {} %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=4>
+      <%= f.label :treatment_id %><br />
+      <%= f.select :treatment_id, @treatments.collect { |p| [ p.select_default, p.id ] }, {} -%>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=4>
+
+    <%= render :partial => "species/species_search" %>
+
+      </td>
+    </tr>
+    <tr>
+      <td colspan=4>
+      <%= f.label :cultivar_id %><br />
+      <%= f.select :cultivar_id, Cultivar.all(:joins => :specie, :order => 'species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true} %>
+  
+      <%#= f.label "cultivar - species " %><br />
+      <!--p>Format : <em>Scientific Name</em> Name - Genus Species</p-->
+      <%#= select_tag "cultivar_specie_id", options_for_select([["",""]] + Cultivar.all(:joins => :specie, :order => 'species.scientificname').collect { |p| [ p.sn_name + " - " +( p.specie.nil? ? "" : p.specie.genus_species), p.id.to_s + "-" + p.specie.id.to_s ] }, {:selected => @yield.cultivar_id.to_s + "-" + @yield.specie_id.to_s } ) %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=4>
+        <%= f.label :dateloc, "Date Level of Confidence" %><br />
+        <%= f.select :dateloc, options_for_select($dateloc_drop.sort,f.object.dateloc.to_s) %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=4>
+        <%= f.label :access_level %><br />
+        <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :selected => current_user.access_level %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=4>
+      <%= f.label :notes %><br />
+      <%= f.text_area :notes %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=4>
+      <%= f.hidden_field :citation_id, :value => session['citation'] %>
+      <%= f.submit 'Create' %>
+      </td>
+    </tr>
+  <% end %>
+<% end %>
+</table>
+<%= observe_field(:species_query,
+                  :frequency => 1,
+                  :update => 'trait_specie_id',
+                  :with => 'symbol',
+                  :url => { :controller => :species, :action => :species_search }) %>
+<%= link_to 'Back', yields_path %>

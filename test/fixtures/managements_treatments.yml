@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  treatment_id: 1
+  management_id: 1
+
+two:
+  treatment_id: 1
+  management_id: 1

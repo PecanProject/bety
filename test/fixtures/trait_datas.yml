@@ -1,0 +1,45 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  TraitDataID: 1
+  SiteID: 1
+  USDASymbol: MyString
+  CitID: MyString
+  CultID: MyString
+  TrtID: MyString
+  TraitDate: 2010-03-14
+  TraitDateLOC: 9.99
+  TraitTime: 2010-03-14 21:24:10
+  TraitTimeLOC: 9.99
+  TraitVarID: MyString
+  TraitMean: 9.99
+  TraitN: 1
+  TraitStatName: MyString
+  TraitStat: 9.99
+  TraitNotes: MyText
+  AccessID: 1
+  Genus: MyString
+  Species: MyString
+  PFT: MyString
+
+two:
+  TraitDataID: 1
+  SiteID: 1
+  USDASymbol: MyString
+  CitID: MyString
+  CultID: MyString
+  TrtID: MyString
+  TraitDate: 2010-03-14
+  TraitDateLOC: 9.99
+  TraitTime: 2010-03-14 21:24:10
+  TraitTimeLOC: 9.99
+  TraitVarID: MyString
+  TraitMean: 9.99
+  TraitN: 1
+  TraitStatName: MyString
+  TraitStat: 9.99
+  TraitNotes: MyText
+  AccessID: 1
+  Genus: MyString
+  Species: MyString
+  PFT: MyString

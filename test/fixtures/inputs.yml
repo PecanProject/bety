@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  site: 
+  variable: 
+  filepath: MyString
+  format: MyText
+  original_data: MyString
+  notes: MyText
+
+two:
+  site: 
+  variable: 
+  filepath: MyString
+  format: MyText
+  original_data: MyString
+  notes: MyText

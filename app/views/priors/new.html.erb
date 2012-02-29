@@ -1,0 +1,45 @@
+<h1>New prior</h1>
+
+
+<% form_for(@prior) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :citation_id %><br />
+    <%= f.select :citation_id, Citation.all(:order => 'author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
+  </p>
+  <p>
+    <%= f.label :variable_id %><br />
+    <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }, {:selected => @prior.variable_id.to_i } %>
+
+  </p>
+  <p>
+    <%= f.label :phylogeny %><br />
+    <%= f.text_field :phylogeny %>
+  </p>
+  <p>
+    <%= f.label :distn %><br />
+     <%= f.select :distn, ['', 'beta', 'binom', 'cauchy', 'chisq', 'exp', 'f', 'gamma', 'geom', 'hyper', 'lnorm', 'logis', 'nbinom', 'norm', 'pois', 't', 'unif', 'weibull', 'wilcox' ] %> <em><%= link_to "More information about distributions", "http://cran.r-project.org/doc/manuals/R-intro.html#R-as-a-set-of-statistical-tables" %>
+  </p>
+  <p>
+    <%= f.label :parama %><br />
+    <%= f.text_field :parama %>
+  </p>
+  <p>
+    <%= f.label :paramb %><br />
+    <%= f.text_field :paramb %>
+  </p>
+  <p>
+    <%= f.label :n %><br />
+    <%= f.text_field :n %>
+  </p>
+  <p>
+    <%= f.label :notes %><br />
+    <%= f.text_area :notes %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', priors_path %>

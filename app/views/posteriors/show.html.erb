@@ -1,0 +1,18 @@
+<p>
+  <b>Pft:</b>
+  <%= link_to_if @posterior.pft, @posterior.pft, @posterior.pft %>
+</p>
+
+<p>
+  <b>Filename:</b>
+  <%=h @posterior.filename %>
+</p>
+
+<p>
+  <b>Parent:</b>
+  <%= link_to_if @posterior.parent, @posterior.parent, @posterior.parent %>
+</p>
+
+
+<%= link_to 'Edit', edit_posterior_path(@posterior) %> |
+<%= link_to 'Back', posteriors_path %>

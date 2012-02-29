@@ -1,0 +1,24 @@
+<h1>Listing covariates</h1>
+
+<table>
+  <tr>
+    <th><%= link_to "Variable", "#", {:onclick => "order('variables.name')"} -%><span id="variables.name"></span></th>
+    <th>Species, trait, treatment, and citation associated with this covariate</th>
+    <th><%= link_to "Level", "#", {:onclick => "order('covariates.level')"} -%><span id="covariates.level"></span></th>
+  </tr>
+
+<% @covariates.each do |covariate| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and covariate.id == @search.to_i%>>
+    <td><%= link_to_if covariate.variable, covariate.variable, covariate.variable %></td>
+    <td><%= link_to_if covariate.trait, covariate.trait, covariate.trait %></td>
+    <td><%=h covariate.level %></td>
+    <td><%= link_to 'Show', covariate %></td>
+    <td><%= link_to 'Edit', edit_covariate_path(covariate) %></td>
+    <td><%= link_to 'Destroy', covariate, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @covariates, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>

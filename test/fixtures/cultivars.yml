@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  plant_id: 1
+  name: MyString
+  ecotype: MyString
+  notes: MyText
+
+two:
+  plant_id: 1
+  name: MyString
+  ecotype: MyString
+  notes: MyText

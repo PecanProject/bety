@@ -1,0 +1,74 @@
+<% if current_user.page_access_level <= 3 %>
+  <p><%= link_to 'Use this record', :controller => :application, :action => 'use_citation', :id => @citation.id  %></p>
+<% end %>
+
+<p>
+  <b>Author:</b>
+  <%=h @citation.author %>
+</p>
+
+<p>
+  <b>Year:</b>
+  <%=h @citation.year %>
+</p>
+
+<p>
+  <b>Title:</b>
+  <%=h @citation.title %>
+</p>
+
+<p>
+  <b>Journal:</b>
+  <%=h @citation.journal %>
+</p>
+
+<p>
+  <b>Vol:</b>
+  <%=h @citation.vol %>
+</p>
+
+<p>
+  <b>Pg:</b>
+  <%=h @citation.pg %>
+</p>
+
+<p>
+  <b>Url:</b>
+  <%= link_to_unless @citation.url.blank?, "link", @citation.url do
+        ""
+      end %>
+</p>
+
+<p>
+  <b>Pdf:</b>
+  <%= link_to_unless @citation.pdf.blank?, "link", @citation.pdf do 
+        ""
+      end %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @citation.user %>
+</p>
+<hr>
+<h3>Sites</h3>
+<table>
+  <tr>
+    <th></th>
+    <th>Lat</th>
+    <th>Lon</th>
+    <th>Soil type</th>
+  </tr>
+<% @citation.sites.each do |site| %>
+  <tr>
+    <td><%= link_to site, site %></td>
+    <td><%= site.lat %></td>
+    <td><%= site.lon %></td>
+    <td><%= site.soil %></td>
+  </tr>
+<% end %>
+</table>
+
+<hr>
+<%= link_to 'Edit', edit_citation_path(@citation) %> |
+<%= link_to 'Back', citations_path %>

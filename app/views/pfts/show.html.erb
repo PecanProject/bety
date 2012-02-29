@@ -1,0 +1,35 @@
+<a style="text-decoration: none" href="#" onclick="showHide('show_pfts_species')" id="show_show_pfts_species">[+] View Related Species</a>
+<br/>
+<br/>
+<div id="show_pfts_species" class="hidden notvisible">
+  <%= render 'show_pfts_species' %>
+</div>
+
+<hr />
+<br />
+<br />
+
+<a style="text-decoration: none" href="#" onclick="showHide('show_pfts_priors')" id="show_show_pfts_priors">[+] View Related Priors</a>
+<br/>
+<br/>
+<div id="show_pfts_priors" class="hidden notvisible">
+  <%= render 'show_pfts_priors' %>
+</div>
+
+<hr />
+<br />
+<br />
+
+<p>
+  <b>Name:</b>
+  <%=h @pft.name %>
+</p>
+
+<p>
+  <b>Definition:</b>
+  <%=h @pft.definition %>
+</p>
+
+
+<%= link_to 'Edit', edit_pft_path(@pft) %> |
+<%= link_to 'Back', pfts_path %>

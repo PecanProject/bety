@@ -1,0 +1,36 @@
+<table width="100%">
+  <tr>
+    <td width="50%"><h3>Existing Citation Relationships</h3></td>
+    <td width="50%"><h3>Add Citation Relationship(s)</h3></td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Auth</th>
+          <th>Year</th>
+          <th>Title</th>
+        </tr>
+        <% @site.citations.each do |c| %>
+        <tr>
+          <td><%= link_to_remote "X", :url => { :controller => :sites, :action => :rem_citations_sites, :id => c.id, :site => @site }, :confirm => 'Are you sure?'%></td>
+          <td><%= link_to "edit", edit_citation_path(c.id) %></td>
+          <td><%= c.author %></td>
+          <td><%= c.year %></td>
+          <td><%= c.title %></td>
+        </tr>
+        <% end %>
+      </table>
+    </td>
+    <td>
+      <% form_remote_tag :url => {:controller=> :sites, :action => 'edit_citations_sites'} do  %>
+      <%= collection_select( :citation, :id, Citation.all.reject { |r| @site.citations.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
+      <%= hidden_field_tag 'id', @site.id %>
+      <br /><br />
+      <%= submit_tag "Select" %>
+      <% end %>
+    </td>
+  </tr>
+</table>

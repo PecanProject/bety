@@ -1,0 +1,32 @@
+<h1>Listing traits for <%= @title %></h1>
+
+<table>
+  <tr>
+    <th>Trait</th>
+    <th>Species</th>
+    <th>Mean</th>
+    <th>N</th>
+    <th>Statname</th>
+    <th>Stat</th>
+    <th>Citation</th>
+    <th>Site</th>
+    <th>Treatment</th>
+  </tr>
+
+<% @traits.each do |trait| %>
+    <td><%= link_to_if trait.variable, trait.variable, trait.variable %></td>
+    <td><%= link_to_if trait.specie, trait.specie, trait.specie %></td>
+    <td><%=h trait.mean %></td>
+    <td><%=h trait.n %></td>
+    <td><%=h trait.statname %></td>
+    <td><%=h trait.stat %></td>
+    <td><%= link_to_if trait.citation, trait.citation, trait.citation %></td>
+    <td><%= link_to_if trait.site, trait.site, trait.site %></td>
+    <td><%= link_to_if trait.treatment, trait.treatment, trait.treatment %></td>
+  </tr>
+<% end %>
+</table>
+<%= will_paginate @traits %>
+<br />
+<%= link_to 'CSV Format', sanitize("#{url_for(:action => 'traits')}.csv?site=#{params[:site]}") %>
+

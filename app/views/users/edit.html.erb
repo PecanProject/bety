@@ -1,0 +1,70 @@
+<h1>Editing User</h1>
+
+<% form_for(@user) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :login %><br />
+    <%= @user.login %>
+  </p>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :email %><br />
+    <%= f.text_field :email %>
+  </p>
+  <p>
+    <%= f.label :city %><br />
+    <%= f.text_field :city %>
+  </p>
+  <p>
+    <%= f.label :state_prov, "State/Province" %><br />
+    <%= f.text_field :state_prov %>
+  </p>
+  <p>
+    <%= f.label :country %><br />
+    <%= f.text_field :country %>
+  </p>
+  <p>
+    <%= f.label :postal_code %><br />
+    <%= f.text_field :postal_code %>
+  </p>
+  <p>
+    <%= f.label :field %><br />
+    <%= f.text_field :field %>
+  </p>
+  <p>
+    <%= f.label :change_password %>
+    <%= check_box_tag(:change_password) %>
+  <p>
+    <%= label_tag 'password' %><br/>
+    <%= f.password_field :password, :disabled => true %>
+  </p>
+
+  <p>
+    <%= label_tag 'password_confirmation', 'Confirm Password' %><br/>
+    <%= f.password_field :password_confirmation, :disabled => true %>
+  </p>
+
+  <% if current_user.page_access_level == 1 %>
+  <p>
+    <%= f.label 'page_access_level' %><br/>
+    <%= f.select :page_access_level, [ ["Administrator", 1], ["Manager", 2], ["Creator", 3], [ "Viewer", 4]] %>
+  </p>
+  <p>
+    <%= f.label 'data_access_level' %><br/>
+    <%= f.select :access_level, [ ["Restricted", 1], ["Internal EBI & Collaborators", 2], ["External Researcher", 3], ["Public", 4] ] %>
+  </p>
+  <% end %>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @citation %> |
+<%= link_to 'Back', citations_path %>
+<%= observe_field("change_password",
+                  :frequency => 1,
+                  :function => "var u = $('user_password'); u.disabled = !u.disabled;$('user_password_confirmation').disabled = u.disabled;") %>

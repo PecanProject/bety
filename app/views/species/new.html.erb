@@ -1,0 +1,491 @@
+<h1>New species  <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node30.html?min" }) %></h1>
+
+
+<% form_for(@specie, :url => {:action => 'create'}) do |f| %>
+  <%= f.error_messages %>
+  <p><i>add "?id=XXX" to the url (where XXX is the ID of another species) and all the fields will be populated with the other species information</i></p>
+
+  <p>
+    <%= f.label :spcd %><br />
+    <%= f.text_field :spcd %>
+  </p>
+  <p>
+    <%= f.label :genus %><br />
+    <%= f.text_field :genus %>
+  </p>
+  <p>
+    <%= f.label :species %><br />
+    <%= f.text_field :species %>
+  </p>
+  <p>
+    <%= f.label :scientificname %><br />
+    <%= f.text_field :scientificname %>
+  </p>
+  <p>
+    <%= f.label :commonname %><br />
+    <%= f.text_field :commonname %>
+  </p>
+  <p>
+    <%= f.label :AcceptedSymbol %><br />
+    <%= f.text_field :AcceptedSymbol %>
+  </p>
+  <p>
+    <%= f.label :SynonymSymbol %><br />
+    <%= f.text_field :SynonymSymbol %>
+  </p>
+  <p>
+    <%= f.label :Symbol %><br />
+    <%= f.text_field :Symbol %>
+  </p>
+  <p>
+    <%= f.label :PLANTS_Floristic_Area %><br />
+    <%= f.text_area :PLANTS_Floristic_Area %>
+  </p>
+  <p>
+    <%= f.label :State %><br />
+    <%= f.text_area :State %>
+  </p>
+  <p>
+    <%= f.label :Category %><br />
+    <%= f.text_field :Category %>
+  </p>
+  <p>
+    <%= f.label :Family %><br />
+    <%= f.text_field :Family %>
+  </p>
+  <p>
+    <%= f.label :FamilySymbol %><br />
+    <%= f.text_field :FamilySymbol %>
+  </p>
+  <p>
+    <%= f.label :FamilyCommonName %><br />
+    <%= f.text_field :FamilyCommonName %>
+  </p>
+  <p>
+    <%= f.label :xOrder %><br />
+    <%= f.text_field :xOrder %>
+  </p>
+  <p>
+    <%= f.label :SubClass %><br />
+    <%= f.text_field :SubClass %>
+  </p>
+  <p>
+    <%= f.label :Class %><br />
+    <%= f.text_field :Class %>
+  </p>
+  <p>
+    <%= f.label :SubDivision %><br />
+    <%= f.text_field :SubDivision %>
+  </p>
+  <p>
+    <%= f.label :Division %><br />
+    <%= f.text_field :Division %>
+  </p>
+  <p>
+    <%= f.label :SuperDivision %><br />
+    <%= f.text_field :SuperDivision %>
+  </p>
+  <p>
+    <%= f.label :SubKingdom %><br />
+    <%= f.text_field :SubKingdom %>
+  </p>
+  <p>
+    <%= f.label :Kingdom %><br />
+    <%= f.text_field :Kingdom %>
+  </p>
+  <p>
+    <%= f.label :ITIS_TSN %><br />
+    <%= f.text_field :ITIS_TSN %>
+  </p>
+  <p>
+    <%= f.label :Duration %><br />
+    <%= f.text_field :Duration %>
+  </p>
+  <p>
+    <%= f.label :GrowthHabit %><br />
+    <%= f.text_field :GrowthHabit %>
+  </p>
+  <p>
+    <%= f.label :NativeStatus %><br />
+    <%= f.text_field :NativeStatus %>
+  </p>
+  <p>
+    <%= f.label :FederalNoxiousStatus %><br />
+    <%= f.text_field :FederalNoxiousStatus %>
+  </p>
+  <p>
+    <%= f.label :FederalNoxiousCommonName %><br />
+    <%= f.text_field :FederalNoxiousCommonName %>
+  </p>
+  <p>
+    <%= f.label :StateNoxiousStatus %><br />
+    <%= f.text_area :StateNoxiousStatus %>
+  </p>
+  <p>
+    <%= f.label :StateNoxiousCommonName %><br />
+    <%= f.text_area :StateNoxiousCommonName %>
+  </p>
+  <p>
+    <%= f.label :Invasive %><br />
+    <%= f.text_field :Invasive %>
+  </p>
+  <p>
+    <%= f.label :Federal_TE_Status %><br />
+    <%= f.text_field :Federal_TE_Status %>
+  </p>
+  <p>
+    <%= f.label :State_TE_Status %><br />
+    <%= f.text_field :State_TE_Status %>
+  </p>
+  <p>
+    <%= f.label :State_TE_Common_Name %><br />
+    <%= f.text_area :State_TE_Common_Name %>
+  </p>
+  <p>
+    <%= f.label :NationalWetlandIndicatorStatus %><br />
+    <%= f.text_field :NationalWetlandIndicatorStatus %>
+  </p>
+  <p>
+    <%= f.label :RegionalWetlandIndicatorStatus %><br />
+    <%= f.text_field :RegionalWetlandIndicatorStatus %>
+  </p>
+  <p>
+    <%= f.label :ActiveGrowthPeriod %><br />
+    <%= f.text_field :ActiveGrowthPeriod %>
+  </p>
+  <p>
+    <%= f.label :AfterHarvestRegrowthRate %><br />
+    <%= f.text_field :AfterHarvestRegrowthRate %>
+  </p>
+  <p>
+    <%= f.label :Bloat %><br />
+    <%= f.text_field :Bloat %>
+  </p>
+  <p>
+    <%= f.label :C2N_Ratio %><br />
+    <%= f.text_field :C2N_Ratio %>
+  </p>
+  <p>
+    <%= f.label :CoppicePotential %><br />
+    <%= f.text_field :CoppicePotential %>
+  </p>
+  <p>
+    <%= f.label :FallConspicuous %><br />
+    <%= f.text_field :FallConspicuous %>
+  </p>
+  <p>
+    <%= f.label :FireResistance %><br />
+    <%= f.text_field :FireResistance %>
+  </p>
+  <p>
+    <%= f.label :FlowerColor %><br />
+    <%= f.text_field :FlowerColor %>
+  </p>
+  <p>
+    <%= f.label :FlowerConspicuous %><br />
+    <%= f.text_field :FlowerConspicuous %>
+  </p>
+  <p>
+    <%= f.label :FoliageColor %><br />
+    <%= f.text_field :FoliageColor %>
+  </p>
+  <p>
+    <%= f.label :FoliagePorositySummer %><br />
+    <%= f.text_field :FoliagePorositySummer %>
+  </p>
+  <p>
+    <%= f.label :FoliagePorosityWinter %><br />
+    <%= f.text_field :FoliagePorosityWinter %>
+  </p>
+  <p>
+    <%= f.label :FoliageTexture %><br />
+    <%= f.text_field :FoliageTexture %>
+  </p>
+  <p>
+    <%= f.label :FruitColor %><br />
+    <%= f.text_field :FruitColor %>
+  </p>
+  <p>
+    <%= f.label :FruitConspicuous %><br />
+    <%= f.text_field :FruitConspicuous %>
+  </p>
+  <p>
+    <%= f.label :GrowthForm %><br />
+    <%= f.text_field :GrowthForm %>
+  </p>
+  <p>
+    <%= f.label :GrowthRate %><br />
+    <%= f.text_field :GrowthRate %>
+  </p>
+  <p>
+    <%= f.label :MaxHeight20Yrs %><br />
+    <%= f.text_field :MaxHeight20Yrs %>
+  </p>
+  <p>
+    <%= f.label :MatureHeight %><br />
+    <%= f.text_field :MatureHeight %>
+  </p>
+  <p>
+    <%= f.label :KnownAllelopath %><br />
+    <%= f.text_field :KnownAllelopath %>
+  </p>
+  <p>
+    <%= f.label :LeafRetention %><br />
+    <%= f.text_field :LeafRetention %>
+  </p>
+  <p>
+    <%= f.label :Lifespan %><br />
+    <%= f.text_field :Lifespan %>
+  </p>
+  <p>
+    <%= f.label :LowGrowingGrass %><br />
+    <%= f.text_field :LowGrowingGrass %>
+  </p>
+  <p>
+    <%= f.label :NitrogenFixation %><br />
+    <%= f.text_field :NitrogenFixation %>
+  </p>
+  <p>
+    <%= f.label :ResproutAbility %><br />
+    <%= f.text_field :ResproutAbility %>
+  </p>
+  <p>
+    <%= f.label :Shape_and_Orientation %><br />
+    <%= f.text_field :Shape_and_Orientation %>
+  </p>
+  <p>
+    <%= f.label :Toxicity %><br />
+    <%= f.text_field :Toxicity %>
+  </p>
+  <p>
+    <%= f.label :AdaptedCoarseSoils %><br />
+    <%= f.text_field :AdaptedCoarseSoils %>
+  </p>
+  <p>
+    <%= f.label :AdaptedMediumSoils %><br />
+    <%= f.text_field :AdaptedMediumSoils %>
+  </p>
+  <p>
+    <%= f.label :AdaptedFineSoils %><br />
+    <%= f.text_field :AdaptedFineSoils %>
+  </p>
+  <p>
+    <%= f.label :AnaerobicTolerance %><br />
+    <%= f.text_field :AnaerobicTolerance %>
+  </p>
+  <p>
+    <%= f.label :CaCO3Tolerance %><br />
+    <%= f.text_field :CaCO3Tolerance %>
+  </p>
+  <p>
+    <%= f.label :ColdStratification %><br />
+    <%= f.text_field :ColdStratification %>
+  </p>
+  <p>
+    <%= f.label :DroughtTolerance %><br />
+    <%= f.text_field :DroughtTolerance %>
+  </p>
+  <p>
+    <%= f.label :FertilityRequirement %><br />
+    <%= f.text_field :FertilityRequirement %>
+  </p>
+  <p>
+    <%= f.label :FireTolerance %><br />
+    <%= f.text_field :FireTolerance %>
+  </p>
+  <p>
+    <%= f.label :MinFrostFreeDays %><br />
+    <%= f.text_field :MinFrostFreeDays %>
+  </p>
+  <p>
+    <%= f.label :HedgeTolerance %><br />
+    <%= f.text_field :HedgeTolerance %>
+  </p>
+  <p>
+    <%= f.label :MoistureUse %><br />
+    <%= f.text_field :MoistureUse %>
+  </p>
+  <p>
+    <%= f.label :pH_Minimum %><br />
+    <%= f.text_field :pH_Minimum %>
+  </p>
+  <p>
+    <%= f.label :pH_Maximum %><br />
+    <%= f.text_field :pH_Maximum %>
+  </p>
+  <p>
+    <%= f.label :Min_PlantingDensity %><br />
+    <%= f.text_field :Min_PlantingDensity %>
+  </p>
+  <p>
+    <%= f.label :Max_PlantingDensity %><br />
+    <%= f.text_field :Max_PlantingDensity %>
+  </p>
+  <p>
+    <%= f.label :Precipitation_Minimum %><br />
+    <%= f.text_field :Precipitation_Minimum %>
+  </p>
+  <p>
+    <%= f.label :Precipitation_Maximum %><br />
+    <%= f.text_field :Precipitation_Maximum %>
+  </p>
+  <p>
+    <%= f.label :RootDepthMinimum %><br />
+    <%= f.text_field :RootDepthMinimum %>
+  </p>
+  <p>
+    <%= f.label :SalinityTolerance %><br />
+    <%= f.text_field :SalinityTolerance %>
+  </p>
+  <p>
+    <%= f.label :ShadeTolerance %><br />
+    <%= f.text_field :ShadeTolerance %>
+  </p>
+  <p>
+    <%= f.label :TemperatureMinimum %><br />
+    <%= f.text_field :TemperatureMinimum %>
+  </p>
+  <p>
+    <%= f.label :BloomPeriod %><br />
+    <%= f.text_field :BloomPeriod %>
+  </p>
+  <p>
+    <%= f.label :CommercialAvailability %><br />
+    <%= f.text_field :CommercialAvailability %>
+  </p>
+  <p>
+    <%= f.label :FruitSeedAbundance %><br />
+    <%= f.text_field :FruitSeedAbundance %>
+  </p>
+  <p>
+    <%= f.label :FruitSeedPeriodBegin %><br />
+    <%= f.text_field :FruitSeedPeriodBegin %>
+  </p>
+  <p>
+    <%= f.label :FruitSeedPeriodEnd %><br />
+    <%= f.text_field :FruitSeedPeriodEnd %>
+  </p>
+  <p>
+    <%= f.label :FruitSeedPersistence %><br />
+    <%= f.text_field :FruitSeedPersistence %>
+  </p>
+  <p>
+    <%= f.label :Propogated_by_BareRoot %><br />
+    <%= f.text_field :Propogated_by_BareRoot %>
+  </p>
+  <p>
+    <%= f.label :Propogated_by_Bulbs %><br />
+    <%= f.text_field :Propogated_by_Bulbs %>
+  </p>
+  <p>
+    <%= f.label :Propogated_by_Container %><br />
+    <%= f.text_field :Propogated_by_Container %>
+  </p>
+  <p>
+    <%= f.label :Propogated_by_Corms %><br />
+    <%= f.text_field :Propogated_by_Corms %>
+  </p>
+  <p>
+    <%= f.label :Propogated_by_Cuttings %><br />
+    <%= f.text_field :Propogated_by_Cuttings %>
+  </p>
+  <p>
+    <%= f.label :Propogated_by_Seed %><br />
+    <%= f.text_field :Propogated_by_Seed %>
+  </p>
+  <p>
+    <%= f.label :Propogated_by_Sod %><br />
+    <%= f.text_field :Propogated_by_Sod %>
+  </p>
+  <p>
+    <%= f.label :Propogated_by_Sprigs %><br />
+    <%= f.text_field :Propogated_by_Sprigs %>
+  </p>
+  <p>
+    <%= f.label :Propogated_by_Tubers %><br />
+    <%= f.text_field :Propogated_by_Tubers %>
+  </p>
+  <p>
+    <%= f.label :Seeds_per_Pound %><br />
+    <%= f.text_field :Seeds_per_Pound %>
+  </p>
+  <p>
+    <%= f.label :SeedSpreadRate %><br />
+    <%= f.text_field :SeedSpreadRate %>
+  </p>
+  <p>
+    <%= f.label :SeedlingVigor %><br />
+    <%= f.text_field :SeedlingVigor %>
+  </p>
+  <p>
+    <%= f.label :SmallGrain %><br />
+    <%= f.text_field :SmallGrain %>
+  </p>
+  <p>
+    <%= f.label :VegetativeSpreadRate %><br />
+    <%= f.text_field :VegetativeSpreadRate %>
+  </p>
+  <p>
+    <%= f.label :Berry_Nut_Seed_Product %><br />
+    <%= f.text_field :Berry_Nut_Seed_Product %>
+  </p>
+  <p>
+    <%= f.label :ChristmasTreeProduct %><br />
+    <%= f.text_field :ChristmasTreeProduct %>
+  </p>
+  <p>
+    <%= f.label :FodderProduct %><br />
+    <%= f.text_field :FodderProduct %>
+  </p>
+  <p>
+    <%= f.label :FuelwoodProduct %><br />
+    <%= f.text_field :FuelwoodProduct %>
+  </p>
+  <p>
+    <%= f.label :LumberProduct %><br />
+    <%= f.text_field :LumberProduct %>
+  </p>
+  <p>
+    <%= f.label :NavalStoreProduct %><br />
+    <%= f.text_field :NavalStoreProduct %>
+  </p>
+  <p>
+    <%= f.label :NurseryStockProduct %><br />
+    <%= f.text_field :NurseryStockProduct %>
+  </p>
+  <p>
+    <%= f.label :PalatableBrowseAnimal %><br />
+    <%= f.text_field :PalatableBrowseAnimal %>
+  </p>
+  <p>
+    <%= f.label :PalatableGrazeAnimal %><br />
+    <%= f.text_field :PalatableGrazeAnimal %>
+  </p>
+  <p>
+    <%= f.label :PalatableHuman %><br />
+    <%= f.text_field :PalatableHuman %>
+  </p>
+  <p>
+    <%= f.label :PostProduct %><br />
+    <%= f.text_field :PostProduct %>
+  </p>
+  <p>
+    <%= f.label :ProteinPotential %><br />
+    <%= f.text_field :ProteinPotential %>
+  </p>
+  <p>
+    <%= f.label :PulpwoodProduct %><br />
+    <%= f.text_field :PulpwoodProduct %>
+  </p>
+  <p>
+    <%= f.label :VeneerProduct %><br />
+    <%= f.text_field :VeneerProduct %>
+  </p>
+
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+
+<%= link_to 'Back', species_index_path %>

@@ -1,0 +1,22 @@
+<table>
+  <tr>
+    <th><%= link_to "Notes", "#", {:onclick => "order('ensembles.notes')"} -%><span id="ensembles.notes"></span></th>
+    <th><%= link_to "Created", "#", {:onclick => "order('ensembles.created_at')"} -%><span id="ensembles.created_at"></span></th>
+    <th><%= link_to "Updated", "#", {:onclick => "order('ensembles.updated_at')"} -%><span id="ensembles.updated_at"></span></th>
+  </tr>
+
+<% @ensembles.each do |ensemble| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and ensemble.id == @search.to_i%>>
+    <td><%=h ensemble.notes %></td>
+    <td><%=h ensemble.created_at %></td>
+    <td><%=h ensemble.updated_at %></td>
+    <td><%= link_to 'Show', ensemble %></td>
+    <td><%= link_to 'Edit', edit_ensemble_path(ensemble) %></td>
+    <td><%= link_to 'Destroy', ensemble, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @ensembles, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>

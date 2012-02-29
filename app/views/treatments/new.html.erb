@@ -1,0 +1,28 @@
+<h1>New treatment <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node18.html?min" }) %></h1>
+
+
+<% form_for(@treatment) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :definition %><br />
+    <%= f.text_field :definition %>
+  </p>
+  <p>
+    <%= f.label :control %><br />
+    <%= f.select :control, [["True",true],["False",false]], { :include_blank => true } %>
+  </p>
+  <p>
+    <%= f.label :user %><br />
+    <%=h current_user %>
+  </p>
+  <p>
+     <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', treatments_path %>

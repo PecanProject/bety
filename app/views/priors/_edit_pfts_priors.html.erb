@@ -1,0 +1,36 @@
+<table width="100%">
+  <tr>
+    <td width="50%"><h3>Existing Pfts Relationships</h3></td>
+    <td width="50%"><h3>Add Pft Relationship(s)</h3></td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Name</th>
+          <th>Definiton</th>
+        </tr>
+        <% @prior.pfts.each do |c| %>
+        <tr>
+          <td><%= link_to_remote "X", :url => { :controller => :priors, :action => :rem_pfts_priors, :id => c.id, :prior => @prior  }, :confirm => 'Are you sure?'%></td>
+          <td><%= link_to "edit", edit_pft_path(c.pft_id) %></td>
+          <td><%= c.name %></td>
+          <td><%= c.definition[0..19] %></td>
+        </tr>
+        <% end %>
+      </table>
+    </td>
+    <td>
+      <% form_remote_tag :url => { :controller => :priors, :action => 'edit_pfts_priors'} do %>
+      <%= collection_select( :pft, :id, Pft.all.reject { |r| @prior.pfts.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
+      <%= hidden_field_tag 'id', @prior.id %>
+      <br /><br />
+      <%= submit_tag "Select" %>
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+

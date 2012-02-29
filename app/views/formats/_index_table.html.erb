@@ -1,0 +1,26 @@
+<h1>Listing formats</h1>
+
+<table>
+  <tr>
+    <th><%= link_to "Name", "#", {:onclick => "order('formats.name')"} -%><span id="formats.name"></span></th>
+    <th><%= link_to "Mime type", "#", {:onclick => "order('formats.mime_type')"} -%><span id="formats.mime_type"></span></th>
+    <th><%= link_to "Data Format", "#", {:onclick => "order('formats.dataformat')"} -%><span id="formats.dataformat"></span></th>
+    <th><%= link_to "Notes", "#", {:onclick => "order('formats.notes')"} -%><span id="formats.notes"></span></th>
+  </tr>
+
+<% @formats.each do |format| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and format.id == @search.to_i%>>
+    <td><%=h format.name %></td>
+    <td><%=h format.mime_type %></td>
+    <td><%=h format.dataformat %></td>
+    <td><%=h format.notes %></td>
+    <td><%= link_to 'Show', format %></td>
+    <td><%= link_to 'Edit', edit_format_path(format) %></td>
+    <td><%= link_to 'Destroy', format, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+<%= will_paginate @formats, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+

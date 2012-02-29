@@ -1,0 +1,40 @@
+<h1>Listing runs</h1>
+
+<table>
+  <tr>
+    <th>Model</th>
+    <th>Site</th>
+    <th>Start time</th>
+    <th>Finish time</th>
+    <th>Started at</th>
+    <th>Finished at</th>
+    <th>Ensemble</th>
+    <th>Outdir</th>
+    <th>Outprefix</th>
+    <th>Setting</th>
+    <th>Parameter List</th>
+  </tr>
+
+<% @runs.each do |run| %>
+  <tr>
+    <td><%= link_to_if run.model, run.model, run.model %></td>
+    <td><%= link_to_if run.model, run.site, run.site %></td>
+    <td><%=h run.start_time %></td>
+    <td><%=h run.finish_time %></td>
+    <td><%=h run.started_at %></td>
+    <td><%=h run.finished_at %></td>
+    <td><%= link_to_if raw.ensemble, raw.ensemble, raw.ensemble %></td>
+    <td><%=h run.outdir %></td>
+    <td><%=h run.outprefix %></td>
+    <td><%=h run.setting %></td>
+    <td><%=h run.parameter_list %></td>
+    <td><%= link_to 'Show', run %></td>
+    <td><%= link_to 'Edit', edit_run_path(run) %></td>
+    <td><%= link_to 'Destroy', run, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New run', new_run_path %>

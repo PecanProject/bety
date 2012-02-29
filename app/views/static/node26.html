@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Extracting Data From a Figure using R</TITLE>
+<META NAME="description" CONTENT="Extracting Data From a Figure using R">
+<META NAME="keywords" CONTENT="dbdocumentation_data_entry">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="dbdocumentation_data_entry.css">
+
+<LINK REL="next" HREF="node27.html">
+<LINK REL="previous" HREF="node25.html">
+<LINK REL="up" HREF="node24.html">
+<LINK REL="next" HREF="node27.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html356"
+  HREF="node27.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
+ SRC="/bety/images/next.png"></A> 
+<A NAME="tex2html354"
+  HREF="node24.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
+ SRC="/bety/images/up.png"></A> 
+<A NAME="tex2html348"
+  HREF="node25.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
+ SRC="/bety/images/prev.png"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html357"
+  HREF="node27.html">Extracting Data From a</A>
+<B> Up:</B> <A NAME="tex2html355"
+  HREF="node24.html">Adding a Covariate</A>
+<B> Previous:</B> <A NAME="tex2html349"
+  HREF="node25.html">Extracting information from tables</A>
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00077200000000000000">
+Extracting Data From a Figure using R</A>
+</H3>
+
+<P>
+To extract data from a jpg file in R using the digitize package:
+
+<P>
+
+<OL>
+<LI>save image as a <code>*.jpg</code> file
+</LI>
+<LI>open R
+</LI>
+<LI>change the directory that R is using to the one where the image is
+</LI>
+<LI>use R code below to extract data, display it, and save it in a <code>csv</code> file steps below  
+</LI>
+<LI>upload csv to the project file in google spreadsheet, or open as excel/openoffice and copy/paste to google spreadsheet 
+</LI>
+</OL>
+
+<P>
+<PRE>
+library('digitize')
+calpts &lt;- ReadAndCal('authorYYYabc_fixX.jpg') 
+   ## click on xaxis min (x1), xaxis max (x2), 
+   ## yaxis min(y1), yaxis max (y2)
+pts &lt;- DigitData(col='red',type='p',n=8)
+   ## set n = to the number of points to collect 
+data &lt;- Calibrate(pts, calpts, x1, x2, y1, y2)
+   ## x1, x2, y1, and y2 are the min and max of the x and y axes, respectively.
+print(data)
+write.csv(data, 'authorYYYYabc_figX.csv')
+</PRE>
+
+<P>
+<BR><HR>
+<ADDRESS>
+David
+2011-10-07
+</ADDRESS>
+</BODY>
+</HTML>

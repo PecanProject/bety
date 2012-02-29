@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  pft_id: 
+  filename: MyString
+  parent_id: 
+
+two:
+  pft_id: 
+  filename: MyString
+  parent_id: 

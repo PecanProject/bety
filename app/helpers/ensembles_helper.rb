@@ -1,0 +1,2 @@
+module EnsemblesHelper
+end

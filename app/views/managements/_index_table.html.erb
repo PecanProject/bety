@@ -1,0 +1,34 @@
+<h1>Listing managements</h1>
+
+<table>
+  <tr>
+    <th><%= link_to "Citation", "#", {:onclick => "order('citations.author')"} -%><span id="citations.author"></span></th>
+    <th><%= link_to "Date", "#", {:onclick => "order('managements.date')"} -%><span id="managements.date"></span></th>
+    <th><%= link_to "Type", "#", {:onclick => "order('managements.mgmttype')"} -%><span id="managements.mgmttype"></span></th>
+    <th><%= link_to "Level", "#", {:onclick => "order('managements.level')"} -%><span id="managements.level"></span></th>
+    <th><%= link_to "Units", "#", {:onclick => "order('managements.units')"} -%><span id="managements.units"></span></th>
+    <th><%= link_to "Notes", "#", {:onclick => "order('managements.notes')"} -%><span id="managements.notes"></span></th>
+  </tr>
+
+<% @managements.each do |management| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and management.id == @search.to_i%>>
+    <td><%= link_to_if management.citation, management.citation, management.citation %></td>
+    <td><%=h management.date %></td>
+    <td><%=h management.mgmttype %></td>
+    <td><%=h management.level %></td>
+    <td><%=h management.units %></td>
+    <td><%=h management.notes %></td>
+    <td><%= link_to 'Show', management %></td>
+    <td><%= link_to 'Edit', edit_management_path(management) %></td>
+    <td><%= link_to 'Destroy', management, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @priors, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+
+
+
+

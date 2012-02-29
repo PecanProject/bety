@@ -1,0 +1,441 @@
+<h1>New site <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node16.html?min" }) %></h1>
+
+<% if session['citation'].nil? %>
+  <h2>Please choose a citation to work with first. <%= link_to 'Citations', citations_path %></h2>
+<% else %>
+
+
+<table>
+<% form_for(@site) do |f| %>
+  <%= f.error_messages %>
+  <tr>
+    <td colspan=3>
+      <%= f.label :sitename, "Site name" %><br />
+      <%= f.text_field :sitename %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= f.label :masl, "Elevation (m)" %><br />
+      <%= f.text_field :masl %>
+    </td>
+    <td>
+      <%= f.label :map, "Mean Annual Precipitation (mm/yr)" %><br />
+      <%= f.text_field :map %>
+    </td>
+    <td>
+      <%= f.label :mat, "Mean Annual Temperature (°C)" %><br />
+      <%= f.text_field :mat %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    <%= f.label :city %><br />
+    <%= f.text_field :city %>
+    </td>
+    <td>
+    <%= f.label :state %><br />
+    <%= f.text_field :state %>
+    </td>
+    <td>
+    <%= f.label :country %><br />
+    <%= f.select :country, [[ "UNITED STATES", "US" ],
+[ "AFGHANISTAN", "AF" ],
+[ "ÅLAND ISLANDS", "AX" ],
+[ "ALBANIA", "AL" ],
+[ "ALGERIA", "DZ" ],
+[ "AMERICAN SAMOA", "AS" ],
+[ "ANDORRA", "AD" ],
+[ "ANGOLA", "AO" ],
+[ "ANGUILLA", "AI" ],
+[ "ANTARCTICA", "AQ" ],
+[ "ANTIGUA AND BARBUDA", "AG" ],
+[ "ARGENTINA", "AR" ],
+[ "ARMENIA", "AM" ],
+[ "ARUBA", "AW" ],
+[ "AUSTRALIA", "AU" ],
+[ "AUSTRIA", "AT" ],
+[ "AZERBAIJAN", "AZ" ],
+[ "BAHAMAS", "BS" ],
+[ "BAHRAIN", "BH" ],
+[ "BANGLADESH", "BD" ],
+[ "BARBADOS", "BB" ],
+[ "BELARUS", "BY" ],
+[ "BELGIUM", "BE" ],
+[ "BELIZE", "BZ" ],
+[ "BENIN", "BJ" ],
+[ "BERMUDA", "BM" ],
+[ "BHUTAN", "BT" ],
+[ "BOLIVIA, PLURINATIONAL STATE OF", "BO" ],
+[ "BOSNIA AND HERZEGOVINA", "BA" ],
+[ "BOTSWANA", "BW" ],
+[ "BOUVET ISLAND", "BV" ],
+[ "BRAZIL", "BR" ],
+[ "BRITISH INDIAN OCEAN TERRITORY", "IO" ],
+[ "BRUNEI DARUSSALAM", "BN" ],
+[ "BULGARIA", "BG" ],
+[ "BURKINA FASO", "BF" ],
+[ "BURUNDI", "BI" ],
+[ "CAMBODIA", "KH" ],
+[ "CAMEROON", "CM" ],
+[ "CANADA", "CA" ],
+[ "CAPE VERDE", "CV" ],
+[ "CAYMAN ISLANDS", "KY" ],
+[ "CENTRAL AFRICAN REPUBLIC", "CF" ],
+[ "CHAD", "TD" ],
+[ "CHILE", "CL" ],
+[ "CHINA", "CN" ],
+[ "CHRISTMAS ISLAND", "CX" ],
+[ "COCOS (KEELING) ISLANDS", "CC" ],
+[ "COLOMBIA", "CO" ],
+[ "COMOROS", "KM" ],
+[ "CONGO", "CG" ],
+[ "CONGO, THE DEMOCRATIC REPUBLIC OF THE", "CD" ],
+[ "COOK ISLANDS", "CK" ],
+[ "COSTA RICA", "CR" ],
+[ "CÔTE D'IVOIRE", "CI" ],
+[ "CROATIA", "HR" ],
+[ "CUBA", "CU" ],
+[ "CYPRUS", "CY" ],
+[ "CZECH REPUBLIC", "CZ" ],
+[ "DENMARK", "DK" ],
+[ "DJIBOUTI", "DJ" ],
+[ "DOMINICA", "DM" ],
+[ "DOMINICAN REPUBLIC", "DO" ],
+[ "ECUADOR", "EC" ],
+[ "EGYPT", "EG" ],
+[ "EL SALVADOR", "SV" ],
+[ "EQUATORIAL GUINEA", "GQ" ],
+[ "ERITREA", "ER" ],
+[ "ESTONIA", "EE" ],
+[ "ETHIOPIA", "ET" ],
+[ "FALKLAND ISLANDS (MALVINAS)", "FK" ],
+[ "FAROE ISLANDS", "FO" ],
+[ "FIJI", "FJ" ],
+[ "FINLAND", "FI" ],
+[ "FRANCE", "FR" ],
+[ "FRENCH GUIANA", "GF" ],
+[ "FRENCH POLYNESIA", "PF" ],
+[ "FRENCH SOUTHERN TERRITORIES", "TF" ],
+[ "GABON", "GA" ],
+[ "GAMBIA", "GM" ],
+[ "GEORGIA", "GE" ],
+[ "GERMANY", "DE" ],
+[ "GHANA", "GH" ],
+[ "GIBRALTAR", "GI" ],
+[ "GREECE", "GR" ],
+[ "GREENLAND", "GL" ],
+[ "GRENADA", "GD" ],
+[ "GUADELOUPE", "GP" ],
+[ "GUAM", "GU" ],
+[ "GUATEMALA", "GT" ],
+[ "GUERNSEY", "GG" ],
+[ "GUINEA", "GN" ],
+[ "GUINEA-BISSAU", "GW" ],
+[ "GUYANA", "GY" ],
+[ "HAITI", "HT" ],
+[ "HEARD ISLAND AND MCDONALD ISLANDS", "HM" ],
+[ "HOLY SEE (VATICAN CITY STATE)", "VA" ],
+[ "HONDURAS", "HN" ],
+[ "HONG KONG", "HK" ],
+[ "HUNGARY", "HU" ],
+[ "ICELAND", "IS" ],
+[ "INDIA", "IN" ],
+[ "INDONESIA", "ID" ],
+[ "IRAN, ISLAMIC REPUBLIC OF", "IR" ],
+[ "IRAQ", "IQ" ],
+[ "IRELAND", "IE" ],
+[ "ISLE OF MAN", "IM" ],
+[ "ISRAEL", "IL" ],
+[ "ITALY", "IT" ],
+[ "JAMAICA", "JM" ],
+[ "JAPAN", "JP" ],
+[ "JERSEY", "JE" ],
+[ "JORDAN", "JO" ],
+[ "KAZAKHSTAN", "KZ" ],
+[ "KENYA", "KE" ],
+[ "KIRIBATI", "KI" ],
+[ "KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF", "KP" ],
+[ "KOREA, REPUBLIC OF", "KR" ],
+[ "KUWAIT", "KW" ],
+[ "KYRGYZSTAN", "KG" ],
+[ "LAO PEOPLE'S DEMOCRATIC REPUBLIC", "LA" ],
+[ "LATVIA", "LV" ],
+[ "LEBANON", "LB" ],
+[ "LESOTHO", "LS" ],
+[ "LIBERIA", "LR" ],
+[ "LIBYAN ARAB JAMAHIRIYA", "LY" ],
+[ "LIECHTENSTEIN", "LI" ],
+[ "LITHUANIA", "LT" ],
+[ "LUXEMBOURG", "LU" ],
+[ "MACAO", "MO" ],
+[ "MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF", "MK" ],
+[ "MADAGASCAR", "MG" ],
+[ "MALAWI", "MW" ],
+[ "MALAYSIA", "MY" ],
+[ "MALDIVES", "MV" ],
+[ "MALI", "ML" ],
+[ "MALTA", "MT" ],
+[ "MARSHALL ISLANDS", "MH" ],
+[ "MARTINIQUE", "MQ" ],
+[ "MAURITANIA", "MR" ],
+[ "MAURITIUS", "MU" ],
+[ "MAYOTTE", "YT" ],
+[ "MEXICO", "MX" ],
+[ "MICRONESIA, FEDERATED STATES OF", "FM" ],
+[ "MOLDOVA, REPUBLIC OF", "MD" ],
+[ "MONACO", "MC" ],
+[ "MONGOLIA", "MN" ],
+[ "MONTENEGRO", "ME" ],
+[ "MONTSERRAT", "MS" ],
+[ "MOROCCO", "MA" ],
+[ "MOZAMBIQUE", "MZ" ],
+[ "MYANMAR", "MM" ],
+[ "NAMIBIA", "NA" ],
+[ "NAURU", "NR" ],
+[ "NEPAL", "NP" ],
+[ "NETHERLANDS", "NL" ],
+[ "NETHERLANDS ANTILLES", "AN" ],
+[ "NEW CALEDONIA", "NC" ],
+[ "NEW ZEALAND", "NZ" ],
+[ "NICARAGUA", "NI" ],
+[ "NIGER", "NE" ],
+[ "NIGERIA", "NG" ],
+[ "NIUE", "NU" ],
+[ "NORFOLK ISLAND", "NF" ],
+[ "NORTHERN MARIANA ISLANDS", "MP" ],
+[ "NORWAY", "NO" ],
+[ "OMAN", "OM" ],
+[ "PAKISTAN", "PK" ],
+[ "PALAU", "PW" ],
+[ "PALESTINIAN TERRITORY, OCCUPIED", "PS" ],
+[ "PANAMA", "PA" ],
+[ "PAPUA NEW GUINEA", "PG" ],
+[ "PARAGUAY", "PY" ],
+[ "PERU", "PE" ],
+[ "PHILIPPINES", "PH" ],
+[ "PITCAIRN", "PN" ],
+[ "POLAND", "PL" ],
+[ "PORTUGAL", "PT" ],
+[ "PUERTO RICO", "PR" ],
+[ "QATAR", "QA" ],
+[ "RÉUNION", "RE" ],
+[ "ROMANIA", "RO" ],
+[ "RUSSIAN FEDERATION", "RU" ],
+[ "RWANDA", "RW" ],
+[ "SAINT BARTHÉLEMY", "BL" ],
+[ "SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA", "SH" ],
+[ "SAINT KITTS AND NEVIS", "KN" ],
+[ "SAINT LUCIA", "LC" ],
+[ "SAINT MARTIN", "MF" ],
+[ "SAINT PIERRE AND MIQUELON", "PM" ],
+[ "SAINT VINCENT AND THE GRENADINES", "VC" ],
+[ "SAMOA", "WS" ],
+[ "SAN MARINO", "SM" ],
+[ "SAO TOME AND PRINCIPE", "ST" ],
+[ "SAUDI ARABIA", "SA" ],
+[ "SENEGAL", "SN" ],
+[ "SERBIA", "RS" ],
+[ "SEYCHELLES", "SC" ],
+[ "SIERRA LEONE", "SL" ],
+[ "SINGAPORE", "SG" ],
+[ "SLOVAKIA", "SK" ],
+[ "SLOVENIA", "SI" ],
+[ "SOLOMON ISLANDS", "SB" ],
+[ "SOMALIA", "SO" ],
+[ "SOUTH AFRICA", "ZA" ],
+[ "SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS", "GS" ],
+[ "SPAIN", "ES" ],
+[ "SRI LANKA", "LK" ],
+[ "SUDAN", "SD" ],
+[ "SURINAME", "SR" ],
+[ "SVALBARD AND JAN MAYEN", "SJ" ],
+[ "SWAZILAND", "SZ" ],
+[ "SWEDEN", "SE" ],
+[ "SWITZERLAND", "CH" ],
+[ "SYRIAN ARAB REPUBLIC", "SY" ],
+[ "TAIWAN, PROVINCE OF CHINA", "TW" ],
+[ "TAJIKISTAN", "TJ" ],
+[ "TANZANIA, UNITED REPUBLIC OF", "TZ" ],
+[ "THAILAND", "TH" ],
+[ "TIMOR-LESTE", "TL" ],
+[ "TOGO", "TG" ],
+[ "TOKELAU", "TK" ],
+[ "TONGA", "TO" ],
+[ "TRINIDAD AND TOBAGO", "TT" ],
+[ "TUNISIA", "TN" ],
+[ "TURKEY", "TR" ],
+[ "TURKMENISTAN", "TM" ],
+[ "TURKS AND CAICOS ISLANDS", "TC" ],
+[ "TUVALU", "TV" ],
+[ "UGANDA", "UG" ],
+[ "UKRAINE", "UA" ],
+[ "UNITED ARAB EMIRATES", "AE" ],
+[ "UNITED KINGDOM", "GB" ],
+[ "UNITED STATES MINOR OUTLYING ISLANDS", "UM" ],
+[ "URUGUAY", "UY" ],
+[ "UZBEKISTAN", "UZ" ],
+[ "VANUATU", "VU" ],
+[ "VENEZUELA, BOLIVARIAN REPUBLIC OF", "VE" ],
+[ "VIET NAM", "VN" ],
+[ "VIRGIN ISLANDS, BRITISH", "VG" ],
+[ "VIRGIN ISLANDS, U.S.", "VI" ],
+[ "WALLIS AND FUTUNA", "WF" ],
+[ "WESTERN SAHARA", "EH" ],
+[ "YEMEN", "YE" ],
+[ "ZAMBIA", "ZM" ],
+[ "ZIMBABWE", "ZW" ] ], {:include_blank => true }  %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    <%= f.label :lat %><%= link_to_prototype_window(image_tag("help.gif"), "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node17.html?min" }) %><br />
+    <%= f.text_field :lat %><br /><br />
+    <%= f.label :lon %><br />
+    <%= f.text_field :lon %><br /><br />
+    <%= f.label :local_time %><br />
+    <%= f.text_field :local_time %>
+    </td>
+    <td colspan=2>
+
+    <div id="map_canvas" style="width: 600px; height: 400px"></div>
+
+    <div id="tmp"></div>
+    <div id="tmp1"></div>
+
+    <script type="text/javascript">
+//<![CDATA[ 
+ 
+      var geocoder;
+      var address;
+      var latlng = new google.maps.LatLng(40.44,-95.98);
+      var myOptions = {
+        zoom: 4,
+        center: latlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+
+      var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+      var geocoder = new google.maps.Geocoder();
+      var infowindow = new google.maps.InfoWindow();
+      var temp;
+      var marker;
+
+      google.maps.event.addListener(map,'click',function(event) {
+        geocoder.geocode({'latLng': event.latLng}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          $("site_lat").value = event.latLng.lat();
+          $("site_lon").value = event.latLng.lng();
+          $("site_city").value = "";
+          $("site_country").value = "";
+          $("site_state").value = "";
+
+            for(k=0;k<results[0].address_components.length;k++) { 
+              var tmp = results[0].address_components[k].long_name;
+              switch (results[0].address_components[k].types[0]) { 
+              case "locality":
+                $("site_city").value = tmp;
+                break;
+              case "administrative_area_level_1":
+                $("site_state").value = tmp;
+                break;
+              case "country":
+                $("site_country").value = results[0].address_components[k].short_name.toUpperCase();
+                break;
+              default:
+              }
+            }
+          if(typeof(marker) != "undefined"){
+            marker.setMap(null);
+          }
+          marker = new google.maps.Marker({
+            position: event.latLng,
+            map: map
+          });
+
+        } else {
+          marker.setMap(null);
+          alert("Geocoder failed due to: " + status);
+        }
+        });
+      });
+
+//]]>
+    </script>
+
+  </tr>
+  <tr>
+    <td colspan>
+    <%= f.label :soil %><br />
+    <%= f.select :soil, [ "sand","loamy sand","sandy loam","silt loam","loam","sandy clay loam","silty clay loam","clay loam","sandy clay","silty clay","clay","peat"], { :include_blank => true }  %><br />
+    % Clay<br />
+    <%= f.text_field :clay_pct %><br />
+    % Sand<br />
+    <%= f.text_field :sand_pct %>
+
+    </td>
+    <td>
+    SOM<br />
+    <%= f.text_field :som %>
+    </td>
+    <td>
+    Greenhouse<br />
+    <%= f.select :greenhouse, [true, false], { :include_blank => true } %>
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>
+    <%= f.label :notes %><br />
+    <%= f.text_area :notes %>
+    </td>
+    <td colspan=1>
+    <%= f.label :soilnotes %><br />
+    <%= f.text_area :soilnotes %>
+    </td>
+  </tr>
+  <tr>
+  </tr>
+  <tr>
+    <td colspan=3>
+    <%= f.label :user %><br />
+    <%= current_user %><br />
+    <%= f.submit 'Create' %> <b><span id="matches_count"></span></b>
+    </td>
+  </tr>
+</table>
+<% end %>
+<% end %>
+
+<span id='search_term'></span>
+<div id="index_table" style="display: none;">
+</div>
+
+<%= observe_field :site_sitename,
+                  :frequency => 1,
+                  :with => "'sort='+current_sort+'&current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('site_sitename')+'&current_sort='+current_sort",
+                  :url => { :action => :search } %>
+<%= observe_field :site_city,
+                  :frequency => 1,
+                  :with => "'sort='+current_sort+'&current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('site_city')+'&current_sort='+current_sort",
+                  :url => { :action => :search } %>
+<%= observe_field :site_lat,
+                  :frequency => 1,
+                  :with => "'sort='+current_sort+'&current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('site_lat')+'&current_sort='+current_sort",
+                  :url => { :action => :search } %>
+<%= observe_field :site_lon,
+                  :frequency => 1,
+                  :with => "'sort='+current_sort+'&current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('site_lon')+'&current_sort='+current_sort",
+                  :url => { :action => :search } %>
+
+<script>
+  current_sort = "sites.id";
+  current_sort_order = "false";
+  function order(field) {
+    <%= remote_function :url => { :action => "search" },
+                        :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'sort='+field+'&current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort" %>
+
+  }
+</script>
+<%= link_to 'Back', sites_path %>

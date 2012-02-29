@@ -1,0 +1,23 @@
+<p>
+  <b>Mime type:</b>
+  <%=h @format.mime_type %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%=h @format.name %>
+</p>
+
+<p>
+  <b>Data Format:</b>
+  <%=h @format.dataformat %>
+</p>
+
+<p>
+  <b>Notes:</b>
+  <%=h @format.notes %>
+</p>
+
+
+<%= link_to 'Edit', edit_format_path(@format) %> |
+<%= link_to 'Back', formats_path %>

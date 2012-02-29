@@ -1,0 +1,29 @@
+<h1>Editing format</h1>
+
+<% form_for :form, @format, :url => { :action => "update", :id => @format.id }, :html => {:method => :put} do |f| %>
+
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :mime_type %><br />
+    <%= f.select :mime_type, Mimetype.all(:order => "id desc").collect(&:type_string), {:include_blank => true} %>
+  </p>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_area :name %>
+  </p>
+  <p>
+    <%= f.label :dataformat %><br />
+    <%= f.text_area :dataformat %>
+  </p>
+  <p>
+    <%= f.label :notes %><br />
+    <%= f.text_area :notes %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @format %> |
+<%= link_to 'Back', formats_path %>

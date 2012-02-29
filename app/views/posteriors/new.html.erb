@@ -1,0 +1,23 @@
+<h1>New posterior</h1>
+
+<% form_for(@posterior) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :pft %><br />
+    <%= f.select :pft_id, Pft.all.collect { |p| [ p.select_default, p.id] } %>
+  </p>
+  <p>
+    <%= f.label :filename %><br />
+    <%= f.text_field :filename %>
+  </p>
+  <p>
+    <%= f.label :parent_id %><br />
+    <%= f.select :parent_id, Posterior.all.collect{ |p| [ p.select_default, p.id] }, {:include_blank => true } %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', posteriors_path %>

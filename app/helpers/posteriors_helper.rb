@@ -1,0 +1,2 @@
+module PosteriorsHelper
+end

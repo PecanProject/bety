@@ -1,0 +1,30 @@
+<table>
+  <tr>
+    <th><%= link_to "Run", "#", {:onclick => "order('models.model_name')"} -%><span id="models.model_name"></span></th>
+    <th><%= link_to "Variable", "#", {:onclick => "order('variables.name')"} -%><span id="variables.name"></span></th>
+    <th><%= link_to "Input", "#", {:onclick => "order('sites.sitename')"} -%><span id="sites.sitename"></span></th>
+    <th><%= link_to "Loglikelihood", "#", {:onclick => "order('likelihoods.loglikelihood')"} -%><span id="likelihoods.loglikelihood"></span></th>
+    <th><%= link_to "N eff", "#", {:onclick => "order('likelihoods.n_eff')"} -%><span id="likelihoods.n_eff"></span></th>
+    <th><%= link_to "Weight", "#", {:onclick => "order('likelihoods.weight')"} -%><span id="likelihoods.weight"></span></th>
+    <th><%= link_to "Residual", "#", {:onclick => "order('likelihoods.residual')"} -%><span id="likelihoods.residual"></span></th>
+  </tr>
+
+<% @likelihoods.each do |likelihood| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and likelihood.id == @search.to_i%>>
+    <td><%= link_to_if likelihood.run, likelihood.run, likelihood.run %></td>
+    <td><%= link_to_if likelihood.variable, likelihood.variable, likelihood.variable  %></td>
+    <td><%= link_to_if likelihood.input, likelihood.input, likelihood.input %></td>
+    <td><%=h likelihood.loglikelihood %></td>
+    <td><%=h likelihood.n_eff %></td>
+    <td><%=h likelihood.weight %></td>
+    <td><%=h likelihood.residual %></td>
+    <td><%= link_to 'Show', likelihood %></td>
+    <td><%= link_to 'Edit', edit_likelihood_path(likelihood) %></td>
+    <td><%= link_to 'Destroy', likelihood, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @likelihoods, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
+                        :complete => "Element.hide('spinner')",
+                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
