@@ -16,7 +16,12 @@ class UsersController < ApplicationController
   end
 
   def show 
-    @user = User.find(params[:id])
+    if current_user.page_access_level == 1
+      user_id = params[:id]
+    else
+      user_id = current_user.id
+    end
+    @user = User.find(user_id)
   end
 
   def new
@@ -88,6 +93,14 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if current_user.page_access_level != 1
+      #Prevent user from attempting to submit updated info for a different user if they are not an admin.
+      if @user.id != current_user.id
+        logger.info "Attempted attack!"
+        logger.info params[:user].to_yaml
+        redirect_to logout_path and return
+      end
+
+      #Prevent users from changing their own access level unless they are admins...
       params[:user].delete(:access_level)
       params[:user].delete(:page_access_level)
     end

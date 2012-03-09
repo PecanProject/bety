@@ -11,7 +11,7 @@ class Yield < ActiveRecord::Base
 
   named_scope :all_order, :include => :specie, :order => 'species.genus, species.species'
   named_scope :all_limited, lambda { |check,access_lev| 
-      {:conditions => ["checked >= ? and access_level >= ?",check,access_lev] }
+      {:conditions => ["(checked >= ? or checked = ? ) and access_level >= ?",check,'-1',access_lev] }
     }
 
   comma do
