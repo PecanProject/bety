@@ -208,11 +208,13 @@ module AuthenticatedSystem
                                 "VariablesController.search",
                                 "TraitsController.index",
                                 "TraitsController.show",
+                                "TraitsController.search",
                                 "UsersController.index", 
                                 "UsersController.show", 
                                 "UsersController.edit", 
                                 "UsersController.update", 
                                 "YieldsController.index",
+                                "YieldsController.search",
                                 "YieldsController.show"]
 
 

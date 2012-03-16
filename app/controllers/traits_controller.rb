@@ -163,8 +163,8 @@ class TraitsController < ApplicationController
         search_cond[1][:citation] = session["citation"]
       end
     end
-    
-    @traits = Trait.all_limited($checked,$access_level).paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:citation, :variable,:specie, :site,:treatment], :conditions => search_cond 
+   logger.info "here" 
+    @traits = Trait.all_limited($checked,$access_level,current_user.id).paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:citation, :variable,:specie, :site,:treatment], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"

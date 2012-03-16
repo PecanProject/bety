@@ -17,7 +17,7 @@ class Trait < ActiveRecord::Base
 
   # Allow admins and managers to see everything, allow users to see everything they created.
   named_scope :all_limited, lambda { |check,access_lev,user_id| 
-    {:conditions => ["(checked >= ? and access_level >= ?) or user_id = ?",check,access_lev,user_id] }
+    {:conditions => ["(checked >= ? and access_level >= ?) or traits.user_id = ?",check,access_lev,user_id] }
     }
 
   comma do
