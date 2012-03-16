@@ -10,13 +10,14 @@ class Trait < ActiveRecord::Base
   belongs_to :cultivar
   belongs_to :user
   belongs_to :entity
+  belongs_to :ebi_method, :class_name => 'Methods'
 
   validates_presence_of     :mean
   validates_presence_of     :statname, :if => Proc.new { |trait| !trait.stat.blank? }
 
-
-  named_scope :all_limited, lambda { |check,access_lev| 
-    {:conditions => ["(checked >= ? or checked = ? ) and access_level >= ?",check,'-1',access_lev] }
+  # Allow admins and managers to see everything, allow users to see everything they created.
+  named_scope :all_limited, lambda { |check,access_lev,user_id| 
+    {:conditions => ["(checked >= ? and access_level >= ?) or user_id = ?",check,access_lev,user_id] }
     }
 
   comma do

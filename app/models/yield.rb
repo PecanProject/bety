@@ -5,6 +5,7 @@ class Yield < ActiveRecord::Base
   belongs_to :treatment
   belongs_to :cultivar
   belongs_to :user
+  belongs_to :method, :class_name => 'Methods'
 
   validates_presence_of     :mean
   validates_presence_of     :statname, :if => Proc.new { |y| !y.stat.blank? }

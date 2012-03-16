@@ -29,10 +29,10 @@ class ApplicationController < ActionController::Base
     if logged_in?
       user = current_user
       if user.page_access_level == 1
-        $checked = 0
+        $checked = -1
         $access_level = 1
       elsif user.page_access_level <= 2
-        $checked = 0
+        $checked = -1
         $access_level = user.access_level
         #$access_level = user.page_access_level
       else

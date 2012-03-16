@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :methods
+
   map.resources :ensembles
 
   map.resources :raws,

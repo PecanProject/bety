@@ -8,6 +8,7 @@ class Citation < ActiveRecord::Base
   has_many :yields
   has_many :traits
   has_many :priors
+  has_many :ebi_methods, :class_name => "Methods"
 
   belongs_to :user
 

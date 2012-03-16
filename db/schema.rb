@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120216144436) do
+ActiveRecord::Schema.define(:version => 20120312143135) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -186,6 +186,14 @@ ActiveRecord::Schema.define(:version => 20120216144436) do
   end
 
   add_index "managements_treatments", ["management_id", "treatment_id"], :name => "index_managements_treatments_on_management_id_and_treatment_id", :unique => true
+
+  create_table "methods", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "citation_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "mimetypes", :force => true do |t|
     t.string "type_string"
@@ -484,6 +492,7 @@ ActiveRecord::Schema.define(:version => 20120216144436) do
     t.integer  "checked",                                     :default => 0
     t.integer  "access_level"
     t.integer  "entity_id"
+    t.integer  "method_id"
   end
 
   add_index "traits", ["citation_id"], :name => "index_traits_on_citation_id"
@@ -553,6 +562,7 @@ ActiveRecord::Schema.define(:version => 20120216144436) do
     t.integer  "user_id"
     t.integer  "checked",                                     :default => 0
     t.integer  "access_level"
+    t.integer  "method_id"
   end
 
   add_index "yields", ["citation_id"], :name => "index_yields_on_citation_id"

@@ -248,7 +248,7 @@ class TraitsController < ApplicationController
       else
         conditions = ["citation_id = ?", session["citation"] ]
       end
-      @traits = Trait.all_limited($checked,$access_level).paginate :page => params[:page], :conditions => conditions, :include => [:site, :specie, :treatment], :order => 'date,sites.sitename,sites.country,sites.state,species.genus,species.species,treatments.name,treatments.definition',:per_page => 20
+      @traits = Trait.all_limited($checked,$access_level,current_user.id).paginate :page => params[:page], :conditions => conditions, :include => [:site, :specie, :treatment], :order => 'date,sites.sitename,sites.country,sites.state,species.genus,species.species,treatments.name,treatments.definition',:per_page => 20
     else
       conditions = {}
       params.each do |k,v|
