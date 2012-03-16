@@ -11,8 +11,8 @@ class Yield < ActiveRecord::Base
   validates_presence_of     :statname, :if => Proc.new { |y| !y.stat.blank? }
 
   named_scope :all_order, :include => :specie, :order => 'species.genus, species.species'
-  named_scope :all_limited, lambda { |check,access_lev| 
-      {:conditions => ["(checked >= ? or checked = ? ) and access_level >= ?",check,'-1',access_lev] }
+  named_scope :all_limited, lambda { |check,access_lev,user_id| 
+      {:conditions => ["(checked >= ? and access_level >= ?) or yields.user_id = ?",check,access_lev,user_id] }
     }
 
   comma do
