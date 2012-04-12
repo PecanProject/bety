@@ -28,10 +28,6 @@
     <%= f.select :site_id, Site.all.collect { |p| [ p.select_default, p.id ] }, {} %>
   </p>
   <p>
-    <%= f.label :format %><br />
-    <%= f.select :format_id, Format.all.collect { |p| [ p.select_default, p.id ] }, {} -%>
-  </p>
-  <p>
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </p>
@@ -42,14 +38,6 @@
   <p>
     <%= f.label :end_date %><br />
     <%= f.datetime_select :end_date, { :start_year => 1900, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
-  </p>
-  <p>
-    <%= f.label :filepath %><br />
-    <%= f.text_field :filepath %>
-  </p>
-  <p>
-    <%= f.label :raw %><br />
-    <%= f.select :raw_id, Raw.all.collect { |p| [ p.select_default, p.id ] }, { :include_blank => true} -%>
   </p>
   <p>
     <%= f.label :notes %><br />

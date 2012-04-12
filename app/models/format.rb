@@ -1,7 +1,6 @@
 class Format < ActiveRecord::Base
 
   has_many :inputs
-  has_many :raws
 
   comma do
     id

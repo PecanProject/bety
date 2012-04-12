@@ -81,7 +81,6 @@ class InputsController < ApplicationController
      search_cond[0] += " or " + Site.search_columns.join(" like :search or ") + " like :search"
      search_cond[0] += " or " + Variable.search_columns.join(" like :search or ") + " like :search"
      search_cond[0] += " or " + Format.search_columns.join(" like :search or ") + " like :search"
-     search_cond[0] += " or " + Raw.search_columns.join(" like :search or ") + " like :search"
      search = "Showing records for \"#{@search}\""
     else
       @search = ""
@@ -92,7 +91,7 @@ class InputsController < ApplicationController
     @inputs = Input.paginate :order => @current_sort+$sort_table[@current_sort_order],
                              :page => params[:page],
                              :per_page => 20,
-                             :include => [:site,:variables,:format,:raw],
+                             :include => [:site,:variables,:format],
                              :conditions => search_cond 
 
     render :update do |page|
@@ -152,7 +151,6 @@ class InputsController < ApplicationController
   # GET /inputs/new.xml
   def new
     @input = Input.new
-    @input.format = Format.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -171,27 +169,14 @@ class InputsController < ApplicationController
   # POST /inputs.xml
   def create
 
-    new_format = params[:input].delete(:format_attributes)
+    new_file = params.delete(:file)
 
     @input = Input.new(params[:input])
 
-    if (!new_format[:mime_type].blank? or !params[:mime_type_other].blank?) and (new_format[:id].nil? or new_format[:id].to_i != @input.format_id.to_i)
-      logger.info new_format[:id]
-      logger.info @input.format_id
-      @input.format = Format.new(new_format)
-    end
+    input_file = InputFile.new
+    input.save
+    
 
-    #logger.info @input.format
-
-    if !params[:mime_type_other].blank?
-      @input.format.mime_type = params[:mime_type_other]
-    end
-
-    # Want to move recently used string to top, this will do this by adding them to end of
-    # the table
-    m = Mimetype.find_by_type_string(@input.format.mime_type)
-    m.delete if !m.nil?
-    Mimetype.new(:type_string => @input.format.mime_type).save
     respond_to do |format|
       if  @input.format.save and @input.format_id = @input.format.id and @input.save
         format.html { redirect_to(@input, :notice => 'Input was successfully created.') }

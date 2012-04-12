@@ -1,0 +1,18 @@
+<p>
+  <b>Name:</b>
+  <%=h @method.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @method.description %>
+</p>
+
+<p>
+  <b>Citation:</b>
+  <%=h @method.citation %>
+</p>
+
+
+<%= link_to 'Edit', edit_method_path(@method) %> |
+<%= link_to 'Back', methods_path %>

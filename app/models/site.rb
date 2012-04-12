@@ -5,7 +5,6 @@ class Site < ActiveRecord::Base
   has_many :traits
   has_many :runs
   has_many :inputs
-  has_many :raws
 
   belongs_to :user
 

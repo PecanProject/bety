@@ -1,0 +1,23 @@
+<h1>New method</h1>
+
+<% form_for(@method) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :description %><br />
+    <%= f.text_area :description %>
+  </p>
+  <p>
+    <%= f.label :citation_id %><br />
+    <%= f.select :citation_id, Citation.all(:order => 'author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %> <em><%= link_to "New Citation", new_citation_path %></em>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', methods_path %>

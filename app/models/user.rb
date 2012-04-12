@@ -11,7 +11,6 @@ class User < ActiveRecord::Base
   has_many :managements
   has_many :treatments
   has_many :sites
-  has_many :raws
 
   validates_presence_of     :login
   validates_length_of       :login,    :within => 3..40
@@ -65,7 +64,7 @@ class User < ActiveRecord::Base
   def to_s
     name
   end
-  def default_select
+  def select_default
     "#{id}: #{self}"
   end
 
