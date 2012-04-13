@@ -20,12 +20,16 @@
 
 <h1>Editing input</h1>
 
-<% form_for(@input) do |f| %>
+<% form_for @input, :html => {:multipart => true} do |f| %>
   <%= f.error_messages %>
 
   <p>
     <%= f.label :site %><br />
     <%= f.select :site_id, Site.all.collect { |p| [ p.select_default, p.id ] }, {} %>
+  </p>
+  <p>
+    <%= f.label :parent %><br />
+    <%= f.select :parent_id, Input.all.collect { |p| [ p.select_default, p.id ] }, {:include_blank => true} %>
   </p>
   <p>
     <%= f.label :name %><br />
@@ -38,6 +42,22 @@
   <p>
     <%= f.label :end_date %><br />
     <%= f.datetime_select :end_date, { :start_year => 1900, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
+  </p>
+  <p>
+    <%= if f.object.iput_file 
+          f.object.input_file
+        else
+          "No file"
+        end -%>
+    <%= label_tag :file, "Upload new file" %>
+    <%= file_field_tag :file, :name => 'document[file]' %>
+    <% if f.object.input_files.length > 0 %>
+    <br />
+    <%= label_tag :previous_files, "Previous Files" -%><br />
+    <% f.object.input_files.each do |input_file| %>
+      <%= input_file -%>
+    <% end %>
+    <% end %>
   </p>
   <p>
     <%= f.label :notes %><br />

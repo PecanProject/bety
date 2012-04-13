@@ -60,6 +60,7 @@ module AuthenticatedSystem
                                 "EntitiesController.ALL",
                                 "ErrorsController.ALL",
                                 "FormatsController.ALL",
+                                "MachinesController.ALL",
                                 "ManagementsController.ALL",
                                 "MethodsController.ALL",
                                 "PftsController.ALL",

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120412142141) do
+ActiveRecord::Schema.define(:version => 20120413135602) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -119,6 +119,7 @@ ActiveRecord::Schema.define(:version => 20120412142141) do
     t.integer  "updated_user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "format_id"
   end
 
   create_table "inputs", :force => true do |t|
@@ -184,6 +185,12 @@ ActiveRecord::Schema.define(:version => 20120412142141) do
   add_index "location_yields", ["species", "county_id"], :name => "index_location_yields_on_species_and_county_id"
   add_index "location_yields", ["species"], :name => "index_location_yields_on_location_and_species"
   add_index "location_yields", ["yield"], :name => "index_location_yields_on_yield"
+
+  create_table "machines", :force => true do |t|
+    t.string   "hostname"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "managements", :force => true do |t|
     t.integer  "citation_id"

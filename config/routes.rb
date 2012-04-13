@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :machines
+
   map.resources :methods
 
   map.resources :ensembles
@@ -31,12 +33,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :session
 
   map.resources :covariates
-
-#  map.resources :plants
-
-#  map.resources :error_logs, :member => {
-#                           :fix => :get,
-#                           :report_problem => :get }
 
   map.resources :pfts
 
@@ -73,6 +69,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :managements_treatments, :controller => 'managements_treatments', :only => [:index, :new, :create]
   map.resources :pfts_priors, :controller => 'pfts_priors', :only => [:index, :new, :create]
   map.resources :pfts_species, :controller => 'pfts_species', :only => [:index, :new, :create]
+
+  map.resources :input_files, :controller => 'input_files', :only => [:download], :collection => { :download => :get }
 
   map.connect 'search.:format', :controller => 'search', :action => :index
 

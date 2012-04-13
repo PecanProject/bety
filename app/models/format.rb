@@ -1,6 +1,6 @@
 class Format < ActiveRecord::Base
 
-  has_many :inputs
+  has_many :input_files
 
   comma do
     id
