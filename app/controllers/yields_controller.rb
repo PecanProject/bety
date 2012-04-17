@@ -129,7 +129,7 @@ class YieldsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @yields }
-      format.csv  { render :csv => @yields, :style => params[:style].to_sym }
+      format.csv  { render :csv => @yields, :style => (params[:style] ||= "default").to_sym }
     end
   end
 
