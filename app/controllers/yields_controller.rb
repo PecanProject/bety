@@ -1,6 +1,6 @@
 class YieldsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
-  before_filter :access_conditions
+#  before_filter :access_conditions
 
   layout 'application'
 
@@ -77,7 +77,7 @@ class YieldsController < ApplicationController
       end
     end 
 
-    @yields = Yield.all_limited($checked,$access_level,current_user.id).paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:citation, :cultivar, :specie, :site, :treatment], :conditions => search_cond 
+    @yields = Yield.all_limited(current_user).paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:citation, :cultivar, :specie, :site, :treatment], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -115,7 +115,7 @@ class YieldsController < ApplicationController
     else
       conditions = ["citation_id = ?", session["citation"] ]
     end
-    @yields = Yield.all_limited($checked,$access_level,current_user.id).paginate :page => params[:page], :include => [:site, :specie, :treatment], :conditions => conditions, :order => 'species.genus,species.species,treatments.name,treatments.definition',:per_page => 20
+    @yields = Yield.all_limited(current_user).paginate :page => params[:page], :include => [:site, :specie, :treatment], :conditions => conditions, :order => 'species.genus,species.species,treatments.name,treatments.definition',:per_page => 20
     
     respond_to do |format|
       format.html # index.html.erb

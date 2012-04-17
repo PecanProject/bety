@@ -5,7 +5,7 @@ include Mercator
 class MapsController < ApplicationController
   layout 'application'
   #before_filter :login_required, :only => ["location_yields","location_yields_lookup"]
-  before_filter :access_conditions
+#  before_filter :access_conditions
 
   def location_yields_lookup
 
@@ -56,8 +56,8 @@ class MapsController < ApplicationController
       @query = params[:search]
       @species_yields = @species_traits = Specie.all(:conditions => ['scientificname like :query or genus like :query or AcceptedSymbol like :query', {:query => "%#{@query}%"} ],:limit => 100)
     else
-      @species_yields = Specie.all(:conditions => ["id in (?)",Yield.all_limited($checked,$access_level).all(:group => :specie_id,:order => "count(id) DESC",:limit => 10).collect {|x| x.specie_id}])
-      @species_traits = Specie.all(:conditions => ["id in (?)",Trait.all_limited($checked,$access_level).all(:group => :specie_id,:order => "count(id) DESC",:limit => 10).collect {|x| x.specie_id}])
+      @species_yields = Specie.all(:conditions => ["id in (?)",Yield.all_limited(nil).all(:group => :specie_id,:order => "count(id) DESC",:limit => 10).collect {|x| x.specie_id}])
+      @species_traits = Specie.all(:conditions => ["id in (?)",Trait.all_limited(nil).all(:group => :specie_id,:order => "count(id) DESC",:limit => 10).collect {|x| x.specie_id}])
     end
 
     respond_to do |format|
@@ -98,12 +98,12 @@ class MapsController < ApplicationController
     @site = Site.find(params[:site])
 
     if !site.nil?
-      @trait = Trait.all_limited($checked,$access_level).find_all_by_site_id(site, :group => "treatment_id" )
+      @trait = Trait.all_limited(nil).find_all_by_site_id(site, :group => "treatment_id" )
     else
       @trait = []
     end
 
-    @trait_logged_in = Trait.all_limited(1,3).find_all_by_site_id(site).length - @trait.length
+    @trait_logged_in = Trait.all_limited(nil).find_all_by_site_id(site).length - @trait.length
 
     render :update do |page|
       page.replace_html 'show_traits', :partial => 'show_traits'
@@ -111,7 +111,7 @@ class MapsController < ApplicationController
   end
 
   def traits
-    @traits = Trait.all_limited($checked,$access_level)
+    @traits = Trait.all_limited(nil)
     if !params[:site].nil?
       site = Site.find(params[:site])
       @traits = @traits.find_all_by_site_id(site.id)
@@ -150,14 +150,14 @@ class MapsController < ApplicationController
     @site = Site.find(params[:site])
 
     if !site.nil?
-      @yields = Yield.all_limited($checked,$access_level).find_all_by_site_id(@site.id, :group => "treatment_id" )
+      @yields = Yield.all_limited(nil).find_all_by_site_id(@site.id, :group => "treatment_id" )
       logger.info $checked
       logger.info $access_level
     else
       @yields = []
     end
 
-    @yields_logged_in = Yield.all_limited(1,3).find_all_by_site_id(site).length - @yields.length
+    @yields_logged_in = Yield.all_limited(nil).find_all_by_site_id(site).length - @yields.length
 
     render :update do |page|
       page.replace_html 'show_yields', :partial => 'show_yields'
@@ -166,7 +166,7 @@ class MapsController < ApplicationController
   end
 
   def yields
-    @yields = Yield.all_limited($checked,$access_level)
+    @yields = Yield.all_limited(nil)
     if !params[:site].nil?
       site = Site.find(params[:site])
       @yields = @yields.find_all_by_site_id(site.id)

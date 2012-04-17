@@ -1,6 +1,6 @@
 class TraitsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
-  before_filter :access_conditions
+#  before_filter :access_conditions
 
   layout 'application'
 
@@ -164,7 +164,7 @@ class TraitsController < ApplicationController
       end
     end
    logger.info "here" 
-    @traits = Trait.all_limited($checked,$access_level,current_user.id).paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:citation, :variable,:specie, :site,:treatment], :conditions => search_cond 
+    @traits = Trait.all_limited(current_user).paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:citation, :variable,:specie, :site,:treatment], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -185,12 +185,11 @@ class TraitsController < ApplicationController
   def trait_search
     @query = params[:symbol] || nil
     if !params[:symbol].nil? and !params[:cont].nil? and params[:symbol].length > 3
-      @trait = Trait.all(:include => [:specie,:variable,:cultivar,:treatment,:citation], :conditions => ['species.scientificname like :query or species.genus like :query or species.AcceptedSymbol like :query or variables.name like :query or treatments.name like :query or citations.author like :query', {:query => "%" + @query + "%"} ],:limit => 100)
+      @trait = Trait.all_limited(current_user).all(:include => [:specie,:variable,:cultivar,:treatment,:citation], :conditions => ['species.scientificname like :query or species.genus like :query or species.AcceptedSymbol like :query or variables.name like :query or treatments.name like :query or citations.author like :query', {:query => "%" + @query + "%"} ],:limit => 100)
     else
       @trait = nil
     end
 
-#Trait.all(:include => [:specie,:variable,:cultivar,:treatment,:citation]).collect { |p| [ p.specie_treat_cultivar, p.id ] }, {:selected => @covariate.trait_id.to_i }
 
     render :update do |page|
       if params[:symbol].length > 3
@@ -248,7 +247,7 @@ class TraitsController < ApplicationController
       else
         conditions = ["citation_id = ?", session["citation"] ]
       end
-      @traits = Trait.all_limited($checked,$access_level,current_user.id).paginate :page => params[:page], :conditions => conditions, :include => [:site, :specie, :treatment], :order => 'date,sites.sitename,sites.country,sites.state,species.genus,species.species,treatments.name,treatments.definition',:per_page => 20
+      @traits = Trait.all_limited(current_user).paginate :page => params[:page], :conditions => conditions, :include => [:site, :specie, :treatment], :order => 'date,sites.sitename,sites.country,sites.state,species.genus,species.species,treatments.name,treatments.definition',:per_page => 20
     else
       conditions = {}
       params.each do |k,v|
@@ -256,7 +255,7 @@ class TraitsController < ApplicationController
         conditions[k] = v
       end
       logger.info conditions.to_yaml
-      @traits = Trait.all(:conditions => conditions)
+      @traits = Trait.all_limited(current_user).all(:conditions => conditions)
     end
 
     respond_to do |format|
