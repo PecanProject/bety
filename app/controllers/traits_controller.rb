@@ -259,7 +259,7 @@ class TraitsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @traits }
-      format.csv  { render :csv => @traits, :style => params[:style] }
+      format.csv  { render :csv => @traits, :style => params[:style].to_sym }
     end
   end
 

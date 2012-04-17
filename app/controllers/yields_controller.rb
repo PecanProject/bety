@@ -110,17 +110,26 @@ class YieldsController < ApplicationController
   # GET /yields
   # GET /yields.xml
   def index
-    if session["citation"].nil?
-      conditions = ['1=1']
+    if params[:format].nil? or params[:format] == 'html'
+      if session["citation"].nil?
+        conditions = ['1=1']
+      else
+        conditions = ["citation_id = ?", session["citation"] ]
+      end
+      @yields = Yield.all_limited(current_user).paginate :page => params[:page], :conditions => conditions, :include => [:site, :specie, :treatment], :order => 'species.genus,species.species,treatments.name,treatments.definition',:per_page => 20
     else
-      conditions = ["citation_id = ?", session["citation"] ]
-    end
-    @yields = Yield.all_limited(current_user).paginate :page => params[:page], :include => [:site, :specie, :treatment], :conditions => conditions, :order => 'species.genus,species.species,treatments.name,treatments.definition',:per_page => 20
-    
+      conditions = {}
+      params.each do |k,v|
+        next if !Yield.column_names.include?(k)
+        conditions[k] = v
+      end
+      logger.info conditions.to_yaml
+      @yields = Yield.all_limited(current_user).all(:conditions => conditions)
+    end 
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @yields }
-      format.csv  { render :csv => @yields }
+      format.csv  { render :csv => @yields, :style => params[:style].to_sym }
     end
   end
 

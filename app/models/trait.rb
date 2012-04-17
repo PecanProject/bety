@@ -67,6 +67,10 @@ class Trait < ActiveRecord::Base
     access_level
   end
 
+  comma :test_pat do
+    access_level
+  end
+
   comma :show_traits do
     site :city_state
     specie :scientificname

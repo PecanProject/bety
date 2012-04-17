@@ -57,6 +57,10 @@ class Yield < ActiveRecord::Base
     access_level
   end
 
+  comma :test_pat do
+    checked
+  end
+
   comma :show_yields do |f|
      site :city_state
      specie :scientificname
