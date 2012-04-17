@@ -239,8 +239,6 @@ class TraitsController < ApplicationController
   # GET /traits
   # GET /traits.xml
   def index
-    #@traits = Trait.find(:all, :conditions => ["variable_id IS NOT NULL AND treatment_id IS NOT NULL"], :limit => 100)
-
     if params[:format].nil? or params[:format] == 'html'
       if session["citation"].nil?
         conditions = ['1=1']
@@ -261,7 +259,7 @@ class TraitsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @traits }
-      format.csv  { render :csv => @traits }
+      format.csv  { render :csv => @traits, :style => params[:style] }
     end
   end
 

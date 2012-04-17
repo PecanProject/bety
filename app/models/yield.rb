@@ -33,7 +33,7 @@ class Yield < ActiveRecord::Base
       access_level = 4
     end
 
-    {:conditions => ["(checked >= ? and access_level >= ?) or traits.user_id = ?",checked,access_level,user] }
+    {:conditions => ["(checked >= ? and access_level >= ?) or yields.user_id = ?",checked,access_level,user] }
   }
 
   comma do

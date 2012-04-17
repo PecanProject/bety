@@ -23,28 +23,28 @@ class ApplicationController < ActionController::Base
     redirect_to :controller => "citations"
   end
 
-  #sets appropiate access levels for Yield/Trait
-  # return checked value and access_level
-  def access_conditions
-    if logged_in?
-      user = current_user
-      if user.page_access_level == 1
-        $checked = -1
-        $access_level = 1
-      elsif user.page_access_level <= 2
-        $checked = -1
-        $access_level = user.access_level
-        #$access_level = user.page_access_level
-      else
-        $checked = 1
-        $access_level = user.access_level
-        #$access_level = user.page_access_level
-      end
-    else
-      $checked = 1
-      $access_level = 4
-    end
-  end
+#  #sets appropiate access levels for Yield/Trait
+#  # return checked value and access_level
+#  def access_conditions
+#    if logged_in?
+#      user = current_user
+#      if user.page_access_level == 1
+#        $checked = -1
+#        $access_level = 1
+#      elsif user.page_access_level <= 2
+#        $checked = -1
+#        $access_level = user.access_level
+#        #$access_level = user.page_access_level
+#      else
+#        $checked = 1
+#        $access_level = user.access_level
+#        #$access_level = user.page_access_level
+#      end
+#    else
+#      $checked = 1
+#      $access_level = 4
+#    end
+#  end
 
   #Attempting to not log Maps#mapoverlay
   def silent?(action)

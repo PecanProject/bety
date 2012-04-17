@@ -83,7 +83,7 @@ class MapsController < ApplicationController
 
   # Provides a map populated with sites, then returns trait information if they click on a site
   def traits_from_sites
-    @sites = Trait.all.collect {|x| x.site}.uniq
+    @sites = Trait.all.collect {|x| x.site unless x.site.nil?}.compact.uniq
     #@sites = Site.all(:conditions => ['id in (?)', traits.uniq])
  
     respond_to do |format|
@@ -136,8 +136,8 @@ class MapsController < ApplicationController
 
   # Provides a map populated with sites, then returns yield information if they click on a site
   def yields_from_sites
-    yields = Yield.all.collect {|x| x.site_id}
-    @sites = Site.all(:conditions => ['id in (?)', yields.uniq])
+    @sites = Yield.all.collect {|x| x.site}.compact.uniq
+#    @sites = Site.all(:conditions => ['id in (?)', yields.uniq])
 
     respond_to do |format|
       format.html # index.html.erb
