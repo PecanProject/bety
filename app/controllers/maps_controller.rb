@@ -137,7 +137,6 @@ class MapsController < ApplicationController
   # Provides a map populated with sites, then returns yield information if they click on a site
   def yields_from_sites
     @sites = Yield.all.collect {|x| x.site}.compact.uniq
-#    @sites = Site.all(:conditions => ['id in (?)', yields.uniq])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -151,8 +150,6 @@ class MapsController < ApplicationController
 
     if !site.nil?
       @yields = Yield.all_limited(current_user ||= nil).find_all_by_site_id(@site.id, :group => "treatment_id" )
-      logger.info $checked
-      logger.info $access_level
     else
       @yields = []
     end
