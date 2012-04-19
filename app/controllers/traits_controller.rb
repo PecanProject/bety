@@ -316,11 +316,7 @@ class TraitsController < ApplicationController
       @trait.specie.nil? ? @species = nil :  @species = [@trait.specie]
     end
 
-#    @treatments = Treatment.find_by_sql ['select * from treatments where id in (select treatment_id from managements_treatments where management_id in (select id from managements where citation_id = ?))', session["citation"]]
-#    @sites = Site.find_by_sql ['select * from sites where id in ( select site_id from citations_sites where citation_id = ?)', session["citation"]]
-
-    @treatments = Citation.find(session["citation"]).treatments rescue nil
-    @sites = Citation.find(session["citation"]).sites rescue nil
+    @citation = Citation.find(session["citation"]) if session["citation"]
 
     respond_to do |format|
       format.html # new.html.erb

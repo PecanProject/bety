@@ -1,8 +1,8 @@
-<% if session['citation'].nil? %>
+<% unless @citation %>
   <h2>Please choose a citation to work with first. <%= link_to 'Citations', citations_path %></h2>
-<% elsif @treatments.length == 0 %>
+<% elsif @citation.treatments.length == 0 %>
   <h2> There are no treatments associated with this citation. Please create a treatment that is associated with this citation first. <%= link_to 'Treatments', treatments_path %></h2>
-<% elsif @sites.length == 0 %>
+<% elsif @citation.sites.length == 0 %>
   <h2> There are no sites associated with this citation. Please create a site that is associated with this citation first. <%= link_to 'Sites', sites_path %></h2>
 <% else %>
 
@@ -34,7 +34,7 @@
     </p>
     <p>
       <%= f.label :site_id %><br />
-      <%= f.select :site_id, @sites.collect { |p| [ p.select_default, p.id ] }, {} %>
+      <%= f.select :site_id, @citation.sites.collect { |p| [ p.select_default, p.id ] }, {} %>
     </p>
 
     <%= render :partial => "species/species_search" %>
@@ -52,7 +52,7 @@
     </p>
     <p>
       <%= f.label :treatment_id %><br />
-      <%= f.select :treatment_id, @treatments.collect { |p| [ p.select_default, p.id ] }, {} -%>
+      <%= f.select :treatment_id, @citation.treatments.collect { |p| [ p.select_default, p.id ] }, {} -%>
     </p>
     <p>
       <%= f.label :variable_id, "trait" %><br />

@@ -156,7 +156,6 @@ class YieldsController < ApplicationController
   # GET /yields/new
   # GET /yields/new.xml
   def new
-    logger.info "Current user: #{current_user.id}"
     if params[:id].nil?
       @yield = Yield.new
     else
@@ -164,10 +163,7 @@ class YieldsController < ApplicationController
       @yield.specie.nil? ? @species = nil : @species = [@yield.specie]
     end
 
-    if !session["citation"].nil?
-      @treatments = Citation.find(session["citation"]).treatments
-      @sites = Citation.find(session["citation"]).sites
-    end
+    @citation = Citation.find(session["citation"]) if session["citation"]
 
     respond_to do |format|
       format.html # new.html.erb
