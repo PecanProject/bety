@@ -10,6 +10,16 @@ module ApplicationHelper
     access = ["", "Administrator", "Manager", "Creator", "Viewer"]
     return access[id.to_i]
   end
+  # Checks if current treatment_id is in associated citations treatment
+  # association.
+  def treatment_check(ty)
+    if ty.citation # Should not happen
+      unless ty.citation.treatments.include?(ty.treatment)
+        ": <span class='red_back'>treatment_id: #{ty.treatment.id}, not in associated citation associated treatments!</span>"
+      end
+    end
+        
+  end
 
   $dateloc_drop = {  "4   time of day, e.g. morning, afternoon" => "4.0" ,
                      "5   day" => "5.0" ,

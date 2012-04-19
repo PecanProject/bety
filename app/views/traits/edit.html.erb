@@ -60,8 +60,9 @@
     <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }.sort { |a,b| a[0].split(': ')[1] <=> b[0].split(': ')[1] }, {} %>
   </p>
   <p>
-    <%= f.label :treatment_id, "Treatment" %><br />
-    <%= f.select :treatment_id, Treatment.all(:joins => :citations, :order => 'name').collect { |p| [ p.select_default, p.id ] }, {} %>
+    <%= f.label :treatment_id, "Treatment" %><%= treatment_check(f.object) -%><br />
+    <%#= f.select :treatment_id, Treatment.all(:joins => :citations, :order => 'name').collect { |p| [ p.select_default, p.id ] }, {} %>
+    <%= f.select :treatment_id, f.object.citation.treatments.collect { |p| [ p.select_default, p.id ] }, {} %>
   </p>
   <p>
     <%= f.label :entity_id, "Entity" %><br />
