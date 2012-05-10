@@ -58,8 +58,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :yields
 
   map.resources :traits, :collection => {
-                           :new_multi => :get,
-                           :create_multi => :post,
                            :linked => :get }
 
 
@@ -118,7 +116,6 @@ ActionController::Routing::Routes.draw do |map|
 
 
   #route for 'static' content
-  map.connect '/maps/mapoverlay/*path', :controller => 'maps', :action => 'mapoverlay'
   map.connect '*path', :controller => 'static'
 
 end
