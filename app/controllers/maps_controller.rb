@@ -69,8 +69,6 @@ class MapsController < ApplicationController
 
   #map showing each site associated with a species
   def sites_by_species
-    @species = Specie.find_by_sql("select * from species where id in (select specie_id from yields where site_id IS NOT NULL ) or id in (select specie_id from traits where site_id IS NOT NULL)")
-
     respond_to do |format|
       format.html 
     end
@@ -79,7 +77,6 @@ class MapsController < ApplicationController
   # Provides a map populated with sites, then returns trait information if they click on a site
   def traits_from_sites
     @sites = Trait.all.collect {|x| x.site unless x.site.nil?}.compact.uniq
-    #@sites = Site.all(:conditions => ['id in (?)', traits.uniq])
  
     respond_to do |format|
       format.html # index.html.erb
@@ -259,15 +256,12 @@ class MapsController < ApplicationController
     
  
   def show_sites
-
     @sites = Site.coordinate_search(params[:lat][/-?\d+\.?\d*/].to_f,params[:lng][/-?\d+\.?\d*/].to_f,params[:radius].to_i)
-
 
     render :update do |page|
       page.replace_html 'show_sites', :partial => "show_sites"
       page.show 'show_sites'
     end
-
   end
     
 
