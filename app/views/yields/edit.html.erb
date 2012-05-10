@@ -16,7 +16,7 @@
 
   <p>
     <%= f.label :treatment_id %> <%= treatment_check(f.object) -%><br />
-    <%= f.select :treatment_id, f.object.citation.treatments.collect { |p| [ p.select_default, p.id ] }, {} %>
+    <%= f.select :treatment_id, (f.object.citation.treatments.collect { |p| [ p.select_default, p.id ] } rescue []), {} %>
     <%#= f.select :treatment_id, Treatment.all(:joins => :citations, :order => 'name').collect { |p| [ p.select_default, p.id ] }, {} %>
   </p>
   <p>
