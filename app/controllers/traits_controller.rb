@@ -212,7 +212,7 @@ class TraitsController < ApplicationController
 
   def access_level
 
-    t = Trait.find(params[:id])
+    t = Trait.all_limited(current_user).find_by_id(params[:id])
     
     render :update do |page|
       if t.update_attributes(params[:trait])
@@ -224,7 +224,7 @@ class TraitsController < ApplicationController
   end
 
   def checked
-    y = Trait.find(params[:id])
+    y = Trait.all_limited(current_user).find_by_id(params[:id])
     
     render :update do |page|
       if y.update_attributes(params[:trait])
@@ -266,16 +266,8 @@ class TraitsController < ApplicationController
   # GET /traits/1
   # GET /traits/1.xml
   def show
-
-    @trait = Trait.find(params[:id])
-
-    if !logged_in?
-      @trait = nil if !@trait.checked or @trait.access_level < 4
-    elsif @trait.user_id == current_user.id or current_user.access_level == 1 or current_user.page_access_level <= 2
-      #Every one can see what they created, makes the else easier. People in Dietz lab can see everything and 'Data Managers' can see everything
-    else
-      @trait = nil if !@trait.checked or current_user.access_level > @trait.access_level
-    end
+    # find_by_id prevents errors when they do not have access
+    @trait = Trait.all_limited(current_user).find_by_id(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -288,15 +280,7 @@ class TraitsController < ApplicationController
   # GET /traits/1.xml
   def nice
 
-    @trait = Trait.find(params[:id])
-
-    if !logged_in?
-      @trait = nil if !@trait.checked or @trait.access_level < 4
-    elsif @trait.user_id == current_user.id or current_user.access_level == 1 or current_user.page_access_level <= 2
-      #Every one can see what they created, makes the else easier. People in Dietz lab can see everything and 'Data Managers' can see everything
-    else
-      @trait = nil if !@trait.checked or current_user.access_level > @trait.access_level
-    end
+    @trait = Trait.all_limited(current_user).find_by_id(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -312,11 +296,11 @@ class TraitsController < ApplicationController
       @trait = Trait.new
     else
       @trait_old = params[:id]
-      @trait = Trait.find(@trait_old).clone
+      @trait = Trait.all_limited(current_user).find_by_id(@trait_old).clone
       @trait.specie.nil? ? @species = nil :  @species = [@trait.specie]
     end
 
-    @citation = Citation.find(session["citation"]) if session["citation"]
+    @citation = Citation.find_by_id(session["citation"])
 
     respond_to do |format|
       format.html # new.html.erb
@@ -327,7 +311,7 @@ class TraitsController < ApplicationController
 
   # GET /traits/1/edit
   def edit
-    @trait = Trait.find(params[:id])
+    @trait = Trait.all_limited(current_user).find_by_id(params[:id])
     @trait.specie.nil? ? @species = nil : @species = [@trait.specie]
   end
 
@@ -371,8 +355,8 @@ class TraitsController < ApplicationController
         format.xml  { render :xml => @trait, :status => :created, :location => @trait }
         format.csv  { render :csv => @trait, :status => :created, :location => @trait }
       else
-        @treatments = Citation.find(session["citation"]).treatments rescue nil
-        @sites = Citation.find(session["citation"]).sites rescue nil
+        @treatments = Citation.find_by_id(session["citation"]).treatments rescue nil
+        @sites = Citation.find_by_id(session["citation"]).sites rescue nil
 
         format.html { render :action => "new" }
         format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
@@ -385,7 +369,7 @@ class TraitsController < ApplicationController
   # PUT /traits/1.xml
   def update
     params[:trait]['date(1i)'] = "9999" if params[:trait]['date(1i)'].blank? and !params[:trait]['date(2i)'].blank?
-    @trait = Trait.find(params[:id])
+    @trait = Trait.all_limited(current_user).find_by_id(params[:id])
 
     respond_to do |format|
       if @trait.update_attributes(params[:trait])
@@ -404,7 +388,7 @@ class TraitsController < ApplicationController
   # DELETE /traits/1
   # DELETE /traits/1.xml
   def destroy
-    @trait = Trait.find(params[:id])
+    @trait = Trait.all_limited(current_user).find_by_id(params[:id])
     @trait.destroy
 
     respond_to do |format|
