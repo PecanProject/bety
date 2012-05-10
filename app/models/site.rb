@@ -10,6 +10,10 @@ class Site < ActiveRecord::Base
 
   named_scope :all_order, :order => 'country, state, city'
 
+  named_scope :coordinate_search, lambda { |lat,lon,radius| { :conditions => { 
+                                                                :lat => (lat-(radius/69.1))..(lat+(radius/69.1)),
+                                                                :lon => (lon-(radius/53.0))..(lon+(radius/53.0)) } } }
+
   comma do
     id
     city

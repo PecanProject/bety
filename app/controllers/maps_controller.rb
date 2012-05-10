@@ -1,11 +1,6 @@
-require 'rvg/rvg'
-include Magick
-
 include Mercator
 class MapsController < ApplicationController
   layout 'application'
-  #before_filter :login_required, :only => ["location_yields","location_yields_lookup"]
-#  before_filter :access_conditions
 
   def location_yields_lookup
 
@@ -264,30 +259,8 @@ class MapsController < ApplicationController
     
  
   def show_sites
-    site = true if !params[:lat].nil? and !params[:lng].nil?
-    radius = params[:radius].to_i
 
-    if site
-      lat = params[:lat].to_f
-      lng = params[:lng].to_f
-    else
-      lat,lng = 0.0,0.0
-    end
-
-    #20 miles
-    #lat ~ miles/69.1
-    #lng ~ miles/53.0
-    latminus = lat - (radius/69.1)
-    latplus = lat + (radius/69.1)
-
-    lngminus = lng - (radius/53.0)
-    lngplus = lng + (radius/53.0)
-
-    if site
-      @sites = Site.find_by_sql(["SELECT * FROM sites WHERE lat >= ? AND lat <= ? AND lon >= ? AND lon <= ?", latminus, latplus, lngminus, lngplus])
-    else
-      @sites = nil
-    end
+    @sites = Site.coordinate_search(params[:lat][/-?\d+\.?\d*/].to_f,params[:lng][/-?\d+\.?\d*/].to_f,params[:radius].to_i)
 
 
     render :update do |page|
