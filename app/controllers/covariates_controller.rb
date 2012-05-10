@@ -37,7 +37,7 @@ class CovariatesController < ApplicationController
       search_cond = ""
     end
     
-    @covariates = Covariate.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:trait, :variable], :conditions => search_cond 
+    @covariates = Covariate.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :include => [:trait, :variable], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -60,7 +60,7 @@ class CovariatesController < ApplicationController
   def index
     #@covariates = Covariate.all
     if params[:format].nil? or params[:format] == 'html'
-      @covariates = Covariate.paginate :page => params[:page], :per_page => 20
+      @covariates = Covariate.paginate :page => params[:page]
     else
       conditions = {}
       params.each do |k,v|

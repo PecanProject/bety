@@ -164,7 +164,7 @@ class TraitsController < ApplicationController
       end
     end
    logger.info "here" 
-    @traits = Trait.all_limited(current_user).paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:citation, :variable,:specie, :site,:treatment], :conditions => search_cond 
+    @traits = Trait.all_limited(current_user).paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :include => [:citation, :variable,:specie, :site,:treatment], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -245,7 +245,7 @@ class TraitsController < ApplicationController
       else
         conditions = ["citation_id = ?", session["citation"] ]
       end
-      @traits = Trait.all_limited(current_user).paginate :page => params[:page], :conditions => conditions, :include => [:site, :specie, :treatment], :order => 'date,sites.sitename,sites.country,sites.state,species.genus,species.species,treatments.name,treatments.definition',:per_page => 20
+      @traits = Trait.all_limited(current_user).paginate :page => params[:page], :conditions => conditions, :include => [:site, :specie, :treatment], :order => 'date,sites.sitename,sites.country,sites.state,species.genus,species.species,treatments.name,treatments.definition'
     else
       conditions = {}
       params.each do |k,v|

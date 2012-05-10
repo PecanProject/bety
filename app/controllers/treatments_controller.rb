@@ -127,7 +127,7 @@ class TreatmentsController < ApplicationController
           end
           tts = Treatment.all(:include => [{:citations => {:sites => :citations} }], :conditions => conditions)
         end
-        @other_treatments = tts.paginate :page => params[:page], :per_page => 20
+        @other_treatments = tts.paginate :page => params[:page]
         
       else
         if !params[:treatment].blank?
@@ -135,7 +135,7 @@ class TreatmentsController < ApplicationController
         else
           conditions = []
         end
-        @other_treatments = Treatment.paginate :page => params[:page], :per_page => 20, :conditions => conditions
+        @other_treatments = Treatment.paginate :page => params[:page], :conditions => conditions
       end
     else
       conditions = {}

@@ -39,7 +39,7 @@ class PriorsController < ApplicationController
       search_cond = ""
     end
     
-    @priors = Prior.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:citation, :variable], :conditions => search_cond 
+    @priors = Prior.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :include => [:citation, :variable], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -84,7 +84,7 @@ class PriorsController < ApplicationController
   # GET /priors.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
-      @priors = Prior.paginate :page => params[:page], :per_page => 20, :order => "updated_at desc"
+      @priors = Prior.paginate :page => params[:page], :order => "updated_at desc"
     else
       conditions = {}
       params.each do |k,v|

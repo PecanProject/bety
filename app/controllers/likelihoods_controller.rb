@@ -40,7 +40,7 @@ class LikelihoodsController < ApplicationController
       search_cond = ""
     end
     
-    @likelihoods = Likelihood.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:variable,{:run => :model},{:input => :site}], :conditions => search_cond 
+    @likelihoods = Likelihood.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :include => [:variable,{:run => :model},{:input => :site}], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -61,7 +61,7 @@ class LikelihoodsController < ApplicationController
   # GET /likelihoods.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
-      @likelihoods = Likelihood.paginate :page => params[:page], :per_page => 20
+      @likelihoods = Likelihood.paginate :page => params[:page]
     else
       conditions = {}
       params.each do |k,v|

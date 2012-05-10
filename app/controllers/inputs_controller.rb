@@ -90,7 +90,6 @@ class InputsController < ApplicationController
     
     @inputs = Input.paginate :order => @current_sort+$sort_table[@current_sort_order],
                              :page => params[:page],
-                             :per_page => 20,
                              :include => [:site,:variables,:format],
                              :conditions => search_cond 
 

@@ -35,7 +35,7 @@ class FormatsController < ApplicationController
       search_cond = ""
     end
     
-    @formats = Format.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :conditions => search_cond 
+    @formats = Format.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -57,7 +57,7 @@ class FormatsController < ApplicationController
   # GET /formats.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
-      @formats = Format.paginate :page => params[:page], :per_page => 20
+      @formats = Format.paginate :page => params[:page]
     else
       conditions = {}
       params.each do |k,v|

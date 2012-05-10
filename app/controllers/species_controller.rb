@@ -97,7 +97,7 @@ class SpeciesController < ApplicationController
       search_cond = ""
     end
     
-    @species = Specie.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :conditions => search_cond 
+    @species = Specie.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -128,8 +128,8 @@ class SpeciesController < ApplicationController
 #        @letter = "A"
 #      end
 #
-#      @species = Specie.by_letter(@letter).paginate :page => params[:page], :per_page => 20, :order => "genus"
-      @species = Specie.paginate :page => params[:page], :per_page => 20, :order => "genus"
+#      @species = Specie.by_letter(@letter).paginate :page => params[:page], :order => "genus"
+      @species = Specie.paginate :page => params[:page], :order => "genus"
     else
       conditions = {}
       params.each do |k,v|

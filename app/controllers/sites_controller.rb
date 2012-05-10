@@ -38,7 +38,7 @@ class SitesController < ApplicationController
       search_cond = ""
     end
     
-    @sites = Site.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :conditions => search_cond 
+    @sites = Site.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :matches_count, "#{@sites.length} matches (see below)" if request.env['HTTP_REFERER'][/\/new$/]
@@ -153,7 +153,7 @@ class SitesController < ApplicationController
         conditions << params[:site]
       end
 
-      @sites = Site.paginate :page => params[:page], :per_page => 20, :conditions => conditions
+      @sites = Site.paginate :page => params[:page], :conditions => conditions
     else
       conditions = {}
       params.each do |k,v|

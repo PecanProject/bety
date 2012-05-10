@@ -37,7 +37,7 @@ class PosteriorsController < ApplicationController
       search_cond = ""
     end
     
-    @posteriors = Posterior.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:pft], :conditions => search_cond 
+    @posteriors = Posterior.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :include => [:pft], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -83,7 +83,7 @@ class PosteriorsController < ApplicationController
   # GET /posteriors.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
-      @posteriors = Posterior.paginate :page => params[:page], :per_page => 20
+      @posteriors = Posterior.paginate :page => params[:page]
     else
       conditions = {}
       params.each do |k,v|

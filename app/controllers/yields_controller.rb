@@ -77,7 +77,7 @@ class YieldsController < ApplicationController
       end
     end 
 
-    @yields = Yield.all_limited(current_user).paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:citation, :cultivar, :specie, :site, :treatment], :conditions => search_cond 
+    @yields = Yield.all_limited(current_user).paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :include => [:citation, :cultivar, :specie, :site, :treatment], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -116,7 +116,7 @@ class YieldsController < ApplicationController
       else
         conditions = ["citation_id = ?", session["citation"] ]
       end
-      @yields = Yield.all_limited(current_user).paginate :page => params[:page], :conditions => conditions, :include => [:site, :specie, :treatment], :order => 'species.genus,species.species,treatments.name,treatments.definition',:per_page => 20
+      @yields = Yield.all_limited(current_user).paginate :page => params[:page], :conditions => conditions, :include => [:site, :specie, :treatment], :order => 'species.genus,species.species,treatments.name,treatments.definition'
     else
       conditions = {}
       params.each do |k,v|

@@ -122,7 +122,7 @@ class MapsController < ApplicationController
       @title = species.scientificname
     end 
     if params[:format].nil? or params[:format] == 'html'
-      @traits = @traits.paginate :page => params[:page], :per_page => 20
+      @traits = @traits.paginate :page => params[:page]
     end
 
     respond_to do |format|
@@ -174,7 +174,7 @@ class MapsController < ApplicationController
       @title = species.scientificname
     end
     if params[:format].nil? or params[:format] == 'html'
-      @yields = @yields.paginate :page => params[:page], :per_page => 20
+      @yields = @yields.paginate :page => params[:page]
     end
 
     respond_to do |format|

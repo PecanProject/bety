@@ -36,7 +36,7 @@ class MethodsController < ApplicationController
       search_cond = ""
     end
     
-    @methods = Methods.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:citation], :conditions => search_cond 
+    @methods = Methods.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :include => [:citation], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -57,7 +57,7 @@ class MethodsController < ApplicationController
   # GET /methods.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
-      @methods = Methods.paginate :page => params[:page], :per_page => 10, :order => "name"
+      @methods = Methods.paginate :page => params[:page], :order => "name"
     else
       conditions = {}
       params.each do |k,v|

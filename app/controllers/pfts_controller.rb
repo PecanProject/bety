@@ -70,9 +70,9 @@ class PftsController < ApplicationController
 
     if @pft and @search.blank?
       search = "Showing already related records"
-      @species = @pft.specie.paginate :page => params[:page], :per_page => 20
+      @species = @pft.specie.paginate :page => params[:page]
     else
-      @species = Specie.paginate :select => "id,scientificname", :page => params[:page], :per_page => 20, :conditions => search_cond 
+      @species = Specie.paginate :select => "id,scientificname", :page => params[:page], :conditions => search_cond 
     end
 
     render :update do |page|
@@ -113,7 +113,7 @@ class PftsController < ApplicationController
       search_cond = ""
     end
     
-    @pfts = Pft.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :conditions => search_cond 
+    @pfts = Pft.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -136,7 +136,7 @@ class PftsController < ApplicationController
   # GET /pfts.xml
   def index
     #@pfts = Pft.all
-    @pfts = Pft.paginate :page => params[:page], :per_page => 20, :order => "updated_at desc"
+    @pfts = Pft.paginate :page => params[:page], :order => "updated_at desc"
 
     respond_to do |format|
       format.html # index.html.erb
@@ -175,7 +175,7 @@ class PftsController < ApplicationController
   # GET /pfts/1/edit
   def edit
     @pft = Pft.find(params[:id])
-    @species = @pft.specie.paginate :page => params[:page], :per_page => 20
+    @species = @pft.specie.paginate :page => params[:page]
   end
 
   # POST /pfts

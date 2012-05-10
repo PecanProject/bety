@@ -36,7 +36,7 @@ class ModelsController < ApplicationController
       search_cond = ""
     end
     
-    @models = Model.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :conditions => search_cond 
+    @models = Model.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -58,7 +58,7 @@ class ModelsController < ApplicationController
   # GET /models.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
-      @models = Model.paginate :page => params[:page], :per_page => 20
+      @models = Model.paginate :page => params[:page]
     else
       conditions = {}
       params.each do |k,v|

@@ -40,7 +40,7 @@ class CultivarsController < ApplicationController
       search_cond = ""
     end
     
-    @cultivars = Cultivar.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:specie], :conditions => search_cond 
+    @cultivars = Cultivar.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :include => [:specie], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -62,7 +62,7 @@ class CultivarsController < ApplicationController
   def index
     #@cultivars = Cultivar.all
     if params[:format].nil? or params[:format] == 'html'
-      @cultivars = Cultivar.paginate :page => params[:page], :per_page => 20
+      @cultivars = Cultivar.paginate :page => params[:page]
     else
       conditions = {}
       params.each do |k,v|

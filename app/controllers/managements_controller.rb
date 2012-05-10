@@ -67,7 +67,7 @@ class ManagementsController < ApplicationController
       search_cond = ""
     end
     
-    @managements = Management.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :include => [:citation], :conditions => search_cond 
+    @managements = Management.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :include => [:citation], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -90,7 +90,7 @@ class ManagementsController < ApplicationController
   def index
     #@managements = Management.find(:all, :limit => 100)
     if params[:format].nil? or params[:format] == 'html'
-      @managements = Management.paginate :page => params[:page], :per_page => 20
+      @managements = Management.paginate :page => params[:page]
     else
       conditions = {}
       params.each do |k,v|

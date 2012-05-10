@@ -8,7 +8,7 @@ class RunsController < ApplicationController
   # GET /runs.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
-      @runs = Run.paginate :page => params[:page], :per_page => 20
+      @runs = Run.paginate :page => params[:page]
     else
       conditions = {}
       params.each do |k,v|

@@ -37,7 +37,7 @@ class VariablesController < ApplicationController
       search_cond = ""
     end
     
-    @variables = Variable.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :conditions => search_cond 
+    @variables = Variable.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -61,7 +61,7 @@ class VariablesController < ApplicationController
   def index
     #@variables = Variable.all
     if params[:format].nil? or params[:format] == 'html'
-      @variables = Variable.paginate :page => params[:page], :order => 'name', :per_page => 20
+      @variables = Variable.paginate :page => params[:page], :order => 'name'
     else
       conditions = {}
       params.each do |k,v|

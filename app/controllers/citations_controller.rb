@@ -39,7 +39,7 @@ class CitationsController < ApplicationController
       search_cond = ""
     end
     
-    @citations = Citation.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :per_page => 20, :conditions => search_cond 
+    @citations = Citation.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :conditions => search_cond 
 
     render :update do |page|
       page.replace_html :index_table, :partial => "index_table"
@@ -181,7 +181,7 @@ class CitationsController < ApplicationController
   def index
 
     if params[:format].nil? or params[:format] == 'html'
-      @citations = Citation.paginate :page => params[:page], :per_page => 10, :order => "author"
+      @citations = Citation.paginate :page => params[:page], :order => "author"
     else
       conditions = {}
       params.each do |k,v|
