@@ -7,7 +7,7 @@ class YieldsController < ApplicationController
   require 'csv'
 
   def checked
-    y = Yield.find(params[:id])
+    y = Yield.all_limited(current_user).find_by_id(params[:id])
     
     render :update do |page|
       if y.update_attributes(params[:y])
@@ -20,7 +20,7 @@ class YieldsController < ApplicationController
 
   def access_level
 
-    y = Yield.find(params[:id])
+    y = Yield.all_limited(current_user).find_by_id(params[:id])
     
     render :update do |page|
       if y.update_attributes(params[:yield])
@@ -136,7 +136,7 @@ class YieldsController < ApplicationController
   # GET /yields/1
   # GET /yields/1.xml
   def show
-    @yield = Yield.find(params[:id])
+    @yield = Yield.all_limited(current_user).find_by_id(params[:id])
 
     if !logged_in?
       @yield = nil if !@yield.checked or @yield.access_level < 4
@@ -159,11 +159,11 @@ class YieldsController < ApplicationController
     if params[:id].nil?
       @yield = Yield.new
     else
-      @yield = Yield.find(params[:id]).clone
+      @yield = Yield.all_limited(current_user).find_by_id(params[:id]).clone
       @yield.specie.nil? ? @species = nil : @species = [@yield.specie]
     end
 
-    @citation = Citation.find(session["citation"]) if session["citation"]
+    @citation = Citation.find_by_id(session["citation"])
 
     respond_to do |format|
       format.html # new.html.erb
@@ -174,7 +174,7 @@ class YieldsController < ApplicationController
 
   # GET /yields/1/edit
   def edit
-    @yield = Yield.find(params[:id])
+    @yield = Yield.all_limited(current_user).find_by_id(params[:id])
     @yield.specie.nil? ? @species = nil : @species = [@yield.specie]
   end
 
@@ -210,8 +210,8 @@ class YieldsController < ApplicationController
         format.xml  { render :xml => @yield, :status => :created, :location => @yield }
         format.csv  { render :csv => @yield, :status => :created, :location => @yield }
       else
-        @treatments = Citation.find(session["citation"]).treatments
-        @sites = Citation.find(session["citation"]).sites
+        @treatments = Citation.find_by_id(session["citation"]).treatments rescue nil
+        @sites = Citation.find_by_id(session["citation"]).sites rescue nil
         format.html { render :action => "new" }
         format.xml  { render :xml => @yield.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @yield.errors, :status => :unprocessable_entity }
@@ -222,7 +222,7 @@ class YieldsController < ApplicationController
   # PUT /yields/1
   # PUT /yields/1.xml
   def update
-    @yield = Yield.find(params[:id])
+    @yield = Yield.all_limited(current_user).find_by_id(params[:id])
 
     respond_to do |format|
       if @yield.update_attributes(params[:yield])
@@ -241,7 +241,7 @@ class YieldsController < ApplicationController
   # DELETE /yields/1
   # DELETE /yields/1.xml
   def destroy
-    @yield = Yield.find(params[:id])
+    @yield = Yield.all_limited(current_user).find_by_id(params[:id])
     @yield.destroy
 
     respond_to do |format|
