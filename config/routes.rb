@@ -58,7 +58,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :yields
 
   map.resources :traits, :collection => {
-                           :nice => :get,
                            :new_multi => :get,
                            :create_multi => :post,
                            :linked => :get }

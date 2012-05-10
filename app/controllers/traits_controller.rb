@@ -276,19 +276,6 @@ class TraitsController < ApplicationController
     end
   end
 
-  # GET /traits/1
-  # GET /traits/1.xml
-  def nice
-
-    @trait = Trait.all_limited(current_user).find_by_id(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @trait }
-      format.csv  { render :csv => @trait }
-    end
-  end
-
   # GET /traits/new
   # GET /traits/new.xml
   def new
