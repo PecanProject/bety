@@ -1,6 +1,5 @@
 class TraitsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
-#  before_filter :access_conditions
 
   layout 'application'
 
@@ -36,74 +35,10 @@ class TraitsController < ApplicationController
           page << 'alert("db_copy did not finish in time!")'
         end
       else
-        page << 'alert("Sorry you are not authroized to run this script")'
+        page << 'alert("Sorry you are not authorized to run this script")'
       end
     end
 
-  end
-
-  def check_trait
-
-    trait = Trait.new(params["trait"])
-    count = params["count"]
-
-    if count[/[^\d]/]
-      count = 1
-    else
-      count = count.to_i
-    end
-
-    render :update do |page|
-      if trait.valid?
-        page["ok#{count}"].src = "/bety/images/greencheck.png"
-      else
-        page["ok#{count}"].src = "/bety/images/redcheck.png"
-      end
-    end
-  end
-
-  def add_row
-
-    @count = params["count"]
-    if @count[/[^\d]/]
-      @count = nil
-    else
-      @count = @count.to_i
-    end
-
-    @treatments = Citation.find(session["citation"]).treatments rescue nil
-    @sites = Citation.find(session["citation"]).sites rescue nil
-
-    render :update do |page|
-      if @count
-        page.insert_html :before, 'place_holder', :partial => "new_multi_row"
-        page.assign "count", @count + 1
-      else
-        page.assign "count", "2"
-      end
-    end
-  end
-
-  def create_multi
-    respond_to do |format|
-      format.html { redirect_to :action => "new_multi" }
-      format.xml  { render :xml => @trait, :status => :created, :location => @trait }
-      format.csv  { render :csv => @trait, :status => :created, :location => @trait }
-    end
-  end
-
-  # GET /traits/new
-  # GET /traits/new.xml
-  def new_multi
-
-    @treatments = Citation.find(session["citation"]).treatments rescue nil
-    @sites = Citation.find(session["citation"]).sites rescue nil
-
-    respond_to do |format|
-      format.html # new.html.erb
-      #format.xml  { render :xml => @trait }
-      #format.csv  { render :csv => @trait }
-    end
   end
 
   def search
