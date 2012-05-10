@@ -76,7 +76,8 @@ class MapsController < ApplicationController
 
   # Provides a map populated with sites, then returns trait information if they click on a site
   def traits_from_sites
-    @sites = Trait.all.collect {|x| x.site unless x.site.nil?}.compact.uniq
+    #@sites = Trait.all.collect {|x| x.site unless x.site.nil?}.compact.uniq
+    @sites = Site.all(:conditions => ["id in (?)",Trait.all(:select => :site_id, :conditions => "site_id is not null").collect(&:site_id).uniq])
  
     respond_to do |format|
       format.html # index.html.erb
