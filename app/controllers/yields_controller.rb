@@ -9,8 +9,10 @@ class YieldsController < ApplicationController
   def checked
     y = Yield.all_limited(current_user).find_by_id(params[:id])
     
+    y.checked = params[:y][:checked]
+
     render :update do |page|
-      if y.update_attributes(params[:y])
+      if y and y.save
         page.replace_html 'checked_notify-'+y.id.to_s, "<br />Updated to #{y.checked}"
       else 
         page.replace_html 'checked_notify-'+y.id.to_s, "<br />Something went wrong, not updated!"
@@ -21,9 +23,11 @@ class YieldsController < ApplicationController
   def access_level
 
     y = Yield.all_limited(current_user).find_by_id(params[:id])
+
+    y.access_level = params[:yield][:access_level] if y
     
     render :update do |page|
-      if y.update_attributes(params[:yield])
+      if y and y.save
         page['access_level-'+y.id.to_s].visual_effect :pulsate
       else 
         page['access_level-'+y.id.to_s].visual_effect :shake

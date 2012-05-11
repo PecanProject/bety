@@ -148,9 +148,11 @@ class TraitsController < ApplicationController
   def access_level
 
     t = Trait.all_limited(current_user).find_by_id(params[:id])
+
+    t.access_level = params[:trait][:access_level] if t
     
     render :update do |page|
-      if t.update_attributes(params[:trait])
+      if t and t.save
         page['access_level-'+t.id.to_s].visual_effect :pulsate
       else 
         page['access_level-'+t.id.to_s].visual_effect :shake
@@ -159,13 +161,14 @@ class TraitsController < ApplicationController
   end
 
   def checked
-    y = Trait.all_limited(current_user).find_by_id(params[:id])
-    
+    t = Trait.all_limited(current_user).find_by_id(params[:id])
+    t.checked = params[:trait][:checked] if t
+   
     render :update do |page|
-      if y.update_attributes(params[:trait])
-        page.replace_html 'checked_notify-'+y.id.to_s, "<br />Updated to #{y.checked}"
+      if t and t.save
+        page.replace_html 'checked_notify-'+t.id.to_s, "<br />Updated to #{t.checked}"
       else 
-        page.replace_html 'checked_notify-'+y.id.to_s, "<br />Something went wrong, not updated!"
+        page.replace_html 'checked_notify-'+t.id.to_s, "<br />Something went wrong, not updated!"
       end
     end
   end
