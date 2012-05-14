@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120413135602) do
+ActiveRecord::Schema.define(:version => 20120514161612) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -62,12 +62,59 @@ ActiveRecord::Schema.define(:version => 20120413135602) do
     t.integer  "county_fips"
   end
 
+  create_table "county_boundaries", :id => false, :force => true do |t|
+    t.integer  "id",                                         :default => 0, :null => false
+    t.integer  "county_id"
+    t.decimal  "lat",        :precision => 20, :scale => 15
+    t.decimal  "lng",        :precision => 20, :scale => 15
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.decimal  "zoom0x",     :precision => 20, :scale => 10
+    t.decimal  "zoom0y",     :precision => 20, :scale => 10
+    t.boolean  "zoom0skip"
+    t.decimal  "zoom1x",     :precision => 20, :scale => 10
+    t.decimal  "zoom1y",     :precision => 20, :scale => 10
+    t.boolean  "zoom1skip"
+    t.decimal  "zoom2x",     :precision => 20, :scale => 10
+    t.decimal  "zoom2y",     :precision => 20, :scale => 10
+    t.decimal  "zoom3x",     :precision => 20, :scale => 10
+    t.decimal  "zoom3y",     :precision => 20, :scale => 10
+    t.decimal  "zoom4x",     :precision => 20, :scale => 10
+    t.decimal  "zoom4y",     :precision => 20, :scale => 10
+    t.decimal  "zoom5x",     :precision => 20, :scale => 10
+    t.decimal  "zoom5y",     :precision => 20, :scale => 10
+    t.decimal  "zoom6x",     :precision => 20, :scale => 10
+    t.decimal  "zoom6y",     :precision => 20, :scale => 10
+    t.decimal  "zoom7x",     :precision => 20, :scale => 10
+    t.decimal  "zoom7y",     :precision => 20, :scale => 10
+    t.decimal  "zoom8x",     :precision => 20, :scale => 10
+    t.decimal  "zoom8y",     :precision => 20, :scale => 10
+    t.decimal  "zoom9x",     :precision => 20, :scale => 10
+    t.decimal  "zoom9y",     :precision => 20, :scale => 10
+    t.decimal  "zoom10x",    :precision => 20, :scale => 10
+    t.decimal  "zoom10y",    :precision => 20, :scale => 10
+    t.decimal  "zoom11x",    :precision => 20, :scale => 10
+    t.decimal  "zoom11y",    :precision => 20, :scale => 10
+  end
+
+  create_table "county_paths", :id => false, :force => true do |t|
+    t.integer  "id",         :default => 0, :null => false
+    t.integer  "county_id"
+    t.integer  "zoom"
+    t.text     "path"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "covariates", :force => true do |t|
     t.integer  "trait_id"
     t.integer  "variable_id"
     t.decimal  "level",       :precision => 16, :scale => 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "n"
+    t.string   "statname"
+    t.decimal  "stat",        :precision => 16, :scale => 4
   end
 
   add_index "covariates", ["trait_id", "variable_id"], :name => "index_covariates_on_trait_id_and_variable_id"
