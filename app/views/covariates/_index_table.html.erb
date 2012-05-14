@@ -5,6 +5,9 @@
     <th><%= link_to "Variable", "#", {:onclick => "order('variables.name')"} -%><span id="variables.name"></span></th>
     <th>Species, trait, treatment, and citation associated with this covariate</th>
     <th><%= link_to "Level", "#", {:onclick => "order('covariates.level')"} -%><span id="covariates.level"></span></th>
+    <th><%= link_to "N", "#", {:onclick => "order('covariates.n')"} -%><span id="covariates.n"></span></th>
+    <th><%= link_to "Stat", "#", {:onclick => "order('covariates.stat')"} -%><span id="covariates.stat"></span></th>
+    <th><%= link_to "Statname", "#", {:onclick => "order('covariates.statname')"} -%><span id="covariates.statname"></span></th>
   </tr>
 
 <% @covariates.each do |covariate| %>
@@ -12,6 +15,9 @@
     <td><%= link_to_if covariate.variable, covariate.variable, covariate.variable %></td>
     <td><%= link_to_if covariate.trait, covariate.trait, covariate.trait %></td>
     <td><%=h covariate.level %></td>
+    <td><%=h covariate.n %></td>
+    <td><%=h covariate.stat %></td>
+    <td><%=h covariate.statname %></td>
     <td><%= link_to 'Show', covariate %></td>
     <td><%= link_to 'Edit', edit_covariate_path(covariate) %></td>
     <td><%= link_to 'Destroy', covariate, :confirm => 'Are you sure?', :method => :delete %></td>

@@ -25,6 +25,9 @@
         <th>Variable</th>
         <th>Species, trait, treatment, and citation associated with this covariate</th>
         <th>Level</th>
+        <th>N</th>
+        <th>Stat</th>
+        <th>Statname</th>
       </tr>
 
       <% f.object.trait.covariates.each do |cov| %>
@@ -33,6 +36,9 @@
         <td><%= link_to_if cov.variable, cov.variable, cov.variable %></td>
         <td><%=h cov.trait %></td>
         <td><%=h cov.level %></td>
+        <td><%=h cov.n %></td>
+        <td><%=h cov.stat %></td>
+        <td><%=h cov.statname %></td>
       </tr>
       <% end %>
     </table>
@@ -40,6 +46,18 @@
     <p>
       <%= f.label :level %><br />
       <%= f.text_field :level %>
+    </p>
+    <p>
+      <%= f.label :n %><br />
+      <%= f.text_field :n %>
+    </p>
+    <p>
+      <%= f.label :stat %> <%= link_to_prototype_window(image_tag("help.gif"), "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node22.html?min" }) %><br />
+      <%= f.text_field :stat %>
+    </p>
+    <p>
+      <%= f.label :statname %><br />
+      <%= f.select :statname, ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD", "P"] %>
     </p>
     <p>
       <%= f.submit 'Create' %>
