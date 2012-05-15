@@ -19,7 +19,13 @@
                       ['Download Yield Means','',{'tw':'0','sb':'Download Yield Means'},
                       ['Miscanthus','',{'tw':'0','sb':'Miscanthus'},
                       ['County','/bety/miscanthus_county_avg_yield.csv',{'tw':'0','sb':'County'}],
-                      ['Gridded','/bety/miscanthusyield.csv',{'tw':'0','sb':'Gridded'}]]]
+                      ['Gridded','/bety/miscanthusyield.csv',{'tw':'0','sb':'Gridded'}]]
+                      <% if logged_in? and current_user.page_access_level <= 2  -%>
+                      ,
+                      ['Switchgrass','',{'tw':'0','sb':'Switchgrass'},
+                      ['County','/bety/miscanthus_county_avg_yield.csv',{'tw':'0','sb':'County'}],
+                      ['Gridded','/bety/miscanthusyield.csv',{'tw':'0','sb':'Gridded'}]]
+                      <% end %>]
                     ];
                   </script>
                   <div style="position:relative; top:0px; left:0px; min-height:26px;">
@@ -69,7 +75,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/miscanthus/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "/bety/maps/mapoverlay/miscanthus/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -82,20 +88,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/miscanthus_test/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
-    },
-    tileSize: new google.maps.Size(256, 256),
-    isPng: true,
-    maxZoom: 4,
-    minZoom: 2,
-    name: "Miscanthus_test"
-  }, {
-    getTileUrl: function(coord, zoom) {
-        var normalizedCoord = getNormalizedCoord(coord, zoom);
-        if (!normalizedCoord) {
-          return null;
-        }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "/bety/maps/mapoverlay/poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -108,7 +101,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "/bety/maps/mapoverlay/switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -121,7 +114,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/miscanthus_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "/bety/maps/mapoverlay/miscanthus_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -134,7 +127,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/miscanthus_switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "/bety/maps/mapoverlay/miscanthus_switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -147,7 +140,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/switchgrass_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "/bety/maps/mapoverlay/switchgrass_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -177,7 +170,7 @@
       },
       mapTypeControlOptions: {
         <% if logged_in? and current_user.page_access_level <= 2  -%>
-        mapTypeIds: ['Miscanthus','Miscanthus_test','Poplar','Switchgrass','Miscanthus-Poplar','Miscanthus-Switchgrass','Switchgrass-Poplar'],
+        mapTypeIds: ['Miscanthus','Poplar','Switchgrass','Miscanthus-Poplar','Miscanthus-Switchgrass','Switchgrass-Poplar'],
         <% else -%>
         mapTypeIds: ['Miscanthus'],
         <% end -%>
@@ -190,7 +183,6 @@
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
     map.mapTypes.set('Miscanthus',new google.maps.StyledMapType(styles, { name: 'Miscanthus' }));
     <% if logged_in? and current_user.page_access_level <= 2 %>
-    map.mapTypes.set('Miscanthus_test',new google.maps.StyledMapType(styles, { name: 'Miscanthus_test' }));
     map.mapTypes.set('Poplar',new google.maps.StyledMapType(styles, { name: 'Poplar' }));
     map.mapTypes.set('Switchgrass',new google.maps.StyledMapType(styles, { name: 'Switchgrass' }));
     map.mapTypes.set('Miscanthus-Poplar',new google.maps.StyledMapType(styles, { name: 'Miscanthus-Poplar' }));
@@ -282,10 +274,6 @@
         overlay_scale("miscanthus");
         break;
       <% if logged_in? and current_user.page_access_level <= 2  -%>
-      case 'Miscanthus_test':
-        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[1]));
-        overlay_scale("miscanthus_test");
-        break;
       case 'Poplar':
         map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[1]));
         overlay_scale("poplar");

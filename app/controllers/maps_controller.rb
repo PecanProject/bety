@@ -91,12 +91,12 @@ class MapsController < ApplicationController
     @site = Site.find(params[:site])
 
     if !site.nil?
-      @trait = Trait.all_limited(current_user ||= nil).find_all_by_site_id(site, :group => "treatment_id" )
+      @trait = @site.traits.all_limited(current_user || nil).all(:group => "treatment_id" )
     else
       @trait = []
     end
 
-    @trait_logged_in = Trait.all_limited(current_user ||= nil).find_all_by_site_id(site).length - @trait.length
+    @trait_logged_in = @site.traits.all(:group => "treatment_id").length - @trait.length
 
     render :update do |page|
       page.replace_html 'show_traits', :partial => 'show_traits'
@@ -142,12 +142,12 @@ class MapsController < ApplicationController
     @site = Site.find(params[:site])
 
     if !site.nil?
-      @yields = Yield.all_limited(current_user ||= nil).find_all_by_site_id(@site.id, :group => "treatment_id" )
+      @yields = @site.yields.all_limited(current_user ||= nil).all(:group => "treatment_id" )
     else
       @yields = []
     end
 
-    @yields_logged_in = Yield.all_limited(current_user ||= nil).find_all_by_site_id(site).length - @yields.length
+    @yields_logged_in = @site.all(:group => "treatment_id").length - @yields.length
 
     render :update do |page|
       page.replace_html 'show_yields', :partial => 'show_yields'
