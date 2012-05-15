@@ -147,7 +147,7 @@ class MapsController < ApplicationController
       @yields = []
     end
 
-    @yields_logged_in = @site.all(:group => "treatment_id").length - @yields.length
+    @yields_logged_in = @site.yields.all(:group => "treatment_id").length - @yields.length
 
     render :update do |page|
       page.replace_html 'show_yields', :partial => 'show_yields'
