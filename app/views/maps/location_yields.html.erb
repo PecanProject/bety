@@ -167,7 +167,7 @@
       },
       mapTypeControlOptions: {
         <% if logged_in? and current_user.page_access_level <= 2  -%>
-        mapTypeIds: ['Miscanthus','Poplar','Switchgrass','Miscanthus-Poplar','Miscanthus-Switchgrass','Switchgrass-Poplar'],
+        mapTypeIds: ['Miscanthus','Switchgrass','Poplar','Miscanthus-Poplar','Miscanthus-Switchgrass','Switchgrass-Poplar'],
         <% else -%>
         mapTypeIds: ['Miscanthus','Switchgrass'],
         <% end -%>
@@ -271,12 +271,12 @@
         overlay_scale("miscanthus");
         break;
       case 'Switchgrass':
-        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[2]));
+        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[1]));
         overlay_scale("switchgrass");
         break;
       <% if logged_in? and current_user.page_access_level <= 2  -%>
       case 'Poplar':
-        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[1]));
+        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[2]));
         overlay_scale("poplar");
         break;
       case 'Miscanthus-Poplar':
