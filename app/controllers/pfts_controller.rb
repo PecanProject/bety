@@ -136,7 +136,7 @@ class PftsController < ApplicationController
   # GET /pfts.xml
   def index
     #@pfts = Pft.all
-    @pfts = Pft.paginate :page => params[:page], :order => "updated_at desc"
+    @pfts = Pft.paginate :page => params[:page]
 
     respond_to do |format|
       format.html # index.html.erb
