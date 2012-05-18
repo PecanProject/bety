@@ -104,7 +104,7 @@ class MapsController < ApplicationController
   end
 
   def traits
-    @traits = Trait.all_limited(current_user ||= nil)
+    @traits = Trait.all_limited(current_user || nil)
     if !params[:site].nil?
       site = Site.find(params[:site])
       @traits = @traits.find_all_by_site_id(site.id)
@@ -159,11 +159,11 @@ class MapsController < ApplicationController
     @yields = Yield.all_limited(current_user ||= nil)
     if !params[:site].nil?
       site = Site.find(params[:site])
-      @yields = @yields.find_all_by_site_id(site.id)
+      @yields = site.yields.all_limited(current_user || nil)
       @title = site.sitename_state_country
     elsif !params[:species].nil?
       species = Specie.find(params[:species])
-      @yields = @yields.find_all_by_specie_id(species.id)
+      @yields = species.yields.all_limited(current_user || nil)
       @title = species.scientificname
     end
     if params[:format].nil? or params[:format] == 'html'
