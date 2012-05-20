@@ -1,13 +1,11 @@
-<h1>Listing managements</h1>
-
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Citation", "#", {:onclick => "order('citations.author')"} -%><span id="citations.author"></span></th>
-    <th><%= link_to "Date", "#", {:onclick => "order('managements.date')"} -%><span id="managements.date"></span></th>
-    <th><%= link_to "Type", "#", {:onclick => "order('managements.mgmttype')"} -%><span id="managements.mgmttype"></span></th>
-    <th><%= link_to "Level", "#", {:onclick => "order('managements.level')"} -%><span id="managements.level"></span></th>
-    <th><%= link_to "Units", "#", {:onclick => "order('managements.units')"} -%><span id="managements.units"></span></th>
-    <th><%= link_to "Notes", "#", {:onclick => "order('managements.notes')"} -%><span id="managements.notes"></span></th>
+    <th><%= sortable "citations.author", "Citation" -%></th>
+    <th><%= sortable "managements.date", "Date" -%></th>
+    <th><%= sortable "managements.mgmttype", "Type" -%></th>
+    <th><%= sortable "managements.level", "Level" -%></th>
+    <th><%= sortable "managements.units", "Units" -%></th>
+    <th><%= sortable "managements.notes", "Notes" -%></th>
   </tr>
 
 <% @managements.each do |management| %>
@@ -25,9 +23,7 @@
 <% end %>
 </table>
 
-<%= will_paginate @priors, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @managements %>
 
 
 

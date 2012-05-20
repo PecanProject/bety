@@ -1,6 +1,7 @@
 class RunsController < ApplicationController
 
   before_filter :login_required 
+  helper_method :sort_column, :sort_direction
 
   layout 'application'
 
@@ -8,19 +9,15 @@ class RunsController < ApplicationController
   # GET /runs.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
-      @runs = Run.paginate :page => params[:page]
-    else
-      conditions = {}
-      params.each do |k,v|
-        next if !Run.column_names.include?(k)
-        conditions[k] = v
-      end
-      logger.info conditions.to_yaml
-      @runs = Run.all(:conditions => conditions)
+      @iteration = params[:iteration][/\d+/] rescue 1
+      @runs = Run.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+    else # Allow url queries of data, with scopes, only xml & csv ( & json? )
+      @runs = Run.api_search(params)
     end
 
     respond_to do |format|
       format.html # index.html.erb
+      format.js
       format.xml  { render :xml => @runs }
       format.csv  { render :csv => @runs }
       format.json  { render :json => @runs }
@@ -111,4 +108,5 @@ class RunsController < ApplicationController
       format.json  { head :ok }
     end
   end
+
 end

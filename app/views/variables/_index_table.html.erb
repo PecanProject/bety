@@ -1,9 +1,9 @@
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Name", "#", {:onclick => "order('variables.name')"} -%><span id="variables.name"></span></th>
-    <th><%= link_to "Description", "#", {:onclick => "order('variables.description')"} -%><span id="variables.description"></span></th>
-    <th><%= link_to "Units", "#", {:onclick => "order('variables.units')"} -%><span id="variables.units"></span></th>
-    <th><%= link_to "Notes", "#", {:onclick => "order('variables.notes')"} -%><span id="variables.notes"></span></th>
+    <th><%= sortable "variables.name", "Name" -%></th>
+    <th><%= sortable "variables.description", "Description" -%></th>
+    <th><%= sortable "variables.units", "Units" -%></th>
+    <th><%= sortable "variables.notes", "Notes" -%></th>
   </tr>
 
 <% @variables.each do |variable| %>
@@ -19,6 +19,4 @@
 <% end %>
 </table>
 
-<%= will_paginate @variables, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @variables %>

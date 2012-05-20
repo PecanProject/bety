@@ -1,59 +1,9 @@
 class PosteriorsController < ApplicationController
 
   before_filter :login_required 
+  helper_method :sort_column, :sort_direction
 
   layout 'application'
-
-  def search
-    sort = params[:sort]
-
-    @page = params[:page]
-    @current_sort = params[:current_sort]
-    params[:current_sort_order].match(/true/) ? @current_sort_order = true : @current_sort_order = false
-
-    @search = params[:search]
-    # If they search just a number it is probably an id, and we do not want to wrap that in wildcards.
-    @search.match(/\D/) ? wildcards = true : wildcards = false
-
-    if sort and sort.split(".")[0].classify.constantize.column_names.include?(sort.split(".")[1])
-      if @current_sort == sort
-        @current_sort_order = !@current_sort_order
-      else
-        @current_sort = sort
-        @current_sort_order = false
-      end
-    end
-
-    if !@search.blank?
-      if wildcards 
-       @search = "%#{@search}%"
-     end
-     search_cond = [Posterior.column_names.collect {|x| "posteriors." + x }.join(" like :search or ") + " like :search", {:search => @search}] 
-     search_cond[0] += " or " + Pft.search_columns.join(" like :search or ") + " like :search"
-     search = "Showing records for \"#{@search}\""
-    else
-      @search = ""
-      search = "Showing all results"
-      search_cond = ""
-    end
-    
-    @posteriors = Posterior.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :include => [:pft], :conditions => search_cond 
-
-    render :update do |page|
-      page.replace_html :index_table, :partial => "index_table"
-      page.assign "current_sort", @current_sort
-      page.assign "current_sort_order", @current_sort_order
-      page.replace_html :search_term, search
-      if @current_sort != "posteriors.id"
-        if @current_sort_order 
-          page.replace_html "#{@current_sort}",  image_tag("up_arrow.gif")
-        else
-          page.replace_html "#{@current_sort}",  image_tag("down_arrow.gif")
-        end
-      end
-    end
-  end
-
 
   def rem_posteriors_runs
     @posterior = Posterior.find(params[:posterior_id])
@@ -83,19 +33,15 @@ class PosteriorsController < ApplicationController
   # GET /posteriors.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
-      @posteriors = Posterior.paginate :page => params[:page]
-    else
-      conditions = {}
-      params.each do |k,v|
-        next if !Posterior.column_names.include?(k)
-        conditions[k] = v
-      end
-      logger.info conditions.to_yaml
-      @posteriors = Posterior.all(:conditions => conditions)
+      @iteration = params[:iteration][/\d+/] rescue 1
+      @posteriors = Posterior.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+    else # Allow url queries of data, with scopes, only xml & csv ( & json? )
+      @posteriors = Posterior.api_search(params)
     end
 
     respond_to do |format|
       format.html # index.html.erb
+      format.js
       format.xml  { render :xml => @posteriors }
       format.csv  { render :csv => @posteriors }
       format.json  { render :json => @posteriors }
@@ -186,4 +132,5 @@ class PosteriorsController < ApplicationController
       format.json  { head :ok }
     end
   end
+
 end

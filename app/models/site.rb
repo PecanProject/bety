@@ -1,4 +1,9 @@
 class Site < ActiveRecord::Base
+
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ }
+  SEARCH_FIELDS = %w{ sites.sitename sites.city sites.state sites.country sites.lat sites.lon }
+
   has_and_belongs_to_many :citations
 
   has_many :yields
@@ -10,13 +15,23 @@ class Site < ActiveRecord::Base
 
   named_scope :all_order, :order => 'country, state, city'
 
-    #20 miles
-    #lat ~ miles/69.1
-    #lng ~ miles/53.0
+  #20 miles
+  #lat ~ miles/69.1
+  #lng ~ miles/53.0
   named_scope :coordinate_search, lambda { |lat,lon,radius| { :conditions => { 
                                                                 :lat => (lat-(radius/69.1))..(lat+(radius/69.1)),
                                                                 :lon => (lon-(radius/53.0))..(lon+(radius/53.0)) },
                                                               :order => "country, state, city" } }
+
+  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+  named_scope :minus_already_linked, lambda {|citation|
+    if citation.nil?
+      {}
+    else
+      { :conditions => ["id not in (?)", citation.sites.collect(&:id) ] }
+    end
+  }
 
   comma do
     id

@@ -1,13 +1,11 @@
-<h1>Listing covariates</h1>
-
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Variable", "#", {:onclick => "order('variables.name')"} -%><span id="variables.name"></span></th>
+    <th><%= sortable "variables.name", "Variable" -%></th>
     <th>Species, trait, treatment, and citation associated with this covariate</th>
-    <th><%= link_to "Level", "#", {:onclick => "order('covariates.level')"} -%><span id="covariates.level"></span></th>
-    <th><%= link_to "N", "#", {:onclick => "order('covariates.n')"} -%><span id="covariates.n"></span></th>
-    <th><%= link_to "Stat", "#", {:onclick => "order('covariates.stat')"} -%><span id="covariates.stat"></span></th>
-    <th><%= link_to "Statname", "#", {:onclick => "order('covariates.statname')"} -%><span id="covariates.statname"></span></th>
+    <th><%= sortable "covariates.level", "Level" -%></th>
+    <th><%= sortable "covariates.n", "N" -%></th>
+    <th><%= sortable "covariates.stat", "Stat" -%></th>
+    <th><%= sortable "covariates.statname", "Statname" -%></th>
   </tr>
 
 <% @covariates.each do |covariate| %>
@@ -25,6 +23,4 @@
 <% end %>
 </table>
 
-<%= will_paginate @covariates, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @covariates %>

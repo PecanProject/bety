@@ -1,6 +1,12 @@
 class Format < ActiveRecord::Base
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ }
+  SEARCH_FIELDS = %w{ formats.name formats.mime_type formats.dataformat formats.notes }
 
   has_many :input_files
+
+  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
 
   comma do
     id

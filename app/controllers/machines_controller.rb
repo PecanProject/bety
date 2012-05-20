@@ -1,18 +1,25 @@
 class MachinesController < ApplicationController
 
-
   before_filter :login_required 
+  helper_method :sort_column, :sort_direction
 
   layout 'application'
 
   # GET /machines
   # GET /machines.xml
   def index
-    @machines = Machine.all
+    if params[:format].nil? or params[:format] == 'html'
+      @iteration = params[:iteration][/\d+/] rescue 1
+      @machines = Machine.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+    else
+      @machines = Machine.api_search(params)
+    end
 
     respond_to do |format|
       format.html # index.html.erb
+      format.js
       format.xml  { render :xml => @machines }
+      format.json { render :json => @machines }
     end
   end
 
@@ -86,4 +93,5 @@ class MachinesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
 end

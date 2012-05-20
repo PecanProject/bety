@@ -13,6 +13,11 @@
 
   <link rel="stylesheet" href="/bety/stylesheets/scaffold.css" type="text/css" />
   <%= javascript_include_tag :all, :cache => "cache/all" %>
+  <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
+  <script>
+    jQuery.noConflict();
+  </script>
+  <%= javascript_include_tag 'lazy/simple_search.js' %>
 
   <% if ['sites','maps','visitors'].include?(params[:controller]) %>
 

@@ -1,5 +1,6 @@
 class SpeciesController < ApplicationController
   before_filter :login_required, :except => [ :show ]
+  helper_method :sort_column, :sort_direction
 
   layout 'application'
 
@@ -64,84 +65,21 @@ class SpeciesController < ApplicationController
   end
 
 
-  def search
-    sort = params[:sort]
-
-    @page = params[:page]
-    @current_sort = params[:current_sort]
-    params[:current_sort_order].match(/true/) ? @current_sort_order = true : @current_sort_order = false
-
-    @search = params[:search]
-    # If they search just a number it is probably an id, and we do not want to wrap that in wildcards.
-    @search.match(/\D/) ? wildcards = true : wildcards = false
-
-    #Different from rest to deal with "species/specie"...
-    if sort and ((sort.match(/species/) and Specie.column_names.include?(sort.split(".")[1])) or sort.split(".")[0].classify.constantize.column_names.include?(sort.split(".")[1]))
-      if @current_sort == sort
-        @current_sort_order = !@current_sort_order
-      else
-        @current_sort = sort
-        @current_sort_order = false
-      end
-    end
-
-    if !@search.blank?
-      if wildcards 
-       @search = "%#{@search}%"
-     end
-     search_cond = [Specie.column_names.collect {|x| "species." + x }.join(" like :search or ") + " like :search", {:search => @search}] 
-     search = "Showing records for \"#{@search}\""
-    else
-      @search = ""
-      search = "Showing all results"
-      search_cond = ""
-    end
-    
-    @species = Specie.paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :conditions => search_cond 
-
-    render :update do |page|
-      page.replace_html :index_table, :partial => "index_table"
-      page.assign "current_sort", @current_sort
-      page.assign "current_sort_order", @current_sort_order
-      page.replace_html :search_term, search
-      if @current_sort != "species.id"
-        if @current_sort_order 
-          page.replace_html "#{@current_sort}",  image_tag("up_arrow.gif")
-        else
-          page.replace_html "#{@current_sort}",  image_tag("down_arrow.gif")
-        end
-      end
-    end
-  end
-
 
 
   # GET /species
   # GET /species.xml
   def index
-
     if params[:format].nil? or params[:format] == 'html'
-
-#      @letter = params[:letter] ||= "A"
-#
-#      if @letter[/^[A-Z]$/].nil?
-#        @letter = "A"
-#      end
-#
-#      @species = Specie.by_letter(@letter).paginate :page => params[:page], :order => "genus"
-      @species = Specie.paginate :page => params[:page], :order => "genus"
-    else
-      conditions = {}
-      params.each do |k,v|
-        next if !Specie.column_names.include?(k)
-        conditions[k] = v
-      end
-      logger.info conditions.to_yaml
-      @species = Specie.all(:conditions => conditions)
+      @iteration = params[:iteration][/\d+/] rescue 1
+      @species = Specie.order("#{sort_column('species','scientificname')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+    else # Allow url queries of data, with scopes, only xml & csv ( & json? )
+      @species = Specie.api_search(params)
     end
 
     respond_to do |format|
       format.html # index.html.erb
+      format.js
       format.xml  { render :xml => @species }
       format.csv  { render :csv => @species }
       format.json  { render :json => @species }
@@ -252,12 +190,4 @@ class SpeciesController < ApplicationController
     end
   end
 
-
-#  def symbol_search
-#    @phrase = params[:symbol]
-#
-#    @match = Specie.find(:first, :conditions => [ 'AcceptedSymbol like ?', @phrase ], :limit => 100)
-#
-#    render(:layout => false)
-#  end
 end

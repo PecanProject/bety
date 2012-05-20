@@ -1,13 +1,13 @@
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Citation", "#", {:onclick => "order('citations.author')"} -%><span id="citations.author"></span></th>
-    <th><%= link_to "Variable", "#", {:onclick => "order('variables.name')"} -%><span id="variables.name"></span></th>
-    <th><%= link_to "Phylogeny", "#", {:onclick => "order('priors.phylogeny')"} -%><span id="priors.phylogeny"></span></th>
-    <th><%= link_to "Distribution", "#", {:onclick => "order('priors.distn')"} -%><span id="priors.distn"></span></th>
-    <th><%= link_to "Parameter a", "#", {:onclick => "order('priors.parama')"} -%><span id="priors.parama"></span></th>
-    <th><%= link_to "Parameter b", "#", {:onclick => "order('priors.paramb')"} -%><span id="priors.paramb"></span></th>
-    <th><%= link_to "N", "#", {:onclick => "order('priors.n')"} -%><span id="priors.n"></span></th>
-    <th><%= link_to "Notes", "#", {:onclick => "order('priors.notes')"} -%><span id="priors.notes"></span></th>
+    <th><%= sortable "citations.author", "Citation" -%></th>
+    <th><%= sortable "variables.name", "Variable" -%></th>
+    <th><%= sortable "priors.phylogeny", "Phylogeny" -%></th>
+    <th><%= sortable "priors.distn", "Distribution" -%></th>
+    <th><%= sortable "priors.parama", "Parameter a" -%></th>
+    <th><%= sortable "priors.paramb", "Parameter b" -%></th>
+    <th><%= sortable "priors.n", "N" -%></th>
+    <th><%= sortable "priors.notes", "Notes" -%></th>
   </tr>
 
 <% @priors.each do |prior| %>
@@ -27,9 +27,5 @@
 <% end %>
 </table>
 
-<%= will_paginate @priors, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
-
-
+<%= will_paginate @priors %>
 

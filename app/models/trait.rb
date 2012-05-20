@@ -1,4 +1,8 @@
 class Trait < ActiveRecord::Base
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ citation variable specie site treatment }
+  SEARCH_FIELDS = %w{ traits.id traits.mean traits.n traits.stat traits.statname variables.name species.genus citations.author sites.sitename treatments.name }
+
   has_many :covariates
   has_many :variables, :through => :covariates
 
@@ -15,11 +19,15 @@ class Trait < ActiveRecord::Base
   validates_presence_of     :mean
   validates_presence_of     :statname, :if => Proc.new { |trait| !trait.stat.blank? }
 
-  # Allow admins and managers to see everything, allow users to see everything they created.
-#  named_scope :all_limited, lambda { |check,access_lev,user_id| 
-#    {:conditions => ["(checked >= ? and access_level >= ?) or traits.user_id = ?",check,access_lev,user_id] }
-#  }
-
+  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+  named_scope :citation, lambda { |citation|
+    if citation.nil?
+      {}
+    else
+      { :conditions => ["citation_id = ?", citation ] }
+    end
+  }
   named_scope :all_limited, lambda { |current_user|
     if !current_user.nil?
       if current_user.page_access_level == 1

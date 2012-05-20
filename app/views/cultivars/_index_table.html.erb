@@ -1,12 +1,10 @@
-<h1>Listing cultivars</h1>
-
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Species", "#", {:onclick => "order('species.scientificname')"} -%><span id="species.scientificname"></span></th>
-    <th><%= link_to "Previous ID", "#", {:onclick => "order('cultivars.previous_id')"} -%><span id="cultivars.previous_id"></span></th>
-    <th><%= link_to "Name", "#", {:onclick => "order('cultivars.name')"} -%><span id="cultivars.name"></span></th>
-    <th><%= link_to "Ecotype", "#", {:onclick => "order('cultivars.ecotype')"} -%><span id="cultivars.ecotype"></span></th>
-    <th><%= link_to "Notes", "#", {:onclick => "order('cultivars.notes')"} -%><span id="cultivars.notes"></span></th>
+    <th><%= sortable "species.scientificname", "Species" -%></th>
+    <th><%= sortable "cultivars.previous_id", "Previous ID" -%></th>
+    <th><%= sortable "cultivars.name", "Name" -%></th>
+    <th><%= sortable "cultivars.ecotype", "Ecotype" -%></th>
+    <th><%= sortable "cultivars.notes", "Notes" -%></th>
   </tr>
 
 <% @cultivars.each do |cultivar| %>
@@ -23,7 +21,5 @@
 <% end %>
 </table>
 
-<%= will_paginate @cultivars, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @cultivars %>
 

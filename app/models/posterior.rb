@@ -1,4 +1,9 @@
 class Posterior < ActiveRecord::Base
+
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ pft }
+  SEARCH_FIELDS = %w{ pfts.name posteriors.filename }
+
   has_and_belongs_to_many :runs
   has_many :children, :class_name => "Posterior", :foreign_key => "parent_id"
   belongs_to :parent, :class_name => "Posterior"
@@ -6,6 +11,10 @@ class Posterior < ActiveRecord::Base
 
   validates_presence_of     :pft_id
   validates_presence_of     :filename
+
+  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+
   comma do
     id
     pft_id

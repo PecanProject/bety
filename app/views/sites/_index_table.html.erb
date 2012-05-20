@@ -1,13 +1,13 @@
 
 
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Site Name", "#", {:onclick => "order('sites.sitename')"} -%><span id="sites.sitename"></span></th>
-    <th><%= link_to "City", "#", {:onclick => "order('sites.city')"} -%><span id="sites.city"></span></th>
-    <th><%= link_to "State", "#", {:onclick => "order('sites.state')"} -%><span id="sites.state"></span></th>
-    <th><%= link_to "Country", "#", {:onclick => "order('sites.country')"} -%><span id="sites.country"></span></th>
-    <th><%= link_to "Lat", "#", {:onclick => "order('sites.lat')"} -%><span id="sites.lat"></span></th>
-    <th><%= link_to "Lon", "#", {:onclick => "order('sites.lon')"} -%><span id="sites.lon"></span></th>
+    <th><%= sortable "sites.sitename", "Site Name" -%></th>
+    <th><%= sortable "sites.city", "City" -%></th>
+    <th><%= sortable "sites.state", "State" -%></th>
+    <th><%= sortable "sites.country", "Country" -%></th>
+    <th><%= sortable "sites.lat", "Lat" -%></th>
+    <th><%= sortable "sites.lon", "Lon" -%></th>
   </tr>
 
 <% @sites.each do |site| %>
@@ -30,6 +30,4 @@
   </tr>
 <% end %>
 </table>
-<%= will_paginate @sites, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @sites %>

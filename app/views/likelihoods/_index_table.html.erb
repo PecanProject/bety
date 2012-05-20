@@ -1,12 +1,12 @@
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Run", "#", {:onclick => "order('models.model_name')"} -%><span id="models.model_name"></span></th>
-    <th><%= link_to "Variable", "#", {:onclick => "order('variables.name')"} -%><span id="variables.name"></span></th>
-    <th><%= link_to "Input", "#", {:onclick => "order('sites.sitename')"} -%><span id="sites.sitename"></span></th>
-    <th><%= link_to "Loglikelihood", "#", {:onclick => "order('likelihoods.loglikelihood')"} -%><span id="likelihoods.loglikelihood"></span></th>
-    <th><%= link_to "N eff", "#", {:onclick => "order('likelihoods.n_eff')"} -%><span id="likelihoods.n_eff"></span></th>
-    <th><%= link_to "Weight", "#", {:onclick => "order('likelihoods.weight')"} -%><span id="likelihoods.weight"></span></th>
-    <th><%= link_to "Residual", "#", {:onclick => "order('likelihoods.residual')"} -%><span id="likelihoods.residual"></span></th>
+    <th>Run</th>
+    <th><%= sortable "variables.name", "Variable" -%></th>
+    <th>Input</th>
+    <th><%= sortable "likelihoods.loglikelihood", "Loglikelihood" -%></th>
+    <th><%= sortable "likelihoods.n_eff", "N eff" -%></th>
+    <th><%= sortable "likelihoods.weight", "Weight" -%></th>
+    <th><%= sortable "likelihoods.residual", "Residual" -%></th>
   </tr>
 
 <% @likelihoods.each do |likelihood| %>
@@ -25,6 +25,4 @@
 <% end %>
 </table>
 
-<%= will_paginate @likelihoods, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @likelihoods %>

@@ -1,14 +1,14 @@
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Trait", "#", {:onclick => "order('variables.name')"} -%><span id="variables.name"></span></th>
-    <th><%= link_to "Species", "#", {:onclick => "order('species.genus')"} -%><span id="species.genus"></span></th>
-    <th><%= link_to "Mean", "#", {:onclick => "order('traits.mean')"} -%><span id="traits.mean"></span></th>
-    <th><%= link_to "N", "#", {:onclick => "order('traits.n')"} -%><span id="traits.n"></span></th>
-    <th><%= link_to "Stat", "#", {:onclick => "order('traits.stat')"} -%><span id="traits.stat"></span></th>
-    <th><%= link_to "Statname", "#", {:onclick => "order('traits.statname')"} -%><span id="traits.statname"></span></th>
-    <th><%= link_to "Citation", "#", {:onclick => "order('citations.author')"} -%><span id="citations.author"></span></th>
-    <th><%= link_to "Site", "#", {:onclick => "order('sites.sitename')"} -%><span id="sites.sitename"></span></th>
-    <th><%= link_to "Treatment", "#", {:onclick => "order('treatment.name')"} -%><span id="treatment.name"></span></th>
+    <th><%= sortable "variables.name", "Trait" -%></th>
+    <th><%= sortable "species.genus", "Species" -%></th>
+    <th><%= sortable "traits.mean", "Mean" -%></th>
+    <th><%= sortable "traits.n", "N" -%></th>
+    <th><%= sortable "traits.stat", "Stat" -%></th>
+    <th><%= sortable "traits.statname", "Statname" -%></th>
+    <th><%= sortable "citations.author", "Citation" -%></th>
+    <th><%= sortable "sites.sitename", "Site" -%></th>
+    <th><%= sortable "treatment.name", "Treatment" -%></th>
   </tr>
 
 <% @traits.each do |trait| %>
@@ -37,9 +37,7 @@
 <% end %>
 </table>
 
-<%= will_paginate @traits, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @traits %>
 
 <br />
 

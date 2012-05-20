@@ -1,9 +1,9 @@
 
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Model name", "#", {:onclick => "order('models.model_name')"} -%><span id="models.model_name"></span></th>
-    <th><%= link_to "Model path", "#", {:onclick => "order('models.model_path')"} -%><span id="models.model_path"></span></th>
-    <th><%= link_to "Revision", "#", {:onclick => "order('models.revision')"} -%><span id="models.revision"></span></th>
+    <th><%= sortable "models.model_name", "Model name" -%></th>
+    <th><%= sortable "models.model_path", "Model path" -%></th>
+    <th><%= sortable "models.revision", "Revision" -%></th>
     <th>Parent</th>
   </tr>
 
@@ -20,6 +20,4 @@
 <% end %>
 </table>
 
-<%= will_paginate @models, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @models %>

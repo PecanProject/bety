@@ -1,11 +1,9 @@
-<h1>Listing formats</h1>
-
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Name", "#", {:onclick => "order('formats.name')"} -%><span id="formats.name"></span></th>
-    <th><%= link_to "Mime type", "#", {:onclick => "order('formats.mime_type')"} -%><span id="formats.mime_type"></span></th>
-    <th><%= link_to "Data Format", "#", {:onclick => "order('formats.dataformat')"} -%><span id="formats.dataformat"></span></th>
-    <th><%= link_to "Notes", "#", {:onclick => "order('formats.notes')"} -%><span id="formats.notes"></span></th>
+    <th><%= sortable "formats.name", "Name" -%></th>
+    <th><%= sortable "formats.mime_type", "Mime type" -%></th>
+    <th><%= sortable "formats.dataformat", "Data Format" -%></th>
+    <th><%= sortable "formats.notes", "Notes" -%></th>
   </tr>
 
 <% @formats.each do |format| %>
@@ -20,7 +18,5 @@
   </tr>
 <% end %>
 </table>
-<%= will_paginate @formats, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @formats %>
 

@@ -1,5 +1,6 @@
 class TraitsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
+  helper_method :sort_column, :sort_direction
 
   layout 'application'
 
@@ -40,82 +41,6 @@ class TraitsController < ApplicationController
     end
 
   end
-
-  def search
-    sort = params[:sort]
-
-    @page = params[:page]
-    @current_sort = params[:current_sort]
-    params[:current_sort_order].match(/true/) ? @current_sort_order = true : @current_sort_order = false
-
-    @search = params[:search]
-    # If they search just a number it is probably an id, and we do not want to wrap that in wildcards.
-    @search.match(/\D/) ? wildcards = true : wildcards = false
-
-    if sort and ((sort.match(/species/) and Specie.column_names.include?(sort.split(".")[1])) or sort.split(".")[0].classify.constantize.column_names.include?(sort.split(".")[1]))
-      if @current_sort == sort
-        @current_sort_order = !@current_sort_order
-      else
-        @current_sort = sort
-        @current_sort_order = false
-      end
-    end
-
-    if !@search.blank?
-     tmp_search = ""
-     search_cond = ["", {} ]
-     # symbols cannot be numbers...
-     count = "a"
-     @search.split(" ").each do |ss|
-       if wildcards 
-         ss = "%#{ss}%"
-         tmp_search += ss + " "
-       else
-         tmp_search = ss
-       end
-       search_cond[1][count.to_sym] = ss
-       search_cond[0] += " and " if count > "a"
-       search_cond[0] += " ( " + Trait.column_names.collect {|x| "traits." + x }.join(" like :#{count} or ") + " like :#{count}"
-       search_cond[0] += " or " + Citation.search_columns.join(" like :#{count} or ") + " like :#{count}"
-       search_cond[0] += " or " + Variable.search_columns.join(" like :#{count} or ") + " like :#{count}"
-       search_cond[0] += " or " + Specie.search_columns.join(" like :#{count} or ") + " like :#{count}"
-       search_cond[0] += " or " + Site.search_columns.join(" like :#{count} or ") + " like :#{count}"
-       search_cond[0] += " or " + Treatment.search_columns.join(" like :#{count} or ") + " like :#{count}" + ")"
-       count = count.next
-     end
-     search = "Showing records for \"#{tmp_search}\""
-    else
-      @search = ""
-      search = "Showing all results"
-      search_cond = ""
-    end
-
-    if !session["citation"].nil?
-      if search_cond.blank?
-        search_cond = ["traits.citation_id = ?", session["citation"] ]
-      else
-        search_cond[0] += " and traits.citation_id = :citation"
-        search_cond[1][:citation] = session["citation"]
-      end
-    end
-   logger.info "here" 
-    @traits = Trait.all_limited(current_user).paginate :order => @current_sort+$sort_table[@current_sort_order], :page => params[:page], :include => [:citation, :variable,:specie, :site,:treatment], :conditions => search_cond 
-
-    render :update do |page|
-      page.replace_html :index_table, :partial => "index_table"
-      page.assign "current_sort", @current_sort
-      page.assign "current_sort_order", @current_sort_order
-      page.replace_html :search_term, search
-      if @current_sort != "traits.id"
-        if @current_sort_order 
-          page.replace_html "#{@current_sort}",  image_tag("up_arrow.gif")
-        else
-          page.replace_html "#{@current_sort}",  image_tag("down_arrow.gif")
-        end
-      end
-    end
-  end
-
 
   def trait_search
     @query = params[:symbol] || nil
@@ -177,26 +102,19 @@ class TraitsController < ApplicationController
   # GET /traits
   # GET /traits.xml
   def index
+    @traits = Trait.all_limited(current_user)
     if params[:format].nil? or params[:format] == 'html'
-      if session["citation"].nil?
-        conditions = ['1=1']
-      else
-        conditions = ["citation_id = ?", session["citation"] ]
-      end
-      @traits = Trait.all_limited(current_user).paginate :page => params[:page], :conditions => conditions, :include => [:site, :specie, :treatment], :order => 'date,sites.sitename,sites.country,sites.state,species.genus,species.species,treatments.name,treatments.definition'
-    else
-      conditions = {}
-      params.each do |k,v|
-        next if !Trait.column_names.include?(k)
-        conditions[k] = v
-      end
-      logger.info conditions.to_yaml
-      @traits = Trait.all_limited(current_user).all(:conditions => conditions)
+      @iteration = params[:iteration][/\d+/] rescue 1
+      @traits = @traits.citation(session["citation"]).order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+    else # Allow url queries of data, with scopes, only xml & csv ( & json? )
+      @traits = @traits.api_search(params)
     end
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html 
+      format.js 
       format.xml  { render :xml => @traits }
+      format.json { render :json => @traits }
       format.csv  { render :csv => @traits, :style => (params[:style] ||= 'default').to_sym }
     end
   end
@@ -322,4 +240,5 @@ class TraitsController < ApplicationController
       format.csv  { head :ok }
     end
   end
+
 end

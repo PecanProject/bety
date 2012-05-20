@@ -1,8 +1,8 @@
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Notes", "#", {:onclick => "order('ensembles.notes')"} -%><span id="ensembles.notes"></span></th>
-    <th><%= link_to "Created", "#", {:onclick => "order('ensembles.created_at')"} -%><span id="ensembles.created_at"></span></th>
-    <th><%= link_to "Updated", "#", {:onclick => "order('ensembles.updated_at')"} -%><span id="ensembles.updated_at"></span></th>
+    <th><%= sortable "ensembles.notes", "Notes" -%></th>
+    <th><%= sortable "ensembles.created_at", "Created" -%></th>
+    <th><%= sortable "ensembles.updated_at", "Updated" -%></th>
   </tr>
 
 <% @ensembles.each do |ensemble| %>
@@ -17,6 +17,4 @@
 <% end %>
 </table>
 
-<%= will_paginate @ensembles, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @ensembles %>

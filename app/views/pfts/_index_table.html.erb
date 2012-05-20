@@ -1,9 +1,7 @@
-<h1>Listing pfts</h1>
-
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Name", "#", {:onclick => "order('pfts.name')"} -%><span id="pfts.name"></span></th>
-    <th><%= link_to "Definition", "#", {:onclick => "order('pfts.definition')"} -%><span id="pfts.definition"></span></th>
+    <th><%= sortable "pfts.name", "Name" -%></th>
+    <th><%= sortable "pfts.definition", "Definition" -%></th>
   </tr>
 
 <% @pfts.each do |pft| %>
@@ -18,7 +16,5 @@
 </table>
 
 
-<%= will_paginate @priors, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @pfts %>
 

@@ -1,0 +1,34 @@
+<table class="pretty">
+  <tr>
+    <th><%= sortable 'models.model_name', 'Model' -%></th>
+    <th><%= sortable 'sites.sitename', 'Site' -%></th>
+    <th><%= sortable 'runs.start_time', 'Start time' -%></th>
+    <th><%= sortable 'runs.finish_time', 'Finish time' -%></th>
+    <th><%= sortable 'runs.started_at', 'Started at' -%></th>
+    <th><%= sortable 'runs.finished_at', 'Finished at' -%></th>
+    <th><%= sortable 'runs.outdir', 'Outdir' -%></th>
+    <th><%= sortable 'runs.outprefix', 'Outprefix' -%></th>
+    <th><%= sortable 'runs.setting', 'Setting' -%></th>
+    <th><%= sortable 'runs.paramter_list', 'Parameter List' -%></th>
+  </tr>
+
+<% @runs.each do |run| %>
+  <tr>
+    <td><%= link_to_if run.model, run.model, run.model %></td>
+    <td><%= link_to_if run.model, run.site, run.site %></td>
+    <td><%=h run.start_time %></td>
+    <td><%=h run.finish_time %></td>
+    <td><%=h run.started_at %></td>
+    <td><%=h run.finished_at %></td>
+    <td><%=h run.outdir %></td>
+    <td><%=h run.outprefix %></td>
+    <td><%=h run.setting %></td>
+    <td><%=h run.parameter_list %></td>
+    <td><%= link_to 'Show', run %></td>
+    <td><%= link_to 'Edit', edit_run_path(run) %></td>
+    <td><%= link_to 'Destroy', run, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @runs %>

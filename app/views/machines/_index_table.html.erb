@@ -1,0 +1,18 @@
+<table class="pretty">
+  <tr>
+    <th><%= sortable 'machines.hostname', 'Hostname' -%></th>
+  </tr>
+
+  <% @machines.each do |machine| %>
+  <tr>
+    <td><%=h machine.hostname %></td>
+    <td><%= link_to 'Show', machine %></td>
+    <td><%= link_to 'Edit', edit_machine_path(machine) %></td>
+    <td><%= link_to 'Destroy', machine, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+  <% end %>
+</table>
+
+<br />
+
+<%= will_paginate @machines %>

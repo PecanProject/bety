@@ -1,5 +1,9 @@
 class Specie < ActiveRecord::Base
 
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ }
+  SEARCH_FIELDS = %w{ species.AcceptedSymbol species.scientificname species.commonname }
+
   has_and_belongs_to_many :pfts
 
   has_many :yields
@@ -9,6 +13,8 @@ class Specie < ActiveRecord::Base
   named_scope :all_order, :order => 'genus, species'
 
   named_scope :by_letter, lambda { |letter| { :conditions => ['genus like ?', letter + "%"] } }
+  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
 
   comma do |f|
     f.id

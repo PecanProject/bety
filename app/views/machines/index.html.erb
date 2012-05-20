@@ -1,20 +1,11 @@
 <h1>Listing machines</h1>
-
-<table>
-  <tr>
-    <th>Hostname</th>
-  </tr>
-
-<% @machines.each do |machine| %>
-  <tr>
-    <td><%=h machine.hostname %></td>
-    <td><%= link_to 'Show', machine %></td>
-    <td><%= link_to 'Edit', edit_machine_path(machine) %></td>
-    <td><%= link_to 'Destroy', machine, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
+<p>
+<% form_tag machines_path, :method => 'get', :id => 'simple_search' do %>
+  <%= text_field_tag :search, params[:search] %>
+  <%= hidden_field_tag :direction, params[:direction] %>
+  <%= hidden_field_tag :sort, params[:sort] %>
 <% end %>
-</table>
-
-<br />
+</p>
+<div id="simple_search_table" class="simple_search_table_1"><%= render 'index_table' %></div>
 
 <%= link_to 'New machine', new_machine_path %>

@@ -1,15 +1,13 @@
- <h1>Listing inputs</h1>
-
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Site", "#", {:onclick => "order('sites.sitename')"} -%><span id="sites.sitename"></span></th>
+    <th><%= sortable "sites.sitename", "Site" -%></th>
     <th>Variables</th>
-    <th><%= link_to "Name", "#", {:onclick => "order('inputs.name')"} -%><span id="inputs.name"></span></th>
-    <th><%= link_to "Start Date", "#", {:onclick => "order('inputs.start_date')"} -%><span id="inputs.start_date"></span></th>
-    <th><%= link_to "End Date", "#", {:onclick => "order('inputs.end_date')"} -%><span id="inputs.end_date"></span></th>
-    <th><%= link_to "Notes", "#", {:onclick => "order('inputs.notes')"} -%><span id="inputs.notes"></span></th>
-    <th><%= link_to "Created at", "#", {:onclick => "order('inputs.created_at')"} -%><span id="inputs.created_at"></span></th>
-    <th><%= link_to "Updated at", "#", {:onclick => "order('inputs.updated_at')"} -%><span id="inputs.updated_at"></span></th>
+    <th><%= sortable "inputs.name", "Name" -%></th>
+    <th><%= sortable "inputs.start_date", "Start Date" -%></th>
+    <th><%= sortable "inputs.end_date", "End Date" -%></th>
+    <th><%= sortable "inputs.notes", "Notes" -%></th>
+    <th><%= sortable "inputs.created_at", "Created at" -%></th>
+    <th><%= sortable "inputs.updated_at", "Updated at" -%></th>
   </tr>
 
   <% @inputs.each do |input| %>
@@ -32,10 +30,5 @@
 
 </table>
 
-<%= will_paginate @priors, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
-
-
-
+<%= will_paginate @inputs %>
 

@@ -34,4 +34,12 @@ module ApplicationHelper
                      "2   minute" => "2.0" ,
                      "2.5 quarter-hour" => "2.5" ,
                      "3   hour" => "3.0" }
+
+  # Simple Search
+  def sortable(column, title = nil)
+    title ||= column.titleize
+    css_class = (column == sort_column) ? "current #{sort_direction}" : nil
+    direction = (column == sort_column && sort_direction == "asc") ? "desc" : "asc"
+    link_to title, params.merge(:sort => column, :direction => direction, :page => nil), {:class => css_class}
+  end
 end

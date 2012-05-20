@@ -1,13 +1,13 @@
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Author", "#", {:onclick => "order('citations.author')"} -%><span id="citations.author"></span></th>
-    <th><%= link_to "Year", "#", {:onclick => "order('citations.year')"} -%><span id="citations.year"></span></th>
-    <th><%= link_to "Title", "#", {:onclick => "order('citations.title')"} -%><span id="citations.title"></span></th>
-    <th><%= link_to "Journal", "#", {:onclick => "order('citations.Jjurnal')"} -%><span id="citations.journal"></span></th>
-    <th><%= link_to "Vol", "#", {:onclick => "order('citations.vol')"} -%><span id="citations.vol"></span></th>
-    <th><%= link_to "Pg", "#", {:onclick => "order('citations.pg')"} -%><span id="citations.pg"></span></th>
-    <th><%= link_to "Url", "#", {:onclick => "order('citations.url')"} -%><span id="citations.url"></span></th>
-    <th><%= link_to "Pdf", "#", {:onclick => "order('citations.pdf')"} -%><span id="citations.pdf"></span></th>
+    <th><%= sortable "citations.author", "Author" -%></th>
+    <th><%= sortable "citations.year", "Year" -%></th>
+    <th><%= sortable "citations.title", "Title" -%></th>
+    <th><%= sortable "citations.journal", "Journal" -%></th>
+    <th><%= sortable "citations.vol", "Vol" -%></th>
+    <th><%= sortable "citations.pg", "Pg" -%></th>
+    <th><%= sortable "citations.url", "Url" -%></th>
+    <th><%= sortable "citations.pdf", "Pdf" -%></th>
   </tr>
 
 <% @citations.each do |citation| %>
@@ -36,7 +36,5 @@
 <% end %>
 </table>
 
-<%= will_paginate @citations, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @citations %>
 

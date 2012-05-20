@@ -1,8 +1,16 @@
 class Prior < ActiveRecord::Base
+
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ citation variable }
+  SEARCH_FIELDS = %w{ citations.author variables.name priors.phylogeny priors.distn priors.parama priors.paramb priors.n priors.notes }
+
   has_and_belongs_to_many :pfts
 
   belongs_to :variable
   belongs_to :citation
+
+  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
 
   comma do
     id

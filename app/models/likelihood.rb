@@ -1,4 +1,10 @@
 class Likelihood < ActiveRecord::Base
+
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ input run variable }
+  SEARCH_FIELDS = %w{ variables.name likelihoods.loglikelihood likelihoods.n_eff likelihoods.weight likelihoods.residual }
+
+
   belongs_to :run
   belongs_to :variable
   belongs_to :input
@@ -6,6 +12,10 @@ class Likelihood < ActiveRecord::Base
   validates_presence_of     :run_id
   validates_presence_of     :variable_id
   validates_presence_of     :loglikelihood
+
+  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+
   comma do
     id
     run_id

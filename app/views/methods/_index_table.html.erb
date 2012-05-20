@@ -1,10 +1,8 @@
-<h1>Listing methods</h1>
-
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Name", "#", {:onclick => "order('methods.name')"} -%><span id="methods.name"></span></th>
-    <th><%= link_to "Description", "#", {:onclick => "order('methods.description')"} -%><span id="methods.description"></span></th>
-    <th><%= link_to "Author", "#", {:onclick => "order('citations.author')"} -%><span id="citations.author"></span></th>
+    <th><%= sortable "methods.name", "Name" -%></th>
+    <th><%= sortable "methods.description", "Description" -%></th>
+    <th><%= sortable "citations.author", "Author" -%></th>
   </tr>
 
 <% @methods.each do |method| %>
@@ -23,6 +21,4 @@
 <% end %>
 </table>
 
-<%= will_paginate @methods, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @methods %>

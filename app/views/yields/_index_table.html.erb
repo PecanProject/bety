@@ -1,16 +1,14 @@
-<h1>Listing yields</h1>
-
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Species", "#", {:onclick => "order('species.genus')"} -%><span id="species.genus"></span></th>
-    <th><%= link_to "Cultivar", "#", {:onclick => "order('cultivars.name')"} -%><span id="cultivars.name"></span></th>
-    <th><%= link_to "Mean", "#", {:onclick => "order('yields.mean')"} -%><span id="yields.mean"></span></th>
-    <th><%= link_to "N", "#", {:onclick => "order('yields.n')"} -%><span id="yields.n"></span></th>
-    <th><%= link_to "Stat", "#", {:onclick => "order('yields.stat')"} -%><span id="yields.stat"></span></th>
-    <th><%= link_to "Stat Name", "#", {:onclick => "order('yields.statname')"} -%><span id="yields.statname"></span></th>
-    <th><%= link_to "Citation", "#", {:onclick => "order('citations.author')"} -%><span id="citations.author"></span></th>
-    <th><%= link_to "Site", "#", {:onclick => "order('sites.sitename')"} -%><span id="sites.sitename"></span></th>
-    <th><%= link_to "Treatment", "#", {:onclick => "order('treatments.name')"} -%><span id="treatments.name"></span></th>
+    <th><%= sortable "species.genus", "Species" -%></th>
+    <th><%= sortable "cultivars.name", "Cultivar" -%></th>
+    <th><%= sortable "yields.mean", "Mean" -%></th>
+    <th><%= sortable "yields.n", "N" -%></th>
+    <th><%= sortable "yields.stat", "Stat" -%></th>
+    <th><%= sortable "yields.statname", "Stat Name" -%></th>
+    <th><%= sortable "citations.author", "Citation" -%></th>
+    <th><%= sortable "sites.sitename", "Site" -%></th>
+    <th><%= sortable "treatments.name", "Treatment" -%></th>
   </tr>
 
 <% @yields.each do |y| %>
@@ -41,9 +39,7 @@
 <% end %>
 </table>
 
-<%= will_paginate @yields, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @yields %>
 
 <br />
 

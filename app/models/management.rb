@@ -1,8 +1,15 @@
 class Management < ActiveRecord::Base
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ citation }
+  SEARCH_FIELDS = %w{ citations.author managements.date managements.mgmttype managements.level managements.units managements.notes }
+
   has_and_belongs_to_many :treatments
 
   belongs_to :citation
   belongs_to :user
+
+  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
 
   comma do
     id

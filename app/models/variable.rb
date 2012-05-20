@@ -1,4 +1,9 @@
 class Variable < ActiveRecord::Base
+
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ }
+  SEARCH_FIELDS = %w{ variables.name variables.description variables.units variables.notes }
+
   has_many :covariates
   has_many :traits, :through => :covariates
   has_many :priors
@@ -7,6 +12,8 @@ class Variable < ActiveRecord::Base
   has_and_belongs_to_many :inputs
 
   named_scope :all_order, :order => 'name'  
+  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
 
   comma do
     id

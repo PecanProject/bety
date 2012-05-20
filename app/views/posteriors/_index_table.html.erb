@@ -1,8 +1,8 @@
 
-<table>
+<table class="pretty">
   <tr>
-    <th><%= link_to "Pft", "#", {:onclick => "order('pfts.name')"} -%><span id="pfts.name"></span></th>
-    <th><%= link_to "Filename", "#", {:onclick => "order('posteriors.filename')"} -%><span id="posteriors.filename"></span></th>
+    <th><%= sortable "pfts.name", "Pft" -%></th>
+    <th><%= sortable "posteriors.filename", "Filename" -%></th>
     <th>Parent</th>
   </tr>
 
@@ -18,6 +18,4 @@
 <% end %>
 </table>
 
-<%= will_paginate @posteriors, :renderer => 'RemoteLinkRenderer' , :params => {:action => :search}, :remote => { :loading => "Element.show('spinner')",
-                        :complete => "Element.hide('spinner')",
-                        :with => "'current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('search')+'&current_sort='+current_sort"  } %>
+<%= will_paginate @posteriors %>

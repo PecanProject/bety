@@ -1,9 +1,18 @@
 class Model < ActiveRecord::Base
+
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ }
+  SEARCH_FIELDS = %w{ models.model_name models.model_path models.revision }
+
   has_many :runs
   has_many :children, :class_name => "Model", :foreign_key => "parent_id"
   belongs_to :parent, :class_name => "Model"
 
   validates_presence_of     :model_name
+
+  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+
   comma do
     id
     model_name
