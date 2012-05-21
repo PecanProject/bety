@@ -4,6 +4,8 @@ class Format < ActiveRecord::Base
   SEARCH_FIELDS = %w{ formats.name formats.mime_type formats.dataformat formats.notes formats.skip formats.header }
 
   has_many :input_files
+  has_many :formats_variables
+  has_many :variables, :through => :formats_variables
 
   named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
   named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 

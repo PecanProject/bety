@@ -107,6 +107,8 @@ module AuthenticatedSystem
                                 "FormatsController.create",
                                 "FormatsController.edit",
                                 "FormatsController.update",
+                                "FormatsController.edit_formats_variables",
+                                "FormatsController.rem_formats_variables",
                                 "ManagementsController.new",
                                 "ManagementsController.create",
                                 "ManagementsController.edit",

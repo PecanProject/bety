@@ -6,6 +6,8 @@ class Variable < ActiveRecord::Base
 
   has_many :covariates
   has_many :traits, :through => :covariates
+  has_many :formats_variables
+  has_many :formats, :through => :formats_variables
   has_many :priors
   has_many :likelihoods
   has_many :traits

@@ -5,6 +5,34 @@ class FormatsController < ApplicationController
 
   layout 'application'
 
+  def rem_formats_variables
+    @format = Format.find(params[:id])
+    @variable = Variable.find(params[:variable])
+
+    render :update do |page|
+      if @format.variables.delete(@variable)
+        page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
+      else
+        page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
+      end
+    end
+  end
+
+  def edit_formats_variables
+    @format = Format.find(params[:id])
+
+    render :update do |page|
+      if !params[:variable].nil?
+        params[:variable][:id].each do |c|
+          @format.variables << Variable.find(c)
+        end
+        page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
+      else
+        page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
+      end
+    end
+  end
+
   # GET /formats
   # GET /formats.xml
   def index

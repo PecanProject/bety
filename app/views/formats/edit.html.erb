@@ -1,3 +1,15 @@
+<a style="text-decoration: none" href="#" onclick="showHide('edit_formats_variables')" id="show_edit_formats_variables">[+] View Related Variable</a>
+<br/>
+<br/>
+<div id="edit_formats_variables" class="hidden notvisible">
+  <%= render 'edit_formats_variables' %>
+</div>
+
+<hr />
+<br />
+<br />
+
+
 <h1>Editing format</h1>
 
 <% form_for :form, @format, :url => { :action => "update", :id => @format.id }, :html => {:method => :put} do |f| %>
