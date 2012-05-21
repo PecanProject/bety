@@ -6,11 +6,11 @@ class FormatsController < ApplicationController
   layout 'application'
 
   def rem_formats_variables
-    @format = Format.find(params[:id])
-    @variable = Variable.find(params[:variable])
+    @formats_variable = FormatsVariable.find(params[:id])
+    @format = @formats_variable.format
 
     render :update do |page|
-      if @format.variables.delete(@variable)
+      if @formats_variable.destroy
         page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
       else
         page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
@@ -20,16 +20,13 @@ class FormatsController < ApplicationController
 
   def edit_formats_variables
     @format = Format.find(params[:id])
+    formats_variable = FormatsVariable.new(params[:formats_variable])
+    formats_variable.format = @format
+    formats_variable.variable = Variable.find(params[:variable_id])
+    formats_variable.save
 
     render :update do |page|
-      if !params[:variable].nil?
-        params[:variable][:id].each do |c|
-          @format.variables << Variable.find(c)
-        end
-        page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
-      else
-        page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
-      end
+      page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
     end
   end
 
