@@ -24,6 +24,10 @@ class Management < ActiveRecord::Base
     updated_at
   end
 
+  def self.management_types
+    [ 'burned', 'coppice', 'cultivated', 'cultivated or grazed', 'fertilization_Ca', 'fertilization_K', 'fertilization_N', 'fertilization_P', 'fertilization_other', 'fungicide', 'grazed', 'harvest', 'herbicide', 'irrigation', 'light', 'pesticide', 'planting density (plants / m2)', 'row spacing', 'seeding', 'tillage' ]
+  end
+
   def date_type_level
     "#{date} - #{type} : #{level}"
   end

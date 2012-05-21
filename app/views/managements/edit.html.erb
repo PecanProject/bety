@@ -29,7 +29,7 @@
   </p>
   <p>
     <%= f.label :mgmttype, "Management Type" %><br />
-    <%= f.select :mgmttype, [ 'burned', 'coppice', 'cultivated', 'cultivated or grazed', 'fertilization_Ca', 'fertilization_K', 'fertilization_N', 'fertilization_P', 'fertilization_other', 'fungicide', 'grazed', 'harvest', 'herbicide', 'irrigation', 'light', 'pesticide', 'planting density (plants / m2)', 'row spacing', 'seeding', 'tillage' ] %>
+    <%= f.select :mgmttype, Management.management_types %> 
   </p>
   <p>
     <%= f.label :level %><br />
