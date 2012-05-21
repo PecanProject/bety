@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120514161612) do
+ActiveRecord::Schema.define(:version => 20120521122453) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -152,9 +152,22 @@ ActiveRecord::Schema.define(:version => 20120514161612) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
+    t.string   "header"
+    t.string   "skip"
   end
 
   add_index "formats", ["mime_type"], :name => "index_formats_on_mime_type"
+
+  create_table "formats_variables", :force => true do |t|
+    t.integer  "format_id"
+    t.integer  "variable_id"
+    t.string   "name"
+    t.string   "unit"
+    t.string   "storage_type"
+    t.integer  "column_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "input_files", :force => true do |t|
     t.integer  "file_id"

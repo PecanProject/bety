@@ -1,7 +1,7 @@
 class Format < ActiveRecord::Base
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
-  SEARCH_FIELDS = %w{ formats.name formats.mime_type formats.dataformat formats.notes }
+  SEARCH_FIELDS = %w{ formats.name formats.mime_type formats.dataformat formats.notes formats.skip formats.header }
 
   has_many :input_files
 

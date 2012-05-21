@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :formats_variables
+
   map.resources :machines
 
   map.resources :methods
