@@ -15,7 +15,7 @@ class TraitsController < ApplicationController
 
       pid = fork { `/usr/local/bin/db_copy.sh y` }
       begin
-        Timeout.timeout(20) do
+        Timeout.timeout(60) do
          Process.wait(pid)
       end
       rescue Timeout::Error
