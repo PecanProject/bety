@@ -45,9 +45,13 @@
       </td>
     </tr>
     <tr>
-      <td colspan=4>
+      <td colspan=2>
       <%= f.label :treatment_id %><br />
       <%= f.select :treatment_id, @citation.treatments.collect { |p| [ p.select_default, p.id ] }, {} -%>
+      </td>
+      <td colspan=2>
+      <%= f.label :method_id, "Method" %><br />
+      <%= f.select :method_id, Methods.all.collect { |p| [ p.select_default, p.id ] }, {} -%>
       </td>
     </tr>
     <tr>

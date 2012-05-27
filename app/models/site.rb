@@ -99,7 +99,7 @@ class Site < ActiveRecord::Base
 
   #Columns we search when referenced from another model
   #Fields present in 'select_default'
-  def self.search_columns
-    return ["sites.id", "sites.sitename", "sites.city", "sites.state", "sites.country"]
-  end
+#  def self.search_columns
+#    return ["sites.id", "sites.sitename", "sites.city", "sites.state", "sites.country"]
+#  end
 end

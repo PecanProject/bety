@@ -26,6 +26,11 @@
   <%=link_to_if @yield.cultivar, @yield.cultivar, @yield.cultivar %>
 </p>
 
+<p>
+  <b>Method:</b>
+  <%=link_to_if @yield.ebi_method, @yield.ebi_method, @yield.ebi_method %>
+</p>
+
 <% if logged_in? %>
 <p>
   <b>User:</b>

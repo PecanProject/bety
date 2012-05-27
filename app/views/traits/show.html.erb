@@ -32,6 +32,11 @@
   <%= link_to_if @trait.treatment, @trait.treatment, @trait.treatment %>
 </p>
 
+<p>
+  <b>Method:</b>
+  <%= link_to_if @trait.ebi_method, @trait.ebi_method, @trait.ebi_method %>
+</p>
+
 <% if logged_in? %>
 <p>
   <b>User:</b>

@@ -45,6 +45,11 @@
       <%= f.select :entity_id, Entity.all.collect { |p| [ p.select_default, p.id ] }, { :include_blank => true} %>
    </p>
 
+  <p>
+    <%= f.label :method_id, "Method" %><br />
+    <%= f.select :method_id, Methods.all().collect { |p| [ p.select_default, p.id ] }, {:include_blank => true} %>
+  </p>
+
     <p>
       <%= f.label :cultivar_id %><br />
       <%= f.select :cultivar_id, Cultivar.all(:joins => :specie, :order => 'species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true} %>
