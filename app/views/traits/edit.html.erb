@@ -57,7 +57,7 @@
   </p>
   <p>
     <%= f.label :variable_id, "Trait" %><br />
-    <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }.sort { |a,b| a[0].split(': ')[1] <=> b[0].split(': ')[1] }, {} %>
+    <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }.sort { |a,b| a[0].split(': ')[1] <=> b[0].split(': ')[1] }, {}, {:onchange => 'javascript:traits_get_variable_max_min(jQuery(this).val());'} %>
   </p>
   <p>
     <%= f.label :treatment_id, "Treatment" %><%= treatment_check(f.object) -%><br />
@@ -94,6 +94,9 @@
   </p>
   <p>
     <%= f.label :mean %><br />
+    <em><span id="variable_mean">Variable: <span id="variable_name"><%= f.object.variable %></span><br />
+    <%= "  Max:Min => (<span id='variable_max'>#{f.object.variable.max}</span>:<span id='variable_min'>#{f.object.variable.min}</span>)" %></span><br />
+    (Notify the project manager about this discrepancy if value outside this range)" if f.object.variable %></span></em><br />
     <%= f.text_field :mean %>
   </p>
   <p>
