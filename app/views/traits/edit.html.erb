@@ -109,7 +109,7 @@
   </p>
   <p>
     <%= f.label :statname %><br />
-    <%= f.select :statname, ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD", "P"] %>
+    <%= f.select :statname, Trait.statname_list %>
   </p>
   <p>
     <%= f.label :access_level %><br />
