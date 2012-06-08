@@ -113,8 +113,7 @@ class InputsController < ApplicationController
     @input = Input.new(params[:input])
 
     input_file = InputFile.new
-    input.save
-    
+    @input.save
 
     respond_to do |format|
       if  @input.format.save and @input.format_id = @input.format.id and @input.save
