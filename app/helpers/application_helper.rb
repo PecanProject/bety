@@ -35,6 +35,9 @@ module ApplicationHelper
                      "2.5 quarter-hour" => "2.5" ,
                      "3   hour" => "3.0" }
 
+  $statname_list =  ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD", "P", "HSD"]
+
+
   # Simple Search
   def sortable(column, title = nil)
     title ||= column.titleize

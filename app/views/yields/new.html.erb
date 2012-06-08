@@ -23,7 +23,7 @@
       </td>
       <td>
       <%= f.label "stat name" %><br />
-      <%= f.select :statname, ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD", "P"] %>
+      <%= f.select :statname, $statname_list %>
       </td>
       <td>
       <%= f.label :n %><br />

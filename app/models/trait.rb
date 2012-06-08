@@ -161,8 +161,4 @@ class Trait < ActiveRecord::Base
     return ["traits.id"]
   end
 
-  def self.statname_list
-    ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD", "P", "HSD"]
-  end
-
 end
