@@ -113,10 +113,13 @@ class InputsController < ApplicationController
     @input = Input.new(params[:input])
 
     input_file = InputFile.new
-    @input.save
+    input_file.save
+    input_file.file_id = input_file.id
+    input_file.savefile(@input.user_id, new_file)
+    @input.file_id = input_file.file_id
 
     respond_to do |format|
-      if  @input.format.save and @input.format_id = @input.format.id and @input.save
+      if @input.save and input_file.save
         format.html { redirect_to(@input, :notice => 'Input was successfully created.') }
         format.xml  { render :xml => @input, :status => :created, :location => @input }
         format.csv  { render :csv => @input, :status => :created, :location => @input }
