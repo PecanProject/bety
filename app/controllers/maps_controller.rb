@@ -257,7 +257,11 @@ class MapsController < ApplicationController
     
  
   def show_sites
-    @sites = Site.coordinate_search(params[:lat][/-?\d+\.?\d*/].to_f,params[:lng][/-?\d+\.?\d*/].to_f,params[:radius].to_i)
+    if params[:lat] and params[:lng] and params[:radius]
+      @sites = Site.coordinate_search(params[:lat][/-?\d+\.?\d*/].to_f,params[:lng][/-?\d+\.?\d*/].to_f,params[:radius].to_i)
+    else
+      @sites = []
+    end 
 
     render :update do |page|
       page.replace_html 'show_sites', :partial => "show_sites"
