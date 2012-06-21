@@ -1,12 +1,12 @@
-<h1>New covariate <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node24.html?min" }) %></h1>
+<h1>New covariate <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node24.html?min" }) %></h1>
 <% if @trait.nil? %>
   <h2>Please select a trait first and click the 'add a covariate' link at the top of the page. <%= link_to 'Traits', traits_path -%></h2>
 
 <% else %>
 
-  <p><%= link_to_prototype_window("Extracting information from tables and graphs", "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node25.html?min" }) %><br />
-<%= link_to_prototype_window("Extracting data from a figure using R", "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node26.html?min" }) %><br />
-<%= link_to_prototype_window("Extracting data from a figure using GetData", "help_popup4", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node27.html?min" }) %></p>
+  <p><%= link_to_prototype_window("Extracting information from tables and graphs", "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node25.html?min" }) %><br />
+<%= link_to_prototype_window("Extracting data from a figure using R", "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node26.html?min" }) %><br />
+<%= link_to_prototype_window("Extracting data from a figure using GetData", "help_popup4", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node27.html?min" }) %></p>
 
   <% form_for(@covariate) do |f| %>
     <%= f.error_messages %>
@@ -52,7 +52,7 @@
       <%= f.text_field :n %>
     </p>
     <p>
-      <%= f.label :stat %> <%= link_to_prototype_window(image_tag("help.gif"), "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node22.html?min" }) %><br />
+      <%= f.label :stat %> <%= link_to_prototype_window(image_tag("help.gif"), "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node22.html?min" }) %><br />
       <%= f.text_field :stat %>
     </p>
     <p>

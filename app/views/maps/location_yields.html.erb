@@ -17,11 +17,11 @@
                     var download_MENU_ITEMS = [
                       ['Download Yield Means','',{'tw':'0','sb':'Download Yield Means'},
                       ['Miscanthus','',{'tw':'0','sb':'Miscanthus'},
-                      ['County','/bety/miscanthus_county_avg_yield.csv',{'tw':'0','sb':'County'}],
-                      ['Gridded','/bety/miscanthusyield.csv',{'tw':'0','sb':'Gridded'}]],
+                      ['County','/miscanthus_county_avg_yield.csv',{'tw':'0','sb':'County'}],
+                      ['Gridded','/miscanthusyield.csv',{'tw':'0','sb':'Gridded'}]],
                       ['Switchgrass','',{'tw':'0','sb':'Switchgrass'},
-                      ['County','/bety/pavi02212012.csv',{'tw':'0','sb':'County'}],
-                      ['Gridded','/bety/sgYield.txt',{'tw':'0','sb':'Gridded'}]]]
+                      ['County','/pavi02212012.csv',{'tw':'0','sb':'County'}],
+                      ['Gridded','/sgYield.txt',{'tw':'0','sb':'Gridded'}]]]
                     ];
                   </script>
                   <div style="position:relative; top:0px; left:0px; min-height:26px;">
@@ -43,9 +43,9 @@
                   <script type="text/javascript">
                     var download_MENU_ITEMS = [
                       <% if @fullscreen -%>
-                      ['Exit fullscreen','/bety/maps/location_yields',{'tw':'0','sb':'Exit fullscreen'}]
+                      ['Exit fullscreen','/maps/location_yields',{'tw':'0','sb':'Exit fullscreen'}]
                       <% else -%>
-                      ['Fullscreen','/bety/maps/location_yields?fullscreen=true',{'tw':'0','sb':'Fullscreen'}]
+                      ['Fullscreen','/maps/location_yields?fullscreen=true',{'tw':'0','sb':'Fullscreen'}]
                       <% end -%>
                     ];
                   </script>
@@ -71,7 +71,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "/bety/maps/mapoverlay/miscanthus/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "/maps/mapoverlay/miscanthus/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -84,7 +84,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "/bety/maps/mapoverlay/switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "/maps/mapoverlay/switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -97,7 +97,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "/bety/maps/mapoverlay/poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "/maps/mapoverlay/poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -110,7 +110,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "/bety/maps/mapoverlay/miscanthus_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "/maps/mapoverlay/miscanthus_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -123,7 +123,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "/bety/maps/mapoverlay/miscanthus_switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "/maps/mapoverlay/miscanthus_switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -136,7 +136,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "/bety/maps/mapoverlay/switchgrass_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "/maps/mapoverlay/switchgrass_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -236,25 +236,11 @@
     google.maps.event.addListenerOnce(map,'tilesloaded',function(event) {
       $$('div[title="Change map style"]')[0].getOffsetParent().id = "mapTypeControl";
     });
-    <% if !@county.nil? %>
-    var marker = [];
-  
-     <% @county.county_boundaries.each do |c|
-        next if ![503657,503971,504021].include?(c.id) %>
-        var point = new google.maps.LatLng(<%= c.lat %>,<%= c.lng %>);
-        marker[<%= c.id -%>] = new google.maps.Marker({
-          position: point,
-          title: <%= "\"#{c.id}\"" -%> ,
-          map: map
-        });
-    <% end %>
-    <% end %>
-
   }
 
   function overlay_scale(crop){
     var controlUI = document.createElement('DIV');
-    controlUI.innerHTML = '<img src="/bety/'+crop+'-scale.png"></img>';
+    controlUI.innerHTML = '<img src="/'+crop+'-scale.png"></img>';
     controlUI.setAttribute("id","gmapscale");
 
     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].clear();

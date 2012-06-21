@@ -21,7 +21,7 @@ class SessionsController < ApplicationController
       #Next two lines not necessary, all references should be removed. Use 'current_user' instead
       session[:page_access_requirement] = user.page_access_level
       session[:access_level] = user.access_level
-      redirect_back_or_default('/bety/')
+      redirect_back_or_default('/')
       flash[:notice] = "Logged in successfully"
     else
       note_failed_signin
@@ -34,7 +34,7 @@ class SessionsController < ApplicationController
   def destroy
     logout_killing_session!
     flash[:notice] = "You have been logged out."
-    redirect_back_or_default('/bety/')
+    redirect_back_or_default('/')
   end
 
 protected

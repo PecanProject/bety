@@ -274,7 +274,7 @@ class MapsController < ApplicationController
   # GET /maps.xml
   def index
     respond_to do |format|
-      format.html { redirect_to "/bety" }
+      format.html { redirect_to "/" }
       format.xml  { render :xml => @maps }
     end
   end

@@ -7,7 +7,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/miscanthus/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "https://www.betydb.org/maps/mapoverlay/miscanthus/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -20,7 +20,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "https://www.betydb.org/maps/mapoverlay/poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -33,7 +33,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "https://www.betydb.org/maps/mapoverlay/switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -46,7 +46,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/miscanthus_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "https://www.betydb.org/maps/mapoverlay/miscanthus_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -59,7 +59,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/miscanthus_switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "https://www.betydb.org/maps/mapoverlay/miscanthus_switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -72,7 +72,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "http://ebi-forecast.igb.illinois.edu/bety/maps/mapoverlay/switchgrass_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "https://www.betydb.org/maps/mapoverlay/switchgrass_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -156,7 +156,7 @@
     var scaleImg = document.createElement('DIV');
     scaleImg.setAttribute("id","gmapscaleiphonescale");
     scaleImg.style.display = "none";
-    scaleImg.innerHTML = '<img src="/bety/'+crop+'-scale.png"></img>';
+    scaleImg.innerHTML = '<img src="/'+crop+'-scale.png"></img>';
     controlDiv.appendChild(scaleImg);
 
     var linkSpan = document.createElement('SPAN');
@@ -165,7 +165,7 @@
     controlDiv.appendChild(linkSpan);
 
 
-    //controlUI.innerHTML = '<div id="gmapscaleiphonescale" style="display:none"><img src="/bety/'+crop+'-scale.png"></img></div>' + '<a id="togglescalelink" href="#" >&laquo;</a>';
+    //controlUI.innerHTML = '<div id="gmapscaleiphonescale" style="display:none"><img src="/'+crop+'-scale.png"></img></div>' + '<a id="togglescalelink" href="#" >&laquo;</a>';
 
     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].clear();
     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);

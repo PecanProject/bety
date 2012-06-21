@@ -617,9 +617,9 @@ div#mapTypeControl div {
 }
 
 .pretty th .asc {
-  background-image: url(/bety/images/up_arrow.gif);
+  background-image: url(/images/up_arrow.gif);
 }
 
 .pretty th .desc {
-  background-image: url(/bety/images/down_arrow.gif);
+  background-image: url(/images/down_arrow.gif);
 }

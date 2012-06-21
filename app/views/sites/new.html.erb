@@ -1,4 +1,4 @@
-<h1>New site <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node16.html?min" }) %></h1>
+<h1>New site <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node16.html?min" }) %></h1>
 
 <% if session['citation'].nil? %>
   <h2>Please choose a citation to work with first. <%= link_to 'Citations', citations_path %></h2>
@@ -289,7 +289,7 @@
   </tr>
   <tr>
     <td>
-    <%= f.label :lat %><%= link_to_prototype_window(image_tag("help.gif"), "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/bety/node17.html?min" }) %><br />
+    <%= f.label :lat %><%= link_to_prototype_window(image_tag("help.gif"), "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node17.html?min" }) %><br />
     <%= f.text_field :lat %><br /><br />
     <%= f.label :lon %><br />
     <%= f.text_field :lon %><br /><br />

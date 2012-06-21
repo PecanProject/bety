@@ -11,7 +11,7 @@
   <meta name="Generator" content="Joomla! - Copyright (C) 2005 - 2007 Open Source Matters. All rights reserved." />
   <meta name="robots" content="index, follow" />
 
-  <link rel="stylesheet" href="/bety/stylesheets/scaffold.css" type="text/css" />
+  <link rel="stylesheet" href="/stylesheets/scaffold.css" type="text/css" />
   <%= javascript_include_tag :all, :cache => "cache/all" %>
   <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
   <script>
@@ -64,11 +64,11 @@
   <div id="banner">
     <div id="banner-wrapper">
       <a class="logo" href="http://www.energybiosciencesinstitute.org/index.php" title="EBI">EBI</a>
-      <a class="bety-db" href="/bety/" title="BETY-DB">BETY-DB</a>
+      <a class="bety-db" href="/" title="BETY-DB">BETY-DB</a>
       <ul>
-        <li><a href="/bety/contacts/" title="Contact US">Contact Us</a></li>
+        <li><a href="/contacts/" title="Contact US">Contact Us</a></li>
         <li>|</li>
-        <li><a href="/bety/" title="Home">Home</a></li>
+        <li><a href="/" title="Home">Home</a></li>
       </ul>
     </div><!-- end banner-wrapper -->
   </div><!-- end banner -->
@@ -81,72 +81,72 @@
             <script type="text/javascript">
               var betydb_MENU_ITEMS = [
               <% if logged_in? %>
-                ['BETY-DB','/bety/',{'tw':'0','sb':'BETY-DB'},
-                ['Citations','/bety/citations/',{'tw':'0','sb':'Citations'},
-                ['New','/bety/citations/new',{'tw':'0','sb':'New'}],],
-                ['Covariates','/bety/covariates/',{'tw':'0','sb':'Covariates'},
-                ['New','/bety/covariates/new',{'tw':'0','sb':'New'}],],
-                ['Cultivars','/bety/cultivars/',{'tw':'0','sb':'Cultivars'},
-                ['New','/bety/cultivars/new',{'tw':'0','sb':'New'}],],
-                ['Ensembles','/bety/ensembles/',{'tw':'0','sb':'Ensembles'},
-                ['New','/bety/ensembles/new',{'tw':'0','sb':'New'}],],
-                ['Entities','/bety/entities/',{'tw':'0','sb':'Entities'},
-                ['New','/bety/entities/new',{'tw':'0','sb':'New'}],],
-                ['Formats','/bety/formats/',{'tw':'0','sb':'Formats'},
-                ['New','/bety/formats/new',{'tw':'0','sb':'New'}],],
-                ['Managements','/bety/managements/',{'tw':'0','sb':'Managements'},
-                ['New','/bety/managements/new',{'tw':'0','sb':'New'}],],
-                ['Methods','/bety/methods/',{'tw':'0','sb':'Methods'},
-                ['New','/bety/methods/new',{'tw':'0','sb':'New'}],],
-                ['PFTs','/bety/pfts/',{'tw':'0','sb':'PFTs'},
-                ['New','/bety/pfts/new',{'tw':'0','sb':'New'}],],
-                ['Priors','/bety/priors/',{'tw':'0','sb':'Priors'},
-                ['New','/bety/priors/new',{'tw':'0','sb':'New'}],],
-                ['Sites','/bety/sites/',{'tw':'0','sb':'Sites'},
-                ['New','/bety/sites/new',{'tw':'0','sb':'New'}],],
-                ['Species','/bety/species/',{'tw':'0','sb':'Species'},
-                ['New','/bety/species/new',{'tw':'0','sb':'New'}],],
-                ['Traits','/bety/traits/',{'tw':'0','sb':'Traits'},
-                ['New','/bety/traits/new',{'tw':'0','sb':'New'}],
-                ['CSV','/bety/traits.csv',{'tw':'0','sb':'CSV'}],],
-                ['Treatments','/bety/treatments/',{'tw':'0','sb':'Treatments'},
-                ['New','/bety/treatments/new',{'tw':'0','sb':'New'}],],
-                ['Variables','/bety/variables/',{'tw':'0','sb':'Variables'},
-                ['New','/bety/variables/new',{'tw':'0','sb':'New'}],],
-                ['Yields','/bety/yields/',{'tw':'0','sb':'Yields'},
-                ['New','/bety/yields/new',{'tw':'0','sb':'New'}],
-                ['CSV','/bety/yields.csv',{'tw':'0','sb':'CSV'}],],],
-                ['New Record','/bety/citations/',{'tw':'0','sb':'New Record'},
-                ['Citations','/bety/citations/',{'tw':'0','sb':'Citations'}],
-                ['Sites','/bety/sites/',{'tw':'0','sb':'Sites'}],
-                ['Treatments','/bety/treatments/',{'tw':'0','sb':'Treatments'}],
-                ['Traits','/bety/traits/',{'tw':'0','sb':'Traits'}],
-                ['Yields','/bety/yields/',{'tw':'0','sb':'Yields'}],],
+                ['BETY-DB','/',{'tw':'0','sb':'BETY-DB'},
+                ['Citations','/citations/',{'tw':'0','sb':'Citations'},
+                ['New','/citations/new',{'tw':'0','sb':'New'}],],
+                ['Covariates','/covariates/',{'tw':'0','sb':'Covariates'},
+                ['New','/covariates/new',{'tw':'0','sb':'New'}],],
+                ['Cultivars','/cultivars/',{'tw':'0','sb':'Cultivars'},
+                ['New','/cultivars/new',{'tw':'0','sb':'New'}],],
+                ['Ensembles','/ensembles/',{'tw':'0','sb':'Ensembles'},
+                ['New','/ensembles/new',{'tw':'0','sb':'New'}],],
+                ['Entities','/entities/',{'tw':'0','sb':'Entities'},
+                ['New','/entities/new',{'tw':'0','sb':'New'}],],
+                ['Formats','/formats/',{'tw':'0','sb':'Formats'},
+                ['New','/formats/new',{'tw':'0','sb':'New'}],],
+                ['Managements','/managements/',{'tw':'0','sb':'Managements'},
+                ['New','/managements/new',{'tw':'0','sb':'New'}],],
+                ['Methods','/methods/',{'tw':'0','sb':'Methods'},
+                ['New','/methods/new',{'tw':'0','sb':'New'}],],
+                ['PFTs','/pfts/',{'tw':'0','sb':'PFTs'},
+                ['New','/pfts/new',{'tw':'0','sb':'New'}],],
+                ['Priors','/priors/',{'tw':'0','sb':'Priors'},
+                ['New','/priors/new',{'tw':'0','sb':'New'}],],
+                ['Sites','/sites/',{'tw':'0','sb':'Sites'},
+                ['New','/sites/new',{'tw':'0','sb':'New'}],],
+                ['Species','/species/',{'tw':'0','sb':'Species'},
+                ['New','/species/new',{'tw':'0','sb':'New'}],],
+                ['Traits','/traits/',{'tw':'0','sb':'Traits'},
+                ['New','/traits/new',{'tw':'0','sb':'New'}],
+                ['CSV','/traits.csv',{'tw':'0','sb':'CSV'}],],
+                ['Treatments','/treatments/',{'tw':'0','sb':'Treatments'},
+                ['New','/treatments/new',{'tw':'0','sb':'New'}],],
+                ['Variables','/variables/',{'tw':'0','sb':'Variables'},
+                ['New','/variables/new',{'tw':'0','sb':'New'}],],
+                ['Yields','/yields/',{'tw':'0','sb':'Yields'},
+                ['New','/yields/new',{'tw':'0','sb':'New'}],
+                ['CSV','/yields.csv',{'tw':'0','sb':'CSV'}],],],
+                ['New Record','/citations/',{'tw':'0','sb':'New Record'},
+                ['Citations','/citations/',{'tw':'0','sb':'Citations'}],
+                ['Sites','/sites/',{'tw':'0','sb':'Sites'}],
+                ['Treatments','/treatments/',{'tw':'0','sb':'Treatments'}],
+                ['Traits','/traits/',{'tw':'0','sb':'Traits'}],
+                ['Yields','/yields/',{'tw':'0','sb':'Yields'}],],
               <% end %>
-                ['Documentation','/bety/',{'tw':'0','sb':'Documentation'},
-                ['Users Guide','/bety/dbdocumentation_users.pdf',{'tw':'0','sb':'Users Guide'}],
-                ['Data Entry Guide','/bety/dbdocumentation_data_entry.pdf',{'tw':'0','sb':'Data Entry Guide'}],],
+                ['Documentation','/',{'tw':'0','sb':'Documentation'},
+                ['Users Guide','/dbdocumentation_users.pdf',{'tw':'0','sb':'Users Guide'}],
+                ['Data Entry Guide','/dbdocumentation_data_entry.pdf',{'tw':'0','sb':'Data Entry Guide'}],],
                 <% if authorized?("index","RunsController") -%>
-                ['Model-Runs','/bety/',{'tw':'0','sb':'Model-Runs'},
-                ['Posteriors','/bety/posteriors/',{'tw':'0','sb':'Posteriors'}],
-                ['Runs','/bety/runs/',{'tw':'0','sb':'Runs'}],
-                ['Likelihoods','/bety/likelihoods/',{'tw':'0','sb':'likelihoods'}],
-                ['Models','/bety/models/',{'tw':'0','sb':'Models'}],
-                ['Machines','/bety/machines/',{'tw':'0','sb':'Machines'}],
-                ['Inputs','/bety/inputs/',{'tw':'0','sb':'Inputs'},
-                ['New','/bety/inputs/new',{'tw':'0','sb':'New'}],],],
+                ['Model-Runs','/',{'tw':'0','sb':'Model-Runs'},
+                ['Posteriors','/posteriors/',{'tw':'0','sb':'Posteriors'}],
+                ['Runs','/runs/',{'tw':'0','sb':'Runs'}],
+                ['Likelihoods','/likelihoods/',{'tw':'0','sb':'likelihoods'}],
+                ['Models','/models/',{'tw':'0','sb':'Models'}],
+                ['Machines','/machines/',{'tw':'0','sb':'Machines'}],
+                ['Inputs','/inputs/',{'tw':'0','sb':'Inputs'},
+                ['New','/inputs/new',{'tw':'0','sb':'New'}],],],
                 <% end -%>
                 <% if logged_in? -%>
-                ['Admin','/bety/',{'tw':'0','sb':'Admin'},
-                ['Users','/bety/users/',{'tw':'0','sb':'Users'}],
+                ['Admin','/',{'tw':'0','sb':'Admin'},
+                ['Users','/users/',{'tw':'0','sb':'Users'}],
                 ['Errors','/redmine/projects/bety-db/issues/new',{'tw':'0','sb':'Errors'}],
-                ['Location Yields','/bety/maps/location_yields/',{'tw':'0','sb':'Location Yields'}],],
+                ['Location Yields','/maps/location_yields/',{'tw':'0','sb':'Location Yields'}],],
                 <% end -%>
                 <% if logged_in? -%>
-                ['Log out','/bety/logout',{'tw':'0','sb':'Log out'}],
+                ['Log out','/logout',{'tw':'0','sb':'Log out'}],
                 <% else -%>
-                ['Log in','/bety/login',{'tw':'0','sb':'Log in'}],
-                ['Create Account','/bety/signup',{'tw':'0','sb':'Create Account'}],
+                ['Log in','/login',{'tw':'0','sb':'Log in'}],
+                ['Create Account','/signup',{'tw':'0','sb':'Create Account'}],
                 <% end -%>
                 
               ];

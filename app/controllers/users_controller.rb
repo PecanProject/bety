@@ -46,7 +46,7 @@ class UsersController < ApplicationController
       xml += "<author name='BETY Bug Report' id='32'/>"
       xml += "<assigned_to id='3'/>"
       xml += "<subject>Access request for #{@user.name.to_xs} (#{@user.login.to_xs})</subject>"
-      xml += "<description>https://ebi-forecast.igb.illinois.edu/bety/users/#{@user.id}/edit\n"
+      xml += "<description>https://www.betydb.org/users/#{@user.id}/edit\n"
       xml += "\n"
       xml += "#{@user.name.to_xs} (#{@user.login.to_xs}) has requested a non-default access level.\n"
       xml += "Page_access_level: #{page_access_level[params[:page_access_level].to_i]}\n"
@@ -72,7 +72,7 @@ class UsersController < ApplicationController
       # button. Uncomment if you understand the tradeoffs.
       # reset session
       self.current_user = @user # !! now logged in
-      redirect_to('/bety/')
+      redirect_to('/')
       flash[:notice] = "Thanks for signing up!"
     else
       flash[:error]  = "We couldn't set up that account, sorry.  Please try again, or contact an admin (link is above)."

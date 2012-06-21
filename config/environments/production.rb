@@ -27,4 +27,4 @@ config.action_view.cache_template_loading            = true
 # Enable threaded mode
 # config.threadsafe!
 
-config.action_controller.relative_url_root = '/bety'
+#config.action_controller.relative_url_root = '/bety'
