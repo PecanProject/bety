@@ -32,12 +32,12 @@
   </p>
  <p>
     <%= f.label :start_date %><br />
-    <%= f.datetime_select :start_date , { :start_year => 1900, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>  </p>
+    <%= f.text_field :start_date  %>
+  </p>
   <p>
     <%= f.label :end_date %><br />
-    <%= f.datetime_select :end_date, { :start_year => 1900, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
+    <%= f.text_field :end_date %>  
   </p>
-
   <p>
     <%= f.label :outdir %><br />
     <%= f.text_field :outdir %>

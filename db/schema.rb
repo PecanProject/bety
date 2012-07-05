@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120705220442) do
+ActiveRecord::Schema.define(:version => 20120705223444) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -412,8 +412,8 @@ ActiveRecord::Schema.define(:version => 20120705220442) do
     t.datetime "started_at"
     t.datetime "finished_at"
     t.integer  "ensemble_id"
-    t.datetime "start_date"
-    t.datetime "end_date"
+    t.string   "start_date"
+    t.string   "end_date"
   end
 
   add_index "runs", ["model_id"], :name => "index_runs_on_model_id"

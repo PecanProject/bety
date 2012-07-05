@@ -4,6 +4,8 @@ class Run < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ model site }
   SEARCH_FIELDS = %w{ models.model_name sites.sitename runs.start_time runs.finish_time runs.started_at runs.finished_at runs.outdir runs.outprefix runs.setting runs.parameter_list }
 
+  validates_format_of :start_date, :with => /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/, :allow_blank => true, :message => 'Must be in format using UTC: YYYY-MM-DD HH:MM:SS' 
+  validates_format_of :end_date, :with => /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/, :allow_blank => true, :message => 'Must be in format using UTC: YYYY-MM-DD HH:MM:SS' 
   has_and_belongs_to_many :posteriors
   has_and_belongs_to_many :inputs
   has_many :likelihoods
