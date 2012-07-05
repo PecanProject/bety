@@ -108,18 +108,20 @@ class InputsController < ApplicationController
   # POST /inputs.xml
   def create
 
-    new_file = params.delete(:file)
 
     @input = Input.new(params[:input])
 
-    input_file = InputFile.new
-    input_file.save
-    input_file.file_id = input_file.id
-    input_file.savefile(@input.user_id, new_file)
-    @input.file_id = input_file.file_id
+    # Replaced with generic file upload
+#    new_file = params.delete(:file)
+#    input_file = InputFile.new
+#    input_file.save
+#    input_file.file_id = input_file.id
+#    input_file.savefile(@input.user_id, new_file)
+#    @input.file_id = input_file.file_id
 
     respond_to do |format|
-      if @input.save and input_file.save
+      #if @input.save and input_file.save
+      if @input.save
         format.html { redirect_to(@input, :notice => 'Input was successfully created.') }
         format.xml  { render :xml => @input, :status => :created, :location => @input }
         format.csv  { render :csv => @input, :status => :created, :location => @input }
@@ -137,9 +139,11 @@ class InputsController < ApplicationController
   # PUT /inputs/1.xml
   def update
     @input = Input.find(params[:id])
+    files = @input.files
 
     respond_to do |format|
       if @input.update_attributes(params[:input])
+        @input.files << @input.current_file unless files.include?(@input.current_file)
         format.html { redirect_to(@input, :notice => 'Input was successfully updated.') }
         format.xml  { head :ok }
         format.csv  { head :ok }

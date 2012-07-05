@@ -1,0 +1,11 @@
+<h1>Listing files</h1>
+<p>
+<% form_tag bety_files_path, :method => 'get', :id => 'simple_search' do %>
+  <%= text_field_tag :search, params[:search] %>
+  <%= hidden_field_tag :direction, params[:direction] %>
+  <%= hidden_field_tag :sort, params[:sort] %>
+<% end %>
+</p>
+<div id="simple_search_table" class="simple_search_table_1"><%= render 'index_table' %></div>
+
+<%= link_to 'New file', new_bety_file_path %>

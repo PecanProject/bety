@@ -56,6 +56,7 @@ module AuthenticatedSystem
       manage_requirement = ["CitationsController.ALL",
                                 "CovariatesController.ALL",
                                 "CultivarsController.ALL",
+                                "BetyFilesController.ALL",
                                 "EnsemblesController.ALL",
                                 "EntitiesController.ALL",
                                 "ErrorsController.ALL",

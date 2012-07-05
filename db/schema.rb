@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120521131745) do
+ActiveRecord::Schema.define(:version => 20120705002431) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -44,6 +44,21 @@ ActiveRecord::Schema.define(:version => 20120521131745) do
 
   add_index "citations_treatments", ["citation_id", "treatment_id"], :name => "index_citations_treatments_on_citation_id_and_treatment_id", :unique => true
 
+  create_table "containers_files", :id => false, :force => true do |t|
+    t.integer "container_id"
+    t.string  "container_type"
+    t.integer "file_id"
+  end
+
+  create_table "coppice", :id => false, :force => true do |t|
+    t.integer "treatment_id"
+    t.integer "management_id"
+    t.string  "mgmttype"
+    t.date    "date"
+    t.decimal "level",         :precision => 16, :scale => 4
+    t.string  "units"
+  end
+
   create_table "counties", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -51,6 +66,50 @@ ActiveRecord::Schema.define(:version => 20120521131745) do
     t.string   "state"
     t.integer  "state_fips"
     t.integer  "county_fips"
+  end
+
+  create_table "county_boundaries", :id => false, :force => true do |t|
+    t.integer  "id",                                         :default => 0, :null => false
+    t.integer  "county_id"
+    t.decimal  "lat",        :precision => 20, :scale => 15
+    t.decimal  "lng",        :precision => 20, :scale => 15
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.decimal  "zoom0x",     :precision => 20, :scale => 10
+    t.decimal  "zoom0y",     :precision => 20, :scale => 10
+    t.boolean  "zoom0skip"
+    t.decimal  "zoom1x",     :precision => 20, :scale => 10
+    t.decimal  "zoom1y",     :precision => 20, :scale => 10
+    t.boolean  "zoom1skip"
+    t.decimal  "zoom2x",     :precision => 20, :scale => 10
+    t.decimal  "zoom2y",     :precision => 20, :scale => 10
+    t.decimal  "zoom3x",     :precision => 20, :scale => 10
+    t.decimal  "zoom3y",     :precision => 20, :scale => 10
+    t.decimal  "zoom4x",     :precision => 20, :scale => 10
+    t.decimal  "zoom4y",     :precision => 20, :scale => 10
+    t.decimal  "zoom5x",     :precision => 20, :scale => 10
+    t.decimal  "zoom5y",     :precision => 20, :scale => 10
+    t.decimal  "zoom6x",     :precision => 20, :scale => 10
+    t.decimal  "zoom6y",     :precision => 20, :scale => 10
+    t.decimal  "zoom7x",     :precision => 20, :scale => 10
+    t.decimal  "zoom7y",     :precision => 20, :scale => 10
+    t.decimal  "zoom8x",     :precision => 20, :scale => 10
+    t.decimal  "zoom8y",     :precision => 20, :scale => 10
+    t.decimal  "zoom9x",     :precision => 20, :scale => 10
+    t.decimal  "zoom9y",     :precision => 20, :scale => 10
+    t.decimal  "zoom10x",    :precision => 20, :scale => 10
+    t.decimal  "zoom10y",    :precision => 20, :scale => 10
+    t.decimal  "zoom11x",    :precision => 20, :scale => 10
+    t.decimal  "zoom11y",    :precision => 20, :scale => 10
+  end
+
+  create_table "county_paths", :id => false, :force => true do |t|
+    t.integer  "id",         :default => 0, :null => false
+    t.integer  "county_id"
+    t.integer  "zoom"
+    t.text     "path"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "covariates", :force => true do |t|
@@ -90,6 +149,16 @@ ActiveRecord::Schema.define(:version => 20120521131745) do
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "files", :force => true do |t|
+    t.string  "file_name"
+    t.string  "file_path"
+    t.string  "md5"
+    t.integer "created_user_id"
+    t.integer "updated_user_id"
+    t.integer "machine_id"
+    t.integer "format_id"
   end
 
   create_table "formats", :force => true do |t|
@@ -231,6 +300,17 @@ ActiveRecord::Schema.define(:version => 20120521131745) do
     t.datetime "updated_at"
   end
 
+  create_table "mgmtview", :id => false, :force => true do |t|
+    t.integer "yield_id", :default => 0, :null => false
+    t.date    "planting"
+    t.date    "seeding"
+    t.date    "coppice"
+  end
+
+  create_table "mimetypes", :force => true do |t|
+    t.string "type_string"
+  end
+
   create_table "models", :force => true do |t|
     t.string   "model_name"
     t.string   "model_path"
@@ -267,126 +347,13 @@ ActiveRecord::Schema.define(:version => 20120521131745) do
 
   add_index "pfts_species", ["pft_id", "specie_id"], :name => "index_pfts_species_on_pft_id_and_specie_id", :unique => true
 
-  create_table "plants", :force => true do |t|
-    t.string   "AcceptedSymbol"
-    t.string   "SynonymSymbol"
-    t.string   "ScientificName"
-    t.string   "Symbol"
-    t.string   "CommonName"
-    t.text     "PLANTS_Floristic_Area"
-    t.text     "State"
-    t.string   "Category"
-    t.string   "Genus"
-    t.string   "Family"
-    t.string   "FamilySymbol"
-    t.string   "FamilyCommonName"
-    t.string   "xOrder"
-    t.string   "SubClass"
-    t.string   "Class"
-    t.string   "SubDivision"
-    t.string   "Division"
-    t.string   "SuperDivision"
-    t.string   "SubKingdom"
-    t.string   "Kingdom"
-    t.integer  "ITIS_TSN"
-    t.string   "Duration"
-    t.string   "GrowthHabit"
-    t.string   "NativeStatus"
-    t.string   "FederalNoxiousStatus"
-    t.string   "FederalNoxiousCommonName"
-    t.text     "StateNoxiousStatus"
-    t.text     "StateNoxiousCommonName"
-    t.string   "Invasive"
-    t.string   "Federal_TE_Status"
-    t.string   "State_TE_Status"
-    t.text     "State_TE_Common_Name"
-    t.string   "NationalWetlandIndicatorStatus"
-    t.string   "RegionalWetlandIndicatorStatus"
-    t.string   "ActiveGrowthPeriod"
-    t.string   "AfterHarvestRegrowthRate"
-    t.string   "Bloat"
-    t.string   "C2N_Ratio"
-    t.string   "CoppicePotential"
-    t.string   "FallConspicuous"
-    t.string   "FireResistance"
-    t.string   "FlowerColor"
-    t.string   "FlowerConspicuous"
-    t.string   "FoliageColor"
-    t.string   "FoliagePorositySummer"
-    t.string   "FoliagePorosityWinter"
-    t.string   "FoliageTexture"
-    t.string   "FruitColor"
-    t.string   "FruitConspicuous"
-    t.string   "GrowthForm"
-    t.string   "GrowthRate"
-    t.integer  "MaxHeight20Yrs"
-    t.integer  "MatureHeight"
-    t.string   "KnownAllelopath"
-    t.string   "LeafRetention"
-    t.string   "Lifespan"
-    t.string   "LowGrowingGrass"
-    t.string   "NitrogenFixation"
-    t.string   "ResproutAbility"
-    t.string   "Shape_and_Orientation"
-    t.string   "Toxicity"
-    t.string   "AdaptedCoarseSoils"
-    t.string   "AdaptedMediumSoils"
-    t.string   "AdaptedFineSoils"
-    t.string   "AnaerobicTolerance"
-    t.string   "CaCO3Tolerance"
-    t.string   "ColdStratification"
-    t.string   "DroughtTolerance"
-    t.string   "FertilityRequirement"
-    t.string   "FireTolerance"
-    t.integer  "MinFrostFreeDays"
-    t.string   "HedgeTolerance"
-    t.string   "MoistureUse"
-    t.decimal  "pH_Minimum",                     :precision => 5, :scale => 2
-    t.decimal  "pH_Maximum",                     :precision => 5, :scale => 2
-    t.integer  "Min_PlantingDensity"
-    t.integer  "Max_PlantingDensity"
-    t.integer  "Precipitation_Minimum"
-    t.integer  "Precipitation_Maximum"
-    t.integer  "RootDepthMinimum"
-    t.string   "SalinityTolerance"
-    t.string   "ShadeTolerance"
-    t.integer  "TemperatureMinimum"
-    t.string   "BloomPeriod"
-    t.string   "CommercialAvailability"
-    t.string   "FruitSeedAbundance"
-    t.string   "FruitSeedPeriodBegin"
-    t.string   "FruitSeedPeriodEnd"
-    t.string   "FruitSeedPersistence"
-    t.string   "Propogated_by_BareRoot"
-    t.string   "Propogated_by_Bulbs"
-    t.string   "Propogated_by_Container"
-    t.string   "Propogated_by_Corms"
-    t.string   "Propogated_by_Cuttings"
-    t.string   "Propogated_by_Seed"
-    t.string   "Propogated_by_Sod"
-    t.string   "Propogated_by_Sprigs"
-    t.string   "Propogated_by_Tubers"
-    t.integer  "Seeds_per_Pound"
-    t.string   "SeedSpreadRate"
-    t.string   "SeedlingVigor"
-    t.string   "SmallGrain"
-    t.string   "VegetativeSpreadRate"
-    t.string   "Berry_Nut_Seed_Product"
-    t.string   "ChristmasTreeProduct"
-    t.string   "FodderProduct"
-    t.string   "FuelwoodProduct"
-    t.string   "LumberProduct"
-    t.string   "NavalStoreProduct"
-    t.string   "NurseryStockProduct"
-    t.string   "PalatableBrowseAnimal"
-    t.string   "PalatableGrazeAnimal"
-    t.string   "PalatableHuman"
-    t.string   "PostProduct"
-    t.string   "ProteinPotential"
-    t.string   "PulpwoodProduct"
-    t.string   "VeneerProduct"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "planting", :id => false, :force => true do |t|
+    t.integer "treatment_id"
+    t.integer "management_id"
+    t.string  "mgmttype"
+    t.date    "date"
+    t.decimal "level",         :precision => 16, :scale => 4
+    t.string  "units"
   end
 
   create_table "posteriors", :force => true do |t|
@@ -444,6 +411,15 @@ ActiveRecord::Schema.define(:version => 20120521131745) do
 
   add_index "runs", ["model_id"], :name => "index_runs_on_model_id"
   add_index "runs", ["site_id"], :name => "index_runs_on_site_id"
+
+  create_table "seeding", :id => false, :force => true do |t|
+    t.integer "treatment_id"
+    t.integer "management_id"
+    t.string  "mgmttype"
+    t.date    "date"
+    t.decimal "level",         :precision => 16, :scale => 4
+    t.string  "units"
+  end
 
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
@@ -635,6 +611,32 @@ ActiveRecord::Schema.define(:version => 20120521131745) do
   add_index "traits", ["treatment_id"], :name => "index_traits_on_treatment_id"
   add_index "traits", ["variable_id"], :name => "index_traits_on_variable_id"
 
+  create_table "traitsview", :id => false, :force => true do |t|
+    t.integer  "trait_id",                                                     :default => 0,  :null => false
+    t.integer  "citation_id"
+    t.integer  "site_id"
+    t.integer  "treatment_id"
+    t.string   "site"
+    t.string   "city"
+    t.decimal  "lat",                           :precision => 9,  :scale => 6
+    t.decimal  "lon",                           :precision => 9,  :scale => 6
+    t.string   "scientificname"
+    t.string   "genus"
+    t.string   "author"
+    t.integer  "cityear"
+    t.string   "trt"
+    t.datetime "date"
+    t.integer  "month"
+    t.integer  "year"
+    t.string   "trait"
+    t.decimal  "mean",                          :precision => 16, :scale => 4
+    t.integer  "n"
+    t.string   "statname"
+    t.decimal  "stat",                          :precision => 16, :scale => 4
+    t.text     "notes"
+    t.string   "user",           :limit => 100,                                :default => ""
+  end
+
   create_table "treatments", :force => true do |t|
     t.string   "name"
     t.string   "definition"
@@ -703,5 +705,32 @@ ActiveRecord::Schema.define(:version => 20120521131745) do
   add_index "yields", ["site_id"], :name => "index_yields_on_site_id"
   add_index "yields", ["specie_id"], :name => "index_yields_on_specie_id"
   add_index "yields", ["treatment_id"], :name => "index_yields_on_treatment_id"
+
+  create_table "yieldsview", :id => false, :force => true do |t|
+    t.integer "yield_id",                                                     :default => 0,  :null => false
+    t.integer "citation_id"
+    t.integer "site_id"
+    t.integer "treatment_id"
+    t.string  "site"
+    t.string  "city"
+    t.decimal "lat",                           :precision => 9,  :scale => 6
+    t.decimal "lon",                           :precision => 9,  :scale => 6
+    t.string  "scientificname"
+    t.string  "genus"
+    t.string  "author"
+    t.integer "cityear"
+    t.string  "trt"
+    t.date    "date"
+    t.integer "month"
+    t.integer "year"
+    t.decimal "mean",                          :precision => 16, :scale => 4
+    t.integer "n"
+    t.string  "statname"
+    t.decimal "stat",                          :precision => 16, :scale => 4
+    t.text    "notes"
+    t.string  "user",           :limit => 100,                                :default => ""
+    t.date    "planting"
+    t.date    "seeding"
+  end
 
 end

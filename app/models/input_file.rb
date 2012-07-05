@@ -31,11 +31,11 @@ class InputFile < ActiveRecord::Base
   end
 
   def to_s
-    directory = "/usr/local/ebi/paperclip/input_files/#{id}/#{name}"
+    directory = "/usr/local/ebi/paperclip/input_files/#{id}/#{file_name}"
     if File.exists?(directory)
-      link_to name, download_input_files_path(id)
+      link_to file_name, download_input_files_path(id)
     else
-      name
+      file_name
     end
   end
 

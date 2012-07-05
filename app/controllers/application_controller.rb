@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
       sort = default_sort
       table = default_table
     end
-    (eval table.sub('species','specie').classify.sub('Method','Methods')).column_names.include?(sort) ? "#{table}.#{sort}" : "id"
+    (eval table.sub('species','specie').classify.sub('Method','Methods').sub(/^File$/,'BetyFile')).column_names.include?(sort) ? "#{table}.#{sort}" : "id"
   end
   
   def sort_direction

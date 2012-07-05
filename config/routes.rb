@@ -1,6 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :formats_variables
 
+  map.resources :bety_files,
+                :collection => { :no => :get },
+                :member => { :download => :get }
+
   map.resources :machines
 
   map.resources :methods

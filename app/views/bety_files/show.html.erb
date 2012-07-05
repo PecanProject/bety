@@ -1,0 +1,21 @@
+  <p>
+    File name: <%=h @file.file_name %>
+  </p>
+  <p>
+    File path: <%=h @file.file_path %>
+  </p>
+  <p>
+    MD5: <%=h @file.md5 %>
+  </p>
+  <p>
+    File created by: <%= link_to @file.created_user, @file.created_user %>
+  </p>
+  <p>
+    Last User to update: <%= link_to @file.updated_user, @file.updated_user %>
+  </p>
+  <p>
+    Machine: <%= @file.machine %>
+  </p>
+  <p>
+    Format: <%=  @file.format %>
+  </p>

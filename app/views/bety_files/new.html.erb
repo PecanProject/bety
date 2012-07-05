@@ -1,0 +1,36 @@
+<h1>New File</h1>
+<em>To upload a new file to ebi-forecast select it using the file upload field below. All other information will auto-populate from the file. To make a note of a file on a different system fill out the information below the break and ignore the file upload field</em>
+<% form_for @file, :html => { :multipart => true } do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= label_tag :upload_file, 'File upload' %><br />
+    <%= file_field_tag :upload_file %>
+  </p>
+
+  <hr />
+ 
+  <p>
+    <%= f.label :file_name %><br />
+    <%= f.text_field :file_name %>
+  </p>
+  <p>
+    <%= f.label :file_path %><br />
+    <%= f.text_field :file_path %>
+  </p>
+  <p>
+    <%= f.label :md5 %><br />
+    <%= f.text_field :md5 %>
+  </p>
+  <p>
+    <%= f.label :machine_id %><br />
+    <%= f.select :machine_id, Machine.all.collect { |p| [p.select_default, p.id] } %>
+  </p>
+  <p>
+    <%= f.label :format_id %><br />
+    <%= f.select :format_id, Format.all.collect { |p| [p.select_default, p.id ] } %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
