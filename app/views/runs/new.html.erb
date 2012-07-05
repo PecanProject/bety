@@ -26,6 +26,14 @@
     <%= f.label :finished_at %><br />
     <%= f.datetime_select :finished_at, { :start_year => 1900, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>  </p>
   <p>
+    <%= f.label :start_date %><br />
+    <%= f.datetime_select :start_date, { :start_year => 1900, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
+  </p>
+  <p>
+    <%= f.label :end_date %><br />
+    <%= f.datetime_select :end_date, { :start_year => 1900, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
+  </p>
+  <p>
     <%= f.label :ensemble_id %><br />
     <%= f.select :ensemble_id, Ensemble.all.collect { |p| [ p.select_default, p.id ] }, {} %>
   </p>
