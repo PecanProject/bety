@@ -1,4 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
+
+  map.resources :workflows
+
   map.resources :formats_variables
 
   map.resources :bety_files,

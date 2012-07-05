@@ -75,6 +75,7 @@ module AuthenticatedSystem
                                 "TreatmentsController.ALL",
                                 "VariablesController.ALL",
                                 "VisitorsController.ALL",
+                                "WorkflowsController.ALL",
                                 "YieldsController.ALL"]
       create_requirement = ["ApplicationsController.ALL",
                                 "CitationsController.new",

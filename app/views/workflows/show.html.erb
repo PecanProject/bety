@@ -1,0 +1,28 @@
+<p>
+  <b>Outdir:</b>
+  <%=h @workflow.outdir %>
+</p>
+
+<p>
+  <b>Started at:</b>
+  <%=h @workflow.started_at %>
+</p>
+
+<p>
+  <b>Finished at:</b>
+  <%=h @workflow.finished_at %>
+</p>
+
+<p>
+  <b>Created at:</b>
+  <%=h @workflow.created_at %>
+</p>
+
+<p>
+  <b>Udated at:</b>
+  <%=h @workflow.updated_at %>
+</p>
+
+
+<%= link_to 'Edit', edit_workflow_path(@workflow) %> |
+<%= link_to 'Back', workflows_path %>

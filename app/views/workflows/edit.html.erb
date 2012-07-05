@@ -1,0 +1,24 @@
+<h1>Editing workflow</h1>
+
+<% form_for(@workflow) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :outdir %><br />
+    <%= f.text_field :outdir %>
+  </p>
+  <p>
+    <%= f.label :started_at %><br />
+    <%= f.date_select :started_at,{ :start_year => 2012, :include_blank => true } %>
+  </p>
+  <p>
+    <%= f.label :finished_at %><br />
+    <%= f.date_select :finished_at, { :start_year => 2012, :include_blank => true } %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @workflow %> |
+<%= link_to 'Back', workflows_path %>

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120705002431) do
+ActiveRecord::Schema.define(:version => 20120705211623) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -45,9 +45,11 @@ ActiveRecord::Schema.define(:version => 20120705002431) do
   add_index "citations_treatments", ["citation_id", "treatment_id"], :name => "index_citations_treatments_on_citation_id_and_treatment_id", :unique => true
 
   create_table "containers_files", :id => false, :force => true do |t|
-    t.integer "container_id"
-    t.string  "container_type"
-    t.integer "file_id"
+    t.integer  "container_id"
+    t.string   "container_type"
+    t.integer  "file_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "coppice", :id => false, :force => true do |t|
@@ -152,13 +154,15 @@ ActiveRecord::Schema.define(:version => 20120705002431) do
   end
 
   create_table "files", :force => true do |t|
-    t.string  "file_name"
-    t.string  "file_path"
-    t.string  "md5"
-    t.integer "created_user_id"
-    t.integer "updated_user_id"
-    t.integer "machine_id"
-    t.integer "format_id"
+    t.string   "file_name"
+    t.string   "file_path"
+    t.string   "md5"
+    t.integer  "created_user_id"
+    t.integer  "updated_user_id"
+    t.integer  "machine_id"
+    t.integer  "format_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "formats", :force => true do |t|
@@ -211,6 +215,7 @@ ActiveRecord::Schema.define(:version => 20120705002431) do
     t.integer  "user_id"
     t.integer  "access_level"
     t.boolean  "raw"
+    t.integer  "current_file_id"
   end
 
   add_index "inputs", ["site_id"], :name => "index_inputs_on_site_id"
@@ -677,6 +682,14 @@ ActiveRecord::Schema.define(:version => 20120705002431) do
     t.string   "name"
     t.string   "max"
     t.string   "min"
+  end
+
+  create_table "workflows", :force => true do |t|
+    t.string   "outdir"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "yields", :force => true do |t|
