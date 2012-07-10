@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
   include Mercator
   require 'csv'
 
+  rescue_from ActiveRecord::RecordNotFound, :with => :not_found
+
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
@@ -23,6 +25,10 @@ class ApplicationController < ActionController::Base
     redirect_to :controller => "citations"
   end
 
+  def not_found
+    render :file => RAILS_ROOT + '/app/views/static/404.html', :layout => true, :status => 404
+  end
+ 
   def sort_column(default_table = params[:controller],default_sort = 'id')
     if params[:sort] and params[:sort][/\./]
       sort = params[:sort].split(".",2)[1].sub('species','specie')
@@ -33,7 +39,7 @@ class ApplicationController < ActionController::Base
     end
     (eval table.sub('species','specie').classify.sub('Method','Methods').sub(/^File$/,'BetyFile')).column_names.include?(sort) ? "#{table}.#{sort}" : "id"
   end
-  
+ 
   def sort_direction
     %w[asc desc].include?(params[:direction]) ?  params[:direction] : "asc"
   end
