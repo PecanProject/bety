@@ -8,10 +8,10 @@
     MD5: <%=h @file.md5 %>
   </p>
   <p>
-    File created by: <%= link_to @file.created_user, @file.created_user %>
+    File created by: <%= link_to_if @file.created_user, @file.created_user, @file.created_user %>
   </p>
   <p>
-    Last User to update: <%= link_to @file.updated_user, @file.updated_user %>
+    Last User to update: <%= link_to_if @file.updated_user, @file.updated_user, @file.updated_user %>
   </p>
   <p>
     Machine: <%= @file.machine %>

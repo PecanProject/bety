@@ -4,7 +4,7 @@ class BetyFile < ActiveRecord::Base
   
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ machine format }
-  SEARCH_FIELDS = %w{ files.file_name files.file_path files.md5 machine.hostname format.mime_type } 
+  SEARCH_FIELDS = %w{ files.file_name files.file_path files.md5 machines.hostname formats.mime_type } 
 
   named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
   named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 

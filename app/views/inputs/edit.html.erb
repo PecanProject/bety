@@ -63,7 +63,7 @@
   -->
   <h2>Testing new file functionality</h2>
   <em>Will add ability to upload new files here in the future</em>
-  <%= link_to 'New File', new_bety_file_path %>
+  <%= link_to 'New File', new_file_path %>
   <p>
     <%= f.label :current_file %><br />
     <%= f.select :current_file_id, BetyFile.all.collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
@@ -71,7 +71,7 @@
   <p>
     <%= f.label :files, 'Previously associated files' %>
     <% (f.object.files - [f.object.current_file]).each do |file| %>
-      <%= link_to file, file %> <%= link_to '[download]', download_bety_file_path(file) %><br />
+      <%= link_to file, file %> <%= link_to '[download]', download_file_path(file) %><br />
     <% end %>
   </p>
   <p>

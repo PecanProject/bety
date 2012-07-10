@@ -1,5 +1,5 @@
 <h1>Editing File</h1>
-<% form_for(@file) do |f| %>
+<% form_for @file, :url => file_path(@path) do |f| %>
   <%= f.error_messages %>
 
   <p>

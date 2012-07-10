@@ -16,7 +16,7 @@ class BetyFilesController < ApplicationController
     if file and File.exists?(File.join(BetyFile.make_md5_path(file.md5),file.md5)) and !File.join(BetyFile.make_md5_path(file.md5),file.md5).match(/[^A-Za-z0-9\/]/)  # On host machine, in proper path, does not match anything out the ordinary
       send_file file.file_path, :type => file.format.mime_type, :disposition => 'inline', :filename => file.file_name
     else
-      redirect_to no_bety_files_path
+      redirect_to no_files_path
     end
   end
 
@@ -35,7 +35,7 @@ class BetyFilesController < ApplicationController
 
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @files = BetyFile.order("#{sort_column('files','')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @files = BetyFile.order("#{sort_column('files','id')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else
       @files = BetyFile.api_search(params)
     end
@@ -86,7 +86,7 @@ class BetyFilesController < ApplicationController
     respond_to do |format|
       if @file.save
         flash[:notice] = 'BetyFile was successfully created.'
-        format.html { redirect_to @file }
+        format.html { redirect_to file_path(@file) }
         format.xml  { render :xml => @file, :status => :created, :location => @file }
         format.csv  { render :csv => @file, :status => :created, :location => @file }
         format.json  { render :json => @file, :status => :created, :location => @file }
@@ -130,7 +130,7 @@ class BetyFilesController < ApplicationController
     # Actual uploaded file not deleted
 
     respond_to do |format|
-      format.html { redirect_to(bety_files_url) }
+      format.html { redirect_to(files_url) }
       format.xml  { head :ok }
       format.csv  { head :ok }
       format.json  { head :ok }

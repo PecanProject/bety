@@ -56,7 +56,8 @@ module SimpleSearch
       type = self.columns_hash[column].type
     else
       column_split = column.split(".",2)
-      type = (eval column_split.first.sub('species','specie').classify.sub('Method','Methods')).columns_hash[column_split.last].type
+      type = (eval column_split.first.sub('species','specie').sub('file','bety_file').classify.sub('Method','Methods')).columns_hash[column_split.last].type
+      #type = (eval column_split.first.sub('species','specie').classify.sub('Method','Methods')).columns_hash[column_split.last].type
     end
     case type
     when :boolean

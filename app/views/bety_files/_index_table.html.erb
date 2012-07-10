@@ -19,12 +19,12 @@
     <td><%= link_to_if file.updated_user, file.updated_user, file.updated_user %></td>
     <td><%= link_to_if file.machine, file.machine, file.machine %></td>
     <td><%= link_to_if file.format, file.format, file.format%></td>
-    <td><%= link_to 'Show', file %></td>
+    <td><%= link_to 'Show', file_path(file) %></td>
     <% if current_user.page_access_level <= 3 %>
-      <td><%= link_to 'Edit', edit_bety_file_path(file) %></td>
+      <td><%= link_to 'Edit', edit_file_path(file) %></td>
     <% end %>
     <% if current_user.page_access_level == 1 %>
-      <td><%= link_to 'Destroy', file, :confirm => 'Are you sure?', :method => :delete %></td>
+      <td><%= link_to 'Destroy', file_path(file), :confirm => 'Are you sure?', :method => :delete %></td>
     <% end %>
   </tr>
 <% end %>
