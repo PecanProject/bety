@@ -25,14 +25,7 @@
 
 <p>
   <b>Current file:</b>
-  <%= link_to_if @input.current_file,@input.current_file,@input.current_file %>
-</p>
-
-<p>
-  <b>Previous file(s):</b>
-  <% (@input.files - [@input.current_file]).each do |file| %>
-  <%= link_to_if file, file, file %><br />
-  <% end %>
+  <%= link_to_if @input.current_file,@input.current_file, dbfile_path(@input.current_file) %>
 </p>
 
 

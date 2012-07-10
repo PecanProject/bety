@@ -43,36 +43,18 @@
     <%= f.label :end_date %><br />
     <%= f.datetime_select :end_date, { :start_year => 1900, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
   </p>
-  <!--
-  <p>
-    <%= if f.object.input_file 
-          f.object.input_file
-        else
-          "No file"
-        end -%>
-    <#%= label_tag :file, "Upload new file" %>
-    <#%= file_field_tag :file, :name => 'document[file]' %>
-    <% if f.object.input_files.length > 0 %>
-    <br />
-    <%= label_tag :previous_files, "Previous Files" -%><br />
-    <% f.object.input_files.each do |input_file| %>
-      <%= input_file -%>
-    <% end %>
-    <% end %>
-  </p>
-  -->
   <h2>Testing new file functionality</h2>
   <em>Will add ability to upload new files here in the future</em>
-  <%= link_to 'New File', new_file_path %>
+  <%= link_to 'New File', new_dbfile_path %>
   <p>
     <%= f.label :current_file %><br />
-    <%= f.select :current_file_id, BetyFile.all.collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
+    <%= f.select :current_file_id, DBFile.all.collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
   </p>
   <p>
-    <%= f.label :files, 'Previously associated files' %>
-    <% (f.object.files - [f.object.current_file]).each do |file| %>
-      <%= link_to file, file %> <%= link_to '[download]', download_file_path(file) %><br />
-    <% end %>
+    <%= f.label :files, 'Files related to current file' %>
+    <% (DBFile.all(:conditions => ['file_id = ?',f.object.current_file.file_id]) - [f.object.current_file]).each do |file| %>
+      <%= link_to file, file %> <%= link_to '[download]', download_dbfile_path(file) %><br />
+    <% end if f.object.current_file %>
   </p>
   <p>
 

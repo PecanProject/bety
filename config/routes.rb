@@ -4,8 +4,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :formats_variables
 
-  map.resources :files,
-                :controller => "bety_files",
+  map.resources :dbfiles,
                 :collection => { :no => :get },
                 :member => { :download => :get }
 
