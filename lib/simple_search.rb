@@ -45,8 +45,9 @@ module SimpleSearch
         select << v
       end
     end
+    params[:include] = [] unless params[:include]
     select = ["*"] if select.empty?
-    find(:all, :conditions => conditions, :select => select.join(","))
+    find(:all, :conditions => conditions, :select => select.join(","), :include => params[:include])
   end
 
   private

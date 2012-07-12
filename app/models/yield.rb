@@ -1,5 +1,7 @@
 class Yield < ActiveRecord::Base
 
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ citation specie site treatment cultivar }
   SEARCH_FIELDS = %w{ species.genus cultivars.name yields.mean yields.n yields.stat yields.statname citations.author sites.sitename treatments.name }

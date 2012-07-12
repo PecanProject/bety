@@ -2,6 +2,8 @@ class DBFile < ActiveRecord::Base
 
   set_table_name 'dbfiles'
   
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ machine format }
   SEARCH_FIELDS = %w{ dbfiles.file_name dbfiles.file_path dbfiles.md5 machines.hostname formats.mime_type } 

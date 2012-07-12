@@ -1,4 +1,7 @@
 class Ensemble < ActiveRecord::Base
+
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ ensembles.notes ensembles.created_at ensembles.updated_at }

@@ -1,5 +1,7 @@
 class Pft < ActiveRecord::Base
 
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{  }
   SEARCH_FIELDS = %w{ pfts.name pfts.definition }

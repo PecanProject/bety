@@ -1,5 +1,7 @@
 class Run < ActiveRecord::Base
 
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ model site }
   SEARCH_FIELDS = %w{ models.model_name sites.sitename runs.start_time runs.finish_time runs.started_at runs.finished_at runs.outdir runs.outprefix runs.setting runs.parameter_list }

@@ -1,4 +1,6 @@
 class Machine < ActiveRecord::Base
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ machines.hostname } 

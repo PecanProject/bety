@@ -1,6 +1,8 @@
 
 class Citation < ActiveRecord::Base
 
+  include Overrides
+
   # Sorting and searching functionality
   extend SimpleSearch
   SEARCH_INCLUDES = %w{  }
@@ -66,5 +68,7 @@ class Citation < ActiveRecord::Base
   def self.search_columns
     ["citations.id", "citations.author", "citations.year", "citations.title"]
   end
+
+
 
 end

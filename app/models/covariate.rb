@@ -1,5 +1,7 @@
 class Covariate < ActiveRecord::Base
 
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ variable }
   SEARCH_FIELDS = %w{ variables.name covariates.level covariates.n covariates.stat covariates.statname }

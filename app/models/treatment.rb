@@ -1,5 +1,7 @@
 class Treatment < ActiveRecord::Base
 
+  include Overrides
+
   has_many :traits
   has_many :yields
 

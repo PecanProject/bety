@@ -1,4 +1,6 @@
 class Methods < ActiveRecord::Base
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ citation }
   SEARCH_FIELDS = %w{ methods.name methods.description citations.author }

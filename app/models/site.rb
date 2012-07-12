@@ -1,5 +1,7 @@
 class Site < ActiveRecord::Base
 
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ sites.sitename sites.city sites.state sites.country sites.lat sites.lon }

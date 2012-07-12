@@ -59,7 +59,7 @@ class CitationsController < ApplicationController
   # GET /citations/1
   # GET /citations/1.xml
   def show
-    @citation = Citation.find(params[:id])
+    @citation = Citation.find(params[:id], :include => params[:include] )
 
     respond_to do |format|
       format.html # show.html.erb

@@ -1,5 +1,7 @@
 class Model < ActiveRecord::Base
 
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ models.model_name models.model_path models.revision }

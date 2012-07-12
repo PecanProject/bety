@@ -1,5 +1,7 @@
 class Input < ActiveRecord::Base
 
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ site }
   SEARCH_FIELDS = %w{ sites.sitename inputs.name inputs.start_date inputs.end_date inputs.notes inputs.created_at inputs.updated_at }

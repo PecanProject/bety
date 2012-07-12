@@ -1,4 +1,7 @@
 class Entity < ActiveRecord::Base
+
+  include Overrides
+
   belongs_to :parent, :class_name => "Entity"
   has_many :children, :foreign_key => "parent_id", :class_name => "Entity"
 

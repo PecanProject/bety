@@ -1,5 +1,7 @@
 class Prior < ActiveRecord::Base
 
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ citation variable }
   SEARCH_FIELDS = %w{ citations.author variables.name priors.phylogeny priors.distn priors.parama priors.paramb priors.n priors.notes }

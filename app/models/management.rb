@@ -1,4 +1,6 @@
 class Management < ActiveRecord::Base
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ citation }
   SEARCH_FIELDS = %w{ citations.author managements.date managements.mgmttype managements.level managements.units managements.notes }

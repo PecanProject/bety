@@ -1,5 +1,7 @@
 class Posterior < ActiveRecord::Base
 
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ pft }
   SEARCH_FIELDS = %w{ pfts.name posteriors.filename }

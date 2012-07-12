@@ -1,5 +1,7 @@
 class Workflow < ActiveRecord::Base
 
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{  }
   SEARCH_FIELDS = %w{ workflows.outdir workflows.started_at workflows.finished_at workflows.created_at workflows.updated_at }

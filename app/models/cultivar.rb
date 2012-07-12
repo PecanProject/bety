@@ -1,5 +1,7 @@
 class Cultivar < ActiveRecord::Base
 
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ specie }
   SEARCH_FIELDS = %w{ species.scientificname cultivars.previous_id cultivars.name cultivars.ecotype cultivars.notes }

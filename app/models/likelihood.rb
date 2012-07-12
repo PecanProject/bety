@@ -1,5 +1,7 @@
 class Likelihood < ActiveRecord::Base
 
+  include Overrides
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ input run variable }
   SEARCH_FIELDS = %w{ variables.name likelihoods.loglikelihood likelihoods.n_eff likelihoods.weight likelihoods.residual }
