@@ -189,7 +189,7 @@
           if (county && state) {
             <%= remote_function :url => {:action => "location_yields_lookup"},:type => :synchronous, :with => "'county='+county+'&state='+state+'&crop='+map.mapTypeId", :update => 'contentString'  %>
             infowindow = document.createElement('DIV');
-            infowindow.innerHTML = '<div id="gmapinfowindowclose" onclick="map.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear();"><img src="http://maps.gstatic.com/intl/en_us/mapfiles/iw_close.gif"/></div><div id="gmapinfowindowcontent">'+contentString+'</div>';
+            infowindow.innerHTML = '<div id="gmapinfowindowclose" onclick="map.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear();"><img src="https://maps.gstatic.com/intl/en_us/mapfiles/iw_close.gif"/></div><div id="gmapinfowindowcontent">'+contentString+'</div>';
             infowindow.setAttribute("id","gmapinfowindow");
 
 
