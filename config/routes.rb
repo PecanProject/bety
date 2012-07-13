@@ -78,7 +78,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :input_files, :controller => 'input_files', :only => [:download], :collection => { :download => :get }
 
-  map.connect 'search.:format', :controller => 'search', :action => :index
+  #map.connect 'search.:format', :controller => 'search', :action => :index
 
   # The priority is based upon order of creation: first created -> highest priority.
 
