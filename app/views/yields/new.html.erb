@@ -33,7 +33,7 @@
     <tr>
       <td colspan=4>
       <%= f.label :date %><br />
-      <%= f.date_select :date, :defualt => nil, :order => [:day, :month, :year], :add_month_numbers => true, :include_blank => true, :start_year => 1900, :end_year => Time.now.year %><br />
+      <%= f.date_select :date, :defualt => nil, :order => [:day, :month, :year], :add_month_numbers => true, :include_blank => true, :start_year => 1800, :end_year => Time.now.year %><br />
       or <%= f.label "julian day (1-365)" %>/year -- <em>leave empty if selecting a date above<br />
       <%= text_field_tag "julianday" %> / <%= text_field_tag "julianyear" %>
       </td>
