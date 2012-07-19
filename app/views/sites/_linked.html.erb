@@ -8,7 +8,7 @@
     <th>Country</th>
     <th>Lat</th>
     <th>Lon</th>
-    <th>Datum</th>
+    <th>Espg</th>
   </tr>
 
 <% @citation.sites.each do |site| %>
@@ -19,7 +19,7 @@
     <td><%=h site.country %></td>
     <td><%=h site.lat %></td>
     <td><%=h site.lon %></td>
-    <td><%=h site.datum %></td>
+    <td><%=h site.espg %></td>
     <td><%= link_to_remote 'Unlink', :url => {:action => "linked", :id => site.id} %></td>
     <td><%= link_to 'Show', site %></td>
     <td><%= link_to 'Edit', edit_site_path(site) %></td>

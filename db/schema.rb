@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120719160008) do
+ActiveRecord::Schema.define(:version => 20120719205918) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -420,7 +420,7 @@ ActiveRecord::Schema.define(:version => 20120719160008) do
     t.integer  "local_time"
     t.decimal  "sand_pct",   :precision => 9, :scale => 5
     t.decimal  "clay_pct",   :precision => 9, :scale => 5
-    t.string   "datum"
+    t.string   "espg"
   end
 
   create_table "species", :force => true do |t|

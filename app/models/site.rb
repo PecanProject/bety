@@ -4,7 +4,7 @@ class Site < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
-  SEARCH_FIELDS = %w{ sites.sitename sites.city sites.state sites.country sites.lat sites.lon }
+  SEARCH_FIELDS = %w{ sites.sitename sites.city sites.state sites.country sites.lat sites.lon sites.espg }
 
   has_and_belongs_to_many :citations
 
@@ -57,7 +57,7 @@ class Site < ActiveRecord::Base
     local_time
     sand_pct
     clay_pct
-    datum
+    espg
   end
 
 
