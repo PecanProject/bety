@@ -57,6 +57,7 @@ class Site < ActiveRecord::Base
     local_time
     sand_pct
     clay_pct
+    datum
   end
 
 

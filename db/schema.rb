@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120705223444) do
+ActiveRecord::Schema.define(:version => 20120719160008) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -43,23 +43,6 @@ ActiveRecord::Schema.define(:version => 20120705223444) do
   end
 
   add_index "citations_treatments", ["citation_id", "treatment_id"], :name => "index_citations_treatments_on_citation_id_and_treatment_id", :unique => true
-
-  create_table "containers_files", :id => false, :force => true do |t|
-    t.integer  "container_id"
-    t.string   "container_type"
-    t.integer  "file_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "coppice", :id => false, :force => true do |t|
-    t.integer "treatment_id"
-    t.integer "management_id"
-    t.string  "mgmttype"
-    t.date    "date"
-    t.decimal "level",         :precision => 16, :scale => 4
-    t.string  "units"
-  end
 
   create_table "counties", :force => true do |t|
     t.string   "name"
@@ -139,6 +122,21 @@ ActiveRecord::Schema.define(:version => 20120705223444) do
 
   add_index "cultivars", ["specie_id"], :name => "index_cultivars_on_specie_id"
 
+  create_table "dbfiles", :force => true do |t|
+    t.string   "file_name"
+    t.string   "file_path"
+    t.string   "md5"
+    t.integer  "created_user_id"
+    t.integer  "updated_user_id"
+    t.integer  "machine_id"
+    t.integer  "format_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "file_id"
+    t.string   "container_type"
+    t.integer  "container_id"
+  end
+
   create_table "ensembles", :force => true do |t|
     t.text     "notes"
     t.datetime "created_at"
@@ -149,18 +147,6 @@ ActiveRecord::Schema.define(:version => 20120705223444) do
     t.integer  "parent_id"
     t.string   "name"
     t.text     "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "files", :force => true do |t|
-    t.string   "file_name"
-    t.string   "file_path"
-    t.string   "md5"
-    t.integer  "created_user_id"
-    t.integer  "updated_user_id"
-    t.integer  "machine_id"
-    t.integer  "format_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -305,13 +291,6 @@ ActiveRecord::Schema.define(:version => 20120705223444) do
     t.datetime "updated_at"
   end
 
-  create_table "mgmtview", :id => false, :force => true do |t|
-    t.integer "yield_id", :default => 0, :null => false
-    t.date    "planting"
-    t.date    "seeding"
-    t.date    "coppice"
-  end
-
   create_table "mimetypes", :force => true do |t|
     t.string "type_string"
   end
@@ -351,15 +330,6 @@ ActiveRecord::Schema.define(:version => 20120705223444) do
   end
 
   add_index "pfts_species", ["pft_id", "specie_id"], :name => "index_pfts_species_on_pft_id_and_specie_id", :unique => true
-
-  create_table "planting", :id => false, :force => true do |t|
-    t.integer "treatment_id"
-    t.integer "management_id"
-    t.string  "mgmttype"
-    t.date    "date"
-    t.decimal "level",         :precision => 16, :scale => 4
-    t.string  "units"
-  end
 
   create_table "posteriors", :force => true do |t|
     t.integer  "pft_id"
@@ -419,15 +389,6 @@ ActiveRecord::Schema.define(:version => 20120705223444) do
   add_index "runs", ["model_id"], :name => "index_runs_on_model_id"
   add_index "runs", ["site_id"], :name => "index_runs_on_site_id"
 
-  create_table "seeding", :id => false, :force => true do |t|
-    t.integer "treatment_id"
-    t.integer "management_id"
-    t.string  "mgmttype"
-    t.date    "date"
-    t.decimal "level",         :precision => 16, :scale => 4
-    t.string  "units"
-  end
-
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
     t.text     "data"
@@ -459,6 +420,7 @@ ActiveRecord::Schema.define(:version => 20120705223444) do
     t.integer  "local_time"
     t.decimal  "sand_pct",   :precision => 9, :scale => 5
     t.decimal  "clay_pct",   :precision => 9, :scale => 5
+    t.string   "datum"
   end
 
   create_table "species", :force => true do |t|
@@ -618,32 +580,6 @@ ActiveRecord::Schema.define(:version => 20120705223444) do
   add_index "traits", ["treatment_id"], :name => "index_traits_on_treatment_id"
   add_index "traits", ["variable_id"], :name => "index_traits_on_variable_id"
 
-  create_table "traitsview", :id => false, :force => true do |t|
-    t.integer  "trait_id",                                                     :default => 0,  :null => false
-    t.integer  "citation_id"
-    t.integer  "site_id"
-    t.integer  "treatment_id"
-    t.string   "site"
-    t.string   "city"
-    t.decimal  "lat",                           :precision => 9,  :scale => 6
-    t.decimal  "lon",                           :precision => 9,  :scale => 6
-    t.string   "scientificname"
-    t.string   "genus"
-    t.string   "author"
-    t.integer  "cityear"
-    t.string   "trt"
-    t.datetime "date"
-    t.integer  "month"
-    t.integer  "year"
-    t.string   "trait"
-    t.decimal  "mean",                          :precision => 16, :scale => 4
-    t.integer  "n"
-    t.string   "statname"
-    t.decimal  "stat",                          :precision => 16, :scale => 4
-    t.text     "notes"
-    t.string   "user",           :limit => 100,                                :default => ""
-  end
-
   create_table "treatments", :force => true do |t|
     t.string   "name"
     t.string   "definition"
@@ -720,32 +656,5 @@ ActiveRecord::Schema.define(:version => 20120705223444) do
   add_index "yields", ["site_id"], :name => "index_yields_on_site_id"
   add_index "yields", ["specie_id"], :name => "index_yields_on_specie_id"
   add_index "yields", ["treatment_id"], :name => "index_yields_on_treatment_id"
-
-  create_table "yieldsview", :id => false, :force => true do |t|
-    t.integer "yield_id",                                                     :default => 0,  :null => false
-    t.integer "citation_id"
-    t.integer "site_id"
-    t.integer "treatment_id"
-    t.string  "site"
-    t.string  "city"
-    t.decimal "lat",                           :precision => 9,  :scale => 6
-    t.decimal "lon",                           :precision => 9,  :scale => 6
-    t.string  "scientificname"
-    t.string  "genus"
-    t.string  "author"
-    t.integer "cityear"
-    t.string  "trt"
-    t.date    "date"
-    t.integer "month"
-    t.integer "year"
-    t.decimal "mean",                          :precision => 16, :scale => 4
-    t.integer "n"
-    t.string  "statname"
-    t.decimal "stat",                          :precision => 16, :scale => 4
-    t.text    "notes"
-    t.string  "user",           :limit => 100,                                :default => ""
-    t.date    "planting"
-    t.date    "seeding"
-  end
 
 end

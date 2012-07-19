@@ -8,6 +8,7 @@
     <th><%= sortable "sites.country", "Country" -%></th>
     <th><%= sortable "sites.lat", "Lat" -%></th>
     <th><%= sortable "sites.lon", "Lon" -%></th>
+    <th><%= sortable "sites.datum", "Datum" -%></th>
   </tr>
 
 <% @sites.each do |site| %>
@@ -18,6 +19,7 @@
     <td><%=h site.country %></td>
     <td><%=h site.lat %></td>
     <td><%=h site.lon %></td>
+    <td><%=h site.datum %></td>
     <td><%= link_to_prototype_window("map", "#{site.id}", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :title =>  "#{site.sitename}", :draggable => "true", :wiredDrag => "true", :url => "/sites/map?id=#{site.id}" }) %> <br />
 
     </td>

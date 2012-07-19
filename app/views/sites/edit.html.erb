@@ -317,6 +317,10 @@
     <%= f.select :greenhouse, [true,false], { :include_blank => true } %>
   </p>
   <p>
+    <%= f.label :datum %><br />
+    <%= f.text_field :datum %>
+  </p>
+  <p>
     <%= f.label :notes %><br />
     <%= f.text_area :notes %>
   </p>
