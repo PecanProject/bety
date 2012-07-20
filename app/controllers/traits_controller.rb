@@ -185,15 +185,13 @@ class TraitsController < ApplicationController
 
     respond_to do |format|
       if @trait.save
-        if !params[:covariate][:variable_id].blank?
-          @covariate = Covariate.new(params[:covariate])
-          @covariate.trait_id = @trait.id
+        params[:covariate].each do |covariate|
+          unless covariate[:variable_id].blank?
+            @covariate = Covariate.new(covariate)
+            @trait.covariates << @covariate
+          end
         end
-        if !@covariate.nil? and @covariate.save
-          flash[:notice] = 'Trait & Covariate was successfully created.'
-        else
-          flash[:notice] = 'Trait was successfully created. No Covariate added'
-        end
+        flash[:notice] = "Trait was successfully created. #{@trait.covariates.length} covariate(s) added"
         format.html { redirect_to :action => "new", :id => @trait }
         format.xml  { render :xml => @trait, :status => :created, :location => @trait }
         format.csv  { render :csv => @trait, :status => :created, :location => @trait }

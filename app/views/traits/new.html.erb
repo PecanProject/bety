@@ -87,16 +87,12 @@
       <%= f.label :access_level %><br />
       <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :selected => 2 %>
     </p>
+    <div id="covariates">
     <h3>Add a covariate to this trait</h3>
     <p><em>Leave blank if not adding a covariate</em></p>
-    <p>
-      <%= label_tag :variable_id %><br />
-      <%= select_tag 'covariate[variable_id]', options_for_select(["",""] + Variable.all(:order => 'name').collect { |p| [ p.name_units, p.id ] }) %>
-    </p>
-    <p>
-      <%= label_tag :level %><br />
-      <%= text_field_tag 'covariate[level]' %>
-    </p>
+    <p><input name="Add Covariate" type="button" onclick="add_covariate()" value="Add another covariate" /></p>
+      <%= render :partial => 'new_covariate' %>
+    </div>
     <p>
       Your user_id <%= current_user.id %><br />
       <%= f.hidden_field :citation_id, :value => session['citation'] %>
@@ -106,3 +102,10 @@
 <% end %>
 
 <%= link_to 'Back', traits_path %>
+
+<script>
+  function add_covariate() {
+    jQuery('div#covariates').append('<%= escape_javascript(render :partial => "new_covariate") %>');
+    return false;
+  }
+</script>
