@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120719205918) do
+ActiveRecord::Schema.define(:version => 20120720221352) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -201,7 +201,6 @@ ActiveRecord::Schema.define(:version => 20120719205918) do
     t.integer  "user_id"
     t.integer  "access_level"
     t.boolean  "raw"
-    t.integer  "current_file_id"
   end
 
   add_index "inputs", ["site_id"], :name => "index_inputs_on_site_id"

@@ -143,7 +143,6 @@ class InputsController < ApplicationController
 
     respond_to do |format|
       if @input.update_attributes(params[:input])
-        @input.files << @input.current_file unless files.include?(@input.current_file)
         format.html { redirect_to(@input, :notice => 'Input was successfully updated.') }
         format.xml  { head :ok }
         format.csv  { head :ok }

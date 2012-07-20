@@ -23,11 +23,5 @@
   <%=h @input.notes %>
 </p>
 
-<p>
-  <b>Current file:</b>
-  <%= link_to_if @input.current_file,@input.current_file, dbfile_path(@input.current_file) %>
-</p>
-
-
 <%= link_to 'Edit', edit_input_path(@input) %> |
 <%= link_to 'Back', inputs_path %>

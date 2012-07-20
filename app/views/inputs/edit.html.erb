@@ -47,16 +47,6 @@
   <em>Will add ability to upload new files here in the future</em>
   <%= link_to 'New File', new_dbfile_path %>
   <p>
-    <%= f.label :current_file %><br />
-    <%= f.select :current_file_id, DBFile.all.collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
-  </p>
-  <p>
-    <%= f.label :files, 'Files related to current file' %>
-    <% (DBFile.all(:conditions => ['file_id = ?',f.object.current_file.file_id]) - [f.object.current_file]).each do |file| %>
-      <%= link_to file, file %> <%= link_to '[download]', download_dbfile_path(file) %><br />
-    <% end if f.object.current_file %>
-  </p>
-  <p>
 
   </p>
   <p>

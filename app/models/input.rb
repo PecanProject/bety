@@ -10,7 +10,6 @@ class Input < ActiveRecord::Base
   has_and_belongs_to_many :variables
   has_many :likelihoods
   has_many :files, :as => :container, :class_name => 'DBFile'
-  belongs_to :current_file, :foreign_key => 'current_file_id', :class_name => 'DBFile'
   has_one :input_file, :foreign_key => 'file_id'
   belongs_to :site
   belongs_to :user
