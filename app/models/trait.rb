@@ -2,6 +2,7 @@ class Trait < ActiveRecord::Base
 
   include Overrides
 
+  #
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ citation variable specie site treatment }
   SEARCH_FIELDS = %w{ traits.id traits.mean traits.n traits.stat traits.statname variables.name species.genus citations.author sites.sitename treatments.name }
