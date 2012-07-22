@@ -1,0 +1,8 @@
+    <p>
+      <%= label_tag :variable_id %><br />
+      <%= select_tag 'covariate[][variable_id]', options_for_select(["",""] + Variable.all(:order => 'name').collect { |p| [ p.name_units, p.id ] }) %>
+    </p>
+    <p>
+      <%= label_tag :level %><br />
+      <%= text_field_tag 'covariate[][level]' %>
+    </p>
