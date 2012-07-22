@@ -114,14 +114,6 @@ class InputsController < ApplicationController
 
     @input = Input.new(params[:input])
 
-    # Replaced with generic file upload
-#    new_file = params.delete(:file)
-#    input_file = InputFile.new
-#    input_file.save
-#    input_file.file_id = input_file.id
-#    input_file.savefile(@input.user_id, new_file)
-#    @input.file_id = input_file.file_id
-
     respond_to do |format|
       #if @input.save and input_file.save
       if @input.save

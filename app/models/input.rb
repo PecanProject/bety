@@ -25,10 +25,6 @@ class Input < ActiveRecord::Base
   named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
   named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
 
-  def input_files
-    InputFile.all(:conditions => ["file_id = ?",file_id])
-  end
-
   def to_s
     "#{name} #{site}"
   end

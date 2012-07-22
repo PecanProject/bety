@@ -76,7 +76,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :pfts_priors, :controller => 'pfts_priors', :only => [:index, :new, :create]
   map.resources :pfts_species, :controller => 'pfts_species', :only => [:index, :new, :create]
 
-  map.resources :input_files, :controller => 'input_files', :only => [:download], :collection => { :download => :get }
+  #map.resources :input_files, :controller => 'input_files', :only => [:download], :collection => { :download => :get }
 
   #map.connect 'search.:format', :controller => 'search', :action => :index
 
