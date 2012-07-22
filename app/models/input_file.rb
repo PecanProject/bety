@@ -14,7 +14,7 @@ class InputFile < ActiveRecord::Base
       upload = new_file['upload']
       self[:file_name] =  upload['datafile'].original_filename
 
-      directory = "/usr/local/ebi/paperclip/input_files/#{self[:file_id]}/"
+      directory = RAILS_ROOT+"/paperclip/input_files/#{self[:file_id]}/"
       Dir.mkdir(directory) if !File.exists?(directory)
 
       # create the file path
@@ -31,7 +31,7 @@ class InputFile < ActiveRecord::Base
   end
 
   def to_s
-    directory = "/usr/local/ebi/paperclip/input_files/#{id}/#{file_name}"
+    directory = RAILS_ROOT+"/paperclip/input_files/#{id}/#{file_name}"
     if File.exists?(directory)
       link_to file_name, download_input_files_path(id)
     else
