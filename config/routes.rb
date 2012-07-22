@@ -6,7 +6,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :dbfiles,
                 :collection => { :no => :get },
-                :member => { :download => :get }
+                :member => { :download => :get, :unlink => :get }
 
   map.resources :machines
 

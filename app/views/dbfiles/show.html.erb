@@ -5,9 +5,6 @@
     File path: <%=h @file.file_path %>
   </p>
   <p>
-    File id: <%=h @file.file_id %>
-  </p>
-  <p>
     MD5: <%=h @file.md5 %>
   </p>
   <p>
@@ -15,6 +12,9 @@
   </p>
   <p>
     Last User to update: <%= link_to_if @file.updated_user, @file.updated_user, @file.updated_user %>
+  </p>
+  <p>
+    Parent file: <%= link_to_if @file.parent, @file.parent, @file.parent %>
   </p>
   <p>
     Machine: <%= @file.machine %>

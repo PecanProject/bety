@@ -11,10 +11,6 @@
     <%= f.text_field :file_path %>
   </p>
   <p>
-    <%= f.label :file_id %><br />
-    <%= f.text_field :file_id %>
-  </p>
-  <p>
     <%= f.label :md5 %><br />
     <%= f.text_field :md5 %>
   </p>
@@ -34,6 +30,11 @@
     <%= f.label :format_id %><br />
     <%= f.select :format_id, Format.all.collect { |p| [p.select_default, p.id ] } %>
   </p>
+  <p>
+    <%= f.label :parent_id %><br />
+    <%= f.select :parent_id, DBFile.all.collect { |p| [p.select_default, p.id ] }, { :include_blank => true } %>
+  </p>
+  
   <p>
     <%= f.submit 'Update' %>
   </p>

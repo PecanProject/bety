@@ -47,8 +47,17 @@
   <em>Will add ability to upload new files here in the future</em>
   <%= link_to 'New File', new_dbfile_path %>
   <p>
-
+    <%= f.label :dbfile_id %><br />
+    <%= select_tag :dbfile_id, options_for_select(['']+DBFile.all(:conditions => { :container_id => nil }).collect { |p| [ p.select_default, p.id ] }) %>
   </p>
+  <% unless f.object.files.empty? %>
+  <p>Files associated with input</p>
+    <% f.object.files.each do |file| %>
+  <p>
+    <%= link_to_if file,file,dbfile_path(file) %> <%= link_to "[X]",unlink_dbfile_path(file.id) %><br />
+  </p>
+    <% end %>
+  <% end %>
   <p>
     <%= f.label :notes %><br />
     <%= f.text_area :notes %>

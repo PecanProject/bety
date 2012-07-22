@@ -108,6 +108,9 @@ class InputsController < ApplicationController
   # POST /inputs.xml
   def create
 
+    if params[:dbfile_id]
+      dbfile = DBFile.find(params[:dbfile_id])
+    end
 
     @input = Input.new(params[:input])
 
@@ -122,6 +125,7 @@ class InputsController < ApplicationController
     respond_to do |format|
       #if @input.save and input_file.save
       if @input.save
+        @input.files << dbfile if dbfile
         format.html { redirect_to(@input, :notice => 'Input was successfully created.') }
         format.xml  { render :xml => @input, :status => :created, :location => @input }
         format.csv  { render :csv => @input, :status => :created, :location => @input }
@@ -139,10 +143,13 @@ class InputsController < ApplicationController
   # PUT /inputs/1.xml
   def update
     @input = Input.find(params[:id])
-    files = @input.files
+    if params[:dbfile_id]
+      dbfile = DBFile.find(params[:dbfile_id])
+    end
 
     respond_to do |format|
       if @input.update_attributes(params[:input])
+        @input.files << dbfile if dbfile
         format.html { redirect_to(@input, :notice => 'Input was successfully updated.') }
         format.xml  { head :ok }
         format.csv  { head :ok }

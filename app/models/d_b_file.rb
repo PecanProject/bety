@@ -11,6 +11,9 @@ class DBFile < ActiveRecord::Base
   named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
   named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
 
+  has_many :children, :class_name => "DBFile"
+  belongs_to :parent, :class_name => "DBFile", :foreign_key => "parent_id"
+  belongs_to :container, :polymorphic => true
   belongs_to :format
   belongs_to :machine 
   belongs_to :updated_user, :foreign_key => "updated_user_id", :class_name => 'User'
@@ -35,7 +38,7 @@ class DBFile < ActiveRecord::Base
         format.save
       end
       self[:format_id] = format.id
-      self[:file_id] = DBFile.max_file_id
+      #self[:file_id] = DBFile.max_file_id
 
       FileUtils.mkdir_p directory if !File.exists?(directory)
       # write the file
@@ -50,11 +53,11 @@ class DBFile < ActiveRecord::Base
       self[:md5] = args[:md5]
       self[:machine_id] = args[:machine_id]
       self[:format_id] = args[:format_id]
-      if args[:file_id].blank? or args[:file_id][/[^0-9]/]
-        self[:file_id] = DBFile.max_file_id
-      else
-        self[:file_id] = args[:file_id]
-      end
+      #if args[:file_id].blank? or args[:file_id][/[^0-9]/]
+      #  self[:file_id] = DBFile.max_file_id
+      #else
+      #  self[:file_id] = args[:file_id]
+      #end
     end   
   end
 
@@ -75,9 +78,9 @@ class DBFile < ActiveRecord::Base
     end
   end
 
-  def self.max_file_id
-    self.first(:order => 'file_id desc').file_id
-  end
+#  def self.max_file_id
+#    self.first(:order => 'file_id desc').file_id
+#  end
 
   def select_default
     self.to_s

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120720221352) do
+ActiveRecord::Schema.define(:version => 20120722163546) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -132,9 +132,9 @@ ActiveRecord::Schema.define(:version => 20120720221352) do
     t.integer  "format_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "file_id"
     t.string   "container_type"
     t.integer  "container_id"
+    t.integer  "parent_id"
   end
 
   create_table "ensembles", :force => true do |t|
@@ -196,7 +196,6 @@ ActiveRecord::Schema.define(:version => 20120720221352) do
     t.datetime "start_date"
     t.datetime "end_date"
     t.string   "name"
-    t.integer  "file_id"
     t.integer  "parent_id"
     t.integer  "user_id"
     t.integer  "access_level"

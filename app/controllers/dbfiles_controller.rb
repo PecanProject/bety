@@ -27,6 +27,25 @@ class DbfilesController < ApplicationController
       format.json  { render :json => 'No file found' }
     end
   end
+
+  def unlink
+    dbfile = DBFile.find(params[:id])
+    dbfile.container = nil
+
+    respond_to do |format|
+      if dbfile.save
+        flash[:notice] = "File unlinked"
+        format.html { redirect_to :back }
+        format.xml  { render :xml => 'File unlinked' }
+        format.json  { render :json => 'File unlinked' }
+      else
+        flash[:notice] = "File not removed"
+        format.html {redirect_to :back }
+        format.xml  { render :xml => 'File not removed' }
+        format.json  { render :json => 'File not removed' }
+      end
+    end
+  end
   
 
   # GET /files
@@ -104,10 +123,10 @@ class DbfilesController < ApplicationController
   def update
     @file = DBFile.find(params[:id])
 
-    params["file"].delete("user_id")
+    #params["file"].delete("user_id")
 
     respond_to do |format|
-      if @file.update_attributes(params[:file])
+      if @file.update_attributes(params[:db_file])
         flash[:notice] = 'DBFile was successfully updated.'
         format.html { redirect_to(:action => :edit) }
         format.xml  { head :ok }

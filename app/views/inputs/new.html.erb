@@ -12,10 +12,6 @@
     <%= f.text_field :name %>
   </p>
   <p>
-    <%= f.label :file_id, "File ID" %><br />
-    <%= f.text_field :file_id %>
-  </p>
-  <p>
     <%= f.label :parent %><br />
     <%= f.select :parent_id, Input.all.collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
   </p>
@@ -46,31 +42,12 @@
   <h3>Attach file</h3>
   <em>New file upload will be integrated into this page in the future, the link below will take you to the upload page</em><br />
   <%= link_to 'Create new file', new_dbfile_path %><br />
-  <!--
   <h3>Attach file</h3>
   <em>Not required</em>
   <p>
-    <#%= label_tag :attach_file %><br />
-    <#%= file_field 'file[upload]', 'datafile' %>
+    <%= label_tag :dbfile_id %><br />
+    <%= select_tag :dbfile_id, options_for_select([""]+DBFile.all( :conditions => { :container_id => nil } ).collect { |p| [ p.select_default, p.id ] }) -%>
   </p>
-  <p>
-    <#%= label_tag :format %><br />
-    <#%= select_tag 'file[format_id]', Format.all.collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } -%>
-  </p>
-  <em>These will autopopulate if you upload a file:</em>
-  <p>
-    <#%= label_tag :file_name %><br />
-    <#%= text_field_tag 'file[file_name]' %>
-  </p>
-  <p>
-    <#%= label_tag :file_path %><br />
-    <#%= text_field_tag 'file[file_path]' %>
-  </p>
-  <p>
-    <#%= label_tag :machine_id %><br />
-    <#%= text_field_tag 'file[machine_id]' %>
-  </p>
-  -->
   <p>
     <%= f.submit 'Create' %>
   </p>

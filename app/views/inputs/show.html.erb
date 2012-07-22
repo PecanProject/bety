@@ -23,5 +23,13 @@
   <%=h @input.notes %>
 </p>
 
+<p>
+  <b>Associated files:</b>
+  <% @input.files.each do |file| %>
+    <%= link_to_if file, file, dbfile_path(file) %><br />
+  <% end %>
+</p>
+
+
 <%= link_to 'Edit', edit_input_path(@input) %> |
 <%= link_to 'Back', inputs_path %>
