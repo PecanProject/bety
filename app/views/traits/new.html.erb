@@ -30,7 +30,9 @@
     </p>
     <p>
       <%= f.label :date %><br />
-      <%= f.date_select :date, { :start_year => 1800, :end_year => Time.now.year, :include_blank => "0000", :default => "0000"} %>
+      <%= f.select :date_year, [''] + (1800..Time.now.year).to_a %>
+      <%= f.select :date_month, [''] + (1..12).to_a %>
+      <%= f.select :date_day, [''] + (1..31).to_a %>
     </p>
     <p>
       <%= f.label :site_id %><br />
@@ -69,7 +71,8 @@
     </p>
     <p>
       <%= f.label :time %><br />
-      <%= f.time_select :time, { :include_blank => true }  %>
+      <%= f.select :time_hour, [''] + (0..23).to_a %>
+      <%= f.select :time_minute, [''] + (0..59).to_a %>
     </p>
     <p>
       <%= f.label :timeloc %><br />

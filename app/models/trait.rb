@@ -22,6 +22,11 @@ class Trait < ActiveRecord::Base
 
   validates_presence_of     :mean
   validates_presence_of     :statname, :if => Proc.new { |trait| !trait.stat.blank? }
+  validates_format_of       :date_year, :with => /^(\d{2}|\d{4})$/, :allow_blank => true
+  validates_format_of       :date_month, :with => /^\d{1,2}$/, :allow_blank => true
+  validates_format_of       :date_day, :with => /^\d{1,2}$/, :allow_blank => true
+  validates_format_of       :time_hour, :with => /^\d{1,2}$/, :allow_blank => true
+  validates_format_of       :time_minute, :with => /^\d{1,2}$/, :allow_blank => true
 
   named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
   named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
@@ -62,9 +67,12 @@ class Trait < ActiveRecord::Base
     cultivar_id
     treatment_id
     entity_id
-    date
+    date_year
+    date_month
+    date_day
     dateloc
-    time
+    time_hour
+    time_minute
     timeloc
     mean
     n
@@ -116,11 +124,10 @@ class Trait < ActiveRecord::Base
   end
 
   def date_pretty
-    if !date.nil?
-      "#{Date::ABBR_MONTHNAMES[date.mon]} #{date.day}, #{date.year}"
-    else
-      "NA"
-    end
+    date_string = ""
+    date_string += "#{date_year} " unless date_year.nil?
+    date_string += "#{Date::ABBR_MONTHNAMES[date_month]} " unless date_month.nil?
+    date_string += "#{date_day} " unless date_day.nil?
   end
 
   def format_statname
@@ -140,11 +147,9 @@ class Trait < ActiveRecord::Base
   end
 
   def time_pretty
-    if !date.nil?
-      "#{date.hour}:#{date.min}"
-    else
-      "NA"
-    end
+    time_string = ""
+    time_string += "#{time_hour}" unless time_hour.nil?
+    time_string += ":#{time_minute}" unless time_hour.nil? or time_minute.nil?
   end
 
   def specie_treat_cultivar

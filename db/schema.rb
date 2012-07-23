@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120722163546) do
+ActiveRecord::Schema.define(:version => 20120723141438) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -173,19 +173,6 @@ ActiveRecord::Schema.define(:version => 20120722163546) do
     t.integer  "column_number"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "input_files", :force => true do |t|
-    t.integer  "file_id"
-    t.string   "file_name"
-    t.string   "file_path"
-    t.integer  "machine_id"
-    t.string   "md5"
-    t.integer  "created_user_id"
-    t.integer  "updated_user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "format_id"
   end
 
   create_table "inputs", :force => true do |t|
@@ -569,6 +556,11 @@ ActiveRecord::Schema.define(:version => 20120722163546) do
     t.integer  "access_level"
     t.integer  "entity_id"
     t.integer  "method_id"
+    t.integer  "date_year"
+    t.integer  "date_month"
+    t.integer  "date_day"
+    t.integer  "time_hour"
+    t.integer  "time_minute"
   end
 
   add_index "traits", ["citation_id"], :name => "index_traits_on_citation_id"

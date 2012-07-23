@@ -161,24 +161,6 @@ class TraitsController < ApplicationController
   # POST /traits
   # POST /traits.xml
   def create
-    # Allows a date to be entered with a year that shows we do not know the year.
-    params[:trait]['date(1i)'] = "9999" if params[:trait]['date(1i)'].blank? and !params[:trait]['date(2i)'].blank?
-
-    # If a time is entered it fails as Rails expects a date as well.
-    if !params[:trait]['time(4i)'].blank? and !params[:trait]['time(5i)'].blank?
-      params[:trait]['time(1i)'] = "9999"
-      params[:trait]['time(2i)'] = "01"
-      params[:trait]['time(3i)'] = "01"
-    end
-
-    if params[:trait]['time(4i)'].blank? and params[:trait]['time(4i)'].blank?
-      params[:trait]['time(1i)'] = "9999"
-      params[:trait]['time(2i)'] = "01"
-      params[:trait]['time(3i)'] = "01"
-      params[:trait]['time(4i)'] = "00"
-      params[:trait]['time(5i)'] = "00"
-    end
-
     @trait = Trait.new(params[:trait])
 
     @trait.user_id = current_user.id
@@ -209,7 +191,6 @@ class TraitsController < ApplicationController
   # PUT /traits/1
   # PUT /traits/1.xml
   def update
-    params[:trait]['date(1i)'] = "9999" if params[:trait]['date(1i)'].blank? and !params[:trait]['date(2i)'].blank?
     @trait = Trait.all_limited(current_user).find_by_id(params[:id])
 
     respond_to do |format|
