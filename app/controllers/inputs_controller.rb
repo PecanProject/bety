@@ -135,7 +135,7 @@ class InputsController < ApplicationController
   # PUT /inputs/1.xml
   def update
     @input = Input.find(params[:id])
-    if params[:dbfile_id]
+    if params[:dbfile_id] and !params[:dbfile_id].blank?
       dbfile = DBFile.find(params[:dbfile_id])
     end
 
