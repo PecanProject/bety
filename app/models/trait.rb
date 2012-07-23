@@ -123,7 +123,7 @@ class Trait < ActiveRecord::Base
     site :lat => 'Latitude', :lon => 'Longitude'
   end
 
-  def date_pretty
+  def pretty_date
     date_string = ""
     date_string += "#{date_year} " unless date_year.nil?
     date_string += "#{Date::ABBR_MONTHNAMES[date_month]} " unless date_month.nil?
@@ -146,7 +146,7 @@ class Trait < ActiveRecord::Base
     end
   end
 
-  def time_pretty
+  def pretty_time
     time_string = ""
     time_string += "#{time_hour}" unless time_hour.nil?
     time_string += ":#{time_minute}" unless time_hour.nil? or time_minute.nil?
