@@ -1,5 +1,6 @@
 <table class="pretty">
   <tr>
+    <th><%= sortable "ensembles.rubytype", "Runtype" -%></th>
     <th><%= sortable "ensembles.notes", "Notes" -%></th>
     <th><%= sortable "ensembles.created_at", "Created" -%></th>
     <th><%= sortable "ensembles.updated_at", "Updated" -%></th>
@@ -7,6 +8,7 @@
 
 <% @ensembles.each do |ensemble| %>
   <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and ensemble.id == @search.to_i%>>
+    <td><%=h ensemble.runtype %></td>
     <td><%=h ensemble.notes %></td>
     <td><%=h ensemble.created_at %></td>
     <td><%=h ensemble.updated_at %></td>

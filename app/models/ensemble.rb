@@ -4,12 +4,16 @@ class Ensemble < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
-  SEARCH_FIELDS = %w{ ensembles.notes ensembles.created_at ensembles.updated_at }
+  SEARCH_FIELDS = %w{ ensembles.runtype ensembles.notes ensembles.created_at ensembles.updated_at }
+
+  RUNTYPETYPES = ["ENS","SA"]
 
   has_many :runs
 
   named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
   named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+
+  validates_inclusion_of :runtype, :in => RUNTYPETYPES, :allow_blank => true
 
   comma do
     id
@@ -17,6 +21,7 @@ class Ensemble < ActiveRecord::Base
     created_at
     updated_at
   end
+
 
   def to_s
     notes[0..20]

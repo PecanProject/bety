@@ -4,6 +4,10 @@
   <%= f.error_messages %>
 
   <p>
+    <%= f.label :runtype %><br />
+    <%= f.select :runtype, Ensemble::RUNTYPETYPES, :include_blank => true %>
+  </p>
+  <p>
     <%= f.label :notes %><br />
     <%= f.text_area :notes %>
   </p>
