@@ -107,7 +107,7 @@ class TraitsController < ApplicationController
       @iteration = params[:iteration][/\d+/] rescue 1
       @traits = @traits.citation(session["citation"]).order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
-      @traits = @traits.api_search(params)
+      @traits = @traits.exclude_api.api_search(params)
     end
 
     respond_to do |format|

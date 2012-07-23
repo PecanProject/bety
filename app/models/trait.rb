@@ -30,6 +30,7 @@ class Trait < ActiveRecord::Base
 
   named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
   named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+  named_scope :exclude_api, { :conditions => ["checked != ?","-1"] }
   named_scope :citation, lambda { |citation|
     if citation.nil?
       {}
@@ -58,6 +59,7 @@ class Trait < ActiveRecord::Base
 
     {:conditions => ["(checked >= ? and access_level >= ?) or traits.user_id = ?",checked,access_level,user] }
   }
+
 
   comma do
     id
