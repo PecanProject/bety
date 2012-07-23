@@ -29,7 +29,8 @@ class DBFile < ActiveRecord::Base
       directory = DBFile.make_md5_path(self[:md5])
       self[:file_path] = File.join(directory,self[:md5])
 
-      self[:machine_id] = Machine.find(2).id # Machine ident for forecast...
+      #self[:machine_id] = Machine.find(2).id # Machine ident for forecast...
+      self[:machine_id] = Machine.find_by_hostname(Socket.gethostbyname(Socket.gethostname).first).id rescue nil # Machine ident for forecast...
       format = Format.find_by_mime_type(upload.content_type)
       if format.nil?
         format = Format.new
