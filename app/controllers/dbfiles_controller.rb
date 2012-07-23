@@ -100,7 +100,7 @@ class DbfilesController < ApplicationController
   # POST /files.xml
   def create
     @file = DBFile.new
-    @file.setup(current_user,params[:upload_file],params[:d_b_file])
+    @file.setup(current_user,params[:upload_file],params[:db_file])
 
     respond_to do |format|
       if @file.save

@@ -22,6 +22,7 @@ class DBFile < ActiveRecord::Base
   def setup(user_id, upload, args = nil)
     self[:created_user_id] = user_id
     self[:updated_user_id] = user_id
+    self[:parent_id] = args[:parent_id]
     if upload # Uploaded file
       self[:file_name] =  upload.original_filename
       self[:md5] = Digest::MD5.file(upload.path).hexdigest
@@ -31,15 +32,19 @@ class DBFile < ActiveRecord::Base
 
       #self[:machine_id] = Machine.find(2).id # Machine ident for forecast...
       self[:machine_id] = Machine.find_by_hostname(Socket.gethostbyname(Socket.gethostname).first).id rescue nil # Machine ident for forecast...
-      format = Format.find_by_mime_type(upload.content_type)
-      if format.nil?
-        format = Format.new
-        format.mime_type = upload.content_type
-        format.notes = "New format created for #self[:file_name"
-        format.save
+      logger.info "No matching host found: #{Socket.gethostbyname(Socket.gethostname).first}"
+      if !args[:format_id].blank?
+        self[:format_id] = args[:format_id]
+      else
+        format = Format.find_by_mime_type(upload.content_type)
+        if format.nil?
+          format = Format.new
+          format.mime_type = upload.content_type
+          format.notes = "New format created for #{self[:file_name]}"
+          format.save
+        end
+        self[:format_id] = format.id
       end
-      self[:format_id] = format.id
-      #self[:file_id] = DBFile.max_file_id
 
       FileUtils.mkdir_p directory if !File.exists?(directory)
       # write the file
@@ -71,11 +76,11 @@ class DBFile < ActiveRecord::Base
   def to_s(format = nil)
     case format
     when :file_path
-      "#{id} - #{machine.hostname}:#{file_path}"
+      "#{id} - #{machine.hostname rescue ''}:#{file_path}"
     when :short
-      "#{id} - #{machine.hostname}:#{file_name.length > 20 ? file_name[0..20]+'...' : file_name}"
+      "#{id} - #{machine.hostname rescue ''}:#{file_name.length > 20 ? file_name[0..20]+'...' : file_name}"
     else
-      "#{id} - #{machine.hostname}:#{file_name}"
+      "#{id} - #{machine.hostname rescue ''}:#{file_name}"
     end
   end
 
