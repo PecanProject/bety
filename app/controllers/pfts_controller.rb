@@ -82,6 +82,15 @@ class PftsController < ApplicationController
     end
   end
 
+  def make_clone
+    orig_pft = Pft.find(params[:id])
+    pft = orig_pft.make_deep_clone
+
+    respond_to do |format|
+      format.html { redirect_to(pft_url(pft)) }
+    end
+  end
+
   # GET /pfts
   # GET /pfts.xml
   def index

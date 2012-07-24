@@ -33,7 +33,6 @@ class Trait < ActiveRecord::Base
 
   # Only allow admins/managers to change traits marked as failed.
   def can_change_checked
-    logger.info current_user
     errors.add(:checked, "You do not have permission to change") if
       checked == -1 and current_user.page_access_level > 2
   end

@@ -22,7 +22,16 @@ module SimpleSearch
       rescue
         date_search = [nil,nil]
       end
-      [(self::SEARCH_FIELDS || self.column_names).collect { |x| type_query(x,search,date_search)}.compact.join(" or "), { :search => search, :wildcard_search => "%#{search}%", :date_start_search => date_search[0], :date_end_search => date_search[1] }]
+      if search[/=/]
+        conditions = {}
+        search.split(",").each do |_search|
+          _search.strip! 
+          conditions[_search.split("=",2).first.strip.to_s] = _search.split("=",2).last.strip.to_s if (self.column_names || self::SEARCH_FIELDS).include?(_search.split("=",2).first)
+        end
+        conditions
+      else
+        [(self::SEARCH_FIELDS || self.column_names).collect { |x| type_query(x,search,date_search)}.compact.join(" or "), { :search => search, :wildcard_search => "%#{search}%", :date_start_search => date_search[0], :date_end_search => date_search[1] }]
+      end
 #      find(:all,
 #           :include => self::SEARCH_INCLUDES,
 #           :conditions => [(self::SEARCH_FIELDS || self.column_names).collect { |x| type_query(x,search,date_search)}.compact.join(" or "), { :search => search, :wildcard_search => "%#{search}%", :date_start_search => date_search[0], :date_end_search => date_search[1] }])

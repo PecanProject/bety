@@ -43,7 +43,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :covariates
 
-  map.resources :pfts
+  map.resources :pfts,
+                :member => { :make_clone => :get }
 
   map.resources :managements
 
