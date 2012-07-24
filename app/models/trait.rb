@@ -1,4 +1,6 @@
 class Trait < ActiveRecord::Base
+  # Passed from controller for validation of ability
+  attr_accessor :current_user
 
   include Overrides
 
@@ -27,6 +29,15 @@ class Trait < ActiveRecord::Base
   validates_format_of       :date_day, :with => /^\d{1,2}$/, :allow_blank => true
   validates_format_of       :time_hour, :with => /^\d{1,2}$/, :allow_blank => true
   validates_format_of       :time_minute, :with => /^\d{1,2}$/, :allow_blank => true
+  validate :can_change_checked
+
+  # Only allow admins/managers to change traits marked as failed.
+  def can_change_checked
+    logger.info current_user
+    errors.add(:checked, "You do not have permission to change") if
+      checked == -1 and current_user.page_access_level > 2
+  end
+
 
   named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
   named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 

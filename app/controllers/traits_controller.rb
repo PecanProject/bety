@@ -87,6 +87,7 @@ class TraitsController < ApplicationController
 
   def checked
     t = Trait.all_limited(current_user).find_by_id(params[:id])
+    t.current_user = current_user
     t.checked = params[:trait][:checked] if t
    
     render :update do |page|
@@ -192,6 +193,7 @@ class TraitsController < ApplicationController
   # PUT /traits/1.xml
   def update
     @trait = Trait.all_limited(current_user).find_by_id(params[:id])
+    @trait.current_user = current_user #Used to validate that they are allowed to change checked
 
     respond_to do |format|
       if @trait.update_attributes(params[:trait])
