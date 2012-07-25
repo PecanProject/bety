@@ -8,6 +8,8 @@ class DBFile < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ machine format }
   SEARCH_FIELDS = %w{ dbfiles.file_name dbfiles.file_path dbfiles.md5 machines.hostname formats.mime_type } 
 
+  validates_presence_of :format_id
+
   named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
   named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
 
@@ -23,6 +25,7 @@ class DBFile < ActiveRecord::Base
     self[:created_user_id] = user_id
     self[:updated_user_id] = user_id
     self[:parent_id] = args[:parent_id]
+    self[:format_id] = args[:format_id]
     if upload # Uploaded file
       self[:file_name] =  upload.original_filename
       self[:md5] = Digest::MD5.file(upload.path).hexdigest
@@ -33,18 +36,6 @@ class DBFile < ActiveRecord::Base
       #self[:machine_id] = Machine.find(2).id # Machine ident for forecast...
       self[:machine_id] = Machine.find_by_hostname(Socket.gethostbyname(Socket.gethostname).first).id rescue nil # Machine ident for forecast...
       logger.info "No matching host found: #{Socket.gethostbyname(Socket.gethostname).first}"
-      if !args[:format_id].blank?
-        self[:format_id] = args[:format_id]
-      else
-        format = Format.find_by_mime_type(upload.content_type)
-        if format.nil?
-          format = Format.new
-          format.mime_type = upload.content_type
-          format.notes = "New format created for #{self[:file_name]}"
-          format.save
-        end
-        self[:format_id] = format.id
-      end
 
       FileUtils.mkdir_p directory if !File.exists?(directory)
       # write the file
@@ -58,7 +49,6 @@ class DBFile < ActiveRecord::Base
       self[:file_path] = args[:file_path]
       self[:md5] = args[:md5]
       self[:machine_id] = args[:machine_id]
-      self[:format_id] = args[:format_id]
       #if args[:file_id].blank? or args[:file_id][/[^0-9]/]
       #  self[:file_id] = DBFile.max_file_id
       #else
