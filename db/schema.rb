@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120723155011) do
+ActiveRecord::Schema.define(:version => 20120725152632) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
     t.string   "doi"
     t.integer  "user_id"
   end
+
+  add_index "citations", ["user_id"], :name => "index_citations_on_user_id"
 
   create_table "citations_sites", :id => false, :force => true do |t|
     t.integer  "citation_id"
@@ -129,13 +131,20 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
     t.integer  "created_user_id"
     t.integer  "updated_user_id"
     t.integer  "machine_id"
-    t.integer  "format_id"
+    t.integer  "format_id",       :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "container_type"
     t.integer  "container_id"
     t.integer  "parent_id"
   end
+
+  add_index "dbfiles", ["container_id", "container_type"], :name => "index_dbfiles_on_container_id_and_container_type"
+  add_index "dbfiles", ["created_user_id"], :name => "index_dbfiles_on_created_user_id"
+  add_index "dbfiles", ["format_id"], :name => "index_dbfiles_on_format_id"
+  add_index "dbfiles", ["machine_id"], :name => "index_dbfiles_on_machine_id"
+  add_index "dbfiles", ["parent_id"], :name => "index_dbfiles_on_parent_id"
+  add_index "dbfiles", ["updated_user_id"], :name => "index_dbfiles_on_updated_user_id"
 
   create_table "ensembles", :force => true do |t|
     t.text     "notes"
@@ -151,6 +160,8 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "entities", ["parent_id"], :name => "index_entities_on_parent_id"
 
   create_table "formats", :force => true do |t|
     t.string   "mime_type"
@@ -176,6 +187,8 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
     t.datetime "updated_at"
   end
 
+  add_index "formats_variables", ["format_id", "variable_id"], :name => "index_formats_variables_on_format_id_and_variable_id"
+
   create_table "inputs", :force => true do |t|
     t.integer  "site_id"
     t.text     "notes"
@@ -190,7 +203,9 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
     t.boolean  "raw"
   end
 
+  add_index "inputs", ["parent_id"], :name => "index_inputs_on_parent_id"
   add_index "inputs", ["site_id"], :name => "index_inputs_on_site_id"
+  add_index "inputs", ["user_id"], :name => "index_inputs_on_user_id"
 
   create_table "inputs_runs", :id => false, :force => true do |t|
     t.integer  "input_id"
@@ -245,6 +260,8 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
     t.datetime "updated_at"
   end
 
+  add_index "machines", ["hostname"], :name => "index_machines_on_hostname"
+
   create_table "managements", :force => true do |t|
     t.integer  "citation_id"
     t.date     "date"
@@ -259,6 +276,7 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
   end
 
   add_index "managements", ["citation_id"], :name => "index_managements_on_citation_id"
+  add_index "managements", ["user_id"], :name => "index_managements_on_user_id"
 
   create_table "managements_treatments", :id => false, :force => true do |t|
     t.integer  "treatment_id"
@@ -276,6 +294,8 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "methods", ["citation_id"], :name => "index_methods_on_citation_id"
 
   create_table "mimetypes", :force => true do |t|
     t.string "type_string"
@@ -372,6 +392,7 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
     t.string   "end_date"
   end
 
+  add_index "runs", ["ensemble_id"], :name => "index_runs_on_ensemble_id"
   add_index "runs", ["model_id"], :name => "index_runs_on_model_id"
   add_index "runs", ["site_id"], :name => "index_runs_on_site_id"
 
@@ -408,6 +429,8 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
     t.decimal  "clay_pct",   :precision => 9, :scale => 5
     t.string   "espg"
   end
+
+  add_index "sites", ["user_id"], :name => "index_sites_on_user_id"
 
   create_table "species", :force => true do |t|
     t.integer  "spcd"
@@ -566,9 +589,12 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
 
   add_index "traits", ["citation_id"], :name => "index_traits_on_citation_id"
   add_index "traits", ["cultivar_id"], :name => "index_traits_on_cultivar_id"
+  add_index "traits", ["entity_id"], :name => "index_traits_on_entity_id"
+  add_index "traits", ["method_id"], :name => "index_traits_on_method_id"
   add_index "traits", ["site_id"], :name => "index_traits_on_site_id"
   add_index "traits", ["specie_id"], :name => "index_traits_on_specie_id"
   add_index "traits", ["treatment_id"], :name => "index_traits_on_treatment_id"
+  add_index "traits", ["user_id"], :name => "index_traits_on_user_id"
   add_index "traits", ["variable_id"], :name => "index_traits_on_variable_id"
 
   create_table "treatments", :force => true do |t|
@@ -579,6 +605,8 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
     t.boolean  "control"
     t.integer  "user_id"
   end
+
+  add_index "treatments", ["user_id"], :name => "index_treatments_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
@@ -644,8 +672,10 @@ ActiveRecord::Schema.define(:version => 20120723155011) do
 
   add_index "yields", ["citation_id"], :name => "index_yields_on_citation_id"
   add_index "yields", ["cultivar_id"], :name => "index_yields_on_cultivar_id"
+  add_index "yields", ["method_id"], :name => "index_yields_on_method_id"
   add_index "yields", ["site_id"], :name => "index_yields_on_site_id"
   add_index "yields", ["specie_id"], :name => "index_yields_on_specie_id"
   add_index "yields", ["treatment_id"], :name => "index_yields_on_treatment_id"
+  add_index "yields", ["user_id"], :name => "index_yields_on_user_id"
 
 end
