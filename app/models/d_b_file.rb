@@ -5,10 +5,8 @@ class DBFile < ActiveRecord::Base
   include Overrides
 
   extend SimpleSearch
-  SEARCH_INCLUDES = %w{ machine format }
-  SEARCH_FIELDS = %w{ dbfiles.file_name dbfiles.file_path dbfiles.md5 machines.hostname formats.mime_type } 
-
-  validates_presence_of :format_id
+  SEARCH_INCLUDES = %w{ machine }
+  SEARCH_FIELDS = %w{ dbfiles.file_name dbfiles.file_path dbfiles.md5 machines.hostname } 
 
   named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
   named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
@@ -16,7 +14,6 @@ class DBFile < ActiveRecord::Base
   has_many :children, :class_name => "DBFile"
   belongs_to :parent, :class_name => "DBFile", :foreign_key => "parent_id"
   belongs_to :container, :polymorphic => true
-  belongs_to :format
   belongs_to :machine 
   belongs_to :updated_user, :foreign_key => "updated_user_id", :class_name => 'User'
   belongs_to :created_user, :foreign_key => "created_user_id", :class_name => 'User'
@@ -25,7 +22,6 @@ class DBFile < ActiveRecord::Base
     self[:created_user_id] = user_id
     self[:updated_user_id] = user_id
     self[:parent_id] = args[:parent_id]
-    self[:format_id] = args[:format_id]
     if upload # Uploaded file
       self[:file_name] =  upload.original_filename
       self[:md5] = Digest::MD5.file(upload.path).hexdigest

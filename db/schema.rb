@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120725152632) do
+ActiveRecord::Schema.define(:version => 20120731183842) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -131,7 +131,6 @@ ActiveRecord::Schema.define(:version => 20120725152632) do
     t.integer  "created_user_id"
     t.integer  "updated_user_id"
     t.integer  "machine_id"
-    t.integer  "format_id",       :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "container_type"
@@ -141,7 +140,6 @@ ActiveRecord::Schema.define(:version => 20120725152632) do
 
   add_index "dbfiles", ["container_id", "container_type"], :name => "index_dbfiles_on_container_id_and_container_type"
   add_index "dbfiles", ["created_user_id"], :name => "index_dbfiles_on_created_user_id"
-  add_index "dbfiles", ["format_id"], :name => "index_dbfiles_on_format_id"
   add_index "dbfiles", ["machine_id"], :name => "index_dbfiles_on_machine_id"
   add_index "dbfiles", ["parent_id"], :name => "index_dbfiles_on_parent_id"
   add_index "dbfiles", ["updated_user_id"], :name => "index_dbfiles_on_updated_user_id"
@@ -201,8 +199,10 @@ ActiveRecord::Schema.define(:version => 20120725152632) do
     t.integer  "user_id"
     t.integer  "access_level"
     t.boolean  "raw"
+    t.integer  "format_id"
   end
 
+  add_index "inputs", ["format_id"], :name => "index_inputs_on_format_id"
   add_index "inputs", ["parent_id"], :name => "index_inputs_on_parent_id"
   add_index "inputs", ["site_id"], :name => "index_inputs_on_site_id"
   add_index "inputs", ["user_id"], :name => "index_inputs_on_user_id"

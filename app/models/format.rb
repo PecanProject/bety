@@ -5,7 +5,7 @@ class Format < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ formats.name formats.mime_type formats.dataformat formats.notes formats.skip formats.header }
 
-  has_many :bety_files
+  has_many :inputs
   has_many :formats_variables
   has_many :variables, :through => :formats_variables
 

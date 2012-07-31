@@ -27,10 +27,6 @@
     <%= f.select :machine_id, Machine.all.collect { |p| [p.select_default, p.id] } %>
   </p>
   <p>
-    <%= f.label :format_id %><br />
-    <%= f.select :format_id, Format.all.collect { |p| [p.select_default, p.id ] } %>
-  </p>
-  <p>
     <%= f.label :parent_id %><br />
     <%= f.select :parent_id, DBFile.all.collect { |p| [p.select_default, p.id ] }, { :include_blank => true } %>
   </p>

@@ -8,6 +8,7 @@
     <th><%= sortable "inputs.notes", "Notes" -%></th>
     <th><%= sortable "inputs.created_at", "Created at" -%></th>
     <th><%= sortable "inputs.updated_at", "Updated at" -%></th>
+    <th><%= sortable "formats.mime_type", "Format" -%></th>
   </tr>
 
   <% @inputs.each do |input| %>
@@ -22,6 +23,7 @@
     <td><%=h input.notes -%></td>
     <td><%=h input.created_at -%></td>
     <td><%=h input.updated_at -%></td>
+    <td><%= link_to_if input.format, input.format, input.format%></td>
     <td><%= link_to "Show", input -%></td>
     <td><%= link_to "Edit", edit_input_path(input) -%></td>
     <td><%= link_to 'Destroy', input, :confirm => 'Are you sure?', :method => :delete %></td>

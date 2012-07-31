@@ -13,6 +13,7 @@ class Input < ActiveRecord::Base
   #has_one :input_file, :foreign_key => 'file_id'
   belongs_to :site
   belongs_to :user
+  belongs_to :format
 
   #Self reference
   has_many :children, :class_name => "Input"

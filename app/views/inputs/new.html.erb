@@ -28,6 +28,10 @@
     <%= f.select :raw, [["True",true],['False',false]], :selected => false %>
   </p>
   <p>
+    <%= f.label :format_id, 'Format <em>*Required</em' %><br />
+    <%= f.select :format_id, Format.all.collect { |p| [p.select_default, p.id ] } %>
+  </p>
+  <p>
     <%= f.label :access_level %><br />
     <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :selected => current_user.access_level %>
   </p>
