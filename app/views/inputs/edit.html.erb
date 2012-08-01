@@ -44,6 +44,10 @@
     <%= f.datetime_select :end_date, { :start_year => 1800, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
   </p>
   <p>
+    <%= f.label :file_id, 'File ID' %><br />
+    <%= f.text_field :file_id %>
+  </p>
+  <p>
     <%= f.label :format_id %><br />
     <%= f.select :format_id, Format.all.collect { |p| [p.select_default, p.id ] }, :include_blank => true %>
   </p>

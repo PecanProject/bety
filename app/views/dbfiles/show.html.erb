@@ -8,6 +8,9 @@
     MD5: <%=h @file.md5 %>
   </p>
   <p>
+    File ID: <%=h @file.file_id %>
+  </p>
+  <p>
     File created by: <%= link_to_if @file.created_user, @file.created_user, @file.created_user %>
   </p>
   <p>

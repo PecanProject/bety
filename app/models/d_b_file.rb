@@ -22,6 +22,7 @@ class DBFile < ActiveRecord::Base
     self[:created_user_id] = user_id
     self[:updated_user_id] = user_id
     self[:parent_id] = args[:parent_id]
+    self[:file_id] = args[:file_id]
     if upload # Uploaded file
       self[:file_name] =  upload.original_filename
       self[:md5] = Digest::MD5.file(upload.path).hexdigest

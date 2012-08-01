@@ -15,6 +15,10 @@
     <%= f.text_field :md5 %>
   </p>
   <p>
+    <%= f.label :file_id %><br />
+    <%= f.text_field :file_id %>
+  </p>
+  <p>
     <%= f.label :created_user_id, 'Created by' %><br />
     <%= link_to_if f.object.created_user, f.object.created_user, f.object.created_user %>
   </p>

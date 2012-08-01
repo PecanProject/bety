@@ -3,6 +3,7 @@
     <th><%= sortable "dbfiles.file_name", "File Name" -%></th>
     <th><%= sortable "dbfiles.file_path", "File Path" -%></th>
     <th><%= sortable "dbfiles.md5", "Md5" -%></th>
+    <th><%= sortable "dbfiles.file_id", "File ID" -%></th>
     <th>Created by</th>
     <th>"Updated by"</th>
     <th><%= sortable "machines.hostname", "Machine" -%></th>
@@ -14,6 +15,7 @@
     <td><%=h file.file_name %></td>
     <td><%=h file.file_path %></td>
     <td><%=h file.md5 %></td>
+    <td><%=h file.file_id %></td>
     <td><%= link_to_if file.created_user, file.created_user, file.updated_user %></td>
     <td><%= link_to_if file.updated_user, file.updated_user, file.updated_user %></td>
     <td><%= link_to_if file.machine, file.machine, file.machine %></td>

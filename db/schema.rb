@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120731183842) do
+ActiveRecord::Schema.define(:version => 20120801130218) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -136,6 +136,7 @@ ActiveRecord::Schema.define(:version => 20120731183842) do
     t.string   "container_type"
     t.integer  "container_id"
     t.integer  "parent_id"
+    t.integer  "file_id"
   end
 
   add_index "dbfiles", ["container_id", "container_type"], :name => "index_dbfiles_on_container_id_and_container_type"
@@ -200,6 +201,7 @@ ActiveRecord::Schema.define(:version => 20120731183842) do
     t.integer  "access_level"
     t.boolean  "raw"
     t.integer  "format_id"
+    t.integer  "file_id"
   end
 
   add_index "inputs", ["format_id"], :name => "index_inputs_on_format_id"

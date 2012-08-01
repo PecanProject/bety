@@ -108,20 +108,30 @@ class InputsController < ApplicationController
   # POST /inputs.xml
   def create
 
-    if params[:dbfile_id]
+    if !params[:dbfile_id].blank?
       dbfile = DBFile.find(params[:dbfile_id])
     end
 
     @input = Input.new(params[:input])
+    if params[:upload_file] or !params[:db_file][:file_name].blank?
+      @file = DBFile.new
+      @file.setup(current_user,params[:upload_file],params[:db_file])
+    end 
 
     respond_to do |format|
       #if @input.save and input_file.save
       if @input.save
-        @input.files << dbfile if dbfile
-        format.html { redirect_to(@input, :notice => 'Input was successfully created.') }
-        format.xml  { render :xml => @input, :status => :created, :location => @input }
-        format.csv  { render :csv => @input, :status => :created, :location => @input }
-        format.json  { render :json => @input, :status => :created, :location => @input }
+        if @file and @file.container = @input and @file.save
+          format.html { redirect_to(@input, :notice => 'Input was successfully created.') }
+          format.xml  { render :xml => @input, :status => :created, :location => @input }
+          format.csv  { render :csv => @input, :status => :created, :location => @input }
+          format.json  { render :json => @input, :status => :created, :location => @input }
+        else
+          format.html { redirect_to(@input, :notice => 'Input was successfully created.') }
+          format.xml  { render :xml => @input, :status => :created, :location => @input }
+          format.csv  { render :csv => @input, :status => :created, :location => @input }
+          format.json  { render :json => @input, :status => :created, :location => @input }
+        end
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @input.errors, :status => :unprocessable_entity }
