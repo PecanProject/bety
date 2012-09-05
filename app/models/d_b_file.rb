@@ -46,11 +46,6 @@ class DBFile < ActiveRecord::Base
       self[:file_path] = args[:file_path]
       self[:md5] = args[:md5]
       self[:machine_id] = args[:machine_id]
-      #if args[:file_id].blank? or args[:file_id][/[^0-9]/]
-      #  self[:file_id] = DBFile.max_file_id
-      #else
-      #  self[:file_id] = args[:file_id]
-      #end
     end   
   end
 
