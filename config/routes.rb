@@ -1,5 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
 
+  map.resources :yieldsviews, :only => [:show]
+
   map.resources :workflows
 
   map.resources :formats_variables

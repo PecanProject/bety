@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120801130218) do
+ActiveRecord::Schema.define(:version => 20120916130311) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -25,8 +25,6 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
     t.string   "doi"
     t.integer  "user_id"
   end
-
-  add_index "citations", ["user_id"], :name => "index_citations_on_user_id"
 
   create_table "citations_sites", :id => false, :force => true do |t|
     t.integer  "citation_id"
@@ -46,52 +44,8 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
 
   add_index "citations_treatments", ["citation_id", "treatment_id"], :name => "index_citations_treatments_on_citation_id_and_treatment_id", :unique => true
 
-  create_table "counties", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "state"
-    t.integer  "state_fips"
-    t.integer  "county_fips"
-  end
-
-  create_table "county_boundaries", :id => false, :force => true do |t|
-    t.integer  "id",                                         :default => 0, :null => false
-    t.integer  "county_id"
-    t.decimal  "lat",        :precision => 20, :scale => 15
-    t.decimal  "lng",        :precision => 20, :scale => 15
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.decimal  "zoom0x",     :precision => 20, :scale => 10
-    t.decimal  "zoom0y",     :precision => 20, :scale => 10
-    t.boolean  "zoom0skip"
-    t.decimal  "zoom1x",     :precision => 20, :scale => 10
-    t.decimal  "zoom1y",     :precision => 20, :scale => 10
-    t.boolean  "zoom1skip"
-    t.decimal  "zoom2x",     :precision => 20, :scale => 10
-    t.decimal  "zoom2y",     :precision => 20, :scale => 10
-    t.decimal  "zoom3x",     :precision => 20, :scale => 10
-    t.decimal  "zoom3y",     :precision => 20, :scale => 10
-    t.decimal  "zoom4x",     :precision => 20, :scale => 10
-    t.decimal  "zoom4y",     :precision => 20, :scale => 10
-    t.decimal  "zoom5x",     :precision => 20, :scale => 10
-    t.decimal  "zoom5y",     :precision => 20, :scale => 10
-    t.decimal  "zoom6x",     :precision => 20, :scale => 10
-    t.decimal  "zoom6y",     :precision => 20, :scale => 10
-    t.decimal  "zoom7x",     :precision => 20, :scale => 10
-    t.decimal  "zoom7y",     :precision => 20, :scale => 10
-    t.decimal  "zoom8x",     :precision => 20, :scale => 10
-    t.decimal  "zoom8y",     :precision => 20, :scale => 10
-    t.decimal  "zoom9x",     :precision => 20, :scale => 10
-    t.decimal  "zoom9y",     :precision => 20, :scale => 10
-    t.decimal  "zoom10x",    :precision => 20, :scale => 10
-    t.decimal  "zoom10y",    :precision => 20, :scale => 10
-    t.decimal  "zoom11x",    :precision => 20, :scale => 10
-    t.decimal  "zoom11y",    :precision => 20, :scale => 10
-  end
-
   create_table "county_paths", :id => false, :force => true do |t|
-    t.integer  "id",         :default => 0, :null => false
+    t.integer  "id"
     t.integer  "county_id"
     t.integer  "zoom"
     t.text     "path"
@@ -131,25 +85,18 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
     t.integer  "created_user_id"
     t.integer  "updated_user_id"
     t.integer  "machine_id"
+    t.integer  "format_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "file_id"
     t.string   "container_type"
     t.integer  "container_id"
-    t.integer  "parent_id"
-    t.integer  "file_id"
   end
-
-  add_index "dbfiles", ["container_id", "container_type"], :name => "index_dbfiles_on_container_id_and_container_type"
-  add_index "dbfiles", ["created_user_id"], :name => "index_dbfiles_on_created_user_id"
-  add_index "dbfiles", ["machine_id"], :name => "index_dbfiles_on_machine_id"
-  add_index "dbfiles", ["parent_id"], :name => "index_dbfiles_on_parent_id"
-  add_index "dbfiles", ["updated_user_id"], :name => "index_dbfiles_on_updated_user_id"
 
   create_table "ensembles", :force => true do |t|
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "runtype"
   end
 
   create_table "entities", :force => true do |t|
@@ -159,8 +106,6 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "entities", ["parent_id"], :name => "index_entities_on_parent_id"
 
   create_table "formats", :force => true do |t|
     t.string   "mime_type"
@@ -186,7 +131,18 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
     t.datetime "updated_at"
   end
 
-  add_index "formats_variables", ["format_id", "variable_id"], :name => "index_formats_variables_on_format_id_and_variable_id"
+  create_table "input_files", :force => true do |t|
+    t.integer  "file_id"
+    t.string   "file_name"
+    t.string   "file_path"
+    t.integer  "machine_id"
+    t.string   "md5"
+    t.integer  "created_user_id"
+    t.integer  "updated_user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "format_id"
+  end
 
   create_table "inputs", :force => true do |t|
     t.integer  "site_id"
@@ -196,18 +152,15 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
     t.datetime "start_date"
     t.datetime "end_date"
     t.string   "name"
+    t.integer  "file_id"
     t.integer  "parent_id"
     t.integer  "user_id"
     t.integer  "access_level"
     t.boolean  "raw"
-    t.integer  "format_id"
-    t.integer  "file_id"
+    t.integer  "current_file_id"
   end
 
-  add_index "inputs", ["format_id"], :name => "index_inputs_on_format_id"
-  add_index "inputs", ["parent_id"], :name => "index_inputs_on_parent_id"
   add_index "inputs", ["site_id"], :name => "index_inputs_on_site_id"
-  add_index "inputs", ["user_id"], :name => "index_inputs_on_user_id"
 
   create_table "inputs_runs", :id => false, :force => true do |t|
     t.integer  "input_id"
@@ -262,8 +215,6 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
     t.datetime "updated_at"
   end
 
-  add_index "machines", ["hostname"], :name => "index_machines_on_hostname"
-
   create_table "managements", :force => true do |t|
     t.integer  "citation_id"
     t.date     "date"
@@ -278,7 +229,6 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
   end
 
   add_index "managements", ["citation_id"], :name => "index_managements_on_citation_id"
-  add_index "managements", ["user_id"], :name => "index_managements_on_user_id"
 
   create_table "managements_treatments", :id => false, :force => true do |t|
     t.integer  "treatment_id"
@@ -296,8 +246,6 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "methods", ["citation_id"], :name => "index_methods_on_citation_id"
 
   create_table "mimetypes", :force => true do |t|
     t.string "type_string"
@@ -394,7 +342,6 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
     t.string   "end_date"
   end
 
-  add_index "runs", ["ensemble_id"], :name => "index_runs_on_ensemble_id"
   add_index "runs", ["model_id"], :name => "index_runs_on_model_id"
   add_index "runs", ["site_id"], :name => "index_runs_on_site_id"
 
@@ -431,8 +378,6 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
     t.decimal  "clay_pct",   :precision => 9, :scale => 5
     t.string   "espg"
   end
-
-  add_index "sites", ["user_id"], :name => "index_sites_on_user_id"
 
   create_table "species", :force => true do |t|
     t.integer  "spcd"
@@ -582,21 +527,13 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
     t.integer  "access_level"
     t.integer  "entity_id"
     t.integer  "method_id"
-    t.integer  "date_year"
-    t.integer  "date_month"
-    t.integer  "date_day"
-    t.integer  "time_hour"
-    t.integer  "time_minute"
   end
 
   add_index "traits", ["citation_id"], :name => "index_traits_on_citation_id"
   add_index "traits", ["cultivar_id"], :name => "index_traits_on_cultivar_id"
-  add_index "traits", ["entity_id"], :name => "index_traits_on_entity_id"
-  add_index "traits", ["method_id"], :name => "index_traits_on_method_id"
   add_index "traits", ["site_id"], :name => "index_traits_on_site_id"
   add_index "traits", ["specie_id"], :name => "index_traits_on_specie_id"
   add_index "traits", ["treatment_id"], :name => "index_traits_on_treatment_id"
-  add_index "traits", ["user_id"], :name => "index_traits_on_user_id"
   add_index "traits", ["variable_id"], :name => "index_traits_on_variable_id"
 
   create_table "treatments", :force => true do |t|
@@ -607,8 +544,6 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
     t.boolean  "control"
     t.integer  "user_id"
   end
-
-  add_index "treatments", ["user_id"], :name => "index_treatments_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
@@ -644,7 +579,14 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
   end
 
   create_table "workflows", :force => true do |t|
-    t.string   "outdir"
+    t.integer  "site_id",     :null => false
+    t.string   "model_type"
+    t.integer  "model_id",    :null => false
+    t.string   "hostname"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.text     "params"
+    t.text     "folder"
     t.datetime "started_at"
     t.datetime "finished_at"
     t.datetime "created_at"
@@ -674,10 +616,33 @@ ActiveRecord::Schema.define(:version => 20120801130218) do
 
   add_index "yields", ["citation_id"], :name => "index_yields_on_citation_id"
   add_index "yields", ["cultivar_id"], :name => "index_yields_on_cultivar_id"
-  add_index "yields", ["method_id"], :name => "index_yields_on_method_id"
   add_index "yields", ["site_id"], :name => "index_yields_on_site_id"
   add_index "yields", ["specie_id"], :name => "index_yields_on_specie_id"
   add_index "yields", ["treatment_id"], :name => "index_yields_on_treatment_id"
-  add_index "yields", ["user_id"], :name => "index_yields_on_user_id"
+
+  create_table "yieldsview", :id => false, :force => true do |t|
+    t.integer "yield_id",                                                   :default => 0,  :null => false
+    t.integer "citation_id"
+    t.integer "site_id"
+    t.string  "site"
+    t.decimal "lat",                         :precision => 9,  :scale => 6
+    t.decimal "lon",                         :precision => 9,  :scale => 6
+    t.string  "sp"
+    t.string  "author"
+    t.integer "cityear"
+    t.string  "trt"
+    t.date    "date"
+    t.integer "month"
+    t.integer "year"
+    t.decimal "mean",                        :precision => 16, :scale => 4
+    t.integer "n"
+    t.string  "statname"
+    t.decimal "stat",                        :precision => 16, :scale => 4
+    t.text    "notes"
+    t.string  "user",         :limit => 100,                                :default => ""
+    t.integer "checked",                                                    :default => 0
+    t.integer "access_level"
+    t.integer "user_id"
+  end
 
 end

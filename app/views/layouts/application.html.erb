@@ -150,7 +150,7 @@
                 <% if logged_in? -%>
                 ['Log out','/logout',{'tw':'0','sb':'Log out'}],
                 <% else -%>
-                ['Log in','/login',{'tw':'0','sb':'Log in'}],
+                ['Log in',<%= "'#{login_path}'" -%>,{'tw':'0','sb':'Log in'}],
                 ['Create Account','/signup',{'tw':'0','sb':'Create Account'}],
                 <% end -%>
                 

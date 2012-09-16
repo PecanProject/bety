@@ -51,6 +51,7 @@ module AuthenticatedSystem
                                 "LikelihoodsController.ALL",
                                 "ModelsController.ALL",
                                 "InputsRunsController.ALL",
+                                "YieldsviewsController.ALL",
                                 "InputsVariablesController.ALL",
                                 "InputsController.ALL" ]
       manage_requirement = ["CitationsController.ALL",
