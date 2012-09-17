@@ -12,3 +12,4 @@ local/counties-20110605
 log
 orig.public
 public/maps
+config/environments/development.rb
