@@ -73,5 +73,14 @@ class DBFile < ActiveRecord::Base
   def select_default
     self.to_s
   end
+ 
+  def download?
+
+    if (!self.md5.blank? and File.exists?(File.join(DBFile.make_md5_path(self.md5),self.md5)) and !File.join(DBFile.make_md5_path(file.md5),file.md5).match(/[^A-Za-z0-9\/]/)) or (File.exists?(self.file_path) and ACCESSIBLE_FOLDERS.select { |af| self.file_path.index(af) == 0 }.length > 0 ) 
+      return true
+    else
+       return false
+    end
+  end
 
 end

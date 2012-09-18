@@ -13,8 +13,9 @@ class DbfilesController < ApplicationController
     # by modifying the file_path attribute. By recalculating the file path here
     # it should not matter if they change it in the interface it will not work.
     # 
-    if file and File.exists?(File.join(DBFile.make_md5_path(file.md5),file.md5)) and !File.join(DBFile.make_md5_path(file.md5),file.md5).match(/[^A-Za-z0-9\/]/)  # On host machine, in proper path, does not match anything out the ordinary
-      send_file file.file_path, :type => file.format.mime_type, :disposition => 'inline', :filename => file.file_name
+    if file and file.download?
+      #send_file file.file_path, :type => file.format.mime_type, :disposition => 'inline', :filename => file.file_name
+      send_file file.file_path, :disposition => 'inline', :filename => file.file_name
     else
       redirect_to no_dbfiles_path
     end
