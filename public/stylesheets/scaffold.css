@@ -615,6 +615,9 @@ div#mapTypeControl div {
   background-repeat: no-repeat;
   background-position: right center;
 }
+.pretty th a {
+  color: white;
+}
 
 .pretty th .asc {
   background-image: url(/images/up_arrow.gif);
