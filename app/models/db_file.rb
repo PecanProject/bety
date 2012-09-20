@@ -1,3 +1,6 @@
+# It should be noted that all "paperclip" references are NOT utilizing the paperclip gem
+# But intead a custom-rolled codebase with the same name.
+
 class DBFile < ActiveRecord::Base
 
   set_table_name 'dbfiles'
