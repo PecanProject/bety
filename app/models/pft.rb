@@ -1,4 +1,4 @@
-class PFT < ActiveRecord::Base
+class Pft < ActiveRecord::Base
 
   include Overrides
   include Cloner

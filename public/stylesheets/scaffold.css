@@ -157,7 +157,7 @@ body {
 }
 
 
-hr, 
+
 div#navigation h2,
 div#section h2,
 .access
@@ -174,7 +174,6 @@ div#section h2,
 div#navigation:after, 
 div#section ul:after, 
 div#content-wrapper:after,
-div#footer:after
 {
   content: ".";
   display: block;
@@ -188,7 +187,6 @@ div#footer:after
 div#navigation,
 div#section ul, 
 div#content,
-div#footer
 {
   display: inline-block;
 }
@@ -196,7 +194,6 @@ div#footer
 html[xmlns] div#navigation,
 html[xmlns] div#section ul, 
 html[xmlns] div#content,
-html[xmlns] div#footer
 {
   display: block;
 }
@@ -204,7 +201,6 @@ html[xmlns] div#footer
 * html div#navigation,
 * html div#section ul, 
 * html div#content, 
-* html div#footer
 {
   height: 1%;
 }
@@ -296,10 +292,6 @@ div#navigation-wrapper {
   border: 1px white solid;
 }
 
-div#footer {
-  min-width: 820px;
-  background: white;
-}
 
 div#footer-wrapper {
   position: relative;
@@ -541,7 +533,7 @@ h3 {
   font-size:12px;
   font-weight:bold;
   color:#0bab0a;
-  text-transform:uppercase;
+/*  text-transform:uppercase;*/
 }
 
 
@@ -614,9 +606,6 @@ div#mapTypeControl div {
   padding-right: 12px;
   background-repeat: no-repeat;
   background-position: right center;
-}
-.pretty th a {
-  color: white;
 }
 
 .pretty th .asc {

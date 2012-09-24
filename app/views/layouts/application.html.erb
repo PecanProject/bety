@@ -3,21 +3,46 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html;>charset=iso-8859-1" />
-  <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />
-  <meta name="keywords" content="biofuel,biofuels,bioenergy,bioscience,biosciences,miscanthus,switchgrass,ethanol,alternative energy"> 
   <title>Energy Biosciences Institute</title>
+  <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />
+  <meta name="keywords" content="biofuel, biofuels, bioenergy, bioscience, biosciences, miscanthus, switchgrass, ethanol, alternative energy"> 
   <meta name="description" content="The Energy Biosciences Institute (EBI) is a new research and development organization that harnesses advanced knowledge in biology, the physical sciences, engineering, and environmental and social sciences to devise viable solutions to global energy challenges and reduce the impact of fossil fuels to global warming.  The worlds first research institution solely dedicated to the new field of energy bioscience, is initially focusing on the development of next-generation biofuels, but will also look into various applications of biology to the energy sector." />
-  <meta name="keywords" content="biofuel, biofuels, bioenergy, miscanthus, switchgrass, alternative energy, ethanol" />
-  <meta name="Generator" content="Joomla! - Copyright (C) 2005 - 2007 Open Source Matters. All rights reserved." />
   <meta name="robots" content="index, follow" />
 
-  <!--link rel="stylesheet" href="/stylesheets/scaffold.css" type="text/css" /-->
+  <!-- Old CSS -->
   <%= stylesheet_link_tag "scaffold" %>
-  <%= javascript_include_tag :all, :cache => "cache/all" %>
+  <!-- Redesign CSS -->
+  <%= stylesheet_link_tag "base", "grid", "dropdown", "demo", "layout" %>
+
   <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
+  <!--  It seems so far that everything works in 1.7.2.-->
+  <%#= javascript_include_tag 'libs/jquery-1.6.2.min.js' %>
+  <%= javascript_include_tag :all, :cache => "cache/all" %>
+
+  <!-- ############## BEGAN verifying all JS imports from here ############## -->
+  <!--[if (lt IE 9) & (!IEMobile)]>
+    <script src="js/libs/selectivizr-min.js"></script>
+  <![endif]-->
+  <%= javascript_include_tag 'libs/respond.min.js', 'libs/modernizr-2.0.6.min.js' %>
+
+
+  <!-- For iPhone 4 -->
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/h/apple-touch-icon.png">
+  <!-- For iPad 1-->
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/m/apple-touch-icon.png">
+  <!-- For iPhone 3G, iPod Touch and Android -->
+  <link rel="apple-touch-icon-precomposed" href="images/l/apple-touch-icon-precomposed.png">
+  <!-- For Nokia -->
+  <link rel="shortcut icon" href="images/l/apple-touch-icon.png">
+  <!-- For everything else -->
+  <link rel="shortcut icon" href="/favicon.ico">
+  
+  <!-- ############## ENDED verifying all JS imports from here ############## -->
+  
   <script>
     jQuery.noConflict();
   </script>
+  
   <%= javascript_include_tag 'lazy/simple_search.js' %>
   <%= javascript_include_tag 'lazy/application.js' %>
 
@@ -25,13 +50,12 @@
 
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
   <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script> 
-  <!--script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAPDXibh0Ct5qeTjwb_CxJtRS9gVzyFzPv7IPkHqaHBvoC5L78cxSgvWIi1gPiS0G0Y2HaRozqznly3g" type="text/javascript"></script-->
+  <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAPDXibh0Ct5qeTjwb_CxJtRS9gVzyFzPv7IPkHqaHBvoC5L78cxSgvWIi1gPiS0G0Y2HaRozqznly3g" type="text/javascript"></script>
   <% end %>
 
   <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />	
   <%= stylesheet_link_tag 'themes/default' %>
   <%= stylesheet_link_tag 'themes/alphacube' %>
-  <%= javascript_include_tag 'window'%>
 
   <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -43,131 +67,93 @@
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
-
   </script>
 
 </head>
 <body>
   <!--[if IE ]>
     <style>
-    ul.mainlevel-suckerfish-horizontal, .mainlevel-suckerfish-horizontal ul {
-      margin-left:32px;
-      margin-top:0px;
-    }
-    
-    table.moduletable-upevents {
-      margin-left: 10px;
-      padding-top:18px;
-    }
-        
+      ul.mainlevel-suckerfish-horizontal, .mainlevel-suckerfish-horizontal ul { margin-left:32px; margin-top:0px; }
+      table.moduletable-upevents { margin-left: 10px; padding-top:18px; }
     </style>
   <![endif]-->
-  <div id="banner">
-    <div id="banner-wrapper">
-      <a class="logo" href="http://www.energybiosciencesinstitute.org/index.php" title="EBI">EBI</a>
-      <a class="bety-db" href="/" title="BETY-DB">BETY-DB</a>
-      <ul>
-        <li><a href="/contacts/" title="Contact US">Contact Us</a></li>
-        <li>|</li>
-        <li><a href="/" title="Home">Home</a></li>
-      </ul>
-    </div><!-- end banner-wrapper -->
-  </div><!-- end banner -->
-
-  <div id="navigation">
-    <div id="navigation-wrapper">
-      <table cellpadding="0" cellspacing="0" class="moduletable">
-        <tr>
-          <td>
-            <script type="text/javascript">
-              var betydb_MENU_ITEMS = [
-              <% if logged_in? %>
-                ['BETY-DB',<%= "'#{root_url}'" -%>,{'tw':'0','sb':'BETY-DB'},
-                ['Citations',<%= "'#{citations_path}'" -%>,{'tw':'0','sb':'Citations'},
-                ['New',<%= "'#{new_citation_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Covariates',<%= "'#{covariates_path}'" -%>,{'tw':'0','sb':'Covariates'},
-                ['New',<%= "'#{new_covariate_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Cultivars',<%= "'#{cultivars_path}'" -%>,{'tw':'0','sb':'Cultivars'},
-                ['New',<%= "'#{new_cultivar_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Ensembles',<%= "'#{ensembles_path}'" -%>,{'tw':'0','sb':'Ensembles'},
-                ['New',<%= "'#{new_ensemble_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Entities',<%= "'#{entities_path}'" -%>,{'tw':'0','sb':'Entities'},
-                ['New',<%= "'#{new_entity_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Formats',<%= "'#{formats_path}'" -%>,{'tw':'0','sb':'Formats'},
-                ['New',<%= "'#{new_format_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Managements',<%= "'#{managements_path}'" -%>,{'tw':'0','sb':'Managements'},
-                ['New',<%= "'#{new_management_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Methods',<%= "'#{methods_path}'" -%>,{'tw':'0','sb':'Methods'},
-                ['New',<%= "'#{new_method_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['PFTs',<%= "'#{pfts_path}'" -%>,{'tw':'0','sb':'PFTs'},
-                ['New',<%= "'#{new_pft_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Priors',<%= "'#{priors_path}'" -%>,{'tw':'0','sb':'Priors'},
-                ['New',<%= "'#{new_prior_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Sites',<%= "'#{sites_path}'" -%>,{'tw':'0','sb':'Sites'},
-                ['New',<%= "'#{new_site_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Species',<%= "'#{species_index_path}'" -%>,{'tw':'0','sb':'Species'},
-                ['New',<%= "'#{new_species_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Traits',<%= "'#{traits_path}'" -%>,{'tw':'0','sb':'Traits'},
-                ['New',<%= "'#{new_trait_path}'" -%>,{'tw':'0','sb':'New'}],
-                ['CSV',<%= "'#{traits_path :format => :csv }'" -%>,{'tw':'0','sb':'CSV'}],],
-                ['Treatments',<%= "'#{treatments_path}'" -%>,{'tw':'0','sb':'Treatments'},
-                ['New',<%= "'#{new_treatment_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Variables',<%= "'#{variables_path}'" -%>,{'tw':'0','sb':'Variables'},
-                ['New',<%= "'#{new_variable_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Yields',<%= "'#{yields_path}'" -%>,{'tw':'0','sb':'Yields'},
-                ['New',<%= "'#{new_yield_path}'" -%>,{'tw':'0','sb':'New'}],
-                ['CSV',<%= "'#{yields_path :format => :csv}'" %>,{'tw':'0','sb':'CSV'}],],],
-                ['New Record',<%= "'#{citations_path}'" -%>,{'tw':'0','sb':'New Record'},
-                ['Citations',<%= "'#{citations_path}'" -%>,{'tw':'0','sb':'Citations'}],
-                ['Sites',<%= "'#{sites_path}'" -%>,{'tw':'0','sb':'Sites'}],
-                ['Treatments',<%= "'#{treatments_path}'" -%>,{'tw':'0','sb':'Treatments'}],
-                ['Traits',<%= "'#{traits_path}'" -%>,{'tw':'0','sb':'Traits'}],
-                ['Yields',<%= "'#{yields_path}'" -%>,{'tw':'0','sb':'Yields'}],],
+  
+  <div id="header">
+	  <div class="container">
+		  <div class="sixteen columns">
+			  <h1 class="remove-bottom">
+			  <a href="ebi.html" class="org">Energy Biosciences Institute</a>
+			  <a href="/" class="site"><strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small></a>
+			  </h1>
+			  <div id="user_name"> User: <%= current_user %></div>
+		  </div>
+	  </div><!-- container -->
+  </div>
+  
+  
+  <div class="nav">    
+  <div class="container">
+	<div class="sixteen columns">
+	  <nav id="access" role="navigation">
+        <div class="skip-link"><a href="#content">Skip to content</a></div>
+        <div class="menu">
+          <ul class="main-menu sf-menu clearfix">
+            <li class="menu-home"><%= link_to "Home", root_path %></li>
+            <li class="menu-docs"> <a href="#Docs" >Docs</a>
+              <ul class="sub-menu">
+                <li><a href="https://www.betydb.org/dbdocumentation_users.pdf" >User Guide (PDF)</a></li>
+                <li><a href="https://www.betydb.org/dbdocumentation_data_entry.pdf" >Data Entry Guide (PDF)</a></li>
+              </ul>
+            </li>
+            <li class="menu-maps"><a href="#Maps" >Maps</a>
+              <ul class="sub-menu">
+                <li><%= link_to "Yield Forecast Maps", :controller => "maps", :action => "location_yields" %></li>
+                <li><%= link_to "Trait Data for Each Site", :controller => "maps", :action => "traits_from_sites" %></li>
+                <li><%= link_to "Yield Data for Each Site", :controller => "maps", :action => "yields_from_sites" %></li>
+                <li><%= link_to "Sites by Species", :controller => "maps", :action => "sites_by_species" %></li>
+                <li><%= link_to "Search for Sites", :controller => "maps", :action => "sites_from_search" %></li>
+              </ul>
+            </li>
+            <li class="menu-data"><a href="#Data" >Data</a>
+              <ul class="sub-menu">
+                <li><%= link_to "Species Database", :controller => "maps", :action => "species_details" %></li>
+              </ul>
+            </li>
+            <li class="menu-new"><a href="#New">New</a>
+              <ul class="sub-menu">
+                <li><%= link_to "Citation", :controller => "citations", :action => "new" %></li>
+                <li><%= link_to "Site", :controller => "sites", :action => "new" %></li>
+                <li><%= link_to "Traits", :controller => "traits", :action => "new" %></li>
+                <li><%= link_to "Treatments", :controller => "treatments", :action => "new" %></li>
+                <li><%= link_to "Yields", :controller => "yields", :action => "new" %></li>
+              </ul>
+            </li>
+            <li class="menu-admin"><a href="#Admin" >Admin</a>
+              <ul class="sub-menu">
+                <li><%= link_to "Users", users_path %></li>
+                <!-- This links to something like: redmine/projects/bety-db/issues/new -->
+                <li><a href="#Errors" >Errors</a></li>
+                <li><%= link_to "Location Yields", :controller => "maps", :action => "location_yields" %></li>
+              </ul>
+            </li>
+            <li class="menu-login">
+              <!-- Logic on logged in or not... to determine  -->
+              <% if current_user.nil? %>
+                <%= link_to "Login", login_path %>
+              <% else %>
+                <%= link_to "Logout", logout_path %>
               <% end %>
-                ['Documentation','/',{'tw':'0','sb':'Documentation'},
-                ['Users Guide','/dbdocumentation_users.pdf',{'tw':'0','sb':'Users Guide'}],
-                ['Data Entry Guide','/dbdocumentation_data_entry.pdf',{'tw':'0','sb':'Data Entry Guide'}],],
-                <% if authorized?("index","RunsController") -%>
-                ['Model-Runs','/',{'tw':'0','sb':'Model-Runs'},
-                ['Posteriors',<%= "'#{posteriors_path}'" -%>,{'tw':'0','sb':'Posteriors'}],
-                ['Runs',<%= "'#{runs_path}'" -%>,{'tw':'0','sb':'Runs'}],
-                ['Likelihoods',<%= "'#{likelihoods_path}'" -%>,{'tw':'0','sb':'likelihoods'}],
-                ['Models',<%= "'#{models_path}'" -%>,{'tw':'0','sb':'Models'}],
-                ['Machines',<%= "'#{machines_path}'" -%>,{'tw':'0','sb':'Machines'}],
-                ['Files',<%= "'#{dbfiles_path}'" -%>,{'tw':'0','sb':'Files'},
-                ['New',<%= "'#{new_dbfile_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Workflows',<%= "'#{workflows_path}'" -%>,{'tw':'0','sb':'Workflows'},
-                ['New',<%= "'#{new_workflow_path}'" -%>,{'tw':'0','sb':'New'}],],
-                ['Inputs',<%= "'#{inputs_path}'" -%>,{'tw':'0','sb':'Inputs'},
-                ['New',<%= "'#{new_input_path}'" -%>,{'tw':'0','sb':'New'}],],],
-                <% end -%>
-                <% if logged_in? -%>
-                ['Admin','/',{'tw':'0','sb':'Admin'},
-                ['Users',<%= "'#{users_path}'" -%>,{'tw':'0','sb':'Users'}],
-                ['Errors','/redmine/projects/bety-db/issues/new',{'tw':'0','sb':'Errors'}],
-                ['Location Yields','/maps/location_yields/',{'tw':'0','sb':'Location Yields'}],],
-                <% end -%>
-                <% if logged_in? -%>
-                ['Log out',<%= "'#{logout_path}'" %>,{'tw':'0','sb':'Log out'}],
-                <% else -%>
-                ['Log in',<%= "'#{login_path}'" -%>,{'tw':'0','sb':'Log in'}],
-                ['Create Account','/signup',{'tw':'0','sb':'Create Account'}],
-                <% end -%>
-                
-              ];
-            </script>
-            <div style="position:relative; top:0px; left:0px; width:auto; min-height:26px;">
-                <div style="position:absolute; top:0px; width:930px; left:50%; margin-left:-465px; height:26px;">
-                  <script type="text/javascript">
-                    new menu (betydb_MENU_ITEMS, topmenu_MENU_POS);
-                  </script>
-                </div>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </div><!-- end navigation-wrapper -->
-  </div><!-- end navigation -->
+            </li>
+          </ul>
+        </div>
+      </nav><!-- #access -->
+			<hr />
+		</div>
+	</div><!-- container -->
+</div> 
+  
+  
+  
   <div id="content">
     <div id="content-wrapper">
 
@@ -180,8 +166,11 @@
         <hr>
         
       <% end %>
+      
       <% if flash[:notice] %>
-        <h5 class="centered"><%= flash[:notice] %></h5>
+        <div id="flash_notice">
+          <h5 class="centered"><%= flash[:notice] %></h5>
+        </div>
         <% flash[:notice] = nil %>
         <hr>
       <% end %>
@@ -191,40 +180,50 @@
       
       <br />
 
-      <%= render :partial => "users/user_bar" %>
+      <%#= render :partial => "users/user_bar" %>
     </div><!-- end content-wrapper -->
   </div><!-- end content -->
 
-  <div id="footer">
-    <div id="footer-wrapper">
-      <div id="footer-divide"></div>
-      <div id="footer-logos">
-        <div id="bp-logo"><a href="http://www.bp.com" title="BP"><span>BP</span></a></div>
-        <div id="illinois-logo"><a href="http://illinois.edu" title="Illinois"><span>Illinois</span></a></div>
-        <div id="berkeley-logo"><a href="http://www.berkeley.edu" title="Berkeley"><span>Berkeley</span></a></div>
-        <div id="lbl-logo"><a href="http://www.lbl.gov" title="LBL"><span>LBL</span></a></div>
+  
+  
+  <div id="footer">   
+    <div class="container">
+		  <div class="sixteen columns">
+      	<h2>Footer</h2>
+	      <div class="three columns alpha">
+        	<h3><strong>BETY</strong>db</h3>
+          <ul>
+          	<li><a href="http://www.betydb.org">Homepage</a></li>
+          	<li><a href="#">Documentation</a></li>
+          	<li><a href="#">Maps &amp; Data</a></li>
+          	<li><%= link_to "Create Account", login_path %></li>
+          </ul>
+        </div>
+	      <div class="three columns">
+        	<h3><strong>Contact</strong> Info</h3>
+          <ul>
+          	<li><a href="">Report a problem</a></li>
+          	<li><%= link_to "Send us a message", :controller => "contacts" %></li>
+          </ul>
+        </div>
+	      <div class="four columns">
+        	<h3><strong>Translate</strong> Page</h3>
+          <div id="google_translate_element"></div>
+        </div>
+	      <div class="six columns omega">
+        	<p>David LeBauer, Dan Wang, and Michael Dietze, 2010. Biofuel Ecophysiological Traits and Yields Database Version 1.0. Energy Biosciences Institute, Urbana, IL</p>
+          <p>Copyright &copy; 2010-2012 Energy Biosciences Institute</p>
+        </div>
+        <hr />
+        <div class="footnotes">     
+        <div class="four columns alpha"><a href="http://illinois.edu" title="University of Illinois at Urbana-Champaign" class="illinois">University of Illinois at Urbana-Champaign</a></div>
+        <div class="four columns"><a href="http://www.berkeley.edu" title="University of California, Berkeley" class="berkeley">University of California, Berkeley</a></div>
+        <div class="four columns"><a href="http://www.lbl.gov" title="Lawrence Berkeley National Laboratory (LBL)" class="lbl">Lawrence Berkeley National Laboratory</a></div>
+        <div class="four columns omega"><a href="http://www.bp.com" title="British Petroleum (BP)" class="bp">British Petroleum (BP)</a></div>
+        </div>
       </div>
-      <div id="footer-divide"></div>
-      <br>
-      <div id=footer-copyright>
-        <div id="google_translate_element"></div>
-        <script>
-            function googleTranslateElementInit() {
-              new google.translate.TranslateElement({
-              pageLanguage: 'en',
-              layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-              }, 'google_translate_element');
-            }
-        </script>
-        <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-      </div>
-      <br>
-      <div id="footer-divide"></div>
-      <br>
-      <div>
-        <p width="480px">David LeBauer, Dan Wang, and Michael Dietze, 2010. Biofuel Ecophysiological Traits and Yields Database Version 1.0. Energy Biosciences Institute, Urbana, IL</p>
-      </div>
-    </div><!-- end footer-wrapper -->
-  </div><!-- end footer -->
+	  </div><!-- container -->
+  </div>
+  
 </body>
 </html>

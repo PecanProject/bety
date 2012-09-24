@@ -3,7 +3,8 @@ class SessionsController < ApplicationController
 
   filter_parameter_logging :password
 
-  # render new.rhtml
+  # This should be used on opening the home page ... before a user logs in
+  # On attempting to login from this page ... feed it to the create method in this controller
   def new
   end
 
@@ -27,6 +28,7 @@ class SessionsController < ApplicationController
       note_failed_signin
       @login       = params[:login]
       @remember_me = params[:remember_me]
+      flash[:notice] = "The login credentials you provided are incorrect."
       render :action => 'new'
     end
   end
