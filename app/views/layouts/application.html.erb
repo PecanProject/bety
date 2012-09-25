@@ -9,10 +9,7 @@
   <meta name="description" content="The Energy Biosciences Institute (EBI) is a new research and development organization that harnesses advanced knowledge in biology, the physical sciences, engineering, and environmental and social sciences to devise viable solutions to global energy challenges and reduce the impact of fossil fuels to global warming.  The worlds first research institution solely dedicated to the new field of energy bioscience, is initially focusing on the development of next-generation biofuels, but will also look into various applications of biology to the energy sector." />
   <meta name="robots" content="index, follow" />
 
-  <!-- Old CSS -->
-  <%= stylesheet_link_tag "scaffold" %>
-  <!-- Redesign CSS -->
-  <%= stylesheet_link_tag "base", "grid", "dropdown", "demo", "layout" %>
+
 
   <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
   <!--  It seems so far that everything works in 1.7.2.-->
@@ -68,6 +65,11 @@
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
   </script>
+  
+    <!-- Old CSS -->
+  <%= stylesheet_link_tag "scaffold" %>
+  <!-- Redesign CSS -->
+  <%= stylesheet_link_tag "base", "grid", "dropdown", "demo", "layout" %>
 
 </head>
 <body>
@@ -85,7 +87,11 @@
 			  <a href="ebi.html" class="org">Energy Biosciences Institute</a>
 			  <a href="/" class="site"><strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small></a>
 			  </h1>
-			  <div id="user_name"> User: <%= current_user %></div>
+			  <div id="user_name">
+			    <% if current_user != nil %>
+  			    User: <%= current_user %>
+  			  <% end %>
+			  </div>
 		  </div>
 	  </div><!-- container -->
   </div>
@@ -105,18 +111,54 @@
                 <li><a href="https://www.betydb.org/dbdocumentation_data_entry.pdf" >Data Entry Guide (PDF)</a></li>
               </ul>
             </li>
-            <li class="menu-maps"><a href="#Maps" >Maps</a>
+            <li class="menu-maps"><%= link_to "Maps", :controller => "maps", :action => "location_yields" %></a>
               <ul class="sub-menu">
-                <li><%= link_to "Yield Forecast Maps", :controller => "maps", :action => "location_yields" %></li>
-                <li><%= link_to "Trait Data for Each Site", :controller => "maps", :action => "traits_from_sites" %></li>
-                <li><%= link_to "Yield Data for Each Site", :controller => "maps", :action => "yields_from_sites" %></li>
+<!--                <li></li>-->
                 <li><%= link_to "Sites by Species", :controller => "maps", :action => "sites_by_species" %></li>
                 <li><%= link_to "Search for Sites", :controller => "maps", :action => "sites_from_search" %></li>
               </ul>
             </li>
+            
+            <!-- Data -->
+            <!--- By species-->
+            <!---- Miscanthus-->
+            <!---- Switchgrass-->
+            <!---- Sugarcane-->
+            <!---- Poplar-->
+            <!---- Willow-->
+            <!---- Other (leads to search by species)-->
+            <!--- By site-->
+            <!---- Traits (leads to trait data by site)-->
+            <!---- Yields (leads to yield data by site)-->
+
             <li class="menu-data"><a href="#Data" >Data</a>
               <ul class="sub-menu">
-                <li><%= link_to "Species Database", :controller => "maps", :action => "species_details" %></li>
+                <li><a class="nav-no-hover">&nbsp;&nbsp; -- Species:</a></li>
+                
+                <li><%= link_to " Miscanthus -- Traits", "/maps/traits?species=1477" %></li>
+                <li><%= link_to " Miscanthus -- Yields", "/maps/yields?species=1477" %></li>
+                
+                <li><%= link_to " Switchgrass -- Traits", "/maps/traits?species=938" %></li>
+                <li><%= link_to " Switchgrass -- Yields", "/maps/yields?species=938" %></li>
+                
+                <li><%= link_to " Sugarcane -- Traits", "/maps/traits?species=2984" %></li>
+                <li><%= link_to " Sugarcane -- Yields", "/maps/yields?species=2984" %></li>
+                
+<!--                <li><%= link_to " Poplar -- Traits", "/maps/traits?species=4" %></li>-->
+<!--                <li><%= link_to " Poplar -- Yields", "/maps/yields?species=4" %></li>-->
+<!--                -->
+<!--                <li><%= link_to " Willow -- Traits", "/maps/traits?species=31" %></li>-->
+<!--                <li><%= link_to " Willow -- Yields", "/maps/yields?species=31" %></li>-->
+
+                <li><%= link_to " Loblolly Pine -- Traits", "/maps/traits?species=1019" %></li>
+                <li><%= link_to " Loblolly Pine -- Yields", "/maps/yields?species=1019" %></li>
+                
+                
+                <li><%= link_to "Other", :controller => "maps", :action => "species_details" %></li>
+                
+                <li><a class="nav-no-hover">&nbsp;&nbsp; -- Site:</a></li>
+                <li><%= link_to "Traits", :controller => "maps", :action => "traits_from_sites" %></li>
+                <li><%= link_to "Yields", :controller => "maps", :action => "yields_from_sites" %></li>
               </ul>
             </li>
             <li class="menu-new"><a href="#New">New</a>
