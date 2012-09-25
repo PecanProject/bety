@@ -133,32 +133,32 @@
 
             <li class="menu-data"><a href="#Data" >Data</a>
               <ul class="sub-menu">
-                <li><a class="nav-no-hover">&nbsp;&nbsp; -- Species:</a></li>
-                
-                <li><%= link_to " Miscanthus -- Traits", "/maps/traits?species=1477" %></li>
-                <li><%= link_to " Miscanthus -- Yields", "/maps/yields?species=1477" %></li>
-                
-                <li><%= link_to " Switchgrass -- Traits", "/maps/traits?species=938" %></li>
-                <li><%= link_to " Switchgrass -- Yields", "/maps/yields?species=938" %></li>
-                
-                <li><%= link_to " Sugarcane -- Traits", "/maps/traits?species=2984" %></li>
-                <li><%= link_to " Sugarcane -- Yields", "/maps/yields?species=2984" %></li>
+                <li><a class="nav-no-hover">By Species:</a></li>
+                <li><a class="nav-no-hover">&nbsp;&nbsp;&nbsp;&nbsp;Miscanthus</a></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Traits", "/maps/traits?species=1477" %></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Yields", "/maps/yields?species=1477" %></li>
+                <li><a class="nav-no-hover">&nbsp;&nbsp;&nbsp;&nbsp;Switchgrass</a></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Traits", "/maps/traits?species=938" %></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Yields", "/maps/yields?species=938" %></li>
+                <li><a class="nav-no-hover">&nbsp;&nbsp;&nbsp;&nbsp;Sugarcane</a></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Traits", "/maps/traits?species=2984" %></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Yields", "/maps/yields?species=2984" %></li>
                 
 <!--                <li><%= link_to " Poplar -- Traits", "/maps/traits?species=4" %></li>-->
 <!--                <li><%= link_to " Poplar -- Yields", "/maps/yields?species=4" %></li>-->
-<!--                -->
+
 <!--                <li><%= link_to " Willow -- Traits", "/maps/traits?species=31" %></li>-->
 <!--                <li><%= link_to " Willow -- Yields", "/maps/yields?species=31" %></li>-->
 
-                <li><%= link_to " Loblolly Pine -- Traits", "/maps/traits?species=1019" %></li>
-                <li><%= link_to " Loblolly Pine -- Yields", "/maps/yields?species=1019" %></li>
+<!--                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp; Loblolly Pine -- Traits", "/maps/traits?species=1019" %></li>-->
+<!--                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp; Loblolly Pine -- Yields", "/maps/yields?species=1019" %></li>-->
+
                 
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp; Other Species", :controller => "maps", :action => "species_details" %></li>
                 
-                <li><%= link_to "Other", :controller => "maps", :action => "species_details" %></li>
-                
-                <li><a class="nav-no-hover">&nbsp;&nbsp; -- Site:</a></li>
-                <li><%= link_to "Traits", :controller => "maps", :action => "traits_from_sites" %></li>
-                <li><%= link_to "Yields", :controller => "maps", :action => "yields_from_sites" %></li>
+                <li><a class="nav-no-hover">By Site:</a></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp; Traits", :controller => "maps", :action => "traits_from_sites" %></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp; Yields", :controller => "maps", :action => "yields_from_sites" %></li>
               </ul>
             </li>
             <li class="menu-new"><a href="#New">New</a>
