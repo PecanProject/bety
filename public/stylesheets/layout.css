@@ -10,6 +10,9 @@
 body {
 	background: #efefef;
 }
+#google_translate_element {
+  text-align: left;
+}
 #flash_notice div.bg {
   background-color: yellowGreen;
   padding: 10px;
