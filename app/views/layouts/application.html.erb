@@ -36,9 +36,8 @@
   
   <!-- ############## ENDED verifying all JS imports from here ############## -->
   
-  <script>
-    jQuery.noConflict();
-  </script>
+  <!--  This disables the use of $ as the jQuery alias-->
+  <script> jQuery.noConflict(); </script>
   
   <%= javascript_include_tag 'lazy/simple_search.js' %>
   <%= javascript_include_tag 'lazy/application.js' %>
@@ -87,7 +86,7 @@
 			  <a href="ebi.html" class="org">Energy Biosciences Institute</a>
 			  <a href="/" class="site"><strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small></a>
 			  </h1>
-			  <div id="user_name">
+			  <div id="header_user_name">
 			    <% if current_user != nil %>
   			    User: <%= current_user %>
   			  <% end %>
@@ -187,10 +186,12 @@
       
       <% if flash[:notice] %>
         <div id="flash_notice">
-          <h5 class="centered"><%= flash[:notice] %></h5>
+          <div class="bg">
+            <h5 class="centered"><%= flash[:notice] %></h5>
+          </div>
+          <hr>
         </div>
         <% flash[:notice] = nil %>
-        <hr>
       <% end %>
 
       <br />
@@ -214,7 +215,7 @@
           	<li><a href="http://www.betydb.org">Homepage</a></li>
           	<li><a href="#">Documentation</a></li>
           	<li><a href="#">Maps &amp; Data</a></li>
-          	<li><%= link_to "Create Account", login_path %></li>
+          	<li><%= link_to "Create Account", signup_path %></li>
           </ul>
         </div>
 	      <div class="three columns">

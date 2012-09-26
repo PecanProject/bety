@@ -241,7 +241,8 @@
 		font-weight: bold;
 		font-size: 13px;  }
 	select {
-		width: 220px; }
+		width: 220px; 
+    height: 28px; }
 	input[type="checkbox"] {
 		display: inline; }
 	label span,

@@ -10,7 +10,7 @@
 body {
 	background: #efefef;
 }
-#flash_notice {
+#flash_notice div.bg {
   background-color: yellowGreen;
   padding: 10px;
 }
@@ -160,7 +160,7 @@ tr.alt td, tr.alt th {
 	text-decoration: none;
 	}
 
-#user_name {
+#header_user_name {
   text-align: right;
   padding-top: 18px;
 }
