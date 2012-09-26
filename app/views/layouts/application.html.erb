@@ -66,7 +66,7 @@
     })();
   </script>
   
-    <!-- Old CSS -->
+  <!-- Old CSS -->
   <%= stylesheet_link_tag "scaffold" %>
   <!-- Redesign CSS -->
   <%= stylesheet_link_tag "base", "grid", "dropdown", "demo", "layout" %>
@@ -105,33 +105,21 @@
         <div class="menu">
           <ul class="main-menu sf-menu clearfix">
             <li class="menu-home"><%= link_to "Home", root_path %></li>
-            <li class="menu-docs"> <a href="#Docs" >Docs</a>
+            <li class="menu-docs"> <a>Docs</a>
               <ul class="sub-menu">
                 <li><a href="https://www.betydb.org/dbdocumentation_users.pdf" >User Guide (PDF)</a></li>
                 <li><a href="https://www.betydb.org/dbdocumentation_data_entry.pdf" >Data Entry Guide (PDF)</a></li>
               </ul>
             </li>
+            
             <li class="menu-maps"><%= link_to "Maps", :controller => "maps", :action => "location_yields" %></a>
               <ul class="sub-menu">
-<!--                <li></li>-->
                 <li><%= link_to "Sites by Species", :controller => "maps", :action => "sites_by_species" %></li>
                 <li><%= link_to "Search for Sites", :controller => "maps", :action => "sites_from_search" %></li>
               </ul>
             </li>
-            
-            <!-- Data -->
-            <!--- By species-->
-            <!---- Miscanthus-->
-            <!---- Switchgrass-->
-            <!---- Sugarcane-->
-            <!---- Poplar-->
-            <!---- Willow-->
-            <!---- Other (leads to search by species)-->
-            <!--- By site-->
-            <!---- Traits (leads to trait data by site)-->
-            <!---- Yields (leads to yield data by site)-->
 
-            <li class="menu-data"><a href="#Data" >Data</a>
+            <li class="menu-data"><a>Data</a>
               <ul class="sub-menu">
                 <li><a class="nav-no-hover">By Species:</a></li>
                 <li><a class="nav-no-hover">&nbsp;&nbsp;&nbsp;&nbsp;Miscanthus</a></li>
@@ -142,26 +130,14 @@
                 <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Yields", "/maps/yields?species=938" %></li>
                 <li><a class="nav-no-hover">&nbsp;&nbsp;&nbsp;&nbsp;Sugarcane</a></li>
                 <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Traits", "/maps/traits?species=2984" %></li>
-                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Yields", "/maps/yields?species=2984" %></li>
-                
-<!--                <li><%= link_to " Poplar -- Traits", "/maps/traits?species=4" %></li>-->
-<!--                <li><%= link_to " Poplar -- Yields", "/maps/yields?species=4" %></li>-->
-
-<!--                <li><%= link_to " Willow -- Traits", "/maps/traits?species=31" %></li>-->
-<!--                <li><%= link_to " Willow -- Yields", "/maps/yields?species=31" %></li>-->
-
-<!--                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp; Loblolly Pine -- Traits", "/maps/traits?species=1019" %></li>-->
-<!--                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp; Loblolly Pine -- Yields", "/maps/yields?species=1019" %></li>-->
-
-                
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Yields", "/maps/yields?species=2984" %></li>               
                 <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp; Other Species", :controller => "maps", :action => "species_details" %></li>
-                
                 <li><a class="nav-no-hover">By Site:</a></li>
                 <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp; Traits", :controller => "maps", :action => "traits_from_sites" %></li>
                 <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp; Yields", :controller => "maps", :action => "yields_from_sites" %></li>
               </ul>
             </li>
-            <li class="menu-new"><a href="#New">New</a>
+            <li class="menu-new"><a>New</a>
               <ul class="sub-menu">
                 <li><%= link_to "Citation", :controller => "citations", :action => "new" %></li>
                 <li><%= link_to "Site", :controller => "sites", :action => "new" %></li>
@@ -170,7 +146,7 @@
                 <li><%= link_to "Yields", :controller => "yields", :action => "new" %></li>
               </ul>
             </li>
-            <li class="menu-admin"><a href="#Admin" >Admin</a>
+            <li class="menu-admin"><a>Admin</a>
               <ul class="sub-menu">
                 <li><%= link_to "Users", users_path %></li>
                 <!-- This links to something like: redmine/projects/bety-db/issues/new -->
