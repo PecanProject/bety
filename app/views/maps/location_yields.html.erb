@@ -176,7 +176,7 @@
       minZoom: 2
     };
 
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    map = new GMap2(document.getElementById("map_canvas"), myOptions);
     map.mapTypes.set('Miscanthus',new google.maps.StyledMapType(styles, { name: 'Miscanthus' }));
     map.mapTypes.set('Switchgrass',new google.maps.StyledMapType(styles, { name: 'Switchgrass' }));
     <% if logged_in? and current_user.page_access_level <= 2 %>
