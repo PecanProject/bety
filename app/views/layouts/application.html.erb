@@ -122,14 +122,17 @@
               <ul class="sub-menu">
                 <li><a class="nav-no-hover">By Species:</a></li>
                 <li><a class="nav-no-hover">&nbsp;&nbsp;&nbsp;&nbsp;Miscanthus</a></li>
-                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Traits", "/maps/traits?species=1477" %></li>
-                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Yields", "/maps/yields?species=1477" %></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Traits", url_for(:controller => "maps", :action => "traits", :species => 1447) %></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Yields", url_for(:controller => "maps", :action => "yields", :species => 1447) %></li>
+                
                 <li><a class="nav-no-hover">&nbsp;&nbsp;&nbsp;&nbsp;Switchgrass</a></li>
-                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Traits", "/maps/traits?species=938" %></li>
-                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Yields", "/maps/yields?species=938" %></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Traits", url_for(:controller => "maps", :action => "traits", :species => 938) %></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Yields", url_for(:controller => "maps", :action => "yields", :species => 938) %></li>
+                
                 <li><a class="nav-no-hover">&nbsp;&nbsp;&nbsp;&nbsp;Sugarcane</a></li>
-                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Traits", "/maps/traits?species=2984" %></li>
-                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Yields", "/maps/yields?species=2984" %></li>               
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Traits", url_for(:controller => "maps", :action => "traits", :species => 2984) %></li>
+                <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Yields", url_for(:controller => "maps", :action => "yields", :species => 2984) %></li>
+                             
                 <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp; Other Species", :controller => "maps", :action => "species_details" %></li>
                 <li><a class="nav-no-hover">By Site:</a></li>
                 <li><%= link_to "&nbsp;&nbsp;&nbsp;&nbsp; Traits", :controller => "maps", :action => "traits_from_sites" %></li>

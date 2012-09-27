@@ -110,6 +110,8 @@ class MapsController < ApplicationController
       @traits = @traits.find_all_by_site_id(site.id)
       @title = site.sitename_state_country
     elsif !params[:species].nil?
+      puts "#####################################"
+      puts params[:species]
       species = Specie.find(params[:species])
       @traits = @traits.find_all_by_specie_id(species.id)
       @title = species.scientificname
