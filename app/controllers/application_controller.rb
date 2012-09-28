@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   # Be sure to include AuthenticationSystem in Application Controller instead
   include AuthenticatedSystem
-  include Mercator
+  #include Mercator
   require 'csv'
 
   rescue_from ActiveRecord::RecordNotFound, :with => :not_found

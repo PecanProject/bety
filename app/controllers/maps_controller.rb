@@ -1,4 +1,4 @@
-include Mercator
+#include Mercator
 class MapsController < ApplicationController
   layout 'application'
 
