@@ -26,6 +26,8 @@ usboundaries[9] = { :xmax => 41160.287118222, :ymax => 56312.969504094, :xmin =>
 usboundaries[10] = { :xmax => 82320.5742364445, :ymax => 112625.939008187, :xmin => 40244.0745415111, :ymin => 89597.7794164164 }
 usboundaries[11] = { :xmax => 164641.148472889, :ymax => 225251.878016374, :xmin => 80488.1490830222, :ymin => 179195.558832833 }
 
+
+
 crops = LocationYield.all(:select => "distinct(species)").collect {|x| x["species"] }
 
 crops.each do |crop|
@@ -33,15 +35,28 @@ crops.each do |crop|
   
   color_range = {}
 
+
+  miscanthus
+  poplar
+  switchgrass
+  evapotransportaion
+  cost
+  yield
  
   if ['miscanthus','poplar','switchgrass'].include?(crop) 
     color_range[:max] = 40.0
     color_range[:min] = 0.0
     #next
+  elsif ['evapotransportaion','cost','yield'].include?()
+    color_range[:max] = 99999.0
+    color_range[:min] = 99999.0
   else
     color_range[:max] = LocationYield.first(:order => 'yield desc', :conditions => ["species = ?",crop]).yield.to_f
     color_range[:min] = LocationYield.first(:order => 'yield asc', :conditions => ["species = ?",crop]).yield.to_f
   end
+  
+  
+  
   p color_range.to_yaml   
   #color_range[:increment] = (color_range[:max] - color_range[:min])/120
   color_range[:increment] = (color_range[:max] - color_range[:min])/80
