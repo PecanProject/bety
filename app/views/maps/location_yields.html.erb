@@ -152,7 +152,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "/maps/mapoverlay/miscanthus/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "<%= root_path%>maps/mapoverlay/miscanthus/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -165,7 +165,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "/maps/mapoverlay/switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "<%= root_path%>maps/mapoverlay/switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -178,7 +178,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "/maps/mapoverlay/poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "<%= root_path%>maps/mapoverlay/poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -191,7 +191,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "/maps/mapoverlay/miscanthus_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "<%= root_path%>maps/mapoverlay/miscanthus_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -204,7 +204,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "/maps/mapoverlay/miscanthus_switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "<%= root_path%>maps/mapoverlay/miscanthus_switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -217,7 +217,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "/maps/mapoverlay/switchgrass_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "<%= root_path%>maps/mapoverlay/switchgrass_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
