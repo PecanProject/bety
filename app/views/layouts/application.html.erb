@@ -127,7 +127,6 @@
                 <li><%= link_to "Sites by Species", :controller => "maps", :action => "sites_by_species" %></li>
                 <li><%= link_to "Search for Sites", :controller => "maps", :action => "sites_from_search" %></li>
                 <li><%= link_to "Model Projections", :controller => "maps", :action => "sites_from_search" %></li>
-                <li><%= link_to "TEMP", user_path(11) %></li>
               </ul>
             </li>
 
@@ -161,12 +160,17 @@
                 <li><%= link_to "Yields", :controller => "yields", :action => "new" %></li>
               </ul>
             </li>
-            <li class="menu-admin"><a>Admin</a>
+            <li class="menu-modelio"><a>Model I/O</a>
               <ul class="sub-menu">
-                <li><%= link_to "Users", users_path %></li>
-                <!-- This links to something like: redmine/projects/bety-db/issues/new -->
-                <li><a href="#Errors" >Errors</a></li>
-                <li><%= link_to "Location Yields", :controller => "maps", :action => "location_yields" %></li>
+                <li><%= link_to "Miscanthus", :controller => "citations", :action => "new" %></li>
+                <li><%= link_to "Miscanthus", :controller => "citations", :action => "new" %></li>
+
+<!--                These were the old ADMIN menu items: -->
+<!--                <li><%= link_to "Users", users_path %></li> -->
+<!--                <li><a href="#Errors" >Errors</a></li> --><!-- This links to something like: redmine/projects/bety-db/issues/new -->
+<!--                SO add them under the admin access link in top right -->
+
+
               </ul>
             </li>
             <li class="menu-login">

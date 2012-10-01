@@ -272,7 +272,7 @@ ul.sf-menu li li li:hover ul, ul.sf-menu li li li.sfHover ul{
 		background: transparent url(../images/theme/nav-icon-new.png) 10px 41px no-repeat;
 		padding-left: 23px;
 	}
-	.main-menu li.menu-admin > a {
+	.main-menu li.menu-modelio > a {
 		background: transparent url(../images/theme/nav-icon-admin.png) 10px 41px no-repeat;
 		padding-left: 23px;
 	}
