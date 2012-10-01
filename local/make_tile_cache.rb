@@ -36,20 +36,20 @@ crops.each do |crop|
   color_range = {}
 
 
-  miscanthus
-  poplar
-  switchgrass
-  evapotransportaion
-  cost
-  yield
+##  miscanthus
+##  poplar
+##  switchgrass
+##  evapotransportaion
+##  cost
+##  yield
  
   if ['miscanthus','poplar','switchgrass'].include?(crop) 
     color_range[:max] = 40.0
     color_range[:min] = 0.0
     #next
-  elsif ['evapotransportaion','cost','yield'].include?()
-    color_range[:max] = 99999.0
-    color_range[:min] = 99999.0
+#  elsif ['evapotransportaion','cost','yield'].include?()
+#    color_range[:max] = 99999.0
+#    color_range[:min] = 99999.0
   else
     color_range[:max] = LocationYield.first(:order => 'yield desc', :conditions => ["species = ?",crop]).yield.to_f
     color_range[:min] = LocationYield.first(:order => 'yield asc', :conditions => ["species = ?",crop]).yield.to_f
