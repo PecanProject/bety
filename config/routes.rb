@@ -39,8 +39,12 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
+    
   map.resources :users
+  
+  map.connect 'search.:format', :controller => 'search', :action => :index
 
+  map.ebi_forwarded '/ebi_forwarded', :controller => 'sessions', :action => 'ebi_forwarded'
   map.resource :session
 
   map.resources :covariates
