@@ -91,6 +91,8 @@ class MapsController < ApplicationController
     @site = Site.find(params[:site])
 
     if !site.nil?
+      # Essentially we've got a lambda running on each of the yieldsview, yield and trait models
+      # which specs out who can view what
       @trait = @site.traits.all_limited(current_user || nil).all(:group => "treatment_id" )
     else
       @trait = []
@@ -110,7 +112,7 @@ class MapsController < ApplicationController
       @traits = @traits.find_all_by_site_id(site.id)
       @title = site.sitename_state_country
     elsif !params[:species].nil?
-      puts "#####################################"
+
       puts params[:species]
       species = Specie.find(params[:species])
       @traits = @traits.find_all_by_specie_id(species.id)

@@ -1,9 +1,13 @@
 <h2>Traits for <%= @site.sitename_state_country %></h2>
+
 <%- if @trait_logged_in > 0 -%>
-<em><%= @trait_logged_in %> additional traits with account</em>
+  <em><%= @trait_logged_in %> additional traits with account</em>
 <%- end -%>
+
+<br />
+
 <%- if @trait.length == 0 -%>
-<em>Sorry no public trait records for this site</em>
+  <em>Sorry no public trait records for this site</em>
 <%- else -%>
 
 <br />
