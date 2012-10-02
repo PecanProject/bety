@@ -60,14 +60,14 @@
                 <td>
                   <script type="text/javascript">
                     var download_MENU_ITEMS = [
-                      ['Water','',{'tw':'0','sb':'Water'},
+                      ['Evapotranspiration (mm/y)','',{'tw':'0','sb':''Evapotranspiration (mm/y)'},
                         ['Miscanthus','',{'tw':'0','sb':'Miscanthus'},
-                          ['County','/miscanthus_county_avg_yield.csv',{'tw':'0','sb':'County'}],
-                          ['Gridded','/miscanthusyield.csv',{'tw':'0','sb':'Gridded'}]
+                          ['County',      '<%= root_path %>temp_models/miscanthus_evapotranspiration_county.csv'     ,{'tw':'0','sb':'County'}],
+                          ['Gridded',     '<%= root_path %>temp_models/miscanthus_evapotranspiration_grid.csv'       ,{'tw':'0','sb':'Gridded'}]
                         ],
                         ['Switchgrass','',{'tw':'0','sb':'Switchgrass'},
-                          ['County','/pavi02212012.csv',{'tw':'0','sb':'County'}],
-                          ['Gridded','/sgYield.txt',{'tw':'0','sb':'Gridded'}]
+                          ['County',      '<%= root_path %>temp_models/switchgrass_evapotranspiration_county.csv'     ,{'tw':'0','sb':'County'}],
+                          ['Gridded',     '<%= root_path %>temp_models/switchgrass_evapotranspiration_grid.csv'       ,{'tw':'0','sb':'Gridded'}]
                         ]
                       ]
                     ];
@@ -90,15 +90,19 @@
                 <td>
                   <script type="text/javascript">
                     var download_MENU_ITEMS = [
-                      ['Production Cost','',{'tw':'0','sb':'Production Cost'},
+                      ['Production Cost (USD/Mt)','',{'tw':'0','sb':'Production Cost (USD/Mt)'},
                         ['Miscanthus','',{'tw':'0','sb':'Miscanthus'},
-                          ['County','/miscanthus_county_avg_yield.csv',{'tw':'0','sb':'County'}],
-                          ['Gridded','/miscanthusyield.csv',{'tw':'0','sb':'Gridded'}]
+                          ['County',      '<%= root_path %>temp_models/miscanthus_cost_county.csv'      ,{'tw':'0','sb':'County'}],
+                          ['Gridded',     '<%= root_path %>temp_models/miscanthus_cost_grid.csv'        ,{'tw':'0','sb':'Gridded'}],
                         ],
                         ['Switchgrass','',{'tw':'0','sb':'Switchgrass'},
-                          ['County','/pavi02212012.csv',{'tw':'0','sb':'County'}],
-                          ['Gridded','/sgYield.txt',{'tw':'0','sb':'Gridded'}]
-                        ]
+                          ['County',      '<%= root_path %>temp_models/switchgrass_cost_county.csv'     ,{'tw':'0','sb':'County'}],
+                          ['Gridded',     '<%= root_path %>temp_models/switchgrass_cost_grid.csv'       ,{'tw':'0','sb':'Gridded'}]
+                        ],
+                        ['EnergyCane','',{'tw':'0','sb':'EnergyCane'},
+                          ['County',      '<%= root_path %>temp_models/energycane_cost_county.csv'     ,{'tw':'0','sb':'County'}],
+                          ['Gridded',     '<%= root_path %>temp_models/energycane_cost_grid.csv'       ,{'tw':'0','sb':'Gridded'}]
+                         ]
                       ]
                     ];
                   </script>
