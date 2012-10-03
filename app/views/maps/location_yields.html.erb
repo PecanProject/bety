@@ -20,7 +20,7 @@
                 <td>
                   <script type="text/javascript">
                     var download_MENU_ITEMS = [
-                      ['Yield','',{'tw':'0','sb':'Yield'},
+                      ['Yield (Mg/ha)','',{'tw':'0','sb':'Yield (Mg/ha)'},
                         ['Miscanthus','',{'tw':'0','sb':'Miscanthus'},
                           ['County',      '<%= root_path %>temp_models/miscanthus_yield_county.csv'      ,{'tw':'0','sb':'County'}],
                           ['Gridded',     '<%= root_path %>temp_models/miscanthus_yield_grid.csv'        ,{'tw':'0','sb':'Gridded'}],
@@ -156,39 +156,52 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "<%= root_path%>maps/mapoverlay/miscanthus/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "<%= root_path%>maps/mapoverlay/miscanthus_yield/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
     maxZoom: 9,
     minZoom: 2,
-    name: "Miscanthus"
+    name: "Miscanthus Yield"
   }, {
     getTileUrl: function(coord, zoom) {
         var normalizedCoord = getNormalizedCoord(coord, zoom);
         if (!normalizedCoord) {
           return null;
         }
-        return "<%= root_path%>maps/mapoverlay/switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "<%= root_path%>maps/mapoverlay/switchgrass_yield/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
     maxZoom: 9,
     minZoom: 2,
-    name: "Switchgrass"
+    name: "Switchgrass Yield"
   },<% if logged_in? and current_user.page_access_level <= 2  -%> {
     getTileUrl: function(coord, zoom) {
         var normalizedCoord = getNormalizedCoord(coord, zoom);
         if (!normalizedCoord) {
           return null;
         }
-        return "<%= root_path%>maps/mapoverlay/poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "<%= root_path%>maps/mapoverlay/poplar_yield/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
     maxZoom: 9,
     minZoom: 2,
-    name: "Poplar"
+    name: "Poplar Yield"
+  }, {
+    getTileUrl: function(coord, zoom) {
+        var normalizedCoord = getNormalizedCoord(coord, zoom);
+        if (!normalizedCoord) {
+          return null;
+        }
+        return "<%= root_path%>maps/mapoverlay/energycane_yield/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+    },
+    tileSize: new google.maps.Size(256, 256),
+    isPng: true,
+    maxZoom: 9,
+    minZoom: 2,
+    name: "Energycane Yield"
   }, {
     getTileUrl: function(coord, zoom) {
         var normalizedCoord = getNormalizedCoord(coord, zoom);
