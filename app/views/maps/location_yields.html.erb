@@ -156,7 +156,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "<%= root_path%>maps/mapoverlay/miscanthus_yield/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "<%= root_path%>maps/mapoverlay/miscanthus/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -169,7 +169,7 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "<%= root_path%>maps/mapoverlay/switchgrass_yield/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "<%= root_path%>maps/mapoverlay/switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
@@ -182,26 +182,13 @@
         if (!normalizedCoord) {
           return null;
         }
-        return "<%= root_path%>maps/mapoverlay/poplar_yield/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+        return "<%= root_path%>maps/mapoverlay/poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
     },
     tileSize: new google.maps.Size(256, 256),
     isPng: true,
     maxZoom: 9,
     minZoom: 2,
     name: "Poplar Yield"
-  }, {
-    getTileUrl: function(coord, zoom) {
-        var normalizedCoord = getNormalizedCoord(coord, zoom);
-        if (!normalizedCoord) {
-          return null;
-        }
-        return "<%= root_path%>maps/mapoverlay/energycane_yield/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
-    },
-    tileSize: new google.maps.Size(256, 256),
-    isPng: true,
-    maxZoom: 9,
-    minZoom: 2,
-    name: "Energycane Yield"
   }, {
     getTileUrl: function(coord, zoom) {
         var normalizedCoord = getNormalizedCoord(coord, zoom);
@@ -241,6 +228,32 @@
     maxZoom: 9,
     minZoom: 2,
     name: "Switchgrass - Poplar"
+  }, {
+    getTileUrl: function(coord, zoom) {
+        var normalizedCoord = getNormalizedCoord(coord, zoom);
+        if (!normalizedCoord) {
+          return null;
+        }
+        return "<%= root_path%>maps/mapoverlay/cornstover_cost/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+    },
+    tileSize: new google.maps.Size(256, 256),
+    isPng: true,
+    maxZoom: 9,
+    minZoom: 2,
+    name: "Cornstover Cost"
+  }, {
+    getTileUrl: function(coord, zoom) {
+        var normalizedCoord = getNormalizedCoord(coord, zoom);
+        if (!normalizedCoord) {
+          return null;
+        }
+        return "<%= root_path%>maps/mapoverlay/miscanthus_switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
+    },
+    tileSize: new google.maps.Size(256, 256),
+    isPng: true,
+    maxZoom: 9,
+    minZoom: 2,
+    name: "Cornstover Yield"
   }<% end -%>];
 
   var styles = [{
@@ -264,9 +277,9 @@
       },
       mapTypeControlOptions: {
         <% if logged_in? and current_user.page_access_level <= 2  -%>
-        mapTypeIds: ['Miscanthus','Switchgrass','Poplar','Miscanthus-Poplar','Miscanthus-Switchgrass','Switchgrass-Poplar'],
+          mapTypeIds: ['Miscanthus','Switchgrass','Poplar','Miscanthus-Poplar','Miscanthus-Switchgrass','Switchgrass-Poplar','Cornstover Cost','Cornstover Yield'],
         <% else -%>
-        mapTypeIds: ['Miscanthus','Switchgrass'],
+          mapTypeIds: ['Miscanthus','Switchgrass'],
         <% end -%>
         style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
       },
@@ -275,14 +288,20 @@
     };
 
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+ 
     map.mapTypes.set('Miscanthus',new google.maps.StyledMapType(styles, { name: 'Miscanthus' }));
     map.mapTypes.set('Switchgrass',new google.maps.StyledMapType(styles, { name: 'Switchgrass' }));
+ 
     <% if logged_in? and current_user.page_access_level <= 2 %>
     map.mapTypes.set('Poplar',new google.maps.StyledMapType(styles, { name: 'Poplar' }));
     map.mapTypes.set('Miscanthus-Poplar',new google.maps.StyledMapType(styles, { name: 'Miscanthus-Poplar' }));
     map.mapTypes.set('Miscanthus-Switchgrass',new google.maps.StyledMapType(styles, { name: 'Miscanthus-Switchgrass' }));
     map.mapTypes.set('Switchgrass-Poplar',new google.maps.StyledMapType(styles, { name: 'Switchgrass-Poplar' }));
+
+    map.mapTypes.set('Cornstover Cost',new google.maps.StyledMapType(styles, { name: 'Cornstover Cost' }));
+    map.mapTypes.set('Cornstover Yield',new google.maps.StyledMapType(styles, { name: 'Cornstover Yield' }));
     <% end %>
+
     google.maps.event.addListener(map, 'maptypeid_changed', function() {
       change_overlay(this.mapTypeId);
     });
