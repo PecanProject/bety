@@ -6,6 +6,7 @@
 ./orig.public
 ./test/fixtures/users.yml
 ./local/counties-20110605
+./tmp/*
 db_backups
 local/counties-20110605
 log
