@@ -1,14 +1,50 @@
-
+# FIXME: RAILS_ENV should be specified by the deploy scripts
+# FIXME: We can test the RAILS_ENV and specify options to make this script more portable
 RAILS_ENV='production'
-require '/rails/ebi/config/environment'
+require '../config/environment'
 
+# Mercator used for lattitude / longitude projections onto XY coordinate plane
+require "#{Rails.root}/lib/mercator"
+include Mercator
+
+# RMagick for image generation
 require 'rvg/rvg'
 include Magick
 
+# Used in reading local file inputs
+require 'csv' 
+
+############
+### New to this script? Start here.
+=begin
+Inputs it takes:
+- names of directories you want to build ( which contain all the tiles )
+- Array of data *****
+- country boundaries
+  - where from? 
+Expected output:
+- directory full of images
+=end
+############
+
+############
+# Notes from the original author:
+# find the max value and the min value (which the code is already doing)
+#  color_range[:max]
+#  color_range[:min]
+
+# divide by the number of color 'steps' there are to find the range of each color.
+# steps == data ranges that associate with each color: 1-5 == red, 6-10 == blue
+# Then draw the boxes and their labels.
+############
+
+
+# Looks like this can accept in command line arguments
 zoom_min = ARGV[0].to_i
 zoom_max = ARGV[1].to_i
+# Here we've got out default zoom levels
 zoom_min == 0 ? zoom_min = 2 : zoom_min = zoom_min.to_i
-zoom_max == 0 ? zoom_max = 9 : zoom_max = zoom_max.to_i
+zoom_max == 0 ? zoom_max = 5 : zoom_max = zoom_max.to_i
 
 ignore_counties = County.all(:select => :id, :conditions => "state = 'Alaska' or state = 'Hawaii'").collect(&:id)
 
@@ -26,8 +62,7 @@ usboundaries[9] = { :xmax => 41160.287118222, :ymax => 56312.969504094, :xmin =>
 usboundaries[10] = { :xmax => 82320.5742364445, :ymax => 112625.939008187, :xmin => 40244.0745415111, :ymin => 89597.7794164164 }
 usboundaries[11] = { :xmax => 164641.148472889, :ymax => 225251.878016374, :xmin => 80488.1490830222, :ymin => 179195.558832833 }
 
-
-
+# Array of strings used in directory naming
 crops = LocationYield.all(:select => "distinct(species)").collect {|x| x["species"] }
 
 crops.each do |crop|
@@ -35,28 +70,15 @@ crops.each do |crop|
   
   color_range = {}
 
-
-##  miscanthus
-##  poplar
-##  switchgrass
-##  evapotransportaion
-##  cost
-##  yield
  
   if ['miscanthus','poplar','switchgrass'].include?(crop) 
     color_range[:max] = 40.0
     color_range[:min] = 0.0
     #next
-#  elsif ['evapotransportaion','cost','yield'].include?()
-#    color_range[:max] = 99999.0
-#    color_range[:min] = 99999.0
   else
     color_range[:max] = LocationYield.first(:order => 'yield desc', :conditions => ["species = ?",crop]).yield.to_f
     color_range[:min] = LocationYield.first(:order => 'yield asc', :conditions => ["species = ?",crop]).yield.to_f
   end
-  
-  
-  
   p color_range.to_yaml   
   #color_range[:increment] = (color_range[:max] - color_range[:min])/120
   color_range[:increment] = (color_range[:max] - color_range[:min])/80
@@ -123,7 +145,7 @@ crops.each do |crop|
       }
 
 
-  scale_list3.append(true).write("/rails/ebi/public/#{crop}-scale.png")
+  scale_list3.append(true).write("#{Rails.root}/public/#{crop}-scale.png")
   
   zoom_min.upto(zoom_max) do |zoom|
   
@@ -144,8 +166,9 @@ crops.each do |crop|
         paramx = 256*tmpx
         paramy = 256*tmpy
   
-        tile_dir = "/rails/ebi/public/maps/mapoverlay/#{crop}"
-        tile_file = "/rails/ebi/public/maps/mapoverlay/#{crop}/#{tmpx}-#{tmpy}-#{zoom}.png"
+        # Establish where the name and directory of the tiles
+        tile_dir = "#{Rails.root}/public/maps/mapoverlay/#{crop}"
+        tile_file = "#{Rails.root}/public/maps/mapoverlay/#{crop}/#{tmpx}-#{tmpy}-#{zoom}.png"
   
         next if File.symlink?(tile_file)
   
@@ -164,8 +187,8 @@ crops.each do |crop|
             counties = []
           else
             range = {}
-            # Zoom 8 is the first level panels are inside a county so they do not show up. San Bernardino County is the largest, outside Alaska
-            # if we just add half of the size to the max and subtract half the size to the min of San Bernardino County at the different
+            # Zoom 8 is the first level a are inside a county so they do not show up. San Bernardino County is the largest, outside Alaska
+            # if we just add half of k size to the max and subtract half the size to the min of San Bernardino County at the different
             # levels ( minus 256 ), we know we will catch the appropiate county (plus some others)
             # 8 : x = 668, y = 430
             # 9 : x = 1336, y = 860
@@ -251,7 +274,7 @@ crops.each do |crop|
           img.write(tile_file)
         else
           File.delete(tile_file) if File.exists?(tile_file)
-          File.symlink("/rails/ebi/public/maps/mapoverlay/blank_tile.png",tile_file)
+          File.symlink("#{Rails.root}/public/maps/mapoverlay/blank_tile.png",tile_file)
         end
         #p "#{xx}-#{yy}-#{zoom} : #{(Time.now - tt).to_f}" if (Time.now - tt).to_f > 1
       end
