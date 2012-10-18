@@ -79,7 +79,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :citations_treatments, :controller => 'citations_treatments', :only => [:index, :new, :create]
   map.resources :managements_treatments, :controller => 'managements_treatments', :only => [:index, :new, :create]
   map.resources :pfts_priors, :controller => 'pfts_priors', :only => [:index, :new, :create]
-  map.resources :pfts_species, :2 => 'pfts_species', :only => [:index, :new, :create]
+  map.resources :pfts_species, :controller => 'pfts_species', :only => [:index, :new, :create]
 
   #map.resources :input_files, :controller => 'input_files', :only => [:download], :collection => { :download => :get }
 
