@@ -21,7 +21,7 @@ class SessionsController < ApplicationController
       #Next two lines not necessary, all references should be removed. Use 'current_user' instead
       session[:page_access_requirement] = user.page_access_level
       session[:access_level] = user.access_level
-      redirect_back_or_default('/')
+      redirect_to :root
       flash[:notice] = "Logged in successfully"
     else
       note_failed_signin
@@ -34,7 +34,34 @@ class SessionsController < ApplicationController
   def destroy
     logout_killing_session!
     flash[:notice] = "You have been logged out."
-    redirect_back_or_default('/')
+    redirect_to :root
+  end
+
+  # This is made for use from the EBI website
+  # urls to this rails application ending in this:
+  # /ebi_forwarded/?as@_dlAA5kq
+  # Will be automatically logged in with the below defebi_username account
+  def ebi_forwarded
+    
+    if request.query_string.to_s == 'as@_dlAA5kq'
+      user = User.authenticate("defebi_username", "dingohopper")
+      
+      puts "#################"
+      puts request.query_string.to_s
+      puts user.object_id
+      
+      self.current_user = user
+      new_cookie_flag = (params[:remember_me] == "1")
+      handle_remember_cookie! new_cookie_flag
+      #Next two lines not necessary, all references should be removed. Use 'current_user' instead
+      session[:page_access_requirement] = user.page_access_level
+      session[:access_level] = user.access_level
+      redirect_to root_path
+      flash[:notice] = "Welcome EBI user"
+    else
+      redirect_to root_path
+      flash[:notice] = 'Please login through the EBI link on page ...'
+    end
   end
 
 protected

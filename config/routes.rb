@@ -39,8 +39,10 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
+  
   map.resources :users
 
+  map.ebi_forwarded '/ebi_forwarded', :controller => 'sessions', :action => 'ebi_forwarded'
   map.resource :session
 
   map.resources :covariates
@@ -77,7 +79,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :citations_treatments, :controller => 'citations_treatments', :only => [:index, :new, :create]
   map.resources :managements_treatments, :controller => 'managements_treatments', :only => [:index, :new, :create]
   map.resources :pfts_priors, :controller => 'pfts_priors', :only => [:index, :new, :create]
-  map.resources :pfts_species, :controller => 'pfts_species', :only => [:index, :new, :create]
+  map.resources :pfts_species, :2 => 'pfts_species', :only => [:index, :new, :create]
 
   #map.resources :input_files, :controller => 'input_files', :only => [:download], :collection => { :download => :get }
 
