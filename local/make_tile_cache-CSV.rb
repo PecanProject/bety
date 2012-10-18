@@ -17,14 +17,11 @@ require 'csv'
 ############
 ### New to this script? Start here.
 =begin
-  Inputs it takes:
-  - names of directories you want to build ( which contain all the tiles )
-  - Array of data *****
-  - country boundaries
-    - where from? 
-  Expected output:
-  - directory full of images
-  - NOTE: "Tiles" are the png files... NOT the individual squares drawn corresponding to a county
+ inputs it takes:
+- country boundaries
+  - where from? 
+ Expected output
+- directory full of images
 =end
 ############
 
@@ -63,126 +60,120 @@ usboundaries[9] = { :xmax => 41160.287118222, :ymax => 56312.969504094, :xmin =>
 usboundaries[10] = { :xmax => 82320.5742364445, :ymax => 112625.939008187, :xmin => 40244.0745415111, :ymin => 89597.7794164164 }
 usboundaries[11] = { :xmax => 164641.148472889, :ymax => 225251.878016374, :xmin => 80488.1490830222, :ymin => 179195.558832833 }
 
-# Array of strings used in directory naming
-crops = LocationYield.all(:select => "distinct(species)").collect {|x| x["species"] }
 
-crops.each do |crop|
-  p crop
-  
-  color_range = {}
-  
-  
-  
+
+
+#CSV.foreach("../public/temp_models/location_yields.csv") do |crop|
+
+######
+## Run whats in the CSV file
+CSV.foreach("../public/temp_models/cornstover_cost_county.csv") do |crop|
+
+# Example data:
+#    STATEFP,STATE,County_FIPS,County_NAME,cornstover_cost
+#    1,AL,1001,Autauga,211.175
+#    1,AL,1003,Baldwin,129.089
+#    1,AL,1005,Barbour,141.901
+#    1,AL,1007,Bibb,0
+######
+
+######
+## Run whats inside the database
+#crops = LocationYield.all(:select => "distinct(species)").collect {|x| x["species"] }
+#crops.each do |crop|
+######
+
+  puts crop
   
   ############
   ### Color values and increments are scaled to the data we're importing
-#  if ['evapotransportaion'].include?(crop)
-#    color_range[:max] = 0.0
-#    color_range[:min] = 10.0 
-#  elsif ['yield'].include?(crop)
-#    color_range[:max] = 0.0
-#    color_range[:min] = 45.0 
-#  elsif ['cost'].include?(crop)
-#    color_range[:max] = 0.0
-#    color_range[:min] = 200.0 
-#  elsif ['miscanthus','poplar','switchgrass'].include?(crop) 
-#    color_range[:max] = 40.0
-#    color_range[:min] = 0.0
-#  else
-#    color_range[:max] = LocationYield.first(:order => 'yield desc', :conditions => ["species = ?",crop]).yield.to_f
-#    color_range[:min] = LocationYield.first(:order => 'yield asc', :conditions => ["species = ?",crop]).yield.to_f
-#  end
-  if ['miscanthus','poplar','switchgrass'].include?(crop) 
-    color_range[:max] = 40.0
-    color_range[:min] = 0.0
-    #next
-  else
-    color_range[:max] = LocationYield.first(:order => 'yield desc', :conditions => ["species = ?",crop]).yield.to_f
-    color_range[:min] = LocationYield.first(:order => 'yield asc', :conditions => ["species = ?",crop]).yield.to_f
-  end
+  color_range = {}
+  # Color ranges for Yields:
+  color_range[:max] = 0.0
+  color_range[:min] = 45.0
+  # Color ranges for Cost:
+  color_range[:max] = 0.0
+  color_range[:min] = 45.0
+  # Color ranges for Evapotransporation:
+  color_range[:max] = 0.0
+  color_range[:min] = 45.0
+  # Not sure why its converted to yaml...
   p color_range.to_yaml   
-  #color_range[:increment] = (color_range[:max] - color_range[:min])/120
   color_range[:increment] = (color_range[:max] - color_range[:min])/80
   ############
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  # Draw Crop Scale -- Image resolution... bc RVG is a vector drawing program
-  RVG::dpi = 600
-  
   ############
-  ### Build up inputs for the legend or "scale":
-  # This image is the scale on the bottom of the right of the map overlay
-  # that shows color to value relationships
-  # Build Arrays which contains information to build images
+  ### Draw Crop Scale
+  # Image resolution... bc RVG is a vector drawing program
+  RVG::dpi = 600
+  # Create an Array which can hold multiple images
   # http://www.imagemagick.org/RMagick/doc/ilist.html
   scale_list1 = Magick::ImageList.new
   # http://www.imagemagick.org/RMagick/doc/image1.html
-                     # Image.new(columns, rows [, fill]) [ { optional arguments } ]
-  scale_list1 << Magick::Image.new(30, 5) { self.background_color = "none" }
+                       # Image.new(columns, rows [, fill]) [ { optional arguments } ]
+  scale_list1 << Magick::Image.new(30, 5) { self.background_color = "none" } # Add image to the ImageList
+
+#  if ['miscanthus','poplar','switchgrass'].include?(crop) 
+#    scale_list1 << Magick::Image.new(30, 240, Magick::GradientFill.new(0,0,240,0,"hsla(120,100,90,0.5)","hsla(120,100,10,0.5)"))
+#    
+#  elsif ['evapostransporation'].include?(crop)
+#    scale_list1 << Magick::Image.new(30, 240, Magick::GradientFill.new(0,0,240,0,"hsla(120,100,90,0.5)","hsla(120,100,10,0.5)"))  
+
+#  elsif ['cost'].include?(crop) 
+#    scale_list1 << Magick::Image.new(30, 240, Magick::GradientFill.new(0,0,100,0,"hsla(0,0,100,0.5)","hsla(147,100,8,0.5)"))  
+
+#  elsif ['yield'].include?(crop) 
+#    scale_list1 << Magick::Image.new(30, 240, Magick::GradientFill.new(0,0,100,0,"hsla(0,0,100,0.5)","hsla(118,100,8,0.5)")) 
+
+#  else 
+#    scale_list1 << Magick::Image.new(30, 240, Magick::GradientFill.new(0,0,240,0,"hsla(280,100,50,0.8)","hsla(360,100,50,0.8)"))
+#  end
+  ############
   
-  if ['miscanthus','poplar','switchgrass'].include?(crop) 
-    scale_list1 << Magick::Image.new(30, 240, Magick::GradientFill.new(0,0,240,0,"hsla(120,100,90,0.5)","hsla(120,100,10,0.5)"))
-  else
-    scale_list1 << Magick::Image.new(30, 240, Magick::GradientFill.new(0,0,240,0,"hsla(280,100,50,0.8)","hsla(360,100,50,0.8)"))
-  end
   
+  ############
+  ### Size and draw a tile:
+  # Create a new image object: 30 cols, 240 rows, GradientFill ( used to create the fill color )
+  scale_list1 << Magick::Image.new(30, 240, Magick::GradientFill.new(0,0,100,0,"hsla(0,0,100,0.5)","hsla(118,100,8,0.5)")) 
+  # GradientFill#initialize(x1,y1,x2,y2,start_color,stop_color)
+  # x1,y1,x2,y2 correspond to:
+  #   - greater yield ( plant growth and sequestration ) OR
+  #   - greater cost 
+  # hsla(120,100,90,0.5)  >> hlsa(hue, saturation, lightness, alpha)
+  ############
+
   scale_list1[1].opacity = Magick::MaxRGB/2
+  
   scale_list2 = Magick::ImageList.new
   scale_list2 << scale_list1.append(true)
   scale_list2 << Magick::Image.new(50, 250){ self.background_color = "none"  }
-
+  
+  # http://www.imagemagick.org/RMagick/doc/draw.html
   txt = Draw.new
 
   # http://www.imagemagick.org/RMagick/doc/draw.html#annotate
   # So it seems we're annotating here ... but I've seen no text in any of the overlays
-  if ['miscanthus','poplar','switchgrass'].include?(crop) 
-    txt.annotate(scale_list2[1],0,0,5,10,"0"){
+  txt.annotate(scale_list2[1],0,0,5,10,"#{color_range[:min]}"){
+    self.font_family = 'Helvetica'
+    self.pointsize = 12
+    self.stroke = "#000000"
+  }
+  1.upto(8) do |_i|
+    txt.annotate(scale_list2[1],0,0,5,_i*30+5,"#{(color_range[:min] + _i*((color_range[:max]-color_range[:min])/8)).round(2)}"){
       self.font_family = 'Helvetica'
       self.pointsize = 12
       self.stroke = "#000000"
     }
-
-    1.upto(8) do |_i|
-      txt.annotate(scale_list2[1],0,0,5,_i*30+5,"#{(_i*color_range[:max]/8).round(2)}"){
-        self.font_family = 'Helvetica'
-        self.pointsize = 12
-        self.stroke = "#000000"
-      }
-    end
-  else
-    txt.annotate(scale_list2[1],0,0,5,10,"#{color_range[:min]}"){
-      self.font_family = 'Helvetica'
-      self.pointsize = 12
-      self.stroke = "#000000"
-    }
-
-    1.upto(8) do |_i|
-      txt.annotate(scale_list2[1],0,0,5,_i*30+5,"#{(color_range[:min] + _i*((color_range[:max]-color_range[:min])/8)).round(2)}"){
-        self.font_family = 'Helvetica'
-        self.pointsize = 12
-        self.stroke = "#000000"
-      }
-    end
   end
+  
+  
   
   scale_list3 = Magick::ImageList.new
   scale_list3 << Magick::Image.new(80, 30) { self.background_color = "none" }
   scale_list3 << scale_list2.append(false)
-  
+
+  # More annotating
   Draw.new.annotate(scale_list3[0],0,0,5,13,"Annual Yield"){
         self.font_family = 'Helvetica'
         self.pointsize = 12
@@ -194,12 +185,13 @@ crops.each do |crop|
         self.stroke = "#000000"
       }
 
+  puts "scale_list3:"
+  puts "\t#{scale_list3}"
+
   scale_list3.append(true).write("#{Rails.root}/public/#{crop}-scale.png")
-  ############
+  
 
 
-  ############  
-  ### Begin creating the tile overlays
   
   zoom_min.upto(zoom_max) do |zoom|
   
@@ -209,7 +201,7 @@ crops.each do |crop|
     countyy_max = usboundaries[zoom][:ymax]
     countyx_min = usboundaries[zoom][:xmin]
     countyy_min = usboundaries[zoom][:ymin]
-    
+  
     # FIXME: 
     # Google maps uses a grid of blocks explained in more detail here:
     # https://developers.google.com/maps/documentation/javascript/maptypes#WorldCoordinates
@@ -218,14 +210,14 @@ crops.each do |crop|
     
     # Intuitive demonstration of whats happening with zoom levels, pixel coordinates and tile coordinates:
     # https://google-developers.appspot.com/maps/documentation/javascript/examples/map-coordinates
-  
+    
     0.upto((2**zoom)-1) do |xx|
       0.upto((2**zoom)-1) do |yy|
         
   
         tt = Time.now
   
-        #Check our params, fallback to defaults if necessary
+        # Check our params, fallback to defaults if necessary
         tmpx,tmpy = xx,yy
         paramx = 256*tmpx
         paramy = 256*tmpy
@@ -233,15 +225,17 @@ crops.each do |crop|
         # Establish where the name and directory of the tiles
         tile_dir = "#{Rails.root}/public/maps/mapoverlay/#{crop}"
         tile_file = "#{Rails.root}/public/maps/mapoverlay/#{crop}/#{tmpx}-#{tmpy}-#{zoom}.png"
-  
+        
         # Skip the instance if the file is symlinked
         next if File.symlink?(tile_file)
-        # make the directory if it doesnt exist already  
+  
         Dir.mkdir(tile_dir) if !File.directory?(tile_dir)
   
         # Mercator is used to convert latitude / longitude positions to a flat-plane coodinate system 
         # IE the XY plane of the google map
         merc = MercatorProjection.new(zoom)
+        puts "MercatorProjection.new(zoom):"
+        puts "\t#{merc} at ZOOM: #{zoom}"        
         
         ############
         ### Ignore areas outside of the US by symlinking to blank tile
@@ -251,8 +245,7 @@ crops.each do |crop|
         # as the zoom level increases a large number of blocks are empty because they are outside
         # of the data we care about.
         if paramx.to_f <= countyx_max and (paramx+256).to_f >= countyx_min and paramy.to_f <= countyy_max and (paramy+256).to_f >= countyy_min
-      
-      
+        
           ############
           ### Find all the counties that are in the block at the given zoom level.
           # For zoom 0 and zoom 1 (block 0,0) that will include Alaska and Hawaii, but we
@@ -301,7 +294,9 @@ crops.each do |crop|
               range["ymin"] = paramy
               range["ymax"] = paramy + 256
             end
+
             counties = CountyBoundary.all(:select => "distinct(county_id)", :conditions => ["zoom#{zoom}x <= ? and zoom#{zoom}x >= ? and zoom#{zoom}y <= ? and zoom#{zoom}y >= ? and county_id not in (?)",range["xmax"],range["xmin"],range["ymax"],range["ymin"],ignore_counties]).collect(&:county_id).uniq
+
           end
     
      
@@ -319,7 +314,6 @@ crops.each do |crop|
               # This finds all the counties we care about.
               countys = County.all(:conditions => ["counties.id in (?)", counties])
               countys.each do |county|
-    
     
                 # were skipping these here ... but ignore_counties already removed them??
                 next if ["Hawaii","Alaska"].include?(county.state)
@@ -362,7 +356,7 @@ crops.each do |crop|
         
         
         ############
-        ### Draw the image
+        # Draw the image
         if !rvg.nil?
           # This is where the image is actually DRAWN with RVG
           # Using the contents of the container instance "rvg"
@@ -388,5 +382,8 @@ crops.each do |crop|
   
 
   
-end
   
+end
+
+
+
