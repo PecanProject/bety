@@ -1,4 +1,8 @@
-#include Mercator
+if RAILS_ENV == "production"
+  require "#{Rails.root}/lib/mercator" 
+  include Mercator
+end
+
 class MapsController < ApplicationController
   layout 'application'
 
