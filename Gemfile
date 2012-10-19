@@ -4,8 +4,10 @@ gem "rails", "2.3.11"
 gem "mysql2"
 gem "activerecord-mysql2-adapter"
 gem "rspec", "2.11.0"
-gem "rmagick"
 
+group :production do
+  gem "rmagick", "2.13.1"
+end
 
 gem "actionmailer", "2.3.11"
 gem "actionpack", "2.3.11"
