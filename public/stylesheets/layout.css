@@ -1,0 +1,270 @@
+/* Table of Content
+==================================================
+	#Site Styles
+	#Page Styles
+	#Media Queries
+	#Font-Face */
+
+/* #Site Styles
+================================================== */
+body {
+	background: #efefef;
+}
+#google_translate_element {
+  text-align: left;
+}
+#flash_notice div.bg {
+  background-color: yellowGreen;
+  padding: 10px;
+}
+tr.alt td, tr.alt th {
+  padding: 3px;
+}
+.main-menu .nav-no-hover:hover {
+  background: #333;
+  cursor: default;
+}
+#header {
+	background: #dfdfdf url("../images/theme/bg-grain-grey.jpg") top left repeat;
+	text-shadow: 0px 1px 1px rgba(255,255,255,1);
+}
+#header h1 {
+	font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #444;
+	font-weight: 100;
+	line-height: 14px;
+	margin-top: 20px;
+}
+#header h1 a {
+	text-decoration: none;
+}
+#header .org {
+	font-size: 14px;
+	font-weight: bold;
+	width: 100px;
+	text-align: right;
+	display: inline-block;
+	background: url(../images/theme/logo-ebi.png) top right no-repeat;
+	padding-right: 45px;
+	height: 46px;
+	padding-top: 4px;
+	float: left;
+	margin-bottom: 20px;
+}
+#header .site {
+	font-size: 23px;
+	display: inline-block;
+	float: left;
+	letter-spacing: -1px;
+	line-height: 50px;
+	margin-left: 8px;
+}
+#header small {
+	border-left: 1px solid #999;
+	padding-left: 11px;
+	margin-left: 6px;
+	color: #888;
+	display: none;
+}
+#header small strong {
+	font-weight: 100;
+	color: #444;
+}
+.nav {
+	background: #505050 url("../images/theme/bg-nav.jpg") top left repeat-x;
+	color: #fff;
+	height: 75px;
+	padding-top: 6px;
+}
+.content {
+	background-color: #fff;
+}
+.content .container {
+	padding-top: 3em;
+	padding-bottom: 2em;
+}
+.content a:not(.button) {
+	color: #7faf41;
+	text-decoration: none;
+}
+.content a strong {
+	color: inherit;
+}
+.content a:hover {
+	text-decoration: underline;
+}
+.content .example-grid .columns {
+	background-color: #ddd;
+}
+#footer {
+	background: #efefef;
+	border-top: 1px solid #ddd;
+	padding: 20px 0;
+}
+#footer h2 {
+	display: none;
+}
+
+#footer h3 {
+	font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #666;
+	font-weight: 100;
+	font-size: 15px;
+	text-align: left;
+}
+#footer h3 strong {
+	color: #666;
+}
+#footer ul li {
+	margin-bottom: 0;
+	font-size: 11px;
+}
+#footer a {
+	text-decoration: none;
+	font-weight: bold;
+	color: #666;
+	}
+#footer #google_translate_element a {
+	font-weight: normal;
+	color: #666;
+}
+
+#footer #google_translate_element a:hover {
+	text-decoration: none;
+	color: #111;
+}
+#footer a:hover {
+	color: #111;
+	text-decoration: underline;
+}
+
+#footer .six.columns.omega {
+	text-align: center;
+	color: #999;
+	padding-top: 40px;
+	line-height: 13px;
+	font-size: 11px;
+	background: url("../images/theme/logo-ebi-footer.jpg") top center no-repeat;
+}
+#footer .six.columns.omega p:first-child {
+	margin-bottom: 10px;
+}
+
+#footer .footnotes a {
+	font-size: 15px;
+	letter-spacing: -0.1em;
+	color: #bbb;
+	line-height: 1em;
+	font-weight: 100;
+	display: inline-block;
+}
+#footer .footnotes a:hover {
+	color: #444;
+	text-decoration: none;
+	}
+
+#header_user_name {
+  text-align: right;
+  padding-top: 18px;
+}
+
+
+
+
+/* #Page Styles
+================================================== */
+
+textarea {
+  width: 550px;
+}
+
+
+/* #Media Queries
+================================================== */
+
+	/* Smaller than standard 960 (devices and browsers) */
+	@media only screen and (max-width: 959px) {}
+
+	/* Tablet Portrait size to standard 960 (devices and browsers) */
+	@media only screen and (min-width: 768px) and (max-width: 959px) {}
+
+	/* All Mobile Sizes (devices and browser) */
+	@media only screen and (max-width: 767px) {}
+
+	/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+	@media only screen and (min-width: 480px) and (max-width: 767px) {
+		#footer .six.columns.omega {
+			text-align: left;
+			background-image: none;
+			padding-top: 15px;
+			border-top: 1px solid #ddd;
+		}
+	}
+
+	/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+	@media only screen and (max-width: 479px) {
+		#footer .six.columns.omega {
+			text-align: left;
+			background-image: none;
+			padding-top: 15px;
+			border-top: 1px solid #ddd;
+		}
+	}
+	
+	@media only screen and (min-width: 768px) {
+	  #header small { display: inline; }
+	}
+	@media only screen and (min-width: 480px) and (max-width: 767px) {
+		
+		#header .site {
+			
+			position: absolute;
+			top: 30px;
+			left: 142px;
+			font-size: 0.36em;
+			line-height: 1em;
+		}
+		#header .site a {
+		}
+	  #header small { display: block;  border: 0; padding: 0; margin: 0;}
+	}
+	@media only screen and (min-width: 960px) {
+	  #footer .footnotes .columns {
+		  text-align: center;
+		  padding-bottom: 20px;
+	  }
+	  #footer .footnotes a {
+		  display: inline-block;
+		  height: 69px;
+		  opacity: 0.5;
+		  
+		  /* new image replacement: http://www.zeldman.com/2012/03/01/replacing-the-9999px-hack-new-image-replacement/ */
+		  text-indent: 200%;
+		  white-space: nowrap;
+		  overflow: hidden;
+	  }
+	  #footer .footnotes a.illinois {
+		  background: url(../images/theme/logo-illinois.png) 0 0 no-repeat;
+		  width: 246px;
+	  
+	  }
+	  #footer .footnotes a.berkeley {
+		  background: url(../images/theme/logo-berkeley.png) 0 0 no-repeat;
+		  width: 145px;
+		  margin-left: 20%;
+	  }
+	  #footer .footnotes a.lbl {
+		  background: url(../images/theme/logo-lbl.png) 0 0 no-repeat;
+		  width: 232px;
+	  
+	  }
+	  #footer .footnotes a.bp {
+		  background: url(../images/theme/logo-bp.png) 0 0 no-repeat;
+		  width: 54px;
+		  margin-right: 40%;
+	  }
+	  #footer .footnotes a:hover {
+		  opacity: 1;
+		  text-decoration: none;
+	  }
+	}

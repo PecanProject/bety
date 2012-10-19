@@ -5,11 +5,10 @@
 ./student_activity_record.rb
 ./orig.public
 ./test/fixtures/users.yml
-./public/maps
 ./local/counties-20110605
+./tmp/*
 db_backups
 local/counties-20110605
 log
 orig.public
-public/maps
 config/environments/development.rb

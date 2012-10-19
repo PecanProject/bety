@@ -1,5 +1,7 @@
 <h1>Listing traits for <%= @title %></h1>
 
+<%= link_to 'CSV Format', sanitize("#{url_for(:action => 'traits')}.csv?site=#{params[:species]}") %>
+
 <table>
   <tr>
     <th>Trait</th>
@@ -28,5 +30,3 @@
 </table>
 <%= will_paginate @traits %>
 <br />
-<%= link_to 'CSV Format', sanitize("#{url_for(:action => 'traits')}.csv?site=#{params[:site]}") %>
-

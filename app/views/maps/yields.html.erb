@@ -1,5 +1,6 @@
-
 <h1>Listing yields for <%= @title %></h1>
+
+<%= link_to 'CSV Format', sanitize("#{url_for(:action => 'traits')}.csv?site=#{params[:species]}") %>
 
 <table>
   <tr>
@@ -30,4 +31,4 @@
 </table>
 <%= will_paginate @yields %>
 <br />
-<%= link_to 'CSV Format', sanitize("#{url_for(:action => 'yields')}.csv?site=#{params[:site]}") %>
+
