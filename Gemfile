@@ -3,10 +3,15 @@ gem "rails", "2.3.11"
 
 gem "mysql2"
 gem "activerecord-mysql2-adapter"
-gem "rspec", "2.11.0"
+#gem "rspec", "2.11.0"
 
 group :production do
   gem "rmagick", "2.13.1"
+end
+
+group :test do
+#  gem "autotest-rails"
+#  gem "autotest-standalone"
 end
 
 gem "actionmailer", "2.3.11"
