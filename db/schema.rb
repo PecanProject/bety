@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121024150948) do
+ActiveRecord::Schema.define(:version => 20121025041533) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -339,6 +339,7 @@ ActiveRecord::Schema.define(:version => 20121024150948) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
+    t.integer  "parent_id"
   end
 
   create_table "pfts_priors", :id => false, :force => true do |t|
