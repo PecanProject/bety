@@ -128,6 +128,8 @@ module AuthenticatedSystem
                                 "PriorsController.create",
                                 "PriorsController.edit",
                                 "PriorsController.update",
+                                "PftsController.new",
+                                "PftsController.create",
                                 "RawsController.new",
                                 "RawsController.create",
                                 "RawsController.edit",
