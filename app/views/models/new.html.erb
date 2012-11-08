@@ -8,6 +8,17 @@
     <%= f.text_field :model_name %>
   </p>
   <p>
+    <%= f.label :model_type %><br />
+    <%= f.select :model_type, options_for_select([
+                ["BIOCRO", "BIOCRO"], 
+                ["ED2", "ED2"],
+                ["GHGVC", "GHGVC"],
+                ["ISIS", "ISIS"],
+                ["SIPNET", "SIPNET"],
+              ]) 
+    %>
+  </p>
+  <p>
     <%= f.label :model_path %><br />
     <%= f.text_field :model_path %>
   </p>
