@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121025041533) do
+ActiveRecord::Schema.define(:version => 20121108192428) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -330,6 +330,7 @@ ActiveRecord::Schema.define(:version => 20121025041533) do
     t.integer  "parent_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "model_type"
   end
 
   add_index "models", ["parent_id"], :name => "index_models_on_parent_id"
@@ -683,18 +684,19 @@ ActiveRecord::Schema.define(:version => 20121025041533) do
   end
 
   create_table "workflows", :force => true do |t|
-    t.integer  "site_id",     :null => false
+    t.integer  "site_id",                          :null => false
     t.string   "model_type"
-    t.integer  "model_id",    :null => false
+    t.integer  "model_id",                         :null => false
     t.string   "hostname"
     t.datetime "start_date"
     t.datetime "end_date"
     t.text     "params"
-    t.text     "folder"
+    t.text     "outdir"
     t.datetime "started_at"
     t.datetime "finished_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "advanced_edit", :default => false
   end
 
   create_table "yields", :force => true do |t|
