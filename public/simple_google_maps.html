@@ -15,18 +15,18 @@
         //map.setCenter(new GLatLng(37.4419, -122.1419), 10);
         map.setUIToDefault();
 
-        //map.setCenter(new GLatLng(37.426496,-122.098918), 15); // works
-        //var gx = new GGeoXml("https://raw.github.com/gist/4057036/b2c448a7066971f1b245b289797f0d84bc642596/gistfile1.klm"); // works        
+        map.setCenter(new GLatLng(37.426496,-122.098918), 15); // works
+        var gx = new GGeoXml("https://raw.github.com/gist/4057036/b2c448a7066971f1b245b289797f0d84bc642596/gistfile1.klm"); // works        
         
         
-        map.setCenter(new GLatLng(112.2549,36.0811), 15); // works
-        var gx = new GGeoXml("https://raw.github.com/gist/4057062/746f3c1595014a4cbd8d5ae848adaa97bd67ba4d/gistfile1.klm"); // works
+        //map.setCenter(new GLatLng(112.2549,36.0811), 15); // works
+        //var gx = new GGeoXml("https://raw.github.com/gist/4057062/746f3c1595014a4cbd8d5ae848adaa97bd67ba4d/gistfile1.klm"); // works
         
         //var gx = new GGeoXml("https://raw.github.com/gist/4052638/aed7ba7653d9a2774051b5b5ab9cece59afc6ce5/gistfile1.klm"); // works
 
 
-        //var gx = new GGeoXml("http://kml.lover.googlepages.com/my-vacation-photos.kml"); // works
-        //var gx = new GGeoXml("https://raw.github.com/gist/4052638/aed7ba7653d9a2774051b5b5ab9cece59afc6ce5/gistfile1");
+        var gx = new GGeoXml("http://kml.lover.googlepages.com/my-vacation-photos.kml"); // works
+        var gx = new GGeoXml("https://raw.github.com/gist/4052638/aed7ba7653d9a2774051b5b5ab9cece59afc6ce5/gistfile1");
         
         map.addOverlay(gx);
 
