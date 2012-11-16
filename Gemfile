@@ -1,8 +1,8 @@
 source "http://rubygems.org"
 gem "rails", "2.3.11"
 
-gem "mysql2"
-gem "activerecord-mysql2-adapter"
+gem "mysql"
+#gem "activerecord-mysql2-adapter"
 #gem "rspec", "2.11.0"
 
 group :production do
@@ -34,7 +34,8 @@ gem "railroad", "0.5.0"
 gem "rails", "2.3.11"
 gem "rake", "0.9.2.2"
 gem "rdoc", "2.4.2"
-gem "recaptcha", "0.3.1"
+#gem "recaptcha", "0.3.1"
+gem "recaptcha", "0.3.1", :require => "recaptcha/rails"
 gem "ruby-graphviz", "1.0.8"
 gem "seer", "0.9.1"
 gem "tzinfo", "0.3.33"
