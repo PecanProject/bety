@@ -2,7 +2,7 @@ source "http://rubygems.org"
 gem "rails", "2.3.11"
 
 gem "mysql"
-#gem "activerecord-mysql2-adapter"
+gem "activerecord-mysql2-adapter"
 #gem "rspec", "2.11.0"
 
 group :production do
@@ -14,6 +14,10 @@ group :test do
 #  gem "autotest-standalone"
 end
 
+gem "query_reviewer", "0.1.5"
+gem "nokogiri"
+gem "ruby-netcdf", "0.6.6.1"
+gem "narray", "0.6.0.1"
 gem "actionmailer", "2.3.11"
 gem "actionpack", "2.3.11"
 #gem "activemodel", "2.3.11"
@@ -34,10 +38,12 @@ gem "railroad", "0.5.0"
 gem "rails", "2.3.11"
 gem "rake", "0.9.2.2"
 gem "rdoc", "2.4.2"
-#gem "recaptcha", "0.3.1"
 gem "recaptcha", "0.3.1", :require => "recaptcha/rails"
 gem "ruby-graphviz", "1.0.8"
 gem "seer", "0.9.1"
 gem "tzinfo", "0.3.33"
 gem "will_paginate", "2.3.16"
+
+
+
 
