@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121108192428) do
+ActiveRecord::Schema.define(:version => 20121119183133) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -55,8 +55,7 @@ ActiveRecord::Schema.define(:version => 20121108192428) do
     t.string  "units"
   end
 
-  create_table "counties", :id => false, :force => true do |t|
-    t.integer  "id",          :default => 0, :null => false
+  create_table "counties", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -65,43 +64,8 @@ ActiveRecord::Schema.define(:version => 20121108192428) do
     t.integer  "county_fips"
   end
 
-  create_table "county_boundaries", :id => false, :force => true do |t|
-    t.integer  "id",                                         :default => 0, :null => false
-    t.integer  "county_id"
-    t.decimal  "lat",        :precision => 20, :scale => 15
-    t.decimal  "lng",        :precision => 20, :scale => 15
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.decimal  "zoom0x",     :precision => 20, :scale => 10
-    t.decimal  "zoom0y",     :precision => 20, :scale => 10
-    t.boolean  "zoom0skip"
-    t.decimal  "zoom1x",     :precision => 20, :scale => 10
-    t.decimal  "zoom1y",     :precision => 20, :scale => 10
-    t.boolean  "zoom1skip"
-    t.decimal  "zoom2x",     :precision => 20, :scale => 10
-    t.decimal  "zoom2y",     :precision => 20, :scale => 10
-    t.decimal  "zoom3x",     :precision => 20, :scale => 10
-    t.decimal  "zoom3y",     :precision => 20, :scale => 10
-    t.decimal  "zoom4x",     :precision => 20, :scale => 10
-    t.decimal  "zoom4y",     :precision => 20, :scale => 10
-    t.decimal  "zoom5x",     :precision => 20, :scale => 10
-    t.decimal  "zoom5y",     :precision => 20, :scale => 10
-    t.decimal  "zoom6x",     :precision => 20, :scale => 10
-    t.decimal  "zoom6y",     :precision => 20, :scale => 10
-    t.decimal  "zoom7x",     :precision => 20, :scale => 10
-    t.decimal  "zoom7y",     :precision => 20, :scale => 10
-    t.decimal  "zoom8x",     :precision => 20, :scale => 10
-    t.decimal  "zoom8y",     :precision => 20, :scale => 10
-    t.decimal  "zoom9x",     :precision => 20, :scale => 10
-    t.decimal  "zoom9y",     :precision => 20, :scale => 10
-    t.decimal  "zoom10x",    :precision => 20, :scale => 10
-    t.decimal  "zoom10y",    :precision => 20, :scale => 10
-    t.decimal  "zoom11x",    :precision => 20, :scale => 10
-    t.decimal  "zoom11y",    :precision => 20, :scale => 10
-  end
-
   create_table "county_paths", :id => false, :force => true do |t|
-    t.integer  "id",         :default => 0, :null => false
+    t.integer  "id"
     t.integer  "county_id"
     t.integer  "zoom"
     t.text     "path"
@@ -331,6 +295,12 @@ ActiveRecord::Schema.define(:version => 20121108192428) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "model_type"
+    t.integer  "site_id"
+    t.integer  "model_id"
+    t.string   "hostname"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.string   "params"
   end
 
   add_index "models", ["parent_id"], :name => "index_models_on_parent_id"
@@ -362,12 +332,12 @@ ActiveRecord::Schema.define(:version => 20121108192428) do
   add_index "pfts_species", ["pft_id", "specie_id"], :name => "index_pfts_species_on_pft_id_and_specie_id", :unique => true
 
   create_table "planting", :id => false, :force => true do |t|
-    t.integer "treatment_id"
-    t.integer "management_id"
-    t.string  "mgmttype"
-    t.date    "date"
-    t.decimal "level",         :precision => 16, :scale => 4
-    t.string  "units"
+    t.integer "treatment_id",  :limit => 1, :null => false
+    t.integer "management_id", :limit => 1, :null => false
+    t.integer "mgmttype",      :limit => 1, :null => false
+    t.integer "date",          :limit => 1, :null => false
+    t.integer "level",         :limit => 1, :null => false
+    t.integer "units",         :limit => 1, :null => false
   end
 
   create_table "posteriors", :force => true do |t|
@@ -430,12 +400,12 @@ ActiveRecord::Schema.define(:version => 20121108192428) do
   add_index "runs", ["site_id"], :name => "index_runs_on_site_id"
 
   create_table "seeding", :id => false, :force => true do |t|
-    t.integer "treatment_id"
-    t.integer "management_id"
-    t.string  "mgmttype"
-    t.date    "date"
-    t.decimal "level",         :precision => 16, :scale => 4
-    t.string  "units"
+    t.integer "treatment_id",  :limit => 1, :null => false
+    t.integer "management_id", :limit => 1, :null => false
+    t.integer "mgmttype",      :limit => 1, :null => false
+    t.integer "date",          :limit => 1, :null => false
+    t.integer "level",         :limit => 1, :null => false
+    t.integer "units",         :limit => 1, :null => false
   end
 
   create_table "sessions", :force => true do |t|
@@ -684,19 +654,18 @@ ActiveRecord::Schema.define(:version => 20121108192428) do
   end
 
   create_table "workflows", :force => true do |t|
-    t.integer  "site_id",                          :null => false
-    t.string   "model_type"
-    t.integer  "model_id",                         :null => false
-    t.string   "hostname"
+    t.string   "folder"
     t.datetime "start_date"
     t.datetime "end_date"
-    t.text     "params"
-    t.text     "outdir"
-    t.datetime "started_at"
-    t.datetime "finished_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "advanced_edit", :default => false
+    t.integer  "site_id"
+    t.integer  "model_id",                         :null => false
+    t.string   "hostname"
+    t.string   "params"
+    t.datetime "started_at"
+    t.datetime "finished_at"
   end
 
   create_table "yields", :force => true do |t|
@@ -729,28 +698,28 @@ ActiveRecord::Schema.define(:version => 20121108192428) do
   add_index "yields", ["user_id"], :name => "index_yields_on_user_id"
 
   create_table "yields_view", :id => false, :force => true do |t|
-    t.integer "yield_id"
-    t.integer "citation_id"
-    t.integer "site_id"
-    t.string  "site"
-    t.decimal "lat",                         :precision => 9,  :scale => 6
-    t.decimal "lon",                         :precision => 9,  :scale => 6
-    t.string  "sp"
-    t.string  "author"
-    t.integer "cityear"
-    t.string  "trt"
-    t.date    "date"
-    t.integer "month"
-    t.integer "year"
-    t.decimal "mean",                        :precision => 16, :scale => 4
-    t.integer "n"
-    t.string  "statname"
-    t.decimal "stat",                        :precision => 16, :scale => 4
-    t.text    "notes"
-    t.string  "user",         :limit => 100
-    t.integer "checked"
-    t.integer "access_level"
-    t.integer "user_id"
+    t.integer "yield_id",     :limit => 1, :null => false
+    t.integer "citation_id",  :limit => 1, :null => false
+    t.integer "site_id",      :limit => 1, :null => false
+    t.integer "site",         :limit => 1, :null => false
+    t.integer "lat",          :limit => 1, :null => false
+    t.integer "lon",          :limit => 1, :null => false
+    t.integer "sp",           :limit => 1, :null => false
+    t.integer "author",       :limit => 1, :null => false
+    t.integer "cityear",      :limit => 1, :null => false
+    t.integer "trt",          :limit => 1, :null => false
+    t.integer "date",         :limit => 1, :null => false
+    t.integer "month",        :limit => 1, :null => false
+    t.integer "year",         :limit => 1, :null => false
+    t.integer "mean",         :limit => 1, :null => false
+    t.integer "n",            :limit => 1, :null => false
+    t.integer "statname",     :limit => 1, :null => false
+    t.integer "stat",         :limit => 1, :null => false
+    t.integer "notes",        :limit => 1, :null => false
+    t.integer "user",         :limit => 1, :null => false
+    t.integer "checked",      :limit => 1, :null => false
+    t.integer "access_level", :limit => 1, :null => false
+    t.integer "user_id",      :limit => 1, :null => false
   end
 
   create_table "yieldsview", :id => false, :force => true do |t|
