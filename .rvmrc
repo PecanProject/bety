@@ -1,3 +1,0 @@
-rvm use ruby-1.8.7-p352@bety --create 		# Sets the individual project gemset
-rvm_project_rvmrc_default=1 		# Enables gemset switch when leaving the dir
-
