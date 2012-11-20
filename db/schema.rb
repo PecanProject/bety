@@ -215,10 +215,10 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
     t.integer  "run_id"
     t.integer  "variable_id"
     t.integer  "input_id"
-    t.integer  "loglikelihood", :limit => 10, :precision => 10, :scale => 0
-    t.integer  "n_eff",         :limit => 10, :precision => 10, :scale => 0
-    t.integer  "weight",        :limit => 10, :precision => 10, :scale => 0
-    t.integer  "residual",      :limit => 10, :precision => 10, :scale => 0
+    t.integer  "loglikelihood"
+    t.integer  "n_eff"
+    t.integer  "weight"
+    t.integer  "residual"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -290,7 +290,7 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
   create_table "models", :force => true do |t|
     t.string   "model_name"
     t.string   "model_path"
-    t.integer  "revision",   :limit => 10, :precision => 10, :scale => 0
+    t.integer  "revision"
     t.integer  "parent_id"
     t.datetime "created_at"
     t.datetime "updated_at"
