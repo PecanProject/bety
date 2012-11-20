@@ -12,3 +12,5 @@ local/counties-20110605
 log
 orig.public
 config/environments/development.rb
+.DS_Store
+.rvmrc
