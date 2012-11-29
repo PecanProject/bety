@@ -17,9 +17,6 @@
     Last User to update: <%= link_to_if @file.updated_user, @file.updated_user, @file.updated_user %>
   </p>
   <p>
-    Parent file: <%= link_to_if @file.parent, @file.parent, dbfile_path(@file.parent) %>
-  </p>
-  <p>
     Machine: <%= @file.machine %>
   </p>
 
