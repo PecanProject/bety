@@ -13,4 +13,3 @@ log
 orig.public
 config/environments/development.rb
 .DS_Store
-.rvmrc
