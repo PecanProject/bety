@@ -1,6 +1,5 @@
 <table class="pretty">
   <tr>
-    <th>Download</th>
     <th><%= sortable "dbfiles.file_name", "File Name" -%></th>
     <th><%= sortable "dbfiles.file_path", "File Path" -%></th>
     <th><%= sortable "dbfiles.md5", "Md5" -%></th>
@@ -13,7 +12,6 @@
   </tr>
 <% @files.each do |file| %>
   <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and file.id == @search.to_i%>>
-    <td><%= link_to_if(file.download?, "Download", download_dbfile_path(file)){} %></td>
     <td><%=h file.file_name %></td>
     <td><%=h file.file_path %></td>
     <td><%=h file.md5 %></td>

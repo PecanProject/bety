@@ -1,3 +1,4 @@
+derpy
 <table class="pretty">
   <tr>
     <th><%= sortable "sites.sitename", "Site" -%></th>
@@ -17,8 +18,20 @@
     <td><%= link_to_if input.site, input.site, input.site -%></td>
     <td><% input.variables.each do |iv| -%>
         <%= link_to iv,iv -%>,<br />
-        <% end -%></td>
-    <td><%=h input.name -%></td>
+        <% end -%>
+    </td>
+    
+    <%#### Test links and if file_path exists ... link it! %>
+    <% filepath = @dbfiles[input.file_id].file_path %>
+    <td>
+      <% if input.file_id != nil && filepath != nil %>
+        <%= link_to input.name, filepath %>
+      <% else %>
+        <%=h input.file_id -%>
+      <% end %>
+    </td>
+    
+    
     <td><%=h input.start_date -%></td>
     <td><%=h input.end_date -%></td>
     <td><%=h input.file_id -%></td>

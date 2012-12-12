@@ -1,14 +1,51 @@
-
+# FIXME: RAILS_ENV should be specified by the deploy scripts
+# FIXME: We can test the RAILS_ENV and specify options to make this script more portable
 RAILS_ENV='production'
-require '/rails/ebi/config/environment'
+require '../config/environment'
 
+# Mercator used for lattitude / longitude projections onto XY coordinate plane
+require "#{Rails.root}/lib/mercator"
+include Mercator
+
+# RMagick for image generation
 require 'rvg/rvg'
 include Magick
 
+# Used in reading local file inputs
+require 'csv' 
+
+############
+### New to this script? Start here.
+=begin
+  Inputs it takes:
+  - names of directories you want to build ( which contain all the tiles )
+  - Array of data *****
+  - country boundaries
+    - where from? 
+  Expected output:
+  - directory full of images
+  - NOTE: "Tiles" are the png files... NOT the individual squares drawn corresponding to a county
+=end
+############
+
+############
+# Notes from the original author:
+# find the max value and the min value (which the code is already doing)
+#  color_range[:max]
+#  color_range[:min]
+
+# divide by the number of color 'steps' there are to find the range of each color.
+# steps == data ranges that associate with each color: 1-5 == red, 6-10 == blue
+# Then draw the boxes and their labels.
+############
+
+
+# Looks like this can accept in command line arguments
 zoom_min = ARGV[0].to_i
 zoom_max = ARGV[1].to_i
+# Here we've got out default zoom levels
 zoom_min == 0 ? zoom_min = 2 : zoom_min = zoom_min.to_i
-zoom_max == 0 ? zoom_max = 9 : zoom_max = zoom_max.to_i
+zoom_max == 0 ? zoom_max = 5 : zoom_max = zoom_max.to_i
 
 ignore_counties = County.all(:select => :id, :conditions => "state = 'Alaska' or state = 'Hawaii'").collect(&:id)
 
@@ -26,14 +63,35 @@ usboundaries[9] = { :xmax => 41160.287118222, :ymax => 56312.969504094, :xmin =>
 usboundaries[10] = { :xmax => 82320.5742364445, :ymax => 112625.939008187, :xmin => 40244.0745415111, :ymin => 89597.7794164164 }
 usboundaries[11] = { :xmax => 164641.148472889, :ymax => 225251.878016374, :xmin => 80488.1490830222, :ymin => 179195.558832833 }
 
+# Array of strings used in directory naming
 crops = LocationYield.all(:select => "distinct(species)").collect {|x| x["species"] }
 
 crops.each do |crop|
   p crop
   
   color_range = {}
-
- 
+  
+  
+  
+  
+  ############
+  ### Color values and increments are scaled to the data we're importing
+#  if ['evapotransportaion'].include?(crop)
+#    color_range[:max] = 0.0
+#    color_range[:min] = 10.0 
+#  elsif ['yield'].include?(crop)
+#    color_range[:max] = 0.0
+#    color_range[:min] = 45.0 
+#  elsif ['cost'].include?(crop)
+#    color_range[:max] = 0.0
+#    color_range[:min] = 200.0 
+#  elsif ['miscanthus','poplar','switchgrass'].include?(crop) 
+#    color_range[:max] = 40.0
+#    color_range[:min] = 0.0
+#  else
+#    color_range[:max] = LocationYield.first(:order => 'yield desc', :conditions => ["species = ?",crop]).yield.to_f
+#    color_range[:min] = LocationYield.first(:order => 'yield asc', :conditions => ["species = ?",crop]).yield.to_f
+#  end
   if ['miscanthus','poplar','switchgrass'].include?(crop) 
     color_range[:max] = 40.0
     color_range[:min] = 0.0
@@ -45,23 +103,52 @@ crops.each do |crop|
   p color_range.to_yaml   
   #color_range[:increment] = (color_range[:max] - color_range[:min])/120
   color_range[:increment] = (color_range[:max] - color_range[:min])/80
-
-  #Draw Crop Scale
+  ############
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  # Draw Crop Scale -- Image resolution... bc RVG is a vector drawing program
   RVG::dpi = 600
+  
+  ############
+  ### Build up inputs for the legend or "scale":
+  # This image is the scale on the bottom of the right of the map overlay
+  # that shows color to value relationships
+  # Build Arrays which contains information to build images
+  # http://www.imagemagick.org/RMagick/doc/ilist.html
   scale_list1 = Magick::ImageList.new
+  # http://www.imagemagick.org/RMagick/doc/image1.html
+                     # Image.new(columns, rows [, fill]) [ { optional arguments } ]
   scale_list1 << Magick::Image.new(30, 5) { self.background_color = "none" }
+  
   if ['miscanthus','poplar','switchgrass'].include?(crop) 
     scale_list1 << Magick::Image.new(30, 240, Magick::GradientFill.new(0,0,240,0,"hsla(120,100,90,0.5)","hsla(120,100,10,0.5)"))
   else
     scale_list1 << Magick::Image.new(30, 240, Magick::GradientFill.new(0,0,240,0,"hsla(280,100,50,0.8)","hsla(360,100,50,0.8)"))
   end
-  scale_list1[1].opacity = Magick::MaxRGB/2 
+  
+  scale_list1[1].opacity = Magick::MaxRGB/2
   scale_list2 = Magick::ImageList.new
   scale_list2 << scale_list1.append(true)
   scale_list2 << Magick::Image.new(50, 250){ self.background_color = "none"  }
+
   txt = Draw.new
 
-
+  # http://www.imagemagick.org/RMagick/doc/draw.html#annotate
+  # So it seems we're annotating here ... but I've seen no text in any of the overlays
   if ['miscanthus','poplar','switchgrass'].include?(crop) 
     txt.annotate(scale_list2[1],0,0,5,10,"0"){
       self.font_family = 'Helvetica'
@@ -95,7 +182,7 @@ crops.each do |crop|
   scale_list3 = Magick::ImageList.new
   scale_list3 << Magick::Image.new(80, 30) { self.background_color = "none" }
   scale_list3 << scale_list2.append(false)
-
+  
   Draw.new.annotate(scale_list3[0],0,0,5,13,"Annual Yield"){
         self.font_family = 'Helvetica'
         self.pointsize = 12
@@ -107,16 +194,30 @@ crops.each do |crop|
         self.stroke = "#000000"
       }
 
+  scale_list3.append(true).write("#{Rails.root}/public/#{crop}-scale.png")
+  ############
 
-  scale_list3.append(true).write("/rails/ebi/public/#{crop}-scale.png")
+
+  ############  
+  ### Begin creating the tile overlays
   
   zoom_min.upto(zoom_max) do |zoom|
   
     t = Time.now
+    # Get boundaries of the US within the coordinate system at a given zoom
     countyx_max = usboundaries[zoom][:xmax]
     countyy_max = usboundaries[zoom][:ymax]
     countyx_min = usboundaries[zoom][:xmin]
     countyy_min = usboundaries[zoom][:ymin]
+    
+    # FIXME: 
+    # Google maps uses a grid of blocks explained in more detail here:
+    # https://developers.google.com/maps/documentation/javascript/maptypes#WorldCoordinates
+    # to determine how many blocks there are on the x & y access you take 2^zoom_level (minus 1)
+    # So at zoom 0 there is one block to draw, at zoom 1 4 blocks to draw,....
+    
+    # Intuitive demonstration of whats happening with zoom levels, pixel coordinates and tile coordinates:
+    # https://google-developers.appspot.com/maps/documentation/javascript/examples/map-coordinates
   
     0.upto((2**zoom)-1) do |xx|
       0.upto((2**zoom)-1) do |yy|
@@ -129,18 +230,34 @@ crops.each do |crop|
         paramx = 256*tmpx
         paramy = 256*tmpy
   
-        tile_dir = "/rails/ebi/public/maps/mapoverlay/#{crop}"
-        tile_file = "/rails/ebi/public/maps/mapoverlay/#{crop}/#{tmpx}-#{tmpy}-#{zoom}.png"
+        # Establish where the name and directory of the tiles
+        tile_dir = "#{Rails.root}/public/maps/mapoverlay/#{crop}"
+        tile_file = "#{Rails.root}/public/maps/mapoverlay/#{crop}/#{tmpx}-#{tmpy}-#{zoom}.png"
   
+        # Skip the instance if the file is symlinked
         next if File.symlink?(tile_file)
-  
+        # make the directory if it doesnt exist already  
         Dir.mkdir(tile_dir) if !File.directory?(tile_dir)
   
+        # Mercator is used to convert latitude / longitude positions to a flat-plane coodinate system 
+        # IE the XY plane of the google map
         merc = MercatorProjection.new(zoom)
-          
+        
+        ############
+        ### Ignore areas outside of the US by symlinking to blank tile
+        # As we only care about the US for this map those boundaries are set above.
+        # If the block we are looking at is completely outside of the US, we can quickly skip it,
+        # link the block to the precreated empty block file. Makes the process much quicker as, 
+        # as the zoom level increases a large number of blocks are empty because they are outside
+        # of the data we care about.
         if paramx.to_f <= countyx_max and (paramx+256).to_f >= countyx_min and paramy.to_f <= countyy_max and (paramy+256).to_f >= countyy_min
       
-          # If any point of the county is in the square include iti the county
+      
+          ############
+          ### Find all the counties that are in the block at the given zoom level.
+          # For zoom 0 and zoom 1 (block 0,0) that will include Alaska and Hawaii, but we
+          # do not map those, so ignore them. If it is at zoom 1, but not block 0,0 just 
+          # give it an empty list of counties as it does not contain anything we care about.
           if zoom == 0
             counties = County.all(:select => "id", :conditions => ["id not in (?)", ignore_counties]).collect(&:id).uniq
           elsif zoom == 1 and paramx == 0 and paramy == 0
@@ -149,7 +266,8 @@ crops.each do |crop|
             counties = []
           else
             range = {}
-            # Zoom 8 is the first level panels are inside a county so they do not show up. San Bernardino County is the largest, outside Alaska
+            # FIXME: 
+            # Zoom 8 is the first level tiles are inside a county so they do not show up. San Bernardino County is the largest, outside Alaska
             # if we just add half of the size to the max and subtract half the size to the min of San Bernardino County at the different
             # levels ( minus 256 ), we know we will catch the appropiate county (plus some others)
             # 8 : x = 668, y = 430
@@ -188,12 +306,22 @@ crops.each do |crop|
     
      
           if counties.length > 0
+            #     RVG.new(width, height) >> Create a new RVG container with its own coordinate system
+            #                     .viewbox(paramx,paramy,256,256)
             rvg = RVG.new(256,256).viewbox(paramx,paramy,256,256) do |canvas|
               canvas.background_fill_opacity = 0.0
     
+              # FIXME: what does "counties.id in (?)" do?
+              # We have two tables:        
+              # county_boundaries which contains the boundary information for each county, and
+              # county which contains generic information about each county. There is the obvious
+              # one to many relationship between the two (aka counties have many boundaries).
+              # This finds all the counties we care about.
               countys = County.all(:conditions => ["counties.id in (?)", counties])
               countys.each do |county|
     
+    
+                # were skipping these here ... but ignore_counties already removed them??
                 next if ["Hawaii","Alaska"].include?(county.state)
                 
                 avg = county.location_yields.find_by_species(crop).yield.to_f rescue nil
@@ -230,18 +358,35 @@ crops.each do |crop|
             end
           end
         end
-    
+        ############
+        
+        
+        ############
+        ### Draw the image
         if !rvg.nil?
+          # This is where the image is actually DRAWN with RVG
+          # Using the contents of the container instance "rvg"
           img = rvg.draw
+          # Then saved
           img.write(tile_file)
         else
+          # This is the case where the tile is outside of the US ... and we simply give it the empty image
           File.delete(tile_file) if File.exists?(tile_file)
-          File.symlink("/rails/ebi/public/maps/mapoverlay/blank_tile.png",tile_file)
+          # Symlink it
+          # NOTE: Dont use Rails.root because we'd like a RELATIVE file path 
+          # as it makes the application more portable
+          File.symlink("../blank_tile.png",tile_file)
         end
+        ############
+
         #p "#{xx}-#{yy}-#{zoom} : #{(Time.now - tt).to_f}" if (Time.now - tt).to_f > 1
       end
     end
     puts "Zoom #{zoom} total: #{(Time.now - t).to_f}"
   end
+  
+  
+
+  
 end
   

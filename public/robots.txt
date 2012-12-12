@@ -23,4 +23,5 @@ Disallow: /users
 Disallow: /variables
 Disallow: /visitors
 Disallow: /yields
+DIsallow: /public/temp_models
 Allow: /

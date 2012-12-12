@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120916130311) do
+ActiveRecord::Schema.define(:version => 20121119183133) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.string   "doi"
     t.integer  "user_id"
   end
+
+  add_index "citations", ["user_id"], :name => "index_citations_on_user_id"
 
   create_table "citations_sites", :id => false, :force => true do |t|
     t.integer  "citation_id"
@@ -43,6 +45,24 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
   end
 
   add_index "citations_treatments", ["citation_id", "treatment_id"], :name => "index_citations_treatments_on_citation_id_and_treatment_id", :unique => true
+
+  create_table "coppice", :id => false, :force => true do |t|
+    t.integer "treatment_id"
+    t.integer "management_id"
+    t.string  "mgmttype"
+    t.date    "date"
+    t.decimal "level",         :precision => 16, :scale => 4
+    t.string  "units"
+  end
+
+  create_table "counties", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "state"
+    t.integer  "state_fips"
+    t.integer  "county_fips"
+  end
 
   create_table "county_paths", :id => false, :force => true do |t|
     t.integer  "id"
@@ -85,18 +105,22 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.integer  "created_user_id"
     t.integer  "updated_user_id"
     t.integer  "machine_id"
-    t.integer  "format_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "file_id"
     t.string   "container_type"
-    t.integer  "container_id"
+    t.integer  "file_id"
   end
+
+  add_index "dbfiles", ["container_type"], :name => "index_dbfiles_on_container_id_and_container_type"
+  add_index "dbfiles", ["created_user_id"], :name => "index_dbfiles_on_created_user_id"
+  add_index "dbfiles", ["machine_id"], :name => "index_dbfiles_on_machine_id"
+  add_index "dbfiles", ["updated_user_id"], :name => "index_dbfiles_on_updated_user_id"
 
   create_table "ensembles", :force => true do |t|
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "runtype"
   end
 
   create_table "entities", :force => true do |t|
@@ -106,6 +130,8 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "entities", ["parent_id"], :name => "index_entities_on_parent_id"
 
   create_table "formats", :force => true do |t|
     t.string   "mime_type"
@@ -131,6 +157,8 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.datetime "updated_at"
   end
 
+  add_index "formats_variables", ["format_id", "variable_id"], :name => "index_formats_variables_on_format_id_and_variable_id"
+
   create_table "input_files", :force => true do |t|
     t.integer  "file_id"
     t.string   "file_name"
@@ -152,15 +180,18 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.datetime "start_date"
     t.datetime "end_date"
     t.string   "name"
-    t.integer  "file_id"
     t.integer  "parent_id"
     t.integer  "user_id"
     t.integer  "access_level"
     t.boolean  "raw"
-    t.integer  "current_file_id"
+    t.integer  "format_id"
+    t.integer  "file_id"
   end
 
+  add_index "inputs", ["format_id"], :name => "index_inputs_on_format_id"
+  add_index "inputs", ["parent_id"], :name => "index_inputs_on_parent_id"
   add_index "inputs", ["site_id"], :name => "index_inputs_on_site_id"
+  add_index "inputs", ["user_id"], :name => "index_inputs_on_user_id"
 
   create_table "inputs_runs", :id => false, :force => true do |t|
     t.integer  "input_id"
@@ -184,10 +215,10 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.integer  "run_id"
     t.integer  "variable_id"
     t.integer  "input_id"
-    t.integer  "loglikelihood", :limit => 10, :precision => 10, :scale => 0
-    t.integer  "n_eff",         :limit => 10, :precision => 10, :scale => 0
-    t.integer  "weight",        :limit => 10, :precision => 10, :scale => 0
-    t.integer  "residual",      :limit => 10, :precision => 10, :scale => 0
+    t.integer  "loglikelihood"
+    t.integer  "n_eff"
+    t.integer  "weight"
+    t.integer  "residual"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -215,6 +246,8 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.datetime "updated_at"
   end
 
+  add_index "machines", ["hostname"], :name => "index_machines_on_hostname"
+
   create_table "managements", :force => true do |t|
     t.integer  "citation_id"
     t.date     "date"
@@ -229,6 +262,7 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
   end
 
   add_index "managements", ["citation_id"], :name => "index_managements_on_citation_id"
+  add_index "managements", ["user_id"], :name => "index_managements_on_user_id"
 
   create_table "managements_treatments", :id => false, :force => true do |t|
     t.integer  "treatment_id"
@@ -247,6 +281,8 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.datetime "updated_at"
   end
 
+  add_index "methods", ["citation_id"], :name => "index_methods_on_citation_id"
+
   create_table "mimetypes", :force => true do |t|
     t.string "type_string"
   end
@@ -254,10 +290,17 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
   create_table "models", :force => true do |t|
     t.string   "model_name"
     t.string   "model_path"
-    t.integer  "revision",   :limit => 10, :precision => 10, :scale => 0
+    t.integer  "revision"
     t.integer  "parent_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "model_type"
+    t.integer  "site_id"
+    t.integer  "model_id"
+    t.string   "hostname"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.string   "params"
   end
 
   add_index "models", ["parent_id"], :name => "index_models_on_parent_id"
@@ -267,6 +310,7 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
+    t.integer  "parent_id"
   end
 
   create_table "pfts_priors", :id => false, :force => true do |t|
@@ -286,6 +330,15 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
   end
 
   add_index "pfts_species", ["pft_id", "specie_id"], :name => "index_pfts_species_on_pft_id_and_specie_id", :unique => true
+
+  create_table "planting", :id => false, :force => true do |t|
+    t.integer "treatment_id",  :limit => 1, :null => false
+    t.integer "management_id", :limit => 1, :null => false
+    t.integer "mgmttype",      :limit => 1, :null => false
+    t.integer "date",          :limit => 1, :null => false
+    t.integer "level",         :limit => 1, :null => false
+    t.integer "units",         :limit => 1, :null => false
+  end
 
   create_table "posteriors", :force => true do |t|
     t.integer  "pft_id"
@@ -342,8 +395,18 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.string   "end_date"
   end
 
+  add_index "runs", ["ensemble_id"], :name => "index_runs_on_ensemble_id"
   add_index "runs", ["model_id"], :name => "index_runs_on_model_id"
   add_index "runs", ["site_id"], :name => "index_runs_on_site_id"
+
+  create_table "seeding", :id => false, :force => true do |t|
+    t.integer "treatment_id",  :limit => 1, :null => false
+    t.integer "management_id", :limit => 1, :null => false
+    t.integer "mgmttype",      :limit => 1, :null => false
+    t.integer "date",          :limit => 1, :null => false
+    t.integer "level",         :limit => 1, :null => false
+    t.integer "units",         :limit => 1, :null => false
+  end
 
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
@@ -378,6 +441,8 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.decimal  "clay_pct",   :precision => 9, :scale => 5
     t.string   "espg"
   end
+
+  add_index "sites", ["user_id"], :name => "index_sites_on_user_id"
 
   create_table "species", :force => true do |t|
     t.integer  "spcd"
@@ -527,13 +592,21 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.integer  "access_level"
     t.integer  "entity_id"
     t.integer  "method_id"
+    t.integer  "date_year"
+    t.integer  "date_month"
+    t.integer  "date_day"
+    t.integer  "time_hour"
+    t.integer  "time_minute"
   end
 
   add_index "traits", ["citation_id"], :name => "index_traits_on_citation_id"
   add_index "traits", ["cultivar_id"], :name => "index_traits_on_cultivar_id"
+  add_index "traits", ["entity_id"], :name => "index_traits_on_entity_id"
+  add_index "traits", ["method_id"], :name => "index_traits_on_method_id"
   add_index "traits", ["site_id"], :name => "index_traits_on_site_id"
   add_index "traits", ["specie_id"], :name => "index_traits_on_specie_id"
   add_index "traits", ["treatment_id"], :name => "index_traits_on_treatment_id"
+  add_index "traits", ["user_id"], :name => "index_traits_on_user_id"
   add_index "traits", ["variable_id"], :name => "index_traits_on_variable_id"
 
   create_table "treatments", :force => true do |t|
@@ -544,6 +617,8 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
     t.boolean  "control"
     t.integer  "user_id"
   end
+
+  add_index "treatments", ["user_id"], :name => "index_treatments_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
@@ -579,18 +654,18 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
   end
 
   create_table "workflows", :force => true do |t|
-    t.integer  "site_id",     :null => false
-    t.string   "model_type"
-    t.integer  "model_id",    :null => false
-    t.string   "hostname"
+    t.string   "folder"
     t.datetime "start_date"
     t.datetime "end_date"
-    t.text     "params"
-    t.text     "folder"
-    t.datetime "started_at"
-    t.datetime "finished_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "advanced_edit", :default => false
+    t.integer  "site_id"
+    t.integer  "model_id",                         :null => false
+    t.string   "hostname"
+    t.string   "params"
+    t.datetime "started_at"
+    t.datetime "finished_at"
   end
 
   create_table "yields", :force => true do |t|
@@ -616,9 +691,36 @@ ActiveRecord::Schema.define(:version => 20120916130311) do
 
   add_index "yields", ["citation_id"], :name => "index_yields_on_citation_id"
   add_index "yields", ["cultivar_id"], :name => "index_yields_on_cultivar_id"
+  add_index "yields", ["method_id"], :name => "index_yields_on_method_id"
   add_index "yields", ["site_id"], :name => "index_yields_on_site_id"
   add_index "yields", ["specie_id"], :name => "index_yields_on_specie_id"
   add_index "yields", ["treatment_id"], :name => "index_yields_on_treatment_id"
+  add_index "yields", ["user_id"], :name => "index_yields_on_user_id"
+
+  create_table "yields_view", :id => false, :force => true do |t|
+    t.integer "yield_id",     :limit => 1, :null => false
+    t.integer "citation_id",  :limit => 1, :null => false
+    t.integer "site_id",      :limit => 1, :null => false
+    t.integer "site",         :limit => 1, :null => false
+    t.integer "lat",          :limit => 1, :null => false
+    t.integer "lon",          :limit => 1, :null => false
+    t.integer "sp",           :limit => 1, :null => false
+    t.integer "author",       :limit => 1, :null => false
+    t.integer "cityear",      :limit => 1, :null => false
+    t.integer "trt",          :limit => 1, :null => false
+    t.integer "date",         :limit => 1, :null => false
+    t.integer "month",        :limit => 1, :null => false
+    t.integer "year",         :limit => 1, :null => false
+    t.integer "mean",         :limit => 1, :null => false
+    t.integer "n",            :limit => 1, :null => false
+    t.integer "statname",     :limit => 1, :null => false
+    t.integer "stat",         :limit => 1, :null => false
+    t.integer "notes",        :limit => 1, :null => false
+    t.integer "user",         :limit => 1, :null => false
+    t.integer "checked",      :limit => 1, :null => false
+    t.integer "access_level", :limit => 1, :null => false
+    t.integer "user_id",      :limit => 1, :null => false
+  end
 
   create_table "yieldsview", :id => false, :force => true do |t|
     t.integer "yield_id",                                                   :default => 0,  :null => false

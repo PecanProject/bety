@@ -39,8 +39,12 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
-  map.resources :users
 
+  map.resources :users
+  
+  
+
+  map.ebi_forwarded '/ebi_forwarded', :controller => 'sessions', :action => 'ebi_forwarded'
   map.resource :session
 
   map.resources :covariates
@@ -115,7 +119,8 @@ ActionController::Routing::Routes.draw do |map|
   #   end
 
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  #map.root '/'
+  # map.root :to => "static#index"
+  map.root :controller => "static", :action => "index"
 
   # See how all your routes lay out with "rake routes"
 
@@ -125,9 +130,6 @@ ActionController::Routing::Routes.draw do |map|
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
   map.connect ':controller/:action.:format'
-
-
-  map.root :controller => 'static'
 
 
   #route for 'static' content

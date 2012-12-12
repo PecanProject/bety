@@ -8,9 +8,9 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 require 'tasks/rails'
-begin
-  require 'query_reviewer/tasks'
-rescue LoadError
-  STDERR.puts "The query_reviewer gem could not be found!"
-end
+#begin
+#  require 'query_reviewer/tasks'
+#rescue LoadError
+#  STDERR.puts "The query_reviewer gem could not be found!"
+#end
 

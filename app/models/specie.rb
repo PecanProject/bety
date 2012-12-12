@@ -1,5 +1,5 @@
 class Specie < ActiveRecord::Base
-
+  require "comma"
   include Overrides
 
   extend SimpleSearch

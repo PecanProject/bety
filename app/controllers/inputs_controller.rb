@@ -60,6 +60,7 @@ class InputsController < ApplicationController
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
       @inputs = Input.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @dbfiles = DBFile.all
     else
       @inputs = Input.api_search(params)
     end

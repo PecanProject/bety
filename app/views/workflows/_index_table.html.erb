@@ -15,8 +15,12 @@
     <td><%=h workflow.created_at %></td>
     <td><%=h workflow.updated_at %></td>
     <td><%= link_to 'Show', workflow %></td>
-    <td><%= link_to 'Edit', edit_workflow_path(workflow) %></td>
-    <td><%= link_to 'Destroy', workflow, :confirm => 'Are you sure?', :method => :delete %></td>
+    
+    <%# Workflows should not be edited through the rails application%>
+    <td><%#= link_to 'Edit', edit_workflow_path(workflow) %></td>
+
+    <%# Workflows should not be destroyed through the rails application%>
+    <td><%#= link_to 'Destroy', workflow, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>

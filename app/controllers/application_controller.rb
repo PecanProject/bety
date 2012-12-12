@@ -5,8 +5,12 @@ class ApplicationController < ActionController::Base
 
   # Be sure to include AuthenticationSystem in Application Controller instead
   include AuthenticatedSystem
-  include Mercator
   require 'csv'
+  
+  if RAILS_ENV == "production"
+    require "#{Rails.root}/lib/mercator" 
+    include Mercator
+  end
 
   rescue_from ActiveRecord::RecordNotFound, :with => :not_found
 

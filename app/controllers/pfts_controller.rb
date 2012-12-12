@@ -5,6 +5,12 @@ class PftsController < ApplicationController
   layout 'application'
 
   require 'csv'
+  
+  # restful-authentication override 
+  def access_denied
+    flash[:notice] = 'You have insufficient permissions to create new PFTs'
+    redirect_to :action => "index"
+  end
 
   def rem_pfts_priors
     @pft = Pft.find(params[:id])
@@ -125,7 +131,7 @@ class PftsController < ApplicationController
 
   # GET /pfts/new
   # GET /pfts/new.xml
-  def new
+  def new 
     @pft = Pft.new
 
     respond_to do |format|
