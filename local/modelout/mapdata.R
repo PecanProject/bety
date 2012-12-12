@@ -24,3 +24,10 @@ write.csv(location_yields, "location_yields.csv", row.names = FALSE)
 # load data infile '/tmp/location_yields.csv' into table location_yields fields terminated by "," optionally enclosed by '"' ignore 1 lines (yield,species,county_id);
 
 ### new table with species, lat, lon, variable_id, value
+source("~/R-dev/gcs/inst/load-all.R")
+x <- cbind(id = 1:nrow(all.long),
+           all.long[,c( "lat", "lon", "sp")],
+           specie_id = ifelse(all.long$sp == "pavi", 938, ifelse(all.long$sp == "mxg", 1477, 32678)),
+           variable_id = 470, value = all.long$aet)
+colnames(x) <- c("id", "lat", "long", "species", "specie_id", "variable_id", "value")  
+write.csv(x, "~/betydb_redesign/public/temp_models/point_output.csv", row.names = FALSE)
