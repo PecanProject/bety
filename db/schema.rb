@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121119183133) do
+ActiveRecord::Schema.define(:version => 20130103195020) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -46,15 +46,6 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
 
   add_index "citations_treatments", ["citation_id", "treatment_id"], :name => "index_citations_treatments_on_citation_id_and_treatment_id", :unique => true
 
-  create_table "coppice", :id => false, :force => true do |t|
-    t.integer "treatment_id"
-    t.integer "management_id"
-    t.string  "mgmttype"
-    t.date    "date"
-    t.decimal "level",         :precision => 16, :scale => 4
-    t.string  "units"
-  end
-
   create_table "counties", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -62,15 +53,6 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
     t.string   "state"
     t.integer  "state_fips"
     t.integer  "county_fips"
-  end
-
-  create_table "county_paths", :id => false, :force => true do |t|
-    t.integer  "id"
-    t.integer  "county_id"
-    t.integer  "zoom"
-    t.text     "path"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "covariates", :force => true do |t|
@@ -158,19 +140,6 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
   end
 
   add_index "formats_variables", ["format_id", "variable_id"], :name => "index_formats_variables_on_format_id_and_variable_id"
-
-  create_table "input_files", :force => true do |t|
-    t.integer  "file_id"
-    t.string   "file_name"
-    t.string   "file_path"
-    t.integer  "machine_id"
-    t.string   "md5"
-    t.integer  "created_user_id"
-    t.integer  "updated_user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "format_id"
-  end
 
   create_table "inputs", :force => true do |t|
     t.integer  "site_id"
@@ -294,13 +263,6 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
     t.integer  "parent_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "model_type"
-    t.integer  "site_id"
-    t.integer  "model_id"
-    t.string   "hostname"
-    t.datetime "start_date"
-    t.datetime "end_date"
-    t.string   "params"
   end
 
   add_index "models", ["parent_id"], :name => "index_models_on_parent_id"
@@ -310,7 +272,6 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
-    t.integer  "parent_id"
   end
 
   create_table "pfts_priors", :id => false, :force => true do |t|
@@ -330,15 +291,6 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
   end
 
   add_index "pfts_species", ["pft_id", "specie_id"], :name => "index_pfts_species_on_pft_id_and_specie_id", :unique => true
-
-  create_table "planting", :id => false, :force => true do |t|
-    t.integer "treatment_id",  :limit => 1, :null => false
-    t.integer "management_id", :limit => 1, :null => false
-    t.integer "mgmttype",      :limit => 1, :null => false
-    t.integer "date",          :limit => 1, :null => false
-    t.integer "level",         :limit => 1, :null => false
-    t.integer "units",         :limit => 1, :null => false
-  end
 
   create_table "posteriors", :force => true do |t|
     t.integer  "pft_id"
@@ -398,15 +350,6 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
   add_index "runs", ["ensemble_id"], :name => "index_runs_on_ensemble_id"
   add_index "runs", ["model_id"], :name => "index_runs_on_model_id"
   add_index "runs", ["site_id"], :name => "index_runs_on_site_id"
-
-  create_table "seeding", :id => false, :force => true do |t|
-    t.integer "treatment_id",  :limit => 1, :null => false
-    t.integer "management_id", :limit => 1, :null => false
-    t.integer "mgmttype",      :limit => 1, :null => false
-    t.integer "date",          :limit => 1, :null => false
-    t.integer "level",         :limit => 1, :null => false
-    t.integer "units",         :limit => 1, :null => false
-  end
 
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
@@ -474,14 +417,6 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
     t.string   "Duration"
     t.string   "GrowthHabit"
     t.string   "NativeStatus"
-    t.string   "FederalNoxiousStatus"
-    t.string   "FederalNoxiousCommonName"
-    t.text     "StateNoxiousStatus"
-    t.text     "StateNoxiousCommonName"
-    t.string   "Invasive"
-    t.string   "Federal_TE_Status"
-    t.string   "State_TE_Status"
-    t.text     "State_TE_Common_Name"
     t.string   "NationalWetlandIndicatorStatus"
     t.string   "RegionalWetlandIndicatorStatus"
     t.string   "ActiveGrowthPeriod"
@@ -491,14 +426,7 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
     t.string   "CoppicePotential"
     t.string   "FallConspicuous"
     t.string   "FireResistance"
-    t.string   "FlowerColor"
-    t.string   "FlowerConspicuous"
-    t.string   "FoliageColor"
-    t.string   "FoliagePorositySummer"
-    t.string   "FoliagePorosityWinter"
     t.string   "FoliageTexture"
-    t.string   "FruitColor"
-    t.string   "FruitConspicuous"
     t.string   "GrowthForm"
     t.string   "GrowthRate"
     t.integer  "MaxHeight20Yrs"
@@ -509,8 +437,6 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
     t.string   "LowGrowingGrass"
     t.string   "NitrogenFixation"
     t.string   "ResproutAbility"
-    t.string   "Shape_and_Orientation"
-    t.string   "Toxicity"
     t.string   "AdaptedCoarseSoils"
     t.string   "AdaptedMediumSoils"
     t.string   "AdaptedFineSoils"
@@ -535,10 +461,8 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
     t.integer  "TemperatureMinimum"
     t.string   "BloomPeriod"
     t.string   "CommercialAvailability"
-    t.string   "FruitSeedAbundance"
     t.string   "FruitSeedPeriodBegin"
     t.string   "FruitSeedPeriodEnd"
-    t.string   "FruitSeedPersistence"
     t.string   "Propogated_by_BareRoot"
     t.string   "Propogated_by_Bulbs"
     t.string   "Propogated_by_Container"
@@ -551,22 +475,6 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
     t.integer  "Seeds_per_Pound"
     t.string   "SeedSpreadRate"
     t.string   "SeedlingVigor"
-    t.string   "SmallGrain"
-    t.string   "VegetativeSpreadRate"
-    t.string   "Berry_Nut_Seed_Product"
-    t.string   "ChristmasTreeProduct"
-    t.string   "FodderProduct"
-    t.string   "FuelwoodProduct"
-    t.string   "LumberProduct"
-    t.string   "NavalStoreProduct"
-    t.string   "NurseryStockProduct"
-    t.string   "PalatableBrowseAnimal"
-    t.string   "PalatableGrazeAnimal"
-    t.string   "PalatableHuman"
-    t.string   "PostProduct"
-    t.string   "ProteinPotential"
-    t.string   "PulpwoodProduct"
-    t.string   "VeneerProduct"
   end
 
   create_table "traits", :force => true do |t|
@@ -654,18 +562,11 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
   end
 
   create_table "workflows", :force => true do |t|
-    t.string   "folder"
-    t.datetime "start_date"
-    t.datetime "end_date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "advanced_edit", :default => false
-    t.integer  "site_id"
-    t.integer  "model_id",                         :null => false
-    t.string   "hostname"
-    t.string   "params"
+    t.string   "outdir"
     t.datetime "started_at"
     t.datetime "finished_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "yields", :force => true do |t|
@@ -696,31 +597,6 @@ ActiveRecord::Schema.define(:version => 20121119183133) do
   add_index "yields", ["specie_id"], :name => "index_yields_on_specie_id"
   add_index "yields", ["treatment_id"], :name => "index_yields_on_treatment_id"
   add_index "yields", ["user_id"], :name => "index_yields_on_user_id"
-
-  create_table "yields_view", :id => false, :force => true do |t|
-    t.integer "yield_id",     :limit => 1, :null => false
-    t.integer "citation_id",  :limit => 1, :null => false
-    t.integer "site_id",      :limit => 1, :null => false
-    t.integer "site",         :limit => 1, :null => false
-    t.integer "lat",          :limit => 1, :null => false
-    t.integer "lon",          :limit => 1, :null => false
-    t.integer "sp",           :limit => 1, :null => false
-    t.integer "author",       :limit => 1, :null => false
-    t.integer "cityear",      :limit => 1, :null => false
-    t.integer "trt",          :limit => 1, :null => false
-    t.integer "date",         :limit => 1, :null => false
-    t.integer "month",        :limit => 1, :null => false
-    t.integer "year",         :limit => 1, :null => false
-    t.integer "mean",         :limit => 1, :null => false
-    t.integer "n",            :limit => 1, :null => false
-    t.integer "statname",     :limit => 1, :null => false
-    t.integer "stat",         :limit => 1, :null => false
-    t.integer "notes",        :limit => 1, :null => false
-    t.integer "user",         :limit => 1, :null => false
-    t.integer "checked",      :limit => 1, :null => false
-    t.integer "access_level", :limit => 1, :null => false
-    t.integer "user_id",      :limit => 1, :null => false
-  end
 
   create_table "yieldsview", :id => false, :force => true do |t|
     t.integer "yield_id",                                                   :default => 0,  :null => false
