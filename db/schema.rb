@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 1) do
+ActiveRecord::Schema.define(:version => 20130104211946) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -81,15 +81,19 @@ ActiveRecord::Schema.define(:version => 1) do
   add_index "cultivars", ["specie_id"], :name => "index_cultivars_on_specie_id"
 
   create_table "dbfiles", :force => true do |t|
-    t.string  "file_name"
-    t.string  "file_path"
-    t.string  "md5"
-    t.integer "created_user_id"
-    t.integer "updated_user_id"
-    t.integer "machine_id"
-    t.integer "file_id"
+    t.string   "file_name"
+    t.string   "file_path"
+    t.string   "md5"
+    t.integer  "created_user_id"
+    t.integer  "updated_user_id"
+    t.integer  "machine_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "container_type"
+    t.integer  "file_id"
   end
 
+  add_index "dbfiles", ["container_type"], :name => "index_dbfiles_on_container_id_and_container_type"
   add_index "dbfiles", ["created_user_id"], :name => "index_dbfiles_on_created_user_id"
   add_index "dbfiles", ["machine_id"], :name => "index_dbfiles_on_machine_id"
   add_index "dbfiles", ["updated_user_id"], :name => "index_dbfiles_on_updated_user_id"
@@ -99,6 +103,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "runtype"
+    t.integer  "workflow_id"
   end
 
   create_table "entities", :force => true do |t|
@@ -136,19 +141,6 @@ ActiveRecord::Schema.define(:version => 1) do
   end
 
   add_index "formats_variables", ["format_id", "variable_id"], :name => "index_formats_variables_on_format_id_and_variable_id"
-
-  create_table "input_files", :force => true do |t|
-    t.integer  "file_id"
-    t.string   "file_name"
-    t.string   "file_path"
-    t.integer  "machine_id"
-    t.string   "md5"
-    t.integer  "created_user_id"
-    t.integer  "updated_user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "format_id"
-  end
 
   create_table "inputs", :force => true do |t|
     t.integer  "site_id"
@@ -282,7 +274,6 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
-    t.integer  "parent_id"
   end
 
   create_table "pfts_priors", :id => false, :force => true do |t|
@@ -404,9 +395,9 @@ ActiveRecord::Schema.define(:version => 1) do
     t.string   "species"
     t.string   "scientificname"
     t.string   "commonname"
+    t.string   "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "notes"
     t.string   "AcceptedSymbol"
     t.string   "SynonymSymbol"
     t.string   "Symbol"
@@ -474,7 +465,6 @@ ActiveRecord::Schema.define(:version => 1) do
     t.string   "CommercialAvailability"
     t.string   "FruitSeedPeriodBegin"
     t.string   "FruitSeedPeriodEnd"
-    t.string   "FruitSeedPersistence"
     t.string   "Propogated_by_BareRoot"
     t.string   "Propogated_by_Bulbs"
     t.string   "Propogated_by_Container"
@@ -495,7 +485,6 @@ ActiveRecord::Schema.define(:version => 1) do
     t.integer  "citation_id"
     t.integer  "cultivar_id"
     t.integer  "treatment_id"
-    t.integer  "variable_id"
     t.datetime "date"
     t.decimal  "dateloc",      :precision => 4,  :scale => 2
     t.time     "time"
@@ -507,6 +496,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "variable_id"
     t.integer  "user_id"
     t.integer  "checked",                                     :default => 0
     t.integer  "access_level"
@@ -579,11 +569,11 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "finished_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "advanced_edit", :default => false
     t.integer  "site_id"
     t.integer  "model_id",                         :null => false
     t.string   "hostname"
     t.string   "params"
+    t.boolean  "advanced_edit", :default => false
     t.datetime "start_date"
     t.datetime "end_date"
   end
