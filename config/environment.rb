@@ -55,15 +55,10 @@ Rails::Initializer.run do |config|
   #config.gem 'mislav-will_paginate', :version => '~> 2.2.3', :lib => 'will_paginate', :source => 'http://gems.github.com'
   config.gem 'will_paginate', :version => '~> 2.3.16'
   config.gem 'paperclip', :version => '~> 2.1.2'
-  config.action_mailer.delivery_method = :smtp
-  # need to change this!!
-  config.action_mailer.smtp_settings = {
-    :address => 'express-smtp.cites.uiuc.edu',
-    :domain => 'igb.uiuc.edu',
-    :port => 25
-  }
-  
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_charset = "utf-8" 
+
+  # Load any local configuration that is kept out of source control
+  # (e.g. gems, patches).
+  if File.exists?(File.join(File.dirname(__FILE__), 'additional_environment.rb'))
+    instance_eval File.read(File.join(File.dirname(__FILE__), 'additional_environment.rb'))
+  end
 end
