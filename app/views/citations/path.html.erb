@@ -1,5 +1,5 @@
 <h1>Existing Citations</h1>
-<% form_for :citation, Citation.new, :url => { :action => "process_flow" } do |f| %>
+<%= form_for :citation, Citation.new, :url => { :action => "process_flow" } do |f| %>
   <p>
     <%= collection_select( :citation, :id, Citation.all, :id, :select_default, {:prompt => true}, { :multiple => true, :size => '5' } )%>
   </p>

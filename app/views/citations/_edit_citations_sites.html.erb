@@ -12,21 +12,21 @@
           <th></th>
           <th>Site</th>
         </tr>
-        <% @citation.sites.each do |c| %>
+        <% @citation.sites.each do |site| %>
         <tr>
-          <td><%= link_to_remote "X", :url => { :action => :rem_citations_sites, :id => @citation.id, :site => c }, :confirm => 'Are you sure?'%></td>
-          <td><%= link_to "edit", edit_site_path(c.site_id) %></td>
-          <td><%= c.sitename_state_country %></td>
+          <td><%= link_to "X", { :controller => :citations, :action => :rem_citations_sites, :id => @citation.id, :site => site }, :confirm => 'Are you sure?', :remote => true %></td>
+          <td><%= link_to "edit", edit_site_path(site.id) %></td>
+          <td><%= site.sitename_state_country %></td>
         </tr>
         <% end %>
       </table>
     </td>
     <td>
-      <% form_remote_tag :url => {:controller => :citations, :action => 'edit_citations_sites'} do %>
-      <%= collection_select( :site, :id, Site.all.reject { |r| @citation.sites.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
-      <%= hidden_field_tag 'id', @citation.id %>
-      <br /><br />
-      <%= submit_tag "Select" %>
+      <%= form_tag url_for(:controller => :citations, :action => :edit_citations_sites), :remote => true do %>
+          <%= collection_select( :site, :id, Site.all.reject { |r| @citation.sites.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
+          <%= hidden_field_tag 'id', @citation.id %>
+          <br /><br />
+          <%= submit_tag "Select" %>
       <% end %>
     </td>
   </tr>

@@ -1,49 +1,29 @@
 source "http://rubygems.org"
-gem "rails", "2.3.11"
 
-gem "mysql2"
+gem "rails", "3.0.18"
+gem "mysql"
 gem "activerecord-mysql2-adapter"
-#gem "rspec", "2.11.0"
-
-group :production do
-  gem "rmagick", "2.13.1"
-end
+gem "query_reviewer", "0.1.6"
+gem "nokogiri"
+gem "ruby-netcdf", "0.6.6.1"
+gem "narray", "0.6.0.4"
+gem "choice", "0.1.6"
+gem "comma", "2.1.1"
+gem "fastercsv", "1.5.5"
+gem "paperclip", "3.4.0"
+gem "railroad", "0.5.0"
+gem "recaptcha", "0.3.4", :require => "recaptcha/rails"
+gem "ruby-graphviz", "1.0.8"
+gem "seer", "0.10.0"
+gem "tzinfo", "0.3.35"
+gem "will_paginate", "3.0.3"
 
 group :test do
 #  gem "autotest-rails"
 #  gem "autotest-standalone"
 end
 
-gem "query_reviewer", "0.1.5"
-gem "nokogiri"
-gem "ruby-netcdf", "0.6.6.1"
-gem "narray", "0.6.0.1"
-gem "actionmailer", "2.3.11"
-gem "actionpack", "2.3.11"
-#gem "activemodel", "2.3.11"
-gem "activerecord", "2.3.11"
-gem "activeresource", "2.3.11"
-gem "activesupport", "2.3.11"
-gem "arel", "3.0.2"
-gem "builder", "3.0.2"
-gem "choice", "0.1.6"
-gem "comma", "0.3.2"
-gem "fastercsv", "1.5.3"
-gem "i18n", "0.6.0"
-gem "json", "1.5.1"
-gem "multi_json", "1.3.6"
-gem "paperclip", "2.1.2"
-gem "rack", "1.1.3"
-gem "railroad", "0.5.0"
-gem "rails", "2.3.11"
-gem "rake", "0.9.2.2"
-gem "rdoc", "2.4.2"
-gem "recaptcha", "0.3.1", :require => "recaptcha/rails"
-gem "ruby-graphviz", "1.0.8"
-gem "seer", "0.9.1"
-gem "tzinfo", "0.3.33"
-gem "will_paginate", "2.3.16"
-
-
-
+group :production do
+  gem "rmagick", "2.13.1"
+end
 

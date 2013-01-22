@@ -1,7 +1,7 @@
 class Yieldsview < ActiveRecord::Base
   set_table_name 'yieldsview'
 
-  named_scope :all_limited, lambda { |current_user|
+  scope :all_limited, lambda { |current_user|
     if !current_user.nil?
       if current_user.page_access_level == 1
         checked = -1

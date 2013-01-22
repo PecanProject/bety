@@ -1,7 +1,7 @@
 
 <h2>Submit a bug</h2>
 
-<% form_for :error, :url => { :action => :create }, :html => { :method => :post } do |f| %>
+<%= form_for :error, :url => { :action => :create }, :html => { :method => :post } do |f| %>
 <p>
 <%= f.label :url %>: <%= f.text_field :url, :value => @src %><br />
 <br />

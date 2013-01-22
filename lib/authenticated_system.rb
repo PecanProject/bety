@@ -43,7 +43,9 @@ module AuthenticatedSystem
     end
 
     def permissions(action_name,controller_class = nil)
-      controller_class = controller_class_name if controller_class.nil?
+      # RAILS3 changed below line with second below line. controller_class_name appears to have been removed Rails3
+      # controller_class = controller_class_name if controller_class.nil?
+      controller_class = "#{controller_name.capitalize}Controller" if controller_class.nil?
       admin_requirement = ["UsersController.ALL",
                                 "PosteriorsController.ALL",
                                 "PosteriorsRunsController.ALL",

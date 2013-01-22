@@ -1,7 +1,7 @@
 <h1>New species  <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node30.html?min" }) %></h1>
 
 
-<% form_for(@specie, :url => {:action => 'create'}) do |f| %>
+<%= form_for(@specie, :url => {:action => 'create'}) do |f| %>
   <%= f.error_messages %>
   <p><i>add "?id=XXX" to the url (where XXX is the ID of another species) and all the fields will be populated with the other species information</i></p>
 

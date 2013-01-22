@@ -4,11 +4,11 @@
 
 <% else %>
 
-  <p><%= link_to_prototype_window("Extracting information from tables and graphs", "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node25.html?min" }) %><br />
+<p><%= link_to_prototype_window("Extracting information from tables and graphs", "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node25.html?min" }) %><br />
 <%= link_to_prototype_window("Extracting data from a figure using R", "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node26.html?min" }) %><br />
 <%= link_to_prototype_window("Extracting data from a figure using GetData", "help_popup4", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node27.html?min" }) %></p>
 
-  <% form_for(@covariate) do |f| %>
+  <%= form_for(@covariate) do |f| %>
     <%= f.error_messages %>
 
     <p>

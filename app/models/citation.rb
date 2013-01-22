@@ -19,10 +19,10 @@ class Citation < ActiveRecord::Base
   belongs_to :user
 
   # Predefined search filters
-  named_scope :by_letter, lambda { |letter| { :conditions => ['author like ?', letter + "%"] } }
+  scope :by_letter, lambda { |letter| { :conditions => ['author like ?', letter + "%"] } }
   # Must be included if using 'simple search'
-  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  scope :search, lambda { |search| {:conditions => simple_search(search) } }
 
   # CSV download default fields/field order
   comma do

@@ -17,17 +17,17 @@ class Yield < ActiveRecord::Base
   validates_presence_of     :mean
   validates_presence_of     :statname, :if => Proc.new { |y| !y.stat.blank? }
 
-  named_scope :all_order, :include => :specie, :order => 'species.genus, species.species'
-  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
-  named_scope :citation, lambda { |citation|
+  scope :all_order, :include => :specie, :order => 'species.genus, species.species'
+  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  scope :search, lambda { |search| {:conditions => simple_search(search) } }
+  scope :citation, lambda { |citation|
     if citation.nil?
       {}
     else
       { :conditions => ["citation_id = ?", citation ] }
     end
   }
-  named_scope :all_limited, lambda { |current_user|
+  scope :all_limited, lambda { |current_user|
     if !current_user.nil?
       if current_user.page_access_level == 1
         checked = -1

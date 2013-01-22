@@ -11,8 +11,8 @@ class Prior < ActiveRecord::Base
   belongs_to :variable
   belongs_to :citation
 
-  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  scope :search, lambda { |search| {:conditions => simple_search(search) } }
 
   comma do
     id

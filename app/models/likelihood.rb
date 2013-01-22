@@ -15,8 +15,8 @@ class Likelihood < ActiveRecord::Base
   validates_presence_of     :variable_id
   validates_presence_of     :loglikelihood
 
-  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  scope :search, lambda { |search| {:conditions => simple_search(search) } }
 
   comma do
     id

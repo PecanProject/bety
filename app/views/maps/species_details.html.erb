@@ -23,8 +23,8 @@
   <% end %>
 </table>
 
-<% form_tag :action => :species_details do %>
-  <% content_tag :label do %>
+<%= form_tag :action => :species_details do %>
+  <%= content_tag :label do %>
     Search term:
     <%= text_field_tag :search, params[:search] %>
     <br/>

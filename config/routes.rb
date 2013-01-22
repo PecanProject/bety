@@ -1,138 +1,148 @@
-ActionController::Routing::Routes.draw do |map|
-
-  map.resources :yieldsviews, :only => [:show]
-
-  map.resources :workflows
-
-  map.resources :formats_variables
-
-  map.resources :dbfiles,
-                :collection => { :no => :get },
-                :member => { :download => :get, :unlink => :get }
-
-  map.resources :machines
-
-  map.resources :methods
-
-  map.resources :ensembles
-
-  map.resources :raws,
-                :collection => { :download => :get }
-
-  map.resources :entities
-
-  map.resources :formats
-
-  map.resources :likelihoods
-
-  map.resources :inputs
-
-  map.resources :models
-
-  map.resources :runs
-
-  map.resources :posteriors
-
-  map.resources :errors, :only => [:index, :create]
-
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
-  map.login '/login', :controller => 'sessions', :action => 'new'
-  map.register '/register', :controller => 'users', :action => 'create'
-  map.signup '/signup', :controller => 'users', :action => 'new'
-
-  map.resources :users
-  
-  
-
-  map.ebi_forwarded '/ebi_forwarded', :controller => 'sessions', :action => 'ebi_forwarded'
-  map.resource :session
-
-  map.resources :covariates
-
-  map.resources :pfts,
-                :member => { :make_clone => :get }
-
-  map.resources :managements
-
-  map.resources :treatments, :collection => { 
-                               :linked => :get,
-                               :new_management => :get} 
-
-  map.resources :sites, :collection => {
-                          :map => :get }
-
-  map.resources :citations
-
-  map.resources :variables
-
-  map.resources :species
-
-  map.resources :cultivars
-
-  map.resources :priors
-
-  map.resources :yields
-
-  map.resources :traits, :collection => {
-                           :linked => :get }
-
-
-  map.resources :citations_sites, :controller => 'citations_sites', :only => [:index, :new, :create]
-  map.resources :citations_treatments, :controller => 'citations_treatments', :only => [:index, :new, :create]
-  map.resources :managements_treatments, :controller => 'managements_treatments', :only => [:index, :new, :create]
-  map.resources :pfts_priors, :controller => 'pfts_priors', :only => [:index, :new, :create]
-  map.resources :pfts_species, :controller => 'pfts_species', :only => [:index, :new, :create]
-
-  #map.resources :input_files, :controller => 'input_files', :only => [:download], :collection => { :download => :get }
-
-  #map.connect 'search.:format', :controller => 'search', :action => :index
-
-  # The priority is based upon order of creation: first created -> highest priority.
+BetyRails3::Application.routes.draw do # RAILS3 |map| removed
+  # The priority is based upon order of creation:
+  # first created -> highest priority.
 
   # Sample of regular route:
-  #   map.connect 'products/:id', :controller => 'catalog', :action => 'view'
+  #   match 'products/:id' => 'catalog#view'
   # Keep in mind you can assign values other than :controller and :action
 
   # Sample of named route:
-  #   map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
+  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
   # This route can be invoked with purchase_url(:id => product.id)
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   map.resources :products
+  #   resources :products
 
   # Sample resource route with options:
-  #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
+  #   resources :products do
+  #     member do
+  #       get 'short'
+  #       post 'toggle'
+  #     end
+  #
+  #     collection do
+  #       get 'sold'
+  #     end
+  #   end
 
   # Sample resource route with sub-resources:
-  #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-  
+  #   resources :products do
+  #     resources :comments, :sales
+  #     resource :seller
+  #   end
+
   # Sample resource route with more complex sub-resources
-  #   map.resources :products do |products|
-  #     products.resources :comments
-  #     products.resources :sales, :collection => { :recent => :get }
+  #   resources :products do
+  #     resources :comments
+  #     resources :sales do
+  #       get 'recent', :on => :collection
+  #     end
   #   end
 
   # Sample resource route within a namespace:
-  #   map.namespace :admin do |admin|
-  #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
-  #     admin.resources :products
+  #   namespace :admin do
+  #     # Directs /admin/products/* to Admin::ProductsController
+  #     # (app/controllers/admin/products_controller.rb)
+  #     resources :products
   #   end
 
-  # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  # map.root :to => "static#index"
-  map.root :controller => "static", :action => "index"
+  # You can have the root of your site routed with "root"
+  # just remember to delete public/index.html.
+  # root :to => "welcome#index"
 
   # See how all your routes lay out with "rake routes"
 
-  # Install the default routes as the lowest priority.
-  # Note: These default routes make all actions in every controller accessible via GET requests. You should
-  # consider removing or commenting them out if you're using named routes and resources.
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
-  map.connect ':controller/:action.:format'
+  # This is a legacy wild controller route that's not recommended for RESTful applications.
+  # Note: This route will make all actions in every controller accessible via GET requests.
+  # match ':controller(/:action(/:id(.:format)))'
 
+
+  resources :yieldsviews, :only => [:show]
+  resources :workflows
+  resources :formats_variables
+  resources :dbfiles do
+    collection do
+      get :no
+    end
+    member do
+      get :download
+      get :unlink
+    end
+  end
+
+  resources :machines
+  resources :methods
+  resources :ensembles
+  resources :raws do
+    collection do
+      get :download
+    end
+  end
+
+  resources :entities
+  resources :formats
+  resources :likelihoods
+  resources :inputs
+  resources :models
+  resources :runs
+  resources :posteriors
+  resources :covariates
+  resources :pfts do
+    member do
+      get :make_clone
+    end
+  end
+
+  resources :managements
+  resources :treatments do
+    collection do
+      get :linked
+      get :new_management
+    end
+  end
+
+  resources :sites do
+    collection do
+      get :map
+    end
+  end
+
+  resources :citations
+  resources :variables
+  resources :species
+  resources :cultivars
+  resources :priors
+  resources :yields
+  resources :traits do
+    collection do
+      get :linked
+    end
+  end
+
+  resources :citations_sites, :only => [:index, :new, :create]
+  resources :citations_treatments, :only => [:index, :new, :create]
+  resources :managements_treatments, :only => [:index, :new, :create]
+  resources :pfts_priors, :only => [:index, :new, :create]
+  resources :pfts_species, :only => [:index, :new, :create]
+
+  resources :errors, :only => [:index, :create]
+  resources :users
+
+  match '/ebi_forwarded' => 'sessions#ebi_forwarded', :as => :ebi_forwarded
+
+  resource :session
+
+  root :to => 'static#index'
+
+  match '/:controller(/:action(/:id))'
+  match ':controller/:action.:format' => '#index'
 
   #route for 'static' content
-  map.connect '*path', :controller => 'static'
+  # RAILS3 commented out below
+  #match '*path' => 'static#index'
 
+  match '/logout' => 'sessions#destroy', :as => :logout
+  match '/login' => 'sessions#new', :as => :login
+  match '/register' => 'users#create', :as => :register
+  match '/signup' => 'users#new', :as => :signup
 end

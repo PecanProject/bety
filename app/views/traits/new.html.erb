@@ -13,7 +13,7 @@
   <h1>New trait <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node20.html?min" }) %></h1>
   
   
-  <% form_for @trait,:html => { :multipart => true } do |f| %>
+  <%= form_for @trait,:html => { :multipart => true } do |f| %>
     <%= f.error_messages %>
 
     <p>

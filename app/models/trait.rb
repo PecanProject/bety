@@ -38,17 +38,17 @@ class Trait < ActiveRecord::Base
   end
 
 
-  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
-  named_scope :exclude_api, { :conditions => ["checked != ?","-1"] }
-  named_scope :citation, lambda { |citation|
+  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  scope :search, lambda { |search| {:conditions => simple_search(search) } }
+  scope :exclude_api, { :conditions => ["checked != ?","-1"] }
+  scope :citation, lambda { |citation|
     if citation.nil?
       {}
     else
       { :conditions => ["citation_id = ?", citation ] }
     end
   }
-  named_scope :all_limited, lambda { |current_user|
+  scope :all_limited, lambda { |current_user|
     if !current_user.nil?
       if current_user.page_access_level == 1
         checked = -1

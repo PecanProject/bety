@@ -25,7 +25,7 @@
       </table>
     </td>
     <td>
-      <% form_for(@treatment) do |f| %>
+      <%= form_for(@treatment) do |f| %>
       <%= collection_select( :management, :id, @treatment.managements.length > 0 ? Management.all(:conditions => [ "id NOT IN (?) ", @treatment.managements.collect(&:id)]) : Management.all(), :id, :date_type_level, {}, { :multiple => true } )%>
       <br /><br />
       <%= submit_tag "Select" %>
@@ -39,7 +39,7 @@
 
 <h1>Editing treatment</h1>
 
-<% form_for(@treatment) do |f| %>
+<%= form_for(@treatment) do |f| %>
   <%= f.error_messages %>
 
   <p>

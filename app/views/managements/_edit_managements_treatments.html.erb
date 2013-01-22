@@ -13,18 +13,18 @@
           <th>Def</th>
           <th></th>
         </tr>
-        <% @management.treatments.each do |c| %>
+        <% @management.treatments.each do |treatment| %>
         <tr>
-          <td><%= link_to_remote "X", :url => { :action => :rem_managements_treatments, :id => @management.id, :treatment => c }, :confirm => 'Are you sure?'%></td>
-          <td><%= link_to "edit", edit_treatment_path(c.treatment_id) %></td>
-          <td><%= c.name %></td>
-          <td><%= c.definition %></td>
+          <td><%= link_to "X", { :controller => :managements, :action => :rem_managements_treatments, :id => @management.id, :treatment => treatment }, :confirm => 'Are you sure?', :remote => true %></td>
+          <td><%= link_to "edit", edit_treatment_path(treatment.id) %></td>
+          <td><%= treatment.name %></td>
+          <td><%= treatment.definition %></td>
         </tr>
         <% end %>
       </table>
     </td>
     <td>
-      <% form_remote_tag :url => { :controller => :managements, :action => 'edit_managements_treatments'} do |f| %>
+      <%= form_tag url_for(:controller => :managements, :action => :edit_managements_treatments), :remote => true do %>
       <%= collection_select( :treatment, :id, Treatment.all.reject { |r| @management.treatments.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
       <%= hidden_field_tag 'id', @management.id %>
       <br /><br />

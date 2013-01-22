@@ -1,7 +1,9 @@
-if RAILS_ENV == "production"
+if Rails.env == "production"
   require "#{Rails.root}/lib/mercator" 
   include Mercator
 end
+
+require 'will_paginate/array'
 
 class MapsController < ApplicationController
   layout 'application'

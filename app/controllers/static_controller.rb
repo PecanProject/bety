@@ -32,7 +32,7 @@ class StaticController < ApplicationController
    
     # file_path is relative from Rails home
     file_path = 'app/views/' + path
-    full_path = RAILS_ROOT + '/app/views/' + path
+    full_path = Rails.root.to_s + '/app/views/' + path
     
     # if the file_path is a directory, but the URL doesn't end with a slash
     # (this helps with relative paths for URLs contained in the document)
@@ -66,7 +66,7 @@ class StaticController < ApplicationController
       file.close
       render :inline => file_contents, :layout => true
     else
-      render :file => RAILS_ROOT + '/app/views/static/404.html', :layout => true, :status => 404
+      render :file => Rails.root.to_s + '/app/views/static/404.html', :layout => true, :status => 404
 # DEBUG
 #      raise ::ActionController::RoutingError,
 #            "Recognition failed for #{request.path.inspect} #{ path }"

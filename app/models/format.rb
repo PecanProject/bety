@@ -9,8 +9,8 @@ class Format < ActiveRecord::Base
   has_many :formats_variables
   has_many :variables, :through => :formats_variables
 
-  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
+  scope :search, lambda { |search| {:conditions => simple_search(search) } }
 
   comma do
     id
