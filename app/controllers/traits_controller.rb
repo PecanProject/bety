@@ -7,41 +7,6 @@ class TraitsController < ApplicationController
   require 'csv'
   require 'timeout'
 
-  def execute_db_copy
-
-    can_run = true
-    if current_user.page_access_level <= 2
-      finished = true
-
-      pid = fork { `/usr/local/bin/db_copy.sh y` }
-      begin
-        Timeout.timeout(120) do
-         Process.wait(pid)
-      end
-      rescue Timeout::Error
-        logger.info 'db_copy.sh did not finished in time, killing it'
-        Process.kill('TERM', pid)
-        finished = false
-      end
-    else
-      can_run = false
-    end
-
-
-    render :update do |page|
-      if can_run
-        if finished
-          page << 'alert("db_copy finished successfully")'
-       else
-          page << 'alert("db_copy did not finish in time!")'
-        end
-      else
-        page << 'alert("Sorry you are not authorized to run this script")'
-      end
-    end
-
-  end
-
   def trait_search
     @query = params[:symbol] || nil
     if !params[:symbol].nil? and !params[:cont].nil? and params[:symbol].length > 3

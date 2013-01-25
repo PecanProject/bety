@@ -41,7 +41,7 @@ module BetyRails3
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password]
+    config.filter_parameters += [:password, :password_authentication]
 
     # Load any local configuration that is kept out of source control
     # (e.g. gems, patches).

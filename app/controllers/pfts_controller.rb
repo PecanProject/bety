@@ -59,7 +59,8 @@ class PftsController < ApplicationController
 
     @page = params[:page]
 
-    @search = params[:search]
+    # RAILS3 had to add the || '' in order for @search not be nil when params[:search] is nil
+    @search = params[:search] || ''
     # If they search just a number it is probably an id, and we do not want to wrap that in wildcards.
     @search.match(/\D/) ? wildcards = true : wildcards = false
 
@@ -79,7 +80,7 @@ class PftsController < ApplicationController
       search = "Showing already related records"
       @species = @pft.specie.paginate :page => params[:page]
     else
-      @species = Specie.paginate :select => "id,scientificname", :page => params[:page], :conditions => search_cond 
+      @species = Specie.paginate :select => "id,scientificname", :page => params[:page], :conditions => search_cond
     end
 
     render :update do |page|

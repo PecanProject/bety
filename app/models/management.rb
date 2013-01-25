@@ -31,7 +31,8 @@ class Management < ActiveRecord::Base
   end
 
   def date_type_level
-    "#{date} - #{type} : #{level}"
+    # RAILS3 changed type to mgmttype
+    "#{date} - #{mgmttype} : #{level}"
   end
   def to_s
     date_type_level

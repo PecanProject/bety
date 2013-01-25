@@ -1,6 +1,4 @@
 class UsersController < ApplicationController
-
-  filter_parameter_logging :password, :password_authentication
   
   before_filter :login_required, :except => [:create,:new]
   #before_filter :login_required

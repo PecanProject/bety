@@ -16,7 +16,7 @@ gem "recaptcha", "0.3.4", :require => "recaptcha/rails"
 gem "ruby-graphviz", "1.0.8"
 gem "seer", "0.10.0"
 gem "tzinfo", "0.3.35"
-gem "will_paginate", "3.0.3"
+gem "will_paginate", "3.0.4"
 
 group :test do
 #  gem "autotest-rails"

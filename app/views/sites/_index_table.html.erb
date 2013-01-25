@@ -13,18 +13,18 @@
 
 <% @sites.each do |site| %>
   <tr id="site-<%= site.id.to_s %>"<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and site.id == @search.to_i%>>
-    <td><%=h site.sitename %></td>
-    <td><%=h site.city %></td>
-    <td><%=h site.state %></td>
-    <td><%=h site.country %></td>
-    <td><%=h site.lat %></td>
-    <td><%=h site.lon %></td>
-    <td><%=h site.espg %></td>
+    <td><%= site.sitename %></td>
+    <td><%= site.city %></td>
+    <td><%= site.state %></td>
+    <td><%= site.country %></td>
+    <td><%= site.lat %></td>
+    <td><%= site.lon %></td>
+    <td><%= site.espg %></td>
     <td><%= link_to_prototype_window("map", "#{site.id}", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :title =>  "#{site.sitename}", :draggable => "true", :wiredDrag => "true", :url => "/sites/map?id=#{site.id}" }) %> <br />
 
     </td>
     <% if !session["citation"].nil? %>
-    <td><%= link_to_remote 'Link', :url => {:action => "linked", :id => site.id }%></td>
+    <td><%= link_to 'Link', {:action => "linked", :id => site.id }, :remote => true %></td>
     <% end %>
     <td><%= link_to 'Show', site %></td>
     <td><%= link_to 'Edit', edit_site_path(site) %></td>

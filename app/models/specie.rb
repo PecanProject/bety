@@ -49,14 +49,6 @@ class Specie < ActiveRecord::Base
     f.Duration
     f.GrowthHabit
     f.NativeStatus
-    f.FederalNoxiousStatus
-    f.FederalNoxiousCommonName
-    f.StateNoxiousStatus
-    f.StateNoxiousCommonName
-    f.Invasive
-    f.Federal_TE_Status
-    f.State_TE_Status
-    f.State_TE_Common_Name
     f.NationalWetlandIndicatorStatus
     f.RegionalWetlandIndicatorStatus
     f.ActiveGrowthPeriod
@@ -66,14 +58,7 @@ class Specie < ActiveRecord::Base
     f.CoppicePotential
     f.FallConspicuous
     f.FireResistance
-    f.FlowerColor
-    f.FlowerConspicuous
-    f.FoliageColor
-    f.FoliagePorositySummer
-    f.FoliagePorosityWinter
     f.FoliageTexture
-    f.FruitColor
-    f.FruitConspicuous
     f.GrowthForm
     f.GrowthRate
     f.MaxHeight20Yrs
@@ -84,8 +69,6 @@ class Specie < ActiveRecord::Base
     f.LowGrowingGrass
     f.NitrogenFixation
     f.ResproutAbility
-    f.Shape_and_Orientation
-    f.Toxicity
     f.AdaptedCoarseSoils
     f.AdaptedMediumSoils
     f.AdaptedFineSoils
@@ -110,10 +93,8 @@ class Specie < ActiveRecord::Base
     f.TemperatureMinimum
     f.BloomPeriod
     f.CommercialAvailability
-    f.FruitSeedAbundance
     f.FruitSeedPeriodBegin
     f.FruitSeedPeriodEnd
-    f.FruitSeedPersistence
     f.Propogated_by_BareRoot
     f.Propogated_by_Bulbs
     f.Propogated_by_Container
@@ -126,22 +107,6 @@ class Specie < ActiveRecord::Base
     f.Seeds_per_Pound
     f.SeedSpreadRate
     f.SeedlingVigor
-    f.SmallGrain
-    f.VegetativeSpreadRate
-    f.Berry_Nut_Seed_Product
-    f.ChristmasTreeProduct
-    f.FodderProduct
-    f.FuelwoodProduct
-    f.LumberProduct
-    f.NavalStoreProduct
-    f.NurseryStockProduct
-    f.PalatableBrowseAnimal
-    f.PalatableGrazeAnimal
-    f.PalatableHuman
-    f.PostProduct
-    f.ProteinPotential
-    f.PulpwoodProduct
-    f.VeneerProduct
   end
 
 

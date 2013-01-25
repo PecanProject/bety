@@ -12,18 +12,18 @@
           <th>Model</th>
           <th>Site</th>
         </tr>
-        <% @posterior.runs.each do |c| %>
-        <tr>
-          <td><%= link_to_remote "X", :url => { :action => :rem_posteriors_runs, :posterior_id => @posterior.id, :run_id => c.id }, :confirm => 'Are you sure?'%></td>
-          <td><%= link_to "edit", edit_run_path(c.id) %></td>
-          <td><%= link_to_if c.model, c.model, c.model %></td>
-          <td><%= link_to_if c.model, c.site, c.site %></td>
-        </tr>
+        <% @posterior.runs.each do |run| %>
+            <tr>
+              <td><%= link_to "X", { :controller => :posteriors, :action => :rem_posteriors_runs, :id => @posterior.id, :run_id => run.id }, :confirm => 'Are you sure?', :remote => true %></td>
+              <td><%= link_to "edit", edit_run_path(run.id) %></td>
+              <td><%= link_to_if run.model, run.model, run.model %></td>
+              <td><%= link_to_if run.model, run.site, run.site %></td>
+            </tr>
         <% end %>
       </table>
     </td>
     <td>
-      <% form_remote_tag :url => { :controller => :posteriors, :action => 'edit_posteriors_runs'} do |f| %>
+      <%= form_tag url_for( :controller => :posteriors, :action => :edit_posteriors_runs), :remote => true do %>
       <%= collection_select( :run, :id, Run.all.reject { |r| @posterior.runs.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
       <%= hidden_field_tag 'posterior_id', @posterior.id %>
       <br /><br />

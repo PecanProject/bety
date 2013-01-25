@@ -6,7 +6,7 @@ class PosteriorsController < ApplicationController
   layout 'application'
 
   def rem_posteriors_runs
-    @posterior = Posterior.find(params[:posterior_id])
+    @posterior = Posterior.find(params[:id])
     @run = Run.find(params[:run_id])
 
     render :update do |page|
