@@ -1,5 +1,5 @@
 source "http://rubygems.org"
-gem "rails", "2.3.15"
+gem "rails", "2.3.16"
 
 gem "mysql2"
 gem "activerecord-mysql2-adapter"
