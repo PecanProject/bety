@@ -5,27 +5,26 @@
 
   <p>
     <%= f.label :citation_id %><br />
-    <%= f.select :citation_id, Citation.all(:order => 'author').collect { |p| [ p.select_default, p.id ] }, {} %>
+    <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, {} %>
   </p>
   <p>
     <%= f.label :site_id %><br />
-    <%= f.select :site_id, Site.all(:order => 'city').collect { |p| [ p.select_default, p.id ] }, {} %>
+    <%= f.select :site_id, Site.order('city').collect { |p| [ p.select_default, p.id ] }, {} %>
   </p>
 
   <%= render :partial => "species/species_search" %>
 
   <p>
-    <%= f.label :treatment_id %> <%= treatment_check(f.object) -%><br />
+    <%= f.label :treatment_id %> <%= raw treatment_check(f.object) -%><br />
     <%= f.select :treatment_id, (f.object.citation.treatments.collect { |p| [ p.select_default, p.id ] } rescue []), {} %>
-    <%#= f.select :treatment_id, Treatment.all(:joins => :citations, :order => 'name').collect { |p| [ p.select_default, p.id ] }, {} %>
   </p>
   <p>
     <%= f.label :cultivar_id %><br />
-    <%= f.select :cultivar_id, Cultivar.all(:joins => :specie, :order => 'species.scientificname').collect { |p| [ p.select_default, p.id ] },  { :include_blank => true} %>
+    <%= f.select :cultivar_id, Cultivar.joins(:specie).order('species.scientificname').collect { |p| [ p.select_default, p.id ] },  { :include_blank => true} %>
   </p>
   <p>
     <%= f.label :method_id, "Method" %><br />
-    <%= f.select :method_id, Methods.all().collect { |p| [ p.select_default, p.id ] },  { :include_blank => true} %>
+    <%= f.select :method_id, Methods.all.collect { |p| [ p.select_default, p.id ] },  { :include_blank => true} %>
   </p>
   <p>
     <%= f.label :date %><br />

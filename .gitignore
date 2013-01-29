@@ -13,4 +13,5 @@ local/counties-20110605
 log
 orig.public
 .DS_Store
+public/maps/*
 config/initializers/site_keys.rb

@@ -14,7 +14,7 @@
         </tr>
         <% @input.runs.each do |c| %>
         <tr>
-          <td><%= link_to_remote "X", :url => { :action => :rem_inputs_runs, :input_id => @input.id, :run_id => c.id }, :confirm => 'Are you sure?'%></td>
+          <td><%= link_to "X", { :action => :rem_inputs_runs, :input_id => @input.id, :run_id => c.id }, :confirm => 'Are you sure?', :remote => true %></td>
           <td><%= link_to "edit", edit_run_path(c.id) %></td>
           <td><%= link_to_if c.model, c.model, c.model %></td>
           <td><%= link_to_if c.site, c.site, c.site %></td>
@@ -23,7 +23,7 @@
       </table>
     </td>
     <td>
-      <% form_remote_tag :url => { :controller => :inputs, :action => 'edit_inputs_runs'} do |f| %>
+      <%= form_tag url_for(:controller => :inputs, :action => :edit_inputs_runs), :remote => true do %>
       <%= collection_select( :run, :id, Run.all.reject { |r| @input.runs.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
       <%= hidden_field_tag 'input_id', @input.id %>
       <br /><br />
