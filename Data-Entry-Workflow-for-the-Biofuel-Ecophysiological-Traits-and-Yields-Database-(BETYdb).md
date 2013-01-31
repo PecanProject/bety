@@ -107,7 +107,7 @@ entered next by completing the following steps:
 * Esoteric information that other scientists or technicians might not catch and that are not otherwise recorded in the database
 * Any data that may be useful at a later date but that can be skipped for now.
 
-   **Comment or Highlight**
+**Comment or Highlight**
 * Sample size
 * Covariates (see Table 7)
 * Treatments
@@ -237,5 +237,55 @@ paper
     **Rooting Zone Depth**:   Depth of rooting zones in meters  
     **Depth to Water Table**:   Depth to water table in meters
 
+####5.2.1 Site Location 
 
+If latitude and longitude coordinates not available, it is often
+possible to determine the site location based on the site name, city,
+and other information. One way to do this would be to look up a location
+name in [google maps](http://maps.google.com) and then locate it on the
+embedded map. Google Maps can provide decimal degrees if the LatLng
+feature is enabled, which can be done
+[here](http://maps.google.com/maps?showlabs=1). Google Earth can be
+particularly useful in locating sites, along with their coordinates and
+elevation. Alternatively, the site website or address might be found
+through an internet search (e.g. Google).
+
+Use Table 2 to determine the number of significant digits to indicate the level
+of precision with which a study location is known.
+
+### 5.3 Adding a Treatment
+Treatments provide a description of a study’s
+treatments. Any specific information such as rate of fertilizer
+application should be recorded in the managements table (section ). In
+general, managements are recorded when Yield data is collected, but not
+when only Trait data are collected.
+
+**When not to use treatment**: predictor variables that are not based on distinct managements, or that are distinguished by information already contained in the trait (e.g. site, cultivar, date fields) should not be given distinct treatments. For example, a study that compares two different species, cultivars or genotypes can be assigned the same control treatment; these categories will be distinguished by the species or cultivar field. Another example is when the observation is made at two sites: the site field will include this information. 
+
+A treatment name is used as a categorical (rather than continuous)
+variable: it should be easy to find the treatment in the paper based on
+the name in the database. The treatment name does not have to indicate
+the level of treatment used in a particular treatment - this information
+will be included in management table.
+
+It is essential that a control group be identified with each study. If
+there is no experimental manipulation, there is only one treatment. In
+this case, the treatment should be named ’observational’ and listed as
+control.
+
+To determine the control when it is not explicitly stated, first
+determine if one of the treatments is most like a background condition
+or how a system would be in its non-experimental state. In the case of
+crops, this could be how a farmer would be most likely to treat a crop.
+
+   **Name**:   indicates type of treatment; it should be easy for anyone with the
+    original paper to be able to identify the treatment from its name.
+
+   **Control**:   make sure to indicate if the treatment is the study ’control’ by
+    selecting true or false
+
+   **Definition**:   indicates the specifics of the treatment. It is useful for
+    identification purposes to use a quantified description of the
+    treatment even though this information can only be used for analysis
+    when entered as a management.
 
