@@ -107,13 +107,13 @@ entered next by completing the following steps:
 * Esoteric information that other scientists or technicians might not catch and that are not otherwise recorded in the database
 * Any data that may be useful at a later date but that can be skipped for now.
 
-**Comment or Highlight**
-
+   **Comment or Highlight**
 * Sample size
 * Covariates (see Table 7)
 * Treatments
 * Managements
-* Other information entered into the database, e.g. experimental details
+* Other information entered into the database, e.g. experimental
+    details
 
 ### 2.3 Finding a citation in Mendeley
 
@@ -152,4 +152,90 @@ data point to be associated with a Site, Treatment, and Species.
 Cultivar information is also required when available, but is only
 relevant for domesticated species. Fields with an asterix (\*) are
 required.
+
+### 5.1 Adding a Citation
+Citation provides information regarding the source of the data. This
+section should allow us to locate and access the paper of interest.
+
+A PDF copy of each paper should be available through Mendeley.
+
+1.  Select one of the starred papers from your projects Mendeley folder.
+2.  The data to be entered should be specified in the notes associated
+    with the paper in Mendeley
+3.  Identify (highlight or underline) the data (means and statistics)
+    that you will enter
+4.  Enter citation information (Figure 1)
+    * [Data entry form](http://ebi-forecast.igb.uiuc.edu/bety/sites/new) for a new
+        site: `BETYdb` → `Citations` → `new`
+    *  Author: Input the first author’s last name only
+    *  Year: Input the year the paper was published, not submitted, reviewed,
+        or anything else
+        * For unknown information, input NA
+    *  URL: web address of the article, preferably from publishers website
+    *  PDF: URL of the PDF of the article
+    *  DOI: the 'digital object identifier'. If DOI is available, PDF and
+        URL are optional. This can be located in the article or in the
+        article website. Use Ctrl+F 'DOI' to find it. Some older
+        articles do not have a DOI.
+
+### 5.2 Adding a Site
+
+Each experiment is conducted at a unique site. In the context of BETY,
+the term 'site' refers to a specific location and it is common for many
+sites to be located within the same experimental station. By creating
+distinct records for multiple sites, it is possible to differentiate
+among independent studies.
+
+1.  Before adding a site, search to make sure that site is not already
+    entered in database.
+2.  Search for the site given latitude and longitude
+    -   If an institution name or city and state are given, try to
+        locate the site on Google Maps
+    -   If a site name is given, try to locate the site using a
+        combination of Google and Google Maps
+    -   If latitude and longitude are given in the paper, search by lat
+        and lon, this will return all sites within $\pm1$ degree lat and
+        long.
+    -   If an existing site is plausibly the same site as the one
+        mentioned in the paper, it will be necessary to check other
+        papers linked to the existing site.
+        -   Use the same site if the previous study uses the *exact same
+            location* and experimental setup.
+        -   Create a new site if the study was conducted in a different
+            fields (i.e., not the exact same location).
+        -   Create a new site if one study was conducted in a greenhouse
+            and another in a field.
+        -   Do not use distinct sites for seed source in a common garden
+            experiment (see ’When not to enter a new site’ below)
+3.  To use an existing site, click 'edit' for the site, and then select
+    current citation under 'add citation relationships'
+4.  If site does not exist, add a new site.  
+
+    **When not to enter a new site**: When plants (or seeds) are collected from multiple locations and then grown in the same location, this is called 'common garden experiment'. In this case, the location of the study is included as site information. Information about the seed source can be entered as a distinct cultivar.  
+
+    **Site name***:   Site identifier, sufficient to uniquely identify the site within the
+paper  
+    **City**:   Nearest city  
+    **State**:   State, if site is in US  
+    **Country***  
+    **Longitude***  
+    **Latitude***:   Latitude and Longitude must be in decimal form. To convert
+    minute-second to decimal degrees, see the equation in Table 9.  
+    **Greenhouse***:   set Greenhouse = TRUE if plants were grown in a greenhouse, growth
+    chamber, or pots. If a 'warming chamber' or 'greenhouse' is used as
+    the experimental manipulation, but is not used in the control
+    treatments, Greenhouse = FALSE.  
+    **Soil**:   Soil class is entered as a categorical variable that describes the
+    texture. If percent clay, sand, and silt are given, Figure 2 can be used to
+    look up the class.  
+    **SOM**:   Soil organic matter (% by weight)  
+    **MAT**:   Mean Annual Temperature (⁰C)  
+    **MAP**:   Mean Annual Precipitation (mm)  
+    **MASL**:   Elevation (meters above sea level, m)  
+    **Notes**:   site details not included above  
+    **Soilnotes**:   soil details not included above  
+    **Rooting Zone Depth**:   Depth of rooting zones in meters  
+    **Depth to Water Table**:   Depth to water table in meters
+
+
 
