@@ -118,7 +118,7 @@ entered next by completing the following steps:
 ### 2.3 Finding a citation in Mendeley
 
 To find a citation in Mendeley, go to the project folder. Group folders
-and personel are listed in Table 1. By default, data entry technicians should
+and personnel are listed in Table 1. By default, data entry technicians should
 enter data from papers which have been indicated by a yellow star and in
 the order that they were added to the list. Information and data to be
 collected from paper can be found under the 'Notes' tab and in
@@ -270,7 +270,7 @@ will be included in management table.
 
 It is essential that a control group be identified with each study. If
 there is no experimental manipulation, there is only one treatment. In
-this case, the treatment should be named ’observational’ and listed as
+this case, the treatment should be named 'observational' and listed as
 control.
 
 To determine the control when it is not explicitly stated, first
@@ -281,7 +281,7 @@ crops, this could be how a farmer would be most likely to treat a crop.
    **Name**:   indicates type of treatment; it should be easy for anyone with the
     original paper to be able to identify the treatment from its name.
 
-   **Control**:   make sure to indicate if the treatment is the study ’control’ by
+   **Control**:   make sure to indicate if the treatment is the study 'control' by
     selecting true or false
 
    **Definition**:   indicates the specifics of the treatment. It is useful for
@@ -289,3 +289,229 @@ crops, this could be how a farmer would be most likely to treat a crop.
     treatment even though this information can only be used for analysis
     when entered as a management.
 
+### 5.4 Adding a Management
+Managements refers to something that occurs at a specific time and has a
+quantity. Managements include actions that are done to a plant or
+ecosystem, for example the planting density or rate of fertilization.
+Managements are distinct from Treatments in that a Treatment is used to
+categorically identify an experimental treatment, whereas a management
+is used to describe what has been done.
+
+Managements are the way a treatment becomes quantified. Each treatment
+is often associated with multiple managements. The combination of
+managements associated with a particular treatment will distinguish it
+from other treatments. The management types that can be entered into
+BETY are described in .
+
+Each management may be associated with one or more treatments. For
+example, in a fertilization experiment, planting, irrigation, and
+herbicide managements would be applied to all plots but the
+fertilization will be specific to a treatment. For a multi-year
+experiment, there may be multiple entries for the same type of
+management, reflecting, for example, repeated applications of herbicide
+or fertilizer, for example see .
+
+*note:* At present, managements are recorded for Yields but not for
+Traits, unless specifically required by the data or project manager.
+
+To associate a management with multiple treatments, first create the
+management, then edit the management and add treatment relationships.
+
+**Dateloc**:   date level of confidence, explained in and defined in  
+
+**Mgmttype**:   the name of the management being used. A list of standardized
+    management types can be found in  
+
+**Level**:   a quantification of mgmttype  
+
+**Units**:   refers to the units of the level. Units should be converted to those
+    in  
+
+### 5.5 Adding a Trait
+
+In general, a 'trait' is a phenotype; a characteristic that the plant
+exhibits. The traits that we are primarily interested in collecting
+data for are listed in .
+
+Before adding trait data, it is necessary to have the citation,
+treatments, and site information already entered. If the correct
+citation is not identified at the top of the page . To add a new Trait,
+go to the [new trait](http:ebi-forecast.igb.uiuc.edu/bety/traits/new)
+page: `Trait` → `new`.
+
+Presently, we are also using the Trait table record ecosystem level
+measurements other than Yield. Such ecosystem level measurements can
+include leaf area index or net primary productivity, but are only
+collected when required for a particular project.
+
+shows the web form for entering new trait data, and provides a list of
+the traits that we are interested in collecting.
+
+Most of the fields in the Traits table are also used in the Yields
+table. Here is a list of the fields with a brief description, followed
+by more thorough explanations:
+
+**Species***:   Search for species in the database using the search box; if species
+    is not found, see  
+
+**Cultivar**:   primarily used for crops; If the cultivar being used is not found in
+    drop-down box, see hyperref[sec:addcultivar]Section
+    [sec:addcultivar]: Adding a Cultivar.  
+
+**DateLOC**:   Date Level of confidence. See for values.  
+
+**Mean***:   mean is in units of tons per hectare per year (t/ha)  
+
+**Stat name**:   is name of the statistical method used (usually one of SE, SD, MSE,
+    CI, LSD, HSD, MSD). See for more details.  
+
+**Statistic**:   is the value of the statistic associated with Stat name.  
+
+**N**:   Always record N if provided. N is the number of experimental
+    replicates, often referred to as the sample size; N represents the
+    number of independent units within each treatment: in a field
+    setting, this is often the number of plots in each treatment, but in
+    a greenhouse, growth chamber, or pot-study this may be the number of
+    chambers, pots, or individual plants. Sometimes this value is not
+    clearly stated.  
+#### 5.5.1 dateLOC
+
+The date level of confidence (DateLOC) provides an indication of how
+accurately the date associated with the trait or yield observation is
+known. provides the values that should be entered in this field. If the
+event occurred at a level of precision not defined by an integer in this
+table, use fractions. For example, we commonly use 5.5 to indicate a one
+week level of precision. If the exact year is not known, but the time of
+year is, use 91 to 97, with the second digit to indicate the information
+known within the year.
+
+#### 5.5.2 Statistics
+
+Our goal is to record statistics that can be used to estimate standard
+deviation or standard error. Many different methods can be used to
+summarize data, and this is reflected in the diversity of statistics
+that are reported. An overview of these methods is given in and a
+description below.
+
+Where available, direct estimates of variance are preferred, including
+Standard Error (SE), sample Standard Deviation (SD), or Mean Squared
+Error (MSE). SE is usually presented in the format of
+$\text{mean} (\pm \text{SE})$. MSE is usually presented in a table. When
+extracting SE or SD from a figure, measure from the mean to the upper or
+lower bound. This is different than confidence intervals and range
+statistics (described below), for which the entire range is collected.
+
+If MSE, SD, or SE are not provided, it is possible that LSD, MSD, HSD,
+or CI will be provided. These are range statistics and the most
+frequently found range statistics include a Confidence Interval (95%CI),
+Fisher’s Least Significant Difference (LSD), Tukey’s Honestly
+Significant Difference (HSD), and Minimum Significant Difference (MSD).
+Fundamentally, these methods calculate a range that indicates whether
+two means are different or not, and this range uses different approaches
+to penalize multiple comparisons. The important point is that these are
+ranges and that we record the entire range.
+
+Another type of statistic is a “test statistic”; most frequently there
+will be an F-value that can be useful, but this should not be recorded
+if MSE is available. Only if there is no other information available,
+record the P-value.
+
+### 5.6 Adding a Yield
+
+The protocol for entering yield data is identical to entering data for a
+trait, with a few exceptions:
+
+1.  There are no covariates associated with yield data
+
+2.  Yield data is always the dry harvestable biomass; if necessary,
+    moisture content can be added as a trait
+
+### 5.7 Adding a Covariate
+
+Covariates are required for many of the traits. Covariates generally
+indicate the environmental conditions under which a measurement was
+made. Without covariate information, the trait data will have limited
+value.
+
+A complete list of required covariates can be found in . For all
+respiration rates and photosynthetic parameters, temperature is recorded
+as a covariate. Soil moisture, humidity, and other such variables that
+were measured at the time of the measurement that may be required in
+order to standardize across studies.
+
+When root data is recorded, the root size class needs to be entered as a
+covariate. The term ’fine root’ often refers to the \<2mm size class,
+and in this case, the covariate `root_maximum_diameter` would be set to
+2. If the size class is a range, then the `root_minimum_diameter` can
+also be used.
+
+To add a new covariate, go to the [new
+covariate](http:ebi-forecast.igb.uiuc.edu/bety/covariates/new) page:
+`Covariate` → `new`.
+
+#### 5.7.1 Extracting information from tables and graphs
+
+1.  Identify the data that is associated with each treatment
+
+    *note:*
+
+2.  Enter the mean value of the trait
+
+3.  Enter the `statname`, `stat`, and number of replicates, `n`
+    associated with the mean
+    *  `stat` is the value of the `statname` (i.e. `statname` might be
+        ’standard deviation’ (SD) and the `stat` is the numerical value
+        of the statistic)
+    *  Always measure size of error bar from the mean to the end of an
+        error bar. This is the value when presented as __X\pm SE$__ or
+        _X(SE)_ and may be found in a table or on a graph.
+    *  Sometimes CI and LSD are presented as the entire range from the
+        lower to the upper end of the confidence interval. In this case,
+        take 1/2 of the interval representing the distance from the mean
+        to the upper or lower bound
+
+#### 5.7.2 Extracting Data From a Figure using R
+
+To extract data from a jpg file in R using the digitize package:  
+
+1.  Save image as a `*.jpg` file
+2.  Open R
+3.  Change the directory that R is using to the one where the image is
+4.  use R code below to extract data, display it, and save it in a `csv`
+    file steps below
+5.  Upload csv to the project file in google spreadsheet, or open as
+    excel/openoffice and copy/paste to google spreadsheet
+
+    `library('digitize')    
+    calpts <- ReadAndCal('authorYYYabc_fixX.jpg')   
+       ## click on xaxis min (x1), xaxis max (x2),   
+       ## yaxis min(y1), yaxis max (y2)  
+    pts <- DigitData(col='red',type='p',n=8)  
+       ## set n = to the number of points to collect   
+    data <- Calibrate(pts, calpts, x1, x2, y1, y2)  
+       ## x1, x2, y1, and y2 are the min and max of the x and y axes, respectively.  
+    print(data)  
+    write.csv(data, 'authorYYYYabc_figX.csv')`
+  
+#### 5.7.3 Extracting Data From a Figure using GetData
+
+1.  Open PDF in Adobe Reader.
+2.  Zoom in on the figure
+3.  Choose `Tools` → `Select and Zoom`
+4.  Open Paint
+5.  Paste Picture
+6.  Save as `authorYYYYabc\_figX.jpg`
+7.  Open Get Data
+8.  `File` → `open` open figure
+9.  Select button with two arrows (fourth from left)
+10. Follow instructions to select x min, x max, y min and y max. If the
+    x-axis has a categorical variable, it does not matter what values
+    you use for x min and x max.
+11. Make sure to set the correct values for the max and min of each
+    axis, and indicate if the axis is log-scaled
+12. Select the target button (seven from left)
+13. Click over center of desired data points and error bars
+14. Copy data to google spreadsheet (see Section
+    [sec:googlespreadsheets]
+15. Calculate SE as the distance between the error bar upper bound and
+    the mean (absolute value of difference between the two points)
