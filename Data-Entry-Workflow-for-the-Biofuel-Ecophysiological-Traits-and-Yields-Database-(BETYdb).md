@@ -515,3 +515,33 @@ To extract data from a jpg file in R using the digitize package:
     [sec:googlespreadsheets]
 15. Calculate SE as the distance between the error bar upper bound and
     the mean (absolute value of difference between the two points)
+
+### 5.8 Adding a Yield
+
+To add a new Yield, go to the [new
+yield](http:ebi-forecast.igb.uiuc.edu/bety/yields/new) page: `Yield`
+ → `new`. Yield is equivalent to aboveground biomass on a per-area
+basis, and has units of Mg ha~-1~ y1
+
+
+### 5.9 Adding a PFT
+
+Plant functional types (PFTs) are used to group plants for statistical
+modeling and analysis. PFTs are associated with both a specific set of
+priors, and a the subset species for which the traits and yields data
+will be queried. In many cases, it is appropriate to use default PFTs
+(e.g. `tempdecid` is temperate deciduous trees)
+
+In other cases, it is necessary to define PFTs for a specific project.
+For example, to query a specific set of priors or subset of species, a
+new PFT may be defined. For example, Xiaohui Feng defined PFT’s for the
+species found at the EBI Farm prairie. Such project-specific PFTs can
+be defined as `` `projectname`.`pft` `` (i.e. `ebifarm.c4grass` instead
+of `c4grass`).
+
+### 5.10 Adding a Species
+
+Species that are found or cultivated in the United States should be in
+the Plants table. Look it up there first.
+
+### 5.11 Adding a Cultivar
