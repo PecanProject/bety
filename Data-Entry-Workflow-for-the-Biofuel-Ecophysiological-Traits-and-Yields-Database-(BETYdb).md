@@ -35,19 +35,19 @@ Each project has two groups, "projectname" and "projectname_out" for the papers 
 
 Each project manager may have one or more projects, each project should have one group. Group names should refer to plant species, plant functional types, or another project specific name. A list of current groups can be found in Table 1. Please make sure that, at a minimum, Mike Dietze and David LeBauer are invited to join each project folder. 
    1. Open Mendeley desktop
-   2. Click `Edit` → `Create Group` or `Ctrl+Shift+M`
+   2. Click `Edit` → `New Group` or `Ctrl+Shift+M`
    3. Create group name following instructions above
    4. Enter group name 
    5. Set `Privacy Settings` → `Private`
    6. Click `Create Group`
-   7. Click `Edit → Settings`
-   8. Check File `Synchronization` → `Download attached files to group`
+   7. Click `Edit Settings`
+   8. Under `File Synchronization`, check `Download attached files to group`
 
 ### 2.2 Adding and annotating papers (Project Managers)
 
 The ’tag’ field associated with each paper can be used to further
 separate papers, for example by species, or the type of data (’trait’,
-’yield’, ’photosynthesis’) that they contain. When naming a group,
+’yield’, ’photosynthesis’) that they contain. When naming a group, tag
 folders so that instructions for a technician would include the folder
 and the tag to look for, e.g. "please enter data from projectx" or
 "please enter data from papers tagged y from project x".
@@ -150,7 +150,7 @@ Before entering data, it is first necessary to (add and) select the
 citation that is the source of the data. It is also necessary for each
 data point to be associated with a Site, Treatment, and Species.
 Cultivar information is also required when available, but is only
-relevant for domesticated species. Fields with an asterix (\*) are
+relevant for domesticated species. Fields with an asterisk (*) are
 required.
 
 ### 5.1 Adding a Citation
@@ -170,13 +170,13 @@ A PDF copy of each paper should be available through Mendeley.
     *  Author: Input the first author’s last name only
     *  Year: Input the year the paper was published, not submitted, reviewed,
         or anything else
-        * For unknown information, input NA
-    *  URL: web address of the article, preferably from publishers website
-    *  PDF: URL of the PDF of the article
+    *  Fill out Title, Journal, Vol, & Pg. For unknown information, input NA
     *  DOI: the 'digital object identifier'. If DOI is available, PDF and
         URL are optional. This can be located in the article or in the
         article website. Use Ctrl+F 'DOI' to find it. Some older
         articles do not have a DOI.
+    *  URL: web address of the article, preferably from publishers website
+    *  PDF: URL of the PDF of the article
 
 ### 5.2 Adding a Site
 
