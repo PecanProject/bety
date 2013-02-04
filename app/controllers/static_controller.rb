@@ -1,8 +1,5 @@
 class StaticController < ApplicationController
 
-  #caches_page :index
-  #layout 'application'
-
   # Allows us to show the documentation without wrapping by adding '?min' to the end of the url
   layout Proc.new { |controller| controller.request.query_string == 'min' ? nil : 'application' }
 
@@ -29,11 +26,11 @@ class StaticController < ApplicationController
     path = 'static/' + params[:path].join('/') unless params[ :path ].nil?
 # DEBUG
 #@path = path
-   
+
     # file_path is relative from Rails home
     file_path = 'app/views/' + path
     full_path = Rails.root.to_s + '/app/views/' + path
-    
+
     # if the file_path is a directory, but the URL doesn't end with a slash
     # (this helps with relative paths for URLs contained in the document)
     if File.directory?( file_path ) && ! /\/$/.match( request.path )

@@ -6,7 +6,8 @@ class Site < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ sites.sitename sites.city sites.state sites.country sites.lat sites.lon sites.espg }
 
-  has_and_belongs_to_many :citations
+  has_many :citation_sites, :class_name => "CitationsSites"
+  has_many :citations, :through =>  :citation_sites
 
   has_many :yields
   has_many :traits
@@ -20,18 +21,17 @@ class Site < ActiveRecord::Base
   #20 miles
   #lat ~ miles/69.1
   #lng ~ miles/53.0
-  scope :coordinate_search, lambda { |lat,lon,radius| { :conditions => {
-                                                                :lat => (lat-(radius/69.1))..(lat+(radius/69.1)),
-                                                                :lon => (lon-(radius/53.0))..(lon+(radius/53.0)) },
-                                                              :order => "country, state, city" } }
+  scope :coordinate_search, lambda { |lat,lon,radius| where({ :lat => (lat-(radius/69.1))..(lat+(radius/69.1)),
+                                                              :lon => (lon-(radius/53.0))..(lon+(radius/53.0)) }).
+                                                              order("country, state, city") }
 
-  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  scope :search, lambda { |search| {:conditions => simple_search(search) } }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
   scope :minus_already_linked, lambda {|citation|
     if citation.nil?
       {}
     else
-      { :conditions => ["id not in (?)", citation.sites.collect(&:id) ] }
+      where("id not in (?)", citation.sites.collect(&:id))
     end
   }
 

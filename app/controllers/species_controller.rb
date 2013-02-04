@@ -5,8 +5,6 @@ class SpeciesController < ApplicationController
   before_filter :login_required, :except => [ :show ]
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   require 'csv'
 
   def species_search
@@ -16,7 +14,7 @@ class SpeciesController < ApplicationController
     @query.gsub!(/[^\w\s]+/,'')
 
     if !params[:symbol].nil? and !params[:cont].nil? and params[:symbol].length > 3
-      @species = Specie.all(:conditions => ['scientificname like :query or genus like :query or AcceptedSymbol like :query or commonname like :query or scientificname like :query2 or genus like :query2 or AcceptedSymbol like :query2 or commonname like :query2', {:query => @query + "%", :query2 => "%" + @query + "%"} ],:limit => 100,:order => "scientificname")
+      @species = Specie.where('scientificname like :query or genus like :query or AcceptedSymbol like :query or commonname like :query or scientificname like :query2 or genus like :query2 or AcceptedSymbol like :query2 or commonname like :query2', {:query => @query + "%", :query2 => "%" + @query + "%"}).limit(100).order("scientificname")
       @species.uniq!
     else
       @species = []
@@ -75,7 +73,7 @@ class SpeciesController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @species = Specie.order("#{sort_column('species','scientificname')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @species = Specie.sorted_order("#{sort_column('species','scientificname')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @species = Specie.api_search(params)
     end

@@ -20,7 +20,7 @@ class Yieldsview < ActiveRecord::Base
       access_level = 4
     end
 
-    {:conditions => ["(checked >= ? and access_level >= ?) or user_id = ?",checked,access_level,user] }
+    where("(checked >= ? and access_level >= ?) or user_id = ?",checked,access_level,user)
   }
 
   comma do

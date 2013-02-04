@@ -18,7 +18,7 @@
 
   <p>
     <%= f.label :mime_type %><br />
-    <%= f.select :mime_type, Mimetype.all(:order => "id desc").collect(&:type_string), {:include_blank => true} %>
+    <%= f.select :mime_type, Mimetype.order("id desc").collect(&:type_string), {:include_blank => true} %>
   </p>
   <p>
     <%= f.label :name %><br />

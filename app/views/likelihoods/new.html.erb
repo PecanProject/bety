@@ -9,7 +9,7 @@
   </p>
   <p>
     <%= f.label :variable %><br />
-    <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }, {} -%>
+    <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }, {} -%>
   </p>
   <p>
     <%= f.label :input %><br />

@@ -30,7 +30,7 @@
   </p>
   <p>
     <%= f.label :user %><br />
-    <%=h current_user.select_default %>
+    <%= current_user.select_default %>
   </p>
   <p>
     <%= f.hidden_field :citation_id, :value => session["citation"] %>

@@ -16,7 +16,7 @@
   <% (@species_yields+@species_traits).uniq.each do |c| %>
   <tr>
     <td><%= link_to c.genus, species_path(c) %></td>
-    <td><%=h c.species %></td>
+    <td><%= c.species %></td>
     <td><%= link_to "Click here", :action => :yields, :species => c.id if @species_yields.include?(c) %></td>
     <td><%= link_to "Click here", :action => :traits, :species => c.id if @species_traits.include?(c) %></td>
   </tr>

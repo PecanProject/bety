@@ -11,7 +11,7 @@
           <th></th>
           <th>Scientific Name</th>
         </tr>
-        <% @pft.specie.all(:limit => 100).each do |c| %>
+        <% @pft.specie.limit(100).each do |c| %>
         <tr>
           <td><%= link_to "X", { :controller => :pfts, :action => :rem_pfts_species, :id => @pft.id, :species => c }, :confirm => 'Are you sure?', :remote => true %></td>
           <td><%= link_to "edit", edit_species_path(c) %></td>
@@ -27,7 +27,7 @@
       <div id="results"></div>
       <select id="pft_specie_id" name="species[id][]" multiple>
         <%- if !@species.nil? -%>  
-          <%- @species -= @pft.specie.all(:limit => 100) -%>  
+          <%- @species -= @pft.specie.limit(100) -%>
           <%= options_from_collection_for_select(@species, :id, :select_default) %>
         <%- else -%>	
           <option value=''>There are no species that match your query.</option>

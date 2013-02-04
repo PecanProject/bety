@@ -16,7 +16,6 @@ module SimpleSearch
     if search and !search.empty?
       #date search
       begin
-        #search.valid_date? *search.split(/[\/-]/).collect(&:to_i) 
         date = Date.parse(search) 
         date_search = [date - 1.day,date + 1.day]
       rescue
@@ -32,12 +31,8 @@ module SimpleSearch
       else
         [(self::SEARCH_FIELDS || self.column_names).collect { |x| type_query(x,search,date_search)}.compact.join(" or "), { :search => search, :wildcard_search => "%#{search}%", :date_start_search => date_search[0], :date_end_search => date_search[1] }]
       end
-#      find(:all,
-#           :include => self::SEARCH_INCLUDES,
-#           :conditions => [(self::SEARCH_FIELDS || self.column_names).collect { |x| type_query(x,search,date_search)}.compact.join(" or "), { :search => search, :wildcard_search => "%#{search}%", :date_start_search => date_search[0], :date_end_search => date_search[1] }])
     else
-      {} 
-      #find(:all) # Causes very slow sorting if not searching
+      {}
     end
   end
 
@@ -56,7 +51,7 @@ module SimpleSearch
     end
     params[:include] = [] unless params[:include]
     select = ["*"] if select.empty?
-    find(:all, :conditions => conditions, :select => select.join(","), :include => params[:include])
+    where(conditions).select(select.join(",")).includes(params[:include])
   end
 
   private
@@ -67,7 +62,6 @@ module SimpleSearch
     else
       column_split = column.split(".",2)
       type = (eval column_split.first.sub('species','specie').classify.sub('Method','Methods').sub('Dbfile','DBFile')).columns_hash[column_split.last].type
-      #type = (eval column_split.first.sub('species','specie').classify.sub('Method','Methods')).columns_hash[column_split.last].type
     end
     case type
     when :boolean

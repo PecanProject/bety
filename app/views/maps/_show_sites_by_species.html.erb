@@ -16,7 +16,7 @@
         <% if !c.lat.nil? %>
           marker.push( new google.maps.Marker({
             position: new google.maps.LatLng(<%= c.lat %>,<%= c.lon %>),
-            title: <%= "\"" + c.sitename_state_country + "\"" -%>,
+            title: <%= raw "\"" + c.sitename_state_country + "\"" -%>,
             map: map
           }) );
         <% end %>

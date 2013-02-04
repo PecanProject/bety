@@ -10,7 +10,7 @@ class MapsController < ApplicationController
 
   def location_yields_lookup
 
-    location = County.first(:conditions => ['state like ? and name like ?',params[:state],params[:county]])
+    location = County.where('state like ? and name like ?',params[:state],params[:county]).first
 
     render :update do |page|
       if location and location.location_yields.length > 0
@@ -55,10 +55,10 @@ class MapsController < ApplicationController
 
     if !params[:search].nil?
       @query = params[:search]
-      @species_yields = @species_traits = Specie.all(:conditions => ['scientificname like :query or genus like :query or AcceptedSymbol like :query', {:query => "%#{@query}%"} ],:limit => 100)
+      @species_yields = @species_traits = Specie.where('scientificname like :query or genus like :query or AcceptedSymbol like :query', {:query => "%#{@query}%"}).limit(100)
     else
-      @species_yields = Specie.all(:conditions => ["id in (?)",Yield.all_limited(current_user ||= nil).all(:group => :specie_id,:order => "count(id) DESC",:limit => 10).collect {|x| x.specie_id}])
-      @species_traits = Specie.all(:conditions => ["id in (?)",Trait.all_limited(current_user ||= nil).all(:group => :specie_id,:order => "count(id) DESC",:limit => 10).collect {|x| x.specie_id}])
+      @species_yields = Specie.where("id in (?)",Yield.all_limited(current_user ||= nil).group(:specie_id).order("count(id) DESC").limit(10).collect {|x| x.specie_id})
+      @species_traits = Specie.where("id in (?)",Trait.all_limited(current_user ||= nil).group(:specie_id).order("count(id) DESC").limit(10).collect {|x| x.specie_id})
     end
 
     respond_to do |format|
@@ -82,9 +82,8 @@ class MapsController < ApplicationController
 
   # Provides a map populated with sites, then returns trait information if they click on a site
   def traits_from_sites
-    #@sites = Trait.all.collect {|x| x.site unless x.site.nil?}.compact.uniq
-    @sites = Site.all(:conditions => ["id in (?)",Trait.all(:select => :site_id, :conditions => "site_id is not null").collect(&:site_id).uniq])
- 
+    @sites = Site.where("id in (?)",Trait.select(:site_id).where("site_id is not null").collect(&:site_id).uniq)
+
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -99,12 +98,12 @@ class MapsController < ApplicationController
     if !site.nil?
       # Essentially we've got a lambda running on each of the yieldsview, yield and trait models
       # which specs out who can view what
-      @trait = @site.traits.all_limited(current_user || nil).all(:group => "treatment_id" )
+      @trait = @site.traits.all_limited(current_user || nil).group("treatment_id")
     else
       @trait = []
     end
 
-    @trait_logged_in = @site.traits.all(:group => "treatment_id").length - @trait.length
+    @trait_logged_in = @site.traits.group("treatment_id").length - @trait.length
 
     render :update do |page|
       page.replace_html 'show_traits', :partial => 'show_traits'
@@ -152,12 +151,12 @@ class MapsController < ApplicationController
     @site = Site.find(params[:site])
 
     if !site.nil?
-      @yields = @site.yields.all_limited(current_user ||= nil).all(:group => "treatment_id" )
+      @yields = @site.yields.all_limited(current_user ||= nil).group("treatment_id")
     else
       @yields = []
     end
 
-    @yields_logged_in = @site.yields.all(:group => "treatment_id").length - @yields.length
+    @yields_logged_in = @site.yields.group("treatment_id").length - @yields.length
 
     render :update do |page|
       page.replace_html 'show_yields', :partial => 'show_yields'
@@ -256,8 +255,8 @@ class MapsController < ApplicationController
         @query = common_name
       end
     end
-         
-    @sites = Site.all(:include => {:traits => :specie }, :conditions => conditions, :order => 'sites.country, sites.state, sites.city') 
+
+    @sites = Site.includes({:traits => :specie }).where(conditions).order('sites.country, sites.state, sites.city')
     render :update do |page|
       page.replace_html 'show_sites_by_species', :partial => 'show_sites_by_species', :locals => { :sites => @sites }
     end

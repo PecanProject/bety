@@ -10,10 +10,10 @@
 <% @cultivars.each do |cultivar| %>
   <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and cultivar.id == @search.to_i%>>
     <td><%= link_to_if cultivar.specie, cultivar.specie, cultivar.specie %></td>
-    <td><%=h cultivar.previous_id %></td>
-    <td><%=h cultivar.name %></td>
-    <td><%=h cultivar.ecotype %></td>
-    <td><%=h cultivar.notes %></td>
+    <td><%= cultivar.previous_id %></td>
+    <td><%= cultivar.name %></td>
+    <td><%= cultivar.ecotype %></td>
+    <td><%= cultivar.notes %></td>
     <td><%= link_to 'Show', cultivar %></td>
     <td><%= link_to 'Edit', edit_cultivar_path(cultivar) %></td>
     <td><%= link_to 'Destroy', cultivar, :confirm => 'Are you sure?', :method => :delete %></td>

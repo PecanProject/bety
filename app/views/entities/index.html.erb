@@ -9,9 +9,9 @@
 
 <% @entities.each do |entity| %>
   <tr>
-    <td><%=h entity.name %></td>
+    <td><%= entity.name %></td>
     <td><%= link_to_if entity.parent, entity.parent, entity.parent %></td>
-    <td><%=h entity.notes %></td>
+    <td><%= entity.notes %></td>
     <td><%= link_to 'Show', entity %></td>
     <td><%= link_to 'Edit', edit_entity_path(entity) %></td>
     <td><%= link_to 'Destroy', entity, :confirm => 'Are you sure?', :method => :delete %></td>

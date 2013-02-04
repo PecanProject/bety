@@ -13,7 +13,7 @@
 
     <p>
       <%= f.label :variable_id %><br />
-      <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] } %>
+      <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] } %>
     </p>
 
     <br />
@@ -34,11 +34,11 @@
 
       <tr>
         <td><%= link_to_if cov.variable, cov.variable, cov.variable %></td>
-        <td><%=h cov.trait %></td>
-        <td><%=h cov.level %></td>
-        <td><%=h cov.n %></td>
-        <td><%=h cov.stat %></td>
-        <td><%=h cov.statname %></td>
+        <td><%= cov.trait %></td>
+        <td><%= cov.level %></td>
+        <td><%= cov.n %></td>
+        <td><%= cov.stat %></td>
+        <td><%= cov.statname %></td>
       </tr>
       <% end %>
     </table>

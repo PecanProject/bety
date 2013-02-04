@@ -45,7 +45,7 @@ module AuthenticatedSystem
     def permissions(action_name,controller_class = nil)
       # RAILS3 changed below line with second below line. controller_class_name appears to have been removed Rails3
       # controller_class = controller_class_name if controller_class.nil?
-      controller_class = "#{controller_name.capitalize}Controller" if controller_class.nil?
+      controller_class = "#{controller_name.camelize}Controller" if controller_class.nil?
       admin_requirement = ["UsersController.ALL",
                                 "PosteriorsController.ALL",
                                 "PosteriorsRunsController.ALL",
@@ -367,7 +367,7 @@ module AuthenticatedSystem
 
     # Called from #current_user.  First attempt to login by the user id stored in the session.
     def login_from_session
-      self.current_user = User.find_by_id(session[:user_id]) if session[:user_id]
+      self.current_user = User.find(session[:user_id]) if session[:user_id]
     end
 
     # Called from #current_user.  Now, attempt to login by basic authentication information.

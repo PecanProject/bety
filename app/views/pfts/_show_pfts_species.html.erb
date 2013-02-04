@@ -7,11 +7,11 @@
     <th>Genus</th>
     <th>Species</th>
   </tr>
-  <% @pft.specie.all(:limit => 100).each do |c| %>
+  <% @pft.specie.limit(100).each do |c| %>
   <tr>
-    <td><%=h c.scientificname %></td>
-    <td><%=h c.genus %></td>
-    <td><%=h c.species %></td>
+    <td><%= c.scientificname %></td>
+    <td><%= c.genus %></td>
+    <td><%= c.species %></td>
     <td><%= link_to "Show", c %></td>
   </tr>
   <% end %>

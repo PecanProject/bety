@@ -12,11 +12,10 @@ class Specie < ActiveRecord::Base
   has_many :traits
   has_many :cultivars
 
-  scope :all_order, :order => 'genus, species'
-
-  scope :by_letter, lambda { |letter| { :conditions => ['genus like ?', letter + "%"] } }
-  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  scope :search, lambda { |search| {:conditions => simple_search(search) } }
+  scope :all_order, order('genus, species')
+  scope :by_letter, lambda { |letter| where('genus like ?', letter + "%") }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do |f|
     f.id

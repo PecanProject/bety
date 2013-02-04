@@ -44,8 +44,8 @@
 <% @treatments.each do |treatment| %>
 
   <tr>
-    <td><%=h treatment.name %></td>
-    <td><%=h treatment.definition %></td>
+    <td><%= treatment.name %></td>
+    <td><%= treatment.definition %></td>
     <td><%= link_to treatment.control ? "Yes" : "No", :action => "flag_control", :id => treatment.id %></td>
     <td><%= link_to 'Unlink', :action => "linked", :id => treatment.id %></td>
     <td><%= link_to 'Show', treatment %></td>
@@ -67,9 +67,9 @@
           treatment.managements.each do |management| %>
           <tr>
             <td><%= link_to_if management.citation, management.citation, management.citation %></td>
-            <td><%=h management.date %></td>
-            <td><%=h management.mgmttype %></td>
-            <td><%=h management.level %></td>
+            <td><%= management.date %></td>
+            <td><%= management.mgmttype %></td>
+            <td><%= management.level %></td>
             <td><%= link_to 'Show', management %></td>
             <td><%= link_to 'Edit', edit_management_path(management) %></td>
           </tr>
@@ -98,8 +98,8 @@
 <% @other_treatments.each do |treatment| %>
 
   <tr>
-    <td><%=h treatment.name %></td>
-    <td><%=h treatment.definition %></td>
+    <td><%= treatment.name %></td>
+    <td><%= treatment.definition %></td>
     <td><%= link_to treatment.control ? "Yes" : "No", :action => "flag_control", :id => treatment.id %></td>
     <td><%= link_to 'Link', :action => "linked", :id => treatment.id %></td>
     <td><%= link_to 'Show', treatment %></td>
@@ -119,10 +119,10 @@
         
         <% treatment.managements.each do |management| %>
           <tr>
-            <td><%=h management.citation.author_year_title if !management.citation.nil? %></td>
-            <td><%=h management.date %></td>
-            <td><%=h management.mgmttype %></td>
-            <td><%=h management.level %></td>
+            <td><%= management.citation.author_year_title if !management.citation.nil? %></td>
+            <td><%= management.date %></td>
+            <td><%= management.mgmttype %></td>
+            <td><%= management.level %></td>
             <td><%= link_to 'Show', management %></td>
             <td><%= link_to 'Edit', edit_management_path(management) %></td>
           </tr>

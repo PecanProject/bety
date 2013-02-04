@@ -17,17 +17,17 @@ class Yield < ActiveRecord::Base
   validates_presence_of     :mean
   validates_presence_of     :statname, :if => Proc.new { |y| !y.stat.blank? }
 
-  scope :all_order, :include => :specie, :order => 'species.genus, species.species'
-  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  scope :search, lambda { |search| {:conditions => simple_search(search) } }
+  scope :all_order, includes(:specie).order('species.genus, species.species')
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
   scope :citation, lambda { |citation|
     if citation.nil?
       {}
     else
-      { :conditions => ["citation_id = ?", citation ] }
+      where("citation_id = ?", citation)
     end
   }
-  scope :all_limited, lambda { |current_user|
+  def self.all_limited(current_user)
     if !current_user.nil?
       if current_user.page_access_level == 1
         checked = -1
@@ -46,8 +46,8 @@ class Yield < ActiveRecord::Base
       access_level = 4
     end
 
-    {:conditions => ["(checked >= ? and access_level >= ?) or yields.user_id = ?",checked,access_level,user] }
-  }
+    where("(checked >= ? and access_level >= ?) or yields.user_id = ?",checked,access_level,user)
+  end
 
   comma do
     id

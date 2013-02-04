@@ -50,7 +50,7 @@
   <h3>Attach existing file or upload new file</h3>
   <p>
     <%= label_tag :dbfile_id %><br />
-    <%= select_tag :dbfile_id, options_for_select([""]+DBFile.all( :conditions => { :container_id => nil } ).collect { |p| [ p.select_default, p.id ] }) -%>
+    <%= select_tag :dbfile_id, options_for_select([""]+DBFile.where(:container_id => nil).collect { |p| [ p.select_default, p.id ] }) -%>
   </p>
   <hr />
   <em>To upload a new file to ebi-forecast select it using the file upload field below. All other information will auto-populate from the file with the exception of the the parent file and the file id. To make a note of a file on a different system fill out the information below the break and ignore the file upload field</em>

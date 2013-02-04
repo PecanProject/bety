@@ -3,9 +3,7 @@ require 'uri'
 
 class ErrorsController < ApplicationController
 
-  before_filter :login_required 
-
-  layout 'application'
+  before_filter :login_required
 
   $bety_managers = { 26 => "Lauren Hostert", 1 => "Patrick Mulrooney", 3 => "David LeBauer", 6 => "Mike Dietze", 8 => "Deepak Jaiswal", 9 => "Carl Davidson", 15 => "Xiaohui Feng", 23 => "Ryan Kelly", 30 => "Steve Long" }
 

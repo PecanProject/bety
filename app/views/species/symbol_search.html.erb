@@ -1,7 +1,7 @@
 <% if @match.nil? %>
-  '<%=h @phrase %>' does not match!
+  '<%= @phrase %>' does not match!
 <% else %>
-   '<%=h @phrase %>' matches <i><%= link_to @match.ScientificName, specie_path(@match) %></i>
+   '<%= @phrase %>' matches <i><%= link_to @match.ScientificName, specie_path(@match) %></i>
    <%= hidden_field_tag :hidden_specie_scientificname, @match.ScientificName %>
    <%= hidden_field_tag :hidden_specie_commonname, @match.CommonName %>
    <%= hidden_field_tag :hidden_specie_genus, @match.Genus %>

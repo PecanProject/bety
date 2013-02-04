@@ -1,8 +1,6 @@
 class EntitiesController < ApplicationController
 
-  before_filter :login_required 
-
-  layout 'application'
+  before_filter :login_required
 
   # GET /entitys
   # GET /entitys.xml

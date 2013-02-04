@@ -12,10 +12,10 @@
   </tr>
 <% @files.each do |file| %>
   <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and file.id == @search.to_i%>>
-    <td><%=h file.file_name %></td>
-    <td><%=h file.file_path %></td>
-    <td><%=h file.md5 %></td>
-    <td><%=h file.file_id %></td>
+    <td><%= file.file_name %></td>
+    <td><%= file.file_path %></td>
+    <td><%= file.md5 %></td>
+    <td><%= file.file_id %></td>
     <td><%= link_to_if file.created_user, file.created_user, file.updated_user %></td>
     <td><%= link_to_if file.updated_user, file.updated_user, file.updated_user %></td>
     <td><%= link_to_if file.machine, file.machine, file.machine %></td>

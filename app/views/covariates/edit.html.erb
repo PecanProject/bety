@@ -9,7 +9,7 @@
 
   <p>
     <%= f.label :variable_id %><br />
-    <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }, {:selected => @covariate.variable_id.to_i } %>
+    <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }, {:selected => @covariate.variable_id.to_i } %>
 
   </p>
 

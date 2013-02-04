@@ -3,8 +3,6 @@ class FormatsController < ApplicationController
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   def rem_formats_variables
     @formats_variable = FormatsVariable.find(params[:id])
     @format = @formats_variable.format
@@ -35,7 +33,7 @@ class FormatsController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @formats = Format.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @formats = Format.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else
       @format = Format.api_search(params)
     end

@@ -13,14 +13,14 @@
 <% if @sites
       @sites.each do |site| %>
   <tr>
-    <td><%=h site.city  -%></td>
-    <td><%=h site.state -%></td>
-    <td><%=h site.country -%></td>
-    <td><%=h site.lat -%></td>
-    <td><%=h site.lon -%></td>
-    <td><%=h site.mat -%></td>
-    <td><%=h site.map -%></td>
-    <td><%=h site.masl -%></td>
+    <td><%= site.city  -%></td>
+    <td><%= site.state -%></td>
+    <td><%= site.country -%></td>
+    <td><%= site.lat -%></td>
+    <td><%= site.lon -%></td>
+    <td><%= site.mat -%></td>
+    <td><%= site.map -%></td>
+    <td><%= site.masl -%></td>
   </tr>
     <% end %>
   <% else %>

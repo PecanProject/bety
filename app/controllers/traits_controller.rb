@@ -2,15 +2,13 @@ class TraitsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   require 'csv'
   require 'timeout'
 
   def trait_search
     @query = params[:symbol] || nil
     if !params[:symbol].nil? and !params[:cont].nil? and params[:symbol].length > 3
-      @trait = Trait.all_limited(current_user).all(:include => [:specie,:variable,:cultivar,:treatment,:citation], :conditions => ['species.scientificname like :query or species.genus like :query or species.AcceptedSymbol like :query or variables.name like :query or treatments.name like :query or citations.author like :query', {:query => "%" + @query + "%"} ],:limit => 100)
+      @trait = Trait.all_limited(current_user).includes([:specie,:variable,:cultivar,:treatment,:citation]).where('species.scientificname like :query or species.genus like :query or species.AcceptedSymbol like :query or variables.name like :query or treatments.name like :query or citations.author like :query', {:query => "%" + @query + "%"}).limit(100)
     else
       @trait = nil
     end
@@ -37,7 +35,7 @@ class TraitsController < ApplicationController
 
   def access_level
 
-    t = Trait.all_limited(current_user).find_by_id(params[:id])
+    t = Trait.all_limited(current_user).find(params[:id])
 
     t.access_level = params[:trait][:access_level] if t
     
@@ -51,7 +49,7 @@ class TraitsController < ApplicationController
   end
 
   def checked
-    t = Trait.all_limited(current_user).find_by_id(params[:id])
+    t = Trait.all_limited(current_user).find(params[:id])
     t.current_user = current_user
     t.checked = params[:trait][:checked] if t
    
@@ -71,7 +69,7 @@ class TraitsController < ApplicationController
     @traits = Trait.all_limited(current_user)
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @traits = @traits.citation(session["citation"]).order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @traits = @traits.citation(session["citation"]).sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @traits = @traits.exclude_api.api_search(params)
     end
@@ -89,7 +87,7 @@ class TraitsController < ApplicationController
   # GET /traits/1.xml
   def show
     # find_by_id prevents errors when they do not have access
-    @trait = Trait.all_limited(current_user).find_by_id(params[:id])
+    @trait = Trait.all_limited(current_user).find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -106,7 +104,7 @@ class TraitsController < ApplicationController
       @trait = Trait.new
     else
       @trait_old = params[:id]
-      @trait = Trait.all_limited(current_user).find_by_id(@trait_old).clone
+      @trait = Trait.all_limited(current_user).find(@trait_old).clone
       @trait.specie.nil? ? @species = nil :  @species = [@trait.specie]
     end
 
@@ -121,7 +119,7 @@ class TraitsController < ApplicationController
 
   # GET /traits/1/edit
   def edit
-    @trait = Trait.all_limited(current_user).find_by_id(params[:id])
+    @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.specie.nil? ? @species = nil : @species = [@trait.specie]
   end
 
@@ -145,8 +143,8 @@ class TraitsController < ApplicationController
         format.xml  { render :xml => @trait, :status => :created, :location => @trait }
         format.csv  { render :csv => @trait, :status => :created, :location => @trait }
       else
-        @treatments = Citation.find_by_id(session["citation"]).treatments rescue nil
-        @sites = Citation.find_by_id(session["citation"]).sites rescue nil
+        @treatments = Citation.find(session["citation"]).treatments rescue nil
+        @sites = Citation.find(session["citation"]).sites rescue nil
 
         format.html { render :action => "new" }
         format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
@@ -158,7 +156,7 @@ class TraitsController < ApplicationController
   # PUT /traits/1
   # PUT /traits/1.xml
   def update
-    @trait = Trait.all_limited(current_user).find_by_id(params[:id])
+    @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.current_user = current_user #Used to validate that they are allowed to change checked
 
     respond_to do |format|
@@ -178,7 +176,7 @@ class TraitsController < ApplicationController
   # DELETE /traits/1
   # DELETE /traits/1.xml
   def destroy
-    @trait = Trait.all_limited(current_user).find_by_id(params[:id])
+    @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.destroy
 
     respond_to do |format|

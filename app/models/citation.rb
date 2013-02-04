@@ -3,14 +3,16 @@ class Citation < ActiveRecord::Base
 
   include Overrides
 
-  # Sorting and searching functionality
   extend SimpleSearch
   SEARCH_INCLUDES = %w{  }
   SEARCH_FIELDS = %w{ citations.author citations.year citations.title citations.journal citations.vol citations.pg citations.url citations.pdf }
 
-  #Define relationships to other tables
-  has_and_belongs_to_many :sites
-  has_and_belongs_to_many :treatments
+  has_many :citation_sites, :class_name => "CitationsSites"
+  has_many :sites, :through =>  :citation_sites
+
+  has_many :citation_treatments, :class_name => "CitationsTreatments"
+  has_many :treatments, :through =>  :citation_treatments
+
   has_many :managements
   has_many :yields
   has_many :traits
@@ -18,11 +20,9 @@ class Citation < ActiveRecord::Base
   has_many :ebi_methods, :class_name => "Methods"
   belongs_to :user
 
-  # Predefined search filters
-  scope :by_letter, lambda { |letter| { :conditions => ['author like ?', letter + "%"] } }
-  # Must be included if using 'simple search'
-  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  scope :search, lambda { |search| {:conditions => simple_search(search) } }
+  scope :by_letter, lambda { |letter| where('author like ?', letter + "%") }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
 
   # CSV download default fields/field order
   comma do

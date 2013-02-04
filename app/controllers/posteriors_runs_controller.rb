@@ -1,8 +1,6 @@
 class PosteriorsRunsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
 
-  layout 'application'
-
   require 'csv'
 
   # GET /posteriorsruns
@@ -20,7 +18,7 @@ class PosteriorsRunsController < ApplicationController
       conditions[k] = v
     end
     logger.info conditions.to_yaml
-    posteriorsruns = PosteriorsRuns.all(:conditions => conditions)
+    posteriorsruns = PosteriorsRuns.where(conditions)
 
     respond_to do |format|
       format.xml { render :xml => posteriorsruns }

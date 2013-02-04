@@ -11,8 +11,8 @@ class Pft < ActiveRecord::Base
   has_and_belongs_to_many :specie
   has_many :posteriors
 
-  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  scope :search, lambda { |search| {:conditions => simple_search(search) } }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do
     id

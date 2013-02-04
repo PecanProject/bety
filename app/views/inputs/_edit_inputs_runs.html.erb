@@ -12,12 +12,12 @@
           <th>Model</th>
           <th>Site</th>
         </tr>
-        <% @input.runs.each do |c| %>
+        <% @input.runs.each do |run| %>
         <tr>
-          <td><%= link_to "X", { :action => :rem_inputs_runs, :input_id => @input.id, :run_id => c.id }, :confirm => 'Are you sure?', :remote => true %></td>
-          <td><%= link_to "edit", edit_run_path(c.id) %></td>
-          <td><%= link_to_if c.model, c.model, c.model %></td>
-          <td><%= link_to_if c.site, c.site, c.site %></td>
+          <td><%= link_to "X", { :action => :rem_inputs_runs, :input_id => @input.id, :run_id => run.id }, :confirm => 'Are you sure?', :remote => true %></td>
+          <td><%= link_to "edit", edit_run_path(run.id) %></td>
+          <td><%= link_to_if run.model, run.model, run.model %></td>
+          <td><%= link_to_if run.site, run.site, run.site %></td>
         </tr>
         <% end %>
       </table>

@@ -10,8 +10,8 @@ class Ensemble < ActiveRecord::Base
 
   has_many :runs
 
-  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  scope :search, lambda { |search| {:conditions => simple_search(search) } }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
 
   validates_inclusion_of :runtype, :in => RUNTYPETYPES, :allow_blank => true
 

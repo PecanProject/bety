@@ -137,12 +137,15 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   match '/:controller(/:action(/:id))'
   match ':controller/:action.:format' => '#index'
 
-  #route for 'static' content
-  # RAILS3 commented out below
-  #match '*path' => 'static#index'
+
 
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/login' => 'sessions#new', :as => :login
   match '/register' => 'users#create', :as => :register
   match '/signup' => 'users#new', :as => :signup
+
+  #route for 'static' content
+  # RAILS3 commented out below and added next in order to get help bubble docs working
+  # match '*path' => 'static#index'
+  match ':action' => 'static#:action'
 end

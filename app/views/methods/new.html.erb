@@ -13,7 +13,7 @@
   </p>
   <p>
     <%= f.label :citation_id %><br />
-    <%= f.select :citation_id, Citation.all(:order => 'author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %> <em><%= link_to "New Citation", new_citation_path %></em>
+    <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %> <em><%= link_to "New Citation", new_citation_path %></em>
   </p>
   <p>
     <%= f.submit 'Create' %>

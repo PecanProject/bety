@@ -5,7 +5,7 @@
 
   <% @machines.each do |machine| %>
   <tr>
-    <td><%=h machine.hostname %></td>
+    <td><%= machine.hostname %></td>
     <td><%= link_to 'Show', machine %></td>
     <td><%= link_to 'Edit', edit_machine_path(machine) %></td>
     <td><%= link_to 'Destroy', machine, :confirm => 'Are you sure?', :method => :delete %></td>

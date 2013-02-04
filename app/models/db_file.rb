@@ -6,10 +6,10 @@ class DBFile < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ machine }
-  SEARCH_FIELDS = %w{ dbfiles.file_name dbfiles.file_path dbfiles.md5 machines.hostname } 
+  SEARCH_FIELDS = %w{ dbfiles.file_name dbfiles.file_path dbfiles.md5 machines.hostname }
 
-  scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  scope :search, lambda { |search| {:conditions => simple_search(search) } }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
 
   has_many :children, :class_name => "DBFile"
   belongs_to :parent, :class_name => "DBFile", :foreign_key => "parent_id"

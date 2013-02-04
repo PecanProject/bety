@@ -1,8 +1,6 @@
 class CitationsSitesController < ApplicationController
   before_filter :login_required, :except => [ :show ]
 
-  layout 'application'
-
   require 'csv'
 
   # GET /sites
@@ -20,7 +18,7 @@ class CitationsSitesController < ApplicationController
       conditions[k] = v
     end
     logger.info conditions.to_yaml
-    citationssites = CitationsSites.all(:conditions => conditions)
+    citationssites = CitationsSites.where(conditions)
 
     respond_to do |format|
       format.xml { render :xml => citationssites }
