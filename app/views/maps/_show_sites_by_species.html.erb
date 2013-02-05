@@ -3,7 +3,7 @@
 <h3>0 : Sites found </h3>
 <% else %>
 
-<h3><%= @sites.length() -%> : Sites found for '<%= @query -%>'</h3>
+<h3><%= @sites.count -%> : Sites found for '<%= @query -%>'</h3>
 <script>
      if (marker.length > 0){
        marker.each( function(n) {
@@ -38,3 +38,4 @@
 </table>
 
 <div>
+

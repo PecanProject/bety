@@ -257,8 +257,14 @@ class MapsController < ApplicationController
     end
 
     @sites = Site.includes({:traits => :specie }).where(conditions).order('sites.country, sites.state, sites.city')
-    render :update do |page|
-      page.replace_html 'show_sites_by_species', :partial => 'show_sites_by_species', :locals => { :sites => @sites }
+
+    # http://stackoverflow.com/questions/9025338/rails-upgrade-to-3-1-changing-ajax-handling-from-render-update-to-respond-t
+    #render :update do |page|
+    #  page.replace_html 'show_sites_by_species', :partial => 'show_sites_by_species', :locals => { :sites => @sites }
+    #end
+
+    respond_to do |format|
+      format.js
     end
   end
 
