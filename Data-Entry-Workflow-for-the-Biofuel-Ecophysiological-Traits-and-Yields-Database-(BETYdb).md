@@ -33,7 +33,7 @@ Papers can be marked as **read** or **unread**, and may be **stared.**
 ### <a id="Section_2.1"></a> 2.1 Creating a new group on Mendeley (Project Managers)
 Each project has two groups, "projectname" and "projectname_out" for the papers with data to be entered and the papers with data that has been entered. Papers in the _out group may contain data for future entry, for example, traits that are not listed in Table 6.  
 
-Each project manager may have one or more projects, each project should have one group. Group names should refer to plant species, plant functional types, or another project specific name. A list of current groups can be found in Table 1. Please make sure that, at a minimum, Mike Dietze and David LeBauer are invited to join each project folder. 
+Each project manager may have one or more projects, each project should have one group. Group names should refer to plant species, plant functional types, or another project specific name. A list of current groups can be found in [Table 1](#Table 1). Please make sure that, at a minimum, Mike Dietze and David LeBauer are invited to join each project folder. 
    1. Open Mendeley desktop
    2. Click `Edit` → `New Group` or `Ctrl+Shift+M`
    3. Create group name following instructions above
@@ -52,7 +52,7 @@ folders so that instructions for a technician would include the folder
 and the tag to look for, e.g. "please enter data from projectx" or
 "please enter data from papers tagged y from project x".
 
-To access the full text and pdf of papers from off campus, use the [UIUC
+To access the full text and PDF of papers from off campus, use the [UIUC
 VPN](http://www.cites.illinois.edu/vpn/download-install.html) service.
 
 If you are managing a Mendeley folder that undergraduates are actively
@@ -64,10 +64,10 @@ undergraduates are doing.
 
 -   If the DOI number is available (most articles since 2000)
     1.  Select project folder
-    2.  Add entry manually
+    2.  Right click and select `Add entry manually...`
     3.  Paste DOI number in *DOI* field
     4.  Select the search spyglass icon
-    5.  Drag and drop pdf onto the record.
+    5.  Drag and drop PDF onto the record.
 -   If DOI not available:
     1.  Download the paper and save as `citation_key.pdf`
     2.  Add using the *Files* field
@@ -118,7 +118,7 @@ entered next by completing the following steps:
 ### 2.3 Finding a citation in Mendeley
 
 To find a citation in Mendeley, go to the project folder. Group folders
-and personnel are listed in Table 1. By default, data entry technicians should
+and personnel are listed in [Table 1](#Table 1). By default, data entry technicians should
 enter data from papers which have been indicated by a yellow star and in
 the order that they were added to the list. Information and data to be
 collected from paper can be found under the 'Notes' tab and in
@@ -153,7 +153,8 @@ Cultivar information is also required when available, but is only
 relevant for domesticated species. Fields with an asterisk (*) are
 required.  
 
-![Alt text](http://farm9.staticflickr.com/8230/8450714199_3886afafd1_b.jpg "Table 1")
+![Alt text](http://farm9.staticflickr.com/8104/8451955020_a80b120434_b.jpg "Table 1")
+<a id="Table 1"></a>
 
 ### 5.1 Adding a Citation
 Citation provides information regarding the source of the data. This
@@ -166,7 +167,7 @@ A PDF copy of each paper should be available through Mendeley.
     with the paper in Mendeley
 3.  Identify (highlight or underline) the data (means and statistics)
     that you will enter
-4.  Enter citation information (Figure 1)
+4.  Enter citation information [Figure 1](#Figure 1)
     * [Data entry form](http://ebi-forecast.igb.uiuc.edu/bety/sites/new) for a new
         site: `BETYdb` → `Citations` → `new`
     *  Author: Input the first author’s last name only
@@ -180,9 +181,9 @@ A PDF copy of each paper should be available through Mendeley.
     *  URL: web address of the article, preferably from publishers website
     *  PDF: URL of the PDF of the article
 
-![Alt text](http://farm9.staticflickr.com/8375/8450731045_a4b38876ff_b.jpg "New Citation")   
+<a id="Figure 1"></a> ![Alt text](http://farm9.staticflickr.com/8375/8450731045_a4b38876ff_b.jpg "New Citation")   
 
-Figure 1: Form for entering a new citation
+<a id="Figure 1"></a> Figure 1: Form for entering a new citation 
 
 ### 5.2 Adding a Site
 
@@ -220,35 +221,40 @@ among independent studies.
     **When not to enter a new site**: When plants (or seeds) are collected from multiple locations and then grown in the same location, this is called 'common garden experiment'. In this case, the location of the study is included as site information. Information about the seed source can be entered as a distinct cultivar.  
 
     **Site name***:   Site identifier, sufficient to uniquely identify the site within the
-paper  
-    **City**:   Nearest city  
-    **State**:   State, if site is in US  
-    **Country***  
-    **Longitude***  
+paper    
+    **City**:   Nearest city    
+    **State**:   State, if site is in US    
+    **Country***    
+    **Longitude***    
     **Latitude***:   Latitude and Longitude must be in decimal form. To convert
-    minute-second to decimal degrees, see the equation in Table 9.  
+    minute-second to decimal degrees, see the equation in Table 9.    
     **Greenhouse***:   set Greenhouse = TRUE if plants were grown in a greenhouse, growth
     chamber, or pots. If a 'warming chamber' or 'greenhouse' is used as
     the experimental manipulation, but is not used in the control
-    treatments, Greenhouse = FALSE.  
+    treatments, Greenhouse = FALSE.    
     **Soil**:   Soil class is entered as a categorical variable that describes the
-    texture. If percent clay, sand, and silt are given, Figure 2 can be used to
-    look up the class.  
-    **SOM**:   Soil organic matter (% by weight)  
-    **MAT**:   Mean Annual Temperature (⁰C)  
-    **MAP**:   Mean Annual Precipitation (mm)  
-    **MASL**:   Elevation (meters above sea level, m)  
-    **Notes**:   site details not included above  
-    **Soilnotes**:   soil details not included above  
-    **Rooting Zone Depth**:   Depth of rooting zones in meters  
-    **Depth to Water Table**:   Depth to water table in meters
+    texture. If percent clay, sand, and silt are given, [Figure 2](#Figure 2) can be used to
+    look up the class.    
+    **SOM**:   Soil organic matter (% by weight)    
+    **MAT**:   Mean Annual Temperature (⁰C)    
+    **MAP**:   Mean Annual Precipitation (mm)    
+    **MASL**:   Elevation (meters above sea level, m)    
+    **Notes**:   site details not included above    
+    **Soilnotes**:   soil details not included above    
+    **Rooting Zone Depth**:   Depth of rooting zones in meters    
+    **Depth to Water Table**:   Depth to water table in meters    
+
+<a id="Figure 2"></a>  
+![Alt text] (http://farm9.staticflickr.com/8233/8450906505_0db44b0068_b.jpg "Figure 2")
+
+Figure 2: USDA Soil Classification
 
 ####5.2.1 Site Location 
 
 If latitude and longitude coordinates not available, it is often
 possible to determine the site location based on the site name, city,
 and other information. One way to do this would be to look up a location
-name in [google maps](http://maps.google.com) and then locate it on the
+name in [Google Maps](http://maps.google.com) and then locate it on the
 embedded map. Google Maps can provide decimal degrees if the LatLng
 feature is enabled, which can be done
 [here](http://maps.google.com/maps?showlabs=1). Google Earth can be
@@ -256,8 +262,10 @@ particularly useful in locating sites, along with their coordinates and
 elevation. Alternatively, the site website or address might be found
 through an internet search (e.g. Google).
 
-Use Table 2 to determine the number of significant digits to indicate the level
+Use [Table 2](#Table 2) to determine the number of significant digits to indicate the level
 of precision with which a study location is known.
+
+<a id="Table 2"></a> ![Alt text] (http://farm9.staticflickr.com/8531/8452015614_74b39ce13f_b.jpg "Table 2")
 
 ### 5.3 Adding a Treatment
 Treatments provide a description of a study’s
@@ -459,7 +467,7 @@ covariate](http:ebi-forecast.igb.uiuc.edu/bety/covariates/new) page:
 
 1.  Identify the data that is associated with each treatment
 
-    *note:*
+    *note:* If the experiment has many factors, the paper may not report the mean and statistics for each treatment. Often, the reported data will reflect the results of more than one treatment, for example if there was no effect of the treatment on the quantity of interest. In some cases it will be possible the values for each treatment, e.g. if there are _n-1_ values and _n_ treatments. If this is not the case, the treatment names and definitions should be changed to indicate the data reflect the results of more than one experimental treatments. 
 
 2.  Enter the mean value of the trait
 
@@ -606,7 +614,6 @@ to be elevated to “manager”.
     there are any listed on the treatments page.
     -   If Yield data have been collected, ensure that required
         managements have been entered
-
     -   If managements have been entered, ensure that they are
         associated with the correct treatments
 6.  Click [Yields](http://ebi-forecast.igb.uiuc.edu/bety/yields/) or
