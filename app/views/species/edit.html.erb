@@ -11,7 +11,7 @@
 
 <h1>Editing species <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node30.html?min" }) %></h1>
 
-<% form_for(@species) do |f| %>
+<%= form_for(@species) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -119,38 +119,6 @@
     <%= f.text_field :NativeStatus %>
   </p>
   <p>
-    <%= f.label :FederalNoxiousStatus %><br />
-    <%= f.text_field :FederalNoxiousStatus %>
-  </p>
-  <p>
-    <%= f.label :FederalNoxiousCommonName %><br />
-    <%= f.text_field :FederalNoxiousCommonName %>
-  </p>
-  <p>
-    <%= f.label :StateNoxiousStatus %><br />
-    <%= f.text_area :StateNoxiousStatus %>
-  </p>
-  <p>
-    <%= f.label :StateNoxiousCommonName %><br />
-    <%= f.text_area :StateNoxiousCommonName %>
-  </p>
-  <p>
-    <%= f.label :Invasive %><br />
-    <%= f.text_field :Invasive %>
-  </p>
-  <p>
-    <%= f.label :Federal_TE_Status %><br />
-    <%= f.text_field :Federal_TE_Status %>
-  </p>
-  <p>
-    <%= f.label :State_TE_Status %><br />
-    <%= f.text_field :State_TE_Status %>
-  </p>
-  <p>
-    <%= f.label :State_TE_Common_Name %><br />
-    <%= f.text_area :State_TE_Common_Name %>
-  </p>
-  <p>
     <%= f.label :NationalWetlandIndicatorStatus %><br />
     <%= f.text_field :NationalWetlandIndicatorStatus %>
   </p>
@@ -187,36 +155,8 @@
     <%= f.text_field :FireResistance %>
   </p>
   <p>
-    <%= f.label :FlowerColor %><br />
-    <%= f.text_field :FlowerColor %>
-  </p>
-  <p>
-    <%= f.label :FlowerConspicuous %><br />
-    <%= f.text_field :FlowerConspicuous %>
-  </p>
-  <p>
-    <%= f.label :FoliageColor %><br />
-    <%= f.text_field :FoliageColor %>
-  </p>
-  <p>
-    <%= f.label :FoliagePorositySummer %><br />
-    <%= f.text_field :FoliagePorositySummer %>
-  </p>
-  <p>
-    <%= f.label :FoliagePorosityWinter %><br />
-    <%= f.text_field :FoliagePorosityWinter %>
-  </p>
-  <p>
     <%= f.label :FoliageTexture %><br />
     <%= f.text_field :FoliageTexture %>
-  </p>
-  <p>
-    <%= f.label :FruitColor %><br />
-    <%= f.text_field :FruitColor %>
-  </p>
-  <p>
-    <%= f.label :FruitConspicuous %><br />
-    <%= f.text_field :FruitConspicuous %>
   </p>
   <p>
     <%= f.label :GrowthForm %><br />
@@ -257,14 +197,6 @@
   <p>
     <%= f.label :ResproutAbility %><br />
     <%= f.text_field :ResproutAbility %>
-  </p>
-  <p>
-    <%= f.label :Shape_and_Orientation %><br />
-    <%= f.text_field :Shape_and_Orientation %>
-  </p>
-  <p>
-    <%= f.label :Toxicity %><br />
-    <%= f.text_field :Toxicity %>
   </p>
   <p>
     <%= f.label :AdaptedCoarseSoils %><br />
@@ -363,20 +295,12 @@
     <%= f.text_field :CommercialAvailability %>
   </p>
   <p>
-    <%= f.label :FruitSeedAbundance %><br />
-    <%= f.text_field :FruitSeedAbundance %>
-  </p>
-  <p>
     <%= f.label :FruitSeedPeriodBegin %><br />
     <%= f.text_field :FruitSeedPeriodBegin %>
   </p>
   <p>
     <%= f.label :FruitSeedPeriodEnd %><br />
     <%= f.text_field :FruitSeedPeriodEnd %>
-  </p>
-  <p>
-    <%= f.label :FruitSeedPersistence %><br />
-    <%= f.text_field :FruitSeedPersistence %>
   </p>
   <p>
     <%= f.label :Propogated_by_BareRoot %><br />
@@ -426,71 +350,6 @@
     <%= f.label :SeedlingVigor %><br />
     <%= f.text_field :SeedlingVigor %>
   </p>
-  <p>
-    <%= f.label :SmallGrain %><br />
-    <%= f.text_field :SmallGrain %>
-  </p>
-  <p>
-    <%= f.label :VegetativeSpreadRate %><br />
-    <%= f.text_field :VegetativeSpreadRate %>
-  </p>
-  <p>
-    <%= f.label :Berry_Nut_Seed_Product %><br />
-    <%= f.text_field :Berry_Nut_Seed_Product %>
-  </p>
-  <p>
-    <%= f.label :ChristmasTreeProduct %><br />
-    <%= f.text_field :ChristmasTreeProduct %>
-  </p>
-  <p>
-    <%= f.label :FodderProduct %><br />
-    <%= f.text_field :FodderProduct %>
-  </p>
-  <p>
-    <%= f.label :FuelwoodProduct %><br />
-    <%= f.text_field :FuelwoodProduct %>
-  </p>
-  <p>
-    <%= f.label :LumberProduct %><br />
-    <%= f.text_field :LumberProduct %>
-  </p>
-  <p>
-    <%= f.label :NavalStoreProduct %><br />
-    <%= f.text_field :NavalStoreProduct %>
-  </p>
-  <p>
-    <%= f.label :NurseryStockProduct %><br />
-    <%= f.text_field :NurseryStockProduct %>
-  </p>
-  <p>
-    <%= f.label :PalatableBrowseAnimal %><br />
-    <%= f.text_field :PalatableBrowseAnimal %>
-  </p>
-  <p>
-    <%= f.label :PalatableGrazeAnimal %><br />
-    <%= f.text_field :PalatableGrazeAnimal %>
-  </p>
-  <p>
-    <%= f.label :PalatableHuman %><br />
-    <%= f.text_field :PalatableHuman %>
-  </p>
-  <p>
-    <%= f.label :PostProduct %><br />
-    <%= f.text_field :PostProduct %>
-  </p>
-  <p>
-    <%= f.label :ProteinPotential %><br />
-    <%= f.text_field :ProteinPotential %>
-  </p>
-  <p>
-    <%= f.label :PulpwoodProduct %><br />
-    <%= f.text_field :PulpwoodProduct %>
-  </p>
-  <p>
-    <%= f.label :VeneerProduct %><br />
-    <%= f.text_field :VeneerProduct %>
-  </p>
-
   <p>
     <%= f.submit 'Update' %>
   </p>

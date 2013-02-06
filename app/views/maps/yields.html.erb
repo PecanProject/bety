@@ -19,10 +19,10 @@
   <tr>
     <td><%= link_to_if y.specie, y.specie, y.specie %></td>
     <td><%= link_to_if y.cultivar, y.cultivar, y.cultivar %></td>
-    <td><%=h y.mean %></td>
-    <td><%=h y.n %></td>
-    <td><%=h y.statname %></td>
-    <td><%=h y.stat %></td>
+    <td><%= y.mean %></td>
+    <td><%= y.n %></td>
+    <td><%= y.statname %></td>
+    <td><%= y.stat %></td>
     <td><%= link_to_if y.citation, y.citation, y.citation %></td>
     <td><%= link_to_if y.site, y.site, y.site %></td>
     <td><%= link_to_if y.treatment, y.treatment, y.treatment %></td>

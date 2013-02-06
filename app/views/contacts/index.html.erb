@@ -1,5 +1,5 @@
 <h2>Contact Us</h2>
-<% form_for :email, :url => { :controller => 'contacts', :action => 'send_mail' } do |f| %>
+<%= form_for :email, :url => { :controller => 'contacts', :action => 'send_mail' } do |f| %>
     <%= f.label :name %>
     <%= f.text_field :name, :size => 60 %><br />
     <%= f.label :email_address %>

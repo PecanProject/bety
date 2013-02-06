@@ -1,17 +1,13 @@
 class UsersController < ApplicationController
-
-  filter_parameter_logging :password, :password_authentication
   
   before_filter :login_required, :except => [:create,:new]
   #before_filter :login_required
-
-  layout 'application'
 
   def index
     if current_user.page_access_level == 1
       @users = User.all
     else
-      @users = User.find_all_by_id(current_user.id)
+      @users = User.find(current_user.id)
     end
   end
 

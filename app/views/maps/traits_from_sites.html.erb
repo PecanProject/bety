@@ -27,7 +27,7 @@
           var point = new google.maps.LatLng(<%= c.lat %>,<%= c.lon %>);
           marker[<%= c.id -%>] = new google.maps.Marker({
             position: point,
-            title: <%= "\"" + c.sitename_state_country.strip.chomp + "\"" -%> ,
+            title: <%= raw "\"" + c.sitename_state_country.strip.chomp + "\"" -%> ,
             map: map
           });
           google.maps.event.addListener(marker[<%= c.id -%>], "click", function()

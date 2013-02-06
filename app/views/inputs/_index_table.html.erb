@@ -27,17 +27,17 @@ derpy
       <% if input.file_id != nil && filepath != nil %>
         <%= link_to input.name, filepath %>
       <% else %>
-        <%=h input.file_id -%>
+        <%= input.file_id -%>
       <% end %>
     </td>
     
     
-    <td><%=h input.start_date -%></td>
-    <td><%=h input.end_date -%></td>
-    <td><%=h input.file_id -%></td>
-    <td><%=h input.notes -%></td>
-    <td><%=h input.created_at -%></td>
-    <td><%=h input.updated_at -%></td>
+    <td><%= input.start_date -%></td>
+    <td><%= input.end_date -%></td>
+    <td><%= input.file_id -%></td>
+    <td><%= input.notes -%></td>
+    <td><%= input.created_at -%></td>
+    <td><%= input.updated_at -%></td>
     <td><%= link_to_if input.format, input.format, input.format%></td>
     <td><%= link_to "Show", input -%></td>
     <td><%= link_to "Edit", edit_input_path(input) -%></td>

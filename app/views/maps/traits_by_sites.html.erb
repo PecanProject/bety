@@ -25,15 +25,15 @@
     <td><%= link_to_if trait.citation,trait.citation, trait.citation %></td>
     <td><%= link_to_if trait.cultivar,trait.cultivar, trait.cultivar %></td>
     <td><%= link_to_if trait.treatment,trait.treatment, trait.treatment %></td>
-    <td><%=h trait.date_pretty %></td>
-    <td><%=h trait.dateloc %></td>
-    <td><%=h trait.time_pretty %></td>
-    <td><%=h trait.timeloc %></td>
-    <td><%=h trait.mean %></td>
-    <td><%=h trait.n %></td>
-    <td><%=h trait.statname %></td>
-    <td><%=h trait.stat %></td>
-    <td><%=h trait.notes %></td>
+    <td><%= trait.date_pretty %></td>
+    <td><%= trait.dateloc %></td>
+    <td><%= trait.time_pretty %></td>
+    <td><%= trait.timeloc %></td>
+    <td><%= trait.mean %></td>
+    <td><%= trait.n %></td>
+    <td><%= trait.statname %></td>
+    <td><%= trait.stat %></td>
+    <td><%= trait.notes %></td>
   </tr>
 <% end %>
 </table>

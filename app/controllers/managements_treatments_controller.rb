@@ -1,8 +1,6 @@
 class ManagementsTreatmentsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
 
-  layout 'application'
-
   require 'csv'
 
   # GET /managementstreatments
@@ -20,7 +18,7 @@ class ManagementsTreatmentsController < ApplicationController
       conditions[k] = v
     end
     logger.info conditions.to_yaml
-    managementstreatments = ManagementsTreatments.all(:conditions => conditions)
+    managementstreatments = ManagementsTreatments.where(conditions)
 
     respond_to do |format|
       format.xml { render :xml => managementstreatments }

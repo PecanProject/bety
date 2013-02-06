@@ -3,14 +3,12 @@ class MachinesController < ApplicationController
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   # GET /machines
   # GET /machines.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @machines = Machine.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @machines = Machine.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else
       @machines = Machine.api_search(params)
     end

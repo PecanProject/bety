@@ -2,7 +2,7 @@
 <% @user.password = @user.password_confirmation = nil %>
 
 <%= error_messages_for :user %>
-<% form_for :user, :url => users_path do |f| -%>
+<%= form_for :user, :url => users_path do |f| -%>
 <p><%= label_tag 'login' %><br/>
 <%= f.text_field :login %></p>
 
@@ -24,8 +24,8 @@
 <p><%= label_tag 'Postal Code' %><br />
 <%= f.text_field :postal_code %></p>
 
-<p><%= label_tag 'field' %><br/>
-<%= f.select :field, ["","Researcher","Student","Educator","Industry","Agriculture","Other"] %></p>
+<p><%= label_tag 'area' %><br/>
+<%= f.select :area, ["","Researcher","Student","Educator","Industry","Agriculture","Other"] %></p>
 
 <p><%= label_tag 'password' %><br/>
 <%= f.password_field :password %></p>

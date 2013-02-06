@@ -67,7 +67,7 @@ class SitesController < ApplicationController
       @iteration = params[:iteration][/\d+/] rescue 1
       @citation = Citation.find_by_id(session["citation"])
       # We will list those already linked above those that are not, so remove them from the list.
-      @sites = Site.minus_already_linked(@citation).order("#{sort_column('sites','sitename')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @sites = Site.minus_already_linked(@citation).sorted_order("#{sort_column('sites','sitename')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else
       @sites = Site.api_search(params)
     end

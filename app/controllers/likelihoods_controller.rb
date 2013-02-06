@@ -3,14 +3,12 @@ class LikelihoodsController < ApplicationController
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   # GET /likelihoods
   # GET /likelihoods.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @likelihoods = Likelihood.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @likelihoods = Likelihood.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @likelihoods = Likelihood.api_search(params)
     end

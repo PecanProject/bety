@@ -19,8 +19,8 @@ class Run < ActiveRecord::Base
   validates_presence_of     :site_id
   validates_presence_of     :outdir
 
-  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do
     id

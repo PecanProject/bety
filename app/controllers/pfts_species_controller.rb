@@ -1,8 +1,6 @@
 class PftsSpeciesController < ApplicationController
   before_filter :login_required, :except => [ :show ]
 
-  layout 'application'
-
   require 'csv'
 
   # GET /pftsspecies
@@ -20,7 +18,7 @@ class PftsSpeciesController < ApplicationController
       conditions[k] = v
     end
     logger.info conditions.to_yaml
-    pftsspecies = PftsSpecies.all(:conditions => conditions)
+    pftsspecies = PftsSpecies.where(conditions)
 
     respond_to do |format|
       format.xml { render :xml => pftsspecies }

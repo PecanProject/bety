@@ -5,8 +5,11 @@ class Treatment < ActiveRecord::Base
   has_many :traits
   has_many :yields
 
-  has_and_belongs_to_many :managements
-  has_and_belongs_to_many :citations
+  has_many :managements_treatments, :class_name => "ManagementsTreatments"
+  has_many :managements, :through => :managements_treatments
+
+  has_many :citations_treatments, :class_name => "CitationsTreatments"
+  has_many :citations, :through => :citations_treatments
 
   belongs_to :user
 

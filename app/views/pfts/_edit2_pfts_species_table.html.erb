@@ -8,13 +8,13 @@
   <tr>
     <td>
     <% if @pft.specie.include?(species) %>
-      <%= link_to_remote "X", :url => { :controller => :pfts, :action => :edit2_pfts_species, :id => @pft.id, :species => species }, :confirm => 'Are you sure?',
+      <%= link_to "X", { :controller => :pfts, :action => :edit2_pfts_species, :id => @pft.id, :species => species }, :confirm => 'Are you sure?', :remote => true,
                         :with => "'search='+Form.Element.getValue('search')",
                         :html => { :style => "text-decoration: none" } %>
 
 
     <% else %>
-      <%= link_to_remote "+", :url => { :controller => :pfts, :action => :edit2_pfts_species, :id => @pft.id, :species => species }, :confirm => 'Are you sure?',
+      <%= link_to "+", { :controller => :pfts, :action => :edit2_pfts_species, :id => @pft.id, :species => species }, :confirm => 'Are you sure?', :remote => true,
                         :with => "'search='+Form.Element.getValue('search')",
                         :html => { :style => "text-decoration: none" } %>
 
@@ -27,7 +27,7 @@
   <% end %>
 </table>
 
-<%= will_paginate @species, :renderer => 'RemoteLinkRenderer' , :params => {:action => :edit2_pfts_species, :id => @pft.id}, :remote => { :loading => "Element.show('spinner')",
+<%= will_paginate @species, :renderer => 'WillPaginate::ActionView::RemoteLinkRenderer' , :params => {:action => :edit2_pfts_species, :id => @pft.id}, :remote => { :loading => "Element.show('spinner')",
                         :complete => "Element.hide('spinner')",
                         :with => "'search='+Form.Element.getValue('search')"  } %>
 

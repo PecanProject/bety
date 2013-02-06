@@ -2,8 +2,6 @@ class ManagementsController < ApplicationController
   before_filter :login_required
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   require 'csv'
 
   def rem_managements_treatments
@@ -38,10 +36,9 @@ class ManagementsController < ApplicationController
   # GET /managements
   # GET /managements.xml
   def index
-    #@managements = Management.find(:all, :limit => 100)
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @managements = Management.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @managements = Management.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @managements = Management.api_search(params)
     end

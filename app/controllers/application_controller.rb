@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   require 'csv'
   
-  if RAILS_ENV == "production"
+  if Rails.env == "production"
     require "#{Rails.root}/lib/mercator" 
     include Mercator
   end
@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
   end
 
   def not_found
-    render :file => RAILS_ROOT + '/app/views/static/404.html', :layout => true, :status => 404
+    render :file => Rails.root.to_s + '/app/views/static/404.html', :layout => true, :status => 404
   end
  
   def sort_column(default_table = params[:controller],default_sort = 'id')

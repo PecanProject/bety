@@ -9,7 +9,7 @@
 <h1>New yield <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node23.html?min" }) %></h1>
 
 <table>
-  <% form_for(@yield) do |f| %>
+  <%= form_for(@yield) do |f| %>
     <%= f.error_messages %>
   
     <tr>
@@ -34,7 +34,7 @@
       <td colspan=4>
       <%= f.label :date %><br />
       <%= f.date_select :date, :defualt => nil, :order => [:day, :month, :year], :add_month_numbers => true, :include_blank => true, :start_year => 1800, :end_year => Time.now.year %><br />
-      or <%= f.label "julian day (1-365)" %>/year -- <em>leave empty if selecting a date above<br />
+      or <%= f.label "julian day (1-365)" %>/year -- <em>leave empty if selecting a date above</em><br />
       <%= text_field_tag "julianday" %> / <%= text_field_tag "julianyear" %>
       </td>
     </tr>
@@ -63,12 +63,8 @@
     </tr>
     <tr>
       <td colspan=4>
-      <%= f.label :cultivar_id %><br />
-      <%= f.select :cultivar_id, Cultivar.all(:joins => :specie, :order => 'species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true} %>
-  
-      <%#= f.label "cultivar - species " %><br />
-      <!--p>Format : <em>Scientific Name</em> Name - Genus Species</p-->
-      <%#= select_tag "cultivar_specie_id", options_for_select([["",""]] + Cultivar.all(:joins => :specie, :order => 'species.scientificname').collect { |p| [ p.sn_name + " - " +( p.specie.nil? ? "" : p.specie.genus_species), p.id.to_s + "-" + p.specie.id.to_s ] }, {:selected => @yield.cultivar_id.to_s + "-" + @yield.specie_id.to_s } ) %>
+        <%= f.label :cultivar_id %><br />
+        <%= f.select :cultivar_id, Cultivar.joins(:specie).order('species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true} %>
       </td>
     </tr>
     <tr>

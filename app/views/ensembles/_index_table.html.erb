@@ -8,10 +8,10 @@
 
 <% @ensembles.each do |ensemble| %>
   <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and ensemble.id == @search.to_i%>>
-    <td><%=h ensemble.runtype %></td>
-    <td><%=h ensemble.notes %></td>
-    <td><%=h ensemble.created_at %></td>
-    <td><%=h ensemble.updated_at %></td>
+    <td><%= ensemble.runtype %></td>
+    <td><%= ensemble.notes %></td>
+    <td><%= ensemble.created_at %></td>
+    <td><%= ensemble.updated_at %></td>
     <td><%= link_to 'Show', ensemble %></td>
     <td><%= link_to 'Edit', edit_ensemble_path(ensemble) %></td>
     <td><%= link_to 'Destroy', ensemble, :confirm => 'Are you sure?', :method => :delete %></td>

@@ -1,7 +1,7 @@
+require 'will_paginate/array'
+
 class TreatmentsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
-
-  layout 'application'
 
   require 'csv'
 
@@ -117,15 +117,14 @@ class TreatmentsController < ApplicationController
         @treatments = Citation.find(session["citation"]).treatments
   
         if !params[:unlinked].blank?
-          tts = Treatment.all(:include => [{:citations => {:sites => :citations} }], :conditions => ['(treatments.name like ? or treatments.definition like ? ) and treatments.id not in (?)',params[:treatment], params[:treatment], @treatments.collect {|x| x.id}.join(",") ])      
-          #tts = Citation.all(:include => [{:sites => {:citations => :treatments} }], :conditions => ['(treatments.name like ? or treatments.definition like ? ) and treatments.id not in (?)',params[:treatment], params[:treatment], @treatments.collect {|x| x.id}.join(",") ])      
+          tts = Treatment.includes({:citations => {:sites => :citations} }).where('(treatments.name like ? or treatments.definition like ? ) and treatments.id not in (?)',params[:treatment], params[:treatment], @treatments.collect {|x| x.id}.join(","))
         else
           if params[:treatment].blank?
             conditions = ['citations.id = ? and treatments.id not in (?) and citations_sites_2.id != ?', session["citation"], @treatments.collect {|x| x.id}.join(","),session["citation"] ]
           else
             conditions = ['(treatments.name like ? or treatments.definition like ? ) and citations.id = ? and treatments.id not in (?)and citations_sites_2.id != ?', params[:treatment],params[:treatment], session["citation"], @treatments.collect {|x| x.id}.join(","), session["citation"] ]
           end
-          tts = Treatment.all(:include => [{:citations => {:sites => :citations} }], :conditions => conditions)
+          tts = Treatment.where(conditions).includes({:citations => {:sites => :citations} })
         end
         @other_treatments = tts.paginate :page => params[:page]
         
@@ -144,7 +143,7 @@ class TreatmentsController < ApplicationController
         conditions[k] = v
       end
       logger.info conditions.to_yaml
-      @treatments = Treatment.all(:conditions => conditions)
+      @treatments = Treatment.where(conditions)
     end
 
 

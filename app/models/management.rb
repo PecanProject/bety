@@ -5,13 +5,14 @@ class Management < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ citation }
   SEARCH_FIELDS = %w{ citations.author managements.date managements.mgmttype managements.level managements.units managements.notes }
 
-  has_and_belongs_to_many :treatments
+  has_many :managements_treatments, :class_name => "ManagementsTreatments"
+  has_many :treatments, :through => :managements_treatments
 
   belongs_to :citation
   belongs_to :user
 
-  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do
     id
@@ -31,7 +32,8 @@ class Management < ActiveRecord::Base
   end
 
   def date_type_level
-    "#{date} - #{type} : #{level}"
+    # RAILS3 changed type to mgmttype
+    "#{date} - #{mgmttype} : #{level}"
   end
   def to_s
     date_type_level

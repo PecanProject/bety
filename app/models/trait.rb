@@ -4,7 +4,6 @@ class Trait < ActiveRecord::Base
 
   include Overrides
 
-  #
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ citation variable specie site treatment }
   SEARCH_FIELDS = %w{ traits.id traits.mean traits.n traits.stat traits.statname variables.name species.genus citations.author sites.sitename treatments.name }
@@ -38,17 +37,17 @@ class Trait < ActiveRecord::Base
   end
 
 
-  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
-  named_scope :exclude_api, { :conditions => ["checked != ?","-1"] }
-  named_scope :citation, lambda { |citation|
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
+  scope :exclude_api, where("checked != ?","-1")
+  scope :citation, lambda { |citation|
     if citation.nil?
       {}
     else
-      { :conditions => ["citation_id = ?", citation ] }
+      where("citation_id = ?", citation)
     end
   }
-  named_scope :all_limited, lambda { |current_user|
+  def self.all_limited(current_user)
     if !current_user.nil?
       if current_user.page_access_level == 1
         checked = -1
@@ -67,8 +66,8 @@ class Trait < ActiveRecord::Base
       access_level = 4
     end
 
-    {:conditions => ["(checked >= ? and access_level >= ?) or traits.user_id = ?",checked,access_level,user] }
-  }
+    where("(checked >= ? and access_level >= ?) or traits.user_id = ?",checked,access_level,user)
+  end
 
 
   comma do

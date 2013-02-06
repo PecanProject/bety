@@ -1,16 +1,16 @@
 <h1>New prior</h1>
 
 
-<% form_for(@prior) do |f| %>
+<%= form_for(@prior) do |f| %>
   <%= f.error_messages %>
 
   <p>
     <%= f.label :citation_id %><br />
-    <%= f.select :citation_id, Citation.all(:order => 'author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
+    <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
   </p>
   <p>
     <%= f.label :variable_id %><br />
-    <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }, {:selected => @prior.variable_id.to_i } %>
+    <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }, {:selected => @prior.variable_id.to_i } %>
 
   </p>
   <p>
