@@ -21,16 +21,16 @@ This the userguide for entering data into the BETYdb database. The goal of this 
 
 ## 2. Using Mendeley
 Mendeley provides a central location of the collection, annotation, and tracking of the journal articles that we use. Features of Mendeley that are useful to us include: 
-* Collaborative annotation & notes sharing: see section 2.2
+* Collaborative annotation & notes sharing: see [Section 2.2](#Section_2.2)
     * Text highlighter   
     * Sticky notes for comments in the text
     * Notes field for text notes in the reference documentation
 * Read/ unread & favorites:
 Papers can be marked as **read** or **unread**, and may be **stared.**
-* Groups: see section 2.1
+* Groups: see [Section 2.1](#Section_2.1)
 * Tagging
 
-### 2.1 Creating a new group on Mendeley (Project Managers)
+### <a id="Section_2.1"></a> 2.1 Creating a new group on Mendeley (Project Managers)
 Each project has two groups, "projectname" and "projectname_out" for the papers with data to be entered and the papers with data that has been entered. Papers in the _out group may contain data for future entry, for example, traits that are not listed in Table 6.  
 
 Each project manager may have one or more projects, each project should have one group. Group names should refer to plant species, plant functional types, or another project specific name. A list of current groups can be found in Table 1. Please make sure that, at a minimum, Mike Dietze and David LeBauer are invited to join each project folder. 
@@ -43,7 +43,7 @@ Each project manager may have one or more projects, each project should have one
    7. Click `Edit Settings`
    8. Under `File Synchronization`, check `Download attached files to group`
 
-### 2.2 Adding and annotating papers (Project Managers)
+### <a id="Section_2.2"></a> 2.2 Adding and annotating papers (Project Managers)
 
 The ’tag’ field associated with each paper can be used to further
 separate papers, for example by species, or the type of data (’trait’,
@@ -151,7 +151,9 @@ citation that is the source of the data. It is also necessary for each
 data point to be associated with a Site, Treatment, and Species.
 Cultivar information is also required when available, but is only
 relevant for domesticated species. Fields with an asterisk (*) are
-required.
+required.  
+
+![Alt text](http://farm9.staticflickr.com/8230/8450714199_3886afafd1_b.jpg "Table 1")
 
 ### 5.1 Adding a Citation
 Citation provides information regarding the source of the data. This
@@ -177,6 +179,10 @@ A PDF copy of each paper should be available through Mendeley.
         articles do not have a DOI.
     *  URL: web address of the article, preferably from publishers website
     *  PDF: URL of the PDF of the article
+
+![Alt text](http://farm9.staticflickr.com/8375/8450731045_a4b38876ff_b.jpg "New Citation")   
+
+Figure 1: Form for entering a new citation
 
 ### 5.2 Adding a Site
 
@@ -545,3 +551,99 @@ Species that are found or cultivated in the United States should be in
 the Plants table. Look it up there first.
 
 ### 5.11 Adding a Cultivar
+
+## 6. BETYdb: Bulk Data Upload
+
+Currently the web interface does not support bulk data upload, although
+this is a planned feature for BETY 2.0.
+
+For bulk data upload, or for a complete view of the tables in BETY, a
+blank spreadsheet can be found
+[online](https://spreadsheets0.google.com/spreadsheet/pub?hl=en&hl=en&key=0Ai_PDCcY5g2JdFN1UDJJdjNsZk9RM0Z6bnFDdlQ0clE&output=html)
+and can be downloaded in .xls format
+[spreadsheet](https://spreadsheets0.google.com/spreadsheet/pub?hl=en&hl=en&key=0Ai_PDCcY5g2JdFN1UDJJdjNsZk9RM0Z6bnFDdlQ0clE&output=xls).
+Contact [David LeBauer](mailto:dlebauer@illinois.edu) or [Mike
+Dietze](mailto:mdietze@illinois.edu) for more information about using
+this method of data upload.
+
+##7. BETYdb: QA/QC with the Web Interface
+
+Quality assurance and quality control (QA/QC) is a critical step that is
+used to ensure the validity of data in the database and of the analyses
+that use these data. When conducting QA/QC, your data access level needs
+to be elevated to “manager”.
+
+1.  Open citation in Mendeley
+2.  Locate citation in BETYdb
+    -   Select ’use’
+    -   Select ’show’
+    -   Check that author, year, title, journal, volume, and page
+        information is correct
+    -   Check that links to URL and PDF are correct, using doi if
+        available
+    -   If any information is incorrect, click ’edit’ to correct.
+3.  Check that site(s) at bottom of citation record match site(s) in
+    paper
+    -   Check that latitude and longitude are consistent with
+        manuscript, are in decimals not degrees, and have appropriate
+        level of precision .
+    -   Click on site name to verify any additional information site
+        information that is present
+    -   Enter any additional site level information that is found
+4.  Select
+    [treatments](http://ebi-forecast.igb.uiuc.edu/bety/treatments/) from
+    menu bar
+    -   Check that there is a control treatment
+    -   Ensure that treatment name and definition are consistent with
+        information in the manuscript.
+    -   Under “treatments from all citations associated with associated
+        sites”, ensure that there is no redundancy (i.e. if another
+        citations uses the same treatments, it should not be listed
+        separately)
+    -   If managements are listed, make sure that managment-treatment
+        associations are correct
+5.  Check [managements](http://ebi-forecast.igb.uiuc.edu/bety/managements/) if
+    there are any listed on the treatments page.
+    -   If Yield data have been collected, ensure that required
+        managements have been entered
+
+    -   If managements have been entered, ensure that they are
+        associated with the correct treatments
+6.  Click [Yields](http://ebi-forecast.igb.uiuc.edu/bety/yields/) or
+    [Traits](http://ebi-forecast.igb.uiuc.edu/bety/traits/) to check
+    data.
+    -   Check that means, sample size, and statistics have been entered
+        correctly
+    -   If data has been transformed, check that transformation was
+        correct in the associated google spreadsheet (or create a new
+        google spreadsheet following instructions in ).
+    -   For any trait data that requires a covariate .
+
+## 8. Acknowledgements
+
+Patrick Mulroony pat@life.illinois.edu implemented the data entry
+interface. Moein Azimi, David Bettinardi, and Nick Brady, along with
+other members of the Dietze lab, have contributed to the ongoing
+development this document and the web interface that it describes.
+
+## 9. Appendix
+### 9.1 Transformations
+#### 9.1.1 Statistics
+#### 9.1.2 Variables
+### 9.2 Calculations used in transformations
+
+## 10. Converting from ![Alt text](http://farm9.staticflickr.com/8527/8451833770_54e6cf5282_b.jpg) to  ![Alt text] (http://farm9.staticflickr.com/8366/8450753725_1d13eaf78e_b.jpg) to ![Alt text] (http://farm9.staticflickr.com/8513/8451843718_ce1600a18f_b.jpg), including adjustment to temperature
+
+### 10.1 Objective:
+Convert from root respiration data reported in George et al (where O₂
+was measured in μL to units of mass.
+
+In the appendix table, George 2003 reports the range of root respiration
+rates, converted to 15° _C_ and standard units:
+
+
+In the original publication Allen (1969), root respiration was measured
+at $27\ ^\circ $C. The values can be found in table 3 and figure 2. The
+data include a minimum (Group 2 Brunswick, NJ plants) and a maximum
+(Group 3 Newbery, South Carolina), which I assume are the ones used by
+George 2003:
