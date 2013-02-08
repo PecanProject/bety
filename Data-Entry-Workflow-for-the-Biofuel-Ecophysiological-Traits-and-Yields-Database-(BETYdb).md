@@ -181,7 +181,7 @@ A PDF copy of each paper should be available through Mendeley.
     *  URL: web address of the article, preferably from publishers website
     *  PDF: URL of the PDF of the article
 
-<a id="Figure 1"></a> ![Alt text](http://farm9.staticflickr.com/8375/8450731045_a4b38876ff_b.jpg "New Citation")   
+<a id="Figure 1"></a> ![Alt text](https://raw.github.com/dlebauer/bety-documentation/master/figures/citations_new.png "New Citation")   
 
 <a id="Figure 1"></a> Figure 1: Form for entering a new citation 
 
