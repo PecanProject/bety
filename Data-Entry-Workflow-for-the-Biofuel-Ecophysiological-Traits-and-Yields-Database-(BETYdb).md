@@ -153,7 +153,7 @@ Cultivar information is also required when available, but is only
 relevant for domesticated species. Fields with an asterisk (*) are
 required.  
 
-![Alt text](http://farm9.staticflickr.com/8104/8451955020_a80b120434_b.jpg "Table 1")
+![Alt text](figures/table1.png "Table 1")
 <a id="Table 1"></a>
 
 ### 5.1 Adding a Citation
