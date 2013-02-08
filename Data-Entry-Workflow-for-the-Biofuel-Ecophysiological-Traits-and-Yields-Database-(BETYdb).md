@@ -245,7 +245,7 @@ paper
     **Depth to Water Table**:   Depth to water table in meters    
 
 <a id="Figure 2"></a>  
-![Alt text] (http://farm9.staticflickr.com/8233/8450906505_0db44b0068_b.jpg "Figure 2")
+![Alt text] (https://raw.github.com/dlebauer/bety-documentation/master/figures/soiltexture.png "Figure 2")
 
 Figure 2: USDA Soil Classification
 
