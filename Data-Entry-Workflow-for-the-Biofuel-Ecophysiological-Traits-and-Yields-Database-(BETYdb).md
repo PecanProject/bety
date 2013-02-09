@@ -307,6 +307,10 @@ crops, this could be how a farmer would be most likely to treat a crop.
     treatment even though this information can only be used for analysis
     when entered as a management.
 
+<a id="Figure 4"></a> ![Alt text] (https://raw.github.com/echeng7/bety-documentation/master/figures/treatment_new.png "Figure 4")
+
+Figure 4: Form for entering a new treatment
+
 <a id="Figure 5"></a> ![Alt text] (https://raw.github.com/echeng7/bety-documentation/master/figures/treatment_control.png "Figure 5")  
 
 <a id="Figure 5"></a> ![Alt text] (https://raw.github.com/echeng7/bety-documentation/master/figures/treatment_fertilized.png "Figure 5")
@@ -351,7 +355,7 @@ management, then edit the management and add treatment relationships.
 **Units**:   refers to the units of the level. Units should be converted to those
     in  [Table 3](#Table_3)
 
-### 5.5 Adding a Trait
+<a id="Section_5.5"></a> ###5.5 Adding a Trait
 
 In general, a 'trait' is a phenotype; a characteristic that the plant
 exhibits. The traits that we are primarily interested in collecting
