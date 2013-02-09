@@ -265,7 +265,11 @@ through an internet search (e.g. Google).
 Use [Table 2](#Table 2) to determine the number of significant digits to indicate the level
 of precision with which a study location is known.
 
-<a id="Table 2"></a> ![Alt text] (http://farm9.staticflickr.com/8531/8452015614_74b39ce13f_b.jpg "Table 2")
+<a id="Table 2"></a> ![Alt text] (http://farm9.staticflickr.com/8531/8452015614_74b39ce13f_b.jpg "Table 2")  
+Table 2: Appropriate precision for site latitude and longitude
+
+<a id="Figure 3"></a> ![Alt text] (https://raw.github.com/echeng7/bety-documentation/master/figures/sites_new.png "Figure 3")  
+Figure 3: Form for entering a new site
 
 ### 5.3 Adding a Treatment
 Treatments provide a description of a study’s
@@ -303,6 +307,12 @@ crops, this could be how a farmer would be most likely to treat a crop.
     treatment even though this information can only be used for analysis
     when entered as a management.
 
+<a id="Figure 5"></a> ![Alt text] (https://raw.github.com/echeng7/bety-documentation/master/figures/treatment_control.png "Figure 5")  
+
+<a id="Figure 5"></a> ![Alt text] (https://raw.github.com/echeng7/bety-documentation/master/figures/treatment_fertilized.png "Figure 5")
+
+Figure 5: Example treatment form with control and experimental information. Example of data entered into the treatment form for a control (top) and treatment (bottom)
+
 ### 5.4 Adding a Management
 Managements refers to something that occurs at a specific time and has a
 quantity. Managements include actions that are done to a plant or
@@ -315,7 +325,7 @@ Managements are the way a treatment becomes quantified. Each treatment
 is often associated with multiple managements. The combination of
 managements associated with a particular treatment will distinguish it
 from other treatments. The management types that can be entered into
-BETY are described in .
+BETY are described in [Table 3](#Table_3).
 
 Each management may be associated with one or more treatments. For
 example, in a fertilization experiment, planting, irrigation, and
@@ -323,7 +333,7 @@ herbicide managements would be applied to all plots but the
 fertilization will be specific to a treatment. For a multi-year
 experiment, there may be multiple entries for the same type of
 management, reflecting, for example, repeated applications of herbicide
-or fertilizer, for example see .
+or fertilizer, for example see [Figure 6](#Figure_6).
 
 *note:* At present, managements are recorded for Yields but not for
 Traits, unless specifically required by the data or project manager.
@@ -331,25 +341,25 @@ Traits, unless specifically required by the data or project manager.
 To associate a management with multiple treatments, first create the
 management, then edit the management and add treatment relationships.
 
-**Dateloc**:   date level of confidence, explained in and defined in  
+**Dateloc**:   date level of confidence, explained in [Section 5.5](#Section_5.5) and defined in [Table 6](#Table_6)
 
 **Mgmttype**:   the name of the management being used. A list of standardized
-    management types can be found in  
+    management types can be found in [Table 3](#Table_3) 
 
 **Level**:   a quantification of mgmttype  
 
 **Units**:   refers to the units of the level. Units should be converted to those
-    in  
+    in  [Table 3](#Table_3)
 
 ### 5.5 Adding a Trait
 
 In general, a 'trait' is a phenotype; a characteristic that the plant
 exhibits. The traits that we are primarily interested in collecting
-data for are listed in .
+data for are listed in [Table 6](#Table_6).
 
 Before adding trait data, it is necessary to have the citation,
 treatments, and site information already entered. If the correct
-citation is not identified at the top of the page . To add a new Trait,
+citation is not identified at the top of the page [Figure 8](#Figure_8). To add a new Trait,
 go to the [new trait](http:ebi-forecast.igb.uiuc.edu/bety/traits/new)
 page: `Trait` → `new`.
 
@@ -388,6 +398,12 @@ by more thorough explanations:
     a greenhouse, growth chamber, or pot-study this may be the number of
     chambers, pots, or individual plants. Sometimes this value is not
     clearly stated.  
+
+<a id="Table 7"></a>
+![Alt text] ( https://raw.github.com/echeng7/bety-documentation/master/figures/management_new.png "Figure 7")   
+
+Figure 7: Form for entering management data with example data. This management denotes a nitrogen fertilization rate of 112.0 kg N ha-1
+
 #### 5.5.1 dateLOC
 
 The date level of confidence (DateLOC) provides an indication of how
