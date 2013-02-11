@@ -12,16 +12,18 @@ gem "comma", "2.1.1"
 gem "fastercsv", "1.5.5"
 #gem "paperclip", "3.4.0"
 gem "railroad", "0.5.0"
-#gem "rake", "0.9.2.2"
 gem "recaptcha", "0.3.4", :require => "recaptcha/rails"
 gem "ruby-graphviz", "1.0.8"
 gem "seer", "0.10.0"
 gem "tzinfo", "0.3.35"
 gem "will_paginate", "3.0.4"
 
+group :development do
+  gem "rspec-rails", "~> 2.0"
+end
+
 group :test do
-#  gem "autotest-rails"
-#  gem "autotest-standalone"
+  gem "rspec-rails", "~> 2.0"
 end
 
 group :production do
