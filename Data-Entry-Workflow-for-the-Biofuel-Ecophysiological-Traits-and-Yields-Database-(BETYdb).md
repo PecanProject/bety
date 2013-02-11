@@ -31,7 +31,7 @@ Papers can be marked as **read** or **unread**, and may be **stared.**
 * Tagging
 
 ### <a id="Section_2.1"></a> 2.1 Creating a new group on Mendeley (Project Managers)
-Each project has two groups, "projectname" and "projectname_out" for the papers with data to be entered and the papers with data that has been entered. Papers in the _out group may contain data for future entry, for example, traits that are not listed in Table 6.  
+Each project has two groups, "projectname" and "projectname_out" for the papers with data to be entered and the papers with data that has been entered. Papers in the _out group may contain data for future entry, for example, traits that are not listed in [Table 6] (#Table 6).  
 
 Each project manager may have one or more projects, each project should have one group. Group names should refer to plant species, plant functional types, or another project specific name. A list of current groups can be found in [Table 1](#Table 1). Please make sure that, at a minimum, Mike Dietze and David LeBauer are invited to join each project folder. 
    1. Open Mendeley desktop
@@ -80,14 +80,14 @@ undergraduates are doing.
 #### 2.2.2 Annotating a Reference in Mendeley
 
 Each week, please identify and prepare papers that you would like to be
-entered next by completing the following steps:
+entered next by completing the following steps:  
 1.  Use the star label to identify the papers that you want the student
     to focus on next.
     -   Start by keeping a minimum of 2 and a maximum of 5 highlighted
         at once so that students can focus on the ones that you want.
         Students have been entering 1-3 papers per week, once we get
         closer to 3-5, the min/max should change.
-    -   Choose papers the papers that are the most data rich.
+    -   Choose papers the papers that are the most data rich.  
 2.  For each paper, use comment bubbles, notes field, and highlighter to
     indicate:
 * Name(s) of traits to be collected
@@ -109,7 +109,7 @@ entered next by completing the following steps:
 
 **Comment or Highlight**
 * Sample size
-* Covariates (see Table 7)
+* Covariates (see [Table 7](#Table 7))
 * Treatments
 * Managements
 * Other information entered into the database, e.g. experimental
@@ -129,7 +129,7 @@ Google Spreadsheets are used to keep a record of any data that is not
 entered directly from the original publication.
 
 * Any raw data that is not directly entered into the database but that
-    is used to derive data or stats using equations in Table 1 and Table 5.
+    is used to derive data or stats using equations in [Table 1](#Table 1)and [Table 5](#Table 5).
 * Any data extracted from figures, along with the figure number
 * Any calculations that were made. These calculations should be
     included in the cells.
@@ -153,8 +153,8 @@ Cultivar information is also required when available, but is only
 relevant for domesticated species. Fields with an asterisk (*) are
 required.  
 
-![Alt text](figures/table1.png "Table 1")
-<a id="Table 1"></a>
+<a id="Table 1"></a> 
+![Alt text](figures/table 1.png "Table 1")  
 
 ### 5.1 Adding a Citation
 Citation provides information regarding the source of the data. This
@@ -181,9 +181,9 @@ A PDF copy of each paper should be available through Mendeley.
     *  URL: web address of the article, preferably from publishers website
     *  PDF: URL of the PDF of the article
 
-<a id="Figure 1"></a> ![Alt text](https://raw.github.com/dlebauer/bety-documentation/master/figures/citations_new.png "New Citation")   
+<a id="Figure 1"></a> ![Alt text](figures/New citation.png "Figure 1")   
 
-<a id="Figure 1"></a> Figure 1: Form for entering a new citation 
+**Figure 1**: Form for entering a new citation 
 
 ### 5.2 Adding a Site
 
@@ -220,36 +220,51 @@ among independent studies.
 
     **When not to enter a new site**: When plants (or seeds) are collected from multiple locations and then grown in the same location, this is called 'common garden experiment'. In this case, the location of the study is included as site information. Information about the seed source can be entered as a distinct cultivar.  
 
-    **Site name***:   Site identifier, sufficient to uniquely identify the site within the
-paper    
-    **City**:   Nearest city    
-    **State**:   State, if site is in US    
-    **Country***    
-    **Longitude***    
-    **Latitude***:   Latitude and Longitude must be in decimal form. To convert
-    minute-second to decimal degrees, see the equation in Table 9.    
+    **Site Name***:     Site identifier, sufficient to uniquely identify the site within the
+paper  
+
+    **City**:   Nearest city      
+    
+    **State**:   State, if site is in US      
+    
+    **Country***        
+    
+    **Longitude***      
+    
+    **Latitude***: Latitude and Longitude must be in decimal form. To convert
+    minute-second to decimal degrees, see the equation in [Table 9](#Table 9).     
+    
     **Greenhouse***:   set Greenhouse = TRUE if plants were grown in a greenhouse, growth
     chamber, or pots. If a 'warming chamber' or 'greenhouse' is used as
     the experimental manipulation, but is not used in the control
     treatments, Greenhouse = FALSE.    
+    
     **Soil**:   Soil class is entered as a categorical variable that describes the
     texture. If percent clay, sand, and silt are given, [Figure 2](#Figure 2) can be used to
     look up the class.    
-    **SOM**:   Soil organic matter (% by weight)    
-    **MAT**:   Mean Annual Temperature (⁰C)    
+    
+    **SOM**:   Soil organic matter (% by weight)  
+    
+    **MAT**:   Mean Annual Temperature (°C)    
+    
     **MAP**:   Mean Annual Precipitation (mm)    
+    
     **MASL**:   Elevation (meters above sea level, m)    
+    
     **Notes**:   site details not included above    
+    
     **Soilnotes**:   soil details not included above    
-    **Rooting Zone Depth**:   Depth of rooting zones in meters    
+    
+    **Rooting Zone Depth**:   Depth of rooting zones in meters  
+    
     **Depth to Water Table**:   Depth to water table in meters    
 
 <a id="Figure 2"></a>  
-![Alt text] (https://raw.github.com/dlebauer/bety-documentation/master/figures/soiltexture.png "Figure 2")
+![Alt text] (figures/soil triangle.png "Figure 2")
 
-Figure 2: USDA Soil Classification
+**Figure 2**: USDA Soil Classification
 
-####5.2.1 Site Location 
+#### 5.2.1 Site Location 
 
 If latitude and longitude coordinates not available, it is often
 possible to determine the site location based on the site name, city,
@@ -263,18 +278,19 @@ elevation. Alternatively, the site website or address might be found
 through an internet search (e.g. Google).
 
 Use [Table 2](#Table 2) to determine the number of significant digits to indicate the level
-of precision with which a study location is known.
+of precision with which a study location is known.  
 
-<a id="Table 2"></a> ![Alt text] (http://farm9.staticflickr.com/8531/8452015614_74b39ce13f_b.jpg "Table 2")  
-Table 2: Appropriate precision for site latitude and longitude
+**Table 2**: Appropriate precision for site latitude and longitude
+<a id="Table 2"></a> ![Alt text] (figures/table 2.png "Table 2")  
 
-<a id="Figure 3"></a> ![Alt text] (https://raw.github.com/echeng7/bety-documentation/master/figures/sites_new.png "Figure 3")  
-Figure 3: Form for entering a new site
+
+<a id="Figure 3"></a> ![Alt text] (figures/new site.png "Figure 3")  
+**Figure 3**: Form for entering a new site
 
 ### 5.3 Adding a Treatment
 Treatments provide a description of a study’s
 treatments. Any specific information such as rate of fertilizer
-application should be recorded in the managements table (section ). In
+application should be recorded in the managements table [Section 5.4] (#Section 5.4) . In
 general, managements are recorded when Yield data is collected, but not
 when only Trait data are collected.
 
@@ -306,18 +322,18 @@ crops, this could be how a farmer would be most likely to treat a crop.
     identification purposes to use a quantified description of the
     treatment even though this information can only be used for analysis
     when entered as a management.
+    
+**Figure 4**: Form for entering a new treatment  
+<a id="Figure 4"></a> ![Alt text] (figures/new treatment.png "Figure 4")
 
-<a id="Figure 4"></a> ![Alt text] (https://raw.github.com/echeng7/bety-documentation/master/figures/treatment_new.png "Figure 4")
 
-Figure 4: Form for entering a new treatment
+<a id="Figure 5"></a> ![Alt text] (figures/example treatment form.png "Figure 5")  
 
-<a id="Figure 5"></a> ![Alt text] (https://raw.github.com/echeng7/bety-documentation/master/figures/treatment_control.png "Figure 5")  
 
-<a id="Figure 5"></a> ![Alt text] (https://raw.github.com/echeng7/bety-documentation/master/figures/treatment_fertilized.png "Figure 5")
+**Figure 5**: Example treatment form with control and experimental information. Example of data entered into the treatment form for a control (left) and treatment (right)
 
-Figure 5: Example treatment form with control and experimental information. Example of data entered into the treatment form for a control (top) and treatment (bottom)
-
-### 5.4 Adding a Management
+<a id="Section 5.4"></a>
+### 5.4 Adding a Management 
 Managements refers to something that occurs at a specific time and has a
 quantity. Managements include actions that are done to a plant or
 ecosystem, for example the planting density or rate of fertilization.
@@ -329,7 +345,7 @@ Managements are the way a treatment becomes quantified. Each treatment
 is often associated with multiple managements. The combination of
 managements associated with a particular treatment will distinguish it
 from other treatments. The management types that can be entered into
-BETY are described in [Table 3](#Table_3).
+BETY are described in [Table 3](#Table 3).
 
 Each management may be associated with one or more treatments. For
 example, in a fertilization experiment, planting, irrigation, and
@@ -337,7 +353,7 @@ herbicide managements would be applied to all plots but the
 fertilization will be specific to a treatment. For a multi-year
 experiment, there may be multiple entries for the same type of
 management, reflecting, for example, repeated applications of herbicide
-or fertilizer, for example see [Figure 6](#Figure_6).
+or fertilizer, for example see [Figure 6](#Figure 6).
 
 *note:* At present, managements are recorded for Yields but not for
 Traits, unless specifically required by the data or project manager.
@@ -345,25 +361,32 @@ Traits, unless specifically required by the data or project manager.
 To associate a management with multiple treatments, first create the
 management, then edit the management and add treatment relationships.
 
-**Dateloc**:   date level of confidence, explained in [Section 5.5](#Section_5.5) and defined in [Table 6](#Table_6)
+**Dateloc**:   date level of confidence, explained in [Section 5.5](#Section_5.5) and defined in [Table 6](#Table 6)
 
 **Mgmttype**:   the name of the management being used. A list of standardized
-    management types can be found in [Table 3](#Table_3) 
+    management types can be found in [Table 3](#Table 3) 
 
 **Level**:   a quantification of mgmttype  
 
 **Units**:   refers to the units of the level. Units should be converted to those
-    in  [Table 3](#Table_3)
+    in  [Table 3](#Table 3)
+  
+<a id="Figure 6"></a>
+![Alt text] (figures/treatments associated.png "Figure 6")   
 
-<a id="Section_5.5"></a> ###5.5 Adding a Trait
+**Figure 6**: Form for entering and editing relationships between treatments and managements
+
+
+<a id="Section_5.5"></a>
+### 5.5 Adding a Trait
 
 In general, a 'trait' is a phenotype; a characteristic that the plant
 exhibits. The traits that we are primarily interested in collecting
-data for are listed in [Table 6](#Table_6).
+data for are listed in [Table 6](#Table 6).
 
 Before adding trait data, it is necessary to have the citation,
 treatments, and site information already entered. If the correct
-citation is not identified at the top of the page [Figure 8](#Figure_8). To add a new Trait,
+citation is not identified at the top of the page [Figure 8](#Figure 8). To add a new Trait,
 go to the [new trait](http:ebi-forecast.igb.uiuc.edu/bety/traits/new)
 page: `Trait` → `new`.
 
@@ -403,10 +426,15 @@ by more thorough explanations:
     chambers, pots, or individual plants. Sometimes this value is not
     clearly stated.  
 
-<a id="Table 7"></a>
-![Alt text] ( https://raw.github.com/echeng7/bety-documentation/master/figures/management_new.png "Figure 7")   
+**Figure 7**: Form for entering management data with example data. This management denotes a nitrogen fertilization rate of 112.0 kg N ha-1  
 
-Figure 7: Form for entering management data with example data. This management denotes a nitrogen fertilization rate of 112.0 kg N ha-1
+<a id="Figure 7"></a>
+![Alt text] (figures/new management.png "Figure 7")   
+
+<a id="Figure 8"></a>
+![Alt text] (figures/top citation.png "Figure 8") 
+
+**Figure 8**: When entering data, the citation is identified at the top of the page  
 
 #### 5.5.1 dateLOC
 
@@ -418,6 +446,10 @@ table, use fractions. For example, we commonly use 5.5 to indicate a one
 week level of precision. If the exact year is not known, but the time of
 year is, use 91 to 97, with the second digit to indicate the information
 known within the year.
+
+<a id="Figure 9"></a>
+![Alt text] (figures/new trait.png "Figure 9")  
+**Figure 9**: Form used to enter a new trait.
 
 #### 5.5.2 Statistics
 
@@ -511,7 +543,7 @@ To extract data from a jpg file in R using the digitize package:
 1.  Save image as a `*.jpg` file
 2.  Open R
 3.  Change the directory that R is using to the one where the image is
-4.  use R code below to extract data, display it, and save it in a `csv`
+4.  Use R code below to extract data, display it, and save it in a `csv`
     file steps below
 5.  Upload csv to the project file in google spreadsheet, or open as
     excel/openoffice and copy/paste to google spreadsheet
@@ -659,18 +691,189 @@ development this document and the web interface that it describes.
 #### 9.1.2 Variables
 ### 9.2 Calculations used in transformations
 
-## 10. Converting from ![Alt text](http://farm9.staticflickr.com/8527/8451833770_54e6cf5282_b.jpg) to  ![Alt text] (http://farm9.staticflickr.com/8366/8450753725_1d13eaf78e_b.jpg) to ![Alt text] (http://farm9.staticflickr.com/8513/8451843718_ce1600a18f_b.jpg), including adjustment to temperature
+## 10. Converting from ![Alt text](figures/ul o2.png) to  ![Alt text] (figures/nmolco2.png) to ![Alt text] (figures/umolco2.png), including adjustment to temperature
 
 ### 10.1 Objective:
-Convert from root respiration data reported in George et al (where O₂
-was measured in μL to units of mass.
+
+Convert from root respiration data reported in George et al (where O$_2$
+was measured in µL to units of mass.
 
 In the appendix table, George 2003 reports the range of root respiration
-rates, converted to 15° _C_ and standard units:
+rates, converted to $15°C$ and standard units:
 
+$$[11.26, 22.52]  \frac{\mathrm{nmol CO}_2}{\mathrm{g}\ \mathrm{s}}$$
 
 In the original publication Allen (1969), root respiration was measured
-at $27\ ^\circ $C. The values can be found in table 3 and figure 2. The
+at $27°C$. The values can be found in [Table 3] (#Table 3) and [Figure 2] (#Figure 2). The
 data include a minimum (Group 2 Brunswick, NJ plants) and a maximum
 (Group 3 Newbery, South Carolina), which I assume are the ones used by
 George 2003:
+
+$$[27.2, 56.2] \frac{\mu\mathrm{L}\ \mathrm{O}_2}{10\mathrm{mg}\ \mathrm{h}}$$
+
+### 10.2 Step 1
+Transformed George 2003 measurements back to the measurement temperature
+using a rearrangement of equation 1 from George, the standardized
+temperature of $15°C$ stated in the Georgeh table legend, and
+Q$_{10} = 2.075$ from George 2003, and the measurement temperature of
+$27°C$ reported by Allen 1969:
+
+$$R_T = R_{15}[\exp(\ln(Q_{10})(T- 15))/10]$$
+
+$$[11.26, 22.52] * exp(log(2.075)*(27 - 15)/10)$$
+
+Now we have the values that we would have expected to find in the Allen
+paper, except that the units need to be converted back to the original:
+
+$$[27.03,54.07] \mathrm{nmol CO}_2\ \mathrm{g}^{-1}\mathrm{s}^{-1}$$
+
+### 10.3 Step 2 Converting Units
+
+### 10.4 Required constants
+
+
+-   $1\ \mathrm{mol}\ \mathrm{O}_2 = 1\ \mathrm{mol}\ \mathrm{CO}_2$
+    since respiration is
+    $\mathrm{CH}_2\mathrm{O} + \mathrm{O}_2 \to \mathrm{CO}_2 + \mathrm{H}_2\mathrm{O}$
+
+-   Density of $\mathrm{O}_2$ at $27^\circ C$:
+    $\frac{7.69 \times 10^5\ \mathrm{ml}\ \mathrm{O}_2}{\mathrm{g}\ \mathrm{O}_2}$
+    first assume that Allen converted to sea level pressure (101 kPa),
+    although maybe they were measured at elevation (Allen may have
+    worked at \~ 900 kPa near Brevard, NC)
+
+-   Molar mass of $\mathrm{O}_2$:
+    $\frac{32\mathrm{g}\ \mathrm{O}_2}{\mathrm{mol}}$
+
+-   Treat 10mg, which is in the unit of root mass used by Allen, as a
+    unit of measurement for simplicity
+
+Now convert
+$$[27.03,54.07] \mathrm{nmol CO}_2\ \mathrm{g}^{-1}\mathrm{s}^{-1}$$ to
+units of
+$\frac{\mu\mathrm{L}\ \textrm{O}_2}{10\mathrm{mg}\ \mathrm{root}\ \mathrm{h}}$.
+The expected result is the original values reported by Allen:
+$[27.2, 56.2] \frac{\mu\mathrm{L}\ \mathrm{O}_2}{10\mathrm{mg}\ \mathrm{h}}$
+
+$$[27.03, 54.07]\ \frac{\mathrm{nmol}\ \mathrm{CO}_2}{\mathrm{g}\ \mathrm{root}\ \mathrm{s}} \times \frac{1\ \mathrm{g}}{100\times10\mathrm{mg}} \times \frac{3600\ \mathrm{s}}{\mathrm{h}} \times \frac{\mathrm{nmol}\ \mathrm{O}_2}{\mathrm{nmol}\ \mathrm{CO}_2}\frac{3.2 \times 10^{-8}\ \mathrm{g}\ \mathrm{O}_2}{\mathrm{nmol}\ \mathrm{O}_2}\times \frac{7.69\times10^5\ \mu\mathrm{L}\ \mathrm{O}_2}{\mathrm{g}\ \mathrm{O}_2}$$
+
+The result is:
+
+$$[23.8, 47.8]  \frac{\mu\mathrm{L}\ \textrm{O}_2}{10\mathrm{mg}\ \mathrm{root}\ \mathrm{h}}$$
+
+These are the units reported in the Allen paper, but they appear to be
+off by the temperature conversion factor,
+$exp(log(2.075)*(27 - 15)/10)=2.4$, e.g.
+$[11.9, 23.9]\times 2.4= [28.6,57.4]$, values which are only 5 and 2
+percent larger than the original values of $[27.2, 56.2]$, respectively
+to be acceptable, but not exact. Since the ratio of observed:expected
+values are different, it is not likely that Q$_{10}$ or the atmospheric
+pressure at time of measurement would explain this error.
+
+### 10.5 Convert to units in BETYdb, find $\textrm{k}$
+
+
+:
+
+$$\textrm{k}\times\frac{\mu\mathrm{L}\ \textrm{O}_2}{10\mathrm{mg}\ \mathrm{root}\ \mathrm{h}} = \frac{\mu\mathrm{mol}\ \mathrm{CO}_2}{\mathrm{kg}\ \mathrm{s}}$$
+
+$$k =  \frac{\mathrm{g}\ \mathrm{O}_2}{7.69\times10^5\ \mu\mathrm{L}\ \mathrm{O}_2}\times\frac{\mu\mathrm{mol}\ \mathrm{O}_2}{3.2 \times 10^{-5}\ \mathrm{g}\ \mathrm{O}_2} \times \frac{10^5\ \times 10\mathrm{mg}}{\mathrm{kg}} \times \frac{\mathrm{h}}{3600\ \mathrm{s}}=$$
+$$= 1.13$$
+
+## 11. Calculating $MSE$ given $F$, $df_{\text{group}}$, and $SS$
+
+
+Given:
+
+$$\label{eq:f}
+  F = MS_g/MS_e$$
+
+Where $g$ indicates the group, or treatment. Rearranging this equation
+gives: $$MS_e=MS_g/F$$
+
+Given
+
+$$MS_x = SS_x/df_x$$
+
+Substitute $MS_e/df_e$ for $SS_e$ in the first equation
+
+$$F=\frac{SS_g/df_g}{MS_e}$$
+
+Then solve for $MS_e$
+
+$$\label{eq:mse}
+  MS_e = \frac{SS_g}{df_g\times F}$$
+
+$$\label{eq:dft}
+  df_{\text{total}}=(df_a+1)\times(df_b+1)...\times(n)-1$$
+
+Which depends on the experimental design:
+
+For factors a, b... (usually 1 or 2, sometimes 3) where $n$ is the
+number of replicates within each treatment combination.
+
+-   One-way anova $df_{\text{total}}=an-1$; where $a$ is the number of
+    treatments
+
+-   Two-way anova without replication $df_{\text{total}}=(a+1)(b+1)-1$
+    also known as ’’randomized complete block design’’ (RCBD)
+
+-   Two-way anova with $n$ replicates
+    $df_{\text{total}}=(a+1)(b+1)(n)-1$ aka ’’RCBD with replication’’
+
+### 11.1 Example
+
+An example application of this is in Starr et al. [2008] table 3 [Figure 11] (Figure 11).
+
+
+The results are from one (two?) factor ANOVA with repeated measures,
+with treatment and week as the factors and no replication.
+
+We will calculate MSE from the $SS_{\text{treatment}}$
+$df_{\text{treatment}}$, and $F$-value given in the table; these are
+$109.58$, $2$, and $0.570$, respectively; $df_{\text{weeks}}$ is given
+as $10$.
+
+For the 1997 *Eriphorium vaginatum*, the mean $A_{max}$ in table 4 is
+$13.49$.
+
+Calculate $MS_e$:
+
+$$MS_e = \frac{109.58}{0.57 \times 2} = 96.12$$
+
+![Alt text] (figures/Starr.png "Figure 11")   
+<a id="Figure 11"></a>
+
+Figure 11: Table used to calculate SE from F, from Starr et al. [2008]
+
+## 12. Bibliography
+**References**  
+![Alt text] (figures/references.png "References")
+
+## 13. Reference Tables
+
+<a id="Table 3"></a>
+![Alt text] (figures/table 3.png "Table 3")   
+
+
+<a id="Table 4"></a>
+![Alt text] (figures/table 4.png "Table 4")   
+
+
+<a id="Table 5"></a>
+![Alt text] (figures/table 5.png "Table 5")   
+
+
+<a id="Table 6"></a>
+![Alt text] (figures/table 6.png "Table 6")   
+
+
+<a id="Table 6.1"></a>
+![Alt text] (figures/table 6.1.png "Table 6.1")   
+
+
+<a id="Table 7"></a>
+![Alt text] (figures/table 7.png "Table 7")   
+
+<a id="Table 9"></a>
+![Alt text] (figures/table 9.png "Table 9")   
