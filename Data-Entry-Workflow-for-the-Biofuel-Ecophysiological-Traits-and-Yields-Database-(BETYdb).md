@@ -1,10 +1,3 @@
-Welcome to the bety wiki!
-# Using BETYdb
-
-**_Under Construction_**
-
-Please see documentation here: https://www.betydb.org/dbdocumentation_users.pdf
-
 # Data Entry
 ## Getting Started
 
