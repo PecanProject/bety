@@ -226,6 +226,10 @@ examples:
 9.  https://www.betydb.org/citations/1.json?include[]=sites&include[]=yields 
     Return citation 1 in json format with it’s associated sites and yields
 
+#### API keys
+
+Using an API key allows access to data without having to enter a login. To use an API key, simply append @?key=<your_api_key>@ to the end of the URL. Each user must obtain a unique API key. 
+
 ### Web Interface
 
 The web interface to BETYdb provides an interactive portal in which
