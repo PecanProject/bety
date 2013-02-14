@@ -1,7 +1,7 @@
 source "http://rubygems.org"
 
 gem "rails", "3.0.18"
-gem "mysql"
+gem "mysql2"
 gem "activerecord-mysql2-adapter"
 gem "query_reviewer", "0.1.6"
 gem "nokogiri"
@@ -18,12 +18,15 @@ gem "seer", "0.10.0"
 gem "tzinfo", "0.3.35"
 gem "will_paginate", "3.0.4"
 
+gem 'sqlite3', '1.3.3'
+
 group :development do
-  gem "rspec-rails", "~> 2.0"
+  gem "rspec-rails", "~> 2.6.1"
 end
 
 group :test do
-  gem "rspec-rails", "~> 2.0"
+  gem "rspec-rails", "~> 2.6.1"
+  gem 'webrat', '0.7.1'
 end
 
 group :production do

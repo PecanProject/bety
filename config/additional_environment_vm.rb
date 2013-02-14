@@ -1,5 +1,3 @@
-config.action_controller.relative_url_root = '/bety'
-
 config.action_mailer.smtp_settings = {
   :address => 'localhost',
   :domain => 'localhost',
