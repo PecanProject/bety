@@ -43,6 +43,6 @@
   <%=h @workflow.params %>
 </p>
 
-
+<%= link_to 'Results', "/pecan/finished.php?workflowid=" + @workflow.id.to_s %> |
 <%= link_to 'Edit', edit_workflow_path(@workflow) %> |
 <%= link_to 'Back', workflows_path %>

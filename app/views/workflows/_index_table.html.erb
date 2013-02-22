@@ -14,6 +14,9 @@
     <td><%=h workflow.finished_at %></td>
     <td><%=h workflow.created_at %></td>
     <td><%=h workflow.updated_at %></td>
+
+    <td><%= link_to 'Results', "/pecan/finished.php?workflowid=" + workflow.id.to_s %></td>
+
     <td><%= link_to 'Show', workflow %></td>
     
     <%# Workflows should not be edited through the rails application%>
