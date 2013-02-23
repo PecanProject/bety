@@ -20,13 +20,16 @@ gem "will_paginate", "3.0.4"
 
 gem 'sqlite3', '1.3.3'
 
-group :development do
-  gem "rspec-rails", "~> 2.6.1"
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'capybara'
 end
 
 group :test do
-  gem "rspec-rails", "~> 2.6.1"
+  gem "rspec-rails"
   gem 'webrat', '0.7.1'
+  gem "capybara"
+  gem "database_cleaner"
 end
 
 group :production do
