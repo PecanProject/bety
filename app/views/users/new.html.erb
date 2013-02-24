@@ -46,7 +46,9 @@
 
 <em>* Any request for page access higher then Viewer or data access higher then External researcher must be approved by an administrator</em>
 
-<%= recaptcha_tags %>
+<% if Rails.env != "test" %>
+  <%= recaptcha_tags %>
+<% end %>
 
 <p><%= submit_tag 'Sign up' %></p>
 <% end -%>

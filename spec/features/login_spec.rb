@@ -1,12 +1,18 @@
 require 'spec_helper'
  
+describe "Login page", :type => :request do
+  describe "GET /login"  do
+    it "should return a valid response" do
+      # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
+      get "/login"
+      response.status.should be(200)
+    end
+  end
+end
+ 
 feature 'Login works' do
   context 'GET /login' do
-    it 'has "Log In" text' do
-      visit login_path
-      page.should have_content 'Log In'
-    end
-    it 'allows successful login' do
+    it 'notify on successful login' do
       visit login_path
       # This will make the page search a bit faster by going to div#content
       within ("#content") do
@@ -18,7 +24,7 @@ feature 'Login works' do
       page.should have_content("Logged in successfully")
 
     end
-    it 'gives notification of unsuccessful login' do
+    it 'notify on unsuccessful login' do
       visit login_path
       within ("#content") do
         fill_in 'Login', with:'carlcrott'
@@ -32,20 +38,3 @@ feature 'Login works' do
   end
 end
 
-
-
-## WORKS
-#describe "Login page", :type => :request do
-#  describe "GET /login"  do
-#    it "should return a valid response" do
-#      # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
-#      get "/login"
-#      response.status.should be(200)
-##      print response.body
-#    end
-#    it "should have the text 'Log In'" do
-#      get "/login"
-#      response.should have_selector("h1", :content => "Log In")
-#    end
-#  end
-#end

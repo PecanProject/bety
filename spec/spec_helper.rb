@@ -5,7 +5,6 @@ require 'rspec/rails'
 require 'capybara/rails'
 require 'capybara/rspec'
 
-
 include Rails.application.routes.url_helpers
 
 # Requires supporting ruby files with custom matchers and macros, etc,

@@ -29,7 +29,11 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.access_level = 3
     @user.page_access_level = 4
-    success = verify_recaptcha(:model => @user, :message => "Please re-enter the words from the image again.") && @user && @user.save
+    if Rails.env == "test"
+      success = @user && @user.save
+    else 
+      success = verify_recaptcha(:model => @user, :message => "Please re-enter the words from the image again.") && @user && @user.save
+    end
     page_access_level = ["", "Administrator", "Manager", "Creator", "Viewer"]
     access_level = ["", "Restricted", "Internal EBI & Collaborators", "External Researchers", "Public"]
 
