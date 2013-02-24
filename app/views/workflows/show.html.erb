@@ -4,18 +4,13 @@
 </p>
 
 <p>
-  <b>Model Type:</b>
-  <%= @workflow.model_type %>
-</p>
-
-<p>
   <b>Model ID:</b>
   <%= @workflow.model_id %>
 </p>
 
 <p>
-  <b>Outdir:</b>
-  <%= @workflow.outdir %>
+  <b>Folder:</b>
+  <%=h @workflow.folder %>
 </p>
 
 <p>
@@ -48,6 +43,6 @@
   <%= @workflow.params %>
 </p>
 
-
+<%= link_to 'Results', "/pecan/finished.php?workflowid=" + @workflow.id.to_s %> |
 <%= link_to 'Edit', edit_workflow_path(@workflow) %> |
 <%= link_to 'Back', workflows_path %>

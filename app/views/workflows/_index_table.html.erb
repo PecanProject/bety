@@ -1,6 +1,6 @@
 <table class="pretty">
   <tr>
-    <th><%= sortable "workflows.outdir", "Outdir" -%></th>
+    <th><%= sortable "workflows.folder", "Outdir" -%></th>
     <th><%= sortable "workflows.started_at", "Started at" -%></th>
     <th><%= sortable "workflows.finished_at", "Finshed at" -%></th>
     <th><%= sortable "workflows.created_at", "Created at" -%></th>
@@ -9,18 +9,21 @@
 
 <% @workflows.each do |workflow| %>
   <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and workflow.id == @search.to_i%>>
-    <td><%= workflow.outdir %></td>
-    <td><%= workflow.started_at %></td>
-    <td><%= workflow.finished_at %></td>
-    <td><%= workflow.created_at %></td>
-    <td><%= workflow.updated_at %></td>
+    <td><%=h workflow.folder %></td>
+    <td><%=h workflow.started_at %></td>
+    <td><%=h workflow.finished_at %></td>
+    <td><%=h workflow.created_at %></td>
+    <td><%=h workflow.updated_at %></td>
+
+    <td><%= link_to 'Results', "/pecan/finished.php?workflowid=" + workflow.id.to_s %></td>
+
     <td><%= link_to 'Show', workflow %></td>
     
     <%# Workflows should not be edited through the rails application%>
     <td><%#= link_to 'Edit', edit_workflow_path(workflow) %></td>
 
-    <%# Workflows should not be destroyed through the rails application%>
-    <td><%#= link_to 'Destroy', workflow, :confirm => 'Are you sure?', :method => :delete %></td>
+    <%# Workflows can be destroyed through the rails application%>
+    <td><%= link_to 'Destroy', workflow, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
