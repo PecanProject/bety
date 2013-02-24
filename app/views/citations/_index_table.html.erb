@@ -12,12 +12,12 @@
 
 <% @citations.each do |citation| %>
   <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and citation.id == @search.to_i%>>
-    <td><%=h citation.author %></td>
-    <td><%=h citation.year %></td>
-    <td><%=h citation.title %></td>
-    <td><%=h citation.journal %></td>
-    <td><%=h citation.vol %></td>
-    <td><%=h citation.pg %></td>
+    <td><%= citation.author %></td>
+    <td><%= citation.year %></td>
+    <td><%= citation.title %></td>
+    <td><%= citation.journal %></td>
+    <td><%= citation.vol %></td>
+    <td><%= citation.pg %></td>
     <td><%= link_to_unless citation.url.blank?, 'link', citation.url do
               ""
             end %></td>

@@ -17,23 +17,23 @@
           <th>Storage Number</th>
           <th>Column Number</th>
         </tr>
-        <% @format.formats_variables.each do |c| %>
+        <% @format.formats_variables.each do |formats_variable| %>
         <tr>
-          <td><%= link_to_remote "X", :url => { :controller => :formats, :action => :rem_formats_variables, :id => c.id }, :confirm => 'Are you sure?'%></td>
-          <td><%= link_to "edit", edit_variable_path(c.variable_id) %></td>
-          <td><%=h c.variable.name %></td>
-          <td><%=h c.variable.description %></td>
-          <td><%=h c.variable.units %></td>
-          <td><%=h c.name %></td>
-          <td><%=h c.unit %></td>
-          <td><%=h c.storage_type %></td>
-          <td><%=h c.column_number %></td>
+          <td><%= link_to "X", { :controller => :formats, :action => :rem_formats_variables, :id => formats_variable.id }, :confirm => 'Are you sure?', :remote => true %></td>
+          <td><%= link_to "edit", edit_variable_path(formats_variable.variable_id) %></td>
+          <td><%= formats_variable.variable.name %></td>
+          <td><%= formats_variable.variable.description %></td>
+          <td><%= formats_variable.variable.units %></td>
+          <td><%= formats_variable.name %></td>
+          <td><%= formats_variable.unit %></td>
+          <td><%= formats_variable.storage_type %></td>
+          <td><%= formats_variable.column_number %></td>
         </tr>
         <% end %>
       </table>
     </td>
     <td>
-      <% form_remote_tag :url => {:controller => :formats, :action => 'edit_formats_variables' } do %>
+      <%= form_tag url_for(:controller => :formats, :action => :edit_formats_variables), :remote => true do %>
       <%= select_tag :variable_id, options_for_select(Variable.all.collect { |x| [x.select_default,x.id] }) %><br />
       <%= label_tag :name, "Name" %><%= text_field_tag 'formats_variable[name]' %><br />
       <%= label_tag :unit, "Unit" %><%= text_field_tag 'formats_variable[unit]' %><br />

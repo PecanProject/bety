@@ -17,19 +17,19 @@
           <th>Date LOC</th>
           <th>Type</th>
         </tr>
-        <% @treatment.managements.each do |c| %>
+        <% @treatment.managements.each do |management| %>
         <tr>
-          <td><%= link_to_remote "X", :url => { :action => :rem_managements_treatments, :id => @treatment.id, :management => c.id }, :confirm => 'Are you sure?'%></td>
-          <td><%= link_to "edit", edit_management_path(c.management_id) %></td>
-          <td><%= c.date %></td>
-          <td><%= c.dateloc %></td>
-          <td><%= c.mgmttype %></td>
+          <td><%= link_to "X", { :controller => :treatments, :action => :rem_managements_treatments, :id => @treatment.id, :management => management }, :confirm => 'Are you sure?', :remote => true %></td>
+          <td><%= link_to "edit", edit_management_path(management.id) %></td>
+          <td><%= management.date %></td>
+          <td><%= management.dateloc %></td>
+          <td><%= management.mgmttype %></td>
         </tr>
         <% end %>
       </table>
     </td>
     <td>
-      <% form_remote_tag :url => { :controller => :treatments, :action => 'edit_managements_treatments'} do |f| %>
+      <%= form_tag url_for(:controller => :treatments, :action => :edit_managements_treatments), :remote => true do %>
       <%= collection_select( :management, :id, Management.all.reject { |r| @treatment.managements.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
       <%= hidden_field_tag 'id', @treatment.id %>
       <br /><br />

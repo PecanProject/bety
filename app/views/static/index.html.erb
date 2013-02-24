@@ -5,15 +5,15 @@
         </div>
 <!--        <div id="count-table" class="index-image" >
         <% cache 'main_index' do
-             miscanthus = Specie.all(:conditions => 'genus like "miscanthus"',:select => :id).collect(&:id)
-             switchgrass = Specie.all(:conditions => 'genus like "panicum"',:select => :id).collect(&:id)
-             willow = Specie.all(:conditions => 'genus like "salix"',:select => :id).collect(&:id)
-             poplar = Specie.all(:conditions => 'genus like "populus"',:select => :id).collect(&:id) -%>
+             miscanthus = Specie.where('genus like "miscanthus"').select(:id).collect(&:id)
+             switchgrass = Specie.where('genus like "panicum"').select(:id).collect(&:id)
+             willow = Specie.where('genus like "salix"').select(:id).collect(&:id)
+             poplar = Specie.where('genus like "populus"').select(:id).collect(&:id) -%>
 
         <table summary="Count of Yield and Trait entries">
           <tr>
             <th>&nbsp;</th>
-            <th colspan = 6><%= Trait.count(:distinct => true, :select => "specie_id") + Yield.count(:distinct => true, :select => "specie_id") %> Species with Trait or Yield Data</th>
+            <th colspan = 6><%= Trait.select("specie_id").count(:distinct => true) + Yield.select("specie_id").count(:distinct => true) %> Species with Trait or Yield Data</th>
           </tr>
           <tr>
             <th>&nbsp;</th>
@@ -31,39 +31,40 @@
           </tr>
           <tr>
             <td>Miscanthus</td>
-            <td><%= Yield.count( :select => :id,  :conditions => ['access_level = 4 and checked = 1 and specie_id in (?)',miscanthus]) %></td>
-            <td><%= Yield.count( :select => :id,  :conditions => ['access_level > 2 and checked = 1 and specie_id in (?)',miscanthus]) %></td>
-            <td><%= Yield.count( :select => :id,  :conditions => ['specie_id in (?)',miscanthus]) %></td>
-            <td><%= Trait.count( :select => :id,  :conditions => ['access_level = 4 and checked = 1 and specie_id in (?)',miscanthus]) %></td>
-            <td><%= Trait.count( :select => :id,  :conditions => ['access_level > 2 and checked = 1 and specie_id in (?)',miscanthus]) %></td>
-            <td><%= Trait.count( :select => :id,  :conditions => ['specie_id in (?)',miscanthus]) %></td>
+            <td><%= Yield.where('access_level = 4 AND checked = 1 AND specie_id in (?)', miscanthus).select(:id).count %></td>
+            <td><%= Yield.where('access_level < 2 AND checked = 1 AND specie_id in (?)', miscanthus).select(:id).count %></td>
+            <td><%= Yield.where('specie_id in (?)', miscanthus).select(:id).count %></td>
+            <td><%= Yield.where('access_level = 4 AND checked = 1 AND specie_id in (?)', miscanthus).select(:id).count %></td>
+            <td><%= Yield.where('access_level < 2 AND checked = 1 AND specie_id in (?)', miscanthus).select(:id).count %></td>
+            <td><%= Yield.where('specie_id in (?)', miscanthus).select(:id).count %></td>
+
           </tr> 
           <tr>
             <td>Switchgrass</td>
-            <td><%= Yield.count( :select => :id,  :conditions => ['specie_id in (?) and access_level = 4 and checked = 1',switchgrass]) %></td>
-            <td><%= Yield.count( :select => :id,  :conditions => ['specie_id in (?) and access_level > 2 and checked = 1',switchgrass]) %></td>
-            <td><%= Yield.count( :select => :id,  :conditions => ['specie_id in (?)',switchgrass]) %></td>
-            <td><%= Trait.count( :select => :id,  :conditions => ['specie_id in (?) and access_level = 4 and checked = 1',switchgrass]) %></td>
-            <td><%= Trait.count( :select => :id,  :conditions => ['specie_id in (?) and access_level > 2 and checked = 1',switchgrass]) %></td>
-            <td><%= Trait.count( :select => :id,  :conditions => ['specie_id in (?)',switchgrass]) %></td>
+            <td><%= Yield.where('access_level = 4 AND checked = 1 AND specie_id in (?)', switchgrass).select(:id).count %></td>
+            <td><%= Yield.where('access_level < 2 AND checked = 1 AND specie_id in (?)', switchgrass).select(:id).count %></td>
+            <td><%= Yield.where('specie_id in (?)', switchgrass).select(:id).count %></td>
+            <td><%= Yield.where('access_level = 4 AND checked = 1 AND specie_id in (?)', switchgrass).select(:id).count %></td>
+            <td><%= Yield.where('access_level < 2 AND checked = 1 AND specie_id in (?)', switchgrass).select(:id).count %></td>
+            <td><%= Yield.where('specie_id in (?)', switchgrass).select(:id).count %></td>
           </tr> 
           <tr>
             <td>Poplar</td>
-            <td><%= Yield.count( :select => :id,  :conditions => ['specie_id in (?) and access_level = 4 and checked = 1',poplar]) %></td>
-            <td><%= Yield.count( :select => :id,  :conditions => ['specie_id in (?) and access_level > 2 and checked = 1',poplar]) %></td>
-            <td><%= Yield.count( :select => :id,  :conditions => ['specie_id in (?)',poplar]) %></td>
-            <td><%= Trait.count( :select => :id,  :conditions => ['specie_id in (?) and access_level = 4 and checked = 1',poplar]) %></td>
-            <td><%= Trait.count( :select => :id,  :conditions => ['specie_id in (?) and access_level > 2 and checked = 1',poplar]) %></td>
-            <td><%= Trait.count( :select => :id,  :conditions => ['specie_id in (?)',poplar]) %></td>
+            <td><%= Yield.where('access_level = 4 AND checked = 1 AND specie_id in (?)', poplar).select(:id).count %></td>
+            <td><%= Yield.where('access_level < 2 AND checked = 1 AND specie_id in (?)', poplar).select(:id).count %></td>
+            <td><%= Yield.where('specie_id in (?)', poplar).select(:id).count %></td>
+            <td><%= Yield.where('access_level = 4 AND checked = 1 AND specie_id in (?)', poplar).select(:id).count %></td>
+            <td><%= Yield.where('access_level < 2 AND checked = 1 AND specie_id in (?)', poplar).select(:id).count %></td>
+            <td><%= Yield.where('specie_id in (?)', poplar).select(:id).count %></td>
           </tr> 
           <tr>
             <td>Willow</td>
-            <td><%= Yield.count( :select => :id,  :conditions => ['specie_id in (?) and access_level = 4 and checked = 1',willow]) %></td>
-            <td><%= Yield.count( :select => :id,  :conditions => ['specie_id in (?) and access_level > 2 and checked = 1',willow]) %></td>
-            <td><%= Yield.count( :select => :id,  :conditions => ['specie_id in (?)',willow]) %></td>
-            <td><%= Trait.count( :select => :id,  :conditions => ['specie_id in (?) and access_level = 4 and checked = 1',willow]) %></td>
-            <td><%= Trait.count( :select => :id,  :conditions => ['specie_id in (?) and access_level > 2 and checked = 1',willow]) %></td>
-            <td><%= Trait.count( :select => :id,  :conditions => ['specie_id in (?)',willow]) %></td>
+            <td><%= Yield.where('access_level = 4 AND checked = 1 AND specie_id in (?)', willow).select(:id).count %></td>
+            <td><%= Yield.where('access_level < 2 AND checked = 1 AND specie_id in (?)', willow).select(:id).count %></td>
+            <td><%= Yield.where('specie_id in (?)', willow).select(:id).count %></td>
+            <td><%= Yield.where('access_level = 4 AND checked = 1 AND specie_id in (?)', willow).select(:id).count %></td>
+            <td><%= Yield.where('access_level < 2 AND checked = 1 AND specie_id in (?)', willow).select(:id).count %></td>
+            <td><%= Yield.where('specie_id in (?)', willow).select(:id).count %></td>
           </tr>
         </table>
         <% end -%> 

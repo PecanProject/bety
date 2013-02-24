@@ -13,7 +13,7 @@
         </tr>
         <% @input.variables.each do |variable| %>
         <tr>
-          <td><%= link_to_remote "X", :url => { :action => :rem_inputs_variables, :input_id => @input.id, :variable_id => variable.id }, :confirm => 'Are you sure?'%></td>
+          <td><%= link_to "X", { :action => :rem_inputs_variables, :input_id => @input.id, :variable_id => variable.id }, :confirm => 'Are you sure?', :remote => true %></td>
           <td><%= link_to "edit", edit_variable_path(variable) %></td>
           <td><%= link_to variable, variable %></td>
         </tr>
@@ -21,7 +21,7 @@
       </table>
     </td>
     <td>
-      <% form_remote_tag :url => { :controller => :inputs, :action => 'edit_inputs_variables'} do |f| %>
+      <%= form_tag url_for( :controller => :inputs, :action => :edit_inputs_variables), :remote => true do %>
       <%= collection_select( :variable, :id, Variable.all.reject { |r| @input.variables.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
       <%= hidden_field_tag 'input_id', @input.id %>
       <br /><br />

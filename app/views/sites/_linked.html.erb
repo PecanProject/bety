@@ -1,5 +1,5 @@
 <% if !session["citation"].nil? %>
-<h1>Sites already associted with this citation</h1>
+<h1>Sites already associated with this citation</h1>
 <table>
   <tr>
     <th>Site Name</th>
@@ -13,14 +13,14 @@
 
 <% @citation.sites.each do |site| %>
   <tr id="site-<%= site.id.to_s %>">
-    <td><%=h site.sitename %></td>
-    <td><%=h site.city %></td>
-    <td><%=h site.state %></td>
-    <td><%=h site.country %></td>
-    <td><%=h site.lat %></td>
-    <td><%=h site.lon %></td>
-    <td><%=h site.espg %></td>
-    <td><%= link_to_remote 'Unlink', :url => {:action => "linked", :id => site.id} %></td>
+    <td><%= site.sitename %></td>
+    <td><%= site.city %></td>
+    <td><%= site.state %></td>
+    <td><%= site.country %></td>
+    <td><%= site.lat %></td>
+    <td><%= site.lon %></td>
+    <td><%= site.espg %></td>
+    <td><%= link_to 'Unlink', {:action => "linked", :id => site.id}, :remote => true %></td>
     <td><%= link_to 'Show', site %></td>
     <td><%= link_to 'Edit', edit_site_path(site) %></td>
     <td><%= link_to 'Destroy', site, :confirm => 'Are you sure?', :method => :delete %></td>

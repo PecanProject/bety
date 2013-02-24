@@ -3,9 +3,7 @@ class CitationsController < ApplicationController
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
   require 'csv'
-
 
   def rem_citations_sites
     @citation = Citation.find(params[:id])
@@ -42,7 +40,7 @@ class CitationsController < ApplicationController
 
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @citations = Citation.order("#{sort_column('citations','author')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @citations = Citation.sorted_order("#{sort_column('citations','author')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else
       @citations = Citation.api_search(params)
     end
@@ -59,7 +57,7 @@ class CitationsController < ApplicationController
   # GET /citations/1
   # GET /citations/1.xml
   def show
-    @citation = Citation.find(params[:id], :include => params[:include] )
+    @citation = Citation.where(:id => params[:id]).includes(params[:include]).first
 
     respond_to do |format|
       format.html # show.html.erb

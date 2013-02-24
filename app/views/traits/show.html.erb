@@ -40,53 +40,53 @@
 <% if logged_in? %>
 <p>
   <b>User:</b>
-  <%=h @trait.user %>
+  <%= @trait.user %>
 </p>
 <% end %>
 
 <p>
   <b>Date:</b>
-  <%=h @trait.pretty_date %>
+  <%= @trait.pretty_date %>
 </p>
 
 <p>
   <b>Date Level of Confidence:</b>
-  <%=h $dateloc_drop.invert[@trait.dateloc.to_s] %>
+  <%= $dateloc_drop.invert[@trait.dateloc.to_s] %>
 </p>
 
 <p>
   <b>Time:</b>
-  <%=h @trait.pretty_time %>
+  <%= @trait.pretty_time %>
 </p>
 
 <p>
   <b>Time Level of Confidence:</b>
-  <%=h @trait.timeloc %>
+  <%= @trait.timeloc %>
 </p>
 
 <p>
   <b>Mean:</b>
-  <%=h @trait.mean %>
+  <%= @trait.mean %>
 </p>
 
 <p>
   <b>N:</b>
-  <%=h @trait.n %>
+  <%= @trait.n %>
 </p>
 
 <p>
   <b>Stat:</b>
-  <%=h @trait.stat %>
+  <%= @trait.stat %>
 </p>
 
 <p>
   <b>Statname:</b>
-  <%=h @trait.statname %>
+  <%= @trait.statname %>
 </p>
 
 <p>
   <b>Notes:</b>
-  <%=h @trait.notes %>
+  <%= @trait.notes %>
 </p>
 
 <%= link_to 'Edit', edit_trait_path(@trait) %> |

@@ -11,9 +11,9 @@
 
 <% @users.each do |user| %>
   <tr>
-    <td><%=h user.login %></td>
-    <td><%=h user.name %></td>
-    <td><%=h user.email %></td>
+    <td><%= user.login %></td>
+    <td><%= user.name %></td>
+    <td><%= user.email %></td>
     <td><%= link_to 'Show', user %></td>
     <td><%= link_to 'Edit', edit_user_path(user) %></td>
   </tr>

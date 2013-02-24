@@ -1,6 +1,6 @@
 <h1>Editing User</h1>
 
-<% form_for(@user) do |f| %>
+<%= form_for(@user) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -32,8 +32,8 @@
     <%= f.text_field :postal_code %>
   </p>
   <p>
-    <%= f.label :field %><br />
-    <%= f.text_field :field %>
+    <%= f.label :area %><br />
+    <%= f.text_field :area %>
   </p>
   <p>
     <%= f.label :change_password %>

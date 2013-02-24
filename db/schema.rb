@@ -1,15 +1,17 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of Active Record to incrementally modify your database, and
-# then regenerate this schema definition.
+# encoding: UTF-8
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your database schema. If you need
-# to create the application database on another system, you should be using db:schema:load, not running
-# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130104211946) do
+ActiveRecord::Schema.define(:version => 20130109205535) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -46,6 +48,15 @@ ActiveRecord::Schema.define(:version => 20130104211946) do
 
   add_index "citations_treatments", ["citation_id", "treatment_id"], :name => "index_citations_treatments_on_citation_id_and_treatment_id", :unique => true
 
+  create_table "coppice", :id => false, :force => true do |t|
+    t.integer "treatment_id"
+    t.integer "management_id"
+    t.string  "mgmttype"
+    t.date    "date"
+    t.decimal "level",         :precision => 16, :scale => 4
+    t.string  "units"
+  end
+
   create_table "counties", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -53,6 +64,15 @@ ActiveRecord::Schema.define(:version => 20130104211946) do
     t.string   "state"
     t.integer  "state_fips"
     t.integer  "county_fips"
+  end
+
+  create_table "county_paths", :id => false, :force => true do |t|
+    t.integer  "id"
+    t.integer  "county_id"
+    t.integer  "zoom"
+    t.text     "path"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "covariates", :force => true do |t|
@@ -90,12 +110,15 @@ ActiveRecord::Schema.define(:version => 20130104211946) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "container_type"
+    t.integer  "container_id"
+    t.integer  "parent_id"
     t.integer  "file_id"
   end
 
-  add_index "dbfiles", ["container_type"], :name => "index_dbfiles_on_container_id_and_container_type"
+  add_index "dbfiles", ["container_id", "container_type"], :name => "index_dbfiles_on_container_id_and_container_type"
   add_index "dbfiles", ["created_user_id"], :name => "index_dbfiles_on_created_user_id"
   add_index "dbfiles", ["machine_id"], :name => "index_dbfiles_on_machine_id"
+  add_index "dbfiles", ["parent_id"], :name => "index_dbfiles_on_parent_id"
   add_index "dbfiles", ["updated_user_id"], :name => "index_dbfiles_on_updated_user_id"
 
   create_table "ensembles", :force => true do |t|
@@ -142,6 +165,19 @@ ActiveRecord::Schema.define(:version => 20130104211946) do
 
   add_index "formats_variables", ["format_id", "variable_id"], :name => "index_formats_variables_on_format_id_and_variable_id"
 
+  create_table "input_files", :force => true do |t|
+    t.integer  "file_id"
+    t.string   "file_name"
+    t.string   "file_path"
+    t.integer  "machine_id"
+    t.string   "md5"
+    t.integer  "created_user_id"
+    t.integer  "updated_user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "format_id"
+  end
+
   create_table "inputs", :force => true do |t|
     t.integer  "site_id"
     t.text     "notes"
@@ -185,10 +221,10 @@ ActiveRecord::Schema.define(:version => 20130104211946) do
     t.integer  "run_id"
     t.integer  "variable_id"
     t.integer  "input_id"
-    t.integer  "loglikelihood", :limit => 10, :precision => 10, :scale => 0
-    t.integer  "n_eff",         :limit => 10, :precision => 10, :scale => 0
-    t.integer  "weight",        :limit => 10, :precision => 10, :scale => 0
-    t.integer  "residual",      :limit => 10, :precision => 10, :scale => 0
+    t.decimal  "loglikelihood", :precision => 10, :scale => 0
+    t.decimal  "n_eff",         :precision => 10, :scale => 0
+    t.decimal  "weight",        :precision => 10, :scale => 0
+    t.decimal  "residual",      :precision => 10, :scale => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -260,7 +296,7 @@ ActiveRecord::Schema.define(:version => 20130104211946) do
   create_table "models", :force => true do |t|
     t.string   "model_name"
     t.string   "model_path"
-    t.integer  "revision",   :limit => 10, :precision => 10, :scale => 0
+    t.decimal  "revision",   :precision => 10, :scale => 0
     t.integer  "parent_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -293,6 +329,15 @@ ActiveRecord::Schema.define(:version => 20130104211946) do
   end
 
   add_index "pfts_species", ["pft_id", "specie_id"], :name => "index_pfts_species_on_pft_id_and_specie_id", :unique => true
+
+  create_table "planting", :id => false, :force => true do |t|
+    t.integer "treatment_id",  :limit => 1, :null => false
+    t.integer "management_id", :limit => 1, :null => false
+    t.integer "mgmttype",      :limit => 1, :null => false
+    t.integer "date",          :limit => 1, :null => false
+    t.integer "level",         :limit => 1, :null => false
+    t.integer "units",         :limit => 1, :null => false
+  end
 
   create_table "posteriors", :force => true do |t|
     t.integer  "pft_id"
@@ -352,6 +397,15 @@ ActiveRecord::Schema.define(:version => 20130104211946) do
   add_index "runs", ["ensemble_id"], :name => "index_runs_on_ensemble_id"
   add_index "runs", ["model_id"], :name => "index_runs_on_model_id"
   add_index "runs", ["site_id"], :name => "index_runs_on_site_id"
+
+  create_table "seeding", :id => false, :force => true do |t|
+    t.integer "treatment_id",  :limit => 1, :null => false
+    t.integer "management_id", :limit => 1, :null => false
+    t.integer "mgmttype",      :limit => 1, :null => false
+    t.integer "date",          :limit => 1, :null => false
+    t.integer "level",         :limit => 1, :null => false
+    t.integer "units",         :limit => 1, :null => false
+  end
 
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
@@ -536,7 +590,7 @@ ActiveRecord::Schema.define(:version => 20130104211946) do
     t.string   "email",                     :limit => 100
     t.string   "city"
     t.string   "country"
-    t.string   "field"
+    t.string   "area"
     t.string   "crypted_password",          :limit => 40
     t.string   "salt",                      :limit => 40
     t.datetime "created_at"
@@ -607,29 +661,56 @@ ActiveRecord::Schema.define(:version => 20130104211946) do
   add_index "yields", ["treatment_id"], :name => "index_yields_on_treatment_id"
   add_index "yields", ["user_id"], :name => "index_yields_on_user_id"
 
+  create_table "yields_view", :id => false, :force => true do |t|
+    t.integer "yield_id",     :limit => 1, :null => false
+    t.integer "citation_id",  :limit => 1, :null => false
+    t.integer "site_id",      :limit => 1, :null => false
+    t.integer "site",         :limit => 1, :null => false
+    t.integer "lat",          :limit => 1, :null => false
+    t.integer "lon",          :limit => 1, :null => false
+    t.integer "sp",           :limit => 1, :null => false
+    t.integer "author",       :limit => 1, :null => false
+    t.integer "cityear",      :limit => 1, :null => false
+    t.integer "trt",          :limit => 1, :null => false
+    t.integer "date",         :limit => 1, :null => false
+    t.integer "month",        :limit => 1, :null => false
+    t.integer "year",         :limit => 1, :null => false
+    t.integer "mean",         :limit => 1, :null => false
+    t.integer "n",            :limit => 1, :null => false
+    t.integer "statname",     :limit => 1, :null => false
+    t.integer "stat",         :limit => 1, :null => false
+    t.integer "notes",        :limit => 1, :null => false
+    t.integer "user",         :limit => 1, :null => false
+    t.integer "checked",      :limit => 1, :null => false
+    t.integer "access_level", :limit => 1, :null => false
+    t.integer "user_id",      :limit => 1, :null => false
+  end
+
   create_table "yieldsview", :id => false, :force => true do |t|
-    t.integer "yield_id",                                                   :default => 0,  :null => false
-    t.integer "citation_id"
-    t.integer "site_id"
-    t.string  "site"
-    t.decimal "lat",                         :precision => 9,  :scale => 6
-    t.decimal "lon",                         :precision => 9,  :scale => 6
-    t.string  "sp"
-    t.string  "author"
-    t.integer "cityear"
-    t.string  "trt"
-    t.date    "date"
-    t.integer "month"
-    t.integer "year"
-    t.decimal "mean",                        :precision => 16, :scale => 4
-    t.integer "n"
-    t.string  "statname"
-    t.decimal "stat",                        :precision => 16, :scale => 4
-    t.text    "notes"
-    t.string  "user",         :limit => 100,                                :default => ""
-    t.integer "checked",                                                    :default => 0
-    t.integer "access_level"
-    t.integer "user_id"
+    t.integer "yield_id",       :limit => 1, :null => false
+    t.integer "citation_id",    :limit => 1, :null => false
+    t.integer "site_id",        :limit => 1, :null => false
+    t.integer "treatment_id",   :limit => 1, :null => false
+    t.integer "site",           :limit => 1, :null => false
+    t.integer "city",           :limit => 1, :null => false
+    t.integer "lat",            :limit => 1, :null => false
+    t.integer "lon",            :limit => 1, :null => false
+    t.integer "scientificname", :limit => 1, :null => false
+    t.integer "genus",          :limit => 1, :null => false
+    t.integer "author",         :limit => 1, :null => false
+    t.integer "cityear",        :limit => 1, :null => false
+    t.integer "trt",            :limit => 1, :null => false
+    t.integer "date",           :limit => 1, :null => false
+    t.integer "month",          :limit => 1, :null => false
+    t.integer "year",           :limit => 1, :null => false
+    t.integer "mean",           :limit => 1, :null => false
+    t.integer "n",              :limit => 1, :null => false
+    t.integer "statname",       :limit => 1, :null => false
+    t.integer "stat",           :limit => 1, :null => false
+    t.integer "notes",          :limit => 1, :null => false
+    t.integer "user",           :limit => 1, :null => false
+    t.integer "planting",       :limit => 1, :null => false
+    t.integer "seeding",        :limit => 1, :null => false
   end
 
 end

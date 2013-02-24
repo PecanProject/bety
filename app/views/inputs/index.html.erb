@@ -1,6 +1,6 @@
 <h1>Listing inputs</h1>
 <p>
-<% form_tag inputs_path, :method => 'get', :id => 'simple_search' do %>
+<%= form_tag inputs_path, :method => 'get', :id => 'simple_search' do %>
   <%= text_field_tag :search, params[:search] %>
   <%= hidden_field_tag :direction, params[:direction] %>
   <%= hidden_field_tag :sort, params[:sort] %>

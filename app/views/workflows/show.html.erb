@@ -1,11 +1,11 @@
 <p>
   <b>Site ID:</b>
-  <%=h @workflow.site_id %>
+  <%= @workflow.site_id %>
 </p>
 
 <p>
   <b>Model ID:</b>
-  <%=h @workflow.model_id %>
+  <%= @workflow.model_id %>
 </p>
 
 <p>
@@ -15,32 +15,32 @@
 
 <p>
   <b>Started at:</b>
-  <%=h @workflow.started_at %>
+  <%= @workflow.started_at %>
 </p>
 
 <p>
   <b>Finished at:</b>
-  <%=h @workflow.finished_at %>
+  <%= @workflow.finished_at %>
 </p>
 
 <p>
   <b>Created at:</b>
-  <%=h @workflow.created_at %>
+  <%= @workflow.created_at %>
 </p>
 
 <p>
   <b>Updated at:</b>
-  <%=h @workflow.updated_at %>
+  <%= @workflow.updated_at %>
 </p>
 
 <p>
   <b>Advanced Edit:</b>
-  <%=h @workflow.advanced_edit %>
+  <%= @workflow.advanced_edit %>
 </p>
 
 <p>
   <b>Params:</b>
-  <%=h @workflow.params %>
+  <%= @workflow.params %>
 </p>
 
 <%= link_to 'Results', "/pecan/finished.php?workflowid=" + @workflow.id.to_s %> |

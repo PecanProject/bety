@@ -1,6 +1,6 @@
 <h1>New run</h1>
 
-<% form_for(@run) do |f| %>
+<%= form_for(@run) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -9,7 +9,7 @@
   </p>
   <p>
     <%= f.label :site %><br />
-    <%= f.select :site_id, Site.all(:order => 'city').collect { |p| [ p.select_default, p.id ] }, {} %>
+    <%= f.select :site_id, Site.order('city').collect { |p| [ p.select_default, p.id ] }, {} %>
   </p>
   <p>
     <%= f.label :start_time %><br />

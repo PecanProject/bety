@@ -10,8 +10,8 @@
 <% @files.each do |file| %>
   <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and file.id == @search.to_i%>>
     <td><%= link_to_if file.machine, file.machine, file.machine %></td>
-    <td><%=h file.file_path %></td>
-    <td><%=h file.file_name %></td>
+    <td><%= file.file_path %></td>
+    <td><%= file.file_name %></td>
     <td><%= link_to_if file.created_user, file.created_user, file.updated_user %></td>
     <td><%= link_to 'Show', dbfile_path(file) %></td>
     <% if current_user.page_access_level <= 3 %>

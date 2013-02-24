@@ -18,16 +18,16 @@
   <tr>
     <td><%= link_to_if run.model, run.model, run.model %></td>
     <td><%= link_to_if run.model, run.site, run.site %></td>
-    <td><%=h run.start_time %></td>
-    <td><%=h run.finish_time %></td>
-    <td><%=h run.started_at %></td>
-    <td><%=h run.finished_at %></td>
-    <td><%=h run.start_date %></td>
-    <td><%=h run.end_date %></td>
-    <td><%=h run.outdir %></td>
-    <td><%=h run.outprefix %></td>
-    <td><%=h run.setting %></td>
-    <td><%=h run.parameter_list %></td>
+    <td><%= run.start_time %></td>
+    <td><%= run.finish_time %></td>
+    <td><%= run.started_at %></td>
+    <td><%= run.finished_at %></td>
+    <td><%= run.start_date %></td>
+    <td><%= run.end_date %></td>
+    <td><%= run.outdir %></td>
+    <td><%= run.outprefix %></td>
+    <td><%= run.setting %></td>
+    <td><%= run.parameter_list %></td>
     <td><%= link_to 'Show', run %></td>
     <td><%= link_to 'Edit', edit_run_path(run) %></td>
     <td><%= link_to 'Destroy', run, :confirm => 'Are you sure?', :method => :delete %></td>

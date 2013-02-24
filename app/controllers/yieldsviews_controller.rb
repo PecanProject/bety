@@ -1,8 +1,6 @@
 class YieldsviewsController < ApplicationController
   before_filter :login_required
 
-  layout 'application'
-
   require 'csv'
 
   # GET /yields/1

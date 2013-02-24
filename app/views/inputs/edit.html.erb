@@ -20,7 +20,7 @@
 
 <h1>Editing input</h1>
 
-<% form_for @input, :html => {:multipart => true} do |f| %>
+<%= form_for @input, :html => {:multipart => true} do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -55,8 +55,9 @@
   <%= link_to 'New File', new_dbfile_path %>
   <p>
     <%= f.label :dbfile_id %><br />
-    <%= select_tag :dbfile_id, options_for_select(['']+DBFile.all(:conditions => { :container_id => nil }).collect { |p| [ p.select_default, p.id ] }) %>
+    <%= select_tag :dbfile_id, options_for_select(['']+DBFile.all.collect { |p| [ p.select_default, p.id ] }) %>
   </p>
+
   <% unless f.object.files.empty? %>
   <p>Files associated with input</p>
     <% f.object.files.each do |file| %>
@@ -65,6 +66,7 @@
   </p>
     <% end %>
   <% end %>
+
   <p>
     <%= f.label :notes %><br />
     <%= f.text_area :notes %>

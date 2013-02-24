@@ -10,10 +10,10 @@
 
 <% @match.each do |variable| %>
   <tr>
-    <td><%=h variable.name %></td>
-    <td><%=h variable.description %></td>
-    <td><%=h variable.units %></td>
-    <td><%=h variable.notes %></td>
+    <td><%= variable.name %></td>
+    <td><%= variable.description %></td>
+    <td><%= variable.units %></td>
+    <td><%= variable.notes %></td>
     <td><%= link_to 'Show', variable %></td>
     <td><%= link_to 'Edit', edit_variable_path(variable) %></td>
     <td><%= link_to 'Destroy', variable, :confirm => 'Are you sure?', :method => :delete %></td>

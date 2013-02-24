@@ -1,6 +1,6 @@
 <h1>Editing likelihood</h1>
 
-<% form_for(@likelihood) do |f| %>
+<%= form_for(@likelihood) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -9,7 +9,7 @@
   </p>
   <p>
     <%= f.label :variable %><br />
-    <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }, {} -%>
+    <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }, {} -%>
   </p>
   <p>
     <%= f.label :input %><br />

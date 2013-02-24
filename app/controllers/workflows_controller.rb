@@ -2,8 +2,6 @@ class WorkflowsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   require 'csv'
 
   # GET /workflows
@@ -12,7 +10,7 @@ class WorkflowsController < ApplicationController
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
       # We will list those already linked above those that are not, so remove them from the list.
-      @workflows = Workflow.order("#{sort_column('workflows','outdir')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @workflows = Workflow.sorted_order("#{sort_column('workflows','outdir')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else
       @workflows = Workflow.api_search(params)
     end

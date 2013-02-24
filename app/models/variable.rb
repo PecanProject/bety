@@ -15,9 +15,9 @@ class Variable < ActiveRecord::Base
   has_many :traits
   has_and_belongs_to_many :inputs
 
-  named_scope :all_order, :order => 'name'  
-  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+  scope :all_order, order('name')
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do
     id

@@ -13,8 +13,10 @@ module ApplicationHelper
   # Checks if current treatment_id is in associated citations treatment
   # association.
   def treatment_check(ty)
-    if ty.citation # Should not happen
-      unless ty.citation.treatments.include?(ty.treatment)
+    if ty.citation
+      if ty.treatment.nil?
+        return
+      elsif !ty.citation.treatments.include?(ty.treatment)
         ": <span class='red_back'>treatment_id: #{ty.treatment.id}, not in associated citation associated treatments!</span>"
       end
     end
