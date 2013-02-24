@@ -36,54 +36,8 @@
     <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :selected => current_user.access_level %>
   </p>
   <p>
-    <%= f.label :user %><br />
-    <%= f.select :user_id, User.all.collect { |p| [ p.select_default, p.id ] }, {} %>
-  </p>
-  <p>
-    <%= f.label :file_id, 'File ID' %><br />
-    <%= f.text_field :file_id %>
-  </p>
-  <p>
     <%= f.label :notes %><br />
     <%= f.text_area :notes %>
-  </p>
-  <h3>Attach existing file or upload new file</h3>
-  <p>
-    <%= label_tag :dbfile_id %><br />
-    <%= select_tag :dbfile_id, options_for_select([""]+DBFile.all( :conditions => { :container_id => nil } ).collect { |p| [ p.select_default, p.id ] }) -%>
-  </p>
-  <hr />
-  <em>To upload a new file to ebi-forecast select it using the file upload field below. All other information will auto-populate from the file with the exception of the the parent file and the file id. To make a note of a file on a different system fill out the information below the break and ignore the file upload field</em>
-  <p>
-    <%= label_tag :upload_file, 'File upload' %><br />
-    <%= file_field_tag :upload_file %>
-  </p>
-
-  <hr width="25%"/>
- 
-  <p>
-    <%= label_tag 'file_name' %><br />
-    <%= text_field_tag 'db_file[file_name]' %>
-  </p>
-  <p>
-    <%= label_tag :file_path %><br />
-    <%= text_field_tag 'db_file[file_path]' %>
-  </p>
-  <p>
-    <%= label_tag :md5 %><br />
-    <%= text_field_tag 'db_file[md5]' %>
-  </p>
-  <p>
-    <%= label_tag :machine_id %><br />
-    <%= select_tag 'db_file[machine_id]', options_for_select( [""] + Machine.all.collect { |p| [p.select_default, p.id] }) %>
-  </p>
-  <p>
-    <%= label_tag :file_id, 'File ID' %><br />
-    <%= text_field_tag 'db_file[file_id]' %>
-  </p>
-  <p>
-    <%= label_tag :parent_id %><br />
-    <%= select_tag 'db_file[parent_id]', options_for_select( [""] + DBFile.all.collect { |p| [p.select_default, p.id ] }) %>
   </p>
 
   <p>

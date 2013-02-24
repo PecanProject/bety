@@ -19,27 +19,31 @@
 </p>
 
 <p>
-  <b>File ID:</b>
-  <%=h @input.file_id %>
-</p>
-
-<p>
   <b>Notes:</b>
   <%=h @input.notes %>
 </p>
 
 <p>
   <b>Format:</b>
-  <%= @input.format %>
+  <%= link_to_if @input.format, @input.format, @input.format %>
 </p>
 
+<% if logged_in? %>
 <p>
-  <b>Associated files:</b>
-  <% @input.files.each do |file| %>
-    <%= link_to_if file, file, dbfile_path(file) %><br />
-  <% end %>
+  <b>User:</b>
+  <%=h link_to_if @input.user, @input.user, @input.user %>
 </p>
+<% end %>
 
+<a style="text-decoration: none" href="#" onclick="showHide('show_files')" id="show_show_files">[+] View Associated Files</a>
+<br/>
+<br/>
+<div id="show_files" class="hidden notvisible">
+  <%= render 'show_files' %>
+</div>
+<hr />
+<br />
+<br />
 
 <%= link_to 'Edit', edit_input_path(@input) %> |
 <%= link_to 'Back', inputs_path %>

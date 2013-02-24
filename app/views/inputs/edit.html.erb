@@ -51,8 +51,7 @@
     <%= f.label :format_id %><br />
     <%= f.select :format_id, Format.all.collect { |p| [p.select_default, p.id ] }, :include_blank => true %>
   </p>
-  <h2>Testing new file functionality</h2>
-  <em>Will add ability to upload new files here in the future</em>
+  <h2>Associated Files</h2>
   <%= link_to 'New File', new_dbfile_path %>
   <p>
     <%= f.label :dbfile_id %><br />

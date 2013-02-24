@@ -3,20 +3,16 @@
   <%= f.error_messages %>
 
   <p>
-    <%= f.label :file_name %><br />
-    <%= f.text_field :file_name %>
+    <%= f.label :machine_id %><br />
+    <%= f.select :machine_id, Machine.all.collect { |p| [p.select_default, p.id] } %>
   </p>
   <p>
     <%= f.label :file_path %><br />
     <%= f.text_field :file_path %>
   </p>
   <p>
-    <%= f.label :md5 %><br />
-    <%= f.text_field :md5 %>
-  </p>
-  <p>
-    <%= f.label :file_id %><br />
-    <%= f.text_field :file_id %>
+    <%= f.label :file_name %><br />
+    <%= f.text_field :file_name %>
   </p>
   <p>
     <%= f.label :created_user_id, 'Created by' %><br />
@@ -25,10 +21,6 @@
   <p>
     <%= f.label :updated_user_id, 'Last updated by' %><br />
     <%= link_to_if f.object.updated_user, f.object.updated_user, f.object.updated_user %>
-  </p>
-  <p>
-    <%= f.label :machine_id %><br />
-    <%= f.select :machine_id, Machine.all.collect { |p| [p.select_default, p.id] } %>
   </p>
 
   <p>
