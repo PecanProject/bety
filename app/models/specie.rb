@@ -12,11 +12,10 @@ class Specie < ActiveRecord::Base
   has_many :traits
   has_many :cultivars
 
-  named_scope :all_order, :order => 'genus, species'
-
-  named_scope :by_letter, lambda { |letter| { :conditions => ['genus like ?', letter + "%"] } }
-  named_scope :order, lambda { |order| {:order => order, :include => SEARCH_INCLUDES } }
-  named_scope :search, lambda { |search| {:conditions => simple_search(search) } } 
+  scope :all_order, order('genus, species')
+  scope :by_letter, lambda { |letter| where('genus like ?', letter + "%") }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do |f|
     f.id
@@ -49,14 +48,6 @@ class Specie < ActiveRecord::Base
     f.Duration
     f.GrowthHabit
     f.NativeStatus
-    f.FederalNoxiousStatus
-    f.FederalNoxiousCommonName
-    f.StateNoxiousStatus
-    f.StateNoxiousCommonName
-    f.Invasive
-    f.Federal_TE_Status
-    f.State_TE_Status
-    f.State_TE_Common_Name
     f.NationalWetlandIndicatorStatus
     f.RegionalWetlandIndicatorStatus
     f.ActiveGrowthPeriod
@@ -66,14 +57,7 @@ class Specie < ActiveRecord::Base
     f.CoppicePotential
     f.FallConspicuous
     f.FireResistance
-    f.FlowerColor
-    f.FlowerConspicuous
-    f.FoliageColor
-    f.FoliagePorositySummer
-    f.FoliagePorosityWinter
     f.FoliageTexture
-    f.FruitColor
-    f.FruitConspicuous
     f.GrowthForm
     f.GrowthRate
     f.MaxHeight20Yrs
@@ -84,8 +68,6 @@ class Specie < ActiveRecord::Base
     f.LowGrowingGrass
     f.NitrogenFixation
     f.ResproutAbility
-    f.Shape_and_Orientation
-    f.Toxicity
     f.AdaptedCoarseSoils
     f.AdaptedMediumSoils
     f.AdaptedFineSoils
@@ -110,10 +92,8 @@ class Specie < ActiveRecord::Base
     f.TemperatureMinimum
     f.BloomPeriod
     f.CommercialAvailability
-    f.FruitSeedAbundance
     f.FruitSeedPeriodBegin
     f.FruitSeedPeriodEnd
-    f.FruitSeedPersistence
     f.Propogated_by_BareRoot
     f.Propogated_by_Bulbs
     f.Propogated_by_Container
@@ -126,22 +106,6 @@ class Specie < ActiveRecord::Base
     f.Seeds_per_Pound
     f.SeedSpreadRate
     f.SeedlingVigor
-    f.SmallGrain
-    f.VegetativeSpreadRate
-    f.Berry_Nut_Seed_Product
-    f.ChristmasTreeProduct
-    f.FodderProduct
-    f.FuelwoodProduct
-    f.LumberProduct
-    f.NavalStoreProduct
-    f.NurseryStockProduct
-    f.PalatableBrowseAnimal
-    f.PalatableGrazeAnimal
-    f.PalatableHuman
-    f.PostProduct
-    f.ProteinPotential
-    f.PulpwoodProduct
-    f.VeneerProduct
   end
 
 

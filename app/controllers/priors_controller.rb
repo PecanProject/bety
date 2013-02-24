@@ -2,9 +2,6 @@ class PriorsController < ApplicationController
   before_filter :login_required
   helper_method :sort_column, :sort_direction
 
-
-  layout 'application'
-
   require 'csv'
 
   def rem_pfts_priors
@@ -36,7 +33,7 @@ class PriorsController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @priors = Prior.order("#{sort_column('priors','updated_at')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @priors = Prior.sorted_order("#{sort_column('priors','updated_at')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @priors = Prior.api_search(params)
     end

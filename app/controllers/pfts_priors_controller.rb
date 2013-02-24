@@ -1,8 +1,6 @@
 class PftsPriorsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
 
-  layout 'application'
-
   require 'csv'
 
   # GET /pftspriors
@@ -20,7 +18,7 @@ class PftsPriorsController < ApplicationController
       conditions[k] = v
     end
     logger.info conditions.to_yaml
-    pftspriors = PftsPriors.all(:conditions => conditions)
+    pftspriors = PftsPriors.where(conditions)
 
     respond_to do |format|
       format.xml { render :xml => pftspriors }

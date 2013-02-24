@@ -1,8 +1,6 @@
 class InputsRunsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
 
-  layout 'application'
-
   require 'csv'
 
   # GET /inputsruns
@@ -20,7 +18,7 @@ class InputsRunsController < ApplicationController
       conditions[k] = v
     end
     logger.info conditions.to_yaml
-    inputsruns = InputsRuns.all(:conditions => conditions)
+    inputsruns = InputsRuns.where(conditions)
 
     respond_to do |format|
       format.xml { render :xml => inputsruns }

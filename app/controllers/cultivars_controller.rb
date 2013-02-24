@@ -2,8 +2,6 @@ class CultivarsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   require 'csv'
 
   # GET /cultivars
@@ -11,7 +9,7 @@ class CultivarsController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @cultivars = Cultivar.order("#{sort_column('cultivars')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @cultivars = Cultivar.sorted_order("#{sort_column('cultivars')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @cultivars = Cultivar.api_search(params)
     end

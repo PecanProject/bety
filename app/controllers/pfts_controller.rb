@@ -2,8 +2,6 @@ class PftsController < ApplicationController
   before_filter :login_required
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   require 'csv'
   
   # restful-authentication override 
@@ -59,7 +57,8 @@ class PftsController < ApplicationController
 
     @page = params[:page]
 
-    @search = params[:search]
+    # RAILS3 had to add the || '' in order for @search not be nil when params[:search] is nil
+    @search = params[:search] || ''
     # If they search just a number it is probably an id, and we do not want to wrap that in wildcards.
     @search.match(/\D/) ? wildcards = true : wildcards = false
 
@@ -79,7 +78,7 @@ class PftsController < ApplicationController
       search = "Showing already related records"
       @species = @pft.specie.paginate :page => params[:page]
     else
-      @species = Specie.paginate :select => "id,scientificname", :page => params[:page], :conditions => search_cond 
+      @species = Specie.paginate :select => "id,scientificname", :page => params[:page], :conditions => search_cond
     end
 
     render :update do |page|
@@ -102,7 +101,7 @@ class PftsController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @pfts = Pft.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @pfts = Pft.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @pfts = Pft.api_search(params)
     end

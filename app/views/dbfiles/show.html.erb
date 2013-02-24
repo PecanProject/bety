@@ -1,14 +1,14 @@
   <p>
-    File name: <%=h @file.file_name %>
+    File name: <%= @file.file_name %>
   </p>
   <p>
-    File path: <%=h @file.file_path %>
+    File path: <%= @file.file_path %>
   </p>
   <p>
-    MD5: <%=h @file.md5 %>
+    MD5: <%= @file.md5 %>
   </p>
   <p>
-    File ID: <%=h @file.file_id %>
+    File ID: <%= @file.file_id %>
   </p>
   <p>
     File created by: <%= link_to_if @file.created_user, @file.created_user, @file.created_user %>

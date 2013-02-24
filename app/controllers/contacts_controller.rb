@@ -1,7 +1,5 @@
 class ContactsController < ApplicationController
 
-  layout 'application'
-
   def index
     respond_to do |format|
       format.html # index.html.erb
@@ -9,7 +7,7 @@ class ContactsController < ApplicationController
   end
 
   def send_mail
-    Contact::deliver_contact_email(params[:email])
+    ContactMailer::contact_email(params[:email]).deliver
     flash[:notice] = "Thank you for your email."
     respond_to do |format|
       format.html # index.html.erb

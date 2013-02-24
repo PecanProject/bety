@@ -11,8 +11,8 @@
 <% @species.each do |specie| %>
   <tr>
     <td><%= link_to_unless specie.AcceptedSymbol.blank?, specie.AcceptedSymbol, "http://plants.usda.gov/java/profile?symbol=#{specie.AcceptedSymbol}" %></td>
-    <td><em><%=h specie %></em></td>
-    <td><%=h specie.commonname %></td>
+    <td><em><%= specie %></em></td>
+    <td><%= specie.commonname %></td>
     <td><%= link_to 'Show', specie %></td>
     <td><%= link_to 'Edit', edit_species_path(specie) %></td>
     <td><%= link_to 'Destroy', specie, :confirm => 'Are you sure?', :method => :delete %></td>

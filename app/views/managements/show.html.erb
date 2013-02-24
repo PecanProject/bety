@@ -5,37 +5,37 @@
 
 <p>
   <b>Date:</b>
-  <%=h @management.date %>
+  <%= @management.date %>
 </p>
 
 <p>
   <b>Date Level of Confidence:</b>
-  <%=h $dateloc_drop.invert[@management.dateloc.to_s] %>
+  <%= $dateloc_drop.invert[@management.dateloc.to_s] %>
 </p>
 
 <p>
   <b>Management Type:</b>
-  <%=h @management.mgmttype %>
+  <%= @management.mgmttype %>
 </p>
 
 <p>
   <b>Level:</b>
-  <%=h @management.level %>
+  <%= @management.level %>
 </p>
 
 <p>
   <b>Units:</b>
-  <%=h @management.units %>
+  <%= @management.units %>
 </p>
 
 <p>
   <b>Notes:</b>
-  <%=h @management.notes %>
+  <%= @management.notes %>
 </p>
 
 <p>
   <b>User:</b>
-  <%=h @management.user %>
+  <%= @management.user %>
 </p>
 
 <%= link_to 'Edit', edit_management_path(@management) %> |

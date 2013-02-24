@@ -3,14 +3,12 @@ class RunsController < ApplicationController
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   # GET /runs
   # GET /runs.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @runs = Run.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @runs = Run.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @runs = Run.api_search(params)
     end

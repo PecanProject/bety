@@ -36,41 +36,40 @@
 
 <h1>Editing trait <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node20.html?min" }) %></h1>
 
-<% form_for(@trait) do |f| %>
+<%= form_for(@trait) do |f| %>
   <%= f.error_messages %>
 
   <p>
     <%= f.label :site_id, "Site" %><br />
-    <%= f.select :site_id, Site.all(:order => 'city').collect { |p| [ p.select_default, p.id ] }, {} %>
+    <%= f.select :site_id, Site.order('city').collect { |p| [ p.select_default, p.id ] }, {} %>
   </p>
 
   <%= render :partial => "species/species_search" %>
 
   <p>
     <%= f.label :citation_id %><br />
-    <%= f.select :citation_id, Citation.all(:order => 'author').collect { |p| [ p.select_default, p.id ] }, {} %>
+    <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, {} %>
   </p>
   </p>
   <p>
     <%= f.label :cultivar_id %><br />
-    <%= f.select :cultivar_id, Cultivar.all(:joins => :specie, :order => 'species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
+    <%= f.select :cultivar_id, Cultivar.joins(:specie).order('species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
   </p>
   <p>
     <%= f.label :variable_id, "Trait" %><br />
-    <%= f.select :variable_id, Variable.all(:order => 'name').collect { |p| [ p.select_default, p.id ] }.sort { |a,b| a[0].split(': ')[1] <=> b[0].split(': ')[1] }, {}, {:onchange => 'javascript:traits_get_variable_max_min(jQuery(this).val());'} %>
+    <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }.sort { |a,b| a[0].split(': ')[1] <=> b[0].split(': ')[1] }, {}, {:onchange => 'javascript:traits_get_variable_max_min(jQuery(this).val());'} %>
   </p>
   <p>
-    <%= f.label :treatment_id, "Treatment" %><%= treatment_check(f.object) -%><br />
-    <%= f.select :treatment_id, Treatment.all(:joins => :citations, :order => 'name', :conditions => {"citations.id" => f.object.citation_id}).collect { |p| [ p.select_default, p.id ] }, {} %>
-    <%#= f.select :treatment_id, f.object.citation.treatments.collect { |p| [ p.select_default, p.id ] }, {} %>
+    <%= f.label :treatment_id, "Treatment" %><%= raw treatment_check(f.object) -%><br />
+    <%= f.select :treatment_id, Treatment.joins(:citations).where("citations.id" => f.object.citation_id).order('name').collect { |p| [ p.select_default, p.id ] }, {} %>
   </p>
   <p>
     <%= f.label :entity_id, "Entity" %><br />
-    <%= f.select :entity_id, Entity.all().collect { |p| [ p.select_default, p.id ] }, {:include_blank => true} %>
+    <%= f.select :entity_id, Entity.all.collect { |p| [ p.select_default, p.id ] }, {:include_blank => true} %>
   </p>
   <p>
     <%= f.label :method_id, "Method" %><br />
-    <%= f.select :method_id, Methods.all().collect { |p| [ p.select_default, p.id ] }, {:include_blank => true} %>
+    <%= f.select :method_id, Methods.all.collect { |p| [ p.select_default, p.id ] }, {:include_blank => true} %>
   </p>
   <p>
     <%= f.label :user_id %><br />

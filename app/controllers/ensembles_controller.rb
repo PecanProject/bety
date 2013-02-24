@@ -3,14 +3,12 @@ class EnsemblesController < ApplicationController
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   # GET /ensembles
   # GET /ensembles.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @ensembles = Ensemble.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @ensembles = Ensemble.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else
       @ensembles = Ensemble.api_search(params)
     end

@@ -1,9 +1,0 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-
-one:
-  censusid: 1
-  name: MyString
-
-two:
-  censusid: 1
-  name: MyString

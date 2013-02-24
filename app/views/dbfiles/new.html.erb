@@ -1,6 +1,6 @@
 <h1>New File</h1>
 <em>To upload a new file to ebi-forecast select it using the file upload field below. All other information will auto-populate from the file with the exception of the the parent file. To make a note of a file on a different system fill out the information below the break and ignore the file upload field</em>
-<% form_for @file, :url => dbfiles_path, :html => { :multipart => true } do |f| %>
+<%= form_for @file, :url => dbfiles_path, :html => { :multipart => true } do |f| %>
   <%= f.error_messages %>
 
   <p>

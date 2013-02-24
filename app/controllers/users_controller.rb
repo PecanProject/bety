@@ -1,17 +1,13 @@
 class UsersController < ApplicationController
-
-  filter_parameter_logging :password, :password_authentication
   
   before_filter :login_required, :except => [:create,:new]
   #before_filter :login_required
-
-  layout 'application'
 
   def index
     if current_user.page_access_level == 1
       @users = User.all
     else
-      @users = User.find_all_by_id(current_user.id)
+      @users = User.find(current_user.id)
     end
   end
 
@@ -33,7 +29,11 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.access_level = 3
     @user.page_access_level = 4
-    success = verify_recaptcha(:model => @user, :message => "Please re-enter the words from the image again.") && @user && @user.save
+    if Rails.env == "test"
+      success = @user && @user.save
+    else 
+      success = verify_recaptcha(:model => @user, :message => "Please re-enter the words from the image again.") && @user && @user.save
+    end
     page_access_level = ["", "Administrator", "Manager", "Creator", "Viewer"]
     access_level = ["", "Restricted", "Internal EBI & Collaborators", "External Researchers", "Public"]
 

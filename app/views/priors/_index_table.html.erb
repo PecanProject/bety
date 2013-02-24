@@ -14,12 +14,12 @@
   <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and prior.id == @search.to_i%>>
     <td><%= link_to_if prior.citation, prior.citation, prior.citation %></td>
     <td><%= link_to_if prior.variable, prior.variable, prior.variable %></td>
-    <td><%=h prior.phylogeny %></td>
-    <td><%=h prior.distn %></td>
-    <td><%=h prior.parama %></td>
-    <td><%=h prior.paramb %></td>
-    <td><%=h prior.n %></td>
-    <td><%=h prior.notes %></td>
+    <td><%= prior.phylogeny %></td>
+    <td><%= prior.distn %></td>
+    <td><%= prior.parama %></td>
+    <td><%= prior.paramb %></td>
+    <td><%= prior.n %></td>
+    <td><%= prior.notes %></td>
     <td><%= link_to 'Show', prior %></td>
     <td><%= link_to 'Edit', edit_prior_path(prior) %></td>
     <td><%= link_to 'Destroy', prior, :confirm => 'Are you sure?', :method => :delete %></td>

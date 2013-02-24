@@ -3,10 +3,8 @@ class PosteriorsController < ApplicationController
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   def rem_posteriors_runs
-    @posterior = Posterior.find(params[:posterior_id])
+    @posterior = Posterior.find(params[:id])
     @run = Run.find(params[:run_id])
 
     render :update do |page|
@@ -34,7 +32,7 @@ class PosteriorsController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @posteriors = Posterior.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @posteriors = Posterior.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @posteriors = Posterior.api_search(params)
     end

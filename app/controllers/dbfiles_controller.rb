@@ -3,7 +3,6 @@ class DbfilesController < ApplicationController
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
   require 'csv'
 
   def download
@@ -54,7 +53,7 @@ class DbfilesController < ApplicationController
 
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @files = DBFile.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @files = DBFile.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else
       @files = DBFile.api_search(params)
     end

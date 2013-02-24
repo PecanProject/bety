@@ -18,10 +18,10 @@
 <% @traits.each do |trait| %>
     <td><%= link_to_if trait.variable, trait.variable, trait.variable %></td>
     <td><%= link_to_if trait.specie, trait.specie, trait.specie %></td>
-    <td><%=h trait.mean %></td>
-    <td><%=h trait.n %></td>
-    <td><%=h trait.statname %></td>
-    <td><%=h trait.stat %></td>
+    <td><%= trait.mean %></td>
+    <td><%= trait.n %></td>
+    <td><%= trait.statname %></td>
+    <td><%= trait.stat %></td>
     <td><%= link_to_if trait.citation, trait.citation, trait.citation %></td>
     <td><%= link_to_if trait.site, trait.site, trait.site %></td>
     <td><%= link_to_if trait.treatment, trait.treatment, trait.treatment %></td>

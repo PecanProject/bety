@@ -14,10 +14,10 @@
     <td><%= link_to_if likelihood.run, likelihood.run, likelihood.run %></td>
     <td><%= link_to_if likelihood.variable, likelihood.variable, likelihood.variable  %></td>
     <td><%= link_to_if likelihood.input, likelihood.input, likelihood.input %></td>
-    <td><%=h likelihood.loglikelihood %></td>
-    <td><%=h likelihood.n_eff %></td>
-    <td><%=h likelihood.weight %></td>
-    <td><%=h likelihood.residual %></td>
+    <td><%= likelihood.loglikelihood %></td>
+    <td><%= likelihood.n_eff %></td>
+    <td><%= likelihood.weight %></td>
+    <td><%= likelihood.residual %></td>
     <td><%= link_to 'Show', likelihood %></td>
     <td><%= link_to 'Edit', edit_likelihood_path(likelihood) %></td>
     <td><%= link_to 'Destroy', likelihood, :confirm => 'Are you sure?', :method => :delete %></td>

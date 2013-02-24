@@ -1,11 +1,11 @@
 <h1>New format</h1>
 
-<% form_for :form, @format, :url => { :action => "create" } do |f| %>
+<%= form_for :form, @format, :url => { :action => "create" } do |f| %>
   <%= f.error_messages %>
 
   <p>
     <%= f.label :mime_type %><br />
-    <%= f.select :mime_type, Mimetype.all(:order => "id desc").collect(&:type_string), {:include_blank => true } %><br />
+    <%= f.select :mime_type, Mimetype.order("id desc").collect(&:type_string), {:include_blank => true } %><br />
     <%= f.label :new_mime_type %>: <%= text_field_tag :mime_type_other %>
   </p>
   <p>

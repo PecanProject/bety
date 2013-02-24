@@ -12,12 +12,12 @@
 
 <h1>Editing management <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node19.html?min" }) %></h1>
 
-<% form_for(@management) do |f| %>
+<%= form_for(@management) do |f| %>
   <%= f.error_messages %>
 
   <p>
     <%= f.label :citation_id %><br />
-    <%= f.select :citation_id, Citation.all(:order => 'author').collect { |p| [ p.select_default, p.id ] }, {:include_blank => ""} %>
+    <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, {:include_blank => ""} %>
   </p>
   <p>
     <%= f.label :date %><br />

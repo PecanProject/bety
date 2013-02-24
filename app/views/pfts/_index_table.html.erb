@@ -6,8 +6,8 @@
 
 <% @pfts.each do |pft| %>
   <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and pft.id == @search.to_i%>>
-    <td><%=h pft.name %></td>
-    <td><%=h pft.definition %></td>
+    <td><%= pft.name %></td>
+    <td><%= pft.definition %></td>
     <td><%= link_to 'Show', pft %></td>
     <td><%= link_to 'Edit', edit_pft_path(pft) %></td>
     <td><%= link_to 'Destroy', pft, :confirm => 'Are you sure?', :method => :delete %></td>

@@ -11,11 +11,11 @@
 <% @managements.each do |management| %>
   <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and management.id == @search.to_i%>>
     <td><%= link_to_if management.citation, management.citation, management.citation %></td>
-    <td><%=h management.date %></td>
-    <td><%=h management.mgmttype %></td>
-    <td><%=h management.level %></td>
-    <td><%=h management.units %></td>
-    <td><%=h management.notes %></td>
+    <td><%= management.date %></td>
+    <td><%= management.mgmttype %></td>
+    <td><%= management.level %></td>
+    <td><%= management.units %></td>
+    <td><%= management.notes %></td>
     <td><%= link_to 'Show', management %></td>
     <td><%= link_to 'Edit', edit_management_path(management) %></td>
     <td><%= link_to 'Destroy', management, :confirm => 'Are you sure?', :method => :delete %></td>

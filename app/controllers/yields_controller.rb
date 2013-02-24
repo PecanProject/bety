@@ -2,12 +2,10 @@ class YieldsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   require 'csv'
 
   def checked
-    y = Yield.all_limited(current_user).find_by_id(params[:id])
+    y = Yield.all_limited(current_user).find(params[:id])
     
     y.checked = params[:y][:checked]
 
@@ -22,7 +20,7 @@ class YieldsController < ApplicationController
 
   def access_level
 
-    y = Yield.all_limited(current_user).find_by_id(params[:id])
+    y = Yield.all_limited(current_user).find(params[:id])
 
     y.access_level = params[:yield][:access_level] if y
     
@@ -41,7 +39,7 @@ class YieldsController < ApplicationController
     @yields = Yield.all_limited(current_user)
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @yields = @yields.citation(session["citation"]).order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @yields = @yields.citation(session["citation"]).sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @yields = @yields.api_search(params)
     end
@@ -58,7 +56,7 @@ class YieldsController < ApplicationController
   # GET /yields/1
   # GET /yields/1.xml
   def show
-    @yield = Yield.all_limited(current_user).find_by_id(params[:id])
+    @yield = Yield.all_limited(current_user).find(params[:id])
 
     if !logged_in?
       @yield = nil if !@yield.checked or @yield.access_level < 4
@@ -81,11 +79,11 @@ class YieldsController < ApplicationController
     if params[:id].nil?
       @yield = Yield.new
     else
-      @yield = Yield.all_limited(current_user).find_by_id(params[:id]).clone
+      @yield = Yield.all_limited(current_user).find(params[:id]).clone
       @yield.specie.nil? ? @species = nil : @species = [@yield.specie]
     end
 
-    @citation = Citation.find_by_id(session["citation"])
+    @citation = Citation.find(session["citation"])
 
     respond_to do |format|
       format.html # new.html.erb
@@ -96,7 +94,7 @@ class YieldsController < ApplicationController
 
   # GET /yields/1/edit
   def edit
-    @yield = Yield.all_limited(current_user).find_by_id(params[:id])
+    @yield = Yield.all_limited(current_user).find(params[:id])
     @yield.specie.nil? ? @species = nil : @species = [@yield.specie]
   end
 
@@ -136,7 +134,7 @@ class YieldsController < ApplicationController
   # PUT /yields/1
   # PUT /yields/1.xml
   def update
-    @yield = Yield.all_limited(current_user).find_by_id(params[:id])
+    @yield = Yield.all_limited(current_user).find(params[:id])
 
     respond_to do |format|
       if @yield.update_attributes(params[:yield])
@@ -155,7 +153,7 @@ class YieldsController < ApplicationController
   # DELETE /yields/1
   # DELETE /yields/1.xml
   def destroy
-    @yield = Yield.all_limited(current_user).find_by_id(params[:id])
+    @yield = Yield.all_limited(current_user).find(params[:id])
     @yield.destroy
 
     respond_to do |format|

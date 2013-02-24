@@ -3,14 +3,12 @@ class MethodsController < ApplicationController
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   # GET /methods
   # GET /methods.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @methods = Methods.order("#{sort_column('methods','name')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @methods = Methods.sorted_order("#{sort_column('methods','name')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @methods = Methods.api_search(params)
     end

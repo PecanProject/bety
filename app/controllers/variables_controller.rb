@@ -2,8 +2,6 @@ class VariablesController < ApplicationController
   before_filter :login_required
   helper_method :sort_column, :sort_direction
 
-  layout 'application'
-
   require 'csv'
 
   # GET /variables
@@ -11,7 +9,7 @@ class VariablesController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @variables = Variable.order("#{sort_column('variables','name')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @variables = Variable.sorted_order("#{sort_column('variables','name')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @variables = Variable.api_search(params)
     end

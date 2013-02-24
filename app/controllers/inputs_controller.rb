@@ -3,8 +3,6 @@ class InputsController < ApplicationController
   before_filter :login_required 
   helper_method :sort_direction, :sort_column
 
-  layout 'application'
-
   def rem_inputs_runs
     @input = Input.find(params[:input_id])
     @run = Run.find(params[:run_id])
@@ -59,7 +57,7 @@ class InputsController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @inputs = Input.order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @inputs = Input.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
       @dbfiles = DBFile.all
     else
       @inputs = Input.api_search(params)

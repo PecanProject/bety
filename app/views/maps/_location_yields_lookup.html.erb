@@ -1,4 +1,4 @@
-    <h2>Results in: <%=h @location %></h2>
+    <h2>Results in: <%= @location %></h2>
     <table>
       <tr>
         <th>Species</th>
@@ -6,8 +6,8 @@
       </tr>
       <% @results.each do |result| %>
       <tr>
-        <td><%=h result.species %></td>
-        <td><%=h result["avg(yield)"] %></td>
+        <td><%= result.species %></td>
+        <td><%= result["avg(yield)"] %></td>
       </tr>
       <% end %>
     </table>
