@@ -1,4 +1,6 @@
 .idea/
+.bundle/
+vendor/bundle
 log
 db_backups
 vendor/plugins/restful-authentication/generators/authenticated/templates/site_keys.rb
