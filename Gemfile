@@ -5,7 +5,6 @@ gem "mysql2"
 gem "activerecord-mysql2-adapter"
 gem "query_reviewer", "0.1.6"
 gem "nokogiri"
-gem "ruby-netcdf", "0.6.6.1"
 gem "narray", "0.6.0.4"
 gem "choice", "0.1.6"
 gem "comma", "3.0.4"
@@ -19,11 +18,12 @@ gem "seer", "0.10.0"
 gem "tzinfo", "0.3.35"
 gem "will_paginate", "3.0.4"
 
-gem 'sqlite3', '1.3.3'
+
 
 group :development, :test do
   gem 'rspec-rails'
   gem 'capybara'
+  gem 'sqlite3', '1.3.3'
 end
 
 group :test do
