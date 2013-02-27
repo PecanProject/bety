@@ -33,7 +33,7 @@ module AuthenticatedSystem
     # Accesses the current user from the session.
     # Future calls avoid the database because nil is not equal to false.
     def current_user
-      @current_user ||= (login_from_session || login_from_basic_auth || login_from_cookie || login_from_api_key) unless @current_user == false
+      @current_user ||= (login_from_session || login_from_basic_auth || login_from_cookie || login_from_api_key || login_from_config) unless @current_user == false
     end
 
     # Store the given user id in the session.
@@ -397,6 +397,12 @@ module AuthenticatedSystem
         handle_remember_cookie! false # freshen cookie token (keeping date)
         self.current_user
       end
+    end
+
+    # Called from #current_user. Try to attempt to login using the id provided in the config
+    # of the application.
+    def login_from_config
+        self.current_user = User.find(BETY_USER) if defined? BETY_USER
     end
 
     # This is ususally what you want; resetting the session willy-nilly wreaks
