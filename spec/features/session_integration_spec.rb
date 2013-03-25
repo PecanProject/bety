@@ -16,25 +16,31 @@ feature 'Login works' do
       visit login_path
       # This will make the page search a bit faster by going to div#content
       within ("#content") do
-        fill_in 'Login', with:'carlcrott'
-        fill_in 'Password', with: 'asdfasdf'
+        fill_in 'Login', :with => 'carlcrott'
+        fill_in 'Password', :with =>  'asdfasdf'
         click_button 'Log in'
       end
 #      print page.body
       page.should have_content("Logged in successfully")
-
     end
     it 'notify on unsuccessful login' do
       visit login_path
       within ("#content") do
-        fill_in 'Login', with:'carlcrott'
-        fill_in 'Password', with: 'wrong'
+        fill_in 'Login', :with => 'carlcrott'
+        fill_in 'Password', :with =>  'wrong'
         click_button 'Log in'
       end
       page.should have_content("The login credentials you provided are incorrect")
-    
-    end
-    
+    end    
   end
 end
 
+
+feature 'EBI forwarded users work' do
+  context 'GET /ebi_forwarded/?email=wongton@gmail.com&pass=as@_dlAA5kq' do
+    it 'notify on successful login' do
+      visit '/ebi_forwarded/?email=wongton@gmail.com&pass=as@_dlAA5kq'
+      page.should have_content("Welcome EBI user")
+    end
+  end
+end
