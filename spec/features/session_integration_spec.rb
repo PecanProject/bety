@@ -22,7 +22,6 @@ feature 'Login works' do
       end
 #      print page.body
       page.should have_content("Logged in successfully")
-
     end
     it 'notify on unsuccessful login' do
       visit login_path
@@ -32,9 +31,16 @@ feature 'Login works' do
         click_button 'Log in'
       end
       page.should have_content("The login credentials you provided are incorrect")
-    
-    end
-    
+    end    
   end
 end
 
+
+feature 'EBI forwarded users work' do
+  context 'GET /ebi_forwarded/?email=wongton@gmail.com&pass=as@_dlAA5kq' do
+    it 'notify on successful login' do
+      visit '/ebi_forwarded/?email=wongton@gmail.com&pass=as@_dlAA5kq'
+      page.should have_content("Welcome EBI user")
+    end
+  end
+end
