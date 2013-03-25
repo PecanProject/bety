@@ -19,10 +19,10 @@ feature 'User creation works' do
     
     it 'should allow a user to be created' do
       visit signup_path
-      fill_in 'user_login', with: 'winstonchurchill'
-      fill_in 'user_email', with: 'winstonchurchill@gmail.com'
-      fill_in 'user_password', with: 'asdfasdf'
-      fill_in 'user_password_confirmation', with: 'asdfasdf'
+      fill_in 'user_login', :with =>  'winstonchurchill'
+      fill_in 'user_email', :with =>  'winstonchurchill@gmail.com'
+      fill_in 'user_password', :with =>  'asdfasdf'
+      fill_in 'user_password_confirmation', :with =>  'asdfasdf'
 
       click_button 'Sign up'
       page.should have_content("Thanks for signing up!")
@@ -30,10 +30,10 @@ feature 'User creation works' do
 
     it 'notify on password mismatch' do
       visit signup_path
-      fill_in 'user_login', with: 'winstonchurchill'
-      fill_in 'user_email', with: 'winstonchurchill@gmail.com'
-      fill_in 'user_password', with: 'money'
-      fill_in 'user_password_confirmation', with: 'notmoney'
+      fill_in 'user_login', :with =>  'winstonchurchill'
+      fill_in 'user_email', :with =>  'winstonchurchill@gmail.com'
+      fill_in 'user_password', :with =>  'money'
+      fill_in 'user_password_confirmation', :with =>  'notmoney'
 
       click_button 'Sign up'
       page.should have_content("Password doesn't match confirmation")
