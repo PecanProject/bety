@@ -1,19 +1,151 @@
-<h1>Log In</h1>
-
-<%= form_tag session_path do -%>
-  <p><%= label_tag 'login' %><br />
-  <%= text_field_tag 'login', @login %></p>
-
-  <p><%= label_tag 'password' %><br/>
-  <%= password_field_tag 'password', nil %></p>
-
-  <!-- Uncomment this if you want this functionality
-  <p><%= label_tag 'remember_me', 'Remember me' %>
-  <%= check_box_tag 'remember_me', '1', @remember_me %></p>
-  -->
-
-  <p><%= submit_tag 'Log in' %></p>
-
-  <p>New to BETYdb? <br /> <%= link_to "Create a New Account",  signup_path,  { :title => "Create a New Account" } %>
-  </p>
-<% end -%>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+				<h1>Welcome to BETYdb</h1>
+			</header>
+			<!-- InstanceBeginEditable name="Full Width Content" -->
+			<div class="ten columns alpha">
+				<p class="lead">The emerging biofuel industry may aid in reducing greenhouse gas emissions and decreasing dependence on foreign oil importation.</p>
+				<img class="pull-right" src="../images/map.jpg"/>
+				<p>How to develop and implement biofuel crops in an ecologically and economically sustainable way requires evaluating the growth and functionality of biofuel crops from the local scale to the regional scale. <strong class="green">BETY-DB</strong> has been developed to support research, agriculture, and policy by synthesizing available information on potential biofuel crops.</p>
+				
+				<div class="well">
+          <%= form_tag({:controller => :sessions , :method => :create}, {:class => "form-horizontal"}) do %>
+				    <fieldset>
+      				<legend>
+						    <h2><i class="icon-lock"></i> Access BETYdb</h2>
+					    </legend>
+              
+              <div class="control-group">
+                <%= label_tag 'login', 'login', :class => "control-label" %>
+                <div class="controls">
+                  <%= text_field_tag 'login', @login, :class => "input-xlarge" %>
+                </div>
+              </div>
+              
+              <div class="control-group">
+                <%= label_tag 'password', 'password', :class => "control-label" %>
+                <div class="controls">
+                  <%= password_field_tag 'password', nil, :class => "input-xlarge" %>
+                </div>
+              </div>
+<!--              <%= label_tag 'remember_me', 'Remember me' %>-->
+<!--              <%= check_box_tag 'remember_me', '1', @remember_me %>-->
+              <div class="form-actions">
+                <%= submit_tag 'Log in', :class=> "button button-primary" %>
+              </div>
+            </fieldset>
+          <% end %>
+				</div>
+				
+				<h3>Don't have an account?</h3>
+				<p>Don't miss out on the opportunity to be a part of this project and change the managements for biofuel research. Sign up using the button below:</p>
+				<p><%= link_to "Register for access to BETY-DB", signup_path, :class =>"button" %></p>
+			</div>
+			<div class="five columns omega offset-by-one">
+				<div>
+					<h3><i class="icon-eye-open"></i> Explore <em>BETYdb</em></h3>
+					<div class="sidebar">
+						<ul class="nav nav-list sidenav">
+							<li><a href="https://www.betydb.org/maps/location_yields"><i class="icon-chevron-right"></i> Yield Forecast Maps</a></li>
+							<li><a href="https://www.betydb.org/maps/traits_from_sites" ><i class="icon-chevron-right"></i> Trait Data for Each Site</a></li>
+							<li><a href="https://www.betydb.org/maps/yields_from_sites" ><i class="icon-chevron-right"></i> Yield Data for Each Site</a></li>
+							<li><a href="https://www.betydb.org/maps/sites_by_species" ><i class="icon-chevron-right"></i> Sites by Species</a></li>
+							<li><a href="https://www.betydb.org/maps/sites_from_search" ><i class="icon-chevron-right"></i> Search for Sites</a></li>
+						</ul>
+					</div>
+				</div>
+				<div>
+					<form id="search-form">
+						<div class="control-group">
+							<h3>
+								<label class="control-label" for="appendedInputButton"><i class="icon-search"></i> Search <em>Species Data</em></label>
+							</h3>
+							<div class="controls">
+								<div class="input-append">
+									<input id="appendedInputButton" type="text" class="" placeholder="What are you looking for?">
+									<a class="button" href="#"><i class="icon-search"></i></a> </div>
+								<span class="help-inline"><small>For more options visit the <a href="" class="green">Advanced Search</a>.</small></span> </div>
+						</div>
+					</form>
+				</div>
+				<div>
+					<h3><i class="icon-info-sign"></i> Database <em>Stats</em></h3>
+					<table summary="Count of Yield and Trait entries" class="table table-condensed">
+						<tr>
+							<th colspan="4">2765 Species with Trait or Yield Data</th>
+						</tr>
+						<tr>
+							<th colspan="4">3909 Yields</th>
+						</tr>
+						<tr>
+							<th>&nbsp;</th>
+							<th>Public</th>
+							<th>Login</th>
+							<th>Total</th>
+						</tr>
+						<tr>
+							<td>Miscanthus</td>
+							<td>614</td>
+							<td>614</td>
+							<td>630</td>
+						</tr>
+						<tr>
+							<td>Switchgrass</td>
+							<td>1379</td>
+							<td>1379</td>
+							<td>1897</td>
+						</tr>
+						<tr>
+							<td>Poplar</td>
+							<td>0</td>
+							<td>0</td>
+							<td>824</td>
+						</tr>
+						<tr>
+							<td>Willow</td>
+							<td>0</td>
+							<td>0</td>
+							<td>257</td>
+						</tr>
+						<tr>
+							<th  colspan="4">28150 Traits</th>
+						</tr>
+						<tr >
+							<th>&nbsp;</th>
+							<th>Public</th>
+							<th>Login</th>
+							<th>Total</th>
+						</tr>
+						<tr>
+							<td>Miscanthus</td>
+							<td>0</td>
+							<td>0</td>
+							<td>2672</td>
+						</tr>
+						<tr>
+							<td>Switchgrass</td>
+							<td>56</td>
+							<td>56</td>
+							<td>630</td>
+						</tr>
+						<tr>
+							<td>Poplar</td>
+							<td>11</td>
+							<td>11</td>
+							<td>2642</td>
+						</tr>
+						<tr>
+							<td>Willow</td>
+							<td>3</td>
+							<td>3</td>
+							<td>947</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<!-- InstanceEndEditable --> </div>
+	</div>
+	<!-- container --> 
+</div>

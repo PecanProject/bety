@@ -1,12 +1,17 @@
-# This controller handles the login/logout function of the site.  
+# This controller handles the login/logout function of the site.
+include AuthenticatedSystem
 class SessionsController < ApplicationController
 
   # This should be used on opening the home page ... before a user logs in
   # On attempting to login from this page ... feed it to the create method in this controller
   def new
+#    @user.new = User.new
+#    @session.new = Session.new
   end
 
   def create
+    
+    puts "HITS"
     logout_keeping_session!
     user = User.authenticate(params[:login], params[:password])
     if user
@@ -45,8 +50,6 @@ class SessionsController < ApplicationController
 #    http://localhost:3000/ebi_forwarded/?email=wongcrott@gmail.com&pass=as@_dlAA5kq
 
     if params[:pass] == 'as@_dlAA5kq'
-      puts "Creating EBI forwarded user"
-      
       if User.find_by_email(params[:email]).nil?
         @user = User.new(
           :login => params[:email].split('@')[0], 
