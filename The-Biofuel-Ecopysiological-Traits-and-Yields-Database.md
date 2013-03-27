@@ -497,6 +497,13 @@ interrelationships among tables, of the biofuel database.
 **Figure 3**: Full schema of BETYdb, showing all tables and relations on the data base
 
 
+[Figure 3.1](#Figure 3.1) provides a visualization of the complete schema, including
+interrelationships among tables, of the biofuel database.
+
+<a id="Figure 3.1" style="width: 600 height: 400"></a>  
+![Alt text] (figures/models_brief_small.png "figure 3.1")   
+**Figure 3**: View of Database from perspective of Ruby
+
 ### 7.2 Software
 
 
