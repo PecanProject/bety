@@ -124,7 +124,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :managements_treatments, :only => [:index, :new, :create]
   resources :pfts_priors, :only => [:index, :new, :create]
   resources :pfts_species, :only => [:index, :new, :create]
-  resources :session#s, only: [:new, :create, :destroy], :controller => 'session'
+  resources :sessions, only: [:new, :create, :destroy], :controller => 'sessions'
 
 
   resources :errors, :only => [:index, :create]
@@ -132,9 +132,8 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
 
   match '/ebi_forwarded' => 'sessions#ebi_forwarded', :as => :ebi_forwarded
 
-  resource :session
 
-  root :to => 'sessions#new'
+  root :to => "sessions#new"
 
   match '/:controller(/:action(/:id))'
   match ':controller/:action.:format' => '#index'

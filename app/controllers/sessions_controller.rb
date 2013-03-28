@@ -10,8 +10,6 @@ class SessionsController < ApplicationController
   end
 
   def create
-    
-    puts "HITS"
     logout_keeping_session!
     user = User.authenticate(params[:login], params[:password])
     if user
@@ -23,8 +21,8 @@ class SessionsController < ApplicationController
       new_cookie_flag = (params[:remember_me] == "1")
       handle_remember_cookie! new_cookie_flag
       #Next two lines not necessary, all references should be removed. Use 'current_user' instead
-      session[:page_access_requirement] = user.page_access_level
-      session[:access_level] = user.access_level
+#      session[:page_access_requirement] = user.page_access_level
+#      session[:access_level] = user.access_level
       redirect_to root_path
       flash[:notice] = "Logged in successfully"
     else
