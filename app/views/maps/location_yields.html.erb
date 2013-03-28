@@ -182,286 +182,94 @@
       
       
     <script type="text/javascript">
-   overlayTypeOptions = [{
-    getTileUrl: function(coord, zoom) {
-        var normalizedCoord = getNormalizedCoord(coord, zoom);
-        if (!normalizedCoord) {
-          return null;
-        }
-        return "<%= root_path%>maps/mapoverlay/miscanthus/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
-    },
-    tileSize: new google.maps.Size(256, 256),
-    isPng: true,
-    maxZoom: 9,
-    minZoom: 2,
-    name: "Miscanthus Yield"
-  }, {
-    getTileUrl: function(coord, zoom) {
-        var normalizedCoord = getNormalizedCoord(coord, zoom);
-        if (!normalizedCoord) {
-          return null;
-        }
-        return "<%= root_path%>maps/mapoverlay/switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
-    },
-    tileSize: new google.maps.Size(256, 256),
-    isPng: true,
-    maxZoom: 9,
-    minZoom: 2,
-    name: "Switchgrass Yield"
-  },<% if logged_in? and current_user.page_access_level <= 2  %> {
-    getTileUrl: function(coord, zoom) {
-        var normalizedCoord = getNormalizedCoord(coord, zoom);
-        if (!normalizedCoord) {
-          return null;
-        }
-        return "<%= root_path%>maps/mapoverlay/poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
-    },
-    tileSize: new google.maps.Size(256, 256),
-    isPng: true,
-    maxZoom: 9,
-    minZoom: 2,
-    name: "Poplar Yield"
-  }, {
-    getTileUrl: function(coord, zoom) {
-        var normalizedCoord = getNormalizedCoord(coord, zoom);
-        if (!normalizedCoord) {
-          return null;
-        }
-        return "<%= root_path%>maps/mapoverlay/miscanthus_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
-    },
-    tileSize: new google.maps.Size(256, 256),
-    isPng: true,
-    maxZoom: 9,
-    minZoom: 2,
-    name: "Miscanthus - Poplar"
-  }, {
-    getTileUrl: function(coord, zoom) {
-        var normalizedCoord = getNormalizedCoord(coord, zoom);
-        if (!normalizedCoord) {
-          return null;
-        }
-        return "<%= root_path%>maps/mapoverlay/miscanthus_switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
-    },
-    tileSize: new google.maps.Size(256, 256),
-    isPng: true,
-    maxZoom: 9,
-    minZoom: 2,
-    name: "Miscanthus - Switchgrass"
-  }, {
-    getTileUrl: function(coord, zoom) {
-        var normalizedCoord = getNormalizedCoord(coord, zoom);
-        if (!normalizedCoord) {
-          return null;
-        }
-        return "<%= root_path%>maps/mapoverlay/switchgrass_poplar/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
-    },
-    tileSize: new google.maps.Size(256, 256),
-    isPng: true,
-    maxZoom: 9,
-    minZoom: 2,
-    name: "Switchgrass - Poplar"
-  }, {
-    getTileUrl: function(coord, zoom) {
-        var normalizedCoord = getNormalizedCoord(coord, zoom);
-        if (!normalizedCoord) {
-          return null;
-        }
-        return "<%= root_path%>maps/mapoverlay/cornstover_cost/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
-    },
-    tileSize: new google.maps.Size(256, 256),
-    isPng: true,
-    maxZoom: 9,
-    minZoom: 2,
-    name: "Cornstover Cost"
-  }, {
-    getTileUrl: function(coord, zoom) {
-        var normalizedCoord = getNormalizedCoord(coord, zoom);
-        if (!normalizedCoord) {
-          return null;
-        }
-        return "<%= root_path%>maps/mapoverlay/miscanthus_switchgrass/"+ normalizedCoord.x + "-" + normalizedCoord.y + "-" + zoom + ".png";
-    },
-    tileSize: new google.maps.Size(256, 256),
-    isPng: true,
-    maxZoom: 9,
-    minZoom: 2,
-    name: "Cornstover Yield"
-  }<% end %>];
-
-  var styles = [{
-    featureType: "poi",
-    elementType: "all",
-    stylers: [
-      { visibility: "off" }
-      ]
-  }];
+    // Place your application-specific JavaScript functions and classes here
+// This file is automatically included by javascript_include_tag :defaults
 
 
-  function initialize() {
-    var myLatlng = new google.maps.LatLng(40.44,-95.98);
-    var myOptions = {
-      center: myLatlng,
-      zoom: 4,
-      streetViewControl: false,
-      zoomControl: true,
-      zoomControlOptions : {
-        style: google.maps.ZoomControlStyle.SMALL
-      },
-      mapTypeControlOptions: {
-        <% if logged_in? and current_user.page_access_level <= 2  %>
-          mapTypeIds: ['Miscanthus','Switchgrass','Poplar','Miscanthus-Poplar','Miscanthus-Switchgrass','Switchgrass-Poplar','Cornstover Cost','Cornstover Yield'],
-        <% else %>
-          mapTypeIds: ['Miscanthus','Switchgrass'],
-        <% end %>
-        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-      },
-      maxZoom: 9,
-      minZoom: 2
-    };
-
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
- 
-    map.mapTypes.set('Miscanthus',new google.maps.StyledMapType(styles, { name: 'Miscanthus' }));
-    map.mapTypes.set('Switchgrass',new google.maps.StyledMapType(styles, { name: 'Switchgrass' }));
- 
-    <% if logged_in? and current_user.page_access_level <= 2 %>
-    map.mapTypes.set('Poplar',new google.maps.StyledMapType(styles, { name: 'Poplar' }));
-    map.mapTypes.set('Miscanthus-Poplar',new google.maps.StyledMapType(styles, { name: 'Miscanthus-Poplar' }));
-    map.mapTypes.set('Miscanthus-Switchgrass',new google.maps.StyledMapType(styles, { name: 'Miscanthus-Switchgrass' }));
-    map.mapTypes.set('Switchgrass-Poplar',new google.maps.StyledMapType(styles, { name: 'Switchgrass-Poplar' }));
-
-    map.mapTypes.set('Cornstover Cost',new google.maps.StyledMapType(styles, { name: 'Cornstover Cost' }));
-    map.mapTypes.set('Cornstover Yield',new google.maps.StyledMapType(styles, { name: 'Cornstover Yield' }));
-    <% end %>
-
-    google.maps.event.addListener(map, 'maptypeid_changed', function() {
-      change_overlay(this.mapTypeId);
-    });
-
-    map.setMapTypeId('Miscanthus');
-
- 
-    var geocoder = new google.maps.Geocoder();
-    //infowindow = new google.maps.InfoWindow();
-    //var contentString = "";
-    var circle;
-
-    var res;
-
-    google.maps.event.addListener(map,'click',function(event) {
-      geocoder.geocode({'latLng': event.latLng}, function(results, status) {
-        var county;
-        var state;
-        if (status == google.maps.GeocoderStatus.OK) {
-          for(i=0;i<results[0].address_components.length;i++) { 
-            if(results[0].address_components[i].types[0] == "administrative_area_level_2") { 
-              county = results[0].address_components[i].long_name
-            }
-            if(results[0].address_components[i].types[0] == "administrative_area_level_1") { 
-              state = results[0].address_components[i].long_name
-            }
-          }
-          if (county && state) {
-            <%= remote_function :url => {:action => "location_yields_lookup"},:type => :synchronous, :with => "'county='+county+'&state='+state+'&crop='+map.mapTypeId", :update => 'contentString'  %>
-            infowindow = document.createElement('DIV');
-            infowindow.innerHTML = '<div id="gmapinfowindowclose"><img src="https://maps.gstatic.com/intl/en_us/mapfiles/iw_close.gif"></div><div id="gmapinfowindowcontent">'+contentString+'</div>';
-            infowindow.setAttribute("id","gmapinfowindow");
 
 
-            map.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear();
-            map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(infowindow);
-            google.maps.event.addDomListenerOnce($('gmapinfowindowclose'),'click',function() {
-              map.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear();
-            });
-            //infowindow.setPosition(event.latLng);
-            //infowindow.setContent(contentString);
-            //infowindow.open(map);
-          }
-        } else {
-          alert("Geocoder failed due to: " + status);
-        }
-      });
-    });
-    google.maps.event.addListenerOnce(map,'tilesloaded',function(event) {
-      $$('div[title="Change map style"]')[0].getOffsetParent().id = "mapTypeControl";
-    });
+
+  var minZoomLevel = 4;
+  var geocoder;
+  var address;
+  var latlng = new google.maps.LatLng(37.09024, -95.712891);
+  var myOptions = {
+    zoom: minZoomLevel,
+    streetViewControl: false,
+    mapTypeControl: false,
+    panControl: false,
+    center: latlng,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  var overlayOptions = {
+    opacity: 0.6,
   }
 
-  function overlay_scale(crop){
-    var controlUI = document.createElement('DIV');
-    controlUI.innerHTML = '<img src="/'+crop+'-scale.png"></img>';
-    controlUI.setAttribute("id","gmapscale");
+  // Google coordinate plane increases in the positive number direction left to right
+  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].clear();
-    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlUI);
-  }
+  // setup of vegtype map  
+  var vegtype_bounds = new google.maps.LatLngBounds(
+    new google.maps.LatLng(-88,-188.5), // south-west
+    new google.maps.LatLng(90.3,171.499) // north-east
+//        new google.maps.LatLng(-50,-124.8), // south-west
+//        new google.maps.LatLng(80,115) // north-east  
 
-  function change_overlay(crop){
-    //map.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear();
-    map.overlayMapTypes.clear();
-    switch (crop) {
-      case 'Miscanthus':
-        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[0]));
-        overlay_scale("miscanthus");
-        break;
-      case 'Switchgrass':
-        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[1]));
-        overlay_scale("switchgrass");
-        break;
-      <% if logged_in? and current_user.page_access_level <= 2  %>
-      case 'Poplar':
-        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[2]));
-        overlay_scale("poplar");
-        break;
-      case 'Miscanthus-Poplar':
-        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[3]));
-        overlay_scale("miscanthus_poplar");
-        break;
-      case 'Miscanthus-Switchgrass':
-        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[4]));
-        overlay_scale("miscanthus_switchgrass");
-        break;
-      case 'Switchgrass-Poplar':
-        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[5]));
-        overlay_scale("switchgrass_poplar");
-        break;
-      <% end %>
-      default:
-        map.overlayMapTypes.insertAt(0,new google.maps.ImageMapType(overlayTypeOptions[0]));
-        overlay_scale("miscanthus");
-        break;
-    }
-  }
+  );
+  var vegtype = new google.maps.GroundOverlay( '../miscanthus_yield_grid.png', vegtype_bounds, overlayOptions );
+ 
+  vegtype.setMap(map);
+  
+  
+  //overlay = [];
+  
+  // Bounds for A single map
+   var strictBounds = new google.maps.LatLngBounds(
+     new google.maps.LatLng(-70, -170), // bottom-left
+     new google.maps.LatLng(70, 170)   // top-right
+   );
 
-  // Normalizes the coords that tiles repeat across the x axis (horizontally)
-  // like the standard Google map tiles.
-  function getNormalizedCoord(coord, zoom) {
-    var x = coord.x;
-    var y = coord.y;
+   // Listen for the map click events
+   google.maps.event.addListener(map, 'dragend', function() {
+     if (strictBounds.contains(map.getCenter())) return;
+
+     // We're out of bounds - Move the map back within the bounds
+     var c = map.getCenter(),
+         x = c.lng(),
+         y = c.lat(),
+         maxX = strictBounds.getNorthEast().lng(),
+         maxY = strictBounds.getNorthEast().lat(),
+         minX = strictBounds.getSouthWest().lng(),
+         minY = strictBounds.getSouthWest().lat();
+
+     if (x < minX) x = minX;
+     if (x > maxX) x = maxX;
+     if (y < minY) y = minY;
+     if (y > maxY) y = maxY;
+
+     map.setCenter(new google.maps.LatLng(y, x));
+   });
+
+  // Limit the zoom level
+  google.maps.event.addListener(map, 'zoom_changed', function() {
+    if (map.getZoom() < minZoomLevel) map.setZoom(minZoomLevel);
+  });
+  
+  markersArray = [];
+  google.maps.event.addListener(vegtype, "click", function(event) {
+
+    var lat = event.latLng.lat();
+    var lng = event.latLng.lng();
+
+
+    populate_html_from_latlng( lat, lng );
+
+  });
 
     
-    // tile range in one direction range is dependent on zoom level
-    // 0 = 1 tile, 1 = 2 tiles, 2 = 4 tiles, 3 = 8 tiles, etc
-    var tileRange = 1 << zoom;
-
-    // don't repeat across y-axis (vertically)
-    if (y < 0 || y >= tileRange) {
-      return null;
-    }
-
-    // repeat across x-axis
-    if (x < 0 || x >= tileRange) {
-      return null;
-      x = (x % tileRange + tileRange) % tileRange;
-    }
-
-    return {
-      x: x,
-      y: y
-    };
-  }
-  initialize();
-//]]>
+    
+    
+    
     </script>
 
 
