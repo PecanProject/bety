@@ -7,10 +7,13 @@
 #header_user_name {
   float: right;
   position: relative;
-  top: -10px;
+  top: -10px;  
 }
 
 
+.inline-block {
+  display: inline-table;
+}
 
 
 
