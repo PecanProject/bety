@@ -1,14 +1,18 @@
 # This is a Draft
 
-## [Documenting Tables and Columns in MySQL](http://dba.stackexchange.com/a/24557/1580)
+## Documenting Tables and Columns in MySQL
 
+Reference: [dba.SE question](http://dba.stackexchange.com/a/24557/1580)
+
+Related Issue: #2
 
 ### Adding Comments to Tables and Columns
 
 #### Add comment to table
 
-    alter table [TABLE NAME] comment '[COMMENT]';
-
+```sql
+alter table [TABLE NAME] comment '[COMMENT]';
+```
 #### Add comment to column
 
 ##### syntax:
