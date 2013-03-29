@@ -11,15 +11,13 @@
 
 #### Add comment to column
 
-* **syntax:**
+##### syntax:
 
 ```sql
 alter table [TABLE NAME] change column [COLUMN NAME] [COLUMN NAME] [TYPE] comment "[COMMENT]";
 ```
 
-* **example:** Add comment to column “specie_id” field in yields
-
-table:
+##### example: Add comment to column “specie_id” field in yields
 
 ```sql
 alter table yields change column specie_id specie_id int(11) comment "lookup table for species ";
