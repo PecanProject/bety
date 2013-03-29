@@ -175,7 +175,7 @@ industry.
 
 
 <a id="Section 4.3"></a>  
-### 4.3 Data Access
+### Data Access
 
 Data is made available for analysis after it is submitted
 and reviewed by a database admistrator. These data are suitable for
