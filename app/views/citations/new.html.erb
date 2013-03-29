@@ -1,48 +1,84 @@
-<h1>New citation <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node15.html?min" }) %></h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>New citation <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node15.html?min" }) %></h1>
+      </header>
 
-<table>
-<%= form_for(@citation) do |f| %>
-  <%= f.error_messages %>
-  <tr>
-    <td><%= f.label :author %><br />
-    <%= f.text_field :author, :size => 20 %></td>
-    <td><%= f.label :year %><br />
-    <%= f.text_field :year, :size => 5 %></td>
-  </tr>
-  <tr>
-    <td colspan=2><%= f.label :title %><br />
-    <%= f.text_field :title, :size => 50 %></td>
-  </tr>
-  <tr>
-    <td colspan=2><%= f.label :journal %><br />
-    <%= f.text_field :journal, :size => 50 %></td>
-  </tr>
-  <tr>
-    <td><%= f.label :vol %><br />
-    <%= f.text_field :vol, :size => 8 %></td>
-    <td><%= f.label :pg %><br />
-    <%= f.text_field :pg, :size => 8 %></td>
-  </tr>
-  <tr>
-    <td colspan=2><%= f.label "DOI" %><br />
-    <%= f.text_field :doi, :size => 50 %></td>
-  </tr>
-  <tr>
-    <td colspan=2><%= f.label :url %><br />
-    <%= f.text_field :url, :size => 50 %></td>
-  </tr>
-  <tr>
-    <td colspan=2><%= f.label :pdf %><br />
-    <%= f.text_field :pdf, :size => 50 %></td>
-  </tr>
-  <tr>
-    <td colspan=2><%= f.label :user %><br />
-    <%= current_user.select_default %>
-  </tr>
-  <tr>
-    <td colspan=2><%= f.submit 'Create' %></td>
-  </tr>
-</table>
-<% end %>
+      <%= form_for(@citation) do |f| %>
+        <%= f.error_messages %>
 
-<%= link_to 'Back', citations_path %>
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :author %>
+            <%= f.text_field :author, :class => "input-full" %>
+          </div>
+          
+          <div class="eight columns omega">
+            <%= f.label :year %>
+            <%= f.text_field :year, :class => "input-full" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="sixteen columns alpha omega">
+            <%= f.label :title %>
+            <%= f.text_field :title, :class => "input-full" %>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :journal %>
+            <%= f.text_field :journal, :class => "input-full" %>
+          </div>
+          <div class="four columns">
+            <%= f.label :vol %>
+            <%= f.text_field :vol, :class => "input-full" %>
+          </div>
+          <div class="four columns omega">
+            <%= f.label :pg %>
+            <%= f.text_field :pg, :class => "input-full" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="four columns alpha">
+            <%= f.label :doi %>
+            <%= f.text_field :vol, :class => "input-full" %>
+          </div>
+          <div class="eight columns">
+            <%= f.label :url %>
+            <%= f.text_field :url, :class => "input-full" %>
+          </div>
+          
+          <div class="four columns omega">
+            <%= f.label :pdf %>
+            <%= f.text_field :pdf, :class => "input-full" %>
+          </div>
+        </div>
+
+
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( citations_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+		      <div class="button-group pull-right">
+			      <%= f.submit 'Create', :class => "button button-primary" %>
+		      </div>
+	      </div>
+
+
+
+          
+      <% end %>
+
+  
+    </div>
+  </div>
+</div>
+
+
+
