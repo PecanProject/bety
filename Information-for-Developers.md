@@ -1,6 +1,6 @@
 # This is a Draft
 
-## Documenting Tables and Columns in MySQL [http://dba.stackexchange.com/a/24557/1580](http://dba.stackexchange.com/a/24557/1580)
+## [Documenting Tables and Columns in MySQL](http://dba.stackexchange.com/a/24557/1580)
 
 
 ### Adding Comments to Tables and Columns
