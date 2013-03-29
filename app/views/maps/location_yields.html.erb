@@ -202,7 +202,7 @@
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
   var overlayOptions = {
-    opacity: 0.6,
+    opacity: 0.4,
   }
 
   // Google coordinate plane increases in the positive number direction left to right
@@ -210,13 +210,13 @@
 
   // setup of vegtype map  
   var vegtype_bounds = new google.maps.LatLngBounds(
-    new google.maps.LatLng(-88,-188.5), // south-west
-    new google.maps.LatLng(90.3,171.499) // north-east
+    new google.maps.LatLng(-31.5,-124.5), // south-west
+    new google.maps.LatLng(51.5,-32) // north-east
 //        new google.maps.LatLng(-50,-124.8), // south-west
 //        new google.maps.LatLng(80,115) // north-east  
 
   );
-  var vegtype = new google.maps.GroundOverlay( '../miscanthus_yield_grid.png', vegtype_bounds, overlayOptions );
+  var vegtype = new google.maps.GroundOverlay( '../newworldmap.png', vegtype_bounds, overlayOptions );
  
   vegtype.setMap(map);
   
