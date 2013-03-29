@@ -32,8 +32,9 @@ alter table yields change column specie_id specie_id int(11) comment "lookup tab
 #### Tables
 
 ```sql
-    use INFORMATION_SCHEMA
-    select distinct TABLE_NAME, TABLE_COMMENT from TABLES where TABLE_SCHEMA = "ebi_production" and TABLE_COMMENT is not "VIEW";
+use INFORMATION_SCHEMA
+select distinct TABLE_NAME, TABLE_COMMENT from TABLES 
+    where TABLE_SCHEMA = "ebi_production" and TABLE_COMMENT is not "VIEW";
 ```
 
 #### Columns
@@ -41,7 +42,8 @@ alter table yields change column specie_id specie_id int(11) comment "lookup tab
 Example for the yields table:
 
 ```sql
-select column_name, column_comment from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = "yields" and TABLE_SCHEMA = "ebi_analysis";
+select column_name, column_comment from INFORMATION_SCHEMA.COLUMNS 
+    where TABLE_NAME = "yields" and TABLE_SCHEMA = "ebi_analysis";
 ```
 
 
