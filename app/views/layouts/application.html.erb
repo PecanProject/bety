@@ -204,17 +204,13 @@
   
   <% if flash[:notice] %>
     <div id="flash_notice">
-      <div class="bg">
-        <h5 class="centered"><%= flash[:notice] %></h5>
-      </div>
-      <hr>
+      <h5 class="centered no-margin"><%= flash[:notice] %></h5>
     </div>
     <% flash[:notice] = nil %>
   <% end %>
 
   <%= yield  %>
   
-  <br />
 
 
   

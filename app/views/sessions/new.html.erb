@@ -10,38 +10,41 @@
 				<img class="pull-right" src="../images/map.jpg"/>
 				<p>How to develop and implement biofuel crops in an ecologically and economically sustainable way requires evaluating the growth and functionality of biofuel crops from the local scale to the regional scale. <strong class="green">BETY-DB</strong> has been developed to support research, agriculture, and policy by synthesizing available information on potential biofuel crops.</p>
 				
-				<div class="well">
-          <%= form_tag({:controller => :sessions , :method => :create}, {:class => "form-horizontal"}) do %>
-				    <fieldset>
-      				<legend>
-						    <h2><i class="icon-lock"></i> Access BETYdb</h2>
-					    </legend>
-              
-              <div class="control-group">
-                <%= label_tag 'login', 'Login', :class => "control-label" %>
-                <div class="controls">
-                  <%= text_field_tag 'login', @login, :class => "input-xlarge" %>
+				<% if current_user.nil? %>
+				  <div class="well">
+            <%= form_tag({:controller => :sessions , :method => :create}, {:class => "form-horizontal"}) do %>
+				      <fieldset>
+        				<legend>
+						      <h2><i class="icon-lock"></i> Access BETYdb</h2>
+					      </legend>
+                
+                <div class="control-group">
+                  <%= label_tag 'login', 'Login', :class => "control-label" %>
+                  <div class="controls">
+                    <%= text_field_tag 'login', @login, :class => "input-xlarge" %>
+                  </div>
                 </div>
-              </div>
-              
-              <div class="control-group">
-                <%= label_tag 'password', 'Password', :class => "control-label" %>
-                <div class="controls">
-                  <%= password_field_tag 'password', nil, :class => "input-xlarge" %>
+                
+                <div class="control-group">
+                  <%= label_tag 'password', 'Password', :class => "control-label" %>
+                  <div class="controls">
+                    <%= password_field_tag 'password', nil, :class => "input-xlarge" %>
+                  </div>
                 </div>
-              </div>
-<!--              <%= label_tag 'remember_me', 'Remember me' %>-->
-<!--              <%= check_box_tag 'remember_me', '1', @remember_me %>-->
-              <div class="form-actions">
-                <%= submit_tag 'Log in', :class=> "button button-primary" %>
-              </div>
-            </fieldset>
-          <% end %>
-				</div>
+  <!--              <%= label_tag 'remember_me', 'Remember me' %>-->
+  <!--              <%= check_box_tag 'remember_me', '1', @remember_me %>-->
+                <div class="form-actions">
+                  <%= submit_tag 'Log in', :class=> "button button-primary" %>
+                </div>
+              </fieldset>
+            <% end %>
+				  </div>
 				
-				<h3>Don't have an account?</h3>
-				<p>Don't miss out on the opportunity to be a part of this project and change the managements for biofuel research. Sign up using the button below:</p>
-				<p><%= link_to "Register for access to BETY-DB", signup_path, :class =>"button" %></p>
+				  <h3>Don't have an account?</h3>
+				  <p>Don't miss out on the opportunity to be a part of this project and change the managements for biofuel research. Sign up using the button below:</p>
+				  <p><%= link_to "Register for access to BETY-DB", signup_path, :class =>"button" %></p>
+				<% end %>
+
 			</div>
 			<div class="five columns omega offset-by-one">
 				<div>
@@ -70,6 +73,7 @@
 						</div>
 					</form>
 				</div>
+				
 				<div>
 					<h3><i class="icon-info-sign"></i> Database <em>Stats</em></h3>
 					<table summary="Count of Yield and Trait entries" class="table table-condensed">

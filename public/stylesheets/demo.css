@@ -16,8 +16,18 @@
 }
 
 
+#flash_notice {
+  background-color: #99FF66;
+  padding: 15px;
+} 
 
+.no-margin{
+  margin: 0;
+}
 
+.no-padding {
+  padding: 0;
+}
 
 
 
