@@ -1,0 +1,11 @@
+test_dbfile:
+  file_name: "CA-Ca3forcing.nc"
+  file_path: "ebi-cluster.igb.uiuc.edu:/home/mdietze/inputs/nacp/..."
+  md5: nil
+  created_user_id: 1
+  updated_user_id: 1
+  machine_id: 1
+  created_at: "2013-03-31 23:16:35"
+  updated_at: "2013-03-31 23:16:38"
+  container_type: "Input"
+  container_id: 27

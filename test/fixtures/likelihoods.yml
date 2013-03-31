@@ -1,0 +1,8 @@
+test_likelihood:
+  run_id: 1
+  variable_id: 1
+  input_id: 1
+  loglikelihood: nacho
+  n_eff: nacho
+  weight: nacho
+  residual: nacho
