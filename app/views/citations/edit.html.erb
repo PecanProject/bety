@@ -2,18 +2,14 @@
 	<div class="container">
 		<div class="sixteen columns">
 			<header>
-	      <h1>Editing citation <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node15.html?min" }) %></h1>
-
+	      <h1>Editing Citation</h1>
 			</header>
 
-
       <a style="text-decoration: none" href="#" onclick="showHide('edit_citations_sites')" id="show_edit_citations_sites">[+] View Related Sites</a>
-      <br/>
       <br/>
       <div id="edit_citations_sites" class="hidden notvisible">
         <%= render 'edit_citations_sites' %>
       </div>
-
       <hr>
 
       <%= form_for(@citation) do |f| %>
@@ -89,13 +85,8 @@
 						<%= f.submit 'Update', :class => "button button-primary" %>
 					</div>
 				</div>
-
-
-
           
       <% end %>
-      
-
   
     </div>
   </div>

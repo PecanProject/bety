@@ -25,9 +25,33 @@ feature 'Citation index works' do
       click_button 'Create'
       
       page.should have_content 'Citation was successfully created'
+
+      # Apparently this forwards to the /sites/ ?
     end
 
+    context 'clicking view citation button' do
+      it 'should return "Viewing Citation" ' do
+        visit '/citations/'
+        first(:xpath,".//a[@alt='show' and contains(@href,'/citations/')]").click
+        page.should have_content 'Viewing Citation'
+      end
+    end
+    
+    context 'clicking edit citation button' do
+      it 'should return "Editing Citation" ' do
+        visit '/citations/'
+        first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
+        page.should have_content 'Editing Citation'
+      end
+    end
 
+    context 'clicking use citation button' do
+      it 'should return "Sites already associated with this citation" ' do
+        visit '/citations/'
+        first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
+        page.should have_content 'Sites already associated with this citation'
+      end
+    end
 
   end
 end

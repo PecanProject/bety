@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="sixteen columns">
 			<header>
-        <h1>New citation <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node15.html?min" }) %></h1>
+        <h1>New Citation</h1>
       </header>
 
       <%= form_for(@citation) do |f| %>
@@ -45,7 +45,7 @@
         <div class="row">
           <div class="four columns alpha">
             <%= f.label :doi %>
-            <%= f.text_field :vol, :class => "input-full" %>
+            <%= f.text_field :doi, :class => "input-full" %>
           </div>
           <div class="eight columns">
             <%= f.label :url %>
@@ -69,13 +69,7 @@
 			      <%= f.submit 'Create', :class => "button button-primary" %>
 		      </div>
 	      </div>
-
-
-
-          
       <% end %>
-
-  
     </div>
   </div>
 </div>
