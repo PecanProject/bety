@@ -1,29 +1,48 @@
-<h1>New cultivar <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node31.html?min" }) %></h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>New Cultivar <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node31.html?min" }) %></h1>
+      </header>
 
-<%= form_for(@cultivar) do |f| %>
-  <%= f.error_messages %>
-  <p>
-    <%= f.label :previous_id %><br />
-    <%= f.text_field :previous_id %>
-  </p>
+      <%= form_for(@cultivar) do |f| %>
+        <%= f.error_messages %>
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :previous_id %>
+            <%= f.text_field :previous_id, :class => "input-full"  %>
+            <br />
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "input-full"  %>
+          </div>
+          <div class="eight columns omega">
+            <%= render :partial => "species/species_search" %>    
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :ecotype %>
+            <%= f.text_field :ecotype, :class => "input-full"  %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :notes %>
+            <%= f.text_area :notes, :rows => 10, :class => "input-full"  %>
+          </div>
+        </div>
+              
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( cultivars_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+		      <div class="button-group pull-right">
+			      <%= f.submit 'Create', :class => "button button-primary" %>
+		      </div>
+	      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
 
-  <%= render :partial => "species/species_search" %>
-
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :ecotype %><br />
-    <%= f.text_field :ecotype %>
-  </p>
-  <p>
-    <%= f.label :notes %><br />
-    <%= f.text_area :notes %>
-  </p>
-  <p>
-    <%= f.submit 'Create' %>
-  </p>
-<% end %>
-
-<%= link_to 'Back', cultivars_path %>
