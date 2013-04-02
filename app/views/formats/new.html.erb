@@ -1,36 +1,65 @@
-<h1>New format</h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>New Format</h1>
+      </header>
 
-<%= form_for :form, @format, :url => { :action => "create" } do |f| %>
-  <%= f.error_messages %>
+      <%= form_for :form, @format, :url => { :action => "create" } do |f| %>
+        <%= f.error_messages %>
 
-  <p>
-    <%= f.label :mime_type %><br />
-    <%= f.select :mime_type, Mimetype.order("id desc").collect(&:type_string), {:include_blank => true } %><br />
-    <%= f.label :new_mime_type %>: <%= text_field_tag :mime_type_other %>
-  </p>
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_area :name %>
-  </p>
-  <p>
-    <%= f.label :header %><br />
-    <%= f.text_field :header %>
-  </p>
-  <p>
-    <%= f.label :skip %><br />
-    <%= f.text_field :skip %>
-  </p>
-  <p>
-    <%= f.label :dataformat %><br />
-    <%= f.text_area :dataformat %>
-  </p>
-  <p>
-    <%= f.label :notes %><br />
-    <%= f.text_area :notes %>
-  </p>
-  <p>
-    <%= f.submit 'Create' %>
-  </p>
-<% end %>
+        <div class="row">
+          <div class="four columns alpha">
+            <%= f.label :mime_type %>
+            <%= f.select :mime_type, Mimetype.order("id desc").collect(&:type_string), {:include_blank => true } %>
+          </div>
+          <div class="four columns">
+            <%= f.label :new_mime_type %>
+            <%= text_field :mime_type_other, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "input-full" %>
+          </div>
+        </div>
 
-<%= link_to 'Back', formats_path %>
+        
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :header %>
+            <%= f.text_field :header, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :skip %>
+            <%= f.text_field :skip, :class => "input-full" %>
+          </div>
+        </div>
+        
+
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :dataformat %>
+            <%= f.text_area :dataformat, :rows => 10, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :notes %>
+            <%= f.text_area :notes, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
+
+
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( formats_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+		      <div class="button-group pull-right">
+			      <%= f.submit 'Create', :class => "button button-primary" %>
+		      </div>
+	      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
