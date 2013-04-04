@@ -1,45 +1,70 @@
-<h1>New prior</h1>
+
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>New Prior</h1>
+      </header>
+
+      <%= form_for(@prior) do |f| %>
+        <%= f.error_messages %>
+
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :citation_id %>
+            <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true }, :class => "input-full" %>
+            <em><%= link_to "New Citation", new_citation_path %></em>
+          </div>
+          
+          <div class="eight columns omega">
+            <%= f.label :variable_id %>
+            <%= f.select :variable_id, Variable.order('description').collect { |p| [ p.select_default, p.id ] }, {:selected => @prior.variable_id.to_i }, :class => "input-full" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :phylogeny %>
+            <%= f.text_field :phylogeny, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :distribution %>
+            <%= f.select :distn, %w(beta binom cauchy chisq exp f gamma geom hyper lnorm logis nbinom norm pois t unif weibull wilcox), :class => "input-full" %>
+            <em><%= link_to "More information about distributions", "http://cran.r-project.org/doc/manuals/R-intro.html#R-as-a-set-of-statistical-tables" %></em>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :parameter_a %>
+            <%= f.text_field :parama, :class => "input-full" %>
+            <br />
+            <%= f.label :parameter_b %>
+            <%= f.text_field :paramb, :class => "input-full" %>
+            <br />
+            <%= f.label :n %>
+            <%= f.text_field :n, :class => "input-full" %>
+          </div>
+          
+          <div class="eight columns omega">
+              <%= f.label :notes %>
+            <%= f.text_area :notes, :rows => 10, :class => "input-full"  %>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( priors_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+		      <div class="button-group pull-right">
+			      <%= f.submit 'Create', :class => "button button-primary" %>
+		      </div>
+	      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
 
 
-<%= form_for(@prior) do |f| %>
-  <%= f.error_messages %>
-
-  <p>
-    <%= f.label :citation_id %><br />
-    <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
-  </p>
-  <p>
-    <%= f.label :variable_id %><br />
-    <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }, {:selected => @prior.variable_id.to_i } %>
-
-  </p>
-  <p>
-    <%= f.label :phylogeny %><br />
-    <%= f.text_field :phylogeny %>
-  </p>
-  <p>
-    <%= f.label :distn %><br />
-     <%= f.select :distn, ['', 'beta', 'binom', 'cauchy', 'chisq', 'exp', 'f', 'gamma', 'geom', 'hyper', 'lnorm', 'logis', 'nbinom', 'norm', 'pois', 't', 'unif', 'weibull', 'wilcox' ] %> <em><%= link_to "More information about distributions", "http://cran.r-project.org/doc/manuals/R-intro.html#R-as-a-set-of-statistical-tables" %>
-  </p>
-  <p>
-    <%= f.label :parama %><br />
-    <%= f.text_field :parama %>
-  </p>
-  <p>
-    <%= f.label :paramb %><br />
-    <%= f.text_field :paramb %>
-  </p>
-  <p>
-    <%= f.label :n %><br />
-    <%= f.text_field :n %>
-  </p>
-  <p>
-    <%= f.label :notes %><br />
-    <%= f.text_area :notes %>
-  </p>
-  <p>
-    <%= f.submit 'Create' %>
-  </p>
-<% end %>
-
-<%= link_to 'Back', priors_path %>
