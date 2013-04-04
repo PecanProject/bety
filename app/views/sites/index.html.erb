@@ -1,54 +1,41 @@
+<script type="text/javascript">//<![CDATA[ 
+  function drawMap(id,lat,lon) { 
+    var latlng = new google.maps.LatLng(lat,lon);
+    var myOptions = {
+      zoom: 2,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP};
+    var map = new google.maps.Map(document.getElementById("map_".id), myOptions);
+    var marker = new google.maps.Marker({ position: latlng, map: map });
+  }//]]>
+</script>
 
-    <script type="text/javascript">
-//<![CDATA[ 
- 
-      function drawMap(id,lat,lon) { 
-        var latlng = new google.maps.LatLng(lat,lon);
-        var myOptions = {
-          zoom: 2,
-          center: latlng,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-  
-        var map = new google.maps.Map(document.getElementById("map_".id), myOptions);
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+      <div id="linked">
+        <%= render 'linked' %>
+      </div>
 
-        var marker = new google.maps.Marker({
-          position: latlng,
-          map: map
-        });
-      }
+      <br />
+      <hr />
+      
+			<header>
+				<h1>Listing Sites</h1>
+			</header>
+      <div id="process_container">
+        <div id="back"><%= link_to '<< Citations', citations_path %></div>
+        <div id="new"><%= link_to 'New Site', new_site_path%></div>
+        <div id="forward"><%= link_to "Treatments >>", treatments_path %></div>
+      </div>
+      <br />
+      <hr />
 
-//]]>
-    </script>
+      <div id="simple_search_table" class="simple_search_table_1"><%= render 'index_table' %></div>
 
-<div id="process_container">
-  <div id="back">
-    <%= link_to "<< Citations", citations_path %>
-  </div>
-  <div id="new">
-    <%= link_to 'New Site', new_site_path%>
-  </div>
-  <div id="forward">
-    <%= link_to "Treatments >>", treatments_path %>
-  </div>
+      <%= link_to 'New Site', new_site_path %>
+
+		</div> <!-- class="sixteen columns" -->
+	</div> <!-- container --> 
 </div>
-<br />
-<hr>
-<br />
 
-<div id="linked">
-<%= render 'linked' %>
-</div>
-
-
-<h1>Listing sites</h1>
-<p>
-<%= form_tag sites_path, :method => 'get', :id => 'simple_search' do %>
-  <%= text_field_tag :search, params[:search] %>
-  <%= hidden_field_tag :direction, params[:direction] %>
-  <%= hidden_field_tag :sort, params[:sort] %>
-<% end %>
-</p>
-<div id="simple_search_table" class="simple_search_table_1"><%= render 'index_table' %></div>
-
-<%= link_to 'New site', new_site_path %>

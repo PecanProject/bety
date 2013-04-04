@@ -1,30 +1,60 @@
+
+
 <% if !session["citation"].nil? %>
 <h1>Sites already associated with this citation</h1>
-<table>
-  <tr>
-    <th>Site Name</th>
-    <th>City</th>
-    <th>State</th>
-    <th>Country</th>
-    <th>Lat</th>
-    <th>Lon</th>
-    <th>Espg</th>
-  </tr>
 
-<% @citation.sites.each do |site| %>
-  <tr id="site-<%= site.id.to_s %>">
-    <td><%= site.sitename %></td>
-    <td><%= site.city %></td>
-    <td><%= site.state %></td>
-    <td><%= site.country %></td>
-    <td><%= site.lat %></td>
-    <td><%= site.lon %></td>
-    <td><%= site.espg %></td>
-    <td><%= link_to 'Unlink', {:action => "linked", :id => site.id}, :remote => true %></td>
-    <td><%= link_to 'Show', site %></td>
-    <td><%= link_to 'Edit', edit_site_path(site) %></td>
-    <td><%= link_to 'Destroy', site, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
-<% end %>
+<table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_1" aria-describedby="DataTables_Table_1_info">
+  <thead>
+    <tr role="row">
+<th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 150px;" aria-sort="ascending" >Site Name</th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 150px">City</th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px" aria-label="Role: activate to sort column ascending">State</th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 67px" aria-label="Status: activate to sort column ascending">Country</th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 67px" aria-label="Status: activate to sort column ascending">Lat</th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Lon</th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Espg</th>
+<th role="columnheader" aria-controls="DataTables_Table_0" style="width: 162px">Actions</th>
+    </tr>
+  </thead>    
+  <tbody role="alert" aria-live="polite" aria-relevant="all">
+    <% if @citation.sites.count == 0 %>
+      <tr>
+        <td colspan="8"><i>None</i></td>
+      </tr>
+    <% end %>  
+    <% @citation.sites.each do |site| %>
+      <tr id="site-<%= site.id.to_s %>">
+        <td><%= site.sitename %></td>
+        <td><%= site.city %></td>
+        <td><%= site.state %></td>
+        <td><%= site.country %></td>
+        <td><%= site.lat %></td>
+        <td><%= site.lon %></td>
+        <td><%= site.espg %></td>
+        <td class="center ">
+				  <!-- UNLINK -->
+			    <% if current_user.page_access_level == 1 %>
+            <%= link_to "/sites/linked/#{site.id}", :id => site.id, :remote => true, :class =>"button button-small" do %>
+              <i class="icon-remove"></i> 
+            <% end %>
+          <% end %>
+				  <!-- SHOW -->
+				  <%= link_to site, :class => "button button-small" do %>
+				    <i class="icon-zoom-in"></i>
+				  <% end %>
+				  <!-- EDIT -->
+				  <%= link_to edit_site_path(site), :class => "button button-small" do %>
+				    <i class="icon-edit"></i>
+				  <% end %>
+				  <!-- DELETE -->
+				  <% if current_user.page_access_level == 1 %>
+            <%= link_to site, :method => :delete, :type => 'site', :confirm => 'Are you sure?', :class=> 'button button-small button-danger' do %>
+              <i class="icon-trash"></i> 
+            <% end %>
+          <% end %>
+			  </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 <% end %>
