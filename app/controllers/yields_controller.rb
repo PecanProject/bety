@@ -94,6 +94,8 @@ class YieldsController < ApplicationController
 
   # GET /yields/1/edit
   def edit
+    @citation = Citation.find(session["citation"])
+  
     @yield = Yield.all_limited(current_user).find(params[:id])
     @yield.specie.nil? ? @species = nil : @species = [@yield.specie]
   end
