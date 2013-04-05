@@ -21,7 +21,7 @@ class Trait < ActiveRecord::Base
   belongs_to :entity
   belongs_to :ebi_method, :class_name => 'Methods', :foreign_key => 'method_id'
 
-  validates_presence_of     :mean
+  validates_presence_of     :mean, :access_level, :page_access_level
   validates_presence_of     :statname, :if => Proc.new { |trait| !trait.stat.blank? }
   validates_format_of       :date_year, :with => /^(\d{2}|\d{4})$/, :allow_blank => true
   validates_format_of       :date_month, :with => /^\d{1,2}$/, :allow_blank => true
