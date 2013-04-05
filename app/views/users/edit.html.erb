@@ -1,70 +1,117 @@
-<h1>Editing User</h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+	      <h1>Editing User</h1>
+			</header>
 
-<%= form_for(@user) do |f| %>
-  <%= f.error_messages %>
+      <%= form_for(@user) do |f| %>
+        <%= f.error_messages %>
 
-  <p>
-    <%= f.label :login %><br />
-    <%= @user.login %>
-  </p>
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :email %><br />
-    <%= f.text_field :email %>
-  </p>
-  <p>
-    <%= f.label :city %><br />
-    <%= f.text_field :city %>
-  </p>
-  <p>
-    <%= f.label :state_prov, "State/Province" %><br />
-    <%= f.text_field :state_prov %>
-  </p>
-  <p>
-    <%= f.label :country %><br />
-    <%= f.text_field :country %>
-  </p>
-  <p>
-    <%= f.label :postal_code %><br />
-    <%= f.text_field :postal_code %>
-  </p>
-  <p>
-    <%= f.label :area %><br />
-    <%= f.text_field :area %>
-  </p>
-  <p>
-    <%= f.label :change_password %>
-    <%= check_box_tag(:change_password) %>
-  <p>
-    <%= label_tag 'password' %><br/>
-    <%= f.password_field :password, :disabled => true %>
-  </p>
+        <div class="row">
+          <div class="six columns alpha">
+            <%= label_tag 'login' %>
+            <%= f.text_field :login, :class => "input-full" %>
+          </div>
+          <div class="five columns">
+            <%= label_tag 'name' %>
+            <%= f.text_field :name, :class => "input-full" %>
+          </div>
+          <div class="five columns omega">
+            <%= label_tag 'email' %>
+            <%= f.text_field :email, :class => "input-full" %>
+          </div>
+        </div>
 
-  <p>
-    <%= label_tag 'password_confirmation', 'Confirm Password' %><br/>
-    <%= f.password_field :password_confirmation, :disabled => true %>
-  </p>
+        <div class="row">
+          <div class="four columns alpha">
+            <%= label_tag 'city' %>
+            <%= f.text_field :city, :class => "input-full" %>
+          </div>
+          <div class="two columns">
+            <%= label_tag 'State/Province' %>
+            <%= f.text_field :state_prov, :class => "input-full" %>
+          </div>
+          <div class="four columns">
+            <%= label_tag 'country' %>
+            <%= f.text_field :country, :class => "input-full" %>
+          </div>
+          <div class="four columns">
+            <%= label_tag 'Postal Code' %>
+            <%= f.text_field :postal_code, :class => "input-full" %>
+          </div>
+          <div class="two columns omega">
+            <%= label_tag 'area' %>
+            <%= f.select :area, ["","Researcher","Student","Educator","Industry","Agriculture","Other"], :class => "input-full" %>
+          </div>
+        </div>
 
-  <% if current_user.page_access_level == 1 %>
-  <p>
-    <%= f.label 'page_access_level' %><br/>
-    <%= f.select :page_access_level, [ ["Administrator", 1], ["Manager", 2], ["Creator", 3], [ "Viewer", 4]] %>
-  </p>
-  <p>
-    <%= f.label 'data_access_level' %><br/>
-    <%= f.select :access_level, [ ["Restricted", 1], ["Internal EBI & Collaborators", 2], ["External Researcher", 3], ["Public", 4] ] %>
-  </p>
-  <% end %>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
 
-<%= link_to 'Show', @citation %> |
-<%= link_to 'Back', citations_path %>
+        <div class="row">
+          <div class="four columns alpha">
+            <%= label_tag 'password' %>
+            <%= f.password_field :password, :class => "input-full" %>
+          </div>
+          <div class="four columns">
+            <%= label_tag 'password_confirmation', 'Confirm Password' %>
+            <%= f.password_field :password_confirmation, :class => "input-full" %>
+          </div>
+          <div class="four columns">
+            <%= f.label 'page_access_level', "Page Access Level*" %>
+            <%= select_tag :page_access_level, options_for_select( [ ["1.Administrator", 1], ["2.Manager", 2], ["3.Creator", 3], [ "4.Viewer", 4] ], 4 ) %>
+          </div>
+          <div class="four columns omega">
+            <%= f.label 'data_access_level', "Data Access Level*" %>
+            <%= select_tag :access_level, options_for_select( [ ["1.Restricted", 1], ["2.Internal EBI & Collaborators", 2], ["3.External Researcher", 3], ["4.Public", 4] ], 3 ) %>
+          </div>
+        </div>
+
+
+
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( @user ) do %>
+              <button class="button">Show</button>
+            <% end%>
+            <%= link_to( users_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+					<div class="button-group pull-right">
+						<%= f.submit 'Update', :class => "button button-primary" %>
+					</div>
+				</div>
+          
+      <% end %>
+      
+    </div>
+  </div>
+</div>
+
 <%= observe_field("change_password",
                   :frequency => 1,
                   :function => "var u = $('user_password'); u.disabled = !u.disabled;$('user_password_confirmation').disabled = u.disabled;") %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
