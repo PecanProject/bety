@@ -17,7 +17,7 @@ feature 'Sites index works' do
       first(:xpath,".//a[contains(@href,'/use_citation/')]").click
       
       visit '/sites/new'
-
+      
       fill_in 'Site name', with:'tester'
       fill_in 'Elevation (m)', with: '2900'
       fill_in 'Mean Annual Precipitation (mm/yr)', with:'11/90'
@@ -35,7 +35,7 @@ feature 'Sites index works' do
     context 'clicking view site button' do
       it 'should return "Viewing Site" ' do
         visit '/sites/'
-        first(:xpath,".//a[@alt='show' and contains(@href,'/sites/')]").click
+        first(:xpath,".//a[text()='Show' and contains(@href,'/sites/')]").click
         page.should have_content 'Viewing Site'
       end
     end
@@ -43,7 +43,7 @@ feature 'Sites index works' do
     context 'clicking edit site button' do
       it 'should return "Editing Site" ' do
         visit '/sites/'
-        first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
+        first(:xpath,".//a[text()='Edit' and contains(@href,'/edit')]").click
         page.should have_content 'Editing Site'
       end
     end

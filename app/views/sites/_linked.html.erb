@@ -31,7 +31,7 @@
         <td><%= site.lat %></td>
         <td><%= site.lon %></td>
         <td><%= site.espg %></td>
-        <td class="center ">
+        <td class="center">
 				  <!-- UNLINK -->
 			    <% if current_user.page_access_level == 1 %>
             <%= link_to "/sites/linked/#{site.id}", :id => site.id, :remote => true, :class =>"button button-small" do %>
@@ -57,4 +57,5 @@
     <% end %>
   </tbody>
 </table>
+<hr />
 <% end %>
