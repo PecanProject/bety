@@ -17,17 +17,37 @@ feature 'Yields index works' do
       click_link 'New Yield'
       
       page.should have_content 'Choose a citation to work with ( Actions Tab > Check )'
+      page.should have_content 'Listing Citations'
     end
 
     it 'should allow creation of new yields after selecting a citation' do
+      visit '/citations'
       first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
 
       visit '/yields/new'
-      fill_in 'Mean', :with => '10.0'
-      fill_in 'N', :with =>  '100'
-
+      
+      select('SD', :from => 'yield[statname]')
+      fill_in 'yield[mean]', :with => '10.0'
+      fill_in 'yield[stat]', :with => '98736.0'
+      fill_in 'yield[n]', :with =>  '100'
       fill_in 'Notes', :with =>  'In some technical publications, appendices are so long and important as part of the book that they are a creative endeavour of the author'
+
       click_button 'Create'
+      
+      page.should have_content 'Yield was successfully created.'
+    end
+    
+    it 'should now allow creation of new yields without a numeric mean' do
+      visit '/citations'
+      first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
+
+      visit '/yields/new'
+      fill_in 'yield[mean]', :with => 'asdf'
+      fill_in 'yield[stat]', :with => '98736.0'
+
+      click_button 'Create'
+      
+      page.should have_content 'Mean is not a number'
     end
 
     context 'clicking view yield button' do
@@ -46,13 +66,6 @@ feature 'Yields index works' do
       end
     end
 
-    context 'clicking use yield button' do
-      it 'should return "Sites already associated with this yield" ' do
-        visit '/yields/'
-        first(:xpath,".//a[@alt='use' and contains(@href,'/use_yield/')]").click
-        page.should have_content 'Sites already associated with this yield'
-      end
-    end
 
   end
 end

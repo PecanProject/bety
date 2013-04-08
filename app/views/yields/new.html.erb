@@ -1,102 +1,97 @@
-<% if !@citation %>
-  <h2>Please choose a citation to work with first. <%= link_to 'Citations', citations_path %></h2>
-<% elsif @citation.treatments.length == 0 %>
-  <h2> There are no treatments associated with this citation. Please create a treatment that is associated with this citation first. <%= link_to 'Treatments', treatments_path %></h2>
-<% elsif @citation.sites.length == 0 %>
-  <h2> There are no sites associated with this citation. Please create a site that is associated with this citation first. <%= link_to 'Sites', sites_path %></h2>
-<% else %>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>New Yield</h1>
+      </header>
 
-<h1>New yield <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node23.html?min" }) %></h1>
+      <%= form_for(@yield) do |f| %>
+        <%= f.error_messages %>
 
-<table>
-  <%= form_for(@yield) do |f| %>
-    <%= f.error_messages %>
-  
-    <tr>
-      <td>
-      <%= f.label :mean %><br />
-      <%= f.text_field :mean, :size => 8 %>
-      </td>
-      <td>
-      <%= f.label :statistic %><br />
-      <%= f.text_field :stat, :size => 8 %>
-      </td>
-      <td>
-      <%= f.label "stat name" %><br />
-      <%= f.select :statname, $statname_list %>
-      </td>
-      <td>
-      <%= f.label :n %><br />
-      <%= f.text_field :n, :size => 8 %>
-      </td>
-    </tr>
-    <tr>
-      <td colspan=4>
-      <%= f.label :date %><br />
-      <%= f.date_select :date, :defualt => nil, :order => [:day, :month, :year], :add_month_numbers => true, :include_blank => true, :start_year => 1800, :end_year => Time.now.year %><br />
-      or <%= f.label "julian day (1-365)" %>/year -- <em>leave empty if selecting a date above</em><br />
-      <%= text_field_tag "julianday" %> / <%= text_field_tag "julianyear" %>
-      </td>
-    </tr>
-    <tr>
-      <td colspan=4>
-      <%= f.label :site_id %><br />
-      <%= f.select :site_id, @citation.sites.collect { |p| [ p.select_default, p.id ] }, {} %>
-      </td>
-    </tr>
-    <tr>
-      <td colspan=2>
-      <%= f.label :treatment_id %><br />
-      <%= f.select :treatment_id, @citation.treatments.collect { |p| [ p.select_default, p.id ] }, {} -%>
-      </td>
-      <td colspan=2>
-      <%= f.label :method_id, "Method" %><br />
-      <%= f.select :method_id, Methods.all.collect { |p| [ p.select_default, p.id ] }, {} -%>
-      </td>
-    </tr>
-    <tr>
-      <td colspan=4>
+        <div class="row">
+          <div class="four columns alpha">
+            <%= f.label :mean %>
+            <%= f.text_field :mean, :size => 8, :class => "input-full" %>
+          </div>
+          <div class="four columns">
+            <%= f.label :statistic %>
+            <%= f.text_field :stat, :size => 8, :class => "input-full" %>
+          </div>
+          <div class="two columns">
+            <%= f.label "Statistic Name" %>
+            <%= f.select :statname, $statname_list %>
+          </div>
+          <div class="two columns">
+            <%= f.label :n %>
+            <%= f.text_field :n, :size => 8, :class => "input-full" %>
+          </div>
+          <div class="two columns omega">
+            <%= f.label :method_id, "Method" %>
+            <%= f.select :method_id, Methods.all.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="six columns alpha">
+            <%= f.label :date %>
+            <%= f.date_select :date,:defualt => nil, :order=> [:day, :month, :year], :add_month_numbers=> true, :include_blank=> true, :start_year=> 1800, :end_year=> Time.now.year %>
+          </div>
+          <div class="two columns">
+            <b>... OR ...</b>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label "julian day (1-365)/year" %>
+            <%= text_field_tag "julianday" %> / <%= text_field_tag "julianyear" %>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="four columns alpha">
+            &nbsp;
+          </div>
+          <div class="eight columns">
+            <%= render :partial => "species/species_search" %>
+          </div>
+          <div class="four columns omega">
+            &nbsp;
+          </div>
+        </div>
+            
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :cultivar_id %>
+            <%= f.select :cultivar_id, Cultivar.joins(:specie).order('species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true}, :class => "input-full" %>
+            <br />
+            <%= f.label :dateloc, "Date Level of Confidence" %>
+            <%= f.select :dateloc, options_for_select($dateloc_drop.sort,f.object.dateloc.to_s), :class => "input-full" %>
+            <br />
+            <%= f.label :access_level %>
+            <%= f.select :access_level, [["1.Restricted",1],['2.EBI',2],['3.External',3],['4.Public',4]], :selected => current_user.access_level, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :notes %>
+            <%= f.text_area :notes, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
 
-    <%= render :partial => "species/species_search" %>
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( yields_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+  	      <%= f.hidden_field :citation_id, :value => session['citation'] %>
+		      <div class="button-group pull-right">
+			      <%= f.submit 'Create', :class => "button button-primary" %>
+		      </div>
+	      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
 
-      </td>
-    </tr>
-    <tr>
-      <td colspan=4>
-        <%= f.label :cultivar_id %><br />
-        <%= f.select :cultivar_id, Cultivar.joins(:specie).order('species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true} %>
-      </td>
-    </tr>
-    <tr>
-      <td colspan=4>
-        <%= f.label :dateloc, "Date Level of Confidence" %><br />
-        <%= f.select :dateloc, options_for_select($dateloc_drop.sort,f.object.dateloc.to_s) %>
-      </td>
-    </tr>
-    <tr>
-      <td colspan=4>
-        <%= f.label :access_level %><br />
-        <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :selected => current_user.access_level %>
-      </td>
-    </tr>
-    <tr>
-      <td colspan=4>
-      <%= f.label :notes %><br />
-      <%= f.text_area :notes %>
-      </td>
-    </tr>
-    <tr>
-      <td colspan=4>
-      <%= f.hidden_field :citation_id, :value => session['citation'] %>
-      <%= f.submit 'Create' %>
-      </td>
-    </tr>
-  <% end %>
-<% end %>
-</table>
 <%= observe_field(:species_query,
                   :frequency => 1,
                   :update => 'trait_specie_id',
                   :with => 'symbol',
                   :url => { :controller => :species, :action => :species_search }) %>
-<%= link_to 'Back', yields_path %>

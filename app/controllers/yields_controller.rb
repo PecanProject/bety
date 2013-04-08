@@ -76,26 +76,29 @@ class YieldsController < ApplicationController
   # GET /yields/new
   # GET /yields/new.xml
   def new
-    if params[:id].nil?
-      @yield = Yield.new
+    if session["citation"].nil?
+      flash[:notice] = 'Choose a citation to work with ( Actions Tab > Check )'
+      redirect_to :citations
     else
-      @yield = Yield.all_limited(current_user).find(params[:id]).clone
-      @yield.specie.nil? ? @species = nil : @species = [@yield.specie]
-    end
+      @citation = Citation.find(session["citation"])
+      
+      if params[:id].nil?
+        @yield = Yield.new
+      else
+        @yield = Yield.all_limited(current_user).find(params[:id]).clone
+        @yield.specie.nil? ? @species = nil : @species = [@yield.specie]
+      end
 
-    @citation = Citation.find(session["citation"])
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @yield }
-      format.csv  { render :csv => @yield }
+      respond_to do |format|
+        format.html # new.html.erb
+        format.xml  { render :xml => @yield }
+        format.csv  { render :csv => @yield }
+      end
     end
   end
 
   # GET /yields/1/edit
   def edit
-    @citation = Citation.find(session["citation"])
-  
     @yield = Yield.all_limited(current_user).find(params[:id])
     @yield.specie.nil? ? @species = nil : @species = [@yield.specie]
   end
