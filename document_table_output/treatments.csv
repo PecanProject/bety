@@ -1,0 +1,7 @@
+id,int(11),NO,
+name,varchar(255),YES,Name of treatment\, should be easy to associate with treatment name in original study.
+definition,varchar(255),YES,Description of treatment\, e.g. levels of fertilizer applied\, etc. This information may be redundant with 'levels' information recorded in Managements table.
+created_at,datetime,YES,
+updated_at,datetime,YES,
+control,tinyint(1),YES,Boolean\, indicates if treatment is a control or observational (1) or experimental treatment (0).
+user_id,int(11),YES,

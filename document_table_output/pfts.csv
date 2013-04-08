@@ -1,0 +1,5 @@
+id,int(11),NO,
+definition,text,YES,Defines the creator and context under which the pft will be used.
+created_at,datetime,YES,
+updated_at,datetime,YES,
+name,varchar(255),YES,unique identifier used by PEcAn.

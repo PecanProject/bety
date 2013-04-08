@@ -1,0 +1,11 @@
+id,int(11),NO,
+citation_id,int(11),YES,
+date,date,YES,Date on which management was conducted.
+dateloc,decimal(4\,2),YES,Level of confidence in value given as date. See documentation for details.
+mgmttype,varchar(255),YES,Type of management
+level,decimal(16\,4),YES,Amount applied\, not always required.
+units,varchar(255),YES,units\, standardized for each management type.
+notes,text,YES,
+created_at,datetime,YES,
+updated_at,datetime,YES,
+user_id,int(11),YES,

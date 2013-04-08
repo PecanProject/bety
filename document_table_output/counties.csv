@@ -1,0 +1,7 @@
+id,int(11),NO,
+name,varchar(255),YES,
+created_at,datetime,YES,
+updated_at,datetime,YES,
+state,varchar(255),YES,
+state_fips,int(11),YES,
+county_fips,int(11),YES,
