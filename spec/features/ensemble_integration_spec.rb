@@ -43,6 +43,8 @@ feature 'Ensembles work' do
       end
       
       it 'should allow a ensemble to be edited' do
+        visit '/ensembles/'
+        first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
         fill_in 'Notes', with: 'in reducing greenhouse gas'
 
         click_button 'Update'

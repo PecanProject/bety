@@ -7,9 +7,9 @@ feature 'Species index works' do
   end
 
   context 'GET /species' do
-    it 'should have "Listing species" ' do
+    it 'should have "Listing Species" ' do
       visit '/species'
-      page.should have_content 'Listing species'
+      page.should have_content 'Listing Species'
     end
 
   end

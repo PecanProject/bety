@@ -50,8 +50,6 @@ feature 'Cultivars index works' do
 
       fill_in 'Previous', with: 'Plantesque'
       
-      print page.body
-
       click_button 'Update'
       page.should have_content 'Cultivar was successfully updated.'
     end

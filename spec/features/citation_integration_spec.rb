@@ -1,5 +1,4 @@
 require 'spec_helper'
-
 include LoginHelper
 
 feature 'Citation index works' do
@@ -7,10 +6,11 @@ feature 'Citation index works' do
     login_test_user
   end
 
-  context 'GET /citations/new' do
-    it 'should have "New citation" ' do
+  context 'GET /citations/new', :type => :feature do
+    it 'should have "New Citation" ' do
       visit '/citations/new'
-      page.should have_content 'New citation'
+      
+      page.should have_content 'New Citation'
     end
 
     it 'should allow creation of new citations' do
