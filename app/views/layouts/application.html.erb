@@ -203,10 +203,12 @@
   <% end %>
   
   <% if flash[:notice] %>
-    <div id="flash_notice">
-      <h5 class="centered no-margin"><%= flash[:notice] %></h5>
-    </div>
-    <% flash[:notice] = nil %>
+    <div class="alert alert-success fade in centered">
+      <div style="width:850px; margin:auto">
+	      <button class="close" data-dismiss="alert">×</button>
+	      <%= flash[:notice] %>
+	    </div>
+	  </div>
   <% end %>
 
   <%= yield  %>
@@ -222,8 +224,8 @@
 			  <div class="three columns alpha">
 				  <h3><strong>BETY</strong>db</h3>
 				  <ul class="unstyled">
-					  <li><a href="#">Homepage</a></li>
-					  <li><a href="#">Documentation</a></li>
+					  <li><%= link_to "Homepage", root_path %></li>
+					  <li><a href="dbdocumentation_users.pdf">Documentation</a></li>
 					  <li><a href="#">Maps &amp; Data</a></li>
 				  </ul>
 			  </div>
@@ -231,7 +233,7 @@
 				  <h3><strong>Contact</strong> Info</h3>
 				  <ul class="unstyled">
 					  <li><a href="">Report a problem</a></li>
-					  <li><a href="">Send us a message</a></li>
+					  <li><%= link_to "Send us a message", "/contacts/" %></li>
 				  </ul>
 			  </div>
 			  <div class="four columns">
