@@ -10,11 +10,16 @@
   top: -10px;  
 }
 
-
-.inline-block {
-  display: inline-table;
+.no-padding {
+  margin: 0;
 }
 
+.inline-table {
+  display: inline-table;
+}
+.inline-block {
+  display: inline-block;
+}
 
 #flash_notice {
   background-color: #99FF66;
@@ -28,7 +33,5 @@
 .no-padding {
   padding: 0;
 }
-
-
 
 

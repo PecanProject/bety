@@ -18,17 +18,15 @@ gem "seer", "0.10.0"
 gem "tzinfo", "0.3.35"
 gem "will_paginate", "3.0.4"
 
-
-
 group :development, :test do
-  gem 'rspec-rails'
-  gem 'capybara'
-  gem 'sqlite3', '1.3.3'
+  gem "rspec-rails"
+  gem "capybara"
+  gem "sqlite3", "1.3.3"
 end
 
 group :test do
   gem "rspec-rails"
-  gem 'webrat', '0.7.1'
+  gem "webrat", "0.7.1"
   gem "capybara"
   gem "database_cleaner"
 end
