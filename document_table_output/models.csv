@@ -1,0 +1,8 @@
+id,int(11),NO,
+model_name,varchar(255),YES,
+model_path,varchar(255),YES,
+revision,decimal(10\,0),YES,
+parent_id,int(11),YES,
+created_at,datetime,YES,
+updated_at,datetime,YES,
+model_type,varchar(255),YES,

@@ -1,0 +1,6 @@
+id,int(11),NO,
+notes,text,YES,
+created_at,datetime,YES,
+updated_at,datetime,YES,
+runtype,varchar(255),YES,
+workflow_id,int(11),YES,
