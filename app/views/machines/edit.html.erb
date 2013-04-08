@@ -1,16 +1,38 @@
-<h1>Editing machine</h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+	      <h1>Editing Machine</h1>
+			</header>
 
-<%= form_for(@machine) do |f| %>
-  <%= f.error_messages %>
+      <%= form_for(@machine) do |f| %>
+        <%= f.error_messages %>
 
-  <p>
-    <%= f.label :hostname %><br />
-    <%= f.text_field :hostname %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+        <div class="row">
+          <div class="sixteen columns alpha omega">
+            <%= f.label :hostname %>
+            <%= f.text_field :hostname %>
+          </div>
+        </div>
 
-<%= link_to 'Show', @machine %> |
-<%= link_to 'Back', machines_path %>
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( @machine ) do %>
+              <button class="button">Show</button>
+            <% end%>
+            <%= link_to( machines_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+					<div class="button-group pull-right">
+						<%= f.submit 'Update', :class => "button button-primary" %>
+					</div>
+				</div>
+          
+      <% end %>
+  
+    </div>
+  </div>
+</div>
+
+
