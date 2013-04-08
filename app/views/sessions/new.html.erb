@@ -8,7 +8,7 @@
 			<div class="ten columns alpha">
 				<p class="lead">The emerging biofuel industry may aid in reducing greenhouse gas emissions and decreasing dependence on foreign oil importation.</p>
 				<img class="pull-right" src="../images/map.jpg"/>
-				<p>How to develop and implement biofuel crops in an ecologically and economically sustainable way requires evaluating the growth and functionality of biofuel crops from the local scale to the regional scale. <strong class="green">BETY-DB</strong> has been developed to support research, agriculture, and policy by synthesizing available information on potential biofuel crops.</p>
+				<p>How to develop and implement biofuel crops in an ecologically and economically sustainable way requires evaluating the growth and functionality of biofuel crops from the local scale to the regional scale. <strong class="green">BETYdb</strong> has been developed to support research, agriculture, and policy by synthesizing available information on potential biofuel crops.</p>
 				
 				<% if current_user.nil? %>
 				  <div class="well">
@@ -42,20 +42,18 @@
 				
 				  <h3>Don't have an account?</h3>
 				  <p>Don't miss out on the opportunity to be a part of this project and change the managements for biofuel research. Sign up using the button below:</p>
-				  <p><%= link_to "Register for access to BETY-DB", signup_path, :class =>"button" %></p>
+				  <p><%= link_to "Register for access to BETYdb", signup_path, :class =>"button" %></p>
 				<% end %>
 
 			</div>
 			<div class="five columns omega offset-by-one">
 				<div>
-					<h3><i class="icon-eye-open"></i> Explore <em>BETYdb</em></h3>
+					<h3><i class="icon-eye-open"></i> EXPLORE <em>BETYdb</em></h3>
 					<div class="sidebar">
 						<ul class="nav nav-list sidenav">
-							<li><a href="https://www.betydb.org/maps/location_yields"><i class="icon-chevron-right"></i> Yield Forecast Maps</a></li>
-							<li><a href="https://www.betydb.org/maps/traits_from_sites" ><i class="icon-chevron-right"></i> Trait Data for Each Site</a></li>
-							<li><a href="https://www.betydb.org/maps/yields_from_sites" ><i class="icon-chevron-right"></i> Yield Data for Each Site</a></li>
-							<li><a href="https://www.betydb.org/maps/sites_by_species" ><i class="icon-chevron-right"></i> Sites by Species</a></li>
-							<li><a href="https://www.betydb.org/maps/sites_from_search" ><i class="icon-chevron-right"></i> Search for Sites</a></li>
+							<li><a href="/maps/location_yields"><i class="icon-chevron-right"></i> Model predictions</a></li>
+							<li><a href="/maps/traits_from_sites" ><i class="icon-chevron-right"></i> Trait Data for Each Site</a></li>
+							<li><a href="/maps/yields_from_sites" ><i class="icon-chevron-right"></i> Yield Data for Each Site</a></li>
 						</ul>
 					</div>
 				</div>
@@ -63,11 +61,11 @@
 					<form id="search-form">
 						<div class="control-group">
 							<h3>
-								<label class="control-label" for="appendedInputButton"><i class="icon-search"></i> Search <em>Species Data</em></label>
+								<label class="control-label" for="appendedInputButton"><i class="icon-search"></i> SEARCH <em>FOR TRAITS AND YIELDS</em></label>
 							</h3>
 							<div class="controls">
 								<div class="input-append">
-									<input id="appendedInputButton" type="text" class="" placeholder="What are you looking for?">
+									<input id="appendedInputButton" type="text" class="" placeholder="EX: Panicum Nitrogen, Miscanthus Yield">
 									<a class="button" href="#"><i class="icon-search"></i></a> </div>
 								<span class="help-inline"><small>For more options visit the <a href="" class="green">Advanced Search</a>.</small></span> </div>
 						</div>
@@ -75,7 +73,7 @@
 				</div>
 				
 				<div>
-					<h3><i class="icon-info-sign"></i> Database <em>Stats</em></h3>
+					<h3><i class="icon-info-sign"></i> DATABASE <em>STATS</em></h3>
 					<table summary="Count of Yield and Trait entries" class="table table-condensed">
 						<tr>
 							<th colspan="4">2765 Species with Trait or Yield Data</th>
