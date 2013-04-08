@@ -1,4 +1,13 @@
 /* Tables */
+
+#treatments_container #DataTables_Table_0_length {
+  width: 100%;  
+}
+
+#treatments_container .padded_sides_20px {
+  padding: 0 20px
+}
+
 .dataTables_wrapper {
 	position: relative;
 	clear: both;
