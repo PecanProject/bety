@@ -1,94 +1,82 @@
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+				<h1>Viewing Trait</h1>
+			</header>
+			
 
-<% if @trait.nil? %>
-<p>Sorry trait does not exists or you do not have access</p>
-<% else %>
-<p>
-  <b>Site:</b>
-  <%= link_to_if @trait.site, @trait.site, @trait.site %>
-</p>
+			<!-- InstanceBeginEditable name="Full Width Content" --> 
+			<dl class="dl-horizontal">
+      <dt>Site:</dt>
+      <dd><%= link_to_if @trait.site, @trait.site, @trait.site %></dd>
 
-<p>
-  <b>Traitname:</b>
-  <%= link_to_if @trait.variable, @trait.variable, @trait.variable %>
-</p>
+      <dt>Traitname:</dt>
+      <dd><%= link_to_if @trait.variable, @trait.variable, @trait.variable %></dd>
 
-<p>
-  <b>Species:</b>
-  <%= link_to_if @trait.specie, @trait.specie, @trait.specie %>
-</p>
+      <dt>Species:</dt>
+      <dd><%= link_to_if @trait.specie, @trait.specie, @trait.specie %></dd>
 
-<p>
-  <b>Citation:</b>
-  <%= link_to_if @trait.citation, @trait.citation, @trait.citation %>
-</p>
+      <dt>Citation:</dt>
+      <dd><%= link_to_if @trait.citation, @trait.citation, @trait.citation %></dd>
 
-<p>
-  <b>Cultivar:</b>
-  <%= link_to_if @trait.cultivar, @trait.cultivar, @trait.cultivar %>
-</p>
+      <dt>Cultivar:</dt>
+      <dd><%= link_to_if @trait.cultivar, @trait.cultivar, @trait.cultivar %></dd>
 
-<p>
-  <b>Treatment:</b>
-  <%= link_to_if @trait.treatment, @trait.treatment, @trait.treatment %>
-</p>
+      <dt>Treatment:</dt>
+      <dd><%= link_to_if @trait.treatment, @trait.treatment, @trait.treatment %></dd>
 
-<p>
-  <b>Method:</b>
-  <%= link_to_if @trait.ebi_method, @trait.ebi_method, @trait.ebi_method %>
-</p>
+      <dt>Method:</dt>
+      <dd><%= link_to_if @trait.ebi_method, @trait.ebi_method, @trait.ebi_method %></dd>
 
-<% if logged_in? %>
-<p>
-  <b>User:</b>
-  <%= @trait.user %>
-</p>
-<% end %>
+      <% if logged_in? %>
+      <p>
+        <dt>User:</dt>
+        <dd><%= @trait.user %></dd>
+      </p>
+      <% end %>
 
-<p>
-  <b>Date:</b>
-  <%= @trait.pretty_date %>
-</p>
+      <dt>Date:</dt>
+      <dd><%= @trait.pretty_date %></dd>
 
-<p>
-  <b>Date Level of Confidence:</b>
-  <%= $dateloc_drop.invert[@trait.dateloc.to_s] %>
-</p>
+      <dt>Date Level of Confidence:</dt>
+      <dd><%= $dateloc_drop.invert[@trait.dateloc.to_s] %></dd>
 
-<p>
-  <b>Time:</b>
-  <%= @trait.pretty_time %>
-</p>
+      <dt>Time:</dt>
+      <dd><%= @trait.pretty_time %></dd>
 
-<p>
-  <b>Time Level of Confidence:</b>
-  <%= @trait.timeloc %>
-</p>
+      <dt>Time Level of Confidence:</dt>
+      <dd><%= @trait.timeloc %></dd>
 
-<p>
-  <b>Mean:</b>
-  <%= @trait.mean %>
-</p>
+      <dt>Mean:</dt>
+      <dd><%= @trait.mean %></dd>
 
-<p>
-  <b>N:</b>
-  <%= @trait.n %>
-</p>
+      <dt>N:</dt>
+      <dd><%= @trait.n %></dd>
 
-<p>
-  <b>Stat:</b>
-  <%= @trait.stat %>
-</p>
+      <dt>Stat:</dt>
+      <dd><%= @trait.stat %></dd>
 
-<p>
-  <b>Statname:</b>
-  <%= @trait.statname %>
-</p>
+      <dt>Statname:</dt>
+      <dd><%= @trait.statname %></dd>
 
-<p>
-  <b>Notes:</b>
-  <%= @trait.notes %>
-</p>
+      <dt>Notes:</dt>
+      <dd><%= @trait.notes %></dd>
 
-<%= link_to 'Edit', edit_trait_path(@trait) %> |
-<% end %>
-<%= link_to 'Back', traits_path %>
+			</dl>
+			<div class="form-actions">
+				<div class="button-group">
+          <%= link_to( traits_path ) do %>
+					  <button class="button"><i class="icon-arrow-left"></i> Go Back</button>
+					<% end %>
+					<%= link_to( edit_trait_path(@trait) ) do %>
+    			  <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>	
+  				<% end %>
+					
+				</div>
+			</div>
+			<!-- InstanceEndEditable --> </div>
+	</div>
+	<!-- container --> 
+</div>
+
