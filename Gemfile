@@ -32,7 +32,7 @@ group :test do
 end
 
 group :production do
-  gem "rmagick", "2.13.1"
+#  gem "rmagick", "2.13.1"
   gem "passenger"
 end
 
