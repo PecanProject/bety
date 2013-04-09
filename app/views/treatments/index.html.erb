@@ -8,7 +8,7 @@
           <div id="back">
             <%= link_to "<< Sites", sites_path %>
           </div>
-        <div id="new"><%= link_to 'New Treatment', new_treatment_path %></div>
+        <div id="new"><%= link_to 'New Treatment', new_treatment_path, :class => "button button-primary"  %></div>
           <div id="forward">
             <%= link_to "Yields >>", new_yield_path %><br />
             <%= link_to "Traits >>", new_trait_path %>

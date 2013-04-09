@@ -15,6 +15,10 @@
   top: -10px;  
 }
 
+.final_paginagte_row {
+  height: 50px;
+}
+
 .no-padding {
   margin: 0;
 }

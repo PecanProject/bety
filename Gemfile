@@ -17,6 +17,7 @@ gem "ruby-graphviz", "1.0.8"
 gem "seer", "0.10.0"
 gem "tzinfo", "0.3.35"
 gem "will_paginate", "3.0.4"
+gem "bootstrap-will_paginate"
 
 group :development, :test do
   gem "rspec-rails"

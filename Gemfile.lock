@@ -31,6 +31,8 @@ GEM
       activesupport (= 3.0.18)
     activesupport (3.0.18)
     arel (2.0.10)
+    bootstrap-will_paginate (0.0.9)
+      will_paginate
     builder (2.1.2)
     capybara (2.0.2)
       mime-types (>= 1.16)
@@ -133,6 +135,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-mysql2-adapter
+  bootstrap-will_paginate
   capybara
   choice (= 0.1.6)
   comma (= 3.0.4)

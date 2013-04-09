@@ -65,20 +65,15 @@
 	  </tbody>
 	</table>
   
-	<div class="row">
+	<div class="row final_paginagte_row">
 	  <div class="span6">
-	    <div class="dataTables_info" id="DataTables_Table_0_info">Showing 1 to 10 of 32 entries</div>
+	    <div class="dataTables_info" id="DataTables_Table_0_info">
+        <%= page_entries_info @entities %>
+      </div>
 	  </div>
 	  <div class="span6">
 	    <div class="dataTables_paginate paging_bootstrap pagination alternate">
-        <ul>
-          <li class="prev disabled"><a href="#">← Previous</a></li>
-          <li class="active"><a href="#">1</a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">4</a></li>
-          <li class="next"><a href="#">Next → </a></li>
-        </ul>
+        <%= will_paginate @entities %>
       </div>
     </div>
   </div>

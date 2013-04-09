@@ -5,7 +5,8 @@ class UsersController < ApplicationController
 
   def index
     if current_user.page_access_level == 1
-      @users = User.all
+#      @users = User.all
+      @users = User.paginate(:page => params[:page], :order => 'created_at DESC')
     else
       @users = User.find(current_user.id)
     end

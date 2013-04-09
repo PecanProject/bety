@@ -1,11 +1,13 @@
 class EntitiesController < ApplicationController
+  require 'will_paginate/array' 
 
   before_filter :login_required
 
   # GET /entitys
   # GET /entitys.xml
   def index
-    @entities = Entity.all
+#    @entities = Entity.all
+    @entities = Entity.paginate(:page => params[:page], :order => 'created_at DESC')
 
     respond_to do |format|
       format.html # index.html.erb
