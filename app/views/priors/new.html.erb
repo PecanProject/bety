@@ -23,31 +23,32 @@
         </div>
 
         <div class="row">
-          <div class="eight columns alpha">
+          <div class="three columns alpha">
             <%= f.label :phylogeny %>
             <%= f.text_field :phylogeny, :class => "input-full" %>
           </div>
-          <div class="eight columns omega">
+          <div class="five columns">
             <%= f.label :distribution %>
-            <%= f.select :distn, %w(beta binom cauchy chisq exp f gamma geom hyper lnorm logis nbinom norm pois t unif weibull wilcox), :class => "input-full" %>
-            <em><%= link_to "More information about distributions", "http://cran.r-project.org/doc/manuals/R-intro.html#R-as-a-set-of-statistical-tables" %></em>
+            <%= f.select :distn, %w(beta binom cauchy chisq exp f gamma geom hyper lnorm logis nbinom norm pois t unif weibull wilcox), :class => "input-full" %><br />
+            <em><%= link_to "More information about distributions", "http://cran.r-project.org/doc/manuals/R-intro.html#R-as-a-set-of-statistical-tables", :target =>"_blank" %></em>
+          </div>
+          <div class="three columns">
+            <%= f.label :parameter_a %>
+            <%= f.text_field :parama %>
+          </div>
+          <div class="three columns">
+            <%= f.label :parameter_b %>
+            <%= f.text_field :paramb %>
+          </div>
+          <div class="two columns omega">
+            <%= f.label :n %>
+            <%= f.text_field :n %>
           </div>
         </div>
         
         <div class="row">
-          <div class="eight columns alpha">
-            <%= f.label :parameter_a %>
-            <%= f.text_field :parama, :class => "input-full" %>
-            <br />
-            <%= f.label :parameter_b %>
-            <%= f.text_field :paramb, :class => "input-full" %>
-            <br />
-            <%= f.label :n %>
-            <%= f.text_field :n, :class => "input-full" %>
-          </div>
-          
-          <div class="eight columns omega">
-              <%= f.label :notes %>
+          <div class="sixteen columns alpha">
+            <%= f.label :notes %>
             <%= f.text_area :notes, :rows => 10, :class => "input-full"  %>
           </div>
         </div>
