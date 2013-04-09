@@ -9,20 +9,16 @@
         <%= f.error_messages %>
 
         <div class="row">
-          <div class="eight columns alpha">
-            <%= f.label :previous_id %>
-            <%= f.text_field :previous_id, :class => "input-full"  %>
-            <br />
-            <%= f.label :name %>
-            <%= f.text_field :name, :class => "input-full"  %>
-          </div>
-          <div class="eight columns omega">
+          <div class="sixteen columns alpha">
             <%= render :partial => "species/species_search" %>    
           </div>
         </div>
         
         <div class="row">
           <div class="eight columns alpha">
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "input-full"  %>
+            <br />
             <%= f.label :ecotype %>
             <%= f.text_field :ecotype, :class => "input-full"  %>
           </div>
