@@ -202,23 +202,35 @@
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
   var overlayOptions = {
-    opacity: 0.4,
+    opacity: 0.6,
   }
 
   // Google coordinate plane increases in the positive number direction left to right
   map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-  // setup of vegtype map  
-  var vegtype_bounds = new google.maps.LatLngBounds(
-    new google.maps.LatLng(-31.5,-124.5), // south-west
-    new google.maps.LatLng(51.5,-32) // north-east
-//        new google.maps.LatLng(-50,-124.8), // south-west
-//        new google.maps.LatLng(80,115) // north-east  
+/////////// setup of bz_sugarcane map
+  //var bz_sugarcane_bounds = new google.maps.LatLngBounds(
+  //  new google.maps.LatLng(-45,-135), // south-west
+  //  new google.maps.LatLng(65,-25) // north-east
 
+  //);
+  //var bz_sugarcane = new google.maps.GroundOverlay( '../images/yield_maps/sugarcane.png', bz_sugarcane_bounds, overlayOptions );
+  //bz_sugarcane.setMap(map);
+
+
+/////////// setup of us_miscanthus map  
+  var us_miscanthus_bounds = new google.maps.LatLngBounds(
+    new google.maps.LatLng(-45,-135), // south-west
+    new google.maps.LatLng(65,-25) // north-east
   );
-  var vegtype = new google.maps.GroundOverlay( '../newworldmap.png', vegtype_bounds, overlayOptions );
- 
-  vegtype.setMap(map);
+  var us_miscanthus = new google.maps.GroundOverlay( '../images/yield_maps/us_miscanthus.png', us_miscanthus_bounds, overlayOptions );
+  us_miscanthus.setMap(map);
+  
+  
+
+  
+  
+  
   
   
   //overlay = [];
@@ -256,15 +268,7 @@
   });
   
   markersArray = [];
-  google.maps.event.addListener(vegtype, "click", function(event) {
 
-    var lat = event.latLng.lat();
-    var lng = event.latLng.lng();
-
-
-    populate_html_from_latlng( lat, lng );
-
-  });
 
     
     
