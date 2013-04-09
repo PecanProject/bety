@@ -2,7 +2,12 @@
   margin: 0;
 }
 
-
+#appendedInputButton {
+  width: 222px;
+}
+#front_page_search_button {
+  padding: 6px 14px 7px;
+}
 
 #header_user_name {
   float: right;
