@@ -1,34 +1,40 @@
+
+
+
 <h2>Traits for <%= @site.sitename_state_country %></h2>
 
-<%- if @trait_logged_in > 0 -%>
+<% if @trait_logged_in > 0 %>
   <em><%= @trait_logged_in %> additional traits with account</em>
-<%- end -%>
+<% end %>
 
 <br />
 
-<%- if @trait.length == 0 -%>
+<% if @trait.length == 0 %>
   <em>Sorry no public trait records for this site</em>
-<%- else -%>
+<% else %>
 
 <br />
-<table>
-  <tr>
-    <th>View Trait Data</th>
-    <th>Site</th>
-    <th>Species</th>
-    <th>Cultivar</th>
-    <th>Citation</th>
-  </tr>
+
+<table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+	  <thead>
+      <tr role="row">
+        <th role="columnheader">View Trait Data</th>
+        <th role="columnheader">Site</th>
+        <th role="columnheader">Species</th>
+        <th role="columnheader">Cultivar</th>
+        <th role="columnheader">Citation</th>
+      </tr>
+    </thead>
   <% @trait.each do |trait| %>
   <tr>
-    <td><%= link_to 'Trait Data', :action => "traits", :site => trait.site_id %></td>
-    <td><%= link_to_if trait.site, trait.site, trait.site %></td>
-    <td><%= link_to_if trait.specie, trait.specie, trait.specie %></td>
-    <td><%= link_to_if trait.cultivar, trait.cultivar, trait.cultivar %></td>
-    <td><%= link_to_if trait.citation, trait.citation, trait.citation %></td>
+    <td class="center"><%= link_to 'Trait Data', :action => "traits", :site => trait.site_id %></td>
+    <td class="center"><%= link_to_if trait.site, trait.site, trait.site %></td>
+    <td class="center"><%= link_to_if trait.specie, trait.specie, trait.specie %></td>
+    <td class="center"><%= link_to_if trait.cultivar, trait.cultivar, trait.cultivar %></td>
+    <td class="center"><%= link_to_if trait.citation, trait.citation, trait.citation %></td>
   </tr>
   <% end %>
 </table>
-<%- end -%>
+<% end %>
 
 <br />
