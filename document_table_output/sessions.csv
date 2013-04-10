@@ -1,5 +1,0 @@
-id,int(11),NO,
-session_id,varchar(255),NO,
-data,text,YES,
-created_at,datetime,YES,
-updated_at,datetime,YES,

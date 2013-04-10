@@ -1,8 +1,0 @@
-id,int(11),NO,
-specie_id,int(11),YES,
-name,varchar(255),YES,Cultivar name given by breeder or reported in citation.
-ecotype,varchar(255),YES,Does not apply for all species\, used in the case of switchgrass to differentiate lowland and upland genotypes.
-notes,text,YES,
-created_at,datetime,YES,
-updated_at,datetime,YES,
-previous_id,varchar(255),YES,
