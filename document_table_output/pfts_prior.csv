@@ -1,0 +1,4 @@
+pft_id,int(11),YES,
+prior_id,int(11),YES,
+created_at,datetime,YES,
+updated_at,datetime,YES,

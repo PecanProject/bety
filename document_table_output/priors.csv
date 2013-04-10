@@ -1,0 +1,12 @@
+id,int(11),NO,
+citation_id,int(11),YES,
+variable_id,varchar(255),YES,Links to variable for which prior is used.
+phylogeny,varchar(255),YES,Used to note the group of plants for which the prior was specified\, often the group of plants represented by the data used to specify the prior.
+distn,varchar(255),YES,Name of the probability distribution\, using R naming convention (e.g. 'beta'\,'f'\, 'gamma'\, 'lnorm'\, 'norm'\, 'pois'\, 't'\, 'unif'\, 'weibull'.
+parama,decimal(16\,4),YES,First parameter for distribution\, as specified by R.
+paramb,decimal(16\,4),YES,Second parameter for distribution\, as specified by R.
+paramc,decimal(16\,4),YES,A third parameter\, if required.
+n,int(11),YES,number of observations used to specify prior.
+notes,text,YES,
+created_at,datetime,YES,
+updated_at,datetime,YES,

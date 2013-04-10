@@ -1,0 +1,19 @@
+id,int(11),NO,
+citation_id,int(11),YES,Citation in which data originally reported.
+site_id,int(11),YES,Site at which crop was harvested.
+specie_id,int(11),YES,Species for which yield was measured.
+treatment_id,int(11),YES,Experimental treatment identification. Required\, can indicate observational study.
+cultivar_id,int(11),YES,Cultivar information\, if any.
+date,date,YES,Date on which crop was harvested.
+dateloc,decimal(4\,2),YES,Level of confidence in harvest date. See documentation.
+statname,varchar(255),YES,Name of reported statistic.
+stat,decimal(16\,4),YES,Value of reported statistic.
+mean,decimal(16\,4),YES,Mean yield reported. 
+n,int(11),YES,Number of replicates used to estimate mean and statistical summary.
+notes,text,YES,
+created_at,datetime,YES,
+updated_at,datetime,YES,
+user_id,int(11),YES,ID of user who entered data.
+checked,int(11),YES,accepts values [-1\, 0\, 1]. 0 is default\, and means that data have not been checked. 1 indicates that the data have been checked and are correct\, -1 indicates that data have been checked and found to be incorrect or suspicious\, e.g. outside of the acceptab
+access_level,int(11),YES,Level of access required to view data.
+method_id,int(11),YES,
