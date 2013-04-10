@@ -14,10 +14,10 @@ feature 'Variables index works' do
 
     it 'should allow creation of new variables' do
       visit '/variables/new'
-      fill_in 'Name', with: 'A (P)'
-      fill_in 'Description', with: 'Biomass of living parts of plant (stem+Leaves)'
-      fill_in 'Units', with:'g plant-1'
-      fill_in 'Notes', with:'If measured for part of year (e.g. growing season ET), add start date and end date as covariates.'
+      fill_in 'Name', :with => 'A (P)'
+      fill_in 'Description', :with => 'Biomass of living parts of plant (stem+Leaves)'
+      fill_in 'Units', :with => 'g plant-1'
+      fill_in 'Notes', :with => 'If measured for part of year (e.g. growing season ET), add start date and end date as covariates.'
 
       click_button 'Create'
       

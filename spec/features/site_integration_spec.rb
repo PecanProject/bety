@@ -18,15 +18,15 @@ feature 'Sites index works' do
       
       visit '/sites/new'
       
-      fill_in 'Site name', with:'tester'
-      fill_in 'Elevation (m)', with: '2900'
-      fill_in 'Mean Annual Precipitation (mm/yr)', with:'11/90'
-      fill_in 'Mean Annual Temperature', with: '90009'
-      fill_in 'City', with:'Taipei'
-      fill_in 'State', with:'hungsha'
+      fill_in 'Site name', :with =>'tester'
+      fill_in 'Elevation (m)', :with => '2900'
+      fill_in 'Mean Annual Precipitation (mm/yr)', :with => '11/90'
+      fill_in 'Mean Annual Temperature', :with => '90009'
+      fill_in 'City', :with => 'Taipei'
+      fill_in 'State', :with => 'hungsha'
       select('UNITED STATES', :from => 'Country')
-      fill_in 'site_notes', with: 'working with and manipulating those elements'
-      fill_in 'site_soilnotes', with: 'methods available, so you can restrict them to specific parts of the page'
+      fill_in 'site_notes', :with => 'working with and manipulating those elements'
+      fill_in 'site_soilnotes', :with => 'methods available, so you can restrict them to specific parts of the page'
       click_button 'Create'
       
       page.should have_content 'Site was successfully created'

@@ -20,7 +20,7 @@ feature 'Ensembles work' do
     it 'should allow creation of new ensembles' do
       visit '/ensembles/new'
       select('ENS', :from => 'Runtype')
-      fill_in 'Notes', with: 'emerging biofuel industry may aid in reducing greenhouse gas'
+      fill_in 'Notes', :with => 'emerging biofuel industry may aid in reducing greenhouse gas'
 
       click_button 'Create'
       
@@ -45,7 +45,7 @@ feature 'Ensembles work' do
       it 'should allow a ensemble to be edited' do
         visit '/ensembles/'
         first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
-        fill_in 'Notes', with: 'in reducing greenhouse gas'
+        fill_in 'Notes', :with => 'in reducing greenhouse gas'
 
         click_button 'Update'
         page.should have_content 'Ensemble was successfully updated.'

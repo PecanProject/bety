@@ -15,8 +15,8 @@ feature 'Treatment index works' do
 
     it 'should allow creation of new treatments' do
       visit '/treatments/new'
-      fill_in 'Name', with:'tester'
-      fill_in 'Definition', with: 'Light utilization anddddd'
+      fill_in 'Name', :with => 'tester'
+      fill_in 'Definition', :with => 'Light utilization anddddd'
       select('True', :from => 'Control')
 
       click_button 'Create'

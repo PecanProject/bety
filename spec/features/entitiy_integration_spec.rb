@@ -19,8 +19,8 @@ feature 'Entities index works' do
 
     it 'should allow creation of new entities' do
       visit '/entities/new'
-      fill_in 'Name', with: 'dingos'
-      fill_in 'Notes', with: 'emerging biofuel industry may aid in reducing greenhouse gas'
+      fill_in 'Name', :with => 'dingos'
+      fill_in 'Notes', :with => 'emerging biofuel industry may aid in reducing greenhouse gas'
 
       click_button 'Create'
       
@@ -48,7 +48,7 @@ feature 'Entities index works' do
         visit '/entities/'
         first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
 
-        fill_in 'Notes', with: 'in reducing greenhouse gas'
+        fill_in 'Notes', :with => 'in reducing greenhouse gas'
 
         click_button 'Update'
         page.should have_content 'Entity was successfully updated.'

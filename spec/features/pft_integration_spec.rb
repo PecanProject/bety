@@ -14,8 +14,8 @@ feature 'Pfts index works' do
 
     it 'should allow creation of new pfts' do
       visit '/pfts/new'
-      fill_in 'Name', with:'tester'
-      fill_in 'Definition', with: '2900'
+      fill_in 'Name', :with =>'tester'
+      fill_in 'Definition', :with => '2900'
       click_button 'Create'
       
       page.should have_content 'Pft was successfully created'

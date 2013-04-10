@@ -17,9 +17,9 @@ feature 'Cultivars index works' do
     it 'should return "Cultivar was successfully created" ' do
       visit '/cultivars/new'
       
-      fill_in 'Name', with: 'Dingosville'
-      fill_in 'Ecotype', with: 'Boreal'
-      fill_in 'Notes', with: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...'
+      fill_in 'Name', :with => 'Dingosville'
+      fill_in 'Ecotype', :with => 'Boreal'
+      fill_in 'Notes', :with => 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...'
       click_button 'Create'
       
       page.should have_content 'Cultivar was successfully created'
@@ -47,7 +47,7 @@ feature 'Cultivars index works' do
       visit '/cultivars/'
       first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
 
-      fill_in 'Name', with: 'Plantesque'
+      fill_in 'Name', :with => 'Plantesque'
       
       click_button 'Update'
       page.should have_content 'Cultivar was successfully updated.'
