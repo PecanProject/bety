@@ -124,7 +124,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :managements_treatments, :only => [:index, :new, :create]
   resources :pfts_priors, :only => [:index, :new, :create]
   resources :pfts_species, :only => [:index, :new, :create]
-  resources :sessions, only: [:new, :create, :destroy], :controller => 'sessions'
+  resources :sessions, :only => [:new, :create, :destroy], :controller => 'sessions'
 
 
   resources :errors, :only => [:index, :create]
