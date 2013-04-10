@@ -1,0 +1,6 @@
+treatment_id,int(11),YES,
+management_id,int(11),YES,
+mgmttype,varchar(255),YES,Type of management
+date,date,YES,Date on which management was conducted.
+level,decimal(16\,4),YES,Amount applied\, not always required.
+units,varchar(255),YES,units\, standardized for each management type.
