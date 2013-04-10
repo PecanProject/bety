@@ -1,4 +1,0 @@
-id,int(11),NO,
-hostname,varchar(255),YES,
-created_at,datetime,YES,
-updated_at,datetime,YES,

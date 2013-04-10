@@ -1,4 +1,0 @@
-yield_id,int(11),NO,
-planting,date,YES,Date on which management was conducted.
-seeding,date,YES,Date on which management was conducted.
-coppice,date,YES,Date on which management was conducted.
