@@ -1,48 +1,72 @@
-<p>
-  <b>Login:</b>
-  <%= @user.login %>
-</p>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+				<h1>Viewing User</h1>
+			</header>
+      
+			<!-- InstanceBeginEditable name="Full Width Content" --> 
+			<dl class="dl-horizontal">
+        <dt>Login</dt>
+        <dd><%= @user.login %></dd>
+        <dt>Name</dt>
+        <dd><%= @user.name %></dd>
+        <dt>Email</dt>
+        <dd><%= @user.email %></dd>
+        <dt>City</dt>
+        <dd><%= @user.city %></dd>
+        <dt>State/Province</dt>
+        <dd><%= @user.state_prov %></dd>
+        <dt>Country</dt>
+        <dd><%= @user.country %></dd>
+        <dt>Postal Code</b>
+        <dd><dd><%= @user.postal_code %></dd>
+        <dt>Area</dt>
+        <dd><dd><%= @user.area %></dd>
+        <dt>User since</dt>
+        <dd><dd><%= @user.created_at %></dd>
+			</dl>
+			<div class="form-actions">
+				<div class="button-group">
+          <%= link_to( users_path ) do %>
+					  <button class="button"><i class="icon-arrow-left"></i> Go Back</button>
+					<% end %>
+					<%= link_to( edit_user_path(@user) ) do %>
+    			  <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>	
+  				<% end %>
+					
+				</div>
+			</div>
+			<!-- InstanceEndEditable --> </div>
+	</div>
+	<!-- container --> 
+</div>
 
-<p>
-  <b>Name:</b>
-  <%= @user.name %>
-</p>
-
-<p>
-  <b>Email:</b>
-  <%= @user.email %>
-</p>
-
-<p>
-  <b>City:</b>
-  <%= @user.city %>
-</p>
-
-<p>
-  <b>State/Province:</b>
-  <%= @user.state_prov %>
-</p>
-
-<p>
-  <b>Country:</b>
-  <%= @user.country %>
-</p>
-
-<p>
-  <b>Postal Code</b>
-  <%= @user.postal_code %>
-</p>
-
-<p>
-  <b>Area:</b>
-  <%= @user.area %>
-</p>
-
-<p>
-  <b>User since:</b>
-  <%= @user.created_at %>
-</p>
 
 
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

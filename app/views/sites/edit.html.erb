@@ -1,31 +1,58 @@
-<a style="text-decoration: none" href="#" onclick="showHide('edit_citations_sites')" id="show_edit_citations_sites">[+] View Related Citations</a>
-<br/>
-<br/>
-<div id="edit_citations_sites" class="hidden notvisible">
-  <%= render 'edit_citations_sites' %>
-</div>
-<hr>
-<br/>
-<h1>Editing site <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node16.html?min" }) %></h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>Editing Site <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node16.html?min" }) %></h1>
+      </header>
 
-<%= form_for(@site) do |f| %>
-  <%= f.error_messages %>
+      <a style="text-decoration: none" href="#" onclick="showHide('edit_citations_sites')" id="show_edit_citations_sites">[+] View Related Citations</a>
+      <br/>
+      <div id="edit_citations_sites" class="hidden notvisible">
+        <%= render 'edit_citations_sites' %>
+      </div>
+      <hr>
 
-  <p>
-    <%= f.label :sitename %><br />
-    <%= f.text_field :sitename %>
-  </p>
-  <p>
-    <%= f.label :city %><br />
-    <%= f.text_field :city %>
-  </p>
-  <p>
-    <%= f.label :state %><br />
-    <%= f.text_field :state %>
-  </p>
-  <p>
-    <%= f.label :country %><br />
-    <%= f.select :country, [[ "UNITED STATES", "US" ],
+      <%= form_for(@site) do |f| %>
+        <%= f.error_messages %>
+
+
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :sitename, "Site name" %>
+            <%= f.text_field :sitename, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            &nbsp;
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="five columns alpha">
+            <%= f.label :masl, "Elevation (m)" %>
+            <%= f.text_field :masl, :class => "input-full" %>
+          </div>
+          <div class="five columns">
+            <%= f.label :map, "Mean Annual Precipitation (mm/yr)" %>
+            <%= f.text_field :map, :class => "input-full" %>
+          </div>
+          <div class="six columns omega">
+            <%= f.label :mat, "Mean Annual Temperature (°C)" %>
+            <%= f.text_field :mat, :class => "input-full" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="five columns alpha">
+            <%= f.label :city %>
+            <%= f.text_field :city, :class => "input-full" %>
+          </div>
+          <div class="five columns">
+            <%= f.label :state %>
+            <%= f.text_field :state, :class => "input-full" %>
+          </div>
+          <div class="six columns omega">
+            <%= f.label :country %>
+            <%= f.select :country, [[ "UNITED STATES", "US" ],
 [ "AFGHANISTAN", "AF" ],
 [ "ÅLAND ISLANDS", "AX" ],
 [ "ALBANIA", "AL" ],
@@ -270,72 +297,139 @@
 [ "WESTERN SAHARA", "EH" ],
 [ "YEMEN", "YE" ],
 [ "ZAMBIA", "ZM" ],
-[ "ZIMBABWE", "ZW" ] ], {:include_blank => true }  %>
-  </p>
-  <p>
-    <%= f.label :lat %> <%= link_to_prototype_window(image_tag("help.gif"), "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node17.html?min" }) %><br />
-    <%= f.text_field :lat %>
-  </p>
-  <p>
-    <%= f.label :lon %><br />
-    <%= f.text_field :lon %>
-  </p>
-  <p>
-    <%= f.label :mat, "Mean Annual Temperature (°C)" %><br />
-    <%= f.text_field :mat %>
-  </p>
-  <p>
-    <%= f.label :map, "Mean Annual Precipitation (mm/yr)" %><br />
-    <%= f.text_field :map %>
-  </p>
-  <p>
-    <%= f.label :masl, "Elevation (m)" %><br />
-    <%= f.text_field :masl %>
-  </p>
-  <p>
-    <%= f.label :soil %><br />
-    <%= f.select :soil, [ "sand","loamy sand","sandy loam","silt loam","loam","sandy clay loam","silty clay loam","clay loam","sandy clay","silty clay","clay","peat"], { :include_blank => true }  %>
-  </p>
-  <p>
-    <%= f.label :local_time %><br />
-    <%= f.text_field :local_time %>
-  </p>
-  <p>
-    <%= f.label :clay_pct, "% Clay" %><br />
-    <%= f.text_field :clay_pct %>
-  </p>
-  <p>
-    <%= f.label :sand_pct, "% Sand" %><br />
-    <%= f.text_field :sand_pct %>
-  </p>
-  <p>
-    <%= f.label :som %><br />
-    <%= f.text_field :som %>
-  </p>
-  <p>
-    <%= f.label :greenhouse %><br />
-    <%= f.select :greenhouse, [true,false], { :include_blank => true } %>
-  </p>
-  <p>
-    <%= f.label :espg %><br />
-    <%= f.text_field :espg %>
-  </p>
-  <p>
-    <%= f.label :notes %><br />
-    <%= f.text_area :notes %>
-  </p>
-  <p>
-    <%= f.label :soilnotes %><br />
-    <%= f.text_area :soilnotes %>
-  </p>
-  <p>
-    <%= f.label :user %><br />
-    <%= @site.user %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+[ "ZIMBABWE", "ZW" ] ], {:include_blank => true }, :class => "input-full" %>
+          </div>
+        </div>
 
-<%= link_to 'Show', @site %> |
-<%= link_to 'Back', sites_path %>
+
+
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :lat %> <%= link_to_prototype_window(image_tag("help.gif"), "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node17.html?min" }) %><br />
+            <%= f.text_field :lat, :class => "input-full" %><br />
+            <%= f.label :lon %>
+            <%= f.text_field :lon, :class => "input-full" %><br />
+            <%= f.label :soil %>
+            <%= f.select :soil, %w(sandloamy sandsandy loamsilt loamloamsandy clay loamsilty clay loamclay loamsandy claysilty clayclaypeat), { :include_blank => true }, :class => "input-full" %>
+            
+            <div class="two columns alpha">
+              <%= f.label :clay_pct, "% Clay" %>
+              <%= f.text_field :clay_pct, :class => "input-full" %>
+            </div>
+            <div class="two columns">
+              <%= f.label :sand_pct, "% Sand" %>
+              <%= f.text_field :sand_pct, :class => "input-full" %>
+            </div>
+            <div class="two columns">
+              <%= f.label :som, "SOM" %>
+              <%= f.text_field :som, :class => "input-full" %>
+            </div>
+            <div class="two columns omega">
+              <%= f.label :greenhouse, "Greenhouse" %>
+              <%= f.select :greenhouse, [true, false], { :include_blank => true }, :class => "input-full" %>
+            </div>
+                 
+          </div>
+          <div class="eight columns omega">
+            <div id="map_canvas" style="width: 450px; height: 280px"></div>
+            <div id="tmp"></div>
+            <div id="tmp1"></div>
+            <script type="text/javascript">
+        //<![CDATA[ 
+         
+              var geocoder;
+              var address;
+              var latlng = new google.maps.LatLng(40.44,-95.98);
+              var myOptions = {
+                zoom: 4,
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                streetViewControl: false
+              };
+
+              var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+              var geocoder = new google.maps.Geocoder();
+              var infowindow = new google.maps.InfoWindow();
+              var temp;
+              var marker;
+
+              google.maps.event.addListener(map,'click',function(event) {
+                geocoder.geocode({'latLng': event.latLng}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                  $("site_lat").value = event.latLng.lat();
+                  $("site_lon").value = event.latLng.lng();
+                  $("site_city").value = "";
+                  $("site_country").value = "";
+                  $("site_state").value = "";
+
+                    for(k=0;k<results[0].address_components.length;k++) { 
+                      var tmp = results[0].address_components[k].long_name;
+                      switch (results[0].address_components[k].types[0]) { 
+                      case "locality":
+                        $("site_city").value = tmp;
+                        break;
+                      case "administrative_area_level_1":
+                        $("site_state").value = tmp;
+                        break;
+                      case "country":
+                        $("site_country").value = results[0].address_components[k].short_name.toUpperCase();
+                        break;
+                      default:
+                      }
+                    }
+                  if(typeof(marker) != "undefined"){
+                    marker.setMap(null);
+                  }
+                  marker = new google.maps.Marker({
+                    position: event.latLng,
+                    map: map
+                  });
+
+                } else {
+                  marker.setMap(null);
+                  alert("Geocoder failed due to: " + status);
+                }
+                });
+              });
+        //]]>
+            </script>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :notes, "Notes" %>
+            <%= f.text_area :notes, :rows => 10, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :soilnotes, "Soil Notes" %>
+            <%= f.text_area :soilnotes, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :user %>
+            <%= current_user %>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( @site ) do %>
+              <button class="button">Show</button>
+            <% end%>
+            <%= link_to( sites_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+					<div class="button-group pull-right">
+						<%= f.submit 'Update', :class => "button button-primary" %>
+					</div>
+				</div>
+          
+      <% end %>
+  
+    </div>
+  </div>
+</div>

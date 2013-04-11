@@ -17,24 +17,23 @@ gem "ruby-graphviz", "1.0.8"
 gem "seer", "0.10.0"
 gem "tzinfo", "0.3.35"
 gem "will_paginate", "3.0.4"
-
-
+gem "bootstrap-will_paginate"
 
 group :development, :test do
-  gem 'rspec-rails'
-  gem 'capybara'
-  gem 'sqlite3', '1.3.3'
+  gem "rspec-rails"
+  gem "capybara"
+  gem "sqlite3", "1.3.3"
 end
 
 group :test do
   gem "rspec-rails"
-  gem 'webrat', '0.7.1'
+  gem "webrat", "0.7.1"
   gem "capybara"
   gem "database_cleaner"
 end
 
 group :production do
-  gem "rmagick", "2.13.1"
+#  gem "rmagick", "2.13.1"
   gem "passenger"
 end
 

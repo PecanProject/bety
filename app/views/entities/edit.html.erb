@@ -1,23 +1,53 @@
-<h1>Editing entity</h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+	      <h1>Editing Entity</h1>
+			</header>
+      <hr>
 
-<%= form_for(@entity) do |f| %>
-  <%= f.error_messages %>
-  <p>
-    <%= f.label :parent %><br />
-    <%= f.select :parent_id, Entity.all.collect {|p| [ p.select_default, p.id] },{:include_blank => true} %>
-  </p>
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :notes %><br />
-    <%= f.text_field :notes %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+      <%= form_for(@entity) do |f| %>
+        <%= f.error_messages %>
+        
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :parent %>
+            <%= f.select :parent_id, Entity.all.collect {|p| [ p.select_default, p.id] },{:include_blank => true}, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "input-full" %>
+          </div>
+        </div>
 
-<%= link_to 'Show', @entity %> |
-<%= link_to 'Back', entities_path %>
+        <div class="row">
+          <div class="sixteen columns alpha omega">
+            <%= f.label :notes %>
+            <%= f.text_area :notes, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( @entity ) do %>
+              <button class="button">Show</button>
+            <% end%>
+            <%= link_to( entities_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+					<div class="button-group pull-right">
+						<%= f.submit 'Update', :class => "button button-primary" %>
+					</div>
+				</div>
+
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

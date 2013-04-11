@@ -1,44 +1,69 @@
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>Editing PFT</h1>
+			</header>
 
-<a style="text-decoration: none" href="#" onclick="showHide('edit_pfts_priors')" id="show_edit_pfts_priors">[+] View Related Priors</a>
-<br/>
-<br/>
-<div id="edit_pfts_priors" class="hidden notvisible">
-  <%= render 'edit_pfts_priors' %>
+      <a style="text-decoration: none" href="#" onclick="showHide('edit_pfts_priors')" id="show_edit_pfts_priors">[+] View Related Priors</a>
+      <br/>
+      <div id="edit_pfts_priors" class="hidden notvisible">
+        <%= render 'edit_pfts_priors' %>
+      </div>
+
+      <hr />
+
+      <a style="text-decoration: none" href="#" onclick="showHide('edit2_pfts_species')" id="show_edit2_pfts_species">[+] View Related Species</a>
+      <div id="edit2_pfts_species" class="hidden notvisible">
+        <%= render 'edit2_pfts_species' %>
+      </div>
+
+      <hr />
+
+      <%= form_for(@pft) do |f| %>
+        <%= f.error_messages %>
+
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "input-full" %>
+          </div>
+          
+          <div class="eight columns omega">
+            <%= f.label :definition %>
+            <%= f.text_area :definition, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( @pft ) do %>
+              <button class="button">Show</button>
+            <% end%>
+            <%= link_to( pfts_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+					<div class="button-group pull-right">
+						<%= f.submit 'Update', :class => "button button-primary" %>
+					</div>
+				</div>
+
+      <% end %>
+  
+    </div>
+  </div>
 </div>
 
-<hr />
-<br />
-<br />
 
 
-<a style="text-decoration: none" href="#" onclick="showHide('edit2_pfts_species')" id="show_edit2_pfts_species">[+] View Related Species</a>
-<br/>
-<br/>
-<div id="edit2_pfts_species" class="hidden notvisible">
-  <%= render 'edit2_pfts_species' %>
-</div>
 
-<hr />
-<br />
-<br />
 
-<h1>Editing pft <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node29.html?min" }) %></h1>
 
-<%= form_for(@pft) do |f| %>
-  <%= f.error_messages %>
 
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :definition %><br />
-    <%= f.text_area :definition %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
 
-<%= link_to 'Show', @pft %> |
-<%= link_to 'Back', pfts_path %>
+
+
+
+
+

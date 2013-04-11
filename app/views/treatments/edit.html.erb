@@ -1,47 +1,75 @@
-<a style="text-decoration: none" href="#" onclick="showHide('edit_managements_treatments')" id="show_edit_managements_treatments">[+] View Related Managements</a>
-<br/>
-<br/>
-<div id="edit_managements_treatments" class="hidden notvisible">
-  <%= render 'edit_managements_treatments' %>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>Editing Treatment  <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node18.html?min" }) %></h1>
+      </header>
+      
+      <a style="text-decoration: none" href="#" onclick="showHide('edit_managements_treatments')" id="show_edit_managements_treatments">[+] View Related Managements</a>
+      <br/>
+      <div id="edit_managements_treatments" class="hidden notvisible">
+        <%= render 'edit_managements_treatments' %>
+      </div>
+      <hr />
+      <a style="text-decoration: none" href="#" onclick="showHide('new_management')" id="show_new_management">[+] Create New Management</a>
+      <br/>
+      <div id="new_management" class="hidden notvisible">
+        <%= render 'new_management' %>
+      </div>
+      <hr />
+
+      <%= form_for(@treatment) do |f| %>
+        <%= f.error_messages %>
+        
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "input-full"  %>
+          </div>
+
+          <div class="eight columns omega">
+            <%= f.label :definition %>
+            <%= f.text_field :definition, :class => "input-full" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="two columns alpha">
+            <%= f.label :control %>
+            <%= f.select :control, [["True",true],["False",false]], { :include_blank => true } %>
+          </div>
+          <div class="fourteen columns omega">
+            &nbsp;
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="two columns alpha">
+            <%= f.label :user %>
+            <%= current_user %>
+          </div>
+          <div class="fourteen columns omega">
+            &nbsp;
+          </div>
+        </div>
+         
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( @treatment ) do %>
+              <button class="button">Show</button>
+            <% end%>
+            <%= link_to( treatments_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+		      <div class="button-group pull-right">
+			      <%= f.submit 'Create', :class => "button button-primary" %>
+		      </div>
+	      </div>
+
+      <% end %>
+    </div>
+  </div>
 </div>
-<hr />
-<br />
-<br />
-<a style="text-decoration: none" href="#" onclick="showHide('new_management')" id="show_new_management">[+] Create New Management</a>
-<br/>
-<br/>
-<div id="new_management" class="hidden notvisible">
-  <%= render 'new_management' %>
-</div>
-<hr />
-<br />
-<br />
 
-<h1>Editing treatment  <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node18.html?min" }) %></h1>
 
-<%= form_for(@treatment) do |f| %>
-  <%= f.error_messages %>
-
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :definition %><br />
-    <%= f.text_field :definition %>
-  </p>
-  <p>
-    <%= f.label :control %><br />
-    <%= f.select :control, [["True",true],["False",false]], { :include_blank => true } %>
-  </p>
-  <p>
-    <%= f.label :user %><br />
-    <%= @treatment.user %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
-
-<%= link_to 'Show', @treatment %> |
-<%= link_to 'Back', treatments_path %>

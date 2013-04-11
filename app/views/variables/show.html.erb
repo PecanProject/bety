@@ -1,23 +1,34 @@
-<p>
-  <b>Name:</b>
-  <%= @variable.name %>
-</p>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+				<h1>Viewing Variable</h1>
+			</header>
 
-<p>
-  <b>Description:</b>
-  <%= @variable.description %>
-</p>
+			<!-- InstanceBeginEditable name="Full Width Content" --> 
+			<dl class="dl-horizontal">
+        <dt>Name:</dt>
+        <dd><%= @variable.name %></dd>
+        <dt>Description:</dt>
+        <dd><%= @variable.description %></dd>
+        <dt>Units:</dt>
+        <dd><%= @variable.units %></dd>
+        <dt>Notes:</dt>
+        <dd><%= @variable.notes %></dd>
+			</dl>
+			<div class="form-actions">
+				<div class="button-group">
+          <%= link_to( variables_path ) do %>
+					  <button class="button"><i class="icon-arrow-left"></i> Go Back</button>
+					<% end %>
+					<%= link_to( edit_variable_path(@variable) ) do %>
+    			  <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>	
+  				<% end %>
+					
+				</div>
+			</div>
+			<!-- InstanceEndEditable --> </div>
+	</div>
+	<!-- container --> 
+</div>
 
-<p>
-  <b>Units:</b>
-  <%= @variable.units %>
-</p>
-
-<p>
-  <b>Notes:</b>
-  <%= @variable.notes %>
-</p>
-
-
-<%= link_to 'Edit', edit_variable_path(@variable) %> |
-<%= link_to 'Back', variables_path %>

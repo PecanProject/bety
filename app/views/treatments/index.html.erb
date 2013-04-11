@@ -1,141 +1,29 @@
-<div id="process_container">
-  <div id="back">
-    <%= link_to "<< Sites", sites_path %>
-  </div>
-  <div id="new">
-    <%= link_to 'New Treatment', new_treatment_path%>
-  </div>
-  <div id="forward">
-    <%= link_to "Yields >>", new_yield_path %><br />
-    <%= link_to "Traits >>", new_trait_path %>
-  </div>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+				<h1>Listing Treatments</h1>
+			</header>
+      <div id="process_container">
+          <div id="back">
+            <%= link_to "<< Sites", sites_path %>
+          </div>
+        <div id="new"><%= link_to 'New Treatment', new_treatment_path, :class => "button button-primary"  %></div>
+          <div id="forward">
+            <%= link_to "Yields >>", new_yield_path %><br />
+            <%= link_to "Traits >>", new_trait_path %>
+          </div>
+      </div>
+      <br />
+      <div id="simple_search_table" class="simple_search_table_1"><%= render 'index_table' %></div>
+
+		</div> <!-- class="sixteen columns" -->
+	</div> <!-- container --> 
 </div>
-<br />
-<hr>
-<br />
-<h1>Search</h1>
-<%= form_tag( { :action => 'index'}, :method => :get ) do %>
-<table>
-  <tr>
-  <tr>
-    <td>Name or Definition:</td>
-    <td><%= text_field_tag(:treatment) %></td>
-  </tr>
-  <tr>
-    <td>Include 'unlinked'?:</td>
-    <td><%= check_box_tag(:unlinked) %></td>
-  </tr>
-  <tr>
-    <td colspan=2 ><%= submit_tag("Search") %></td>
-  </tr>
-</table>
-<% end %>
-<br />
-<h1>Treatments associated with this citation</h1>
 
-<% if !@treatments.nil? and @treatments.length > 0 %>
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Def</th>
-    <th>Control</th>
-  </tr>
 
-<% @treatments.each do |treatment| %>
 
-  <tr>
-    <td><%= treatment.name %></td>
-    <td><%= treatment.definition %></td>
-    <td><%= link_to treatment.control ? "Yes" : "No", :action => "flag_control", :id => treatment.id %></td>
-    <td><%= link_to 'Unlink', :action => "linked", :id => treatment.id %></td>
-    <td><%= link_to 'Show', treatment %></td>
-    <td><%= link_to 'Edit', edit_treatment_path(treatment) %></td>
-  </tr>
 
-    <tr>
-      <td colspan=5><br /><h1>Associated Managements</h1>
-        <%= link_to 'New Management for this treatment', new_management_path(:treatment => treatment.id) %><br />
-        <table>
-          <tr>
-            <th>Citation</th>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Level</th>
-          </tr>
-        
-        <% if treatment.managements.length > 0 
-          treatment.managements.each do |management| %>
-          <tr>
-            <td><%= link_to_if management.citation, management.citation, management.citation %></td>
-            <td><%= management.date %></td>
-            <td><%= management.mgmttype %></td>
-            <td><%= management.level %></td>
-            <td><%= link_to 'Show', management %></td>
-            <td><%= link_to 'Edit', edit_management_path(management) %></td>
-          </tr>
-        <% end 
-          end %>
-        </table>
-      </td>
-    </tr>
 
-<% end %>
-</table>
-<% else %>
-<h2>No treatments associated with this citation</h2>
-<br />
-<% end %>
 
-<h1>Treatments from all citations associated with associated sites</h1>
-
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Def</th>
-    <th>Control</th>
-  </tr>
-
-<% @other_treatments.each do |treatment| %>
-
-  <tr>
-    <td><%= treatment.name %></td>
-    <td><%= treatment.definition %></td>
-    <td><%= link_to treatment.control ? "Yes" : "No", :action => "flag_control", :id => treatment.id %></td>
-    <td><%= link_to 'Link', :action => "linked", :id => treatment.id %></td>
-    <td><%= link_to 'Show', treatment %></td>
-    <td><%= link_to 'Edit', edit_treatment_path(treatment) %></td>
-  </tr>
-
-  <% if treatment.managements.length > 0 %>
-    <tr>
-      <td colspan=5><br /><h1>Associated Managements</h1>
-        <table>
-          <tr>
-            <th>Citation</th>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Level</th>
-          </tr>
-        
-        <% treatment.managements.each do |management| %>
-          <tr>
-            <td><%= management.citation.author_year_title if !management.citation.nil? %></td>
-            <td><%= management.date %></td>
-            <td><%= management.mgmttype %></td>
-            <td><%= management.level %></td>
-            <td><%= link_to 'Show', management %></td>
-            <td><%= link_to 'Edit', edit_management_path(management) %></td>
-          </tr>
-        <% end %>
-        </table>
-      </td>
-    </tr>
-  <% end %>
-
-<% end %>
-</table>
-
-<%= will_paginate @other_treatments %>
-
-<br />
 

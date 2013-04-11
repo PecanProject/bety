@@ -1,18 +1,41 @@
-<h1>New ensemble</h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>New Ensemble</h1>
+      </header>
 
-<%= form_for(@ensemble) do |f| %>
-  <%= f.error_messages %>
-  <p>
-    <%= f.label :runtype %><br />
-    <%= f.select :runtype, Ensemble::RUNTYPETYPES, :include_blank => true %>
-  </p>
-  <p>
-    <%= f.label :notes %><br />
-    <%= f.text_area :notes %>
-  </p>
-  <p>
-    <%= f.submit 'Create' %>
-  </p>
-<% end %>
+      <%= form_for(@ensemble) do |f| %>
+        <%= f.error_messages %>
+        <div class="row">
+          <div class="four columns alpha">
+            <%= f.label :runtype %>
+            <%= f.select :runtype, Ensemble::RUNTYPETYPES, :include_blank => true, :class => "input-full"  %>
+          </div>
+          <div class="twelve columns omega">
+            <%= f.label :notes %>
+            <%= f.text_area :notes, :rows => 10, :class => "input-full"  %>
+          </div>
+        </div>
+              
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( ensembles_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+		      <div class="button-group pull-right">
+			      <%= f.submit 'Create', :class => "button button-primary" %>
+		      </div>
+	      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
 
-<%= link_to 'Back', ensembles_path %>
+
+
+
+
+
+
