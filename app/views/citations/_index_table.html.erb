@@ -81,11 +81,13 @@
   
 	<div class="row final_paginagte_row">
 	  <div class="span6">
-	    <div class="dataTables_info" id="DataTables_Table_0_info">Showing 1 to 10 of 32 entries</div>
+	    <div class="dataTables_info" id="DataTables_Table_0_info">
+	      <%= page_entries_info @citations %>
+	    </div>
 	  </div>
 	  <div class="span6">
 	    <div class="dataTables_paginate paging_bootstrap pagination alternate">
-<%= will_paginate @citations %>
+        <%= will_paginate @citations %>
       </div>
     </div>
   </div>
