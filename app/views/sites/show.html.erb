@@ -22,51 +22,50 @@
       <p><span id="site_link_<%= @site.id %>" class="popup_link">Map</span><br />
         <%#= render :partial => "site_popup", :locals => {:site => @site } %>
       </p>
-
-
-
+      
       
 			<!-- InstanceBeginEditable name="Full Width Content" --> 
 			<dl class="dl-horizontal">
 			  <dt>Site Name:</dt>
-        <dd><%= @site.sitename %></dd>
+        <dd><%= @site.sitename.nil? ? "none" : @site.sitename %></dd>
         <dt>City:</dt>
-        <dd><%= @site.city %></dt>
+        <dd><%= @site.city.nil? ? "none" : @site.city %></dt>
         <dt>State:</dt>
-        <dd><%= @site.state %></dt>
+        <dd><%= @site.state.nil? ? "none" : @site.state %></dt>
         <dt>Country:</dt>
-        <dd><%= @site.country %></dt>
+        <dd><%= @site.country.nil? ? "none" : @site.country %></dt>
         <dt>Lat:</dt>
-        <dd><%= @site.lat %></dt>
+        <dd><%= @site.lat.nil? ? "none" : @site.lat %></dt>
         <dt>Lon:</dt>
-        <dd><%= @site.lon %></dt>
+        <dd><%= @site.lon.nil? ? "none" : @site.lon %></dt>
         <dt>Mean Annual Temperature (°C)</dt>
-        <dd><%= @site.mat %></dt>
+        <dd><%= @site.mat.nil? ? "none" : @site.mat  %></dt>
         <dt>Mean Annual Precipitation (mm/yr):</dt>
-        <dd><%= @site.map %></dt>
+        <dd><%= @site.map.nil? ? "none" : @site.map  %></dt>
         <dt>Elevation (m):</dt>
-        <dd><%= @site.masl %></dt>
+        <dd><%= @site.masl.nil? ? "none" : @site.masl  %></dt>
         <dt>Soil:</dt>
-        <dd><%= @site.soil %></dt>
+        <dd><%= @site.soil.nil? ? "none" : @site.soil  %></dt>
         <dt>Local Time:</dt>
-        <dd><%= @site.local_time %></dt>
+        <dd><%= @site.local_time.nil? ? "none" : @site.local_time  %></dt>
         <dt>Espg:</dt>
-        <dd><%= @site.espg %></dt>
+        <dd><%= @site.espg.nil? ? "none" : @site.user  %></dt>
         <dt>% Clay:</dt>
-        <dd><%= @site.clay_pct %></dt>
+        <dd><%= @site.clay_pct.nil? ? "none" : @site.clay_pct  %></dt>
         <dt>% Sand:</dt>
-        <dd><%= @site.sand_pct %></dt>
+        <dd><%= @site.sand_pct.nil? ? "none" : @site.sand_pct  %></dt>
         <dt>Greenhouse:</dt>
         <dd><%= @site.greenhouse ? "True" : "False" %></dt>
         <dt>Som:</dt>
-        <dd><%= @site.som %></dt>
+        <dd><%= @site.som.nil? ? "none" : @site.som  %></dt>
         <dt>Notes:</dt>
-        <dd><%= @site.notes %></dt>
+        <dd><%= @site.notes.nil? ? "none" : @site.notes  %></dt>
         <dt>Soilnotes:</dt>
-        <dd><%= @site.soilnotes %></dt>
+        <dd><%= @site.soilnotes.nil? ? "none" : @site.soilnotes  %></dt>
         <dt>User:</dt>
-        <dd><%= @site.user %></dd>
+        <dd><%= @site.user.nil? ? "none" : @site.user %></dd>
 			</dl>
+			
 			<div class="form-actions">
 				<div class="button-group">
           <%= link_to( sites_path ) do %>
