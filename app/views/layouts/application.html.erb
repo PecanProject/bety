@@ -109,6 +109,8 @@
           <ul class="main-menu sf-menu clearfix">
             <li class="menu-home"><%= link_to "Home", root_path %></li>
             
+            
+            <% if current_user != nil %>
             <li class="menu-data"><a>Data</a>
               <ul class="sub-menu">
                 <li><%= link_to "Citations", citations_path %></li>
@@ -135,6 +137,8 @@
                 <li><%= link_to "Yields", yields_path %></li>
               </ul>
             </li>
+            <% end %>
+            
             
             <li class="menu-docs"> <a>Docs</a>
               <ul class="sub-menu">
