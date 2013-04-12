@@ -15,6 +15,11 @@
   top: -10px;  
 }
 
+#map_legend img {
+  width: 70px;
+  margin: 10px
+}
+
 .final_paginagte_row {
   height: 50px;
 }
