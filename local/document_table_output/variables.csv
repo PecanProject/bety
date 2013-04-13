@@ -1,9 +1,0 @@
-id,int(11),NO,
-description,varchar(255),YES,Description or definition of variable.
-units,varchar(255),YES,units in which data must be entered.
-notes,text,YES,
-created_at,datetime,YES,
-updated_at,datetime,YES,
-name,varchar(255),YES,variable name\, this is the name used by PEcAn and in other modeling contexts.
-max,varchar(255),YES,
-min,varchar(255),YES,
