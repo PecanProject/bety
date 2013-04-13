@@ -1,9 +1,0 @@
-id,int(11),NO,
-trait_id,int(11),YES,
-variable_id,int(11),YES,
-level,decimal(16\,4),YES,Value of covariate\, units are determined in variables table by the variable_id foreign key.
-created_at,datetime,YES,
-updated_at,datetime,YES,
-n,int(11),YES,
-statname,varchar(255),YES,
-stat,decimal(16\,4),YES,

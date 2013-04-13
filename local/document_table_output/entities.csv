@@ -1,6 +1,0 @@
-id,int(11),NO,
-parent_id,int(11),YES,
-name,varchar(255),YES,
-notes,text,YES,
-created_at,datetime,YES,
-updated_at,datetime,YES,
