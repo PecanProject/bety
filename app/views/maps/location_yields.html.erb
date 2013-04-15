@@ -6,13 +6,14 @@
 			</header>
 
       <select id="map_overlay_picker">
-        <option value="cornstover_evapotranspiration_grid">cornstover_evapotranspiration_grid</option>
-        <option value="miscanthus_yield_grid">miscanthus_yield_grid</option>
-        <option value="miscanthus_evapotranspiration_grid">miscanthus_evapotranspiration_grid</option>
-        
-        <option value="poplar_yield_grid">poplar_yield_grid</option>
-        <option value="switchgrass_evapotranspiration_grid">switchgrass_evapotranspiration_grid</option>
-        <option value="switchgrass_yield_grid">switchgrass_yield_grid</option>
+        <option value="cornstover_evapotranspiration_grid">cornstover evapotranspiration grid</option>
+        <option value="energycane_yield_grid">energycane yield grid</option>
+        <option value="miscanthus_yield_grid">miscanthus yield grid</option>
+        <option value="miscanthus_evapotranspiration_grid">miscanthus evapotranspiration grid</option>
+        <option value="poplar_yield_grid">poplar yield grid</option>
+        <option value="switchgrass_evapotranspiration_grid">switchgrass evapotranspiration grid</option>
+        <option value="switchgrass_yield_grid">switchgrass yield grid</option>
+        <option value="willow_yield_grid">willow yield grid</option>
       </select>
 
   
@@ -233,6 +234,8 @@ function initalize_google_map( overlay_type ) {
 
   var cornstover_evapotranspiration_grid = new google.maps.GroundOverlay( '../modelout/cornstover_evapotranspiration_grid.png', standard_us_bz_bounds, overlayOptions );
 
+  var energycane_yield_grid = new google.maps.GroundOverlay( '../modelout/energycane_yield_grid.png', standard_us_bz_bounds, overlayOptions );
+
   var miscanthus_evapotranspiration_grid = new google.maps.GroundOverlay( '../modelout/miscanthus_evapotranspiration_grid.png', standard_us_bz_bounds, overlayOptions );
 
   var miscanthus_yield_grid = new google.maps.GroundOverlay( '../modelout/miscanthus_yield_grid.png', standard_us_bz_bounds, overlayOptions );
@@ -242,6 +245,8 @@ function initalize_google_map( overlay_type ) {
   var switchgrass_evapotranspiration_grid = new google.maps.GroundOverlay( '../modelout/switchgrass_evapotranspiration_grid.png', standard_us_bz_bounds, overlayOptions );
   
   var switchgrass_yield_grid = new google.maps.GroundOverlay( '../modelout/switchgrass_yield_grid.png', standard_us_bz_bounds, overlayOptions );
+  
+  var willow_yield_grid = new google.maps.GroundOverlay( '../modelout/willow_yield_grid.png', standard_us_bz_bounds, overlayOptions );
   
 
   eval(overlay_type).setMap(map);
