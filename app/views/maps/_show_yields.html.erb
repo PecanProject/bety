@@ -1,10 +1,10 @@
 <h2>Yields for <%= @site.sitename_state_country %></h2>
-<%- if @yields_logged_in > 0 -%>
+<% if @yields_logged_in > 0 %>
 <em><%= @yields_logged_in %> additional traits with account</em>
-<%- end -%>
-<%- if @yields.length == 0 -%>
+<% end %>
+<% if @yields.length == 0 %>
 <em>Sorry no public yield records for this site</em>
-<%- else -%>
+<% else %>
 
 <br>
 
@@ -30,4 +30,4 @@
 </table>
 <br />
 
-<%- end -%>
+<% end %>
