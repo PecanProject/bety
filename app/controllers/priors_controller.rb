@@ -51,7 +51,7 @@ class PriorsController < ApplicationController
   # GET /priors/1.xml
   def show
     @prior = Prior.find(params[:id])
-
+    @purl='/priors/${id}.png'
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @prior }
