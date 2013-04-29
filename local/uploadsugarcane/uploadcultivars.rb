@@ -1,7 +1,15 @@
 require 'csv'
 require 'mysql'
 begin
-  con = Mysql.new 'localhost','root','password','bety' # connect to database using the user:root password:password db: test
+  puts "Please type the hosting service of the database: Default is localhost"
+  host=gets.chomp
+  puts "type the username to connect to your database\n"
+  username=gets.chomp
+  puts "please type the password"
+  password=gets.chomp
+  puts "please type the name of the database"
+  database=gets.chomp
+  con = Mysql.new("#{host}","#{username}","#{password}","#{database}")
 	linecounter=0;
 	#maketbquery= con.query 'CREATE TABLE tempcultivar(name VARCHAR(25),id INT(11))'
 	CSV.foreach('sugarcanecultivars.csv') do |row| 

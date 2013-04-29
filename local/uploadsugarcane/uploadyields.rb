@@ -2,7 +2,15 @@ require 'csv'
 require 'mysql'
 require 'time'
 begin
-  con = Mysql.new 'localhost','root','password','bety' # connect to database using the user:root password:password db: test
+  puts "Please type the hosting service of the database: Default is localhost"
+  host=gets.chomp
+  puts "type the username to connect to your database\n"
+  username=gets.chomp
+  puts "please type the password"
+  password=gets.chomp
+  puts "please type the name of the database"
+  database=gets.chomp
+  con = Mysql.new("#{host}","#{username}","#{password}","#{database}")
 	linecounter=0;
 	nosites=Array.new
 	nositescounter=0;
@@ -124,7 +132,8 @@ begin
 end
 puts "the following entries have no site\n" 
 puts nosites
-
+con.query("DROP TABLE temp")
+con.query("DROP TABLE tempcultivar")
   
 
 rescue Mysql::Error => e
