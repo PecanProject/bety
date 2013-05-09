@@ -6,7 +6,11 @@ BETYdb runs on a Red Hat Enterprise Linux version 5.8 Server. To simulate this e
 
 ### Boot from CD and Install 
 
-* Follow instructions here: http://www.if-not-true-then-false.com/2010/centos-netinstall-network-installation/
+* Following instructions here: http://www.if-not-true-then-false.com/2010/centos-netinstall-network-installation/
+* Download this iso: http://vault.centos.org/5.8/isos/x86_64/CentOS-5.8-x86_64-netinstall.iso
+ * it is the "netinstall" version, small enough to fit on a CD, but requires internet to install
+ * burn to CD
+ * boot from CD
 * ftp server: `vault.centos.org`
 * directory: `/centos/5.8/os/x86_64`
 
@@ -37,4 +41,3 @@ sudo rpm -Uvh epel-release-5*.rpm
 
 ... move to PEcAn wiki page for build environment https://github.com/PecanProject/pecan/wiki/Development-Environment-Setup-and-VM-Creation#install-build-environment
  
-
