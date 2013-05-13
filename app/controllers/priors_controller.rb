@@ -51,13 +51,32 @@ class PriorsController < ApplicationController
   # GET /priors/1.xml
   def show
     @prior = Prior.find(params[:id])
-    @purl='/priors/${id}.png'
+    @id = params[:id]
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @prior }
       format.csv  { render :csv => @prior }
       format.json  { render :json => @prior }
     end
+  end
+
+  # GET /priors/preview/
+  def preview
+    id = params[:id]
+    @prior = Prior.find(id)
+    aparam=@prior.parama
+    bparam = @prior.paramb
+    distname = @prior.distn
+    imgfile = "public/images/prev/#{id}.png"
+    `echo #{@prior.updated_at} >> log.txt`
+    updatetime = @prior.updated_at
+    if updatetime.nil?
+      updatetime = Time.at(0)
+    end
+    if !File.exist?(imgfile) or File.atime(imgfile)<updatetime
+    `R --vanilla --args #{id} #{distname} #{aparam} #{bparam}<script/previewhelp.R`
+    end
+    send_file(imgfile, :type =>'image/png', :disposition => 'inline')
   end
 
   # GET /priors/new
