@@ -1,6 +1,6 @@
 Instructions to use the upload sugarcane files
 1. First install the following gems necessary to run the programs
-	-mysql, mysql2, csv, 
+	-mysql, mysql2
 	ex:
 	gem install mysql 
 2. Then open up uploadsites.rb
