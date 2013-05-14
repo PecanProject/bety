@@ -69,10 +69,9 @@ class PriorsController < ApplicationController
     distname = @prior.distn
     imgfile = "public/images/prev/#{id}.png"
     updatetime = @prior.updated_at
-    `echo #{updatetime} >> log.txt`
 
     if updatetime.nil?
-      updatetime = Time.at(0)
+      updatetime = Time.now()
     end
     if !File.exist?(imgfile) or File.atime(imgfile)<updatetime
     `R --vanilla --args #{id} #{distname} #{aparam} #{bparam}<script/previewhelp.R`
