@@ -64,7 +64,7 @@ class PriorsController < ApplicationController
   def preview
     id = params[:id]
     @prior = Prior.find(id)
-    aparam=@prior.parama
+    aparam = @prior.parama
     bparam = @prior.paramb
     distname = @prior.distn
     n = @prior.n
@@ -75,7 +75,7 @@ class PriorsController < ApplicationController
       updatetime = Time.at(0)
     end
 
-    if !File.exist?(imgfile) or File.atime(imgfile)<updatetime
+    if !File.exist?( imgfile ) or File.atime(imgfile) < updatetime
       `R --vanilla --args #{id} #{distname} #{aparam} #{bparam} #{n} <script/previewhelp.R`
     end
     send_file(imgfile, :type =>'image/png', :disposition => 'inline')
