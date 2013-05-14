@@ -111,7 +111,12 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :variables
   resources :species
   resources :cultivars
-  resources :priors
+  resources :priors do
+    member do
+      get 'preview'
+    end
+  end
+
   resources :yields
   resources :traits do
     collection do
