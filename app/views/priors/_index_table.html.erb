@@ -13,7 +13,7 @@
     <td><%= link_to_if prior.citation, prior.citation, prior.citation %></td>
     <td><%= link_to_if prior.variable, prior.variable, prior.variable %></td>
     <td><%= prior.phylogeny %></td>
-    <td> <img src=priors/preview/<%=prior.id%> width=1000>    </td>
+    <td> <a href=priors/preview/<%=prior.id%> ><img src=priors/preview/<%=prior.id%> width=100> </a></td>
     <td><%= prior.n %></td>
     <td><%= prior.notes %></td>
     <td><%= link_to 'Show', prior %></td>
