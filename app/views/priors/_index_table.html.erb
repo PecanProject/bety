@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- InstanceBeginEditable name="Full Width Content" -->
 <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
   <div class="row">
@@ -34,10 +35,7 @@
 <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px;"><%= sortable "citations.author", "Citation" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "variables.name", "Variable" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "priors.phylogeny", "Phylogeny" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "priors.distn", "Dist." %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 25px"><%= sortable "priors.parama", "Param A" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "priors.paramb", "Param B" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 20px"><%= sortable "priors.n", "N" %></th>
+<th class="center" role="columnheader" style="width:500px"> Distribution </th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "priors.notes", "Notes" %></th>
 <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 110px">Actions</th>
       </tr>
@@ -49,10 +47,7 @@
           <td class="center"><%= link_to_if prior.citation, prior.citation, prior.citation %></td>
           <td class="center"><%= link_to_if prior.variable, prior.variable, prior.variable %></td>
           <td class="center"><%= prior.phylogeny %></td>
-          <td class="center"><%= prior.distn %></td>
-          <td class="center"><%= prior.parama %></td>
-          <td class="center"><%= prior.paramb %></td>
-          <td class="center"><%= prior.n %></td>
+          <td class="center"><img src=priors/preview/<%=prior.id%> width=1000></td>
           <td class="center"><%= prior.notes %></td>
           <td class="center">
 					  <!-- SHOW -->
@@ -94,8 +89,6 @@
     </div>
   </div>
 </div>
-
-
 
 
 
