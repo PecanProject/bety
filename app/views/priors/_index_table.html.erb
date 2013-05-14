@@ -3,9 +3,7 @@
     <th><%= sortable "citations.author", "Citation" -%></th>
     <th><%= sortable "variables.name", "Variable" -%></th>
     <th><%= sortable "priors.phylogeny", "Phylogeny" -%></th>
-    <th><%= sortable "priors.distn", "Distribution" -%></th>
-    <th><%= sortable "priors.parama", "Parameter a" -%></th>
-    <th><%= sortable "priors.paramb", "Parameter b" -%></th>
+    <th><%=   "Distribution" -%></th>
     <th><%= sortable "priors.n", "N" -%></th>
     <th><%= sortable "priors.notes", "Notes" -%></th>
   </tr>
@@ -15,9 +13,7 @@
     <td><%= link_to_if prior.citation, prior.citation, prior.citation %></td>
     <td><%= link_to_if prior.variable, prior.variable, prior.variable %></td>
     <td><%= prior.phylogeny %></td>
-    <td><%= prior.distn %></td>
-    <td><%= prior.parama %></td>
-    <td><%= prior.paramb %></td>
+    <td> <img src=priors/preview/<%=prior.id%> width=1000>    </td>
     <td><%= prior.n %></td>
     <td><%= prior.notes %></td>
     <td><%= link_to 'Show', prior %></td>
