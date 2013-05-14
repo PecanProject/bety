@@ -67,14 +67,16 @@ class PriorsController < ApplicationController
     aparam=@prior.parama
     bparam = @prior.paramb
     distname = @prior.distn
+    n = @prior.n
     imgfile = "public/images/prev/#{id}.png"
     updatetime = @prior.updated_at
 
     if updatetime.nil?
-      updatetime = Time.now()
+      updatetime = Time.at(0)
     end
+
     if !File.exist?(imgfile) or File.atime(imgfile)<updatetime
-    `R --vanilla --args #{id} #{distname} #{aparam} #{bparam}<script/previewhelp.R`
+      `R --vanilla --args #{id} #{distname} #{aparam} #{bparam} #{n} <script/previewhelp.R`
     end
     send_file(imgfile, :type =>'image/png', :disposition => 'inline')
   end

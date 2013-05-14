@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <!-- InstanceBeginEditable name="Full Width Content" -->
 <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
   <div class="row">
@@ -96,4 +97,30 @@
 
 
 
+=======
+<table class="pretty">
+  <tr>
+    <th ><%= sortable "citations.author", "Citation" -%></th>
+    <th><%= sortable "variables.name", "Variable" -%></th>
+    <th><%= sortable "priors.phylogeny", "Phylogeny" -%></th>
+    <th width=220><%=   "Distribution" -%></th>
+    <th><%= sortable "priors.notes", "Notes" -%></th>
+  </tr>
+
+<% @priors.each do |prior| %>
+  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and prior.id == @search.to_i%>>
+    <td><%= link_to_if prior.citation, prior.citation, prior.citation %></td>
+    <td><%= link_to_if prior.variable, prior.variable, prior.variable %></td>
+    <td><%= prior.phylogeny %></td>
+    <td> <br><a href=priors/preview/<%=prior.id%> ><img src=priors/preview/<%=prior.id%> > </a></td>
+    <td><%= prior.notes %></td>
+    <td><%= link_to 'Show', prior %></td>
+    <td><%= link_to 'Edit', edit_prior_path(prior) %></td>
+    <td><%= link_to 'Destroy', prior, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @priors %>
+>>>>>>> Prior reprettification
 
