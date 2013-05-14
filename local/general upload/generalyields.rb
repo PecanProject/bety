@@ -128,6 +128,10 @@ begin
         linecounter+=1
       end
     end
+    puts "the following entries have no site\n" 
+    puts nosites
+    con.query("DROP TABLE temp")
+    con.query("DROP TABLE tempcultivar")
   rescue Mysql::Error => e
           puts e.errno
           puts e.error
