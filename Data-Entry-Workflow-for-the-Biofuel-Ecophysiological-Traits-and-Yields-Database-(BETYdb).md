@@ -18,7 +18,7 @@ Mendeley provides a central location of the collection, annotation, and tracking
     * Sticky notes for comments in the text
     * Notes field for text notes in the reference documentation
 * Read/ unread & favorites:
-Papers can be marked as **read** or **unread**, and may be **stared.**
+Papers can be marked as **read** or **unread**, and may be **starred.**
 * Groups: see [Section 2.1](#Section_2.1)
 * Tagging
 
