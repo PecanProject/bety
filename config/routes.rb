@@ -122,8 +122,8 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :citations_sites, :only => [:index, :new, :create]
   resources :citations_treatments, :only => [:index, :new, :create]
   resources :managements_treatments, :only => [:index, :new, :create]
-  resources :pfts_priors, :only => [:index, :new, :create]
-  resources :pfts_species, :only => [:index, :new, :create]
+  resources :pfts_priors, :only => [:index, :new, :create] #check this part out because it may be why this is messed up
+  resources :pfts_species, :only => [:index, :new, :create] #check this part out because it may be whats messed up
 
   resources :errors, :only => [:index, :create]
   resources :users
