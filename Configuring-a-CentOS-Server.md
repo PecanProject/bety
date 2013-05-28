@@ -40,4 +40,66 @@ sudo rpm -Uvh epel-release-5*.rpm
 ```
 
 ... move to PEcAn wiki page for build environment https://github.com/PecanProject/pecan/wiki/Development-Environment-Setup-and-VM-Creation#install-build-environment
- 
+
+###Site data installation
+
+```
+cd /usr/local/ebi
+
+rm -rf sites
+curl -o sites.tgz http://isda.ncsa.illinois.edu/~kooper/EBI/sites.tgz
+tar zxf sites.tgz
+sed -i -e "s#/home/kooper/projects/EBI#${PWD}#" sites/*/ED_MET_DRIVER_HEADER
+rm sites.tgz
+
+rm -rf inputs
+wget http://isda.ncsa.illinois.edu/~kooper/EBI/inputs.tgz
+tar zxf inputs.tgz
+rm inputs.tgz
+```
+
+###Database Creation
+
+```
+#sets up the user for the bety database
+mysql -u root -p -e "grant all on bety.* to bety@localhost identified by 'bety';"
+wget -O /usr/local/ebi/updatedb.sh http://isda.ncsa.illinois.edu/~kooper/EBI/updatedb.sh
+chmod 755 /usr/local/ebi/updatedb.sh
+```
+
+Open up updatedb.sh and remove the two lines
+
+```
+#change to home
+cd
+```
+
+If these are left in, the script will attempt to put the site data in ~/sites instead of /usr/local/ebi/sites.
+
+```
+#fetch and updates the bety database
+./updatedb.sh
+```
+
+###Ruby installation
+The version of ruby available through yum is too low, so we have to install from source:
+```
+wget ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p330.tar.gz
+tar -xzf ruby-1.8.7-p330.tar.gz
+cd ruby-1.8.7-p330
+./configure
+make 
+make install
+#make install didn't take, also broke gem, etc. Trying RVM
+```
+
+Up next install required ruby-related packages.
+```
+yum install rubygems
+```
+Then all the ruby gems bety needs.
+```
+cd bety
+gem install bundler
+bundle install
+```
