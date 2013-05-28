@@ -1,143 +1,103 @@
-require 'csv'
-require 'mysql'
+require './utilities.rb'
+
+# MAIN PROGRAM
+
 begin
-  
-  puts "Please type the hosting service of the database: Default is localhost"
-  host=gets.chomp
-  puts "type the username to connect to your database\n"
-  username=gets.chomp
-  puts "please type the password"
-  password=gets.chomp
-  puts "please type the name of the database"
-  database=gets.chomp
-  con = Mysql.new("#{host}","#{username}","#{password}","#{database}")# I can't get the linking to work for somereason with variables
-  linecounter=0;
-	#mtempquery= "CREATE TABLE temp(name VARCHAR(25), id INT(11))"
-	#con.query(mtempquery)     creating a temporary table to store the ids. 
-	CSV.foreach('sugarcanesites.csv') do |row| 
-		  if linecounter!=0 #row 1 is the list of column heads
-		    id=row[0]; 
-		    if (id==nil)
-		      id=nil
-		    end
-  		  usgsmuid=row[1] #not in database fields
-  		  if (usgsmuid==nil)
-		      usgsmuid=nil
-		    end
-  		  city=row[2]
-  		  if (city==nil)
-		      city=nil
-		    end
-  		  state=row[3]
-  		  if (state==nil)
-		      state=nil
-		    end
-  		  country=row[4]
-  		  if (country==nil)
-		      country=nil
-		    end
-  		  lat=row[5]
-  		  if (lat==nil)
-		      lat=nil
-		    end
-  		  lon=row[6]
-  		  if (lon==nil)
-		      lon=nil
-		    end
-  		  gdd=row[7] #not in database fields
-  		  if (gdd==nil)
-		      gdd=nil
-		    end
-  		  firstkillingfrost=row[8]
-  		  if (firstkillingfrost==nil)
-		      firstkillingfrost=nil
-		    end
-  		  mat=row[9]
-  		  if (mat==nil)
-  		    mat=0 # numerical check default null
-  		  end
-  		  map=row[10]
-  		  if (map==nil)
-		      map=0 #numerical check default null
-		    end
-  		  masl=row[11]
-  		  if (masl==nil)
-		      masl="NULL"
-		    end
-  		  soil=row[12]
-  		  if (soil==nil)
-		      soil="NULL"
-		    end
-  		  zrt=row[13] #not in database fields
-  		    if (zrt==nil)
-  		      zrt=nil
-  		    end
-  		  zh2o=row[14]
-  		    if (zh2o==nil)
-  		      zh2o=nil
-  		    end
-  		  som=row[15]
-  		    if (som==nil)
-  		      som=0 # numerical check default null
-  		    end
-  		  notes=row[16]
-  		    if (notes==nil)
-  		      notes="NULL"
-  		    end
-  		  soilnotes=row[17]
-  		  if (soilnotes==nil)
-  		    soilnotes="NULL"
-  		  end
-  		  created_at=row[18]
-  		    if (created_at==nil)
-  		      created_at="NULL"#date format check default
-  		    end
-  		  updated_at=row[19]
-  		  if (updated_at==nil)
-  		    updated_at="NULL" #date format check default
-  		  end
-  		  sitename=row[20]
-  		    if (sitename==nil)
-  		      sitename=nil
-  		    end
-  		  greenhouse=row[21]
-  		    if (greenhouse==nil)
-  		      greenhouse=0
-  		    end
-  		#fields of interest for database entering
-  		#city  state country  lat  lon   mat   map   masi   soil 
-  		#som  notes  soilnotes  created_at 
-  		#updated_at  sitename   greenhouse   user_id   
-  		#local_time  sand_pct   clay_pct     espg
-      
-      query="INSERT INTO sites(city, state, country, lat, lon, mat, map, masl, soil, som, notes, soilnotes,
-      created_at, updated_at, sitename, greenhouse)
-      VALUES ('#{city}', '#{state}', '#{country}', '#{lat}', '#{lon}'
-      , '#{mat}', '#{map}', #{masl}, '#{soil}',#{som}, #{notes}, #{soilnotes}, #{created_at}, #{updated_at}, 
-      '#{sitename}', '#{greenhouse}')"
-      puts "linecounter=#{linecounter}  city = #{city} state= #{state} country= #{country} lat=#{lat}\n"
-      puts "lon= #{lon} mat = #{mat} map = #{map} masl= #{masl} \nsoil=#{soil}\n"
-      puts "som=#{som} notes=#{notes} soilnotes= #{soilnotes}\n"
-      puts "created_at =#{created_at} updated_at=#{updated_at} sitename=#{sitename} greenhouse=#{greenhouse}"
-      con.query(query);
-      idquery="SELECT id FROM sites where lon=#{lon} AND lat=#{lat} AND sitename='#{sitename}' AND state='#{state}'"
-      idresult=con.query(idquery);
-      number=0;
-      idresult.each_hash do |site|
-        number=site['id']
-      end
-        
-      tempquery="INSERT INTO temp(name,id) VALUES('#{id}',#{number})"   # add stuff to temporary database.
-      con.query(tempquery)
-    end
-    linecounter=linecounter+1;
-  end
 
-  rescue Mysql::Error => e
-      puts e.errno
-      puts e.error
+  # First get open the csv file and check the header:
 
-  ensure
-      con.close if con
+  csv = CSV.open(get_input_file)
+
+  # Check that the header row is what we expect
+  EXPECTED_HEADER = %w(id usgsmuid city state country lat lon gdd
+                   firstkillingfrost mat map masl soil zrt zh2o som notes
+                   soilnotes created_at updated_at sitename greenhouse)
+  header = csv.readline
+
+  check_csv_header(header, EXPECTED_HEADER)
+
+
+  # Now open a connection to the database:
+
+  con = get_connection_interactively
+
+
+  # Create a temporary table to keep track of the mapping between site
+  # ids as listed in the csv file and the id numbers generated upon
+  # inserting a site into the sites table
+  create_temp_table con
+
+  INSERT_STRING = <<-INSERTION
+    INSERT INTO sites(city, state, country, lat, lon, mat, map, masl, soil, som, notes, soilnotes,
+                  created_at, updated_at, sitename, greenhouse)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE(?, NOW()), COALESCE(?, NOW()), ?, ?)
+  INSERTION
+  insert_statement = con.prepare(INSERT_STRING)
+
+  # The query to get the generated id of site just inserted.  We assume
+  # (lon, lat, sitename) form a natural key.  In particular, we assume
+  # each is non-null.
+  ID_QUERY_STRING = <<-SELECTION
+    SELECT id FROM sites 
+      WHERE lon = ? AND lat = ? AND sitename = ?
+  SELECTION
+
+  id_query = con.prepare(ID_QUERY_STRING)
+
+
+
+
+  # Finally, iterate through the rows of the csv file and insert the
+  # data into the sites table
+  csv.each do |row| 
+
+    # assign row data to local varibles
+    (id, usgsmuid, city, state, country, lat, lon,
+     gdd, firstkillingfrost, mat, map, masl, soil, zrt, zh2o, som,
+     notes, soilnotes, created_at, updated_at, sitename, greenhouse) = row
+
+
+    # Display to the user what data is being inserted
+    puts "city = #{city}"
+    puts "state = #{state}"
+    puts "country = #{country}"
+    puts "lat = #{lat}"
+    puts "lon = #{lon}"
+    puts "mat = #{mat}"
+    puts "map = #{map}"
+    puts "masl = #{masl}"
+    puts "soil = #{soil}"
+    puts "som = #{som}"
+    puts "notes = #{notes}"
+    puts "soilnotes = #{soilnotes}"
+    puts "created_at = #{created_at}"
+    puts "updated_at = #{updated_at}"
+    puts "sitename = #{sitename}"
+    puts "greenhouse = #{greenhouse}"
+
+    insert_statement.execute(city, state, country, lat, lon, mat,
+                             map, masl, soil, som, notes,
+                             soilnotes, created_at, updated_at,
+                             sitename, greenhouse)
+
+    # Now get the automatically-generated id number
+    id_query.execute(lon, lat, sitename)
+    id_number = (id_query.fetch)[0]
+
+    # Record the named-id --> id_number correspondence in the "temp" table
+    tempquery="INSERT INTO temp(name, id) VALUES('#{id}', #{id_number})"
+    con.query(tempquery)
+
+  end # CSV.foreach
+
+
+rescue Mysql::Error => e
+  puts e.errno
+  puts e.error
+
+ensure
+  con.close if con
 end
-			
+
+
+
