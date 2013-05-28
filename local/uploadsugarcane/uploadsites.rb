@@ -6,12 +6,12 @@ begin
 
   # First get open the csv file and check the header:
 
-  csv = CSV.open(get_input_file)
+  csv = CSV.open(get_input_file("sugarcanesites.csv"))
 
   # Check that the header row is what we expect
   EXPECTED_HEADER = %w(id usgsmuid city state country lat lon gdd
-                   firstkillingfrost mat map masl soil zrt zh2o som notes
-                   soilnotes created_at updated_at sitename greenhouse)
+                       firstkillingfrost mat map masl soil zrt zh2o som notes
+                       soilnotes created_at updated_at sitename greenhouse)
   header = csv.readline
 
   check_csv_header(header, EXPECTED_HEADER)
@@ -21,16 +21,17 @@ begin
 
   con = get_connection_interactively
 
-
   # Create a temporary table to keep track of the mapping between site
   # ids as listed in the csv file and the id numbers generated upon
   # inserting a site into the sites table
-  create_temp_table con
+  create_temp_table(con, "temp_site_ids")
 
   INSERT_STRING = <<-INSERTION
-    INSERT INTO sites(city, state, country, lat, lon, mat, map, masl, soil, som, notes, soilnotes,
-                  created_at, updated_at, sitename, greenhouse)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE(?, NOW()), COALESCE(?, NOW()), ?, ?)
+    INSERT INTO sites(city, state, country, lat, lon, mat, map, masl, soil,
+                      som, notes, soilnotes, created_at, updated_at, sitename,
+                      greenhouse)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                COALESCE(?, NOW()), COALESCE(?, NOW()), ?, ?)
   INSERTION
   insert_statement = con.prepare(INSERT_STRING)
 
@@ -84,11 +85,11 @@ begin
     id_query.execute(lon, lat, sitename)
     id_number = (id_query.fetch)[0]
 
-    # Record the named-id --> id_number correspondence in the "temp" table
-    tempquery="INSERT INTO temp(name, id) VALUES('#{id}', #{id_number})"
+    # Record the named-id --> id_number correspondence in the "temp_site_ids" table
+    tempquery="INSERT INTO temp_site_ids(name, id) VALUES('#{id}', #{id_number})"
     con.query(tempquery)
 
-  end # CSV.foreach
+  end # csv.each
 
 
 rescue Mysql::Error => e
@@ -98,6 +99,3 @@ rescue Mysql::Error => e
 ensure
   con.close if con
 end
-
-
-

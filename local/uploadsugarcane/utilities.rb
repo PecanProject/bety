@@ -28,22 +28,22 @@ def get_connection_interactively
   con
 end
 
-def get_input_file
-  filename = prompt("input file name", "sugarcanesites.csv")
+def get_input_file(default)
+  filename = prompt("input file name", default)
 end
 
 
-# Create a temporary table to store the a mapping from the CSV files
+# Create a temporary table to store the a mapping from the CSV file's
 # id string to the sites table insert id numbers
-def create_temp_table(connection)
+def create_temp_table(connection, tablename)
 
-  mtempquery= "CREATE TABLE temp(name VARCHAR(25), id INT(11))"
+  mtempquery= "CREATE TABLE #{tablename}(name VARCHAR(25), id INT(11))"
 
   begin
     result = connection.query(mtempquery)
   rescue Mysql::Error => e
     puts e.class
-    puts "A table named 'temp' already exists.  You must delete this table manually before running this script."
+    puts "A table named '#{tablename}' already exists.  You must delete this table manually before running this script."
     exit
   end
 

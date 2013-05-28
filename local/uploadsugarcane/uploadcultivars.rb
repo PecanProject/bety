@@ -1,76 +1,91 @@
-require 'csv'
-require 'mysql'
-begin
-  puts "Please type the hosting service of the database: Default is localhost"
-  host=gets.chomp
-  puts "type the username to connect to your database\n"
-  username=gets.chomp
-  puts "please type the password"
-  password=gets.chomp
-  puts "please type the name of the database"
-  database=gets.chomp
-  con = Mysql.new("#{host}","#{username}","#{password}","#{database}")
-	linecounter=0;
-	#maketbquery= con.query 'CREATE TABLE tempcultivar(name VARCHAR(25),id INT(11))'
-	CSV.foreach('sugarcanecultivars.csv') do |row| 
-		  if linecounter!=0 #row 1 is the list of column heads
-		    id = row[0];
-		    if (id==nil)
-		      id="NULL"
-		    end
-		    species_id=row[1];
-		    if (species_id==nil)
-		      species_id="NULL"
-		    end
-		    name=row[2];
-		    if (name==nil)
-		      name="NULL"
-	      else
-	        name=name.tr('-','')
-	      end
-		    ecotype=row[3]
-		    if (ecotype==nil)
-		      ecotype="NULL"
-		    end
-		    notes=row[4]
-		    if (notes==nil)
-		      notes="NULL"
-		    end
-		    created_at=row[5]
-		    if (created_at==nil)
-		      created_at="NULL"
-		    end
-		    updated_at=row[6]
-		    if (updated_at==nil)
-		      updated_at="NULL"
-		    end
-		    previous_id=row[7]
-		    if (previous_id==nil)
-		      previous_id="NULL"
-		    end
-		    query = "INSERT INTO cultivars(specie_id, name, ecotype, notes, created_at, updated_at, previous_id)
-		    VALUES(#{species_id}, '#{name}' , #{ecotype}, #{notes}, #{created_at}, #{updated_at}, #{previous_id})"
-		  
-		    puts "id=#{id} specie_id= #{species_id} name= #{name} ecotype=#{ecotype}\n"
-		    puts "notes=#{notes} created_at= #{created_at} updated_at= #{updated_at} previous_id=#{previous_id}\n"
-		    con.query(query)
-		    idquery="SELECT id FROM cultivars WHERE specie_id='#{species_id}' AND name='#{name}'"
-		    idresult=con.query(idquery);
-        number=0;
-        idresult.each_hash do |site|
-          number=site['id']
-        end 
-        puts "number=#{number} name=#{name}\n"
-		    tempcultquery="INSERT INTO tempcultivar(name,id) VALUES('#{name}', '#{number}')"
-		    con.query(tempcultquery)
-		    #add temp query and get id;
-		  end
-		linecounter=linecounter+1
-  end
-  rescue Mysql::Error => e
-      puts e.errno
-      puts e.error
+require './utilities.rb'
 
-  ensure
-      con.close if con
+# MAIN PROGRAM
+
+begin
+
+  # First get open the csv file and check the header:
+
+  csv = CSV.open(get_input_file('sugarcanecultivars.csv'))
+
+  # Check that the header row is what we expect
+  EXPECTED_HEADER = %w(id specie_id name ecotype notes created_at updated_at
+                       previous_id)
+  header = csv.readline
+
+  check_csv_header(header, EXPECTED_HEADER)
+
+
+  # Now open a connection to the database:
+
+  con = get_connection_interactively
+
+  # Create a temporary table to keep track of the mapping between site
+  # ids as listed in the csv file and the id numbers generated upon
+  # inserting a site into the sites table
+  create_temp_table(con, "temp_cultivar_ids")
+
+  INSERT_STRING = <<-INSERTION
+    INSERT INTO cultivars(specie_id, name, ecotype, notes, created_at, updated_at, previous_id)
+		VALUES(?, ?, ?, ?, COALESCE(?, NOW()), COALESCE(?, NOW()), ?)
+  INSERTION
+  insert_statement = con.prepare(INSERT_STRING)
+
+  # The query to get the generated id of site just inserted.  We assume
+  # (lon, lat, sitename) form a natural key.  In particular, we assume
+  # each is non-null.
+  ID_QUERY_STRING = <<-SELECTION
+    SELECT id FROM cultivars 
+        WHERE specie_id = ? AND name = ?
+  SELECTION
+
+  id_query = con.prepare(ID_QUERY_STRING)
+
+
+
+
+  # Finally, iterate through the rows of the csv file and insert the
+  # data into the sites table
+  csv.each do |row| 
+
+    # assign row data to local varibles
+    (id, species_id, name , ecotype, notes, 
+     created_at, updated_at, previous_id) = row
+
+    # Correct name (is this necessary?)
+    name=row[2];
+    if (!name.nil?)
+      name=name.tr('-','')
+    end
+
+    # Display to the user what data is being inserted
+    puts "id = #{id}"
+    puts "specie_id = #{species_id}"
+    puts "name = #{name}"
+    puts "ecotype = #{ecotype}"
+    puts "notes = #{notes}"
+    puts "created_at = #{created_at}"
+    puts "updated_at = #{updated_at}"
+    puts "previous_id = #{previous_id}"
+
+    insert_statement.execute(species_id, name, ecotype, notes, created_at,
+                             updated_at, previous_id)
+
+    # Now get the automatically-generated id number
+    id_query.execute(species_id, name)
+    id_number = (id_query.fetch)[0]
+
+    # Record the name --> id_number correspondence in the "temp_site_ids" table
+    tempquery="INSERT INTO temp_cultivar_ids(name, id) VALUES('#{name}', '#{id_number}')"
+    con.query(tempquery)
+
+  end # csv.each
+
+
+rescue Mysql::Error => e
+  puts e.errno
+  puts e.error
+
+ensure
+  con.close if con
 end
