@@ -3,12 +3,11 @@
 ## Key Documentation
 
 * Entering and Retrieving Data
- * [Data Entry| Data-Entry-Workflow-for-the-Biofuel-Ecophysiological-Traits-and-Yields-Database-(BETYdb)]
+ * [Data Entry Workflow](https://github.com/PecanProject/bety/wiki/Data-Entry-Workflow-for-the-Biofuel-Ecophysiological-Traits-and-Yields-Database-(BETYdb))
  * Data Access
 * Implementation
- * [Database Structure and Contents | The-Biofuel-Ecopysiological-Traits-and-Yields-Database] 
- * [Web Interface | BETYdb-Ruby-on-Rails]
+ * [Database Structure and Contents](https://github.com/PecanProject/bety/wiki/Data-Entry-Workflow-for-the-Biofuel-Ecophysiological-Traits-and-Yields-Database-(BETYdb)) 
+ * [BETYdb-Ruby-on-Rails | Ruby-on-Rails Application Overview]
  * Development / Production Server Environments:
-  * [Red Hat / CentOS|Configuring-a-CentOS-Server]
-  * [Ubuntu | 
-  * OSX
+  * [Installing BETYdb (Ubuntu)](https://github.com/PecanProject/pecan/wiki/Development-Environment-Setup-and-VM-Creation#installing-bety)
+  * [Configuring BETYdb on a RHEL / CentOS Server](https://github.com/PecanProject/bety/wiki/Configuring-a-CentOS-Server)
