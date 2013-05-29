@@ -82,24 +82,75 @@ If these are left in, the script will attempt to put the site data in ~/sites in
 ```
 
 ###Ruby installation
-The version of ruby available through yum is too low, so we have to install from source:
+The version of ruby available through yum is too low, so we have to use rvm
 ```
-wget ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p330.tar.gz
-tar -xzf ruby-1.8.7-p330.tar.gz
-cd ruby-1.8.7-p330
+\curl -L https://get.rvm.io | bash
+rvm install 1.9
+rvm use 1.9
+
+yum install mysql-devel.x86_64
+yum install ImageMagick-devel.x86_64
+yum install rubygem-rails
+yum install httpd-devel
+wget http://www.sqlite.org/2013/sqlite-autoconf-3071700.tar.gz
+tar -xzf sqlite-autoconf-3071700.tar.gz
+cd sqlite-autoconf-3071700.tar.gz
 ./configure
-make 
+make
 make install
-#make install didn't take, also broke gem, etc. Trying RVM
 ```
 
-Up next install required ruby-related packages.
-```
-yum install rubygems
-```
 Then all the ruby gems bety needs.
 ```
-cd bety
+cd /usr/local/bety
 gem install bundler
 bundle install
+```
+Configuration for Bety:
+```
+cd /usr/local/ebi/bety
+
+# create folders for upload folders
+mkdir paperclip/files paperclip/file_names
+chmod 777 paperclip/files paperclip/file_names
+
+# create folder for log files
+mkdir log
+touch log/production.log
+chmod 0666 log/production.log
+cat > config/database.yml << EOF
+production:
+  adapter: mysql2
+  encoding: latin1
+  reconnect: false
+  database: bety
+  pool: 5
+  username: bety
+  password: bety
+EOF
+
+# setup login tokens
+cat > config/initializers/site_keys.rb << EOF
+REST_AUTH_SITE_KEY         = 'thisisnotasecret'
+REST_AUTH_DIGEST_STRETCHES = 10
+EOF
+
+# configure apache
+ln -s /usr/local/ebi/bety/public /var/www/bety
+
+cat > /etc/apache2/conf.d/bety << EOF
+RailsEnv production
+RailsBaseURI /bety
+<Directory /var/www/bety>
+   Options FollowSymLinks
+   AllowOverride None
+   Order allow,deny
+   Allow from all
+</Directory>
+EOF
+```
+
+Up next make apache2 and passenger play nicely:
+```
+passenger-install-apache2-module
 ```
