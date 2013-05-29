@@ -50,7 +50,7 @@ begin
 
   # Finally, iterate through the rows of the csv file and insert the
   # data into the sites table
-  csv.each do |row| 
+  csv.each do |row|
 
     # assign row data to local varibles
     (id, usgsmuid, city, state, country, lat, lon,
