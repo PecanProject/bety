@@ -84,9 +84,11 @@ If these are left in, the script will attempt to put the site data in ~/sites in
 ###Ruby installation
 The version of ruby available through yum is too low, so we have to use rvm
 ```
-\curl -L https://get.rvm.io | bash
+user$ \curl -L https://get.rvm.io | sudo bash -s stable
 rvm install 1.9
 rvm use 1.9
+
+yum upgrade rubygem
 
 yum install mysql-devel.x86_64
 yum install ImageMagick-devel.x86_64
