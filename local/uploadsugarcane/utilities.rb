@@ -1,6 +1,39 @@
 require 'csv'
 require 'mysql' # This is the ruby-mysql gem, which allows prepared statements.
 
+# Converts a date string of the form 14/2/09 or 14/2/2009 to a form
+# that can be used in a MySQL insert statement
+def convert_date(str)
+  begin
+
+  date_re = %r{^(\d\d?)/(\d\d?)/(\d\d(\d\d)?)$}
+  match_data = date_re.match(str)
+  if match_data.nil?
+    puts "#{str} is not a recognized form of date"
+    exit
+  end
+  (day, month, year) = match_data[1..3]
+  if year.size == 2
+    year = year.to_i
+    if year < 69
+      year += 2000
+    else
+      year += 1900
+    end
+    year = year.to_s
+  end
+  return "#{year}-#{month}-#{day}"
+
+  rescue Exception => e
+    puts e
+    puts "str was #{str}"
+    puts "year month and day were #{year}-#{month}-#{day}"
+
+    exit
+  end
+
+end
+
 # Convenience method for prompting.
 # Returns chomped response, or default if given and response is empty
 def prompt(prompt_string = "?", default = "")

@@ -52,12 +52,6 @@ begin
     (id, species_id, name , ecotype, notes, 
      created_at, updated_at, previous_id) = row
 
-    # Correct name (is this necessary?)
-    name=row[2];
-    if (!name.nil?)
-      name=name.tr('-','')
-    end
-
     # Display to the user what data is being inserted
     puts "id = #{id}"
     puts "specie_id = #{species_id}"
@@ -73,7 +67,19 @@ begin
 
     # Now get the automatically-generated id number
     id_query.execute(species_id, name)
-    id_number = (id_query.fetch)[0]
+    row_count = id_query.size
+    # Check that we get only the id for the row we just inserted--that
+    # is, (specie_id, name) should be unique
+    if row_count == 0
+      puts "Couldn't find a row with specie_id = #{species_id} and name = #{name}"
+      puts "Quitting"
+      exit
+    elsif row_count > 1
+      puts "Found more than one row with specie_id = #{species_id} and name = #{name}"
+      puts "Quitting"
+      exit
+    end
+    (id_number,) = id_query.fetch
 
     # Record the name --> id_number correspondence in the "temp_site_ids" table
     tempquery="INSERT INTO temp_cultivar_ids(name, id) VALUES('#{name}', '#{id_number}')"

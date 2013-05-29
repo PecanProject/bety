@@ -83,7 +83,19 @@ begin
 
     # Now get the automatically-generated id number
     id_query.execute(lon, lat, sitename)
-    id_number = (id_query.fetch)[0]
+    row_count = id_query.size
+    # Check that we get only the id for the row we just inserted--that
+    # is, (lon, lat, sitename) should be unique
+    if row_count == 0
+      puts "Couldn't find a row with lon = #{lon}, lat = #{lat}, and sitename = #{sitename}"
+      puts "Quitting"
+      exit
+    elsif row_count > 1
+      puts "Found more than one row with lon = #{lon}, lat = #{lat}, and sitename = #{sitename}"
+      puts "Quitting"
+      exit
+    end
+    (id_number,) = id_query.fetch
 
     # Record the named-id --> id_number correspondence in the "temp_site_ids" table
     tempquery="INSERT INTO temp_site_ids(name, id) VALUES('#{id}', #{id_number})"

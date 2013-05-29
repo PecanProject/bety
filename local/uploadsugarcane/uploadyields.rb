@@ -38,9 +38,9 @@ begin
   CULTIVAR_ID_QUERY_STRING = "SELECT id FROM temp_cultivar_ids WHERE name = ?"
   cultivar_id_query = con.prepare(CULTIVAR_ID_QUERY_STRING)
 
+  # variables to keep track of missing site data
   linecounter=0;
   nosites=Array.new
-  nositescounter=0;
   
   # Finally, iterate through the rows of the csv file and insert the
   # data into the sites table
@@ -51,64 +51,109 @@ begin
      statname, stat, mean, n, notes, created_at, updated_at, user_id, checked,
      access_level) = row
 
+    # If sid is specified, find the the id for the corresponding row
+    # in the sites table.
     if !sid.nil?
       site_id_query.execute(sid)
-      site_id = (site_id_query.fetch)[0]
+      row_count = site_id_query.size
+      if row_count > 1
+        puts "Found multiple rows in temp_site_ids table with name = #{sid}"
+        puts "Quitting."
+        exit
+      elsif row_count == 0
+        if sid == "0"
+          site_id = nil
+        else
+          # Assume sid is the id number of an previously existing site
+          # in the sites table
+          site_id = sid
+        end
+      else # exactly one row found
+        (site_id,) = site_id_query.fetch
+      end
+    else
+      side_id = nil
+    end
+
+    # Keep track of the rows in the csv file having no site id information
+    if site_id.nil?
+      nosites << linecounter;
     end
 
     if !cid.nil?
       cultivar_id_query.execute(cid)
-      result = cultivar_id_query.fetch
-      if result.nil?
-        puts "Couldn't find cultivar_id corresponding to #{cid}"
+      row_count = cultivar_id_query.size
+      if row_count > 1
+        puts "Found multiple rows in temp_cultivar_ids table with name = #{cid}"
+        puts "Quitting."
         exit
-      end
-      cultivar_id = result[0]
-    end
+      elsif row_count == 0
+        if cid == "0"
+          cultivar_id = nil
+        elsif cid =~ /^\d+$/
+          # Assume cid is the id number of an previously existing site
+          # in the sites table
+          cultivar_id = cid
+        elsif cid == "#N/A"
+          # Grudgingly allow this value
+          cultivar_id = nil
+        else
+          # We have a non-integer cid that doesn't match anything in
+          # the temp_cultivar_ids table.  Print an error and quit.
 
-    if site_id.nil?
-      nosites[nositescounter]=linecounter;
-      nositescounter=nositescounter+1
+          message = <<-MESSAGE
+Cultivar id value '#{cid}' is not an integer and does
+not match any of the values in the temp_cultivar_ids table.
+quitting
+          MESSAGE
+
+          puts message
+          exit
+        end
+      else # exactly one row found
+        (cultivar_id,) = site_id_query.fetch
+      end
+    else
+      cultivar_id = nil
     end
 
     if specie_id.nil?
-      puts "finished\n"
-      break
+      puts "Each row in the csv file must include a species_id"
+      puts "Quitting"
+      exit
     end
 
-    # ???
-    if (date=='8/1/01')
-      date='08/01/2001'
+    puts "linecounter = #{linecounter}"
+    # convert the date into an acceptible format
+    if !date.nil?
+      date = convert_date(date)
     end
 
     puts "linecounter=#{linecounter} citation_id=#{citation_id} site_id=#{site_id} specie_id=#{specie_id} treatment_id=#{treatment_id}\n"
     puts "cultivar_id=#{cultivar_id} date=#{date} dateloc= #{dateloc} statname= #{statname} stat=#{stat} mean=#{mean}\n"
     puts "n=#{n} notes=#{notes} created_at=#{created_at} updated_at=#{updated_at} user_id=#{user_id} checked =#{checked}\n"
     puts "access_level=#{access_level}\n"
-    
-    date=nil;
 
     insert_statement.execute(citation_id, site_id, specie_id, treatment_id,
                              cultivar_id, date, dateloc, statname, stat, 
                              mean, n, notes, created_at, updated_at, user_id,
                              checked, access_level) 
-      
-
 
     linecounter=linecounter+1;
-end
-puts "the following entries have no site\n" 
-puts nosites
-con.query("DROP TABLE temp")
-con.query("DROP TABLE tempcultivar")
-  
+  end
+
+  puts "The following #{nosites.size} rows of the csv file have have no site information:" 
+  puts nosites.join(", ")
+
+  # Clean up temporary tables
+  con.query("DROP TABLE temp_site_ids")
+  con.query("DROP TABLE temp_cultivar_ids")
 
 rescue Mysql::Error => e
   puts e.errno
   puts e.error
+  puts e.backtrace.join("\n")
   
 ensure
   con.close if con
 end
-    
-    
