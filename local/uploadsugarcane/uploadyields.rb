@@ -142,8 +142,7 @@ quitting
     linecounter=linecounter+1;
   end
 
-  puts "The following #{nosites.size} rows of the csv file have have no site information:" 
-  puts nosites.join(", ")
+  puts "#{nosites.size} rows of the csv file have have no site information."
 
   # Clean up temporary tables
   con.query("DROP TABLE temp_site_ids")
