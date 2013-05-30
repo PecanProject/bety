@@ -74,7 +74,7 @@ def create_temp_table(connection, tablename)
 
   begin
     result = connection.query(mtempquery)
-  rescue Mysql::Error => e
+  rescue Mysql::ServerError::TableExistsError => e
     puts e.class
     puts "A table named '#{tablename}' already exists.  You must delete this table manually before running this script."
     exit

@@ -107,6 +107,7 @@ begin
 rescue Mysql::Error => e
   puts e.errno
   puts e.error
+  puts e.backtrace.join("\n")
 
 ensure
   con.close if con
