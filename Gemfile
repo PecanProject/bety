@@ -2,7 +2,7 @@ source "http://rubygems.org"
 
 gem "rails", "3.0.18"
 gem "mysql2"
-gem "ruby-mysql", "2.9.5" # for data upload scripts in local
+gem "ruby-mysql" # for data upload scripts in local
 gem "activerecord-mysql2-adapter"
 gem "query_reviewer", "0.1.6"
 gem "nokogiri"
