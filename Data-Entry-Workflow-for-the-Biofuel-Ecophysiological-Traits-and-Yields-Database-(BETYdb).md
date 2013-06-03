@@ -395,7 +395,7 @@ table. Here is a list of the fields with a brief description, followed
 by more thorough explanations:
 
 **Species***:   Search for species in the database using the search box; if species
-    is not found, see  
+    is not found, see:  
 
 **Cultivar**:   primarily used for crops; If the cultivar being used is not found in
     drop-down box, see hyperref[sec:addcultivar]Section
