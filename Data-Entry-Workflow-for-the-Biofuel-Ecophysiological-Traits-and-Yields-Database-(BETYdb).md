@@ -170,7 +170,7 @@ A PDF copy of each paper should be available through Mendeley.
         URL are optional. This can be located in the article or in the
         article website. Use Ctrl+F 'DOI' to find it. Some older
         articles do not have a DOI.
-    *  URL: web address of the article, preferably from publishers website
+    *  URL: web address of the article, preferably from publisher's website
     *  PDF: URL of the PDF of the article
 
 <a id="Figure 1"></a> ![Alt text](figures/New citation.png "Figure 1")   
@@ -186,14 +186,14 @@ distinct records for multiple sites, it is possible to differentiate
 among independent studies.
 
 1.  Before adding a site, search to make sure that site is not already
-    entered in database.
+    entered in the database.
 2.  Search for the site given latitude and longitude
     -   If an institution name or city and state are given, try to
         locate the site on Google Maps
     -   If a site name is given, try to locate the site using a
         combination of Google and Google Maps
     -   If latitude and longitude are given in the paper, search by lat
-        and lon, this will return all sites within $\pm1$ degree lat and
+        and lon, which will return all sites within $\pm1$ degree lat and
         long.
     -   If an existing site is plausibly the same site as the one
         mentioned in the paper, it will be necessary to check other
@@ -203,7 +203,7 @@ among independent studies.
         -   Create a new site if the study was conducted in a different
             fields (i.e., not the exact same location).
         -   Create a new site if one study was conducted in a greenhouse
-            and another in a field.
+            and another was conducted in a field.
         -   Do not use distinct sites for seed source in a common garden
             experiment (see ’When not to enter a new site’ below)
 3.  To use an existing site, click 'edit' for the site, and then select
@@ -228,7 +228,7 @@ paper
     
     **Greenhouse***:   set Greenhouse = TRUE if plants were grown in a greenhouse, growth
     chamber, or pots. If a 'warming chamber' or 'greenhouse' is used as
-    the experimental manipulation, but is not used in the control
+    the experimental manipulation but not used in the control
     treatments, Greenhouse = FALSE.    
     
     **Soil**:   Soil class is entered as a categorical variable that describes the
@@ -258,7 +258,7 @@ paper
 
 #### 5.2.1 Site Location 
 
-If latitude and longitude coordinates not available, it is often
+If latitude and longitude coordinates are not available, it is often
 possible to determine the site location based on the site name, city,
 and other information. One way to do this would be to look up a location
 name in [Google Maps](http://maps.google.com) and then locate it on the
@@ -284,7 +284,7 @@ Treatments provide a description of a study’s
 treatments. Any specific information such as rate of fertilizer
 application should be recorded in the managements table [Section 5.4] (#Section 5.4) . In
 general, managements are recorded when Yield data is collected, but not
-when only Trait data are collected.
+when only Trait data is collected.
 
 **When not to use treatment**: predictor variables that are not based on distinct managements, or that are distinguished by information already contained in the trait (e.g. site, cultivar, date fields) should not be given distinct treatments. For example, a study that compares two different species, cultivars or genotypes can be assigned the same control treatment; these categories will be distinguished by the species or cultivar field. Another example is when the observation is made at two sites: the site field will include this information. 
 
@@ -292,10 +292,10 @@ A treatment name is used as a categorical (rather than continuous)
 variable: it should be easy to find the treatment in the paper based on
 the name in the database. The treatment name does not have to indicate
 the level of treatment used in a particular treatment - this information
-will be included in management table.
+will be included in the management table.
 
-It is essential that a control group be identified with each study. If
-there is no experimental manipulation, there is only one treatment. In
+It is essential that a control group is identified with each study. If
+there is no experimental manipulation, then there is only one treatment. In
 this case, the treatment should be named 'observational' and listed as
 control.
 
@@ -328,8 +328,8 @@ crops, this could be how a farmer would be most likely to treat a crop.
 ### 5.4 Adding a Management 
 Managements refers to something that occurs at a specific time and has a
 quantity. Managements include actions that are done to a plant or
-ecosystem, for example the planting density or rate of fertilization.
-Managements are distinct from Treatments in that a Treatment is used to
+ecosystem, such as the planting density or rate of fertilization, for example.
+Managements are distinct from treatments in that a treatment is used to
 categorically identify an experimental treatment, whereas a management
 is used to describe what has been done.
 
@@ -345,7 +345,7 @@ herbicide managements would be applied to all plots but the
 fertilization will be specific to a treatment. For a multi-year
 experiment, there may be multiple entries for the same type of
 management, reflecting, for example, repeated applications of herbicide
-or fertilizer, for example see [Figure 6](#Figure 6).
+or fertilizer (for example, see [Figure 6](#Figure 6)).
 
 *note:* At present, managements are recorded for Yields but not for
 Traits, unless specifically required by the data or project manager.
@@ -372,8 +372,8 @@ management, then edit the management and add treatment relationships.
 <a id="Section_5.5"></a>
 ### 5.5 Adding a Trait
 
-In general, a 'trait' is a phenotype; a characteristic that the plant
-exhibits. The traits that we are primarily interested in collecting
+In general, a 'trait' is a phenotype (a characteristic that the plant
+exhibits). The traits that we are primarily interested in collecting
 data for are listed in [Table 6](#Table 6).
 
 Before adding trait data, it is necessary to have the citation,
@@ -382,7 +382,7 @@ citation is not identified at the top of the page [Figure 8](#Figure 8). To add 
 go to the [new trait](http:ebi-forecast.igb.uiuc.edu/bety/traits/new)
 page: `Trait` → `new`.
 
-Presently, we are also using the Trait table record ecosystem level
+Presently, we are also using the Trait table to record ecosystem level
 measurements other than Yield. Such ecosystem level measurements can
 include leaf area index or net primary productivity, but are only
 collected when required for a particular project.
@@ -405,7 +405,7 @@ by more thorough explanations:
 
 **Mean***:   mean is in units of tons per hectare per year (t/ha)  
 
-**Stat name**:   is name of the statistical method used (usually one of SE, SD, MSE,
+**Stat name**:   is the name of the statistical method used (usually one of SE, SD, MSE,
     CI, LSD, HSD, MSD). See for more details.  
 
 **Statistic**:   is the value of the statistic associated with Stat name.  
@@ -432,11 +432,11 @@ by more thorough explanations:
 
 The date level of confidence (DateLOC) provides an indication of how
 accurately the date associated with the trait or yield observation is
-known. provides the values that should be entered in this field. If the
+known.  It provides the values that should be entered in this field. If the
 event occurred at a level of precision not defined by an integer in this
-table, use fractions. For example, we commonly use 5.5 to indicate a one
+table, then use fractions. For example, we commonly use 5.5 to indicate a one
 week level of precision. If the exact year is not known, but the time of
-year is, use 91 to 97, with the second digit to indicate the information
+year is, then use 91 to 97, with the second digit to indicate the information
 known within the year.
 
 <a id="Figure 9"></a>
@@ -448,7 +448,7 @@ known within the year.
 Our goal is to record statistics that can be used to estimate standard
 deviation or standard error. Many different methods can be used to
 summarize data, and this is reflected in the diversity of statistics
-that are reported. An overview of these methods is given in and a
+that are reported. An overview of these methods is given in a
 description below.
 
 Where available, direct estimates of variance are preferred, including
@@ -471,7 +471,7 @@ ranges and that we record the entire range.
 
 Another type of statistic is a “test statistic”; most frequently there
 will be an F-value that can be useful, but this should not be recorded
-if MSE is available. Only if there is no other information available,
+if MSE is available. Only if there is no other information available should you
 record the P-value.
 
 ### 5.6 Adding a Yield
