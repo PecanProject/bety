@@ -494,7 +494,7 @@ value.
 A complete list of required covariates can be found in . For all
 respiration rates and photosynthetic parameters, temperature is recorded
 as a covariate. Soil moisture, humidity, and other such variables that
-were measured at the time of the measurement that may be required in
+were measured at the time of the measurement may be required in
 order to standardize across studies.
 
 When root data is recorded, the root size class needs to be entered as a
@@ -511,7 +511,7 @@ covariate](http:ebi-forecast.igb.uiuc.edu/bety/covariates/new) page:
 
 1.  Identify the data that is associated with each treatment
 
-    *note:* If the experiment has many factors, the paper may not report the mean and statistics for each treatment. Often, the reported data will reflect the results of more than one treatment, for example if there was no effect of the treatment on the quantity of interest. In some cases it will be possible the values for each treatment, e.g. if there are _n-1_ values and _n_ treatments. If this is not the case, the treatment names and definitions should be changed to indicate the data reflect the results of more than one experimental treatments. 
+    *note:* If the experiment has many factors, the paper may not report the mean and statistics for each treatment. Often, the reported data will reflect the results of more than one treatment (for example, if there was no effect of the treatment on the quantity of interest). In some cases it will be possible to obtain the values for each treatment, e.g. if there are _n-1_ values and _n_ treatments. If this is not the case, the treatment names and definitions should be changed to indicate the data reflect the results of more than one experimental treatment. 
 
 2.  Enter the mean value of the trait
 
@@ -536,7 +536,7 @@ To extract data from a jpg file in R using the digitize package:
 2.  Open R
 3.  Change the directory that R is using to the one where the image is
 4.  Use R code below to extract data, display it, and save it in a `csv`
-    file steps below
+    file (steps below)
 5.  Upload csv to the project file in google spreadsheet, or open as
     excel/openoffice and copy/paste to google spreadsheet
 
@@ -586,13 +586,13 @@ basis, and has units of Mg ha~-1~ y1
 
 Plant functional types (PFTs) are used to group plants for statistical
 modeling and analysis. PFTs are associated with both a specific set of
-priors, and a the subset species for which the traits and yields data
+priors, and a subset species for which the traits and yields data
 will be queried. In many cases, it is appropriate to use default PFTs
 (e.g. `tempdecid` is temperate deciduous trees)
 
 In other cases, it is necessary to define PFTs for a specific project.
-For example, to query a specific set of priors or subset of species, a
-new PFT may be defined. For example, Xiaohui Feng defined PFT’s for the
+For example, to query a specific set of priors or a subset of a species, a
+new PFT may be defined. For example, Xiaohui Feng defined PFTs for the
 species found at the EBI Farm prairie. Such project-specific PFTs can
 be defined as `` `projectname`.`pft` `` (i.e. `ebifarm.c4grass` instead
 of `c4grass`).
@@ -633,12 +633,12 @@ to be elevated to “manager”.
         information is correct
     -   Check that links to URL and PDF are correct, using doi if
         available
-    -   If any information is incorrect, click ’edit’ to correct.
+    -   If any information is incorrect, click ’edit’ to correct
 3.  Check that site(s) at bottom of citation record match site(s) in
     paper
     -   Check that latitude and longitude are consistent with
         manuscript, are in decimals not degrees, and have appropriate
-        level of precision .
+        level of precision
     -   Click on site name to verify any additional information site
         information that is present
     -   Enter any additional site level information that is found
@@ -647,10 +647,10 @@ to be elevated to “manager”.
     menu bar
     -   Check that there is a control treatment
     -   Ensure that treatment name and definition are consistent with
-        information in the manuscript.
+        information in the manuscript
     -   Under “treatments from all citations associated with associated
         sites”, ensure that there is no redundancy (i.e. if another
-        citations uses the same treatments, it should not be listed
+        citation uses the same treatments, it should not be listed
         separately)
     -   If managements are listed, make sure that managment-treatment
         associations are correct
@@ -675,7 +675,7 @@ to be elevated to “manager”.
 Patrick Mulroony pat@life.illinois.edu implemented the data entry
 interface. Moein Azimi, David Bettinardi, and Nick Brady, along with
 other members of the Dietze lab, have contributed to the ongoing
-development this document and the web interface that it describes.
+development of this document and the web interface that it describes.
 
 ## 9. Appendix
 ### 9.1 Transformations
