@@ -667,8 +667,8 @@ to be elevated to “manager”.
         correctly
     -   If data has been transformed, check that transformation was
         correct in the associated google spreadsheet (or create a new
-        google spreadsheet following instructions in ).
-    -   For any trait data that requires a covariate .
+        google spreadsheet following instructions)
+    -   For any trait data that requires a covariate
 
 ## 8. Acknowledgements
 
@@ -688,7 +688,7 @@ development of this document and the web interface that it describes.
 ### 10.1 Objective:
 
 Convert from root respiration data reported in George et al (where O$_2$
-was measured in µL to units of mass.
+was measured in µL to units of mass
 
 In the appendix table, George 2003 reports the range of root respiration
 rates, converted to $15°C$ and standard units:
