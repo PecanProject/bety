@@ -154,7 +154,7 @@ section should allow us to locate and access the paper of interest.
 
 A PDF copy of each paper should be available through Mendeley.
 
-1.  Select one of the starred papers from your projects Mendeley folder.
+1.  Select one of the starred papers from your project's Mendeley folder.
 2.  The data to be entered should be specified in the notes associated
     with the paper in Mendeley
 3.  Identify (highlight or underline) the data (means and statistics)
