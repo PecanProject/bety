@@ -9,10 +9,10 @@ You will need to create the following accounts:
 * Mendeley www.mendeley.com/
 
 ## 1. Overview
-This the userguide for entering data into the BETYdb database. The goal of this guide is to provide a consistent method of data entry that is transparent, reproducible, and well documented. The steps here generally accomplish one of two goals. The first goal is to provide data in a consistent framework that is associated with the experimental methods, species, site, and other factors associated with the original study. The second goal is to provide a record of all the transformations, assumptions, and data extraction steps used to migrate data from the primary literature to the standardized framework of the database. This second goal not only supports the scientific value of the data itself, it also simplifies the Quality Assurance process. 
+This is the userguide for entering data into the BETYdb database. The goal of this guide is to provide a consistent method of data entry that is transparent, reproducible, and well documented. The steps here generally accomplish one of two goals. The first goal is to provide data in a consistent framework that is associated with the experimental methods, species, site, and other factors associated with the original study. The second goal is to provide a record of all the transformations, assumptions, and data extraction steps used to migrate data from the primary literature to the standardized framework of the database. This second goal not only supports the scientific value of the data itself, but it also simplifies the Quality Assurance process. 
 
 ## 2. Using Mendeley
-Mendeley provides a central location of the collection, annotation, and tracking of the journal articles that we use. Features of Mendeley that are useful to us include: 
+Mendeley provides a central location for the collection, annotation, and tracking of the journal articles that we use. Features of Mendeley that are useful to us include: 
 * Collaborative annotation & notes sharing: see [Section 2.2](#Section_2.2)
     * Text highlighter   
     * Sticky notes for comments in the text
@@ -23,9 +23,9 @@ Papers can be marked as **read** or **unread**, and may be **starred.**
 * Tagging
 
 ### <a id="Section_2.1"></a> 2.1 Creating a new group on Mendeley (Project Managers)
-Each project has two groups, "projectname" and "projectname_out" for the papers with data to be entered and the papers with data that has been entered. Papers in the _out group may contain data for future entry, for example, traits that are not listed in [Table 6] (#Table 6).  
+Each project has two groups: "projectname" and "projectname_out" for the papers with data to be entered and for the papers with data that has been entered, respectively. Papers in the _out group may contain data for future entry [for example, traits that are not listed in [Table 6] (#Table 6)].  
 
-Each project manager may have one or more projects, each project should have one group. Group names should refer to plant species, plant functional types, or another project specific name. A list of current groups can be found in [Table 1](#Table 1). Please make sure that, at a minimum, Mike Dietze and David LeBauer are invited to join each project folder. 
+Each project manager may have one or more projects and each project should have one group. Group names should refer to plant species, plant functional types, or another project specific name. A list of current groups can be found in [Table 1](#Table 1). Please make sure that, at a minimum, Mike Dietze and David LeBauer are invited to join each project folder. 
    1. Open Mendeley desktop
    2. Click `Edit` → `New Group` or `Ctrl+Shift+M`
    3. Create group name following instructions above
@@ -38,8 +38,8 @@ Each project manager may have one or more projects, each project should have one
 ### <a id="Section_2.2"></a> 2.2 Adding and annotating papers (Project Managers)
 
 The ’tag’ field associated with each paper can be used to further
-separate papers, for example by species, or the type of data (’trait’,
-’yield’, ’photosynthesis’) that they contain. When naming a group, tag
+separate papers [for example, by species, or the type of data (’trait’,
+’yield’, ’photosynthesis’) that they contain]. When naming a group, tag
 folders so that instructions for a technician would include the folder
 and the tag to look for, e.g. "please enter data from projectx" or
 "please enter data from papers tagged y from project x".
@@ -79,7 +79,7 @@ entered next by completing the following steps:
         at once so that students can focus on the ones that you want.
         Students have been entering 1-3 papers per week, once we get
         closer to 3-5, the min/max should change.
-    -   Choose papers the papers that are the most data rich.  
+    -   Choose papers that are the most data rich.  
 2.  For each paper, use comment bubbles, notes field, and highlighter to
     indicate:
 * Name(s) of traits to be collected
@@ -95,8 +95,8 @@ entered next by completing the following steps:
     * Table number and columns with data to collect
 * Covariates
 * Management data (for yields)
-* Units in 'to' and 'from' fields of used to convert data
-* Esoteric information that other scientists or technicians might not catch and that are not otherwise recorded in the database
+* Units in 'to' and 'from' fields used to convert data
+* Esoteric information that other scientists or technicians might not catch and that is not otherwise recorded in the database
 * Any data that may be useful at a later date but that can be skipped for now.
 
 **Comment or Highlight**
@@ -113,7 +113,7 @@ To find a citation in Mendeley, go to the project folder. Group folders
 and personnel are listed in [Table 1](#Table 1). By default, data entry technicians should
 enter data from papers which have been indicated by a yellow star and in
 the order that they were added to the list. Information and data to be
-collected from paper can be found under the 'Notes' tab and in
+collected from a paper can be found under the 'Notes' tab and in
 highlighted sections of the paper.
 
 ## 3. Google Spreadsheets: Recording data transformations
@@ -129,7 +129,7 @@ entered directly from the original publication.
 Each project has a google document spreadsheet with the title
 ’’project\_data’’. In this spreadsheet, each reference should have a
 separate worksheet labeled with the citation key (`authorYYYabc`
-format). Do not enter data into excel first, this is prone to errors and
+format). Do not enter data into excel first as this is prone to errors and
 information such as equations may be lost when uploading or
 copy-pasting.
 
@@ -138,10 +138,10 @@ copy-pasting.
 ### 4.2 Suggesting features in Redmine
 
 ## 5. BETYdb: Entering new data through the web interface
-Before entering data, it is first necessary to (add and) select the
+Before entering data, it is first necessary to add and select the
 citation that is the source of the data. It is also necessary for each
 data point to be associated with a Site, Treatment, and Species.
-Cultivar information is also required when available, but is only
+Cultivar information is also required when available, but it is only
 relevant for domesticated species. Fields with an asterisk (*) are
 required.  
 
