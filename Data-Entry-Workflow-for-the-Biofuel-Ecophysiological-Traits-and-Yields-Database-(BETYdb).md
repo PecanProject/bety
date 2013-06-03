@@ -656,7 +656,7 @@ to be elevated to “manager”.
         associations are correct
 5.  Check [managements](http://ebi-forecast.igb.uiuc.edu/bety/managements/) if
     there are any listed on the treatments page.
-    -   If Yield data have been collected, ensure that required
+    -   If yield data has been collected, ensure that required
         managements have been entered
     -   If managements have been entered, ensure that they are
         associated with the correct treatments
