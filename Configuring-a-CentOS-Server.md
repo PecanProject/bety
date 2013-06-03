@@ -161,3 +161,22 @@ If that fails, try
 sudo -s
 source `rvm gemdir`
 ```
+
+###Pecan Installation
+
+```
+# download pecan
+cd /usr/local/ebi
+git clone https://github.com/PecanProject/pecan.git
+
+
+yum install gdal
+
+# install PEcAn packages in R
+cd pecan
+R --vanilla < scripts/install.dependencies.R
+
+# compile pecan
+./scripts/build.sh
+```
+NB: ncdf, ncdf4, rjags, rgdal unhappy: fix.
