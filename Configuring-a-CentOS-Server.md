@@ -171,7 +171,13 @@ git clone https://github.com/PecanProject/pecan.git
 
 
 yum install gdal
+yum install netcdf-devel.x86_64 netcdf-static.x85_64 openmpi hdf5-devel.x86_64 
+#install PEcAn dependencies
+wget http://cran.r-project.org/src/contrib/ncdf_1.6.6.tar.gz
 
+wget http://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-4.3.0.tar.gz
+
+wget  http://www.hdfgroup.org/ftp/HDF5/current/bin/RPMS/hdf5-1.8.11-1.with.szip.encoder.el5.x86_64.rpm
 # install PEcAn packages in R
 cd pecan
 R --vanilla < scripts/install.dependencies.R
