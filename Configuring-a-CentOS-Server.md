@@ -177,7 +177,9 @@ wget http://cran.r-project.org/src/contrib/ncdf_1.6.6.tar.gz
 
 wget http://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-4.3.0.tar.gz
 
-wget  http://www.hdfgroup.org/ftp/HDF5/current/bin/RPMS/hdf5-1.8.11-1.with.szip.encoder.el5.x86_64.rpm
+rpm -Uvh http://www.hdfgroup.org/ftp/HDF5/current/bin/RPMS/hdf5-1.8.11-1.with.szip.encoder.el5.x86_64.rpm
+
+rpm -Uvh http://elgis.argeo.org/repos/testing/6/elgis/x86_64/gdal-1.9.2-4.el6.x86_64.rpm
 # install PEcAn packages in R
 cd pecan
 R --vanilla < scripts/install.dependencies.R
