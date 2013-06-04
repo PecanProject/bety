@@ -869,3 +869,17 @@ Figure 11: Table used to calculate SE from F, from Starr et al. [2008]
 
 <a id="Table 9"></a>
 ![Alt text] (figures/table 9.png "Table 9")   
+
+Additional conversions
+
+```
+| from        | to           |  |
+|nmol g-1 s-1 | umol kg-1 s-1| 1|
+```
+
+You can use the R package "udunits2" like this:
+
+```r
+library(udunits2)
+ud.convert(1, "nmol g-1 s-1", "umol kg-1 s-1")
+```
