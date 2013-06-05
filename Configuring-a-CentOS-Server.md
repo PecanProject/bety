@@ -174,10 +174,12 @@ yum install netcdf-devel.x86_64 netcdf-static.x85_64 openmpi hdf5-devel.x86_64
 #install PEcAn dependencies
 wget http://cran.r-project.org/src/contrib/ncdf4_1.6.1.tar.gz
 
-wget http://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-4.3.0.tar.gz
 
 rpm -Uvh http://www.hdfgroup.org/ftp/HDF5/current/bin/RPMS/hdf5-1.8.11-1.with.szip.encoder.el5.x86_64.rpm
 
+wget http://cran.r-project.org/src/contrib/rjags_3-10.tar.gz
+
+wget http://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-4.3.0.tar.gz
 
 tar -xzf netcdf-4.3.0.tar.gz
 cd netcdf-4.3.0
@@ -194,6 +196,10 @@ cd gdal-1.10.0
 sudo ./configure
 sudo make install
 
+sudo yum install atlas blas.x86_64
+sudo rpm -Uvh  http://download.opensuse.org/repositories/home:/cornell_vrdc/CentOS_CentOS-5/x86_64/jags3-3.3.0-48.1.x86_64.rpm
+sudo rpm -Uvh http://download.opensuse.org/repositories/home:/cornell_vrdc/CentOS_CentOS-5/x86_64/jags3-devel-3.3.0-48.1.x86_64.rpm
+
 # install PEcAn packages in R
 cd pecan
 R --vanilla < scripts/install.dependencies.R
@@ -201,4 +207,4 @@ R --vanilla < scripts/install.dependencies.R
 # compile pecan
 ./scripts/build.sh
 ```
-NB: rjags, rgdal unhappy: fix.
+NB: rgdal unhappy: fix.
