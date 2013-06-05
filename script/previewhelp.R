@@ -1,6 +1,6 @@
 
 
-require('PEcAn.utils')
+require('PEcAn.priors')
 
 args <- commandArgs()
 
