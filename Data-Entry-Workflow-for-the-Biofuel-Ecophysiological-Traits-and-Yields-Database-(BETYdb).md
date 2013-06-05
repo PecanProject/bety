@@ -206,7 +206,7 @@ among independent studies.
     -   If a site name is given, try to locate the site using a
         combination of Google and Google Maps
     -   If latitude and longitude are given in the paper, search by lat
-        and lon, which will return all sites within $\pm1$ degree lat and
+        and lon, which will return all sites within ± 1 degree lat and
         long.
     -   If an existing site is plausibly the same site as the one
         mentioned in the paper, it will be necessary to check other
@@ -219,8 +219,8 @@ among independent studies.
             and another was conducted in a field.
         -   Do not use distinct sites for seed source in a common garden
             experiment (see ’When not to enter a new site’ below)
-3.  To use an existing site, click 'edit' for the site, and then select
-    current citation under 'add citation relationships'
+3.  To use an existing site, click `Edit` for the site, and then select
+    current citation under `Add Citation Relationships`
 4.  If site does not exist, add a new site.  
 
     **When not to enter a new site**: When plants (or seeds) are collected from multiple locations and then grown in the same location, this is called 'common garden experiment'. In this case, the location of the study is included as site information. Information about the seed source can be entered as a distinct cultivar.  
@@ -285,7 +285,7 @@ through an internet search (e.g. Google).
 Use [Table 2](#Table 2) to determine the number of significant digits to indicate the level
 of precision with which a study location is known.  
 
-**Table 2**: Appropriate precision for site latitude and longitude
+**Table 2**: Appropriate precision for site latitude and longitude  
 <a id="Table 2"></a> ![Alt text] (figures/table 2.png "Table 2")  
 
 
@@ -408,10 +408,10 @@ table. Here is a list of the fields with a brief description, followed
 by more thorough explanations:
 
 **Species***:   Search for species in the database using the search box; if species
-    is not found, see:  
+    is not found, see [Section 5.9](#Section 5.9)
 
 **Cultivar**:   primarily used for crops; If the cultivar being used is not found in
-    drop-down box, see [Section 5.11](#Section 5.11).
+    drop-down box, see [Section 5.10](#Section 5.10).
 
 **DateLOC**:   Date Level of confidence. See for values.  
 
@@ -496,6 +496,13 @@ trait, with a few exceptions:
 2.  Yield data is always the dry harvestable biomass; if necessary,
     moisture content can be added as a trait
 
+Yield is equivalent to aboveground biomass on a per-area
+basis, and has units of Mg ha^-1 y1
+To add a new yield, go to the [new
+yield](http:ebi-forecast.igb.uiuc.edu/bety/yields/new) page:
+`Yield` → `new`.
+
+
 ### 5.7 Adding a Covariate
 
 Covariates are required for many of the traits. Covariates generally
@@ -533,7 +540,7 @@ covariate](http:ebi-forecast.igb.uiuc.edu/bety/covariates/new) page:
         ’standard deviation’ (SD) and the `stat` is the numerical value
         of the statistic)
     *  Always measure size of error bar from the mean to the end of an
-        error bar. This is the value when presented as __X\pm SE$__ or
+        error bar. This is the value when presented as ( _X_ ± _SE_) or
         _X(SE)_ and may be found in a table or on a graph.
     *  Sometimes CI and LSD are presented as the entire range from the
         lower to the upper end of the confidence interval. In this case,
@@ -585,15 +592,7 @@ To extract data from a jpg file in R using the digitize package:
 15. Calculate SE as the distance between the error bar upper bound and
     the mean (absolute value of difference between the two points)
 
-### 5.8 Adding a Yield
-
-To add a new Yield, go to the [new
-yield](http:ebi-forecast.igb.uiuc.edu/bety/yields/new) page: `Yield`
- → `new`. Yield is equivalent to aboveground biomass on a per-area
-basis, and has units of Mg ha~-1~ y1
-
-
-### 5.9 Adding a PFT
+### 5.8 Adding a PFT
 
 Plant functional types (PFTs) are used to group plants for statistical
 modeling and analysis. PFTs are associated with both a specific set of
@@ -608,13 +607,14 @@ species found at the EBI Farm prairie. Such project-specific PFTs can
 be defined as `` `projectname`.`pft` `` (i.e. `ebifarm.c4grass` instead
 of `c4grass`).
 
-### 5.10 Adding a Species
+<a id="Section 5.9"></a> 
+### 5.9 Adding a Species
 
 Species that are found or cultivated in the United States should be in
 the Plants table. Look it up there first.
 
-<a id="Section 5.11"></a> 
-### 5.11 Adding a Cultivar  
+<a id="Section 5.10"></a> 
+### 5.10 Adding a Cultivar  
 
 To add a new Cultivar, go to the [new
 cultivar](https://www.betydb.org/cultivars/new) page: `Cultivar`
