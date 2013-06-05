@@ -73,15 +73,15 @@ undergraduates are doing.
 
 Each week, please identify and prepare papers that you would like to be
 entered next by completing the following steps:  
-1.  Use the star label to identify the papers that you want the student
-    to focus on next.
-    -   Start by keeping a minimum of 2 and a maximum of 5 highlighted
+1. Use the star label to identify the papers that you want the student
+    to focus on next.  
+- Start by keeping a minimum of 2 and a maximum of 5 highlighted
         at once so that students can focus on the ones that you want.
         Students have been entering 1-3 papers per week, once we get
-        closer to 3-5, the min/max should change.
-    -   Choose papers that are the most data rich.  
-2.  For each paper, use comment bubbles, notes field, and highlighter to
-    indicate:
+        closer to 3-5, the min/max should change.  
+- Choose papers that are the most data rich.  
+
+2. For each paper, use comment bubbles, notes field, and highlighter to indicate:
 * Name(s) of traits to be collected
 * Methods:
     * Site name
@@ -116,6 +116,7 @@ the order that they were added to the list. Information and data to be
 collected from a paper can be found under the 'Notes' tab and in
 highlighted sections of the paper.
 
+<a id="Section 3"></a>   
 ## 3. Google Spreadsheets: Recording data transformations
 Google Spreadsheets are used to keep a record of any data that is not
 entered directly from the original publication.
@@ -398,8 +399,7 @@ by more thorough explanations:
     is not found, see:  
 
 **Cultivar**:   primarily used for crops; If the cultivar being used is not found in
-    drop-down box, see hyperref[sec:addcultivar]Section
-    [sec:addcultivar]: Adding a Cultivar.  
+    drop-down box, see [Section 5.11](#Section 5.11).
 
 **DateLOC**:   Date Level of confidence. See for values.  
 
@@ -453,8 +453,8 @@ description below.
 
 Where available, direct estimates of variance are preferred, including
 Standard Error (SE), sample Standard Deviation (SD), or Mean Squared
-Error (MSE). SE is usually presented in the format of
-$\text{mean} (\pm \text{SE})$. MSE is usually presented in a table. When
+Error (MSE). SE is usually presented in the format of mean 
+(±SE). MSE is usually presented in a table. When
 extracting SE or SD from a figure, measure from the mean to the upper or
 lower bound. This is different than confidence intervals and range
 statistics (described below), for which the entire range is collected.
@@ -569,8 +569,7 @@ To extract data from a jpg file in R using the digitize package:
     axis, and indicate if the axis is log-scaled
 12. Select the target button (seven from left)
 13. Click over center of desired data points and error bars
-14. Copy data to google spreadsheet (see Section
-    [sec:googlespreadsheets]
+14. Copy data to a Google spreadsheet. See [Section 3] (#Section 3).
 15. Calculate SE as the distance between the error bar upper bound and
     the mean (absolute value of difference between the two points)
 
@@ -602,7 +601,12 @@ of `c4grass`).
 Species that are found or cultivated in the United States should be in
 the Plants table. Look it up there first.
 
-### 5.11 Adding a Cultivar
+<a id="Section 5.11"></a> 
+### 5.11 Adding a Cultivar  
+
+To add a new Cultivar, go to the [new
+cultivar](https://www.betydb.org/cultivars/new) page: `Cultivar`
+ → `new`.  
 
 ## 6. BETYdb: Bulk Data Upload
 
