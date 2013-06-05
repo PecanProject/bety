@@ -497,7 +497,8 @@ trait, with a few exceptions:
     moisture content can be added as a trait
 
 Yield is equivalent to aboveground biomass on a per-area
-basis, and has units of Mg ha^-1 y1
+basis, and has units of Mg ha^-1 y1  
+
 To add a new yield, go to the [new
 yield](http:ebi-forecast.igb.uiuc.edu/bety/yields/new) page:
 `Yield` → `new`.
@@ -643,11 +644,11 @@ to be elevated to “manager”.
 
 1.  Open citation in Mendeley
 2.  Locate citation in BETYdb
-    -   Select ’use’
-    -   Select ’show’
+    -   Select `Use`
+    -   Select `Show`
     -   Check that author, year, title, journal, volume, and page
         information is correct
-    -   Check that links to URL and PDF are correct, using doi if
+    -   Check that links to URL and PDF are correct, using DOI if
         available
     -   If any information is incorrect, click ’edit’ to correct
 3.  Check that site(s) at bottom of citation record match site(s) in
