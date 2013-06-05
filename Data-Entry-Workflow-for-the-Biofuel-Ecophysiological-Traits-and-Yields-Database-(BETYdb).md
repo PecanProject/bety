@@ -73,31 +73,32 @@ undergraduates are doing.
 
 Each week, please identify and prepare papers that you would like to be
 entered next by completing the following steps:  
+
 1. Use the star label to identify the papers that you want the student
     to focus on next.  
-- Start by keeping a minimum of 2 and a maximum of 5 highlighted
+    -   Start by keeping a minimum of 2 and a maximum of 5 highlighted
         at once so that students can focus on the ones that you want.
         Students have been entering 1-3 papers per week, once we get
         closer to 3-5, the min/max should change.  
-- Choose papers that are the most data rich.  
+    -   Choose papers that are the most data rich.  
 
 2. For each paper, use comment bubbles, notes field, and highlighter to indicate:
-* Name(s) of traits to be collected
-* Methods:
-    * Site name
-    * Location
-    * Number of replicates
-    * Statistics to collect
-    * Identify treatment(s) and control
-    * Indicate if study was conducted in greenhouse, pot, or growth chamber  
-* Data to collect
-    * Identify figures number and the symbols to extract data from.
-    * Table number and columns with data to collect
-* Covariates
-* Management data (for yields)
-* Units in 'to' and 'from' fields used to convert data
-* Esoteric information that other scientists or technicians might not catch and that is not otherwise recorded in the database
-* Any data that may be useful at a later date but that can be skipped for now.
+    -   Name(s) of traits to be collected
+    -   Methods:
+       * Site name
+       * Location
+       * Number of replicates
+       * Statistics to collect
+       * Identify treatment(s) and control
+       * Indicate if study was conducted in greenhouse, pot, or growth chamber  
+    -   Data to collect
+       * Identify figures number and the symbols to extract data from.
+       * Table number and columns with data to collect
+    -   Covariates
+    -   Management data (for yields)
+    -   Units in 'to' and 'from' fields used to convert data
+    -   Esoteric information that other scientists or technicians might not catch and that is not otherwise recorded in the database
+    -   Any data that may be useful at a later date but that can be skipped for now.
 
 **Comment or Highlight**
 * Sample size
@@ -122,12 +123,12 @@ Google Spreadsheets are used to keep a record of any data that is not
 entered directly from the original publication.
 
 * Any raw data that is not directly entered into the database but that
-    is used to derive data or stats using equations in [Table 1](#Table 1)and [Table 5](#Table 5).
+    is used to derive data or stats using equations in [Table 1](#Table 1) and [Table 5](#Table 5).
 * Any data extracted from figures, along with the figure number
 * Any calculations that were made. These calculations should be
     included in the cells.
 
-Each project has a google document spreadsheet with the title
+Each project has a Google document spreadsheet with the title
 ’’project\_data’’. In this spreadsheet, each reference should have a
 separate worksheet labeled with the citation key (`authorYYYabc`
 format). Do not enter data into excel first as this is prone to errors and
@@ -136,7 +137,18 @@ copy-pasting.
 
 ## 4. Redmine: Reporting errors, suggesting features
 ### 4.1 Reporting errors in Redmine 
+1. Go to [Redmine: BetyDB] (https://ebi-forecast.igb.illinois.edu/redmine/projects/bety-db/) project page.
+2. Click the `New Issue` tab in the center of the ribbon. 
+3. Set `Tracker` to `Bug`
+4. Fill out necessary fields
+5. Click `Create`  
+
 ### 4.2 Suggesting features in Redmine
+1. Go to [Redmine: BetyDB] (https://ebi-forecast.igb.illinois.edu/redmine/projects/bety-db/) project page.
+2. Click the `New Issue` tab in the center of the ribbon. 
+3. Set `Tracker` to `Feature`
+4. Fill out necessary fields
+5. Click `Create`  
 
 ## 5. BETYdb: Entering new data through the web interface
 Before entering data, it is first necessary to add and select the
@@ -163,16 +175,16 @@ A PDF copy of each paper should be available through Mendeley.
 4.  Enter citation information [Figure 1](#Figure 1)
     * [Data entry form](http://ebi-forecast.igb.uiuc.edu/bety/sites/new) for a new
         site: `BETYdb` → `Citations` → `new`
-    *  Author: Input the first author’s last name only
-    *  Year: Input the year the paper was published, not submitted, reviewed,
+    *  **Author**: Input the first author’s last name only
+    *  **Year**: Input the year the paper was published, not submitted, reviewed,
         or anything else
-    *  Fill out Title, Journal, Vol, & Pg. For unknown information, input NA
-    *  DOI: the 'digital object identifier'. If DOI is available, PDF and
+    *  Fill out Title, Journal, Vol, & Pg. For unknown information, input 'NA'
+    *  **DOI**: The 'digital object identifier'. If DOI is available, PDF and
         URL are optional. This can be located in the article or in the
         article website. Use Ctrl+F 'DOI' to find it. Some older
         articles do not have a DOI.
-    *  URL: web address of the article, preferably from publisher's website
-    *  PDF: URL of the PDF of the article
+    *  **URL**: Web address of the article, preferably from publisher's website
+    *  **PDF**: URL of the PDF of the article
 
 <a id="Figure 1"></a> ![Alt text](figures/New citation.png "Figure 1")   
 
