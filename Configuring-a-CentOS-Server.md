@@ -170,16 +170,30 @@ cd /usr/local/ebi
 git clone https://github.com/PecanProject/pecan.git
 
 
-yum install gdal
 yum install netcdf-devel.x86_64 netcdf-static.x85_64 openmpi hdf5-devel.x86_64 
 #install PEcAn dependencies
-wget http://cran.r-project.org/src/contrib/ncdf_1.6.6.tar.gz
+wget http://cran.r-project.org/src/contrib/ncdf4_1.6.1.tar.gz
 
 wget http://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-4.3.0.tar.gz
 
 rpm -Uvh http://www.hdfgroup.org/ftp/HDF5/current/bin/RPMS/hdf5-1.8.11-1.with.szip.encoder.el5.x86_64.rpm
 
-rpm -Uvh http://elgis.argeo.org/repos/testing/6/elgis/x86_64/gdal-1.9.2-4.el6.x86_64.rpm
+
+tar -xzf netcdf-4.3.0.tar.gz
+cd netcdf-4.3.0
+export LDFLAGS="/usr/include/netcdf-3/"
+sudo ./configure
+sudo make install
+cd ..
+tar -xzf ncdf4_1.6.1.tar.gz
+sudo R CMD INSTALL --configure-args="--with-nc-config=~/netcdf-4.3.0/nc-config" ncdf4
+
+wget   http://download.osgeo.org/gdal/1.10.0/gdal-1.10.0.tar.gz
+tar -xzf gdal-1.10.0.tar.gz
+cd gdal-1.10.0
+sudo ./configure
+sudo make install
+
 # install PEcAn packages in R
 cd pecan
 R --vanilla < scripts/install.dependencies.R
@@ -187,4 +201,4 @@ R --vanilla < scripts/install.dependencies.R
 # compile pecan
 ./scripts/build.sh
 ```
-NB: ncdf, ncdf4, rjags, rgdal unhappy: fix.
+NB: rjags, rgdal unhappy: fix.
