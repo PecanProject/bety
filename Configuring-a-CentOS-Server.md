@@ -203,6 +203,8 @@ sudo yum install atlas blas.x86_64
 sudo rpm -Uvh  http://download.opensuse.org/repositories/home:/cornell_vrdc/CentOS_CentOS-5/x86_64/jags3-3.3.0-48.1.x86_64.rpm
 sudo rpm -Uvh http://download.opensuse.org/repositories/home:/cornell_vrdc/CentOS_CentOS-5/x86_64/jags3-devel-3.3.0-48.1.x86_64.rpm
 
+yum install proj-devel.x86_64
+
 
 # install PEcAn packages in R
 cd pecan
