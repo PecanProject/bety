@@ -190,6 +190,9 @@ cd ..
 tar -xzf ncdf4_1.6.1.tar.gz
 sudo R CMD INSTALL --configure-args="--with-nc-config=~/netcdf-4.3.0/nc-config" ncdf4
 
+
+rpm -Uvh http://www6.atomicorp.com/channels/atomic/centos/5/x86_64/RPMS/sqlite-3.7.0.1-1.el5.art.x86_64.rpm
+
 wget   http://download.osgeo.org/gdal/1.10.0/gdal-1.10.0.tar.gz
 tar -xzf gdal-1.10.0.tar.gz
 cd gdal-1.10.0
@@ -199,6 +202,7 @@ sudo make install
 sudo yum install atlas blas.x86_64
 sudo rpm -Uvh  http://download.opensuse.org/repositories/home:/cornell_vrdc/CentOS_CentOS-5/x86_64/jags3-3.3.0-48.1.x86_64.rpm
 sudo rpm -Uvh http://download.opensuse.org/repositories/home:/cornell_vrdc/CentOS_CentOS-5/x86_64/jags3-devel-3.3.0-48.1.x86_64.rpm
+
 
 # install PEcAn packages in R
 cd pecan
