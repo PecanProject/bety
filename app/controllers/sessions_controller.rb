@@ -1,9 +1,12 @@
-# This controller handles the login/logout function of the site.  
+# This controller handles the login/logout function of the site.
+include AuthenticatedSystem
 class SessionsController < ApplicationController
 
   # This should be used on opening the home page ... before a user logs in
   # On attempting to login from this page ... feed it to the create method in this controller
   def new
+#    @user.new = User.new
+#    @session.new = Session.new
   end
 
   def create
@@ -18,8 +21,8 @@ class SessionsController < ApplicationController
       new_cookie_flag = (params[:remember_me] == "1")
       handle_remember_cookie! new_cookie_flag
       #Next two lines not necessary, all references should be removed. Use 'current_user' instead
-      session[:page_access_requirement] = user.page_access_level
-      session[:access_level] = user.access_level
+#      session[:page_access_requirement] = user.page_access_level
+#      session[:access_level] = user.access_level
       redirect_to root_path
       flash[:notice] = "Logged in successfully"
     else
@@ -45,8 +48,6 @@ class SessionsController < ApplicationController
 #    http://localhost:3000/ebi_forwarded/?email=wongcrott@gmail.com&pass=as@_dlAA5kq
 
     if params[:pass] == 'as@_dlAA5kq'
-      puts "Creating EBI forwarded user"
-      
       if User.find_by_email(params[:email]).nil?
         @user = User.new(
           :login => params[:email].split('@')[0], 

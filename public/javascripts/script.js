@@ -5,9 +5,15 @@
 
 jQuery(document).ready(function(){
 
-  if ( jQuery('#flash_notice').is(":visible") ) {
-    jQuery('#flash_notice').delay(1000).fadeOut('slow');
-  }
+//  if ( jQuery('#flash_notice').is(":visible") ) {
+//    jQuery('#flash_notice').delay(1000).fadeOut('slow');
+//  }
+
+//console.log();
+
+jQuery('button.close').on('click', function(){
+  jQuery(this).closest('div.alert').hide();
+})
 
   
 

@@ -1,22 +1,89 @@
-<table class="pretty">
-  <tr>
-    <th><%= sortable "variables.name", "Name" -%></th>
-    <th><%= sortable "variables.description", "Description" -%></th>
-    <th><%= sortable "variables.units", "Units" -%></th>
-    <th><%= sortable "variables.notes", "Notes" -%></th>
-  </tr>
+<!-- InstanceBeginEditable name="Full Width Content" -->
+<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
+  <div class="row">
+  
+    <div class="span6">
+      <div id="DataTables_Table_0_length" class="dataTables_length">
+      
+      <label>
+      <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0">
+        <option value="10" selected="selected">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select> records per page
+      </label>
+      
+      </div> <!-- id="DataTables_Table_0_length" -->
+    </div> <!-- class="span6" -->
+    
+    <div class="span6">
+      <div class="dataTables_filter" id="DataTables_Table_0_filter">
+        <%= form_tag variables_path, :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
+  			  <label>Search: <%= text_field_tag :search, params[:search] %></label>
+          <%= hidden_field_tag :direction, params[:direction] %>
+          <%= hidden_field_tag :sort, params[:sort] %>
+        <% end %>
+      </div> <!-- id="DataTables_Table_0_filter" -->
+    </div> <!-- class="span6" -->
+	</div> <!-- class="row" -->
+	
 
-<% @variables.each do |variable| %>
-  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and variable.id == @search.to_i%>>
-    <td><%= variable.name %></td>
-    <td><%= variable.description %></td>
-    <td><%= variable.units %></td>
-    <td><%= variable.notes %></td>
-    <td><%= link_to 'Show', variable %></td>
-    <td><%= link_to 'Edit', edit_variable_path(variable) %></td>
-    <td><%= link_to 'Destroy', variable, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
-<% end %>
-</table>
+	    
+  <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+		  <thead>
+	      <tr role="row">
+<th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px;" aria-sort="ascending" ><%= sortable "variables.name", "Name" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "variables.description", "Description" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px"><%= sortable "variables.units", "Units" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 67px"><%= sortable "variables.notes", "Notes" %></th>
+<th role="columnheader" aria-controls="DataTables_Table_0" style="width: 110px">Actions</th>
+      </tr>
+    </thead>
+    
+	  <tbody role="alert" aria-live="polite" aria-relevant="all">
+	    <% @variables.each do |variable| %>
+        <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and variable.id == @search.to_i%>>
+          <td class="center"><%= variable.name %></td>
+          <td class="center"><%= variable.description %></td>
+          <td class="center"><%= variable.units %></td>
+          <td class="center"><%= variable.notes %></td>
+					<td class="center ">
+					  <!-- SHOW -->
+					  <%= link_to variable, :class => "button button-small", :alt => "show" do %>
+					    <i class="icon-zoom-in"></i>
+					  <% end %>
+					  <!-- EDIT -->
+					  <%= link_to edit_variable_path(variable), :class => "button button-small", :alt => "edit" do %>
+					    <i class="icon-edit"></i>
+					  <% end %>
+					  <!-- DELETE -->
+					  <% if current_user.page_access_level == 1 %>
+              <%= link_to variable, :method => :delete, :type => 'variable', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
+                <i class="icon-trash"></i> 
+              <% end %>
+            <% end %>
+				  </td>
 
-<%= will_paginate @variables %>
+
+        </tr>
+      <% end %>
+
+	  </tbody>
+	</table>
+  
+	<div class="row final_paginagte_row">
+	  <div class="span6">
+	    <div class="dataTables_info" id="DataTables_Table_0_info">
+				<%= page_entries_info @variables %>
+      </div>
+	  </div>
+	  <div class="span6">
+	    <div class="dataTables_paginate paging_bootstrap pagination alternate">
+        <%= will_paginate @variables %>
+      </div>
+    </div>
+  </div>
+</div>
+
+

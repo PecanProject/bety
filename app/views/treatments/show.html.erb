@@ -1,26 +1,43 @@
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+				<h1>Viewing Treatment</h1>
+			</header>
+      
+			<!-- InstanceBeginEditable name="Full Width Content" --> 
+			<dl class="dl-horizontal">
+				<dt>Name</dt>
+				<dd><%= @treatment.name %></dd>
+				<dt>Definition</dt>
+			  <dd><%= @treatment.definition %></dd>
+				<dt>Control</dt>
+				<dd><%= @treatment.control ? "Yes" : "No"  %></dd>
+				<dt>User</dt>
+				<dd><%= @treatment.user %></dd>
+			</dl>
+			<div class="form-actions">
+				<div class="button-group">
+          <%= link_to( treatments_path ) do %>
+					  <button class="button"><i class="icon-arrow-left"></i> Go Back</button>
+					<% end %>
+					<%= link_to( edit_treatment_path(@treatment) ) do %>
+    			  <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>	
+  				<% end %>
+					
+				</div>
+			</div>
+			<!-- InstanceEndEditable --> </div>
+	</div>
+	<!-- container --> 
+</div>
 
-<hr width="50%">
-
-<p>
-  <b>Name:</b>
-  <%= @treatment.name %>
-</p>
-
-<p>
-  <b>Def:</b>
-  <%= @treatment.definition %>
-</p>
-
-<p>
-  <b>Control:</b>
-  <%= @treatment.control ? "Yes" : "No"  %>
-</p>
-
-<p>
-  <b>User:</b>
-  <%= @treatment.user  %>
-</p>
 
 
-<%= link_to 'Edit', edit_treatment_path(@treatment) %> |
-<%= link_to 'Back', treatments_path %>
+
+
+
+
+
+  
+

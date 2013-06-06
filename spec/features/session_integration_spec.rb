@@ -15,21 +15,17 @@ feature 'Login works' do
     it 'notify on successful login' do
       visit login_path
       # This will make the page search a bit faster by going to div#content
-      within ("#content") do
-        fill_in 'Login', :with => 'carlcrott'
-        fill_in 'Password', :with =>  'asdfasdf'
-        click_button 'Log in'
-      end
+      fill_in 'Login', :with => 'carlcrott'
+      fill_in 'Password', :with => 'asdfasdf'
+      click_button 'Log in'
 #      print page.body
       page.should have_content("Logged in successfully")
     end
     it 'notify on unsuccessful login' do
       visit login_path
-      within ("#content") do
-        fill_in 'Login', :with => 'carlcrott'
-        fill_in 'Password', :with =>  'wrong'
-        click_button 'Log in'
-      end
+      fill_in 'Login', :with => 'carlcrott'
+      fill_in 'Password', :with => 'wrong'
+      click_button 'Log in'
       page.should have_content("The login credentials you provided are incorrect")
     end    
   end

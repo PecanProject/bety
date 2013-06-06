@@ -15,7 +15,7 @@ test_site:
   updated_at: "2010-07-09 18:01:49"
   sitename: ""
   greenhouse: false
-  user_id: nil
+  user_id: 1
   local_time: nil
   sand_pct: nil
   clay_pct: nil

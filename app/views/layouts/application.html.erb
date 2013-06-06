@@ -43,7 +43,7 @@
   <%= javascript_include_tag 'lazy/application.js' %>
 
   <% if ['sites','maps','visitors'].include?(params[:controller]) %>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA9Ac4XswpkdjIslQcRJzgwnbkEDdomZS4&amp;sensor=false"></script> 
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyA9Ac4XswpkdjIslQcRJzgwnbkEDdomZS4&sensor=false"></script> 
   <% end %>
 
   <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />	
@@ -66,11 +66,11 @@
   <!-- Old CSS -->
   <%= stylesheet_link_tag "scaffold" %>
   <!-- Redesign CSS -->
-  <%= stylesheet_link_tag "base", "grid", "dropdown", "demo", "layout" %>
+  <%= stylesheet_link_tag "base", "grid", "layout", "dropdown", "tables", "demo" %>
 </head>
 
 
-<body onunload="GUnload()">
+<body class="home" onunload="GUnload()">
   <!--[if IE ]>
     <style>
       ul.mainlevel-suckerfish-horizontal, .mainlevel-suckerfish-horizontal ul { margin-left:32px; margin-top:0px; }
@@ -78,21 +78,26 @@
     </style>
   <![endif]-->
   
-  <div id="header">
+
+  
+  <!-- Primary Page Layout
+  ================================================== -->
+  <div class="header">
 	  <div class="container">
 		  <div class="sixteen columns">
-			  <h1 class="remove-bottom">
-			  <a href="ebi.html" class="org">Energy Biosciences Institute</a>
-			  <a href="/" class="site"><strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small></a>
-			  </h1>
+			  <h1 class="remove-bottom"><a href="ebi.html" class="org">Energy Biosciences Institute</a> <a href="/" class="site"><strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small></a></h1>
 			  <div id="header_user_name">
-			    <% if current_user != nil %>
-  			    User: <%= current_user %>
-  			  <% end %>
-			  </div>
+		      <% if current_user != nil %>
+			      User: <%= current_user %>
+			    <% end %>
+		    </div>
+		    
 		  </div>
-	  </div><!-- container -->
+	  </div><!-- container --> 
   </div>
+  
+  
+  
   
   
   <div class="nav">    
@@ -104,6 +109,8 @@
           <ul class="main-menu sf-menu clearfix">
             <li class="menu-home"><%= link_to "Home", root_path %></li>
             
+            
+            <% if current_user != nil %>
             <li class="menu-data"><a>Data</a>
               <ul class="sub-menu">
                 <li><%= link_to "Citations", citations_path %></li>
@@ -130,6 +137,8 @@
                 <li><%= link_to "Yields", yields_path %></li>
               </ul>
             </li>
+            <% end %>
+            
             
             <li class="menu-docs"> <a>Docs</a>
               <ul class="sub-menu">
@@ -170,14 +179,14 @@
                 <li><%= link_to "Model Projections", :controller => "maps", :action => "location_yields" %></li>
               </ul>
             </li>
-            <li class="menu-login">
-              <!-- Logic on logged in or not... to determine  -->
-              <% if current_user.nil? %>
-                <%= link_to "Login", login_path %>
-              <% else %>
+
+            <% if current_user != nil %>
+              <li class="menu-login">                            
                 <%= link_to "Logout", logout_path %>
-              <% end %>
-            </li>
+              </li>
+            <% end %>
+            
+            
           </ul>
         </div>
       </nav><!-- #access -->
@@ -188,86 +197,71 @@
   
   
   
-  <div id="content">
-    <div id="content-wrapper">
+  <% if !session['citation'].nil? and Citation.exists?(session['citation']) %>
+    <h5 class="centered">Citation: <%= link_to Citation.find(session['citation']).author_year_title, citation_url( session['citation']) %> <%= link_to '[remove]', :controller => "application", :action => "remove_citation" %> </h5>
+  <% elsif !session['citation'].nil? and !Citation.exists?(session['citation'])
+       session['citation'] = nil
+  %>
+    <hr>
+    
+  <% end %>
+  
+  <% if flash[:notice] %>
+    <div class="alert alert-success fade in centered">
+      <div style="width:850px; margin:auto">
+	      <button class="close" data-dismiss="alert">×</button>
+	      <%= flash[:notice] %>
+	    </div>
+	  </div>
+  <% end %>
 
-      <hr>
-      <% if !session['citation'].nil? and Citation.exists?(session['citation']) %>
-        <h5 class="centered">Citation: <%= link_to Citation.find(session['citation']).author_year_title, citation_url( session['citation']) %> <%= link_to '[remove]', :controller => "application", :action => "remove_citation" %> </h5>
-      <% elsif !session['citation'].nil? and !Citation.exists?(session['citation'])
-           session['citation'] = nil
-      %>
-        <hr>
-        
-      <% end %>
-      
-      <% if flash[:notice] %>
-        <div id="flash_notice">
-          <div class="bg">
-            <h5 class="centered"><%= flash[:notice] %></h5>
-          </div>
-          <hr>
-        </div>
-        <% flash[:notice] = nil %>
-      <% end %>
+  <%= yield  %>
+  
 
-      <br />
-      <%= yield  %>
-      
-      <br />
-
-    </div><!-- end content-wrapper -->
-  </div><!-- end content -->
 
   
   
-  <div id="footer">   
-    <div class="container">
-		  <div class="sixteen columns">
-      	<h2>Footer</h2>
-	      <div class="three columns alpha">
-        	<h3><strong>BETY</strong>db</h3>
-          <ul>
-          	<li><a href="http://www.betydb.org">Homepage</a></li>
-          	<li><a href="#">Documentation</a></li>
-          	<li><a href="#">Maps &amp; Data</a></li>
-          	<li><%= link_to "Create Account", signup_path %></li>
-          </ul>
-        </div>
-	      <div class="three columns">
-        	<h3><strong>Contact</strong> Info</h3>
-          <ul>
-          	<li><a href="">Report a problem</a></li>
-          	<li><%= link_to "Send us a message", :controller => "contacts" %></li>
-          </ul>
-        </div>
-	      <div class="four columns">
-        	<h3><strong>Translate</strong> Page</h3>
-          <div id="google_translate_element"></div>
-        </div>
-	      <div class="six columns omega">
-        	<p>David LeBauer, Dan Wang, and Michael Dietze, 2010. Biofuel Ecophysiological Traits and Yields Database Version 1.0. Energy Biosciences Institute, Urbana, IL</p>
-          <p>Copyright &copy; 2010-2012 Energy Biosciences Institute</p>
-        </div>
-        <hr />
-        <div class="footnotes">     
-        <div class="four columns alpha"><a href="http://illinois.edu" title="University of Illinois at Urbana-Champaign" class="illinois">University of Illinois at Urbana-Champaign</a></div>
-        <div class="four columns"><a href="http://www.berkeley.edu" title="University of California, Berkeley" class="berkeley">University of California, Berkeley</a></div>
-        <div class="four columns"><a href="http://www.lbl.gov" title="Lawrence Berkeley National Laboratory (LBL)" class="lbl">Lawrence Berkeley National Laboratory</a></div>
-        <div class="four columns omega"><a href="http://www.bp.com" title="British Petroleum (BP)" class="bp">British Petroleum (BP)</a></div>
-        </div>
-      </div>
-	  </div><!-- container -->
+  <div class="footer">
+	  <div class="container">
+		  <div class="row">
+			  <h2>Footer</h2>
+			  <div class="three columns alpha">
+				  <h3><strong>BETY</strong>db</h3>
+				  <ul class="unstyled">
+					  <li><%= link_to "Homepage", root_path %></li>
+					  <li><a href="dbdocumentation_users.pdf">Documentation</a></li>
+					  <li><a href="/maps/location_yields">Maps &amp; Data</a></li>
+				  </ul>
+			  </div>
+			  <div class="three columns">
+				  <h3><strong>Contact</strong> Info</h3>
+				  <ul class="unstyled">
+					  <li><%= link_to "Report a problem", "/contacts/" %></li>
+					  <li><%= link_to "Send us a message", "/contacts/" %></li>
+				  </ul>
+			  </div>
+			  <div class="four columns">
+				  <h3><strong>Translate</strong> Page</h3>
+				  <div id="google_translate_element"><div class="skiptranslate goog-te-gadget" dir="ltr" style=""><div id=":0.targetLanguage" style="white-space: nowrap; " class="goog-te-gadget-simple"><img src="http://www.google.com/images/cleardot.gif" class="goog-te-gadget-icon" style="background-image: url(http://translate.googleapis.com/translate_static/img/te_ctrl3.gif); background-position: -65px 0px; "><span style="vertical-align: middle; "><a class="goog-te-menu-value" href="javascript:void(0)"><span>Select Language</span><img src="http://www.google.com/images/cleardot.gif" width="1" height="1"><span style="border-left-width: 1px; border-left-style: solid; border-left-color: rgb(187, 187, 187); ">​</span><img src="http://www.google.com/images/cleardot.gif" width="1" height="1"><span style="color: rgb(155, 155, 155); ">▼</span></a></span></div></div></div>
+			  </div>
+			  <div class="six columns omega">
+				  <p>David LeBauer, Dan Wang, and Michael Dietze, 2010. Biofuel Ecophysiological Traits and Yields Database Version 1.0. Energy Biosciences Institute, Urbana, IL</p>
+				  <p>Copyright © 2010-2013 Energy Biosciences Institute</p>
+			  </div>
+		  </div>
+		  <hr>
+		  <div class="row">
+			  <div class="footnotes">
+				  <div class="four columns alpha"><a href="http://illinois.edu" title="University of Illinois at Urbana-Champaign" class="illinois">University of Illinois at Urbana-Champaign</a></div>
+				  <div class="four columns"><a href="http://www.berkeley.edu" title="University of California, Berkeley" class="berkeley">University of California, Berkeley</a></div>
+				  <div class="four columns"><a href="http://www.lbl.gov" title="Lawrence Berkeley National Laboratory (LBL)" class="lbl">Lawrence Berkeley National Laboratory</a></div>
+				  <div class="four columns omega"><a href="http://www.bp.com" title="British Petroleum (BP)" class="bp">British Petroleum (BP)</a></div>
+			  </div>
+		  </div>
+	  </div>
+	  <!-- container --> 
   </div>
   
-  <script>
-	function googleTranslateElementInit() {
-	  new google.translate.TranslateElement({
-	  pageLanguage: 'en',
-	  layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-	  }, 'google_translate_element');
-	}
-  </script>
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   
 </body>

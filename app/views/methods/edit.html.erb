@@ -1,24 +1,43 @@
-<h1>Editing method</h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+	      <h1>Editing Method</h1>
+			</header>
 
-<%= form_for(@method) do |f| %>
-  <%= f.error_messages %>
+      <%= form_for(@method) do |f| %>
+        <%= f.error_messages %>
 
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :description %><br />
-    <%= f.text_area :description %>
-  </p>
-  <p>
-    <%= f.label :citation_id %><br />
-    <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %> <em><%= link_to "New Citation", new_citation_path %></em>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "input-full" %>
+            <br />
+            <%= f.label :citation_id %>
+            <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %> 
+            <em><%= link_to "New Citation", new_citation_path %></em>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :description %>
+            <%= f.text_area :description, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
 
-<%= link_to 'Show', @method %> |
-<%= link_to 'Back', methods_path %>
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( @method ) do %>
+              <button class="button">Show</button>
+            <% end%>
+            <%= link_to( methods_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+					<div class="button-group pull-right">
+						<%= f.submit 'Update', :class => "button button-primary" %>
+					</div>
+				</div>
+      <% end %>
+      
+    </div>
+  </div>
+</div>

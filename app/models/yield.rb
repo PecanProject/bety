@@ -15,6 +15,7 @@ class Yield < ActiveRecord::Base
   belongs_to :ebi_method, :class_name => 'Methods', :foreign_key => 'method_id'
 
   validates_presence_of     :mean
+  validates_numericality_of :mean
   validates_presence_of     :statname, :if => Proc.new { |y| !y.stat.blank? }
 
   scope :all_order, includes(:specie).order('species.genus, species.species')

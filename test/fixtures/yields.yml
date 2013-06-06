@@ -16,4 +16,7 @@ test_yield:
   user_id: 1
   checked: 1
   access_level: 3
-  method_id: nil
+  method_id: 1
+  
+  
+  
