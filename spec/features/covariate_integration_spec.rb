@@ -7,9 +7,9 @@ feature 'Covariates index works' do
   end
 
   context 'GET /covariates' do
-    it 'should have "Listing covariates" ' do
+    it 'should have "Listing Covariates" ' do
       visit '/covariates'
-      page.should have_content 'Listing covariates'
+      page.should have_content 'Listing Covariates'
     end
 
   end

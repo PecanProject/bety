@@ -1,28 +1,58 @@
-<h1>New treatment <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node18.html?min" }) %></h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>New Treatment</h1>
+      </header>
 
+      <%= form_for(@treatment) do |f| %>
+        <%= f.error_messages %>
+        
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "input-full"  %>
+          </div>
 
-<%= form_for(@treatment) do |f| %>
-  <%= f.error_messages %>
+          <div class="eight columns omega">
+            <%= f.label :definition %>
+            <%= f.text_field :definition, :class => "input-full" %>
+          </div>
+        </div>
 
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :definition %><br />
-    <%= f.text_field :definition %>
-  </p>
-  <p>
-    <%= f.label :control %><br />
-    <%= f.select :control, [["True",true],["False",false]], { :include_blank => true } %>
-  </p>
-  <p>
-    <%= f.label :user %><br />
-    <%= current_user %>
-  </p>
-  <p>
-     <%= f.submit 'Create' %>
-  </p>
-<% end %>
+        <div class="row">
+          <div class="two columns alpha">
+            <%= f.label :control %>
+            <%= f.select :control, [["True",true],["False",false]], { :include_blank => true } %>
+          </div>
+          <div class="fourteen columns omega">
+            &nbsp;
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="two columns alpha">
+            <%= f.label :user %>
+            <%= current_user %>
+          </div>
+          <div class="fourteen columns omega">
+            &nbsp;
+          </div>
+        </div>
+         
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( treatments_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+		      <div class="button-group pull-right">
+			      <%= f.submit 'Create', :class => "button button-primary" %>
+		      </div>
+	      </div>
 
-<%= link_to 'Back', treatments_path %>
+      <% end %>
+    </div>
+  </div>
+</div>
+

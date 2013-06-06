@@ -1,48 +1,41 @@
-<p>
-  <b>Citation:</b>
-  <%= link_to_if @prior.citation, @prior.citation, @prior.citation %>
-</p>
-
-<p>
-  <b>Variable:</b>
-  <%= link_to_if @prior.variable, @prior.variable, @prior.variable %>
-</p>
-
-<p>
-  <b>Phylogeny:</b>
-  <%= @prior.phylogeny %>
-</p>
-
-<p>
-  <b>Distn:</b>
-  <%= @prior.distn %>
-</p>
-
-<p>
-  <b>Parama:</b>
-  <%= @prior.parama %>
-</p>
-
-<p>
-  <b>Paramb:</b>
-  <%= @prior.paramb %>
-</p>
-
-<p>
-  <b>N:</b>
-  <%= @prior.n %>
-</p>
-
-<p>
-  <b>Notes:</b>
-  <%= @prior.notes %>
-</p>
-<p>
-  <b>Graph:</b>
-  <p>
-  <img src="preview/<%=@id%>">
-</p>
-
-
-<%= link_to 'Edit', edit_prior_path(@prior) %> |
-<%= link_to 'Back', priors_path %>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+				<h1>Viewing Prior</h1>
+			</header>
+      
+			<!-- InstanceBeginEditable name="Full Width Content" --> 
+			<dl class="dl-horizontal">
+				<dt>Citation</dt>
+				<dd><%= link_to_if @prior.citation, @prior.citation, @prior.citation %></dd>
+				<dt>Variable</dt>
+				<dd><%= link_to_if @prior.variable, @prior.variable, @prior.variable %></dd>
+				<dt>Phylogeny</dt>
+				<dd><%= @prior.phylogeny %></dd>
+				<dt>Distn</dt>
+				<dd><%= @prior.distn %></dd>
+				<dt>Param a</dt>
+				<dd><%= @prior.parama %></dd>
+				<dt>Param b</dt>
+				<dd><%= @prior.paramb %></dd>
+				<dt>N</dt>
+				<dd><%= @prior.n %></dd>
+				<dt>Notes</dt>
+			  <dd><%= @prior.notes %></dd>
+			</dl>
+			<div class="form-actions">
+				<div class="button-group">
+          <%= link_to( priors_path ) do %>
+					  <button class="button"><i class="icon-arrow-left"></i> Go Back</button>
+					<% end %>
+					<%= link_to( edit_prior_path(@prior) ) do %>
+    			  <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>	
+  				<% end %>
+					
+				</div>
+			</div>
+			<!-- InstanceEndEditable --> </div>
+	</div>
+	<!-- container --> 
+</div>

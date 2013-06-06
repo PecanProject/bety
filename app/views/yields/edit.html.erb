@@ -1,63 +1,101 @@
-<h1>Editing yield  <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node23.html?min" }) %></h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+	      <h1>Editing Yield</h1>
+			</header>
 
-<%= form_for(@yield) do |f| %>
-  <%= f.error_messages %>
 
-  <p>
-    <%= f.label :citation_id %><br />
-    <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, {} %>
-  </p>
-  <p>
-    <%= f.label :site_id %><br />
-    <%= f.select :site_id, Site.order('city').collect { |p| [ p.select_default, p.id ] }, {} %>
-  </p>
+      <%= form_for(@yield) do |f| %>
+        <%= f.error_messages %>
 
-  <%= render :partial => "species/species_search" %>
+        <div class="row">
+          <div class="four columns alpha">
+            <%= f.label :mean %>
+            <%= f.text_field :mean, :size => 8, :class => "input-full" %>
+          </div>
+          <div class="four columns">
+            <%= f.label :statistic %>
+            <%= f.text_field :stat, :size => 8, :class => "input-full" %>
+          </div>
+          <div class="two columns">
+            <%= f.label "Statistic Name" %>
+            <%= f.select :statname, $statname_list %>
+          </div>
+          <div class="two columns">
+            <%= f.label :n %>
+            <%= f.text_field :n, :size => 8, :class => "input-full" %>
+          </div>
+          <div class="two columns omega">
+            <%= f.label :method_id, "Method" %>
+            <%= f.select :method_id, Methods.all.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="six columns alpha">
+            <%= f.label :date %>
+            <%= f.date_select :date,:defualt => nil, :order=> [:day, :month, :year], :add_month_numbers=> true, :include_blank=> true, :start_year=> 1800, :end_year=> Time.now.year %>
+          </div>
+          <div class="two columns">
+            <b>... OR ...</b>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label "julian day (1-365)/year" %>
+            <%= text_field_tag "julianday" %> / <%= text_field_tag "julianyear" %>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="four columns alpha">
+            &nbsp;
+          </div>
+          <div class="eight columns">
+            <%= render :partial => "species/species_search" %>
+          </div>
+          <div class="four columns omega">
+            &nbsp;
+          </div>
+        </div>
+            
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :cultivar_id %>
+            <%= f.select :cultivar_id, Cultivar.joins(:specie).order('species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true}, :class => "input-full" %>
+            <br />
+            <%= f.label :dateloc, "Date Level of Confidence" %>
+            <%= f.select :dateloc, options_for_select($dateloc_drop.sort,f.object.dateloc.to_s), :class => "input-full" %>
+            <br />
+            <%= f.label :access_level %>
+            <%= f.select :access_level, [["1.Restricted",1],['2.EBI',2],['3.External',3],['4.Public',4]], :selected => current_user.access_level, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :notes %>
+            <%= f.text_area :notes, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
 
-  <p>
-    <%= f.label :treatment_id %> <%= raw treatment_check(f.object) -%><br />
-    <%= f.select :treatment_id, (f.object.citation.treatments.collect { |p| [ p.select_default, p.id ] } rescue []), {} %>
-  </p>
-  <p>
-    <%= f.label :cultivar_id %><br />
-    <%= f.select :cultivar_id, Cultivar.joins(:specie).order('species.scientificname').collect { |p| [ p.select_default, p.id ] },  { :include_blank => true} %>
-  </p>
-  <p>
-    <%= f.label :method_id, "Method" %><br />
-    <%= f.select :method_id, Methods.all.collect { |p| [ p.select_default, p.id ] },  { :include_blank => true} %>
-  </p>
-  <p>
-    <%= f.label :date %><br />
-      <%= f.date_select :date, :defualt => nil, :order => [:day, :month, :year], :add_month_numbers => true, :include_blank => true, :start_year => 1800, :end_year => Time.now.year %>
-  </p>
-  <p>
-    <%= f.label :dateloc, "Date Level of Confidence" %><br />
-    <%= f.select :dateloc, options_for_select($dateloc_drop.sort,f.object.dateloc.to_s) %>
-  </p>
-  <p>
-    <%= f.label :statistic %><br />
-    <%= f.text_field :stat, :size => 8 %>
-  </p>
-  <p>
-    <%= f.label :statname, "stat name" %><br />
-    <%= f.select :statname, $statname_list %>
-  </p>
-  <p>
-    <%= f.label :mean %><br />
-    <%= f.text_field :mean %>
-  </p>
-  <p>
-    <%= f.label :n %><br />
-    <%= f.text_field :n %>
-  </p>
-  <p>
-    <%= f.label :access_level %><br />
-    <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]]%>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( @yield ) do %>
+              <button class="button">Show</button>
+            <% end%>
+            <%= link_to( yields_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+					<div class="button-group pull-right">
+						<%= f.submit 'Update', :class => "button button-primary" %>
+					</div>
+				</div>
+          
+      <% end %>
+  
+    </div>
+  </div>
+</div>
+
+
 
 <div id="explain" style="display: none">* = This field for this Trait is NULL in the database. We do not allow this field to be blank, so if you update the record incorrect values might be saved.</div>
 
@@ -83,5 +121,3 @@
 <% end %>
 </script>
 
-<%= link_to 'Show', @yield %> |
-<%= link_to 'Back', yields_path %>

@@ -1,45 +1,55 @@
-<h1>New site <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node16.html?min" }) %></h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>New Site</h1>
+      </header>
+      
+      <% if session['citation'].nil? %>
+        <h2>Please choose a citation to work with first. <%= link_to 'Citations', citations_path %></h2>
+      <% else %>
 
-<% if session['citation'].nil? %>
-  <h2>Please choose a citation to work with first. <%= link_to 'Citations', citations_path %></h2>
-<% else %>
+      <%= form_for(@site) do |f| %>
+        <%= f.error_messages %>
 
 
-<table>
-<%= form_for(@site) do |f| %>
-  <%= f.error_messages %>
-  <tr>
-    <td colspan=3>
-      <%= f.label :sitename, "Site name" %><br />
-      <%= f.text_field :sitename %>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <%= f.label :masl, "Elevation (m)" %><br />
-      <%= f.text_field :masl %>
-    </td>
-    <td>
-      <%= f.label :map, "Mean Annual Precipitation (mm/yr)" %><br />
-      <%= f.text_field :map %>
-    </td>
-    <td>
-      <%= f.label :mat, "Mean Annual Temperature (°C)" %><br />
-      <%= f.text_field :mat %>
-    </td>
-  </tr>
-  <tr>
-    <td>
-    <%= f.label :city %><br />
-    <%= f.text_field :city %>
-    </td>
-    <td>
-    <%= f.label :state %><br />
-    <%= f.text_field :state %>
-    </td>
-    <td>
-    <%= f.label :country %><br />
-    <%= f.select :country, [[ "UNITED STATES", "US" ],
+                <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :sitename, "Site name" %>
+            <%= f.text_field :sitename, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            &nbsp;
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="five columns alpha">
+            <%= f.label :masl, "Elevation (m)" %>
+            <%= f.text_field :masl, :class => "input-full" %>
+          </div>
+          <div class="five columns">
+            <%= f.label :map, "Mean Annual Precipitation (mm/yr)" %>
+            <%= f.text_field :map, :class => "input-full" %>
+          </div>
+          <div class="six columns omega">
+            <%= f.label :mat, "Mean Annual Temperature (°C)" %>
+            <%= f.text_field :mat, :class => "input-full" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="five columns alpha">
+            <%= f.label :city %>
+            <%= f.text_field :city, :class => "input-full" %>
+          </div>
+          <div class="five columns">
+            <%= f.label :state %>
+            <%= f.text_field :state, :class => "input-full" %>
+          </div>
+          <div class="six columns omega">
+            <%= f.label :country %>
+            <%= f.select :country, [[ "UNITED STATES", "US" ],
 [ "AFGHANISTAN", "AF" ],
 [ "ÅLAND ISLANDS", "AX" ],
 [ "ALBANIA", "AL" ],
@@ -284,129 +294,141 @@
 [ "WESTERN SAHARA", "EH" ],
 [ "YEMEN", "YE" ],
 [ "ZAMBIA", "ZM" ],
-[ "ZIMBABWE", "ZW" ] ], {:include_blank => true }  %>
-    </td>
-  </tr>
-  <tr>
-    <td>
-    <%= f.label :lat %><%= link_to_prototype_window(image_tag("help.gif"), "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node17.html?min" }) %><br />
-    <%= f.text_field :lat %><br /><br />
-    <%= f.label :lon %><br />
-    <%= f.text_field :lon %><br /><br />
-    <%= f.label :local_time %><br />
-    <%= f.text_field :local_time %><br /><br />
-    <%= f.label :espg %><br />
-    <%= f.text_field :espg %><br /><br />
-    </td>
-    <td colspan=2>
+[ "ZIMBABWE", "ZW" ] ], {:include_blank => true }, :class => "input-full" %>
+          </div>
+        </div>
 
-    <div id="map_canvas" style="width: 600px; height: 400px"></div>
 
-    <div id="tmp"></div>
-    <div id="tmp1"></div>
 
-    <script type="text/javascript">
-//<![CDATA[ 
- 
-      var geocoder;
-      var address;
-      var latlng = new google.maps.LatLng(40.44,-95.98);
-      var myOptions = {
-        zoom: 4,
-        center: latlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :lat %>
+            <%= f.text_field :lat, :class => "input-full" %>
+            <br /><br />
+            <%= f.label :lon %>
+            <%= f.text_field :lon, :class => "input-full" %>
+            <br /><br />
+            <%= f.label :soil %>
+            <%= f.select :soil, %w(sandloamy sandsandy loamsilt loamloamsandy clay loamsilty clay loamclay loamsandy claysilty clayclaypeat), { :include_blank => true }, :class => "input-full" %>
+            
+            <div class="two columns alpha">
+              <%= f.label :clay_pct, "% Clay" %>
+              <%= f.text_field :clay_pct, :class => "input-full" %>
+            </div>
+            <div class="two columns">
+              <%= f.label :sand_pct, "% Sand" %>
+              <%= f.text_field :sand_pct, :class => "input-full" %>
+            </div>
+            <div class="two columns">
+              <%= f.label :som, "SOM" %>
+              <%= f.text_field :som, :class => "input-full" %>
+            </div>
+            <div class="two columns omega">
+              <%= f.label :greenhouse, "Greenhouse" %>
+              <%= f.select :greenhouse, [true, false], { :include_blank => true }, :class => "input-full" %>
+            </div>
+                 
+          </div>
+          <div class="eight columns omega">
+            <div id="map_canvas" style="width: 450px; height: 280px"></div>
+            <div id="tmp"></div>
+            <div id="tmp1"></div>
+            <script type="text/javascript">
+        //<![CDATA[ 
+         
+              var geocoder;
+              var address;
+              var latlng = new google.maps.LatLng(40.44,-95.98);
+              var myOptions = {
+                zoom: 4,
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                streetViewControl: false
+              };
 
-      var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-      var geocoder = new google.maps.Geocoder();
-      var infowindow = new google.maps.InfoWindow();
-      var temp;
-      var marker;
+              var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+              var geocoder = new google.maps.Geocoder();
+              var infowindow = new google.maps.InfoWindow();
+              var temp;
+              var marker;
 
-      google.maps.event.addListener(map,'click',function(event) {
-        geocoder.geocode({'latLng': event.latLng}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-          $("site_lat").value = event.latLng.lat();
-          $("site_lon").value = event.latLng.lng();
-          $("site_city").value = "";
-          $("site_country").value = "";
-          $("site_state").value = "";
+              google.maps.event.addListener(map,'click',function(event) {
+                geocoder.geocode({'latLng': event.latLng}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                  $("site_lat").value = event.latLng.lat();
+                  $("site_lon").value = event.latLng.lng();
+                  $("site_city").value = "";
+                  $("site_country").value = "";
+                  $("site_state").value = "";
 
-            for(k=0;k<results[0].address_components.length;k++) { 
-              var tmp = results[0].address_components[k].long_name;
-              switch (results[0].address_components[k].types[0]) { 
-              case "locality":
-                $("site_city").value = tmp;
-                break;
-              case "administrative_area_level_1":
-                $("site_state").value = tmp;
-                break;
-              case "country":
-                $("site_country").value = results[0].address_components[k].short_name.toUpperCase();
-                break;
-              default:
-              }
-            }
-          if(typeof(marker) != "undefined"){
-            marker.setMap(null);
-          }
-          marker = new google.maps.Marker({
-            position: event.latLng,
-            map: map
-          });
+                    for(k=0;k<results[0].address_components.length;k++) { 
+                      var tmp = results[0].address_components[k].long_name;
+                      switch (results[0].address_components[k].types[0]) { 
+                      case "locality":
+                        $("site_city").value = tmp;
+                        break;
+                      case "administrative_area_level_1":
+                        $("site_state").value = tmp;
+                        break;
+                      case "country":
+                        $("site_country").value = results[0].address_components[k].short_name.toUpperCase();
+                        break;
+                      default:
+                      }
+                    }
+                  if(typeof(marker) != "undefined"){
+                    marker.setMap(null);
+                  }
+                  marker = new google.maps.Marker({
+                    position: event.latLng,
+                    map: map
+                  });
 
-        } else {
-          marker.setMap(null);
-          alert("Geocoder failed due to: " + status);
-        }
-        });
-      });
+                } else {
+                  marker.setMap(null);
+                  alert("Geocoder failed due to: " + status);
+                }
+                });
+              });
+        //]]>
+            </script>
+          </div>
+        </div>
 
-//]]>
-    </script>
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :notes, "Notes" %>
+            <%= f.text_area :notes, :rows => 10, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :soilnotes, "Soil Notes" %>
+            <%= f.text_area :soilnotes, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
 
-  </tr>
-  <tr>
-    <td colspan>
-    <%= f.label :soil %><br />
-    <%= f.select :soil, [ "sand","loamy sand","sandy loam","silt loam","loam","sandy clay loam","silty clay loam","clay loam","sandy clay","silty clay","clay","peat"], { :include_blank => true }  %><br />
-    % Clay<br />
-    <%= f.text_field :clay_pct %><br />
-    % Sand<br />
-    <%= f.text_field :sand_pct %>
-
-    </td>
-    <td>
-    SOM<br />
-    <%= f.text_field :som %>
-    </td>
-    <td>
-    Greenhouse<br />
-    <%= f.select :greenhouse, [true, false], { :include_blank => true } %>
-    </td>
-  </tr>
-  <tr>
-    <td colspan=2>
-    <%= f.label :notes %><br />
-    <%= f.text_area :notes %>
-    </td>
-    <td colspan=1>
-    <%= f.label :soilnotes %><br />
-    <%= f.text_area :soilnotes %>
-    </td>
-  </tr>
-  <tr>
-  </tr>
-  <tr>
-    <td colspan=3>
-    <%= f.label :user %><br />
-    <%= current_user %><br />
-    <%= f.submit 'Create' %> <b><span id="matches_count"></span></b>
-    </td>
-  </tr>
-</table>
-<% end %>
-<% end %>
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :user %>
+            <%= current_user %>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( @site ) do %>
+              <button class="button">Show</button>
+            <% end%>
+            <%= link_to( sites_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+					<div class="button-group pull-right">
+						<%= f.submit 'Create', :class => "button button-primary" %>
+					</div>
+				</div>
+          
+      <% end %>
+    <% end %>
 
 <span id='search_term'></span>
 <div id="index_table" style="display: none;">
@@ -441,3 +463,7 @@
   }
 </script>
 <%= link_to 'Back', sites_path %>
+    </div>
+  </div>
+</div>
+

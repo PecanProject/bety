@@ -1,23 +1,41 @@
-<h1>New method</h1>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>New Method</h1>
+      </header>
 
-<%= form_for(@method, :url => { :action => :create }) do |f| %>
-  <%= f.error_messages %>
+      <%= form_for(@method, :url => { :action => :create }) do |f| %>
+        <%= f.error_messages %>
+        
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "input-full" %>
+            <br />
+            <%= f.label :citation_id %>
+            <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %> 
+            <em><%= link_to "New Citation", new_citation_path %></em>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :description %>
+            <%= f.text_area :description, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
 
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :description %><br />
-    <%= f.text_area :description %>
-  </p>
-  <p>
-    <%= f.label :citation_id %><br />
-    <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %> <em><%= link_to "New Citation", new_citation_path %></em>
-  </p>
-  <p>
-    <%= f.submit 'Create' %>
-  </p>
-<% end %>
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( methods_path ) do %>
+              <button class="button">Back</button>
+            <% end%>
+          </div>
+		      <div class="button-group pull-right">
+			      <%= f.submit 'Create', :class => "button button-primary" %>
+		      </div>
+	      </div>
 
-<%= link_to 'Back', methods_path %>
+
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,36 +1,52 @@
-<a style="text-decoration: none" href="#" onclick="showHide('show_pfts_species')" id="show_show_pfts_species">[+] View Related Species</a>
-<br/>
-<br/>
-<div id="show_pfts_species" class="hidden notvisible">
-  <%= render 'show_pfts_species' %>
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+				<h1>Viewing PFT</h1>
+			</header>
+			
+			<a style="text-decoration: none" href="#" onclick="showHide('show_pfts_species')" id="show_show_pfts_species">[+] View Related Species</a>
+      <br/>
+      <br/>
+      <div id="show_pfts_species" class="hidden notvisible">
+        <%= render 'show_pfts_species' %>
+      </div>
+      <hr />
+      <br />
+
+      <a style="text-decoration: none" href="#" onclick="showHide('show_pfts_priors')" id="show_show_pfts_priors">[+] View Related Priors</a>
+      <br/>
+      <div id="show_pfts_priors" class="hidden notvisible">
+        <%= render 'show_pfts_priors' %>
+      </div>
+
+      <hr />
+      <br />
+      <br />
+      
+			<!-- InstanceBeginEditable name="Full Width Content" --> 
+			<dl class="dl-horizontal">
+				<dt>Name</dt>
+				<dd><%= @pft.name %></dd>
+				<dt>Definition</dt>
+				<dd><%= @pft.definition %></dd>
+			</dl>
+
+			<div class="form-actions">
+				<div class="button-group">
+          <%= link_to( citations_path ) do %>
+					  <button class="button"><i class="icon-arrow-left"></i> Go Back</button>
+					<% end %>
+					<%= link_to( edit_citation_path(@citation) ) do %>
+    			  <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>	
+  				<% end %>
+					<%= link_to( make_clone_pft_path(@pft) ) do %>
+    			  <button type="submit" class="button button-primary"><i class="icon-plus"></i> Clone Record</button>	
+  				<% end %>
+					
+				</div>
+			</div>
+			<!-- InstanceEndEditable --> </div>
+	</div>
+	<!-- container --> 
 </div>
-
-<hr />
-<br />
-<br />
-
-<a style="text-decoration: none" href="#" onclick="showHide('show_pfts_priors')" id="show_show_pfts_priors">[+] View Related Priors</a>
-<br/>
-<br/>
-<div id="show_pfts_priors" class="hidden notvisible">
-  <%= render 'show_pfts_priors' %>
-</div>
-
-<hr />
-<br />
-<br />
-
-<p>
-  <b>Name:</b>
-  <%= @pft.name %>
-</p>
-
-<p>
-  <b>Definition:</b>
-  <%= @pft.definition %>
-</p>
-
-
-<%= link_to 'Edit', edit_pft_path(@pft) %> |
-<%= link_to 'Back', pfts_path %> |
-<%= link_to 'Clone', make_clone_pft_path(@pft) %>

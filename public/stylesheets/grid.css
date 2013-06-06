@@ -10,10 +10,9 @@
 
 /* #Base 960 Grid
 ================================================== */
-
     .container                                  { position: relative; width: 960px; margin: 0 auto; padding: 0; }
     .container .column,
-    .container .columns                         { float: left; display: inline; margin-left: 10px; margin-right: 10px; }
+    .container .columns                         { float: left; display: inline; margin-left: 10px; margin-right: 10px; min-height: 1px; }
     .row                                        { margin-bottom: 20px; }
 
     /* Nested Column Classes */
@@ -202,8 +201,7 @@
     /* Self Clearing Goodness */
     .container:after { content: "\0020"; display: block; height: 0; clear: both; visibility: hidden; }
 
-    /* Use clearfix class on parent to clear nested columns,
-    or wrap each row of columns in a <div class="row"> */
+    /* Use clearfix class on parent to clear nested columns, or wrap each row of columns in a <div class="row"> */
     .clearfix:before,
     .clearfix:after,
     .row:before,
