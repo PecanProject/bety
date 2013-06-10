@@ -81,6 +81,7 @@ class PriorsController < ApplicationController
     else
       send_file(imgfile, :type =>'image/png', :disposition => 'inline')
     end
+
   end
 
   # GET /priors/new

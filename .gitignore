@@ -21,3 +21,4 @@ config/initializers/site_keys.rb
 public/images/prev/*
 
 .ruby-version
+
