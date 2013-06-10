@@ -140,11 +140,18 @@ test:
   password: bety
 EOF
 
+# create and configure test log
+echo "" >> /usr/local/ebi/bety/log/test.log
+sudo chmod 0666 /usr/local/ebi/bety/log/test.log
+
+
 # setup login tokens
 cat > config/initializers/site_keys.rb << EOF
 REST_AUTH_SITE_KEY         = 'thisisnotasecret'
 REST_AUTH_DIGEST_STRETCHES = 10
 EOF
+
+
 
 # configure apache
 ln -s /usr/local/ebi/bety/public /var/www/bety
