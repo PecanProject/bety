@@ -18,4 +18,4 @@ orig.public
 public/maps/*
 config/initializers/site_keys.rb
 .Rproj.user
-public/images/prev
+public/images/prev/*

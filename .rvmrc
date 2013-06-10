@@ -1,2 +1,0 @@
-rvm use 1.9.3@betydb_rails3 --create #creates gemset if non-existant
-rvm_project_rvmrc_default=1

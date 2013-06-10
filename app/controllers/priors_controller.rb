@@ -77,8 +77,10 @@ class PriorsController < ApplicationController
 
     if !File.exist?( imgfile ) or File.atime(imgfile) < updatetime
       `R --vanilla --args #{id} #{distname} #{aparam} #{bparam} #{n} <script/previewhelp.R`
+      send_file(imgfile, :type =>'image/png', :disposition => 'inline')
+    else
+      send_file(imgfile, :type =>'image/png', :disposition => 'inline')
     end
-    send_file(imgfile, :type =>'image/png', :disposition => 'inline')
   end
 
   # GET /priors/new
