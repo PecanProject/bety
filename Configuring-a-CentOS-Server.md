@@ -134,7 +134,7 @@ test:
   adapter: mysql2
   encoding: latin1
   reconnect: false
-  database: bety_test
+  database: test
   pool: 5
   username: bety
   password: bety
