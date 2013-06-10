@@ -62,6 +62,7 @@ rm inputs.tgz
 
 ```
 #sets up the user for the bety database
+mysql -u root -p -e "create database test; create database production;"
 mysql -u root -p -e "grant all on bety.* to bety@localhost identified by 'bety';"
 wget -O /usr/local/ebi/updatedb.sh http://isda.ncsa.illinois.edu/~kooper/EBI/updatedb.sh
 chmod 755 /usr/local/ebi/updatedb.sh
@@ -120,6 +121,9 @@ chmod 777 paperclip/files paperclip/file_names
 mkdir log
 touch log/production.log
 chmod 0666 log/production.log
+touch log/test.log
+chmod 0666 log/test.log
+
 cat > config/database.yml << EOF
 production:
   adapter: mysql2
@@ -139,10 +143,6 @@ test:
   username: bety
   password: bety
 EOF
-
-# create and configure test log
-echo "" >> /usr/local/ebi/bety/log/test.log
-sudo chmod 0666 /usr/local/ebi/bety/log/test.log
 
 
 # setup login tokens
