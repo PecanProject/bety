@@ -18,6 +18,4 @@ orig.public
 public/maps/*
 config/initializers/site_keys.rb
 .Rproj.user
-
-public/UI_redesign/images/.DS_Store
 public/images/prev
