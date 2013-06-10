@@ -129,6 +129,15 @@ production:
   pool: 5
   username: bety
   password: bety
+
+test:
+  adapter: mysql2
+  encoding: latin1
+  reconnect: false
+  database: bety_test
+  pool: 5
+  username: bety
+  password: bety
 EOF
 
 # setup login tokens
