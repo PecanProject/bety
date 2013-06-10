@@ -145,7 +145,7 @@ test:
 EOF
 
 
-# setup login tokens
+# setup login tokens ( actual REST_AUTH_SITE_KEY needs to be replaced with one matching the DB )
 cat > config/initializers/site_keys.rb << EOF
 REST_AUTH_SITE_KEY         = 'thisisnotasecret'
 REST_AUTH_DIGEST_STRETCHES = 10
