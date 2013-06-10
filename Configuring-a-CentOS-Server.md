@@ -178,6 +178,12 @@ sudo -s
 source `rvm gemdir`
 ```
 
+Finally run the tests 
+```
+cd /usr/local/eby/bety/
+rake db:test:load && rake db:fixtures:load RAILS_ENV=test && rspec spec/
+```
+
 ###Pecan Installation
 
 ```
