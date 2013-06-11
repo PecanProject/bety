@@ -188,6 +188,12 @@ rake db:test:load && rake db:fixtures:load RAILS_ENV=test && rspec spec/
 ###Install Models
 Install the models biocro, sipnet, and ED as they are installed [here](https://github.com/PecanProject/pecan/wiki/Installing-PEcAn#install-models). 
 
+For biocro, there are some dependencies:
+```
+echo "install.packages('devtools',repos='http://cran.rstudio.com/')"| R --vanilla
+yum install udunits2-devel
+sudo R CMD INSTALL udunits2 --configure-args='--with-udunits2-include=/usr/include/udunits2'
+```
 
 ###Pecan Installation
 
