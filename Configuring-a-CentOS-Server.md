@@ -186,7 +186,7 @@ rake db:test:load && rake db:fixtures:load RAILS_ENV=test && rspec spec/
 
 
 ###Install Models
-Install the models biocro, sipnet, and ED as they are installed [here](https://github.com/PecanProject/pecan/wiki/Installing-PEcAn#install-models).
+Install the models biocro, sipnet, and ED as they are installed [here](https://github.com/PecanProject/pecan/wiki/Installing-PEcAn#install-models). 
 
 
 ###Pecan Installation
@@ -230,7 +230,7 @@ sudo yum install atlas blas.x86_64
 sudo rpm -Uvh  http://download.opensuse.org/repositories/home:/cornell_vrdc/CentOS_CentOS-5/x86_64/jags3-3.3.0-48.1.x86_64.rpm
 sudo rpm -Uvh http://download.opensuse.org/repositories/home:/cornell_vrdc/CentOS_CentOS-5/x86_64/jags3-devel-3.3.0-48.1.x86_64.rpm
 
-yum install proj-devel.x86_64
+yum install proj-devel.x86_64 udunits2-devel.x86_64
 
 wget http://cran.r-project.org/src/contrib/rgdal_0.8-9.tar.gz
 tar -xzf rgdal_0.8-9.tar.gz
