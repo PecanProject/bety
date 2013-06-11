@@ -192,7 +192,7 @@ cd /usr/local/ebi
 git clone https://github.com/PecanProject/pecan.git
 
 
-yum install netcdf-devel.x86_64 netcdf-static.x85_64 openmpi hdf5-devel.x86_64 
+yum install netcdf-devel.x86_64 netcdf-static.x85_64 openmpi hdf5-devel.x86_64 openmpi-devel
 #install PEcAn dependencies
 wget http://cran.r-project.org/src/contrib/ncdf4_1.6.1.tar.gz
 
@@ -227,6 +227,11 @@ sudo rpm -Uvh http://download.opensuse.org/repositories/home:/cornell_vrdc/CentO
 
 yum install proj-devel.x86_64
 
+wget http://cran.r-project.org/src/contrib/rgdal_0.8-9.tar.gz
+tar -xzf rgdal_0.8-9.tar.gz
+echo "/usr/local/lib" >> /etc/ld.so.conf.d/gdal.conf
+ldconfig -v
+R CMD INSTALL rgdal --configure-args='--with-gdal-config=/usr/local/bin/gdal-config'
 
 # install PEcAn packages in R
 cd pecan
@@ -235,4 +240,5 @@ R --vanilla < scripts/install.dependencies.R
 # compile pecan
 ./scripts/build.sh
 ```
-NB: rgdal unhappy: fix.
+###Install Models
+Install the models biocro, sipnet, and ED as they are installed [here](https://github.com/PecanProject/pecan/wiki/Installing-PEcAn#install-models).
