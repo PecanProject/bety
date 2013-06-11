@@ -184,6 +184,11 @@ cd /usr/local/eby/bety/
 rake db:test:load && rake db:fixtures:load RAILS_ENV=test && rspec spec/
 ```
 
+
+###Install Models
+Install the models biocro, sipnet, and ED as they are installed [here](https://github.com/PecanProject/pecan/wiki/Installing-PEcAn#install-models).
+
+
 ###Pecan Installation
 
 ```
@@ -240,5 +245,3 @@ R --vanilla < scripts/install.dependencies.R
 # compile pecan
 ./scripts/build.sh
 ```
-###Install Models
-Install the models biocro, sipnet, and ED as they are installed [here](https://github.com/PecanProject/pecan/wiki/Installing-PEcAn#install-models).
