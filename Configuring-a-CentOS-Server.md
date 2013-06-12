@@ -41,6 +41,16 @@ sudo rpm -Uvh epel-release-5*.rpm
 
 ... move to PEcAn wiki page for build environment https://github.com/PecanProject/pecan/wiki/Development-Environment-Setup-and-VM-Creation#install-build-environment
 
+Remember to install R 3.0:
+```
+wget http://cran.us.r-project.org/src/base/R-3/R-3.0.1.tar.gz
+tar xzf R-3.0.1.tar.gz
+cd R-3.0.1
+./configure
+make
+sudo make install
+```
+
 ###Site data installation
 
 ```
