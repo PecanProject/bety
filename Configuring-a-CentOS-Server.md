@@ -180,7 +180,7 @@ EOF
 You may have to change your DocumentRoot in /etc/httpd/conf/httpd.conf from "/var/www/html" to "/var/www" if you get the error message 'Passenger error #2 An error occurred while trying to access '/var/www/html/bety': Cannot resolve possible symlink '/var/www/html/bety': No such file or directory (2)'.
 Up next make apache2 and passenger play nicely:
 ```
-sudo passenger-install-apache2-module
+rvmsudo passenger-install-apache2-module
 ```
 If that fails, try 
 ```
