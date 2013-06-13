@@ -8,7 +8,7 @@ class SearchesController < ApplicationController
 #    @user.new = User.new
 #    @session.new = Session.new
 
-    search_string = params[:mysearch]
+    search_string = params[:search]
 
     if !search_string || search_string.strip == ""
       @results = []
@@ -72,7 +72,7 @@ class SearchesController < ApplicationController
   # removes them from the list and sets @search_type accordingly.  The
   # remaining terms are returned as a list.
   def _parse_params
-    search_string = params[:mysearch]
+    search_string = params[:search]
     logger.debug "1 #{search_string}"
     search_terms = search_string.split
     logger.debug "2 #{search_terms}"
