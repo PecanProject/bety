@@ -19,8 +19,8 @@
     
     <div class="span6">
       <div class="dataTables_filter" id="DataTables_Table_0_filter">
-        <%= form_tag citations_path, :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
-  			  <label>Search: <%= text_field_tag :search, params[:search] %></label>
+        <%= form_tag "searches", :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
+  			  <label>Search: <%= text_field_tag :mysearch, params[:search] %></label>
           <%= hidden_field_tag :direction, params[:direction] %>
           <%= hidden_field_tag :sort, params[:sort] %>
         <% end %>
@@ -30,6 +30,8 @@
   <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
 		  <thead>
 	      <tr role="row">
+<!-- <%
+=begin %>
 <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px"><%= sortable "citation.author", "Author" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "citation.year", "Year" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 200px"><%= sortable "citation.title", "Title" %></th>
@@ -38,11 +40,34 @@
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "citation.pg", "Page" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "citation.pdf", "URL" %></th>
 <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 162px">Actions</th>
+<%
+=end %>
+-->
+          <!--                    <th>Author</th>
+                                  <th>Year</th>-->
+          <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px">Site or City</th>
+          <!--                    <th>Date</th>-->
+          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px">Latitude</th> 
+          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px">Longitude</th> 
+          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px">Species</th>
+          <!--                    <th>Treatment</th> -->
+          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px">Trait</th>
+          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px">Mean</th>
+          <!--                    <th>N</th>
+                                  <th>SE</th>-->
       </tr>
     </thead>    
 	  <tbody role="alert" aria-live="polite" aria-relevant="all">
-	    <% @citations.each do |citation| %>
+	    <% @results.each do |t| %>
+        <tr><!--<%
+=begin
         <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and citation.id == @search.to_i%>>
+<%
+=end
+%>
+<%
+=begin
+%>    
           <td class="center"><%= citation.author %></td>
           <td class="center"><%= citation.year %></td>
           <td class="center"><%= citation.title %></td>
@@ -51,28 +76,84 @@
           <td class="center"><%= citation.pg %></td>
           <td class="center"><%= link_to_unless citation.pdf.blank?, 'link', citation.pdf do ""; end %></td>
 					<td class="center ">
+-->
 					  <!-- USE -->
+<!--
 				    <% if current_user.page_access_level == 1 %>
               <%= link_to "/application/use_citation/#{citation.id}", :class =>"button button-small", :alt => "use" do %>
                 <i class="icon-ok"></i> 
               <% end %>
             <% end %>
+-->
 					  <!-- SHOW -->
+<!--
 					  <%= link_to citation, :class => "button button-small", :alt => "show" do %>
 					    <i class="icon-zoom-in"></i>
 					  <% end %>
+-->
 					  <!-- EDIT -->
+<!--
 					  <%= link_to edit_citation_path(citation), :class => "button button-small", :alt => "edit" do %>
 					    <i class="icon-edit"></i>
 					  <% end %>
+-->
 					  <!-- DELETE -->
+<!--
 					  <% if current_user.page_access_level == 1 %>
               <%= link_to citation, :method => :delete, :type => 'citation', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
                 <i class="icon-trash"></i> 
               <% end %>
             <% end %>
 				  </td>
-
+<%
+=end %>
+-->
+          <!--
+              <%
+=begin %>
+          <td class="center"><%= t.author %></td>
+          <td class="center"><%= t.year %></td>
+          <%
+=end %>
+          -->
+          <td class="center"><%= t.sitename_or_city %></td>
+          <!--
+              <%
+=begin %>
+          <td class="center"><%= if t.dateloc < 5 then
+                                 t.date
+                                 elsif t.dateloc < 8
+                                                   t.year
+                                                   else
+                                                   "-"
+                                                   end %></td>
+                                 <%
+=end %>
+                                 -->
+          <td class="center"><%= t.lat  %></td>
+          <td class="center"><%= t.lon  %></td>
+          <td class="center"><%= t.scientificname %></td>
+          <td class="center"><%= t.trait %></td>
+          <!--
+              <%
+=begin %>
+          <td class="center"><%= t.treatment  %></td>
+          <%
+=end %>
+          -->
+          <td class="center"><%= t.mean  %></td>
+          <!--
+              <%
+=begin %>
+          <td class="center"><%= t.n %></td>
+          <td class="center"><%= if t.statname == "SE" then t.stat
+                  elsif t.statname == "SD" then t.stat/Math.sqrt(t.n) 
+                  else "-"
+                  end
+                  %></td>
+          <%
+=end %>
+          -->
         </tr>
       <% end %>
 
@@ -82,12 +163,12 @@
 	<div class="row final_paginagte_row">
 	  <div class="span6">
 	    <div class="dataTables_info" id="DataTables_Table_0_info">
-	      <%= page_entries_info @citations %>
+	      <%= "page_entries_info @citations" %>
 	    </div>
 	  </div>
 	  <div class="span6">
 	    <div class="dataTables_paginate paging_bootstrap pagination alternate">
-        <%= will_paginate @citations %>
+        <%= "will_paginate @citations" %>
       </div>
     </div>
   </div>
