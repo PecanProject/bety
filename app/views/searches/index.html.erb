@@ -1,107 +1,107 @@
 <div class="content">
-	<div class="container">
+  <div class="five columns omega offset-by-one">
+	<div>
+	  <%= form_tag "searches", :method => 'get', :id => 'search-form', :class => "no-margin" do %><!--<form id="search-form">-->
+		<div class="control-group">
+		  <h3>
+			<i class="icon-search"></i> SEARCH <em>FOR TRAITS AND YIELDS</em>
+		  </h3>
+		  <div class="controls">
+			<div class="input-append">
+              
+			  <input id="appendedInputButton" name="mysearch" type="text" class="" placeholder="EX: Panicum Nitrogen, Miscanthus Yield">
+			  <a id="front_page_search_button" class="button" href="#"><i class="icon-search"></i></a> </div>
+			<span class="help-inline"><small>For more options visit the <a href="" class="green">Advanced Search</a>.</small></span> </div>
+		</div>
+      <% end %>
+    </div>
+    <!-- InstanceEndEditable -->
+  </div>
 
-                <div style="float: left; clear: both">
-                  <% if @results %>
-                  <table>
-                    <tr>
+  <div class="container">
+
+    <div style="float: left; clear: both">
+      <% if @results %>
+      <table>
+        <tr>
 
 
-<!-- current column list: sitename, lat, lon, scientificname, mean, unit -->
-                      
-<!--                    <th>Author</th>
-                    <th>Year</th>-->
-                    <th>Site or City</th>
-<!--                    <th>Date</th>-->
-                    <th>Latitude</th> 
-                    <th>Longitude</th> 
-                    <th>Scientific Name</th>
-<!--                    <th>Treatment</th> -->
-                    <th>Mean</th>
-<!--                    <th>N</th>
-                    <th>SE</th>-->
-                    </tr>
+          <!-- current column list: sitename, lat, lon, scientificname, mean, unit -->
+          
+          <!--                    <th>Author</th>
+                                  <th>Year</th>-->
+          <th>Site or City</th>
+          <!--                    <th>Date</th>-->
+          <th>Latitude</th> 
+          <th>Longitude</th> 
+          <th>Scientific Name</th>
+          <!--                    <th>Treatment</th> -->
+          <th>Mean</th>
+          <!--                    <th>N</th>
+                                  <th>SE</th>-->
+        </tr>
 
-                    <% @results.each do |t| %>
-                    <tr>
-<!--
-<%
+        <% @results.each do |t| %>
+        <tr>
+          <!--
+              <%
 =begin %>
-                      <td><%= t.author %></td>
-                      <td><%= t.year %></td>
-<%
+          <td><%= t.author %></td>
+          <td><%= t.year %></td>
+          <%
 =end %>
--->
-                      <td><%= t.sitename_or_city %></td>
-<!--
-<%
+          -->
+          <td><%= t.sitename_or_city %></td>
+          <!--
+              <%
 =begin %>
-                      <td><%= if t.dateloc < 5 then
-                                           t.date
-                                           elsif t.dateloc < 8
-                                                           t.year
-                                                           else
-                                                           "-"
-                                                           end %></td>
-<%
+          <td><%= if t.dateloc < 5 then
+                                 t.date
+                                 elsif t.dateloc < 8
+                                                   t.year
+                                                   else
+                                                   "-"
+                                                   end %></td>
+                                 <%
 =end %>
--->
-                      <td><%= t.lat  %></td>
-                      <td><%= t.lon  %></td>
-                      <td><%= t.scientificname %></td>
-<!--
-<%
+                                 -->
+          <td><%= t.lat  %></td>
+          <td><%= t.lon  %></td>
+          <td><%= t.scientificname %></td>
+          <!--
+              <%
 =begin %>
-                      <td><%= t.treatment  %></td>
-<%
+          <td><%= t.treatment  %></td>
+          <%
 =end %>
--->
-                      <td><%= t.mean  %></td>
-<!--
-<%
+          -->
+          <td><%= t.mean  %></td>
+          <!--
+              <%
 =begin %>
-                      <td><%= t.n %></td>
-                      <td><%= if t.statname == "SE" then t.stat
-                              elsif t.statname == "SD" then t.stat/Math.sqrt(t.n) 
-                              else "-"
-                              end
-                              %></td>
-<%
+          <td><%= t.n %></td>
+          <td><%= if t.statname == "SE" then t.stat
+                  elsif t.statname == "SD" then t.stat/Math.sqrt(t.n) 
+                  else "-"
+                  end
+                  %></td>
+          <%
 =end %>
--->
-                    </tr>
-                    <% end %>
-                    <% else %>
-                    <%= "No Results" %>
-                    <% end %>
-                  </table>
+          -->
+        </tr>
+        <% end %>
+        <% else %>
+        <%= "No Results" %>
+        <% end %>
+      </table>
 
 
 
-</div>                        
+    </div>                        
 
 
-			</div>
+  </div>
 
-            <div class="five columns omega offset-by-one">
-				<div>
-					<%= form_tag "search", :method => 'get', :id => 'search-form', :class => "no-margin" do %><!--<form id="search-form">-->
-						<div class="control-group">
-							<h3>
-								<i class="icon-search"></i> SEARCH <em>FOR TRAITS AND YIELDS</em>
-							</h3>
-							<div class="controls">
-								<div class="input-append">
-
-									<input id="appendedInputButton" name="mysearch" type="text" class="" placeholder="EX: Panicum Nitrogen, Miscanthus Yield">
-									<a id="front_page_search_button" class="button" href="#"><i class="icon-search"></i></a> </div>
-								<span class="help-inline"><small>For more options visit the <a href="" class="green">Advanced Search</a>.</small></span> </div>
-						</div>
-                        <% end %>
-
-				</div>
-							</div>
-			<!-- InstanceEndEditable --> </div>
-	</div>
-	<!-- container --> 
 </div>
+<!-- container --> 
+
