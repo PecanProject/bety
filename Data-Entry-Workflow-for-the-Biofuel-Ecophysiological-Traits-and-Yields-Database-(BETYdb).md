@@ -878,12 +878,52 @@ Figure 11: Table used to calculate SE from F, from Starr et al. [2008]
 
 ## 13. Reference Tables
 
-<a id="Table 3"></a>
-![Alt text] (figures/table 3.png "Table 3")   
+**Table 3**
+
+**Managements**
+
+This is a list of  managements to enter, with the most common management types in bold. It is more important to have management records for Yields than for traits. For greenhouse experiments, it is not necessary to include informaton on fertilizaton, lighting, or greenhouse temperature.
+
+| Management Type | Units | Definition | Notes |
+|:----------------|:------|:-----------|:------|
+| Burned | aboveground biomass burned |
+| CO2 fumigation | ppm | | |
+| Fertilization_X      | kg x ha$^{-1}$ | fertilization rate, element X | | 
+| Fungicide | kg x ha$^{-1}$ |  | add type of fungicide to notes |
+| Grazed | years | livestock grazing | pre-experiment land use |
+| Harvest | | | no units, just date, equivalent to coppice, aboveground biomass removal |
+| Herbicide | kg x ha$^{-1}$ |   | add type of herbicide to notes: glyphosate, atrazine, many others |
+| Irrigation | cm | | convert volume \ area to depth as required |
+| Light | W m$^{-2}$ | | |
+| O3 fumigation | ppm | | |
+| Pesticide | kg x ha$^{-1}$ |  | add type of pesticide to notes |
+| Planting | plants m$^{-2}$ |    | Convert row spacing to planting density if possible |
+| Seeding  | kg seeds x ha$^{-1}$ |   |   |
+| Tillage | | | no units, maybe depth; *tillage* is equivalent to *cultivate* | 
 
 
-<a id="Table 4"></a>
-![Alt text] (figures/table 4.png "Table 4")   
+**Table 4**
+
+**Date level of confidence (DateLOC) Field**
+
+Numbering convention for the DateLOC (Date level of confidence) field, used in managements, traits, and yields table. 
+
+**DateLOC**
+
+| Dateloc | Definition |
+|:--------|:-----------|
+| 9 | no data |
+| 8 | year |
+| 7 | season |
+| 6 | month |
+| 5 | day |
+| 4 | time of day i.e. morning, afternoon |
+| 3 | hour |
+| 2 | minute |
+| 1 | second |
+| 95 | unknown year, known day |
+| 96 | unknown year, known month |
+| ...etc | | 
 
 
 <a id="Table 5"></a>
