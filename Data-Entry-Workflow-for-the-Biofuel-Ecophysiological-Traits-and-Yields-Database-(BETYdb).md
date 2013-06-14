@@ -993,8 +993,47 @@ List of the statistics that can be  entered into the statname field of traits an
 <a id="Table 7"></a>
 ![Alt text] (figures/table 7.png "Table 7")   
 
-<a id="Table 9"></a>
-![Alt text] (figures/table 9.png "Table 9")   
+**Traits with required covariates**
+
+A list of traits and the covariates that must be recorded along with the trait value in order to be converted to a constant scale from across studies.*notes:* stomatal conductance (gs) is only useful when reported in conjunction with other photosynthetic data, such as Amax. Specifically, if we have Amax and gs, then estimation of Vcmax only covaries with dark\_respiration\_factor and atmospheric CO2 concentration.  We also now have information to help constrain stomatal\_slope. If we have Amax but not gs, then our estimate of Vcmax will covary with: dark_respiration_factor, CO2, stomatal_slope, cuticular_conductance, and vapor-pressure deficit VPD (which is more difficult to estimate than CO2, but still possible given lat, lon, and date). 
+Most important, there will be a strong covariance between Vcmax and stomatal_slope.
+
+
+**Table 8: How to convert statistics from $P$, $LSD$, or $MSD$ to $SE$**
+
+| From | To | Conversion | Rcode | Notes |
+|:-----|:---|:-----------|:------|:------|
+| P | SE | $SE = \frac{\bar{X}_1-\bar{X}_2}{t_{1-P/2,2n-2}\sqrt{2/n}}$ | (x1-x2)/(qt(1-P/2,2*n-2)*sqrt(2/n)) | $\bar{X}_{1,2}$ are two means being compared. |
+| LSD | SE | $SE = \frac{LSD}{t_{1-\alpha/2,n}*\sqrt{2b}}$ | LSD/(qt(1-P/2,n)*sqrt(2*b)) | where $b$ is the number of blocks, $n$ is the number of replicates, and  $n=b$ in a Randomized Complete Block Design |
+| MSD | SE | $SE = \frac{MSD*n}{t_{1-\alpha, 2n-2}*\sqrt{2}}$ | msd*n/(qt(1-P/2,2*n-2)*sqrt(2)) | |
+
+
+**Table 9: Useful conversions for entering site, management, yield, and trait data**
+
+| From ($X$) | to ($Y$) | Conversion | Notes |
+|:-----------|:---------|:-----------|:------|
+| $X_2=$root production | $X_1=$root biomass & root turnover rate | $Y = X_2/X_1$& | Gill [2000] |
+| DD$^{\circ}$ MM'SS | XX.ZZZZ | $\textrm{XX.ZZZZ} = \textrm{XX} + \textrm{MM}/60+\textrm{SS}/60$ | to convert latitude or longitude from degrees, minutes, seconds to  decimal degrees |
+| lb | kg | $Y=X\times 2.2$ | |
+| mm/s | $\mu$ mol CO$_2$ m$^{2}$ s$^{-1}$ | $Y=X\times 0.04$ | |
+| m$^2$ | ha | $Y = X/10^6$ | |
+| g/m$^2$ | kg/ha | $Y=X\times 10$ | |
+| US ton/acre | Mg/ha | $Y = X\times 2.24$ | |
+| m$^3$/ha | cm | $Y=X/100$ | units used for irrigation and rainfall |
+| % roots | root:shoot (q) | $Y=\frac{X}{1-X}$ | $\% \text{roots} = \frac{\text{root biomass}}{\text{total biomass}}$ |
+| $\mu$ mol cm$^{-2}$ s$^{-1}$ | mmol m$^{-2}$ s$^{-1}$ | $Y = X/10$ | |
+| mol m$^{-2}$ s$^{-1}$ | mmol m$^{-2}$ s$^{-1}$ | $Y = X/10^6$ | |
+| mol  m$^{-2}$ s$^{-1}$ | $\mu$ mol cm$^{-2}$ s$^{-1}$ | $Y = X/ 10^5$ | |
+| mm s$^{-2}$ | mmol m$^{-3}$ s$^{-1}$ | $Y=X/41$ | Korner et al. [1988] |
+| mg CO$_2$ g$^{-1}$ h$^{-1}$ | $\mu$ mol kg$^{-1}$ s$^{-1}$ | $Y = X\times 6.31$ | used for root\_respiration\_rate |
+| $\mu$ mol | mol | $Y= X\times 10^6$ | |
+| julian day (1--365) | date | | see ref: http://disc.gsfc.nasa.gov/julian_calendar.shtml (NASA Julian Calendar)
+| spacing (m) | density (plants m$^{2}$) | $Y=\frac{1}{\textrm{row spacing}\times\textrm{plant spacing}}$  | |
+| kg ha$^{-1}$ y$^{-1}$ | Mg ha$^{-1}$ y$^{-1}$ | $Y= X/1000$ | |
+| g m$^{-2}$ y$^{-1}$ | Mg ha$^{-1}$ y$^{-1}$  | $Y= X/100$ | |
+| kg | mg | $Y=X\times 10^6$ | |
+| cm$^2$  | m$^2$ | $Y=X\times 10^4$ | |
+
 
 Additional conversions
 
