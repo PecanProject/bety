@@ -26,7 +26,11 @@ Utilizing the drop-down menu for radius distances of 20, 40, 60, 80, 100, or 200
 
 #####3. Location Yield
 
+The Location Yield map 
+
 #####4. Traits from Sites
+
+This map displays all of the sites that have trait data in the database.  Clicking on the site provides the name of the site, and the species/multiple species, cultivar, and citation affiliated with that site, all of which link to more detailed information.  The traits link connects to a full listing of traits for that site with all available information for the traits.    
 
 #####5. Yields from Sites
 
