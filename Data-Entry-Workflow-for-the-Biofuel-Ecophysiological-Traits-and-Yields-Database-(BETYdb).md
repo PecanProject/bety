@@ -300,7 +300,7 @@ of precision with which a study location is known.
 **Appropriate precision for site latitude and longitude (Siteloc)**
                  
 | Location Detail | Decimal Degree Accuracy  |
-|:----------------|:-------------------------|
+|:----------------|-------------------------:|
 | City            |                      0.1 |
 | Mile            |                     0.01 |
 | Acre            |                    0.001 |
