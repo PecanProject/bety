@@ -158,8 +158,18 @@ Cultivar information is also required when available, but it is only
 relevant for domesticated species. Fields with an asterisk (*) are
 required.  
 
-<a id="Table 1"></a> 
-![Alt text](figures/table 1.png "Table 1")  
+Table 1
+
+| Current Projects | List of Current Projects | PI's      | Managers    | Technicians   | Status   |
+|:-----------------|:-------------------------|:----------|:------------|:--------------|:---------|
+| Folders          | Project                  |           |             |               |          |
+| Arctic           | Arctic                   | M. Dietze | C. Davidson | M. Azimi      | active   |
+| Prairie          | Prairie                  | M. Dietze | X. Feng     |      *        | active   |
+| Poplar, Willow, Woody | Hardwood | M. Dietze | D. Wang     | *N. Brady     | active   |
+| Sugarcane        | Sugarcane                | F. Miguez | D. Jaiswal  | F. Hussain    | active   |
+| Syntheses        | Synthesis Papers         | M. Dietze | D. LeBauer  | *D. Bettinardi | complete |
+| Face             | FACE/NCEAS               | M. Dietze | D. LeBauer  | * Andy Tu     | complete |
+| Switchgrass      | Switchgrass              | M. Dietze | D. LeBauer  |               | inactive |
 
 ### 5.1 Adding a Citation
 Citation provides information regarding the source of the data. This
