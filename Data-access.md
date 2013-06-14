@@ -8,6 +8,16 @@ publicly available after publication to users of BETY-db who are
 conducting primary research. Access to these raw data is provided to
 users based on affiliation and contribution of data.
 
+####Search Box
+
+####Advanced Search
+
+####Access Maps
+
+####Download Data from Model Output
+
+Data can be downloaded directed by selecting the download button when the desired data is presented in the model.  The data with a title will be downloaded.  
+
 #### URL-based Queries
 
 ##### Easy CSV downloads
