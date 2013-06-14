@@ -14,7 +14,19 @@ users based on affiliation and contribution of data.
 
 ####Access Maps
 
-####Download Data from Model Output
+There are five different search methods that can be utilized under the Maps tab:
+
+#####1. Sites by Species
+
+#####2. Search for Sites
+
+#####3. Location Yield
+
+#####4. Traits from Sites
+
+#####5. Yields from Sites
+
+#####Download Data from Model Output
 
 Data can be downloaded directed by selecting the download button when the desired data is presented in the model.  The data with a title will be downloaded.  
 
