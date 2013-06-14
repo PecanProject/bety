@@ -158,7 +158,7 @@ Cultivar information is also required when available, but it is only
 relevant for domesticated species. Fields with an asterisk (*) are
 required.  
 
-Table 1
+**Table 1**
 
 | Current Projects | List of Current Projects | PI's      | Managers    | Technicians   | Status   |
 |:-----------------|:-------------------------|:----------|:------------|:--------------|:---------|
@@ -292,13 +292,20 @@ particularly useful in locating sites, along with their coordinates and
 elevation. Alternatively, the site website or address might be found
 through an internet search (e.g. Google).
 
-Use [Table 2](#Table 2) to determine the number of significant digits to indicate the level
+Use Table 2 to determine the number of significant digits to indicate the level
 of precision with which a study location is known.  
 
-**Table 2**: Appropriate precision for site latitude and longitude  
-<a id="Table 2"></a> ![Alt text] (figures/table 2.png "Table 2")  
+**Table 2**
 
-
+**Appropriate precision for site latitude and longitude (Siteloc)**
+                 
+| Location Detail | Decimal Degree Accuracy  |
+|:----------------|:-------------------------|
+| City            |                      0.1 |
+| Mile            |                     0.01 |
+| Acre            |                    0.001 |
+| 10 Meters       |                   0.0001 |
+ 
 <a id="Figure 3"></a> ![Alt text] (figures/new site.png "Figure 3")  
 **Figure 3**: Form for entering a new site
 
