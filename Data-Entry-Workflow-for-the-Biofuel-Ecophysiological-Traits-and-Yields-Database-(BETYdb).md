@@ -988,10 +988,7 @@ List of the statistics that can be  entered into the statname field of traits an
 | root, soil | depth (cm) | used for max and min depths of soil, if only one value, assume min depth = 0; negative values indicate above ground |
 | gs (stomatal conductance) | A$_{max}$ | see notes in caption |
 | stomatal\_slope (m) | humidity, temperature | specific humidity, assume leaf T =  air T |  
-
-
-<a id="Table 7"></a>
-![Alt text] (figures/table 7.png "Table 7")   
+ 
 
 **Traits with required covariates**
 
