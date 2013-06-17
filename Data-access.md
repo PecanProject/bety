@@ -20,6 +20,8 @@ There are five different search methods that can be utilized under the Maps tab:
 
 Groups can be searched by selecting criteria from a drop-down menu or a common name or genus can be entering in the search bar below the map.  Both methods of search show the location of the site on the map and location details underneath the map.
 
+(figures/sites by species screenshot.png)
+
 #####2. Search for Sites
 
 Utilizing the drop-down menu for radius distances of 20, 40, 60, 80, 100, or 200 miles and then clicking on a location on the map presents sites within that range.  Site city, state, country, latitude, longitude, mean annual temperature, mean annual precipitation, and elevation are shown under the map for each site.  
