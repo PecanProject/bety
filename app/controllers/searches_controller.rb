@@ -9,6 +9,7 @@ class SearchesController < ApplicationController
 #    @session.new = Session.new
 
     search_string = params[:search]
+    @search_type = params[:search_type] # "simple" or "advanced"
 
     if !search_string || search_string.strip == ""
       @results = []
@@ -40,7 +41,7 @@ class SearchesController < ApplicationController
     search_terms.flatten!
     
     @results = []
-    if ["traits", "both"].find_index @search_type
+    if ["traits", "both"].find_index @search_domain
       @results = Traitsview.find(:all, 
                                 :conditions => [
                                                 search_condition,
@@ -48,7 +49,7 @@ class SearchesController < ApplicationController
                                                ].flatten!)
     end
     
-    if ["yields", "both"].find_index @search_type
+    if ["yields", "both"].find_index @search_domain
       @results += Yieldsview.find(:all, 
                                  :conditions => [
                                                  search_condition,
@@ -69,7 +70,7 @@ class SearchesController < ApplicationController
   #
   # Expects a list of search terms.  If the terms "yield" or "trait"
   # occur (in any case and in either singular or plural form) it
-  # removes them from the list and sets @search_type accordingly.  The
+  # removes them from the list and sets @search_domain accordingly.  The
   # remaining terms are returned as a list.
   def _parse_params
     search_string = params[:search]
@@ -77,24 +78,50 @@ class SearchesController < ApplicationController
     search_terms = search_string.split
     logger.debug "2 #{search_terms}"
 
-    # Look for and remove search-type keywords.
-    searchtype_keywords = search_terms.select { |term| term =~ /^(trait|yield)s?/i }
+    if params[:search_type] == "simple"
 
-    logger.debug "3 #{search_terms}"
-    search_terms -= searchtype_keywords
-    logger.debug "4 #{search_terms}"
+      # Look for and remove search-type keywords.
+      searchtype_keywords = search_terms.select { |term| term =~ /^(trait|yield)s?/i }
 
-    # For now, assume user doesn't use a keyword more than once.
-    if searchtype_keywords.size != 1
-      @search_type = "both"
-      return search_terms
+      logger.debug "3 #{search_terms}"
+      search_terms -= searchtype_keywords
+      logger.debug "4 #{search_terms}"
+
+      # For now, assume user doesn't use a keyword more than once.
+      if searchtype_keywords.size != 1
+        @search_domain = "both"
+        return search_terms
+      end
+
+      if searchtype_keywords.first  =~ /yields?/i
+        @search_domain = "yields"
+      else
+        @search_domain = "traits"
+      end
+      
+    elsif params[:search_type] == "advanced"
+
+      if params[:show_yields] and params[:show_traits]
+        
+        @search_domain = "both"
+
+      elsif params[:show_yields]
+
+        @search_domain = "yields"
+
+      elsif params[:show_traits]
+
+        @search_domain = "traits"
+
+      else
+
+        raise "You must select a search domain"
+
+      end
+
     end
 
-    if searchtype_keywords.first  =~ /yields?/i
-      @search_type = "yields"
-    else
-      @search_type = "traits"
-    end
+    params[:search] = search_terms.join ' '
 
     return search_terms
   end
