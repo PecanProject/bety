@@ -21,8 +21,15 @@
       <div class="dataTables_filter" id="DataTables_Table_0_filter">
         <%= form_tag "searches", :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
   			  <label>Search: <%= text_field_tag :search, params[:search] %></label>
+              <p>
+              <label>Show Yield Data <%= check_box_tag :show_yields, params[:show_yields], { :onchange => 'this.submit()' } %></label>
+              </p>
+                <p>
+              <label>Show Trait Data <%= check_box_tag :show_traits, params[:show_traits] %></label>
+              </p>
           <%= hidden_field_tag :direction, params[:direction] %>
           <%= hidden_field_tag :sort, params[:sort] %>
+          <%= hidden_field_tag :search_type, "advanced" %>
         <% end %>
       </div> <!-- id="DataTables_Table_0_filter" -->
     </div> <!-- class="span6" -->
