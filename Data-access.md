@@ -18,7 +18,7 @@ There are five different search methods that can be utilized under the Maps tab:
 
 #####1. Sites by Species
 
-Groups can be searched by selecting criteria from a drop-down menu and a common name or genus can be entering in the search bar below the map.  Both methods of search show the location of the site on the map and location details underneath the map.
+Groups can be searched by selecting criteria from a drop-down menu or a common name or genus can be entering in the search bar below the map.  Both methods of search show the location of the site on the map and location details underneath the map.
 
 #####2. Search for Sites
 
@@ -26,11 +26,11 @@ Utilizing the drop-down menu for radius distances of 20, 40, 60, 80, 100, or 200
 
 #####3. Location Yield
 
-The Location Yield map 
+The Location Yield map narrows model output by yield, evapotranspiration, and production cost.  Yield and evapotranspiration can be narrowed by species and then county (displays longitude, latitude, and yield in text format) or gridded (displays state, county, and yield in a text format).  Production cost can yield county data, as well as a least cost yield listing.  A fullscreen button enables viewing of the map in greater detail.       
 
 #####4. Traits from Sites
 
-This map displays all of the sites that have trait data in the database.  Clicking on the site provides the name of the site, and the species/multiple species, cultivar, and citation affiliated with that site, all of which link to more detailed information.  The traits link connects to a full listing of traits for that site with all available information for the traits.    
+The Traits from Sites map displays all of the sites that have trait data in the database.  Clicking on the site provides the name of the site, and the species/multiple species, cultivar, and citation affiliated with that site, all of which link to more detailed information.  The traits link connects to a full listing of traits for that site with all available information for the traits.    
 
 #####5. Yields from Sites
 
