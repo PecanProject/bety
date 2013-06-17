@@ -8,33 +8,35 @@ publicly available after publication to users of BETY-db who are
 conducting primary research. Access to these raw data is provided to
 users based on affiliation and contribution of data.
 
-####Search Box
+#### Search Box
 
-####Advanced Search
+(figures/search_advancedsearch_mockup.png)
 
-####Access Maps
+#### Advanced Search
+
+#### Access Maps
 
 There are five different search methods that can be utilized under the Maps tab:
 
-#####1. Sites by Species
+##### 1. Sites by Species
 
 Groups can be searched by selecting criteria from a drop-down menu or a common name or genus can be entering in the search bar below the map.  Both methods of search show the location of the site on the map and location details underneath the map.
 
-(figures/sites by species screenshot.png)
+(figures/sites_by_species_screenshot.png)
 
 #####2. Search for Sites
 
-Utilizing the drop-down menu for radius distances of 20, 40, 60, 80, 100, or 200 miles and then clicking on a location on the map presents sites within that range.  Site city, state, country, latitude, longitude, mean annual temperature, mean annual precipitation, and elevation are shown under the map for each site.  
+Utilizing the drop-down menu for radius distances of 20, 40, 60, 80, 100, or 200 miles and then clicking on a location on the map presents sites within that range.  Site city, state, country, latitude, longitude, mean annual temperature, mean annual precipitation, and elevation are displayed under the map for each site.  
 
 #####3. Location Yield
 
 The Location Yield map narrows model output by yield, evapotranspiration, and production cost.  Yield and evapotranspiration can be narrowed by species and then county (displays longitude, latitude, and yield in text format) or gridded (displays state, county, and yield in a text format).  Production cost can yield county data, as well as a least cost yield listing.  A fullscreen button enables viewing of the map in greater detail.       
-
-#####4. Traits from Sites
+![fig] (figures/sites_by_species_screenshot.png)
+##### 4. Traits from Sites
 
 The Traits from Sites map displays all of the sites that have trait data in the database.  Clicking on the site provides the name of the site, and the species/multiple species, cultivar, and citation affiliated with that site, all of which link to more detailed information.  The traits link connects to a full listing of traits for that site with all available information for the traits.    
 
-#####5. Yields from Sites
+##### 5. Yields from Sites
 
 #####Download Data from Model Output
 
