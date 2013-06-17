@@ -158,8 +158,18 @@ Cultivar information is also required when available, but it is only
 relevant for domesticated species. Fields with an asterisk (*) are
 required.  
 
-<a id="Table 1"></a> 
-![Alt text](figures/table 1.png "Table 1")  
+**Table 1**
+
+| Current Projects | List of Current Projects | PI's      | Managers    | Technicians   | Status   |
+|:-----------------|:-------------------------|:----------|:------------|:--------------|:---------|
+| Folders          | Project                  |           |             |               |          |
+| Arctic           | Arctic                   | M. Dietze | C. Davidson | M. Azimi      | active   |
+| Prairie          | Prairie                  | M. Dietze | X. Feng     |      *        | active   |
+| Poplar, Willow, Woody | Hardwood | M. Dietze | D. Wang     | *N. Brady     | active   |
+| Sugarcane        | Sugarcane                | F. Miguez | D. Jaiswal  | F. Hussain    | active   |
+| Syntheses        | Synthesis Papers         | M. Dietze | D. LeBauer  | *D. Bettinardi | complete |
+| Face             | FACE/NCEAS               | M. Dietze | D. LeBauer  | * Andy Tu     | complete |
+| Switchgrass      | Switchgrass              | M. Dietze | D. LeBauer  |               | inactive |
 
 ### 5.1 Adding a Citation
 Citation provides information regarding the source of the data. This
@@ -282,13 +292,20 @@ particularly useful in locating sites, along with their coordinates and
 elevation. Alternatively, the site website or address might be found
 through an internet search (e.g. Google).
 
-Use [Table 2](#Table 2) to determine the number of significant digits to indicate the level
+Use Table 2 to determine the number of significant digits to indicate the level
 of precision with which a study location is known.  
 
-**Table 2**: Appropriate precision for site latitude and longitude  
-<a id="Table 2"></a> ![Alt text] (figures/table 2.png "Table 2")  
+**Table 2**
 
-
+**Appropriate precision for site latitude and longitude (Siteloc)**
+                 
+| Location Detail | Decimal Degree Accuracy  |
+|:----------------|-------------------------:|
+| City            |                      0.1 |
+| Mile            |                     0.01 |
+| Acre            |                    0.001 |
+| 10 Meters       |                   0.0001 |
+ 
 <a id="Figure 3"></a> ![Alt text] (figures/new site.png "Figure 3")  
 **Figure 3**: Form for entering a new site
 
@@ -861,31 +878,159 @@ Figure 11: Table used to calculate SE from F, from Starr et al. [2008]
 
 ## 13. Reference Tables
 
-<a id="Table 3"></a>
-![Alt text] (figures/table 3.png "Table 3")   
+**Table 3**
+
+**Managements**
+
+This is a list of  managements to enter, with the most common management types in bold. It is more important to have management records for Yields than for traits. For greenhouse experiments, it is not necessary to include informaton on fertilizaton, lighting, or greenhouse temperature.
+
+| Management Type | Units | Definition | Notes |
+|:----------------|:------|:-----------|:------|
+| Burned | aboveground biomass burned |
+| CO2 fumigation | ppm | | |
+| Fertilization_X      | kg x ha$^{-1}$ | fertilization rate, element X | | 
+| Fungicide | kg x ha$^{-1}$ |  | add type of fungicide to notes |
+| Grazed | years | livestock grazing | pre-experiment land use |
+| Harvest | | | no units, just date, equivalent to coppice, aboveground biomass removal |
+| Herbicide | kg x ha$^{-1}$ |   | add type of herbicide to notes: glyphosate, atrazine, many others |
+| Irrigation | cm | | convert volume \ area to depth as required |
+| Light | W m$^{-2}$ | | |
+| O3 fumigation | ppm | | |
+| Pesticide | kg x ha$^{-1}$ |  | add type of pesticide to notes |
+| Planting | plants m$^{-2}$ |    | Convert row spacing to planting density if possible |
+| Seeding  | kg seeds x ha$^{-1}$ |   |   |
+| Tillage | | | no units, maybe depth; *tillage* is equivalent to *cultivate* | 
 
 
-<a id="Table 4"></a>
-![Alt text] (figures/table 4.png "Table 4")   
+**Table 4**
+
+**Date level of confidence (DateLOC) Field**
+
+Numbering convention for the DateLOC (Date level of confidence) field, used in managements, traits, and yields table. 
+
+**DateLOC**
+
+| Dateloc | Definition |
+|:--------|:-----------|
+| 9 | no data |
+| 8 | year |
+| 7 | season |
+| 6 | month |
+| 5 | day |
+| 4 | time of day i.e. morning, afternoon |
+| 3 | hour |
+| 2 | minute |
+| 1 | second |
+| 95 | unknown year, known day |
+| 96 | unknown year, known month |
+| ...etc | | 
 
 
-<a id="Table 5"></a>
-![Alt text] (figures/table 5.png "Table 5")   
+**List of statistical summaries**
+
+List of the statistics that can be  entered into the statname field of traits and yields tables. Please see David (or Mike) if you have questions about statistics that do not appear in this list. If you have P, or LSD in a study with $n\neq b$ (e.g. not a RCBD, see Table 8), please convert these values prior to entering the data, and add a note that stat was transformed to the table. Note: These are listed in order of preference, e.g., if SD, SE, or MSE are provided then use these values.
+
+**Table 5**
+
+**Statname**
+
+| Statname | Name | Definition | Notes |
+|:----------|:-----|:-----------|:------|
+| SD | Standard Deviation | $\sqrt{\frac{1}{N} \sum{(x_i - \bar{x})^2}}$ | $\bar{x}$ is the mean |
+| SE | Standard Error | $\frac{s}{\sqrt{n}}$&  | |
+| MSE | Mean Squared Error | | | like SD, but with multiple treatments; in R: $\frac{mean(aov(y~x)$residuals{^2}$/{aov(y~x)df}$ |
+| 95\%CI | 95% Confidence Interval| $t_{1-^{\alpha}/_2,n}*s$ | measure the 95% CI from the mean, this is actually $^1/_2$ of the CI |
+| LSD | Least Significant Difference | $t_{1-\frac{\alpha}{2},n}\sqrt{2\text{MSE}/b}$ | $b$ is the number of blocks (Rosenberg 2004) |
+| MSD | Minimum Significant Difference |  |  |
+
+**Table 6**
+
+| Variable | Units | Median (90%CI) or Range | Definition |
+|:---------|:------|:------------------------|:-----------|
+| Vcmax | $\mu$ mol CO$_2$ m$^{2}$ s$^{-1}$ | $44 (12, 125)$ | maximum rubisco carboxylation capacity |
+| SLA | m$^2$ kg$^{-1}$ | $15(4,27)$ | Specific Leaf Area area of leaf per unit mass of leaf |
+| LMA | kg m$^{-2}$ | $0.09 (0.03, 0.33)$ | Leaf Mass Area (LMA = SLM = 1/SLA) mass of leaf per unit area of leaf |
+| leafN | % | $2.2(0.8, 17)$ | leaf percent nitrogen |
+| c2n leaf | leaf C:N ratio | $39(21,79)$ | use only if leafN not provided |
+| leaf turnover rate | 1/year | $0.28(0.03,1.0) $ | |
+| Jmax | $\mu$ mol photons m$^{-2}$ s$^{-1}$ | $121(30, 262)$ | maximum rate of electron transport |
+| stomatal slope | | $9(1, 20)$ | |
+| GS | | | stomatal conductance (= gs$_{\textrm{max}}$ |
+| q* | | 0.2--5 | ratio of fine root to leaf biomass |
+| **grasses* | ratio of root:leaf = below:above ground biomass | | |
+| aboveground biomass | g m$^{-2}$ *or* g plant$^{-1}$ | | |
+| root biomass | g m$^{-2}$ *or* g plant$^{-1}$ | | |
+| **trees* | ratio of fine root:leaf biomass | | |
+| leaf biomass | g m$^{-2}$ *or* g plant$^{-1}$ | | |
+| fine root biomass (<2mm) | g m$^{-2}$ *or* g plant$^{-1}$ | | |
+| root turnover rate | 1/year | 0.1--10 | rate of fine root loss (temperature dependent) year$^{-1}$ |
+| leaf width | mm | 22(5,102) | |
+| growth respiration factor | % | 0--1 | proportion of daily carbon gain lost to growth respiration |
+| R$_{\textrm{dark}}$ | | $\mu$ mol CO$_2$ m$^{-2}$ s$^{-1}$ | dark respiration |
+| quantum efficiency | % | 0--1 | efficiency of light conversion to carbon fixation, see Farqhuar model |
+| dark respiration factor | % | 0--1 | converts Vm to leaf respiration |
+| seedling mortality | % | 0--1 | proportion of seedlings that die | 
+| r fraction | % |0--1 | fraction of storage to seed reproduction |
+| root respiration rate* | CO$_2$ kg$^{-1}$ fine roots s$^{-1}$ | 1--100 | rate of fine root respiration at reference soil temperature |
+| f labile | % | 0--1 | fraction of litter that goes into the labile carbon pool
+| water conductance | | |
+
+**Table 7**
+
+| Variable | Required Covariates | Optional Covariates |
+|:---------|:--------------------|:--------------------|
+| vcmax | irradiance and temperature (leaf or air) | |
+|any leaf measurement | | canopy height |
+| root\_respiration\_rate | temperature (root or soil, | soil moisture |
+| | root\_diameter\_max | root size class (usually $<2mm$) |
+| any respiration | temperature | |
+| root biomass | | min. size cutoff, max. size cutoff |
+| root, soil | depth (cm) | used for max and min depths of soil, if only one value, assume min depth = 0; negative values indicate above ground |
+| gs (stomatal conductance) | A$_{max}$ | see notes in caption |
+| stomatal\_slope (m) | humidity, temperature | specific humidity, assume leaf T =  air T |  
+ 
+
+**Traits with required covariates**
+
+A list of traits and the covariates that must be recorded along with the trait value in order to be converted to a constant scale from across studies.*notes:* stomatal conductance (gs) is only useful when reported in conjunction with other photosynthetic data, such as Amax. Specifically, if we have Amax and gs, then estimation of Vcmax only covaries with dark\_respiration\_factor and atmospheric CO2 concentration.  We also now have information to help constrain stomatal\_slope. If we have Amax but not gs, then our estimate of Vcmax will covary with: dark_respiration_factor, CO2, stomatal_slope, cuticular_conductance, and vapor-pressure deficit VPD (which is more difficult to estimate than CO2, but still possible given lat, lon, and date). 
+Most important, there will be a strong covariance between Vcmax and stomatal_slope.
 
 
-<a id="Table 6"></a>
-![Alt text] (figures/table 6.png "Table 6")   
+**Table 8: How to convert statistics from $P$, $LSD$, or $MSD$ to $SE$**
+
+| From | To | Conversion | Rcode | Notes |
+|:-----|:---|:-----------|:------|:------|
+| P | SE | $SE = \frac{\bar{X}_1-\bar{X}_2}{t_{1-P/2,2n-2}\sqrt{2/n}}$ | (x1-x2)/(qt(1-P/2,2*n-2)*sqrt(2/n)) | $\bar{X}_{1,2}$ are two means being compared. |
+| LSD | SE | $SE = \frac{LSD}{t_{1-\alpha/2,n}*\sqrt{2b}}$ | LSD/(qt(1-P/2,n)*sqrt(2*b)) | where $b$ is the number of blocks, $n$ is the number of replicates, and  $n=b$ in a Randomized Complete Block Design |
+| MSD | SE | $SE = \frac{MSD*n}{t_{1-\alpha, 2n-2}*\sqrt{2}}$ | msd*n/(qt(1-P/2,2*n-2)*sqrt(2)) | |
 
 
-<a id="Table 6.1"></a>
-![Alt text] (figures/table 6.1.png "Table 6.1")   
+**Table 9: Useful conversions for entering site, management, yield, and trait data**
 
+| From ($X$) | to ($Y$) | Conversion | Notes |
+|:-----------|:---------|:-----------|:------|
+| $X_2=$root production | $X_1=$root biomass & root turnover rate | $Y = X_2/X_1$& | Gill [2000] |
+| DD$^{\circ}$ MM'SS | XX.ZZZZ | $\textrm{XX.ZZZZ} = \textrm{XX} + \textrm{MM}/60+\textrm{SS}/60$ | to convert latitude or longitude from degrees, minutes, seconds to  decimal degrees |
+| lb | kg | $Y=X\times 2.2$ | |
+| mm/s | $\mu$ mol CO$_2$ m$^{2}$ s$^{-1}$ | $Y=X\times 0.04$ | |
+| m$^2$ | ha | $Y = X/10^6$ | |
+| g/m$^2$ | kg/ha | $Y=X\times 10$ | |
+| US ton/acre | Mg/ha | $Y = X\times 2.24$ | |
+| m$^3$/ha | cm | $Y=X/100$ | units used for irrigation and rainfall |
+| % roots | root:shoot (q) | $Y=\frac{X}{1-X}$ | $\% \text{roots} = \frac{\text{root biomass}}{\text{total biomass}}$ |
+| $\mu$ mol cm$^{-2}$ s$^{-1}$ | mmol m$^{-2}$ s$^{-1}$ | $Y = X/10$ | |
+| mol m$^{-2}$ s$^{-1}$ | mmol m$^{-2}$ s$^{-1}$ | $Y = X/10^6$ | |
+| mol  m$^{-2}$ s$^{-1}$ | $\mu$ mol cm$^{-2}$ s$^{-1}$ | $Y = X/ 10^5$ | |
+| mm s$^{-2}$ | mmol m$^{-3}$ s$^{-1}$ | $Y=X/41$ | Korner et al. [1988] |
+| mg CO$_2$ g$^{-1}$ h$^{-1}$ | $\mu$ mol kg$^{-1}$ s$^{-1}$ | $Y = X\times 6.31$ | used for root\_respiration\_rate |
+| $\mu$ mol | mol | $Y= X\times 10^6$ | |
+| julian day (1--365) | date | | see ref: http://disc.gsfc.nasa.gov/julian_calendar.shtml (NASA Julian Calendar)
+| spacing (m) | density (plants m$^{2}$) | $Y=\frac{1}{\textrm{row spacing}\times\textrm{plant spacing}}$  | |
+| kg ha$^{-1}$ y$^{-1}$ | Mg ha$^{-1}$ y$^{-1}$ | $Y= X/1000$ | |
+| g m$^{-2}$ y$^{-1}$ | Mg ha$^{-1}$ y$^{-1}$  | $Y= X/100$ | |
+| kg | mg | $Y=X\times 10^6$ | |
+| cm$^2$  | m$^2$ | $Y=X\times 10^4$ | |
 
-<a id="Table 7"></a>
-![Alt text] (figures/table 7.png "Table 7")   
-
-<a id="Table 9"></a>
-![Alt text] (figures/table 9.png "Table 9")   
 
 Additional conversions
 

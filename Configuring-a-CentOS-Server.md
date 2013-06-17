@@ -41,6 +41,16 @@ sudo rpm -Uvh epel-release-5*.rpm
 
 ... move to PEcAn wiki page for build environment https://github.com/PecanProject/pecan/wiki/Development-Environment-Setup-and-VM-Creation#install-build-environment
 
+Remember to install R 3.0:
+```
+wget http://cran.us.r-project.org/src/base/R-3/R-3.0.1.tar.gz
+tar xzf R-3.0.1.tar.gz
+cd R-3.0.1
+./configure
+make
+sudo make install
+```
+
 ###Site data installation
 
 ```
@@ -62,6 +72,7 @@ rm inputs.tgz
 
 ```
 #sets up the user for the bety database
+mysql -u root -p -e "create database test; create database production;"
 mysql -u root -p -e "grant all on bety.* to bety@localhost identified by 'bety';"
 wget -O /usr/local/ebi/updatedb.sh http://isda.ncsa.illinois.edu/~kooper/EBI/updatedb.sh
 chmod 755 /usr/local/ebi/updatedb.sh
@@ -120,6 +131,9 @@ chmod 777 paperclip/files paperclip/file_names
 mkdir log
 touch log/production.log
 chmod 0666 log/production.log
+touch log/test.log
+chmod 0666 log/test.log
+
 cat > config/database.yml << EOF
 production:
   adapter: mysql2
@@ -129,13 +143,25 @@ production:
   pool: 5
   username: bety
   password: bety
+
+test:
+  adapter: mysql2
+  encoding: latin1
+  reconnect: false
+  database: test
+  pool: 5
+  username: bety
+  password: bety
 EOF
 
-# setup login tokens
+
+# setup login tokens ( actual REST_AUTH_SITE_KEY needs to be replaced with one matching the DB )
 cat > config/initializers/site_keys.rb << EOF
 REST_AUTH_SITE_KEY         = 'thisisnotasecret'
 REST_AUTH_DIGEST_STRETCHES = 10
 EOF
+
+
 
 # configure apache
 ln -s /usr/local/ebi/bety/public /var/www/bety
@@ -154,12 +180,29 @@ EOF
 You may have to change your DocumentRoot in /etc/httpd/conf/httpd.conf from "/var/www/html" to "/var/www" if you get the error message 'Passenger error #2 An error occurred while trying to access '/var/www/html/bety': Cannot resolve possible symlink '/var/www/html/bety': No such file or directory (2)'.
 Up next make apache2 and passenger play nicely:
 ```
-sudo passenger-install-apache2-module
+rvmsudo passenger-install-apache2-module
 ```
 If that fails, try 
 ```
 sudo -s
 source `rvm gemdir`
+```
+
+Finally run the tests 
+```
+cd /usr/local/eby/bety/
+rake db:test:load && rake db:fixtures:load RAILS_ENV=test && rspec spec/
+```
+
+
+###Install Models
+Install the models biocro, sipnet, and ED as they are installed [here](https://github.com/PecanProject/pecan/wiki/Installing-PEcAn#install-models). 
+
+For biocro, there are some dependencies:
+```
+echo "install.packages('devtools',repos='http://cran.rstudio.com/')"| R --vanilla
+yum install udunits2-devel
+sudo R CMD INSTALL udunits2 --configure-args='--with-udunits2-include=/usr/include/udunits2'
 ```
 
 ###Pecan Installation
@@ -170,7 +213,7 @@ cd /usr/local/ebi
 git clone https://github.com/PecanProject/pecan.git
 
 
-yum install netcdf-devel.x86_64 netcdf-static.x85_64 openmpi hdf5-devel.x86_64 
+yum install netcdf-devel.x86_64 netcdf-static.x85_64 openmpi hdf5-devel.x86_64 openmpi-devel
 #install PEcAn dependencies
 wget http://cran.r-project.org/src/contrib/ncdf4_1.6.1.tar.gz
 
@@ -203,8 +246,13 @@ sudo yum install atlas blas.x86_64
 sudo rpm -Uvh  http://download.opensuse.org/repositories/home:/cornell_vrdc/CentOS_CentOS-5/x86_64/jags3-3.3.0-48.1.x86_64.rpm
 sudo rpm -Uvh http://download.opensuse.org/repositories/home:/cornell_vrdc/CentOS_CentOS-5/x86_64/jags3-devel-3.3.0-48.1.x86_64.rpm
 
-yum install proj-devel.x86_64
+yum install proj-devel.x86_64 udunits2-devel.x86_64
 
+wget http://cran.r-project.org/src/contrib/rgdal_0.8-9.tar.gz
+tar -xzf rgdal_0.8-9.tar.gz
+echo "/usr/local/lib" >> /etc/ld.so.conf.d/gdal.conf
+ldconfig -v
+R CMD INSTALL rgdal --configure-args='--with-gdal-config=/usr/local/bin/gdal-config'
 
 # install PEcAn packages in R
 cd pecan
@@ -213,4 +261,3 @@ R --vanilla < scripts/install.dependencies.R
 # compile pecan
 ./scripts/build.sh
 ```
-NB: rgdal unhappy: fix.
