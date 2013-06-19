@@ -15,69 +15,49 @@ class SearchesController < ApplicationController
       @results = []
     else
 
-    search_terms = _parse_params
+      search_terms = _parse_params
 
-    # Construct the search condition string; this will have a
-    # *conjunct* for each term (since *all* terms must be found); each
-    # conjunct is a disjunction of three clauses--on for each column
-    # we are searching.
-    
-    disjunct_clause = <<-CLAUSE
-      (scientificname LIKE CONCAT('%', ?, '%')
-        OR commonname LIKE CONCAT('%', ?, '%')
-        OR treatment LIKE CONCAT('%', ?, '%'))
-    CLAUSE
+      # Construct the search condition string; this will have a
+      # *conjunct* for each term (since *all* terms must be found); each
+      # conjunct is a disjunction of three clauses--on for each column
+      # we are searching.
 
-    # Make a clause for each search term:
-    clause_array = [disjunct_clause] * search_terms.count
-    # Join these by AND to make the full conjunction:
-    search_condition = clause_array.join(' AND ')
-  
+      disjunct_clause = <<-CLAUSE
+        (scientificname LIKE CONCAT('%', ?, '%')
+          OR commonname LIKE CONCAT('%', ?, '%')
+          OR treatment LIKE CONCAT('%', ?, '%'))
+      CLAUSE
 
-    # We use each term three times, so duplicate them.
-    search_terms.map! do |term|
-      [term, term, term]
-    end
-    search_terms.flatten!
-    
-    @results = []
-    if ["traits", "both"].find_index @search_domain
-      @results = Traitsview.find(:all, 
-                                :conditions => [
-                                                search_condition,
-                                                search_terms
-                                               ].flatten!)
-    end
-    
-    if ["yields", "both"].find_index @search_domain
-      @results += Yieldsview.find(:all, 
-                                 :conditions => [
-                                                 search_condition,
-                                                 search_terms
-                                                ].flatten!)
-    end
+      # Make a clause for each search term:
+      clause_array = [disjunct_clause] * search_terms.count
+      # Join these by AND to make the full conjunction:
+      search_condition = "result_type IN #{@search_domain} AND " + clause_array.join(' AND ')
+      
 
+      # We use each term three times, so duplicate them.
+      search_terms.map! do |term|
+        [term, term, term]
+      end
+      search_terms.flatten!
 
+      @results = TraitsAndYieldsView.find(:all, 
+                                          :conditions => [
+                                                          search_condition,
+                                                          search_terms
+                                                         ].flatten!)
 
       respond_to do |format|
-        format.html do   # show html page as before
-
+        format.html  # show html page as before
+        format.csv do
           send_data result_to_csv(@results), :content_type => 'text/plain', :filename => 'search_results.csv'
-
         end
       end
-
-=begin
-
-    respond_to do |format|
-      format.html # index.html.erb
-    end
-
-=end
 
     end
 
   end
+
+
 
 
   def result_to_csv(result)
@@ -130,13 +110,6 @@ class SearchesController < ApplicationController
     return csv_string
   end
 
-
-  def download_csv
-    data = session[:results]
-    send_data(data, :type => "text", :filename => "search_results.csv")
-  end
-
-
   # probably should be in a helper, but put here for now:
   #
   # Expects a list of search terms.  If the terms "yield" or "trait"
@@ -160,29 +133,29 @@ class SearchesController < ApplicationController
 
       # For now, assume user doesn't use a keyword more than once.
       if searchtype_keywords.size != 1
-        @search_domain = "both"
+        @search_domain = "('traits', 'yields')"
         return search_terms
       end
 
       if searchtype_keywords.first  =~ /yields?/i
-        @search_domain = "yields"
+        @search_domain = "('yields')"
       else
-        @search_domain = "traits"
+        @search_domain = "('traits')"
       end
       
     elsif params[:search_type] == "advanced"
 
       if params[:show_yields] and params[:show_traits]
         
-        @search_domain = "both"
+        @search_domain = "('traits', 'yields')"
 
       elsif params[:show_yields]
 
-        @search_domain = "yields"
+        @search_domain = "('yields')"
 
       elsif params[:show_traits]
 
-        @search_domain = "traits"
+        @search_domain = "('traits')"
 
       else
 
