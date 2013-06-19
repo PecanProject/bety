@@ -31,6 +31,9 @@
           <%= hidden_field_tag :sort, params[:sort] %>
           <%= hidden_field_tag :search_type, "advanced" %>
         <% end %>
+        <%= link_to "Download Search Results", :url => request.request_uri, :format => 'csv' %>
+        <a href="<%= request.request_uri%>">Download Search Restuls</a>
+
       </div> <!-- id="DataTables_Table_0_filter" -->
     </div> <!-- class="span6" -->
 	</div> <!-- class="row" -->          
@@ -137,8 +140,8 @@
                                  <%
 =end %>
                                  -->
-          <td class="center"><%= t.lat  %></td>
-          <td class="center"><%= t.lon  %></td>
+          <td class="center"><%= t.lat ? t.lat.round(2) : nil  %></td>
+          <td class="center"><%= t.lon ? t.lon.round(2) : nil %></td>
           <td class="center"><%= t.scientificname %></td>
           <td class="center"><%= t.trait %></td>
           <!--
@@ -148,7 +151,8 @@
           <%
 =end %>
           -->
-          <td class="center"><%= t.mean  %></td>
+          <% require 'float' %>
+          <td class="center"><%= t.mean.to_f.round_to_significant_digit(4).pretty_s  %></td>
           <!--
               <%
 =begin %>

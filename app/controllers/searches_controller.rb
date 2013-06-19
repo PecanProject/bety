@@ -57,14 +57,85 @@ class SearchesController < ApplicationController
                                                 ].flatten!)
     end
 
+
+
+      respond_to do |format|
+        format.html do   # show html page as before
+
+          send_data result_to_csv(@results), :content_type => 'text/plain', :filename => 'search_results.csv'
+
+        end
+      end
+
+=begin
+
     respond_to do |format|
       format.html # index.html.erb
     end
 
+=end
 
     end
 
   end
+
+
+  def result_to_csv(result)
+    logger.info(result.class)
+
+
+    if result.count == 0
+      return ""
+    end
+    require 'csv'
+
+
+
+    
+    #keys = result[0].keys
+
+    row = result[0]
+
+=begin
+
+    logger.info 'hi'
+    logger.info(row.class)
+    logger.info(row.class.superclass)
+#    logger.info(row.class.included_modules.uniq.map {|a| a.to_s}.uniq.join("\n"))
+    logger.info(row.public_methods.sort.join("\n"))
+    logger.info(row.to_xml)
+
+
+    csv_string = CSV.generate do |csv|
+      result.each do |row|
+        ar = []
+        keys.each do |key|
+          ar << row[key]
+        end
+      end
+    end
+
+=end
+
+    csv_string = CSV.generate do |csv|
+      csv << row.to_comma_headers
+
+      result.each do |row|
+        csv << row.to_comma
+      end
+    end
+
+    logger.info(csv_string)
+
+    return csv_string
+  end
+
+
+  def download_csv
+    data = session[:results]
+    send_data(data, :type => "text", :filename => "search_results.csv")
+  end
+
 
   # probably should be in a helper, but put here for now:
   #

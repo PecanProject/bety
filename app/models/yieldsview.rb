@@ -24,16 +24,17 @@ class Yieldsview < ActiveRecord::Base
   }
 
   comma do
-    yield_id
+    result_type
+    id
     citation_id
     site_id
-    site
+    sitename_or_city
     lat
     lon
-    sp
+    scientificname
     author
-    cityear
-    trt
+    citation_year
+    treatment
     date
     month
     year
@@ -42,7 +43,7 @@ class Yieldsview < ActiveRecord::Base
     statname
     stat
     notes
-    user
+    user_name
   end
 
 end
