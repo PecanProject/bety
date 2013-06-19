@@ -450,7 +450,7 @@ by more thorough explanations:
     chambers, pots, or individual plants. Sometimes this value is not
     clearly stated.  
 
-**Figure 7**: Form for entering management data with example data. This management denotes a nitrogen fertilization rate of 112.0 kg N ha-1  
+**Figure 7**: Form for entering management data with example data. This management denotes a nitrogen fertilization rate of 112.0 kg N ha-1.  The form for entering new managements is accessed by selecting a specific treatment for the desired citation.  On the Edit page, there is a link for New Managements, which yields a Notes section and this form:
 
 <a id="Figure 7"></a>
 ![Alt text] (figures/new management.png "Figure 7")   
