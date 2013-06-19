@@ -28,17 +28,24 @@ class Yieldsview < ActiveRecord::Base
     id
     citation_id
     site_id
-    sitename_or_city
+    treatment_id
+    sitename
+    city
     lat
     lon
     scientificname
+    commonname
+    genus
     author
     citation_year
     treatment
     date
     month
     year
+    dateloc
+    trait
     mean
+    units
     n
     statname
     stat
