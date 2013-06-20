@@ -5,7 +5,7 @@
 ### Entering and Retrieving Data
 
 #### [[Data Entry Workflow | Data-Entry]]
-* [[Overview | Data-Entry#Overview]]
+* [[Overview | Data-Entry#overview]]
 * [[2. Using Mendeley]]
 * [[2.1 Creating a new group on Mendeley (Project Managers)]]
 * [[2.2 Adding and annotating papers (Project Managers)]]
