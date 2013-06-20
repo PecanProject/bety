@@ -5,8 +5,6 @@
 ### Entering and Retrieving Data
 
 #### Data Entry Workflow | Data-Entry-Workflow-for-the-Biofuel-Ecophysiological-Traits-and-Yields-Database-(BETYdb)
-
-* [[Getting Started]]
 * [[1. Overview]]
 * [[2. Using Mendeley]]
 * [[2.1 Creating a new group on Mendeley (Project Managers)]]
@@ -44,29 +42,16 @@
 * [[9.1.2 Variables]]
 * [[9.2 Calculations used in transformations]]
 * [[10. Converting from ![Alt text](figures/ul o2.png) to  ![Alt text] (figures/nmolco2.png) to ![Alt text] (figures/umolco2.png), including adjustment to temperature]]
-* [[10.1 Objective:]]
-* [[10.2 Step 1]]
-* [[10.3 Step 2 Converting Units]]
-* [10.4 Required constants]]
-* [[10.5 Convert to units in BETYdb, find $\textrm{k}$]]
 * [[11. Calculating $MSE$ given $F$, $df_{\text{group}}$, and $SS$]]
-* [[11.1 Example]]
 * [[12. Bibliography]]
 * [[13. Reference Tables]]
-* [[Table 3: Managements]]
-* [[Table 4: Date level of confidence (DateLOC) field]]
-* [[Table 5: List of statistical summaries]]
-* [[Table 6: Variables]]
-* [[[Table 7: Traits with required covariates]]
-* [[Table 8: How to convert statistics from $P$, $LSD$, or $MSD$ to $SE$]]
-* [[Table 9: Useful conversions for entering site, management, yield, and trait data]]
 
 
 #### Data Access
 * [[Data Access]]
 * [[Search Box]]
 * [[Advanced Search | Data-access#advanced-search]]
-* [[Acces Maps]]
+* [[Access Maps]]
 * [[1. Sites by Species]]
 * [[2. Search for Sites]]
 * [[3. Locatiopn Yields]]
@@ -137,7 +122,7 @@
 #### Configuring BETYdb on a RHEL / CentOS Server](https://github.com/PecanProject/bety/wiki/Configuring-a-CentOS-Server)
 * [[Overview]]
 * [[Create a netinstall of the CentOS ISO]]
-* [Boot from CD and Install]]
+* [[Boot from CD and Install]]
 * [[Configuration]]
 * [[Add new repository]]
 * [[Site data installation]]
