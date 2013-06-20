@@ -1,6 +1,6 @@
-## Contents
+### Contents
 
-## The Biofuel Ecophysiological Traits and Yields Database Wiki
+### The Biofuel Ecophysiological Traits and Yields Database Wiki
 
 ### Entering and Retrieving Data
 
@@ -79,77 +79,70 @@
 * [[API keys]]
 * [[Installing BETY (the complete database)]]
 * [[Database creation]]
-
- 
  
 ### Implementation
-* [[Database Structure and Contents | The-Biofuel-Ecopysiological-Traits-and-Yields-Database ]]
-**[[1. Quick Start]]
-**[[2. Background]]
-**[[3. Introduction]]
-**[[3.1 Objectives]]
-**[[4. Scope]]
-**[[4.1 Data Content]]
-**[[4.2 Design]]
-**[[Data Access]]
-**[[URL-based Queries]]
-**[[Easy CSV downloads]]
-**[[JSON, CSV, and XML API]]
-**[[API keys]]
-**[[Web Interface]]
-**[[Data Entry]]
-**[[5. Tables]]
-**[[5.1 Table and field naming conventions]]
-**[[5.2 Data Tables]]
-**[[5.3 Auxillary Tables]]
-**[[5.4 Lookup Tables]]
-**[[Documentation]]
-**[[Adding Comments to Tables and Columns]]
-**[[Export documentation tables above from the INFORMATION_SCHEMA database in MySQL:]]
-**[[6. Acknowledgments]]
-**[[7. Appendix]]
-**[[7.1 Full Schema: Enhanced Entity-Relatiopnship Model]]
-**[[8. Software]]
+
+#### Database Structure and Contents | The-Biofuel-Ecophysiological-Traits-and-Yields-Database 
+* [[1. Quick Start]]
+* [[2. Background]]
+* [[3. Introduction]]
+* [[3.1 Objectives]]
+* [[4. Scope]]
+* [[4.1 Data Content]]
+* [[4.2 Design]]
+* [[Data Access]]
+* [[URL-based Queries]]
+* [[Easy CSV downloads]]
+* [[JSON, CSV, and XML API]]
+* [[API keys]]
+* [[Web Interface]]
+* [[Data Entry]]
+* [[5. Tables]]
+* [[5.1 Table and field naming conventions]]
+* [[5.2 Data Tables]]
+* [[5.3 Auxillary Tables]]
+* [[5.4 Lookup Tables]]
+* [[Documentation]]
+* [[Adding Comments to Tables and Columns]]
+* [[Export documentation tables above from the INFORMATION_SCHEMA database in MySQL:]]
+* [[6. Acknowledgments]]
+* [[7. Appendix]]
+* [[8. Software]]
 
 
 ### Development / Production Server Environments:
-* [[Ruby-on-Rails Application Overview | BETYdb-Ruby-on-Rails]]
-**[[Commenting in the Rails Models]]
-**[[Introduction to MVC]]
-**[[Source Code Map]]
-**[[Misc. Information]]
-**[[Providing model output for download]]
-**[[Related Issues/ Commits:]]
+
+#### Ruby-on-Rails Application Overview | BETYdb-Ruby-on-Rails
+* [[Commenting int he Rails Models]]
+* [[Introduction to MVC]]
+* [[Source Code Map]]
+* [[Misc. Information]]
+* [[Providing model output for download]]
+* [[Related Issues/ Commits:]]
+
+#### Installing BETYdb (Ubuntu)](https://github.com/PecanProject/pecan/wiki/Development-Environment-Setup-and-VM-Creation#installing-bety)
+* [[Overview: What is PEcAn?]]
+* [[Getting Started I: Background]]
+* [[Getting Started II: Installing PEcAn]]
+* [[Getting Started III: Using PEcAn]]
+* [[University of Illinois-Energy Biosciences Institute]]
+* [[Reporting Bugs and Requesting Features]]
+* [[Development]]
+* [[Setup]]
+* [[Using Git and GitHub]]
+* [[R Development]]
+* [[References]]
 
 
-
-* [Installing BETYdb (Ubuntu)](https://github.com/PecanProject/pecan/wiki/Development-Environment-Setup-and-VM-Creation#installing-bety)
-**[[Overview: What is PEcAn?]]
-**[[Getting Started I: Background]]
-**[[Getting started II: Installing PEcAn]]
-**[[Getting started III: Using PEcAn]]
-**[[University of Illinois-Energy Biosciences Institute]]
-**[[Reporting Bugs and Requesting Features]]
-**[[Development]]
-**[[Setup]]
-**[[Using Git and GitHub]]
-**[[R Development]]
-**[[References]]
-
-
-
-* [Configuring BETYdb on a RHEL / CentOS Server](https://github.com/PecanProject/bety/wiki/Configuring-a-CentOS-Server)
-**[[Overview]]
-**[[Create a netinstall of the CentOS ISO]]
-**[[Boot from CD and Install]]
-**[[Configuration]]
-**[[Add new repository]]
-**[[Site data installation]]
-**[[Database Creation]]
-**[[Ruby installation]]
-**[[Install Models]]
-**[[Pecan Installation]]
-
-
-
+#### Configuring BETYdb on a RHEL / CentOS Server](https://github.com/PecanProject/bety/wiki/Configuring-a-CentOS-Server)
+* [[Overview]]
+* [[Create a netinstall of the CentOS ISO]]
+* [Boot from CD and Install]]
+* [[Configuration]]
+* [[Add new repository]]
+* [[Site data installation]]
+* [[Database Creation]]
+* [[Ruby installation]]
+* [[Install Models]]
+* [[Pecan Installation]] 
 
