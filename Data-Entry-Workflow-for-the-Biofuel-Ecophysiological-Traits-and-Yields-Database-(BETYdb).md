@@ -8,7 +8,7 @@ You will need to create the following accounts:
 * GitHub https://github.com/
 * Mendeley www.mendeley.com/
 
-## 1. Overview
+## Overview
 This is the userguide for entering data into the BETYdb database. The goal of this guide is to provide a consistent method of data entry that is transparent, reproducible, and well documented. The steps here generally accomplish one of two goals. The first goal is to provide data in a consistent framework that is associated with the experimental methods, species, site, and other factors associated with the original study. The second goal is to provide a record of all the transformations, assumptions, and data extraction steps used to migrate data from the primary literature to the standardized framework of the database. This second goal not only supports the scientific value of the data itself, but it also simplifies the Quality Assurance process. 
 
 <a id="Using Mendeley"></Using Mendeley>

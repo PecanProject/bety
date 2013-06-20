@@ -4,8 +4,8 @@
 
 ### Entering and Retrieving Data
 
-#### Data Entry Workflow | Data-Entry-Workflow-for-the-Biofuel-Ecophysiological-Traits-and-Yields-Database-(BETYdb)
-* [[1. Overview]]
+#### [[Data Entry Workflow | Data-Entry-Workflow-for-the-Biofuel-Ecophysiological-Traits-and-Yields-Database-(BETYdb)]]
+* [[Data-Entry-Workflow-for-the-Biofuel-Ecophysiological-Traits-and-Yields-Database-(BETYdb)#Overview]]
 * [[2. Using Mendeley]]
 * [[2.1 Creating a new group on Mendeley (Project Managers)]]
 * [[2.2 Adding and annotating papers (Project Managers)]]
