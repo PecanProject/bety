@@ -36,7 +36,7 @@
 * [[6. BETYdb: Bulk Data Upload]]
 * [[7. BETYdb: QA/QC with the Web Interface]]
 * [[8. Acknowledgements]]
-* [[9. Appendix]]
+* [[Appendix | Data-Entry#Appendix]]
 * [[9.1 Transformations]]
 * [[9.1.1 Statistics]]
 * [[9.1.2 Variables]]

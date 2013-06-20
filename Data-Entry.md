@@ -713,7 +713,7 @@ interface. Moein Azimi, David Bettinardi, and Nick Brady, along with
 other members of the Dietze lab, have contributed to the ongoing
 development of this document and the web interface that it describes.
 
-## 9. Appendix
+## Appendix
 ### 9.1 Transformations
 #### 9.1.1 Statistics
 #### 9.1.2 Variables
