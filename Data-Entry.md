@@ -1,4 +1,4 @@
-# Data Entry
+# Data Entry Workflow for the Biofuel Ecophysiological Traits and Yields Database (BETYdb)
 ## Getting Started
 
 You will need to create the following accounts:
