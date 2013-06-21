@@ -7,11 +7,11 @@ class TraitsAndYieldsView < ActiveRecord::Base
 
 
   comma do
-    result_type 'result_type'
-    id 'id'
-    citation_id 'citation_id'
-    site_id 'site_id'
-    treatment_id 'treatment_id'
+    #result_type 'result_type'
+    #id 'id'
+    #citation_id 'citation_id'
+    #site_id 'site_id'
+    #treatment_id 'treatment_id'
     sitename 'sitename'
     city 'city'
     lat 'lat'
