@@ -71,7 +71,7 @@ class SessionsController < ApplicationController
       session[:page_access_requirement] = current_user.page_access_level
       session[:access_level] = current_user.access_level
       redirect_to root_path
-      flash[:notice] = "Welcome EBI user #{current_user.name}"
+      flash[:notice] = "Welcome EBI user #{current_user.login}"
     else
       redirect_to root_path
       flash[:notice] = 'Please login through the EBI link on page ...'

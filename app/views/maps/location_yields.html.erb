@@ -6,11 +6,48 @@
 			</header>
 
       <% if @fullscreen %>
-      <div id="map_canvas" style=" width: 100%; height: 800px"></div>
+      <!--  <div id="map_canvas" style=" width: 100%; height: 800px"></div>  -->
       <% else %>
-      <div id="map_canvas" style=" width: 750px; height: 600px"></div>
+      <!--  <div id="map_canvas" style=" width: 750px; height: 600px"></div>  -->
       <% end %>
- 
+      <div id='LCC'><h2> Least cost crop </h2>
+      <iframe width="800" height="600" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?q=select+col16%3E%3E1+from+1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88&amp;viz=MAP&amp;h=false&amp;lat=36.61902351866101&amp;lng=-88.32213031249995&amp;t=1&amp;z=5&amp;l=col16%3E%3E1&amp;y=11&amp;tmplt=11"></iframe></div>
+
+      <div id='miscanthus'>
+      <h2> Miscanthus yields(County) </h2>
+      <iframe width="800" height="600" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?q=select+col16%3E%3E1+from+1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88&amp;viz=MAP&amp;h=false&amp;lat=36.61902351866101&amp;lng=-88.32213031249995&amp;t=1&amp;z=5&amp;l=col16%3E%3E1&amp;y=12&amp;tmplt=12"></iframe> </div>
+
+      <div id='energycane'>
+      <h2> Energycane yields(County)</h2>
+      <iframe  width="800" height="600" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?q=select+col16%3E%3E1+from+1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88&amp;viz=MAP&amp;h=false&amp;lat=36.61902351866101&amp;lng=-88.32213031249995&amp;t=1&amp;z=5&amp;l=col16%3E%3E1&amp;y=4&amp;tmplt=4"></iframe></div>
+
+      <div id='switchgrass'>
+      <h2> Switchgrass yields(County)</h2>
+      <iframe width="800" height="600" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?q=select+col16%3E%3E1+from+1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88&amp;viz=MAP&amp;h=false&amp;lat=36.61902351866101&amp;lng=-88.32213031249995&amp;t=1&amp;z=5&amp;l=col16%3E%3E1&amp;y=3&amp;tmplt=3"></iframe></div>
+      <script>
+      function reset(){
+      document.getElementById('miscanthus').style.display='none';
+      document.getElementById('energycane').style.display='none';
+      document.getElementById('switchgrass').style.display='none';
+      document.getElementById('LCC').style.display='none';
+    }
+    reset()
+      document.getElementById('LCC').style.display='';
+      </script>
+      <br>
+      <button type='button' onclick="
+      reset()
+      javascript:document.getElementById('miscanthus').style.display=''; ">Miscanthus</button>
+      <button type='button' onclick="
+      reset()
+      javascript:document.getElementById('energycane').style.display=''; ">Energycane</button>
+      <button type='button' onclick="
+      reset()
+      javascript:document.getElementById('switchgrass').style.display=''; " >Switchgrass</button>
+      <button type='button' onclick="
+      reset()
+      javascript:document.getElementById('LCC').style.display=''; " >Least Cost Crop</button>
+      <br>
       <% if @fullscreen %>
         <div style="width:100%;margin-top:5px;">
       <% else %>
