@@ -69,33 +69,7 @@ class SearchesController < ApplicationController
     end
     require 'csv'
 
-
-
-    
-    #keys = result[0].keys
-
     row = result[0]
-
-=begin
-
-    logger.info 'hi'
-    logger.info(row.class)
-    logger.info(row.class.superclass)
-#    logger.info(row.class.included_modules.uniq.map {|a| a.to_s}.uniq.join("\n"))
-    logger.info(row.public_methods.sort.join("\n"))
-    logger.info(row.to_xml)
-
-
-    csv_string = CSV.generate do |csv|
-      result.each do |row|
-        ar = []
-        keys.each do |key|
-          ar << row[key]
-        end
-      end
-    end
-
-=end
 
     csv_string = CSV.generate do |csv|
       csv << row.to_comma_headers
@@ -145,15 +119,15 @@ class SearchesController < ApplicationController
       
     elsif params[:search_type] == "advanced"
 
-      if params[:show_yields] and params[:show_traits]
+      if params[:search_domain] == 'yields traits'
         
         @search_domain = "('traits', 'yields')"
 
-      elsif params[:show_yields]
+      elsif params[:search_domain] == 'yields'
 
         @search_domain = "('yields')"
 
-      elsif params[:show_traits]
+      elsif params[:search_domain] == 'traits'
 
         @search_domain = "('traits')"
 
