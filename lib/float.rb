@@ -11,7 +11,7 @@ class Float
   def round_to_significant_digit(n)
     num = self
     if(num == 0)
-      return 0;
+      return 0.to_f;
     end
 
     d = (Math.log10(num < 0 ? -num : num)).ceil;
@@ -20,7 +20,8 @@ class Float
     magnitude = (10 ** power).to_f
     shifted = (num*magnitude).round;
     #puts "shifted class is #{shifted.class}; magnitude has class #{magnitude.class} and value #{magnitude}"
-    return shifted/magnitude;
+    rounded_n = shifted/magnitude;
+    return rounded_n.to_f
   end
 
 end
