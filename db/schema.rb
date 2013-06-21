@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130222222929) do
+ActiveRecord::Schema.define(:version => 20130624001504) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -365,7 +365,7 @@ ActiveRecord::Schema.define(:version => 20130222222929) do
 
   create_table "priors", :force => true do |t|
     t.integer  "citation_id"
-    t.string   "variable_id"
+    t.integer  "variable_id"
     t.string   "phylogeny"
     t.string   "distn"
     t.decimal  "parama",      :precision => 16, :scale => 4
