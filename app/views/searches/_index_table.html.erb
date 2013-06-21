@@ -20,18 +20,19 @@
     <div class="span6">
       <div class="dataTables_filter" id="DataTables_Table_0_filter">
         <%= form_tag "searches", :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
-  			  <label>Search: <%= text_field_tag :search, params[:search] %></label>
-              <p>
-              <label>Show Yield Data <%= check_box_tag :show_yields, params[:show_yields], params[:show_yields] %></label>
-              </p>
-                <p>
-              <label>Show Trait Data <%= check_box_tag :show_traits, params[:show_traits], params[:show_traits] %></label>
-              </p>
+  			  <div style="height: 30px"><label>Search: <%= text_field_tag :search, params[:search] %></label></div>
+<div>
+              <ul style="list-style-type: none"><% logger.info("params[:search_domain] = "); logger.info( params[:search_domain].inspect ) %>
+              <li style="float: right; clear: right"><%= label_tag(:show_yields, raw('Yields' + radio_button_tag(:search_domain, "yields", (params[:search_domain] == 'yields' || params[:search_domain] == nil))), { style: "float: none" }) %></li>
+              <li style="float: right; clear: right"><%= label_tag(:show_traits, raw('Traits' + radio_button_tag(:search_domain, "traits", params[:search_domain] == 'traits')), { style: "float: none" }) %></li>
+              <li style="float: right; clear: right"><%= label_tag(:show_both, raw('Both' + radio_button_tag(:search_domain, "yields traits", params[:search_domain] == 'yields traits')), { style: "float: none" }) %></li>
+              </ul>
+</div>
           <%= hidden_field_tag :direction, params[:direction] %>
           <%= hidden_field_tag :sort, params[:sort] %>
           <%= hidden_field_tag :search_type, "advanced" %>
         <% end %>
-        <%#= link_to "Download Search Results", :href => request.fullpath, :format => 'csv' %>
+        <%#= link_to "Download Search Results", :href => request.fullpath, :format => 'csv', style: "clear: both; float: right" %>
         <a href="<%= "#{request.fullpath}&format=csv" %>">Download Search Restuls</a>
 
       </div> <!-- id="DataTables_Table_0_filter" -->
