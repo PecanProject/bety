@@ -714,10 +714,6 @@ other members of the Dietze lab, have contributed to the ongoing
 development of this document and the web interface that it describes.
 
 ## Appendix
-### 9.1 Transformations
-#### 9.1.1 Statistics
-#### 9.1.2 Variables
-### 9.2 Calculations used in transformations
 
 ## 10. Converting from ![Alt text](figures/ul o2.png) to  ![Alt text] (figures/nmolco2.png) to ![Alt text] (figures/umolco2.png), including adjustment to temperature
 
