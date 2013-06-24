@@ -40,11 +40,23 @@ class SearchesController < ApplicationController
       end
       search_terms.flatten!
 
+      for symbol in [:sitename, :scientificname, :trait]
+        logger.info("symbol is #{symbol}")
+        if params[symbol]
+          search_condition += " AND #{symbol.id2name} LIKE CONCAT('%', ?, '%') "
+          search_terms << params[symbol]
+        end
+      end
+
+      
+          
+
       @results = TraitsAndYieldsView.find(:all, 
                                           :conditions => [
                                                           search_condition,
                                                           search_terms
-                                                         ].flatten!)
+                                                         ].flatten!,
+                                          :order => "scientificname, sitename, trait")
 
       respond_to do |format|
         format.html  # show html page as before
