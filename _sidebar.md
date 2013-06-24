@@ -42,6 +42,8 @@
 * [[Bibliography | Data-Entry#12-bibliography]]
 * [[Reference Tables | Data-Entry#13-reference-tables]]
 
+
+
 #### [[Data Access | Data-access]]
 
 * [[Search Box | Data-access#search-box]]
@@ -56,7 +58,9 @@
 * [[Database creation | Data-access#database-creation]]
 
 
-### Implementation:
+
+### Implementation
+
 
 
 #### [[Database Structure and Contents | The-Biofuel-EcophysiologicalTraits-and-Yields-Database | Data-access#database-structure-and-contents--the-biofuel-ecophysiological-traits-and-yields-database]] 
@@ -82,8 +86,7 @@
 * [[Appendix | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#7-appendix]]
 * [[Software | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#8-software]]
 
-
-### Development / Production Server Environments:
+### Development / Production Server Environments
 
 
 #### [[Ruby-on-Rails Application Overview | BETYdb-Ruby-on-Rails | BETYdb-Ruby-on-Rails#commenting-in-the-rails-models]]
@@ -107,7 +110,8 @@
 * [[References | wiki#references]]
 (https://github.com/PecanProject/pecan/wiki#references)
 
-#### Configuring BETYdb on a RHEL / CentOS Server | Configuring-a-CentOS-Server]]
+
+#### [[Configuring BETYdb on a RHEL / CentOS Server | Configuring-a-CentOS-Server]]
 * [[Create a netinstall of the CentOS ISO | Configuring-a-CentOS-Server#create-an-netinstall-of-the-centos-iso]]
 * [[Boot from CD and Install | Configuring-a-CentOS-Server#boot-from-cd-and-install]]
 * [[Configuration | Configuring-a-CentOS-Server#configuration]]
