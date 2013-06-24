@@ -97,8 +97,7 @@
 * [[Providing model output for download | BETYdb-Ruby-on-Rails#providing-model-output-for-download]]
 * [[Related Issues/Commits: | BETYdb-Ruby-on-Rails#related-issues--commits]]
 
-#### [[Installing BETYdb (Ubuntu) | wiki#installing-bety]]  
-* [[Overview: What is PEcAn? | wiki#overview-what-is-pecan]]
+#### [[Installing BETYdb (Ubuntu) | wiki#overview-what-is-pecan]]
 * [[Getting Started I: Background | wiki#getting-started-i-background]]
 * [[Getting Started II: Installing PEcAn | wiki#getting-started-ii-installing-pecan]]
 * [[Getting Started III: Using PEcAn | wiki#getting-started-iii-using-pecan]]
