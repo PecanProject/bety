@@ -713,7 +713,7 @@ interface. Moein Azimi, David Bettinardi, and Nick Brady, along with
 other members of the Dietze lab, have contributed to the ongoing
 development of this document and the web interface that it describes.
 
-## Appendix
+## 9. Appendix
 
 ## 10. Converting from ![Alt text](figures/ul o2.png) to  ![Alt text] (figures/nmolco2.png) to ![Alt text] (figures/umolco2.png), including adjustment to temperature
 
