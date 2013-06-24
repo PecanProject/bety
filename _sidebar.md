@@ -4,7 +4,7 @@
 ### The Biofuel Ecophysiological Traits and Yields Database Wiki
 
 
-### Entering and Retrieving Data | wiki#entering-and-retrieving-data]]
+### Entering and Retrieving Data 
 
 
 #### [[Data Entry Workflow | Data-Entry]]
