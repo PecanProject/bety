@@ -71,7 +71,7 @@
 * [[Scope | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#4-scope]]
 * [[Data Content | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#41-data-content]]
 * [[Design | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#42-design]]
-* [[Data Access | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#data-access
+* [[Data Access | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#data-access]]
 * [[URL-based Queries | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#url-based-queries]]
 * [[Easy CSV downloads | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#easy-csv-downloads]]
 * [[JSON, CSV, and XML API | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#json-csv-and-xml-api]]
