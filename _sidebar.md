@@ -42,8 +42,6 @@
 * [[Bibliography | Data-Entry#12-bibliography]]
 * [[Reference Tables | Data-Entry#13-reference-tables]]
 
-
-
 #### [[Data Access | Data-access]]
 
 * [[Search Box | Data-access#search-box]]
@@ -84,8 +82,8 @@
 * [[Appendix | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#7-appendix]]
 * [[Software | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#8-software]]
 
-### Development / Production Server Environments:
 
+### Development / Production Server Environments:
 
 
 #### [[Ruby-on-Rails Application Overview | BETYdb-Ruby-on-Rails | BETYdb-Ruby-on-Rails#commenting-in-the-rails-models]]
@@ -108,7 +106,6 @@
 * [[R Development | wiki#r-development]]
 * [[References | wiki#references]]
 (https://github.com/PecanProject/pecan/wiki#references)
-
 
 #### Configuring BETYdb on a RHEL / CentOS Server | Configuring-a-CentOS-Server]]
 * [[Create a netinstall of the CentOS ISO | Configuring-a-CentOS-Server#create-an-netinstall-of-the-centos-iso]]
