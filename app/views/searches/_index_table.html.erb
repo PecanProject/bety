@@ -125,7 +125,7 @@
           <%
 =end %>
           -->
-          <td class="center"><%= t.sitename ? t.sitename : t.city %></td>
+          <td class="center"><%= t.sitename && !t.sitename.strip.empty? ? t.sitename : t.city %></td>
           <!--
               <%
 =begin %>
