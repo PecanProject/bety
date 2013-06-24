@@ -19,7 +19,6 @@
     
     <div class="span6">
       <div class="dataTables_filter" id="DataTables_Table_0_filter">
-        <%= form_tag "searches", :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
   			  <div style="height: 30px"><label>Search: <%= text_field_tag :search, params[:search] %></label></div>
 <div>
               <ul style="list-style-type: none"><% logger.info("params[:search_domain] = "); logger.info( params[:search_domain].inspect ) %>
@@ -31,9 +30,8 @@
           <%= hidden_field_tag :direction, params[:direction] %>
           <%= hidden_field_tag :sort, params[:sort] %>
           <%= hidden_field_tag :search_type, "advanced" %>
-        <% end %>
-        <%#= link_to "Download Search Results", :href => request.fullpath, :format => 'csv', style: "clear: both; float: right" %>
-        <a href="<%= "#{request.fullpath}&format=csv" %>">Download Search Restuls</a>
+          <input type="submit">
+        <a href="<%= "#{request.fullpath}&format=csv" %>">Download&nbsp;Search&nbsp;Restuls</a>
 
       </div> <!-- id="DataTables_Table_0_filter" -->
     </div> <!-- class="span6" -->
