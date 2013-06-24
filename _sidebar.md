@@ -63,7 +63,7 @@
 
 
 
-#### [[Database Structure and Contents | The-Biofuel-Ecophysiological-Traits-and-Yields-Database | Data-access#database-structure-and-contents--the-biofuel-ecophysiological-traits-and-yields-database]] 
+#### [[Database Structure and Contents | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#database-description-and-users-guide]] 
 * [[Quick Start | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#1-quick-start]]
 * [[Background | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#2-background]]
 * [[Introduction | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#3-introduction]]
