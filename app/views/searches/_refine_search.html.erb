@@ -2,39 +2,29 @@
 
 <!-- Narrow Search Options -->
   <div class="yui-b"><div class="box submenu narrow">
-
+<!--
              <h2>Results for</h2>
-        <ul class="filters">
-     
-               
-        <li>
-
-                  Library: "University of Illinois at Urbana-Champaign"
-                                       <a href="/all/vf-uiu/Search/Home?lookfor=sql&type=all&hathi=1"> <span class="italic">[show all Libraries]</span></a>
-                      </li>
-
-               
-
-             </ul>
-        <br/>
-     
-    <h2>Narrow Your Search</h2>
+         # maybe give info about search terms here
+    --> 
+    <h2>Narrow Your Search &hellip;</h2>
     <style>
       dd { padding-left: .5em }
       </style>
       <dl class="narrowList navmenu" id="narrowList">
         <dl>
-          <dt>Site</dt>
-          <dd><a>Latj....</a></dd>
+          <dt><%= label_tag(:sitename, 'By Site:') %></dt>
+  		  <dd><div style="height: 30px"><%= text_field_tag(:sitename, params[:sitename]) %></label></div></dd>
+          <dd><%= link_to_function('Apply Limit', "$(simple_search).submit()") %></dd>
         </dl>
         <dl>
-          <dt>Species</dt>
-          <dd><a>miscanthus</a></dd>
+          <dt><%= label_tag(:scientificname, 'By Species:') %></dt>
+  		  <dd><div style="height: 30px"><%= text_field_tag(:scientificname, params[:scientificname]) %></label></div></dd>
+          <dd><%= link_to_function('Apply Limit', "$(simple_search).submit()") %></dd>
         </dl>
         <dl>
-          <dt>Trait</dt>
-          <dd>1</dd>
-          <dd>2</dd>
+          <dt><%= label_tag(:trait, 'By Trait:') %></dt>
+  		  <dd><div style="height: 30px"><%= text_field_tag(:trait, params[:trait]) %></label></div></dd>
+          <dd><%= link_to_function('Apply Limit', "$(simple_search).submit()") %></dd>
         </dl>
       </dl>
     </div>
