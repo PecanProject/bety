@@ -8,13 +8,29 @@ class Float
   end
 
 
+
+=begin
+
+Examples for given values of num and n:
+
+num  |  n  |  d  | power | magnitude | shifted | rounded_n
+ 99  |  2  |  2  |  0    |    1      |   99    |   99
+100  |  2  |  2  |  0    |    1      |  100    |  100
+101  |  2  |  3  |  -1   |   .1      |   10    |  100
+.1   |  2  |  
+
+... [to finish]
+
+
+=end
+
   def round_to_significant_digit(n)
     num = self
-    if(num == 0)
+    if num == 0 # treat 0 specially: we can't take the log of it below
       return 0.to_f;
     end
 
-    d = (Math.log10(num < 0 ? -num : num)).ceil;
+    d = (Math.log10(num.abs)).ceil;
     power = n - d.to_i;
 
     magnitude = (10 ** power).to_f
