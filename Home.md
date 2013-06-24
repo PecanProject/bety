@@ -1,7 +1,7 @@
 # The Biofuel Ecophysiological Traits and Yields Database Wiki
 
 ### Entering and Retrieving Data
- * [[Data Entry Workflow | Data-Entry-Workflow-for-the-Biofuel-Ecophysiological-Traits-and-Yields-Database-(BETYdb)]]
+ * [[Data Entry Workflow | Data-Entry]]
  * [[Data Access]]
 
 ### Implementation
