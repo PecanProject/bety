@@ -1,4 +1,4 @@
-# The Biofuel Ecopysiological Traits and Yields Database: 
+# The Biofuel Ecophysiological Traits and Yields Database: 
 # Database Description and User's Guide 
 ## Version 1.0
 
