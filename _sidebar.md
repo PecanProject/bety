@@ -44,7 +44,7 @@
 
 
 
-#### [[Data Access | Data-access#data-access]]
+#### [[Data Access | Data-access]]
 
 * [[Search Box | Data-access#search-box]]
 * [[Advanced Search | Data-access#advanced-search]]
@@ -59,34 +59,34 @@
 
 
 
-### [[Implementation | wiki#implementation]]
+### Implementation:
 
 
 
 #### [[Database Structure and Contents | The-Biofuel-EcophysiologicalTraits-and-Yields-Database | Data-access#database-structure-and-contents--the-biofuel-ecophysiological-traits-and-yields-database]] 
- * [[Quick Start | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#1-quick-start]]
-* [[Background | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#2-background]]
-* [[Introduction | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#3-introduction]]
-* [[Objectives | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#31-objectives]]
-* [[Scope | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#4-scope]]
-* [[Data Content | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#41-data-content]]
-* [[Design | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#42-design]]
-* [[Data Access | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#data-access]]
-* [[URL-based Queries | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#url-based-queries]]
-* [[Easy CSV downloads | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#easy-csv-downloads]]
-* [[JSON, CSV, and XML API | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#json-csv-and-xml-api]]
-* [[API keys | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#api-keys]]
-* [[Web Interface | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#web-interface]]
-* [[Data Entry | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#data-entry]]
-* [[Tables | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#5-tables]]
-* [[Documentation | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#documentation]]
-* [[Adding Comments to Tables and Columns | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#adding-comments-to-tables-and-columns]]
-* [[Export documentation tables above from the INFORMATION_SCHEMA database in MySQL: | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#export-documentation-tables-above-from-the-information_schema-database-in-mysql]]
-* [[Acknowledgments | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#6-acknowlegments]]
-* [[Appendix | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#7-appendix]]
-* [[Software | The-Biofuel-Ecopysiological-Traits-and-Yields-Database#8-software]]
+* [[Quick Start | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#1-quick-start]]
+* [[Background | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#2-background]]
+* [[Introduction | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#3-introduction]]
+* [[Objectives | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#31-objectives]]
+* [[Scope | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#4-scope]]
+* [[Data Content | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#41-data-content]]
+* [[Design | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#42-design]]
+* [[Data Access | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#data-access]]
+* [[URL-based Queries | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#url-based-queries]]
+* [[Easy CSV downloads | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#easy-csv-downloads]]
+* [[JSON, CSV, and XML API | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#json-csv-and-xml-api]]
+* [[API keys | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#api-keys]]
+* [[Web Interface | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#web-interface]]
+* [[Data Entry | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#data-entry]]
+* [[Tables | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#5-tables]]
+* [[Documentation | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#documentation]]
+* [[Adding Comments to Tables and Columns | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#adding-comments-to-tables-and-columns]]
+* [[Export documentation tables above from the INFORMATION_SCHEMA database in MySQL: | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#export-documentation-tables-above-from-the-information_schema-database-in-mysql]]
+* [[Acknowledgments | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#6-acknowlegments]]
+* [[Appendix | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#7-appendix]]
+* [[Software | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#8-software]]
 
-### [[Development / Production Server Environments: | wiki#development--production-server-environments]]
+### Development / Production Server Environments:
 
 
 
@@ -98,13 +98,13 @@
 * [[Providing model output for download | BETYdb-Ruby-on-Rails#providing-model-output-for-download]]
 * [[Related Issues/Commits: | BETYdb-Ruby-on-Rails#related-issues--commits]]
 
-#### Installing BETYdb (Ubuntu)](https://github.com/PecanProject/pecan/wiki/Development-Environment-Setup-and-VM-Creation#installing-bety)
+#### [[Installing BETYdb (Ubuntu) | wiki#installing-bety]]  
 * [[Overview: What is PEcAn? | wiki#overview-what-is-pecan]]
 * [[Getting Started I: Background | wiki#getting-started-i-background]]
 * [[Getting Started II: Installing PEcAn | wiki#getting-started-ii-installing-pecan]]
 * [[Getting Started III: Using PEcAn | wiki#getting-started-iii-using-pecan]]
 * [[University of Illinois-Energy Biosciences Institute | wiki#university-of-illinois---energy-biosciences-institute]]
-* [[Reporting Bugs and Requesting Features | pecan/wiki#reporting-bugs-and-requesting-features]]
+* [[Reporting Bugs and Requesting Features | wiki#reporting-bugs-and-requesting-features]]
 * [[Setup | wiki#setup]]
 * [[Using Git and GitHub | wiki#using-git-and-github]]
 * [[R Development | wiki#r-development]]
@@ -112,8 +112,7 @@
 (https://github.com/PecanProject/pecan/wiki#references)
 
 
-#### Configuring BETYdb on a RHEL / CentOS Server](https://github.com/PecanProject/bety/wiki/Configuring-a-CentOS-Server)
-* [[Overview | Configuring-a-CentOS-Server#overview]]
+#### Configuring BETYdb on a RHEL / CentOS Server | Configuring-a-CentOS-Server]]
 * [[Create a netinstall of the CentOS ISO | Configuring-a-CentOS-Server#create-an-netinstall-of-the-centos-iso]]
 * [[Boot from CD and Install | Configuring-a-CentOS-Server#boot-from-cd-and-install]]
 * [[Configuration | Configuring-a-CentOS-Server#configuration]]
