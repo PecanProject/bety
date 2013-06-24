@@ -58,9 +58,7 @@
 * [[Database creation | Data-access#database-creation]]
 
 
-
 ### Implementation:
-
 
 
 #### [[Database Structure and Contents | The-Biofuel-EcophysiologicalTraits-and-Yields-Database | Data-access#database-structure-and-contents--the-biofuel-ecophysiological-traits-and-yields-database]] 
