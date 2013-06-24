@@ -14,8 +14,11 @@ class TraitsAndYieldsView < ActiveRecord::Base
     #treatment_id 'treatment_id'
     sitename 'sitename'
     city 'city'
-    lat 'lat'
-    lon 'lon'
+
+    # sprintf will both round to 2 decimal places and ensure that (e.g.) "14" is displayed as "14.00"
+    lat 'lat' do |num| sprintf("%0.2f", num) end
+    lon 'lon' do |num| sprintf("%0.2f", num) end
+
     scientificname 'scientificname'
     commonname 'commonname'
     genus 'genus'
@@ -27,11 +30,11 @@ class TraitsAndYieldsView < ActiveRecord::Base
     year 'year'
     dateloc 'dateloc'
     trait 'trait'
-    mean 'mean'
+    mean 'mean' do |num| num.to_f.round_to_significant_digit(3) end
     units 'units'
     n 'n'
     statname 'statname'
-    stat 'stat'
+    stat 'stat' do |num| num.to_f.round_to_significant_digit(3) end
     notes 'notes'
     user_name 'user_name'
   end
