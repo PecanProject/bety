@@ -88,17 +88,9 @@
 * [[Under construction]]
 
 #### [[Installing BETYdb (Ubuntu) | https://github.com/PecanProject/pecan/wiki/Installing-PEcAn#installing-bety]]
-* [[Getting Started I: Background | wiki#getting-started-i-background]]
-* [[Getting Started II: Installing PEcAn | wiki#getting-started-ii-installing-pecan]]
-* [[Getting Started III: Using PEcAn | wiki#getting-started-iii-using-pecan]]
-* [[University of Illinois-Energy Biosciences Institute | wiki#university-of-illinois---energy-biosciences-institute]]
-* [[Reporting Bugs and Requesting Features | wiki#reporting-bugs-and-requesting-features]]
-* [[Setup | wiki#setup]]
-* [[Using Git and GitHub | wiki#using-git-and-github]]
-* [[R Development | wiki#r-development]]
-* [[References | wiki#references]]
-(https://github.com/PecanProject/pecan/wiki#references)
-
+* [[Database creation | Installing-PEcAn#database-creation]]
+* [[PHP version | Installing-PEcAn#php-version]]
+* [[RUBY version | Installing-PEcAn#ruby-version]]
 
 #### [[Configuring BETYdb on a RHEL / CentOS Server | Configuring-a-CentOS-Server]]
 * [[Create a netinstall of the CentOS ISO | Configuring-a-CentOS-Server#create-an-netinstall-of-the-centos-iso]]
