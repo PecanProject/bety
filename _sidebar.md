@@ -87,7 +87,7 @@
 #### [[Ruby-on-Rails Application Overview | BETYdb-Ruby-on-Rails | BETYdb-Ruby-on-Rails#commenting-in-the-rails-models]]
 * [[Under construction]]
 
-#### [[Installing BETYdb (Ubuntu) | https://github.com/PecanProject/pecan/wiki#installing-bety]]
+#### [[Installing BETYdb (Ubuntu) | https://github.com/PecanProject/pecan/wiki/Installing-PEcAn#installing-bety]]
 * [[Getting Started I: Background | wiki#getting-started-i-background]]
 * [[Getting Started II: Installing PEcAn | wiki#getting-started-ii-installing-pecan]]
 * [[Getting Started III: Using PEcAn | wiki#getting-started-iii-using-pecan]]
