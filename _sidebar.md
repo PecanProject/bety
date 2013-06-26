@@ -71,11 +71,6 @@
 * [[Scope | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#4-scope]]
 * [[Data Content | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#41-data-content]]
 * [[Design | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#42-design]]
-* [[Data Access | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#data-access]]
-* [[URL-based Queries | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#url-based-queries]]
-* [[Easy CSV downloads | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#easy-csv-downloads]]
-* [[JSON, CSV, and XML API | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#json-csv-and-xml-api]]
-* [[API keys | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#api-keys]]
 * [[Web Interface | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#web-interface]]
 * [[Data Entry | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#data-entry]]
 * [[Tables | The-Biofuel-Ecophysiological-Traits-and-Yields-Database#5-tables]]
@@ -90,14 +85,9 @@
 
 
 #### [[Ruby-on-Rails Application Overview | BETYdb-Ruby-on-Rails | BETYdb-Ruby-on-Rails#commenting-in-the-rails-models]]
-* [[Commenting in the Rails Models | BETYdb-Ruby-on-Rails#commentingin-the-rails-models]]
-* [[Introduction to MVC | BETYdb-Ruby-on-Rails#introduction-to-mvc]]
-* [[Source Code Map | BETYdb-Ruby-on-Rails#source-code-map]]
-* [[Misc. Information | BETYdb-Ruby-on-Rails#misc-information]]
-* [[Providing model output for download | BETYdb-Ruby-on-Rails#providing-model-output-for-download]]
-* [[Related Issues/Commits: | BETYdb-Ruby-on-Rails#related-issues--commits]]
+* [[Under construction]]
 
-#### [[Installing BETYdb (Ubuntu) | wiki#overview-what-is-pecan]]
+#### [[Installing BETYdb (Ubuntu) | https://github.com/PecanProject/pecan/wiki#installing-bety]]
 * [[Getting Started I: Background | wiki#getting-started-i-background]]
 * [[Getting Started II: Installing PEcAn | wiki#getting-started-ii-installing-pecan]]
 * [[Getting Started III: Using PEcAn | wiki#getting-started-iii-using-pecan]]
