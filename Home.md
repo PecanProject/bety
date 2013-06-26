@@ -5,7 +5,7 @@
  * [[Data Access]]
 
 ### Implementation
-* [[Database Structure and Contents | The-Biofuel-Ecophysiological-Traits-and-Yields-Database]]
+* [[Database Description and User's Guide | The-Biofuel-Ecophysiological-Traits-and-Yields-Database]]
 * [[Creating Maps from Model Output]]
 
 ### Development / Production Server Environments:
