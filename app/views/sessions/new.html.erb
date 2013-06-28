@@ -61,18 +61,21 @@
 					</div>
 				</div>
 				<div>
-					<form id="search-form">
+					<%= form_tag "searches", :method => 'get', :id => 'search-form', :class => "no-margin" do %><!--<form id="search-form">-->
 						<div class="control-group">
 							<h3>
 								<i class="icon-search"></i> SEARCH <em>FOR TRAITS AND YIELDS</em>
 							</h3>
 							<div class="controls">
 								<div class="input-append">
-									<input id="appendedInputButton" type="text" class="" placeholder="EX: Panicum Nitrogen, Miscanthus Yield">
-									<a id="front_page_search_button" class="button" href="#"><i class="icon-search"></i></a> </div>
+
+									<input id="appendedInputButton" name="search" type="text" class="" placeholder="EX: Panicum Nitrogen, Miscanthus Yield">
+                                    <%= link_to_submit raw('<i class="icon-search"></i>'), id: "front_page_search_button", class: "button" %>
+                                </div>
 								<span class="help-inline"><small>For more options visit the <a href="" class="green">Advanced Search</a>.</small></span> </div>
 						</div>
-					</form>
+                        <%= hidden_field_tag :search_type, "simple" %>
+                    <% end %>
 				</div>
 				
 				<div>
