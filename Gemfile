@@ -1,9 +1,6 @@
 source "http://rubygems.org"
 
 gem "rails", "3.0.18"
-gem "mysql2"
-gem "ruby-mysql" # for data upload scripts in local
-gem "activerecord-mysql2-adapter"
 gem "query_reviewer", "0.1.6"
 gem "nokogiri"
 gem "narray", "0.6.0.4"
@@ -23,6 +20,14 @@ gem "bootstrap-will_paginate"
 gem "rspec-rails"
 gem "capybara"
 
+# MySQL, comment out PostgreSQL section
+gem "mysql2"
+gem "ruby-mysql" # for data upload scripts in local
+gem "activerecord-mysql2-adapter"
+
+# Postgresql, comment out MySQL section
+#gem "pg"
+#gem "activerecord-postgresql-adapter"
 
 group :development, :test do
   gem "rspec-rails"
