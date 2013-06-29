@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130624001504) do
+ActiveRecord::Schema.define(:version => 20130629205658) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -300,7 +300,7 @@ ActiveRecord::Schema.define(:version => 20130624001504) do
   create_table "models", :force => true do |t|
     t.string   "model_name"
     t.string   "model_path"
-    t.decimal  "revision",   :precision => 10, :scale => 0
+    t.string   "revision"
     t.integer  "parent_id"
     t.datetime "created_at"
     t.datetime "updated_at"
