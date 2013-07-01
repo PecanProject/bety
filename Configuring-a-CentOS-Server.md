@@ -166,7 +166,7 @@ EOF
 # configure apache
 ln -s /usr/local/ebi/bety/public /var/www/bety
 
-cat > /etc/apache2/conf.d/bety << EOF
+cat > /etc/apache2/conf.d/bety.conf << EOF
 RailsEnv production
 RailsBaseURI /bety
 <Directory /var/www/bety>
