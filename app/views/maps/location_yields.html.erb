@@ -2,7 +2,7 @@
 	<div class="container" style="margin: 10px 100px; width:80%">
 		<div class="sixteen columns" style="width:100%">
 			<header>
-				<h1>Location Yields</h1>
+				<h1><span id="maptitle">Miscanthus Yield</span></h1>
 			</header>
 
       <% if @fullscreen %>
@@ -176,6 +176,7 @@ function updatemap() {
   select = document.getElementById('selectmap')
   reset();
   layers[select.options[select.selectedIndex].value].setMap(map);
+  document.getElementById('maptitle').innerHTML = select.options[select.selectedIndex].text;
 
 }
 </script>
