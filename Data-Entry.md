@@ -1,4 +1,4 @@
-# Data Entry
+# Data Entry Workflow for the Biofuel Ecophysiological Traits and Yields Database (BETYdb)
 ## Getting Started
 
 You will need to create the following accounts:
@@ -8,9 +8,10 @@ You will need to create the following accounts:
 * GitHub https://github.com/
 * Mendeley www.mendeley.com/
 
-## 1. Overview
+## Overview
 This is the userguide for entering data into the BETYdb database. The goal of this guide is to provide a consistent method of data entry that is transparent, reproducible, and well documented. The steps here generally accomplish one of two goals. The first goal is to provide data in a consistent framework that is associated with the experimental methods, species, site, and other factors associated with the original study. The second goal is to provide a record of all the transformations, assumptions, and data extraction steps used to migrate data from the primary literature to the standardized framework of the database. This second goal not only supports the scientific value of the data itself, but it also simplifies the Quality Assurance process. 
 
+<a id="Using Mendeley"></Using Mendeley>
 ## 2. Using Mendeley
 Mendeley provides a central location for the collection, annotation, and tracking of the journal articles that we use. Features of Mendeley that are useful to us include: 
 * Collaborative annotation & notes sharing: see [Section 2.2](#Section_2.2)
@@ -23,7 +24,7 @@ Papers can be marked as **read** or **unread**, and may be **starred.**
 * Tagging
 
 ### <a id="Section_2.1"></a> 2.1 Creating a new group on Mendeley (Project Managers)
-Each project has two groups: "projectname" and "projectname_out" for the papers with data to be entered and for the papers with data that has been entered, respectively. Papers in the _out group may contain data for future entry [for example, traits that are not listed in [Table 6] (#Table 6)].  
+Each project has two groups: "projectname" and "projectname_out" for the papers with data to be entered and for the papers with data that has been entered, respectively. Papers in the _out group may contain data for future entry (for example, traits that are not listed in [Table 6](#Table 6)). 
 
 Each project manager may have one or more projects and each project should have one group. Group names should refer to plant species, plant functional types, or another project specific name. A list of current groups can be found in [Table 1](#Table 1). Please make sure that, at a minimum, Mike Dietze and David LeBauer are invited to join each project folder. 
    1. Open Mendeley desktop
@@ -156,9 +157,10 @@ citation that is the source of the data. It is also necessary for each
 data point to be associated with a Site, Treatment, and Species.
 Cultivar information is also required when available, but it is only
 relevant for domesticated species. Fields with an asterisk (*) are
-required.  
+required. 
 
-**Table 1**
+<a id="Table 1"></Table 1>
+**Table 1: List of current projects, PI's, Managers, and Technicians**
 
 | Current Projects | List of Current Projects | PI's      | Managers    | Technicians   | Status   |
 |:-----------------|:-------------------------|:----------|:------------|:--------------|:---------|
@@ -183,7 +185,7 @@ A PDF copy of each paper should be available through Mendeley.
 3.  Identify (highlight or underline) the data (means and statistics)
     that you will enter
 4.  Enter citation information [Figure 1](#Figure 1)
-    * [Data entry form](http://ebi-forecast.igb.uiuc.edu/bety/sites/new) for a new
+    * [Data entry form](http://www.betydb.org//sites/new) for a new
         site: `BETYdb` → `Citations` → `new`
     *  **Author**: Input the first author’s last name only
     *  **Year**: Input the year the paper was published, not submitted, reviewed,
@@ -198,7 +200,7 @@ A PDF copy of each paper should be available through Mendeley.
 
 <a id="Figure 1"></a> ![Alt text](figures/New citation.png "Figure 1")   
 
-**Figure 1**: Form for entering a new citation 
+**Figure 1**: [Form for entering a new citation](https://www.betydb.org/citations/new) 
 
 ### 5.2 Adding a Site
 
@@ -295,9 +297,8 @@ through an internet search (e.g. Google).
 Use Table 2 to determine the number of significant digits to indicate the level
 of precision with which a study location is known.  
 
-**Table 2**
-
-**Appropriate precision for site latitude and longitude (Siteloc)**
+<a id="Table 2"></Table 2>
+**Table 2: Appropriate precision for site latitude and longitude (Siteloc)**
                  
 | Location Detail | Decimal Degree Accuracy  |
 |:----------------|-------------------------:|
@@ -307,7 +308,9 @@ of precision with which a study location is known.
 | 10 Meters       |                   0.0001 |
  
 <a id="Figure 3"></a> ![Alt text] (figures/new site.png "Figure 3")  
-**Figure 3**: Form for entering a new site
+
+**Figure 3**: [Form for entering a new site](https://www.betydb.org/sites/new)
+
 
 ### 5.3 Adding a Treatment
 Treatments provide a description of a study’s
@@ -345,7 +348,8 @@ crops, this could be how a farmer would be most likely to treat a crop.
     treatment even though this information can only be used for analysis
     when entered as a management.
     
-**Figure 4**: Form for entering a new treatment  
+**Figure 4**: [Form for entering a new treatment](https://www.betydb.org/treatments/new)  
+
 <a id="Figure 4"></a> ![Alt text] (figures/new treatment.png "Figure 4")
 
 
@@ -396,7 +400,7 @@ management, then edit the management and add treatment relationships.
 <a id="Figure 6"></a>
 ![Alt text] (figures/treatments associated.png "Figure 6")   
 
-**Figure 6**: Form for entering and editing relationships between treatments and managements
+**Figure 6**: [Form for entering and editing relationships between treatments and managements](https://www.betydb.org/treatments)
 
 
 <a id="Section_5.5"></a>
@@ -409,7 +413,7 @@ data for are listed in [Table 6](#Table 6).
 Before adding trait data, it is necessary to have the citation,
 treatments, and site information already entered. If the correct
 citation is not identified at the top of the page [Figure 8](#Figure 8). To add a new Trait,
-go to the [new trait](http:ebi-forecast.igb.uiuc.edu/bety/traits/new)
+go to the [new trait](http://www.betydb.org/traits/new)
 page: `Trait` → `new`.
 
 Presently, we are also using the Trait table to record ecosystem level
@@ -447,7 +451,7 @@ by more thorough explanations:
     chambers, pots, or individual plants. Sometimes this value is not
     clearly stated.  
 
-**Figure 7**: Form for entering management data with example data. This management denotes a nitrogen fertilization rate of 112.0 kg N ha-1  
+**Figure 7**: Form for entering management data with example data. This management denotes a nitrogen fertilization rate of 112.0 kg N ha-1.  The form for entering new managements is accessed by selecting a specific treatment for the desired citation.  On the Edit page, there is a link for New Managements, which yields a Notes section and this form:
 
 <a id="Figure 7"></a>
 ![Alt text] (figures/new management.png "Figure 7")   
@@ -459,18 +463,16 @@ by more thorough explanations:
 
 #### 5.5.1 dateLOC
 
-The date level of confidence (DateLOC) provides an indication of how
-accurately the date associated with the trait or yield observation is
-known.  It provides the values that should be entered in this field. If the
+The date level of confidence (DateLOC) provides an indication of how accurately the date associated with the trait or yield observation is
+known. It provides the values that should be entered in this field. If the
 event occurred at a level of precision not defined by an integer in this
-table, then use fractions. For example, we commonly use 5.5 to indicate a one
-week level of precision. If the exact year is not known, but the time of
+table, then use fractions. For example, we commonly use 5.5 to indicate a one week level of precision. If the exact year is not known, but the time of
 year is, then use 91 to 97, with the second digit to indicate the information
 known within the year.
 
 <a id="Figure 9"></a>
 ![Alt text] (figures/new trait.png "Figure 9")  
-**Figure 9**: Form used to enter a new trait.
+**Figure 9**: [Form used to enter a new trait](https://www.betydb.org/traits/new)
 
 #### 5.5.2 Statistics
 
@@ -517,7 +519,7 @@ Yield is equivalent to aboveground biomass on a per-area
 basis, and has units of Mg ha^-1 y1  
 
 To add a new yield, go to the [new
-yield](http:ebi-forecast.igb.uiuc.edu/bety/yields/new) page:
+yield](http://www.betydb.org/yields/new) page:
 `Yield` → `new`.
 
 
@@ -541,7 +543,7 @@ and in this case, the covariate `root_maximum_diameter` would be set to
 also be used.
 
 To add a new covariate, go to the [new
-covariate](http:ebi-forecast.igb.uiuc.edu/bety/covariates/new) page:
+covariate](http:www.betydb.org/covariates/new) page:
 `Covariate` → `new`.
 
 #### 5.7.1 Extracting information from tables and graphs
@@ -677,7 +679,7 @@ to be elevated to “manager”.
         information that is present
     -   Enter any additional site level information that is found
 4.  Select
-    [treatments](http://ebi-forecast.igb.uiuc.edu/bety/treatments/) from
+    [treatments](http://www.betydb.org/treatments/) from
     menu bar
     -   Check that there is a control treatment
     -   Ensure that treatment name and definition are consistent with
@@ -688,14 +690,14 @@ to be elevated to “manager”.
         separately)
     -   If managements are listed, make sure that managment-treatment
         associations are correct
-5.  Check [managements](http://ebi-forecast.igb.uiuc.edu/bety/managements/) if
+5.  Check [managements](http://www.betydb.org/managements/) if
     there are any listed on the treatments page.
     -   If yield data has been collected, ensure that required
         managements have been entered
     -   If managements have been entered, ensure that they are
         associated with the correct treatments
-6.  Click [Yields](http://ebi-forecast.igb.uiuc.edu/bety/yields/) or
-    [Traits](http://ebi-forecast.igb.uiuc.edu/bety/traits/) to check
+6.  Click [Yields](http://www.betydb.org/yields/) or
+    [Traits](http://www.betydb.org/traits/) to check
     data.
     -   Check that means, sample size, and statistics have been entered
         correctly
@@ -712,10 +714,6 @@ other members of the Dietze lab, have contributed to the ongoing
 development of this document and the web interface that it describes.
 
 ## 9. Appendix
-### 9.1 Transformations
-#### 9.1.1 Statistics
-#### 9.1.2 Variables
-### 9.2 Calculations used in transformations
 
 ## 10. Converting from ![Alt text](figures/ul o2.png) to  ![Alt text] (figures/nmolco2.png) to ![Alt text] (figures/umolco2.png), including adjustment to temperature
 
@@ -878,9 +876,8 @@ Figure 11: Table used to calculate SE from F, from Starr et al. [2008]
 
 ## 13. Reference Tables
 
-**Table 3**
-
-**Managements**
+<a id="Table 3"></Table 3>
+**Table 3: Managements**
 
 This is a list of  managements to enter, with the most common management types in bold. It is more important to have management records for Yields than for traits. For greenhouse experiments, it is not necessary to include informaton on fertilizaton, lighting, or greenhouse temperature.
 
@@ -902,13 +899,10 @@ This is a list of  managements to enter, with the most common management types i
 | Tillage | | | no units, maybe depth; *tillage* is equivalent to *cultivate* | 
 
 
-**Table 4**
-
-**Date level of confidence (DateLOC) Field**
+<a id="Table 4"></Table 4>
+**Table 4: Date level of confidence (DateLOC) field**
 
 Numbering convention for the DateLOC (Date level of confidence) field, used in managements, traits, and yields table. 
-
-**DateLOC**
 
 | Dateloc | Definition |
 |:--------|:-----------|
@@ -926,13 +920,10 @@ Numbering convention for the DateLOC (Date level of confidence) field, used in m
 | ...etc | | 
 
 
-**List of statistical summaries**
+<a id="Table 5"></Table 5>
+**Table 5: List of statistical summaries**
 
-List of the statistics that can be  entered into the statname field of traits and yields tables. Please see David (or Mike) if you have questions about statistics that do not appear in this list. If you have P, or LSD in a study with $n\neq b$ (e.g. not a RCBD, see Table 8), please convert these values prior to entering the data, and add a note that stat was transformed to the table. Note: These are listed in order of preference, e.g., if SD, SE, or MSE are provided then use these values.
-
-**Table 5**
-
-**Statname**
+List of the statistics that can be entered into the statname field of traits and yields tables. Please see David (or Mike) if you have questions about statistics that do not appear in this list. If you have P, or LSD in a study with $n\neq b$ (e.g. not a RCBD, see Table 8), please convert these values prior to entering the data, and add a note that stat was transformed to the table. Note: These are listed in order of preference, e.g., if SD, SE, or MSE are provided then use these values.
 
 | Statname | Name | Definition | Notes |
 |:----------|:-----|:-----------|:------|
@@ -943,7 +934,8 @@ List of the statistics that can be  entered into the statname field of traits an
 | LSD | Least Significant Difference | $t_{1-\frac{\alpha}{2},n}\sqrt{2\text{MSE}/b}$ | $b$ is the number of blocks (Rosenberg 2004) |
 | MSD | Minimum Significant Difference |  |  |
 
-**Table 6**
+<a id="Table 6"></Table 6>
+**Table 6: Variables**
 
 | Variable | Units | Median (90%CI) or Range | Definition |
 |:---------|:------|:------------------------|:-----------|
@@ -975,7 +967,12 @@ List of the statistics that can be  entered into the statname field of traits an
 | f labile | % | 0--1 | fraction of litter that goes into the labile carbon pool
 | water conductance | | |
 
-**Table 7**
+<a id="Table 7"></Table 7>
+**Table 7: Traits with required covariates**
+
+A list of traits and the covariates that must be recorded along with the trait value in order to be converted to a constant scale from across studies.*notes:* stomatal conductance (gs) is only useful when reported in conjunction with other photosynthetic data, such as Amax. Specifically, if we have Amax and gs, then estimation of Vcmax only covaries with dark\_respiration\_factor and atmospheric CO2 concentration.  We also now have information to help constrain stomatal\_slope. If we have Amax but not gs, then our estimate of Vcmax will covary with: dark_respiration_factor, CO2, stomatal_slope, cuticular_conductance, and vapor-pressure deficit VPD (which is more difficult to estimate than CO2, but still possible given lat, lon, and date). 
+Most important, there will be a strong covariance between Vcmax and stomatal_slope.
+
 
 | Variable | Required Covariates | Optional Covariates |
 |:---------|:--------------------|:--------------------|
@@ -990,12 +987,7 @@ List of the statistics that can be  entered into the statname field of traits an
 | stomatal\_slope (m) | humidity, temperature | specific humidity, assume leaf T =  air T |  
  
 
-**Traits with required covariates**
-
-A list of traits and the covariates that must be recorded along with the trait value in order to be converted to a constant scale from across studies.*notes:* stomatal conductance (gs) is only useful when reported in conjunction with other photosynthetic data, such as Amax. Specifically, if we have Amax and gs, then estimation of Vcmax only covaries with dark\_respiration\_factor and atmospheric CO2 concentration.  We also now have information to help constrain stomatal\_slope. If we have Amax but not gs, then our estimate of Vcmax will covary with: dark_respiration_factor, CO2, stomatal_slope, cuticular_conductance, and vapor-pressure deficit VPD (which is more difficult to estimate than CO2, but still possible given lat, lon, and date). 
-Most important, there will be a strong covariance between Vcmax and stomatal_slope.
-
-
+<a id="Table 8"></Table 8>
 **Table 8: How to convert statistics from $P$, $LSD$, or $MSD$ to $SE$**
 
 | From | To | Conversion | Rcode | Notes |
@@ -1005,6 +997,7 @@ Most important, there will be a strong covariance between Vcmax and stomatal_slo
 | MSD | SE | $SE = \frac{MSD*n}{t_{1-\alpha, 2n-2}*\sqrt{2}}$ | msd*n/(qt(1-P/2,2*n-2)*sqrt(2)) | |
 
 
+<a id="Table 9"></Table 9>
 **Table 9: Useful conversions for entering site, management, yield, and trait data**
 
 | From ($X$) | to ($Y$) | Conversion | Notes |

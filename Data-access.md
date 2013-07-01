@@ -2,39 +2,56 @@
 ### Data Access
 
 Data is made available for analysis after it is submitted
-and reviewed by a database admistrator. These data are suitable for
+and reviewed by a database administrator. These data are suitable for
 basic scientific research and modeling. All reviewed data are made
 publicly available after publication to users of BETY-db who are
 conducting primary research. Access to these raw data is provided to
 users based on affiliation and contribution of data.
 
-####Search Box
+#### Search Box
 
-####Advanced Search
+The search box allows for a trait or yield to be entered, which yields the following screen and narrowed search options:
 
-####Access Maps
+![] (figures/search_advancedsearch.png)
 
-There are five different search methods that can be utilized under the Maps tab:
 
-#####1. Sites by Species
+#### Advanced Search
 
-Groups can be searched by selecting criteria from a drop-down menu or a common name or genus can be entering in the search bar below the map.  Both methods of search show the location of the site on the map and location details underneath the map.
+The advanced search can be accessed by selecting the link on the homepage under the search bar or by searching in the search bar, as this function brings the viewer to the same screen (shown above).  
 
-#####2. Search for Sites
+#### Access Maps
 
-Utilizing the drop-down menu for radius distances of 20, 40, 60, 80, 100, or 200 miles and then clicking on a location on the map presents sites within that range.  Site city, state, country, latitude, longitude, mean annual temperature, mean annual precipitation, and elevation are shown under the map for each site.  
+There are five different search and data output methods that can be utilized under the Maps tab:
 
-#####3. Location Yield
+**1. Sites by Species**
 
-The Location Yield map narrows model output by yield, evapotranspiration, and production cost.  Yield and evapotranspiration can be narrowed by species and then county (displays longitude, latitude, and yield in text format) or gridded (displays state, county, and yield in a text format).  Production cost can yield county data, as well as a least cost yield listing.  A fullscreen button enables viewing of the map in greater detail.       
+The Sites by Species map allows groups to be searched by selecting criteria from a drop-down menu or by a common name or genus entered into the search bar below the map.  Both methods of search show the location of the site on the map and the location details underneath the map.
 
-#####4. Traits from Sites
+![] (figures/sites_by_species_screenshot.png)
 
-The Traits from Sites map displays all of the sites that have trait data in the database.  Clicking on the site provides the name of the site, and the species/multiple species, cultivar, and citation affiliated with that site, all of which link to more detailed information.  The traits link connects to a full listing of traits for that site with all available information for the traits.    
+**2. Search for Sites**
 
-#####5. Yields from Sites
+Utilizing the drop-down menu for radius distances of 20, 40, 60, 80, 100, or 200 miles and then clicking on a location on the map presents sites within that range from the point.  Site city, state, country, latitude, longitude, mean annual temperature, mean annual precipitation, and elevation are displayed under the map for each site and can be used to further narrow the output. 
 
-#####Download Data from Model Output
+![] (figures/search_sites_map.png)
+
+**3. Location Yield**
+
+The Location Yield map narrows model output by yield, evapotranspiration, and production cost.  Yield and evapotranspiration can be narrowed by species and then county (displays longitude, latitude, and yield in text format) or gridded (displays state, county, and yield in a text format).  Production cost can yield county data, as well as a least cost yield listing.  A fullscreen button enables viewing of the map in greater detail.     
+
+![] (figures/location_yields.png)
+
+**4. Traits from Sites**
+
+The Sites with Trait Data map displays all of the sites that have trait data in the database.  Clicking on a site's button provides the name of the site, and the species, cultivar, and citation(s) affiliated with that site, all of which link to more detailed information.  The traits link connects to a full listing of traits for the site with all available information for the traits. 
+
+![] (figures/site_trait_data.png)
+
+**5. Yields from Sites**
+
+(not currently up on the new site) 
+
+##### Download Data from Model Output
 
 Data can be downloaded directed by selecting the download button when the desired data is presented in the model.  The data with a title will be downloaded.  
 
@@ -83,3 +100,22 @@ examples:
 #### API keys
 
 Using an API key allows access to data without having to enter a login. To use an API key, simply append @?key=<your_api_key>@ to the end of the URL. Each user must obtain a unique API key. 
+
+
+### Installing BETY (the complete database)
+
+There are two flavors of BETY: PHP and RUBY. The PHP version allows for minimal interaction with the database while the RUBY version allows for full interaction with the database. Both, however, require the database to be created and installed.
+
+### Database creation
+
+The following creates the user, database and populates the database with the latest version from Illinois.
+
+```bash
+# needs to be done only once
+mysql -u root -p -e "grant all on bety.* to bety@localhost identified by 'bety';"
+curl -o ${HOME}/updatedb.sh http://isda.ncsa.illinois.edu/~kooper/EBI/updatedb.sh
+chmod 755 ${HOME}/updatedb.sh
+
+# download and update/install database
+${HOME}/updatedb.sh
+```

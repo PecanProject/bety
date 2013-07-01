@@ -175,9 +175,11 @@ EOF
 # configure apache
 ln -s /usr/local/ebi/bety/public /var/www/bety
 
-cat > /etc/apache2/conf.d/bety << EOF
+# http://wiki.apache.org/httpd/DistrosDefaultLayout
+cat > /etc/httpd/conf.d/bety.conf << EOF
 RailsEnv production
 RailsBaseURI /bety
+DocumentRoot /usr/local/ebi/bety/public/
 <Directory /var/www/bety>
    Options FollowSymLinks
    AllowOverride None
