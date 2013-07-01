@@ -166,6 +166,7 @@ EOF
 # configure apache
 ln -s /usr/local/ebi/bety/public /var/www/bety
 
+# http://wiki.apache.org/httpd/DistrosDefaultLayout
 cat > /etc/apache2/conf.d/bety.conf << EOF
 RailsEnv production
 RailsBaseURI /bety
@@ -261,4 +262,3 @@ R --vanilla < scripts/install.dependencies.R
 # compile pecan
 ./scripts/build.sh
 ```
-
