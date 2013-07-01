@@ -1,6 +1,6 @@
 <div class="content">
 	<div class="container" style="margin: 10px 100px; width:80%">
-		<div class="sixteen columns" style="width:100%">
+		<div class="sixteen columns" >
 			<header>
 				<h1><span id="maptitle">Miscanthus Yield</span></h1>
 			</header>
@@ -20,11 +20,11 @@
 <script type="text/javascript">
 function initialize() {
 map = new google.maps.Map(document.getElementById('googft-mapCanvas'), {
-center: new google.maps.LatLng(39, -94),
+center: new google.maps.LatLng(38.7, -88),
 zoom: 6,
 mapTypeId: google.maps.MapTypeId.ROADMAP
 });
-//map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('googft-legend'));
+map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('googft-legend'));
 //Disabled legends until dynamic legends implemented
 
 layers = [];
@@ -177,6 +177,7 @@ function updatemap() {
   reset();
   layers[select.options[select.selectedIndex].value].setMap(map);
   document.getElementById('maptitle').innerHTML = select.options[select.selectedIndex].text;
+
 
 }
 </script>
