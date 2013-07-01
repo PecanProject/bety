@@ -6,16 +6,16 @@
 			</header>
 
       <% if @fullscreen %>
-      <!--  <div id="map_canvas" style=" width: 100%; height: 800px"></div>  -->
+       <div id="map_canvas" style=" width: 100%; height: 800px"></div> 
       <% else %>
-      <!--  <div id="map_canvas" style=" width: 750px; height: 600px"></div>  -->
+        <div id="googft-mapCanvas" style=" width: 750px; height: 600px"></div>  
       <% end %>
-      <div id='LCC'><h2> Least cost crop </h2>
-      <iframe width="800" height="600" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?q=select+col16%3E%3E1+from+1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88&amp;viz=MAP&amp;h=false&amp;lat=36.61902351866101&amp;lng=-88.32213031249995&amp;t=1&amp;z=5&amp;l=col16%3E%3E1&amp;y=11&amp;tmplt=11"></iframe></div>
+      <!-- <div id='LCC'><h2> Least cost crop </h2>
+      <iframe width="800" height="600" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?q=select+col16%3E%3E1+from+1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88&amp;viz=MAP&amp;h=false&amp;lat=36&amp;lng=-88&amp;t=1&amp;z=5&amp;l=col16%3E%3E1&amp;y=11&amp;tmplt=11"></iframe></div>
 
       <div id='miscanthus'>
       <h2> Miscanthus yields(County) </h2>
-      <iframe width="800" height="600" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?q=select+col16%3E%3E1+from+1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88&amp;viz=MAP&amp;h=false&amp;lat=36.61902351866101&amp;lng=-88.32213031249995&amp;t=1&amp;z=5&amp;l=col16%3E%3E1&amp;y=12&amp;tmplt=12"></iframe> </div>
+      <iframe width="800" height="600" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?q=select+col16%3E%3E1+from+1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88&amp;viz=MAP&amp;h=false&amp;lat=36&amp;lng=-88&amp;t=1&amp;z=5&amp;l=col16%3E%3E1&amp;y=12&amp;tmplt=12"></iframe> </div>
 
       <div id='energycane'>
       <h2> Energycane yields(County)</h2>
@@ -47,7 +47,198 @@
       <button type='button' onclick="
       reset()
       javascript:document.getElementById('LCC').style.display=''; " >Least Cost Crop</button>
-      <br>
+      <br> -->
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+<style>
+#googft-mapCanvas img{max-width:none;}
+ #googft-legend{background-color:#fff;border:1px solid #000;font-family:Arial, sans-serif;font-size:12px;margin:5px;padding:10px 10px 8px;}#googft-legend p{font-weight:bold;margin-top:0;}#googft-legend div{margin-bottom:5px;}.googft-legend-swatch{border:1px solid;float:left;height:12px;margin-right:8px;width:20px;}.googft-legend-range{margin-left:0;}.googft-dot-icon{margin-right:8px;}.googft-paddle-icon{height:24px;left:-8px;margin-right:-8px;position:relative;vertical-align:middle;width:24px;}.googft-legend-source{margin-bottom:0;margin-top:8px;}.googft-legend-source a{color:#666;font-size:11px;}
+</style>
+<script type="text/javascript">
+function initialize() {
+map = new google.maps.Map(document.getElementById('googft-mapCanvas'), {
+center: new google.maps.LatLng(38.43979117974809, -95.61705218749995),
+zoom: 6,
+mapTypeId: google.maps.MapTypeId.ROADMAP
+});
+//map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('googft-legend'));
+//Disabled legends until dynamic legends implemented
+
+layers = [];
+layers[0] = cornstoveryield= new google.maps.FusionTablesLayer({
+map: null,
+heatmap: { enabled: false },
+query: {
+select: "col16\x3e\x3e1",
+from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
+where: ""
+},
+options: {
+styleId: 13,
+templateId: 14
+}
+});
+
+
+layers[1] = miscanthusyield = new google.maps.FusionTablesLayer({
+map: null,
+heatmap: { enabled: false },
+query: {
+select: "col16\x3e\x3e1",
+from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
+where: ""
+},
+options: {
+styleId: 14,
+templateId: 15
+}
+});
+
+
+layers[2] = switchgrassyield = new google.maps.FusionTablesLayer({
+map: null,
+heatmap: { enabled: false },
+query: {
+select: "col16\x3e\x3e1",
+from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
+where: ""
+},
+options: {
+styleId: 15,
+templateId: 16
+}
+});
+
+layers[3] = energycaneyield = new google.maps.FusionTablesLayer({
+map: null,
+heatmap: { enabled: false },
+query: {
+select: "col16\x3e\x3e1",
+from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
+where: ""
+},
+options: {
+styleId: 16,
+templateId: 17
+}
+});
+
+layers[4] = lcc = new google.maps.FusionTablesLayer({
+map: map,
+heatmap: { enabled: false },
+query: {
+select: "col16\x3e\x3e1",
+from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
+where: ""
+},
+options: {
+styleId: 17,
+templateId: 18
+}
+});
+
+
+layers[5] = cornstovercost = new google.maps.FusionTablesLayer({
+map: null,
+heatmap: { enabled: false },
+query: {
+select: "col16\x3e\x3e1",
+from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
+where: ""
+},
+options: {
+styleId: 18,
+templateId: 19
+}
+});
+
+layers[6] = miscanthuscost = new google.maps.FusionTablesLayer({
+map: null,
+heatmap: { enabled: false },
+query: {
+select: "col16\x3e\x3e1",
+from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
+where: ""
+},
+options: {
+styleId: 19,
+templateId: 20
+}
+});
+
+
+layers[7] = switchgrasscost = new google.maps.FusionTablesLayer({
+map: null,
+heatmap: { enabled: false },
+query: {
+select: "col16\x3e\x3e1",
+from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
+where: ""
+},
+options: {
+styleId: 20,
+templateId: 21
+}
+});
+
+layers[8] = energycanecost = new google.maps.FusionTablesLayer({
+map: null,
+heatmap: { enabled: false },
+query: {
+select: "col16\x3e\x3e1",
+from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
+where: ""
+},
+options: {
+styleId: 21,
+templateId: 22
+}
+});
+
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+
+
+<script>
+function reset() {
+  for(var i = 0; i <layers.length;i++){
+    layers[i].setMap(null)
+  }
+}
+
+function updatemap() {
+  select = document.getElementById('selectmap')
+  reset();
+  layers[select.options[select.selectedIndex].value].setMap(map);
+
+}
+</script>
+
+
+<select onchange="javascript: updatemap()" id="selectmap" > 
+  <option value=4 selected>Least Cost Crop</option>
+  <optgroup label="Cornstover">
+    <option value=0> Cornstover Yield</option>
+    <option value=5> Cornstover Cost </option>
+  </optgroup>
+  <optgroup label="Switchgrass">
+    <option value=2> Switchgrass Yield</option>
+    <option value=7> Switchgrass Cost</option>
+  </optgroup>
+  <optgroup label="Miscanthus">
+    <option value=1>Miscanthus Yield</option>
+    <option value=6>Miscanthus Cost</option>
+  </optgroup>
+  <optgroup label = "Energycane">
+    <option value=3> Energycane Yield</option>
+    <option value=8> Energycane Cost</option>
+  </optgroup>
+</select>
+
+
       <% if @fullscreen %>
         <div style="width:100%;margin-top:5px;">
       <% else %>
@@ -243,7 +434,7 @@
   }
 
   // Google coordinate plane increases in the positive number direction left to right
-  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+  // map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
 /////////// setup of bz_sugarcane map
   //var bz_sugarcane_bounds = new google.maps.LatLngBounds(
@@ -256,12 +447,12 @@
 
 
 /////////// setup of us_miscanthus map  
-  var us_miscanthus_bounds = new google.maps.LatLngBounds(
-    new google.maps.LatLng(-45,-135), // south-west
-    new google.maps.LatLng(65,-25) // north-east
-  );
-  var us_miscanthus = new google.maps.GroundOverlay( '../images/yield_maps/us_miscanthus.png', us_miscanthus_bounds, overlayOptions );
-  us_miscanthus.setMap(map);
+  // var us_miscanthus_bounds = new google.maps.LatLngBounds(
+  //   new google.maps.LatLng(-45,-135), // south-west
+  //   new google.maps.LatLng(65,-25) // north-east
+  // );
+  // var us_miscanthus = new google.maps.GroundOverlay( '../images/yield_maps/us_miscanthus.png', us_miscanthus_bounds, overlayOptions );
+  // us_miscanthus.setMap(map);
   
   
 
@@ -273,36 +464,36 @@
   //overlay = [];
   
   // Bounds for A single map
-   var strictBounds = new google.maps.LatLngBounds(
-     new google.maps.LatLng(-70, -170), // bottom-left
-     new google.maps.LatLng(70, 170)   // top-right
-   );
+   // var strictBounds = new google.maps.LatLngBounds(
+   //   new google.maps.LatLng(-70, -170), // bottom-left
+   //   new google.maps.LatLng(70, 170)   // top-right
+   // );
 
    // Listen for the map click events
-   google.maps.event.addListener(map, 'dragend', function() {
-     if (strictBounds.contains(map.getCenter())) return;
+   // google.maps.event.addListener(map, 'dragend', function() {
+   //   if (strictBounds.contains(map.getCenter())) return;
 
-     // We're out of bounds - Move the map back within the bounds
-     var c = map.getCenter(),
-         x = c.lng(),
-         y = c.lat(),
-         maxX = strictBounds.getNorthEast().lng(),
-         maxY = strictBounds.getNorthEast().lat(),
-         minX = strictBounds.getSouthWest().lng(),
-         minY = strictBounds.getSouthWest().lat();
+   //   // We're out of bounds - Move the map back within the bounds
+   //   var c = map.getCenter(),
+   //       x = c.lng(),
+   //       y = c.lat(),
+   //       maxX = strictBounds.getNorthEast().lng(),
+   //       maxY = strictBounds.getNorthEast().lat(),
+   //       minX = strictBounds.getSouthWest().lng(),
+   //       minY = strictBounds.getSouthWest().lat();
 
-     if (x < minX) x = minX;
-     if (x > maxX) x = maxX;
-     if (y < minY) y = minY;
-     if (y > maxY) y = maxY;
+   //   if (x < minX) x = minX;
+   //   if (x > maxX) x = maxX;
+   //   if (y < minY) y = minY;
+   //   if (y > maxY) y = maxY;
 
-     map.setCenter(new google.maps.LatLng(y, x));
-   });
+   //   map.setCenter(new google.maps.LatLng(y, x));
+   // });
 
-  // Limit the zoom level
-  google.maps.event.addListener(map, 'zoom_changed', function() {
-    if (map.getZoom() < minZoomLevel) map.setZoom(minZoomLevel);
-  });
+  // // Limit the zoom level
+  // google.maps.event.addListener(map, 'zoom_changed', function() {
+  //   if (map.getZoom() < minZoomLevel) map.setZoom(minZoomLevel);
+  // });
   
   markersArray = [];
 
