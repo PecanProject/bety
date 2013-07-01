@@ -30,6 +30,15 @@ emacs /etc/sudoers
 johndoe  ALL=(ALL)  ALL
 ```
 
+4. Keep time updated (source: [ServerFault](http://serverfault.com/q/368602))
+
+```{bash}
+yum install ntp
+/sbin/chkconfig ntpd on         ## check that it is on
+/usr/sbin/ntpdate pool.ntp.org  ## set system date
+/etc/init.d/ntpd start
+```
+
 ### Add new repository
 
 instructions here: http://www.rackspace.com/knowledge_center/article/installing-rhel-epel-repo-on-centos-5x-or-6x
