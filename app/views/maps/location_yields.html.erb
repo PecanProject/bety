@@ -10,6 +10,33 @@
       <% else %>
         <div id="googft-mapCanvas" style=" width: 100%; height: 600px"></div>  
       <% end %>
+      <div id="googft-legend">
+        <p id="googft-legend-title">Miscanthus Yield (Mg/ha)</p>
+        <div>
+          <span class="googft-legend-swatch" style="background-color: #d9ead3"></span>
+          <span class="googft-legend-range">0.01 to 5.842</span>
+        </div>
+        <div>
+          <span class="googft-legend-swatch" style="background-color: #b6d7a8"></span>
+          <span class="googft-legend-range">5.842 to 11.673</span>
+        </div>
+        <div>
+          <span class="googft-legend-swatch" style="background-color: #93c47d"></span>
+          <span class="googft-legend-range">11.673 to 17.505</span>
+        </div>
+        <div>
+          <span class="googft-legend-swatch" style="background-color: #6aa84f"></span>
+          <span class="googft-legend-range">17.505 to 23.337</span>
+        </div>
+        <div>
+          <span class="googft-legend-swatch" style="background-color: #38761d"></span>
+          <span class="googft-legend-range">23.337 to 29.168</span>
+        </div>
+        <div>
+          <span class="googft-legend-swatch" style="background-color: #274e13"></span>
+          <span class="googft-legend-range">29.168 to 35</span>
+        </div>
+      </div><!-- legend -->
       
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
@@ -150,13 +177,28 @@ heatmap: { enabled: false },
 query: {
 select: "col16\x3e\x3e1",
 from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-where: ""
+where: "energycane_cost > 0.0"
 },
 options: {
 styleId: 21,
 templateId: 22
 }
 });
+
+var bz_sugarcane_bounds = new google.maps.LatLngBounds(
+   new google.maps.LatLng(-45,-135), // south-west
+   new google.maps.LatLng(65,-25) // north-east
+
+  );
+  layers[9]= bz_sugarcane = new google.maps.GroundOverlay( '../images/yield_maps/bz_sugarcane.png', bz_sugarcane_bounds, overlayOptions );
+
+
+/////////// setup of us_miscanthus map  
+  var us_miscanthus_bounds = new google.maps.LatLngBounds(
+    new google.maps.LatLng(-45,-135), // south-west
+    new google.maps.LatLng(65,-25) // north-east
+  );
+  layers[10] = us_miscanthus = new google.maps.GroundOverlay( '../images/yield_maps/us_miscanthus.png', us_miscanthus_bounds, overlayOptions );
 
 }
 
@@ -175,8 +217,22 @@ function reset() {
 function updatemap() {
   select = document.getElementById('selectmap')
   reset();
-  layers[select.options[select.selectedIndex].value].setMap(map);
-  document.getElementById('maptitle').innerHTML = select.options[select.selectedIndex].text;
+  var opt = select.options[select.selectedIndex]
+  layers[opt.value].setMap(map);
+  document.getElementById('maptitle').innerHTML = opt.text;
+  if (opt.value<4){
+    document.getElementById('googft-legend-title').innerHTML = opt.text + ' (Mg/ha)'
+    //make gradient legend
+  }else if (opt.value == 4){
+    document.getElementById('googft-legend-title').innerHTML = opt.text
+
+    //make crop legend
+  } else if (opt.value<9){
+    document.getElementById('googft-legend-title').innerHTML = opt.text
+    //make cost legend
+  }else {
+    //make null legend
+  }
 
 
 }
@@ -199,6 +255,10 @@ function updatemap() {
     <optgroup label = "Energycane">
       <option value=3> Energycane Yield</option>
       <option value=8> Energycane Cost</option>
+    </optgroup>
+    <optgroup label="Modeled">
+      <option value=9>Raster Sugarcane</option>
+      <option value=10>Raster Miscanthus</option>
     </optgroup>
   </select>
 
