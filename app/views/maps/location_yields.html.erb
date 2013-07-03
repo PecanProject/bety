@@ -255,6 +255,9 @@ function makecroplegend(legend){
     legend.appendChild(swatchdiv);
   }
 }
+function makecostlegend(legend){
+
+}
 
 
 function updatemap() {
@@ -283,7 +286,11 @@ function updatemap() {
 
     //make crop legend
   } else if (opt.value<9){
-    document.getElementById('googft-legend-title').innerHTML = opt.text;
+    var legendtitle = document.createElement('p');
+    legendtitle.id='googft-legend-title';
+    legendtitle.innerHTML=opt.text;
+    leg.appendChild(legendtitle);
+    makecostlegend(leg);
     //make cost legend
   }else {
     //make null legend
