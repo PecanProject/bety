@@ -294,7 +294,6 @@ function updatemap() {
 </script>
 
   <select onchange="javascript: updatemap()" id="selectmap" style="margin:10px 20px"> 
-    <option value=4 >Least Cost Crop</option>
     <optgroup label="Cornstover">
       <option value=0> Cornstover Yield</option>
       <option value=5> Cornstover Cost </option>
@@ -305,16 +304,15 @@ function updatemap() {
     </optgroup>
     <optgroup label="Miscanthus">
       <option value=1 selected>Miscanthus Yield</option>
+      <option value=6>Miscanthus Yield (grid)</option>
       <option value=6>Miscanthus Cost</option>
     </optgroup>
     <optgroup label = "Energycane">
       <option value=3> Energycane Yield</option>
+      <option value=9>Energycane Yield (grid)</option>
       <option value=8> Energycane Cost</option>
     </optgroup>
-    <optgroup label="Modeled">
-      <option value=9>Raster Sugarcane</option>
-      <option value=10>Raster Miscanthus</option>
-    </optgroup>
+    <option value=4>Least Cost Crop</option>
   </select>
 
 
