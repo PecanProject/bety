@@ -14,26 +14,47 @@ class PftsController < ApplicationController
     @pft = Pft.find(params[:id])
     @prior = Prior.find(params[:prior])
 
-    render :update do |page|
-      if @pft.priors.delete(@prior)
-        page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
-      else
-        page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
+  respond_to do |format|
+#    render :update do |page|
+
+	if @pft.priors.delete(@prior)
+#	 render :partial => "edit_pfts_prior", :layout => false		
+#	page.repace_html " edit_pfts_prior", :partial => "edit_pfts_prior" 
+#       logger.info  "got into rem pfts prior3"
+	format.html  {redirect_to(edit_pft_path(@pft))}
+        format.xml  { render :xml => @pft, :status => :created, :location => @pft }
+        format.csv  { render :csv => @pft, :status => :created, :location => @pft }
+        format.json  { render :json => @pft, :status => :created, :location => @pft }  
+    else
+    # render :partial => "edit_pfts_prior", :layout => false
+#	page.repace_html "edit_pfts_prior", :partial => "edit_pfts_prior"
+	format.html { render  :action =>"new" }
+ 	format.xml  { render :xml => @pft.errors, :status => :unprocessable_entity }
+        format.csv  { render :csv => @pft.errors, :status => :unprocessable_entity }
+        format.json  { render :json => @pft.errors, :status => :unprocessable_entity }
       end
+	#render :partial => "edit_pfts_prior", :layout => false
     end
   end
 
   def edit_pfts_priors
     @pft = Pft.find(params[:id])
 
-    render :update do |page|
+    respond_to do |format|
+	logger.info  "got into edit pfts prior 3"
       if !params[:prior].nil?
         params[:prior][:id].each do |c|
           @pft.priors << Prior.find(c)
         end
-        page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
-      else
-        page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
+	format.html { redirect_to( edit_pft_path(@pft)) }
+        format.xml  { render :xml => @pft, :status => :created, :location => @pft }
+        format.csv  { render :csv => @pft, :status => :created, :location => @pft }
+        format.json  { render :json => @pft, :status => :created, :location => @pft }
+        else
+        format.html { render  :action =>"new" }
+        format.xml  { render :xml => @pft.errors, :status => :unprocessable_entity }
+        format.csv  { render :csv => @pft.errors, :status => :unprocessable_entity }
+        format.json  { render :json => @pft.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -114,7 +135,6 @@ class PftsController < ApplicationController
       format.json  { render :json => @pfts }
     end
   end
-
   # GET /pfts/1
   # GET /pfts/1.xml
   def show

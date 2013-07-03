@@ -1,0 +1,1 @@
+page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
