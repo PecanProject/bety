@@ -180,11 +180,12 @@ cat > /etc/httpd/conf.d/bety.conf << EOF
 RailsEnv production
 RailsBaseURI /bety
 DocumentRoot /usr/local/ebi/bety/public/
-<Directory /var/www/bety>
-   Options FollowSymLinks
-   AllowOverride None
-   Order allow,deny
-   Allow from all
+ServerName pecandev.igb.illinois.edu
+<Directory /usr/local/beta/public >
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        Allow from all
 </Directory>
 EOF
 ```
