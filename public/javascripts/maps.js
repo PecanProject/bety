@@ -8,7 +8,6 @@ zoom: 6,
 mapTypeId: google.maps.MapTypeId.ROADMAP
 });
 map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('googft-legend'));
-//Disabled legends until dynamic legends implemented
 
 layers = [];
 layers[0] = cornstoveryield= new google.maps.FusionTablesLayer({
@@ -147,7 +146,7 @@ var bz_sugarcane_bounds = new google.maps.LatLngBounds(
    );
 
   layers[9]= bz_sugarcane =
-  	 new google.maps.GroundOverlay( '../images/lmodelout/energycane_yield_grid.png'
+  	 new google.maps.GroundOverlay( '../bety/images/lmodelout/energycane_yield_grid.png'
   		, bz_sugarcane_bounds, overlayOptions );
      bz_sugarcane.setMap(null);
 

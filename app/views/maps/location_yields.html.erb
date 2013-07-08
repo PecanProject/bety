@@ -1,13 +1,12 @@
 <div class="content">
-	<div id="mapcont" class="container" style="margin: 10px 100px; width:80%">
+	<div id="mapcont" class="container" style="margin: 10px 100px; width:70%">
 		<div class="sixteen columns" style="width:100%">
 			<header>
 				<h1><span id="maptitle">Miscanthus Yield</span></h1>
 			</header>
 
-     <div id="googft-mapCanvas" style=" width: 100%; height: 800px"></div>  
+     <div id="googft-mapCanvas" style=" width: 100%; height: 600px"></div>  
       <div id="googft-legend">
-        
         </div>
       </div><!-- legend -->
       
@@ -22,20 +21,21 @@
   <select onchange="javascript: updatemap()" id="selectmap" style="margin:10px 20px"> 
     <optgroup label="Cornstover">
       <option value=0> Cornstover Yield</option>
+      <!--<option value=11> Cornstover Yield(grid)</option>  Does not exist-->
       <option value=5> Cornstover Cost </option>
-      <option value=15>Cornstover AET</option>
+      <option value=17>Cornstover AET</option>
     </optgroup>
     <optgroup label="Switchgrass">
       <option value=2> Switchgrass Yield</option>
-      <option value=12>Switchgrass Yield (grid) </option>
+      <option value=14>Switchgrass Yield (grid) </option>
       <option value=7> Switchgrass Cost</option>
-      <option value=13>Switchgrass AET</option>
+      <option value=15>Switchgrass AET</option>
     </optgroup>
     <optgroup label="Miscanthus">
       <option value=1 selected>Miscanthus Yield</option>
       <option value=10>Miscanthus Yield (grid)</option>
       <option value=6>Miscanthus Cost</option>
-      <option value=14>Miscanthus AET</option>
+      <option value=16>Miscanthus AET</option>
     </optgroup>
     <optgroup label = "Energycane">
       <option value=3> Energycane Yield</option>
@@ -206,9 +206,9 @@
                     onclick="javascript: 
                     fullscreen = ! fullscreen;
                     if(fullscreen){
-                      document.getElementById('mapcont').setAttribute('style','margin: 0px; width: 95%');
+                      document.getElementById('mapcont').setAttribute('style','margin: 0px; width: 95%'; height: 800px);
                     } else{
-                      document.getElementById('mapcont').setAttribute('style','margin: 10px 100px; width: 80%');
+                      document.getElementById('mapcont').setAttribute('style','margin: 10px 100px; width: 80%; height: 600px');
                     }
                     " > Fullscreen</button>
                     </div>
