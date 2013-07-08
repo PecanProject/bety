@@ -1,21 +1,16 @@
 <div class="content">
-	<div class="container" style="margin: 10px 100px; width:80%">
-		<div class="sixteen columns" >
+	<div id="mapcont" class="container" style="margin: 10px 100px; width:80%">
+		<div class="sixteen columns" style="width:100%">
 			<header>
 				<h1><span id="maptitle">Miscanthus Yield</span></h1>
 			</header>
 
-      <% if @fullscreen %>
-       <div id="googft-mapCanvas" style=" width: 100%; height: 800px"></div>
-      <% else %>
-        <div id="googft-mapCanvas" style=" width: 100%; height: 600px"></div>  
-      <% end %>
+     <div id="googft-mapCanvas" style=" width: 100%; height: 800px"></div>  
       <div id="googft-legend">
         
         </div>
       </div><!-- legend -->
       
-<!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script> -->
 
 <style>
 #googft-mapCanvas img{max-width:none;}
@@ -201,20 +196,21 @@
             <table cellpadding="0" cellspacing="0" class="moduletable">
               <tr>
                 <td>
-                  <script type="text/javascript">
-                    var download_MENU_ITEMS = [
-                      <% if @fullscreen %>
-                      ['Exit fullscreen','/bety/maps/location_yields',{'tw':'0','sb':'Exit fullscreen'}]
-                      <% else %>
-                      ['Fullscreen','/bety/maps/location_yields?fullscreen=true',{'tw':'0','sb':'Fullscreen'}]
-                      <% end %>
-                    ];
-                  </script>
+                   <script type="text/javascript">
+                    fullscreen = false;
+                   </script>
                   <div style="position:relative; top:0px; left:0px; min-height:26px;">
                     <div style="position:absolute; top:0px; width: 200px; height:26px;">
-                      <script type="text/javascript">
-                        new menu (download_MENU_ITEMS, [{height:26,width:200,block_top:0,block_left:0,top:0,left:155,hide_delay:600,expd_delay:100,css:{outer:["topmenu_l0oout","topmenu_l0oover"],inner:["topmenu_l0iout","topmenu_l0iover"]}},{height:26,width:155,block_top:26,block_left:0,top:26,left:0,css:{outer:["topmenu_l1oout","topmenu_l1oover"],inner:["topmenu_l1iout","topmenu_l1iover"]}},{block_top:0,block_left:155}])
-                      </script>
+                      <button class="button button-primary" 
+
+                    onclick="javascript: 
+                    fullscreen = ! fullscreen;
+                    if(fullscreen){
+                      document.getElementById('mapcont').setAttribute('style','margin: 0px; width: 95%');
+                    } else{
+                      document.getElementById('mapcont').setAttribute('style','margin: 10px 100px; width: 80%');
+                    }
+                    " > Fullscreen</button>
                     </div>
                   </div>
                 </td>

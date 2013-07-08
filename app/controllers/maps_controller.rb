@@ -36,14 +36,11 @@ class MapsController < ApplicationController
   end
 
   def location_yields
-    params[:fullscreen] ? @fullscreen = true : @fullscreen = false
 
     @county = County.find(1890) if params[:test]
 
     respond_to do |format|
-      if @fullscreen
-       format.html { render "location_yields", :layout => "fullscreen" }
-      elsif request.user_agent.include?("iPhone") or request.user_agent.include?("iPad") or request.user_agent.include?("Android") or params[:test] == "iphone"
+      if request.user_agent.include?("iPhone") or request.user_agent.include?("iPad") or request.user_agent.include?("Android") or params[:test] == "iphone"
        format.html { render "location_yields_iphone", :layout => "fullscreen" }
      else
        format.html
