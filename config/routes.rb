@@ -135,6 +135,8 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :errors, :only => [:index, :create]
   resources :users
 
+  match '/maps' => 'maps#location_yields'
+
   match '/ebi_forwarded' => 'sessions#ebi_forwarded', :as => :ebi_forwarded
 
 

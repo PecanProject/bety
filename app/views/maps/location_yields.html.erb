@@ -1,53 +1,58 @@
 <div class="content">
-	<div class="container">
-		<div class="sixteen columns">
+	<div id="mapcont" class="container" style="margin: 10px 100px; width:70%">
+		<div class="sixteen columns" style="width:100%">
 			<header>
-				<h1>Location Yields</h1>
+				<h1><span id="maptitle">Miscanthus Yield</span></h1>
 			</header>
 
-      <% if @fullscreen %>
-      <!--  <div id="map_canvas" style=" width: 100%; height: 800px"></div>  -->
-      <% else %>
-      <!--  <div id="map_canvas" style=" width: 750px; height: 600px"></div>  -->
-      <% end %>
-      <div id='LCC'><h2> Least cost crop </h2>
-      <iframe width="800" height="600" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?q=select+col16%3E%3E1+from+1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88&amp;viz=MAP&amp;h=false&amp;lat=36.61902351866101&amp;lng=-88.32213031249995&amp;t=1&amp;z=5&amp;l=col16%3E%3E1&amp;y=11&amp;tmplt=11"></iframe></div>
+     <div id="googft-mapCanvas" style=" width: 100%; height: 600px"></div>  
+      <div id="googft-legend">
+        </div>
+      </div><!-- legend -->
+      
 
-      <div id='miscanthus'>
-      <h2> Miscanthus yields(County) </h2>
-      <iframe width="800" height="600" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?q=select+col16%3E%3E1+from+1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88&amp;viz=MAP&amp;h=false&amp;lat=36.61902351866101&amp;lng=-88.32213031249995&amp;t=1&amp;z=5&amp;l=col16%3E%3E1&amp;y=12&amp;tmplt=12"></iframe> </div>
+<style>
+#googft-mapCanvas img{max-width:none;}
+ #googft-legend{background-color:#fff;border:1px solid #000;font-family:Arial, sans-serif;font-size:12px;margin:5px;padding:10px 10px 8px;}#googft-legend p{font-weight:bold;margin-top:0;}#googft-legend div{margin-bottom:5px;}.googft-legend-swatch{border:1px solid;float:left;height:12px;margin-right:8px;width:20px;}.googft-legend-range{margin-left:0;}.googft-dot-icon{margin-right:8px;}.googft-paddle-icon{height:24px;left:-8px;margin-right:-8px;position:relative;vertical-align:middle;width:24px;}.googft-legend-source{margin-bottom:0;margin-top:8px;}.googft-legend-source a{color:#666;font-size:11px;}
+</style>
+<script type="text/javascript" src='../bety/javascripts/maps.js'></script>
 
-      <div id='energycane'>
-      <h2> Energycane yields(County)</h2>
-      <iframe  width="800" height="600" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?q=select+col16%3E%3E1+from+1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88&amp;viz=MAP&amp;h=false&amp;lat=36.61902351866101&amp;lng=-88.32213031249995&amp;t=1&amp;z=5&amp;l=col16%3E%3E1&amp;y=4&amp;tmplt=4"></iframe></div>
 
-      <div id='switchgrass'>
-      <h2> Switchgrass yields(County)</h2>
-      <iframe width="800" height="600" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?q=select+col16%3E%3E1+from+1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88&amp;viz=MAP&amp;h=false&amp;lat=36.61902351866101&amp;lng=-88.32213031249995&amp;t=1&amp;z=5&amp;l=col16%3E%3E1&amp;y=3&amp;tmplt=3"></iframe></div>
-      <script>
-      function reset(){
-      document.getElementById('miscanthus').style.display='none';
-      document.getElementById('energycane').style.display='none';
-      document.getElementById('switchgrass').style.display='none';
-      document.getElementById('LCC').style.display='none';
-    }
-    reset()
-      document.getElementById('LCC').style.display='';
-      </script>
-      <br>
-      <button type='button' onclick="
-      reset()
-      javascript:document.getElementById('miscanthus').style.display=''; ">Miscanthus</button>
-      <button type='button' onclick="
-      reset()
-      javascript:document.getElementById('energycane').style.display=''; ">Energycane</button>
-      <button type='button' onclick="
-      reset()
-      javascript:document.getElementById('switchgrass').style.display=''; " >Switchgrass</button>
-      <button type='button' onclick="
-      reset()
-      javascript:document.getElementById('LCC').style.display=''; " >Least Cost Crop</button>
-      <br>
+  <select onchange="javascript: updatemap()" id="selectmap" style="margin:10px 20px"> 
+    <optgroup label="Cornstover">
+      <option value=0> Cornstover Yield</option>
+      <!--<option value=11> Cornstover Yield(grid)</option>  Does not exist-->
+      <option value=5> Cornstover Cost </option>
+      <option value=17>Cornstover AET</option>
+    </optgroup>
+    <optgroup label="Switchgrass">
+      <option value=2> Switchgrass Yield</option>
+      <option value=14>Switchgrass Yield (grid) </option>
+      <option value=7> Switchgrass Cost</option>
+      <option value=15>Switchgrass AET</option>
+    </optgroup>
+    <optgroup label="Miscanthus">
+      <option value=1 selected>Miscanthus Yield</option>
+      <option value=10>Miscanthus Yield (grid)</option>
+      <option value=6>Miscanthus Cost</option>
+      <option value=16>Miscanthus AET</option>
+    </optgroup>
+    <optgroup label = "Energycane">
+      <option value=3> Energycane Yield</option>
+      <option value=9>Energycane Yield (grid)</option>
+      <option value=8> Energycane Cost</option>
+    </optgroup>
+    <optgroup label="Poplar">
+      <option value=12>Poplar Yield (grid) </option>
+    </optgroup>
+    <optgroup label="Willow">
+      <option value=13> Willow Yield (grid) </option>
+    </optgroup>
+    <option value=4>Least Cost Crop</option>
+  </select>
+
+
+
       <% if @fullscreen %>
         <div style="width:100%;margin-top:5px;">
       <% else %>
@@ -191,20 +196,21 @@
             <table cellpadding="0" cellspacing="0" class="moduletable">
               <tr>
                 <td>
-                  <script type="text/javascript">
-                    var download_MENU_ITEMS = [
-                      <% if @fullscreen %>
-                      ['Exit fullscreen','/maps/location_yields',{'tw':'0','sb':'Exit fullscreen'}]
-                      <% else %>
-                      ['Fullscreen','/maps/location_yields?fullscreen=true',{'tw':'0','sb':'Fullscreen'}]
-                      <% end %>
-                    ];
-                  </script>
+                   <script type="text/javascript">
+                    fullscreen = false;
+                   </script>
                   <div style="position:relative; top:0px; left:0px; min-height:26px;">
                     <div style="position:absolute; top:0px; width: 200px; height:26px;">
-                      <script type="text/javascript">
-                        new menu (download_MENU_ITEMS, [{height:26,width:200,block_top:0,block_left:0,top:0,left:155,hide_delay:600,expd_delay:100,css:{outer:["topmenu_l0oout","topmenu_l0oover"],inner:["topmenu_l0iout","topmenu_l0iover"]}},{height:26,width:155,block_top:26,block_left:0,top:26,left:0,css:{outer:["topmenu_l1oout","topmenu_l1oover"],inner:["topmenu_l1iout","topmenu_l1iover"]}},{block_top:0,block_left:155}])
-                      </script>
+                      <button class="button button-primary" 
+
+                    onclick="javascript: 
+                    fullscreen = ! fullscreen;
+                    if(fullscreen){
+                      document.getElementById('mapcont').setAttribute('style','margin: 0px; width: 95%'; height: 800px);
+                    } else{
+                      document.getElementById('mapcont').setAttribute('style','margin: 10px 100px; width: 80%; height: 600px');
+                    }
+                    " > Fullscreen</button>
                     </div>
                   </div>
                 </td>
@@ -243,7 +249,7 @@
   }
 
   // Google coordinate plane increases in the positive number direction left to right
-  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+  // map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
 /////////// setup of bz_sugarcane map
   //var bz_sugarcane_bounds = new google.maps.LatLngBounds(
@@ -256,12 +262,12 @@
 
 
 /////////// setup of us_miscanthus map  
-  var us_miscanthus_bounds = new google.maps.LatLngBounds(
-    new google.maps.LatLng(-45,-135), // south-west
-    new google.maps.LatLng(65,-25) // north-east
-  );
-  var us_miscanthus = new google.maps.GroundOverlay( '../images/yield_maps/us_miscanthus.png', us_miscanthus_bounds, overlayOptions );
-  us_miscanthus.setMap(map);
+  // var us_miscanthus_bounds = new google.maps.LatLngBounds(
+  //   new google.maps.LatLng(-45,-135), // south-west
+  //   new google.maps.LatLng(65,-25) // north-east
+  // );
+  // var us_miscanthus = new google.maps.GroundOverlay( '../images/yield_maps/us_miscanthus.png', us_miscanthus_bounds, overlayOptions );
+  // us_miscanthus.setMap(map);
   
   
 
@@ -273,36 +279,36 @@
   //overlay = [];
   
   // Bounds for A single map
-   var strictBounds = new google.maps.LatLngBounds(
-     new google.maps.LatLng(-70, -170), // bottom-left
-     new google.maps.LatLng(70, 170)   // top-right
-   );
+   // var strictBounds = new google.maps.LatLngBounds(
+   //   new google.maps.LatLng(-70, -170), // bottom-left
+   //   new google.maps.LatLng(70, 170)   // top-right
+   // );
 
    // Listen for the map click events
-   google.maps.event.addListener(map, 'dragend', function() {
-     if (strictBounds.contains(map.getCenter())) return;
+   // google.maps.event.addListener(map, 'dragend', function() {
+   //   if (strictBounds.contains(map.getCenter())) return;
 
-     // We're out of bounds - Move the map back within the bounds
-     var c = map.getCenter(),
-         x = c.lng(),
-         y = c.lat(),
-         maxX = strictBounds.getNorthEast().lng(),
-         maxY = strictBounds.getNorthEast().lat(),
-         minX = strictBounds.getSouthWest().lng(),
-         minY = strictBounds.getSouthWest().lat();
+   //   // We're out of bounds - Move the map back within the bounds
+   //   var c = map.getCenter(),
+   //       x = c.lng(),
+   //       y = c.lat(),
+   //       maxX = strictBounds.getNorthEast().lng(),
+   //       maxY = strictBounds.getNorthEast().lat(),
+   //       minX = strictBounds.getSouthWest().lng(),
+   //       minY = strictBounds.getSouthWest().lat();
 
-     if (x < minX) x = minX;
-     if (x > maxX) x = maxX;
-     if (y < minY) y = minY;
-     if (y > maxY) y = maxY;
+   //   if (x < minX) x = minX;
+   //   if (x > maxX) x = maxX;
+   //   if (y < minY) y = minY;
+   //   if (y > maxY) y = maxY;
 
-     map.setCenter(new google.maps.LatLng(y, x));
-   });
+   //   map.setCenter(new google.maps.LatLng(y, x));
+   // });
 
-  // Limit the zoom level
-  google.maps.event.addListener(map, 'zoom_changed', function() {
-    if (map.getZoom() < minZoomLevel) map.setZoom(minZoomLevel);
-  });
+  // // Limit the zoom level
+  // google.maps.event.addListener(map, 'zoom_changed', function() {
+  //   if (map.getZoom() < minZoomLevel) map.setZoom(minZoomLevel);
+  // });
   
   markersArray = [];
 
