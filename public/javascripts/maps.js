@@ -149,6 +149,7 @@ var bz_sugarcane_bounds = new google.maps.LatLngBounds(
   layers[9]= bz_sugarcane =
   	 new google.maps.GroundOverlay( '../images/lmodelout/energycane_yield_grid.png'
   		, bz_sugarcane_bounds, overlayOptions );
+     bz_sugarcane.setMap(null);
 
 
 /////////// setup of us_miscanthus map  
@@ -160,19 +161,24 @@ new google.maps.LatLng(65,-25) // north-east
 layers[10] = us_miscanthus =
 	 new google.maps.GroundOverlay( '../images/lmodelout/miscanthus_yield_grid.png'
 	 	, us_miscanthus_bounds, overlayOptions );
+   us_miscanthus.setMap(null);
 
 layers[11] = cornstovergrid =
 	 new google.maps.GroundOverlay('../images/lmodelout/cornstover_yield_grid.png'
 	 	,us_miscanthus_bounds,overlayOptions);
+ cornstovergrid.setMap(null);
 
 layers[12] = poplaryield = new google.maps.GroundOverlay('../images/lmodelout/poplar_yield_grid.png'
 		,us_miscanthus_bounds,overlayOptions);
+  poplaryield.setMap(null);
 
-layers[13] = willowyield = new google.maps.Groundoverlay('../images/lmodelout/willow_yield_grid.png'
+layers[13] = willowyield = new google.maps.GroundOverlay('../images/lmodelout/willow_yield_grid.png'
 		,us_miscanthus_bounds,overlayOptions);
+willowyield.setMap(null);
 
-layers[14] = switchgrassyieldgrid = new google.maps.Groundoverlay('../images/lmodelout/switchgrass_yield_grid.png'
+layers[14] = switchgrassyieldgrid = new google.maps.GroundOverlay('../images/lmodelout/switchgrass_yield_grid.png'
 		,us_miscanthus_bounds,overlayOptions);
+switchgrassyieldgrid.setMap(null);
 
 
 
