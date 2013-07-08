@@ -148,14 +148,7 @@
             </li>
             
             <% if current_user != nil && current_user.page_access_level < 4 %>
-              <li class="menu-maps"><a>Maps</a>
-                <ul class="sub-menu">
-                  <li><%= link_to "Sites by Species", :controller => "maps", :action => "sites_by_species" %></li>
-                  <li><%= link_to "Search for Sites", :controller => "maps", :action => "sites_from_search" %></li>
-                  <li><%= link_to "Location Yields", :controller => "maps", :action => "location_yields" %></li>
-                  <li><%= link_to "Traits from Sites", :controller => "maps", :action => "traits_from_sites" %></li>
-                  <li><%= link_to "Yields from Sites", :controller => "maps", :action => "yields_from_sites" %></li>
-                </ul>
+                <li class="menu-maps"><%= link_to "Maps", :controller => "maps" %></li>
               </li>
             <% end %>
             

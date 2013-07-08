@@ -159,24 +159,24 @@ new google.maps.LatLng(65,-25) // north-east
 );
 
 layers[10] = us_miscanthus =
-	 new google.maps.GroundOverlay( '../images/lmodelout/miscanthus_yield_grid.png'
+	 new google.maps.GroundOverlay( '../bety/images/lmodelout/miscanthus_yield_grid.png'
 	 	, us_miscanthus_bounds, overlayOptions );
    us_miscanthus.setMap(null);
 
 layers[11] = cornstovergrid =
-	 new google.maps.GroundOverlay('../images/lmodelout/cornstover_yield_grid.png'
+	 new google.maps.GroundOverlay('../bety/images/lmodelout/cornstover_yield_grid.png'
 	 	,us_miscanthus_bounds,overlayOptions);
  cornstovergrid.setMap(null);
 
-layers[12] = poplaryield = new google.maps.GroundOverlay('../images/lmodelout/poplar_yield_grid.png'
+layers[12] = poplaryield = new google.maps.GroundOverlay('../bety/images/lmodelout/poplar_yield_grid.png'
 		,us_miscanthus_bounds,overlayOptions);
   poplaryield.setMap(null);
 
-layers[13] = willowyield = new google.maps.GroundOverlay('../images/lmodelout/willow_yield_grid.png'
+layers[13] = willowyield = new google.maps.GroundOverlay('../bety/images/lmodelout/willow_yield_grid.png'
 		,us_miscanthus_bounds,overlayOptions);
 willowyield.setMap(null);
 
-layers[14] = switchgrassyieldgrid = new google.maps.GroundOverlay('../images/lmodelout/switchgrass_yield_grid.png'
+layers[14] = switchgrassyieldgrid = new google.maps.GroundOverlay('../bety/images/lmodelout/switchgrass_yield_grid.png'
 		,us_miscanthus_bounds,overlayOptions);
 switchgrassyieldgrid.setMap(null);
 
@@ -340,27 +340,27 @@ function updatemap() {
     //make cost legend
   }else if (opt.value == 9){
     var imgdiv = document.createElement('img');
-    imgdiv.setAttribute('src','../images/lmodelout/energycane_yield_grid.png-legend.png')
+    imgdiv.setAttribute('src','../bety/images/lmodelout/energycane_yield_grid.png-legend.png')
     leg.appendChild(imgdiv);
     //make energycane legend
   } else if (opt.value == 10){
     var imgdiv = document.createElement('img');
-    imgdiv.setAttribute('src','../images/lmodelout/miscanthus_yield_grid.png-legend.png')
+    imgdiv.setAttribute('src','../bety/images/lmodelout/miscanthus_yield_grid.png-legend.png')
     leg.appendChild(imgdiv);
     //miscanthus legend
 	} else if (opt.value == 12){
 		var imgdiv = document.createElement('img');
-		imgdiv.setAttribute('src','../images/lmodelout/poplar_yield_grid.png-legend.png')
+		imgdiv.setAttribute('src','../bety/images/lmodelout/poplar_yield_grid.png-legend.png')
 		leg.appendChild(imgdiv);
 		//poplar
 	}else if (opt.value == 13){
 		var imgdiv = document.createElement('img');
-    imgdiv.setAttribute('src','../images/lmodelout/willow_yield_grid.png-legend.png')
+    imgdiv.setAttribute('src','../bety/images/lmodelout/willow_yield_grid.png-legend.png')
     leg.appendChild(imgdiv);
     //willow
   }else if (opt.value == 14){
   	var imgdiv = document.createElement('img');
-    imgdiv.setAttribute('src','../images/lmodelout/switchgrass_yield_grid.png-legend.png')
+    imgdiv.setAttribute('src','../bety/images/lmodelout/switchgrass_yield_grid.png-legend.png')
     leg.appendChild(imgdiv);
 	} else {
   	leg.display.style='none';
