@@ -5,6 +5,7 @@
     <div class="span6">
       <div id="DataTables_Table_0_length" class="dataTables_length">
       
+      <!-- UNCOMMENT THIS WHEN PAGINATION IS WORKING
       <label>
       <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0">
         <option value="10" selected="selected">10</option>
@@ -13,6 +14,7 @@
         <option value="100">100</option>
       </select> records per page
       </label>
+      -->
       
       </div> <!-- id="DataTables_Table_0_length" -->
     </div> <!-- class="span6" -->
@@ -169,16 +171,15 @@
 
 	  </tbody>
 	</table>
-  
 	<div class="row final_paginagte_row">
 	  <div class="span6">
 	    <div class="dataTables_info" id="DataTables_Table_0_info">
-	      <%= "page_entries_info @citations" %>
+	      <%#= page_entries_info @results %>
 	    </div>
 	  </div>
 	  <div class="span6">
 	    <div class="dataTables_paginate paging_bootstrap pagination alternate">
-        <%= "will_paginate @citations" %>
+        <%#= will_paginate @results %>
       </div>
     </div>
   </div>
