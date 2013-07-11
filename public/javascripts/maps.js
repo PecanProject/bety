@@ -255,7 +255,10 @@ function makeyieldlegend(legend, max){
     swatch.setAttribute('style',"background-color: #" + colors[i])
     var legrange = document.createElement('span');
     legrange.setAttribute('class','googft-legend-range');
-    legrange.innerHTML=""+Math.round(max*(i+1)/colors.length);
+    legrange.innerHTML=Math.round(max*(i)/colors.length) 
+                        +" - "+
+                         Math.round(max*(i+1)/colors.length)
+                         + " Mg/ha";
     swatchdiv.appendChild(legrange);
     
     swatchdiv.appendChild(document.createElement('br'));
@@ -312,7 +315,7 @@ function updatemap() {
   if (opt.value<4){
     var legendtitle = document.createElement('p');
     legendtitle.id='googft-legend-title';
-    legendtitle.innerHTML=opt.text+' Mg/ha';
+    legendtitle.innerHTML=opt.text;
     leg.appendChild(legendtitle);
     var yields = ['12','34','20','46']
     makeyieldlegend(leg, yields[opt.value]);
