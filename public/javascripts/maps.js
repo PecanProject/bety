@@ -243,7 +243,7 @@ function reset() {
   }
 }
 
-function makeyieldlegend(legend){
+function makeyieldlegend(legend, max){
   var colors = ['d9ead3','b6d7a8','93c47d','6aa84f','38761d','274e13'];
   for (i=0;i<colors.length;i++){
 
@@ -253,17 +253,11 @@ function makeyieldlegend(legend){
 
     swatch.setAttribute('class','googft-legend-swatch')
     swatch.setAttribute('style',"background-color: #" + colors[i])
-    if (i ==0){
-      var legrange = document.createElement('span');
-      legrange.setAttribute('class','googft-legend-range');
-      legrange.innerHTML='0.0';
-      swatchdiv.appendChild(legrange);
-    } else if (i==(colors.length-1)){
-      var legrange = document.createElement('span');
-      legrange.setAttribute('class','googft-legend-range');
-      legrange.innerHTML='Max Yield';
-      swatchdiv.appendChild(legrange);
-    }
+    var legrange = document.createElement('span');
+    legrange.setAttribute('class','googft-legend-range');
+    legrange.innerHTML=""+Math.round(max*(i+1)/colors.length);
+    swatchdiv.appendChild(legrange);
+    
     swatchdiv.appendChild(document.createElement('br'));
     legend.appendChild(swatchdiv)
   }
@@ -320,7 +314,8 @@ function updatemap() {
     legendtitle.id='googft-legend-title';
     legendtitle.innerHTML=opt.text+' Mg/ha';
     leg.appendChild(legendtitle);
-    makeyieldlegend(leg)
+    var yields = ['12','34','20','46']
+    makeyieldlegend(leg, yields[opt.value]);
     //make gradient legend
   }else if (opt.value == 4){
     var legendtitle = document.createElement('p');
@@ -362,7 +357,7 @@ function updatemap() {
     imgdiv.setAttribute('src','../bety/images/lmodelout/switchgrass_yield_grid.png-legend.png')
     leg.appendChild(imgdiv);
 	} else {
-  	leg.display.style='none';
+  	leg.style.display='none';
   }
 
 
