@@ -362,7 +362,7 @@ function updatemap() {
     imgdiv.setAttribute('src','../bety/images/lmodelout/switchgrass_yield_grid.png-legend.png')
     leg.appendChild(imgdiv);
 	} else {
-  	leg.display.style='none';
+  	leg.style.display='none';
   }
 
 
