@@ -147,10 +147,7 @@
               </ul>
             </li>
             
-            <% if current_user != nil && current_user.page_access_level < 4 %>
-                <li class="menu-maps"><%= link_to "Maps", :controller => "maps" %></li>
-              </li>
-            <% end %>
+            
             
             <% if current_user != nil && current_user.page_access_level < 4 %>
               <li class="menu-new"><a>Runs</a>

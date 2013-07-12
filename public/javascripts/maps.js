@@ -338,6 +338,7 @@ function updatemap() {
   layers[opt.value].setMap(map);
   document.getElementById('maptitle').innerHTML = opt.text;
   var leg = document.getElementById('googft-legend')
+    leg.style.display='';
     while (leg.firstChild){
       leg.removeChild(leg.firstChild);
     }
@@ -390,13 +391,13 @@ function updatemap() {
     leg.appendChild(imgdiv);
 	} else if (opt.value <18){
   	leg.style.display='none';
-  } else if (opt.value == 17){
+  } else if (opt.value == 18){
     var legendtitle = document.createElement('p');
     legendtitle.id='googft-legend-title';
     legendtitle.innerHTML=opt.text;
     leg.appendChild(legendtitle);
     makeyieldlegend(leg,12)
-  } else if (opt.value == 18){
+  } else if (opt.value == 19){
     var legendtitle = document.createElement('p');
     legendtitle.id='googft-legend-title';
     legendtitle.innerHTML=opt.text;
