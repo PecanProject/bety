@@ -1,4 +1,4 @@
-"state","county","abbrev","lat","lon","state_fips","county_fips","fips","yield"
+"state","county","abbrev","lat","lon","state_fips","county_fips","fips","willowyield"
 "Alabama","Autauga","AL",32.52478738,-86.63770638,1,1,1001,2.95665119108037
 "Alabama","Baldwin","AL",30.58720177,-87.71905612,1,3,1003,2.18750769080864
 "Alabama","Barbour","AL",31.8161686,-85.4180688,1,5,1005,2.49443779423985
