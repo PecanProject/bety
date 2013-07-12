@@ -13,6 +13,7 @@ Advanced search:
 5.	Narrowing Search Results: Once you have obtained a search result, you may refine the result by applying further restrictions using the “Narrow your search” panel on the right side of the page.  Enter terms in one or more of the three search boxes there to limit results by Site, by Species, or by Trait.  Then either click one of the “Apply Limit” links or click the Submit button again.
 
 Notes:
+
 1.	Search terms or case-insensitive and a search term will match a species name, treatment name, site name or trait name if it matches any part of the name.  Thus, simply typing “misc” will match against “Miscanthus”, “Miscanthus sacchariflorus”, “Miscanthus sinensis”, or “Miscanthus X giganteus”.
 2.	The “species” search box in the “Narrow your search” panel only matches against scientific names.  To match against common names, put the term in the main search box.
 3.	For sites having no formal site name, the city name is shown instead.  Note however that when narrowing your search by site, the term entered will only be matched against site names.
