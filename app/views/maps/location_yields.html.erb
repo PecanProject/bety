@@ -53,8 +53,8 @@
     </optgroup>
     <option value=4>Least Cost Crop</option>
   </select>
-
-
+  <br>
+   <!-- <a id='downloadbutton' href=''><button class="button button-primary"> Download</button></a> -->
 
       <% if @fullscreen %>
         <div style="width:100%;margin-top:5px;">
@@ -89,7 +89,13 @@
                           ['County',      '<%= root_path %>temp_models/cornstover_yield_county.csv'     ,{'tw':'0','sb':'County'}]
                         ],
                         ['Poplar','',{'tw':'0','sb':'Poplar'},
+                          ['County',      '<%= root_path %>images/lmodelout/poplar_yield_county.csv'     ,{'tw':'0','sb':'County'}],
                           ['Gridded',     '<%= root_path %>temp_models/poplar_yield_grid.csv'          ,{'tw':'0','sb':'Gridded'}]
+                          ],
+                        ['Willow','',{'tw':'0','sb':'Poplar'},
+                          ['County',      '<%= root_path %>images/lmodelout/willow_yield_county.csv'     ,{'tw':'0','sb':'County'}],
+                          ['Gridded',     '<%= root_path %>images/lmodelout/willow_yield_grid.csv'          ,{'tw':'0','sb':'Gridded'}]
+
                         ]
                       ]
                     ];

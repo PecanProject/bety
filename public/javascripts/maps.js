@@ -7,6 +7,18 @@ function fullscreenmap(isfullscreen){
   }
 }
 
+function downloaddata(){
+  var sm = document.getElementById('selectmap');
+  var opt = sm.options[sm.selectedIndex];
+  var db = document.getElementById('downloadbutton')
+  switch(opt.value){
+    case 0:
+      //cornstover yield
+      db.href = 'temp_models/cornstover_yield_county.csv';
+    break;
+  }
+
+}
 
 function initialize() {
 map = new google.maps.Map(document.getElementById('googft-mapCanvas'), {
@@ -15,6 +27,7 @@ zoom: 6,
 mapTypeId: google.maps.MapTypeId.ROADMAP
 });
 map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('googft-legend'));
+
 
 layers = [];
 layers[0] = cornstoveryield= new google.maps.FusionTablesLayer({
@@ -411,5 +424,5 @@ function updatemap() {
     leg.appendChild(legendtitle);
     makeyieldlegend(leg,15)
   }
-
+  downloaddata();
 }
