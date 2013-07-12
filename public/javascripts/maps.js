@@ -223,6 +223,35 @@ templateId: 4
 }
 });
 
+layers[18] = willowyield   = new google.maps.FusionTablesLayer({
+  map: null,
+  heatmap: { enabled: false },
+  query: {
+    select: "col16\x3e\x3e2",
+    from: "1V1yWmGE9U5jxcxOrWhhLiwQ6g4ys0Uvlz-DrXQ0",
+    where: ""
+  },
+  options: {
+    styleId: 2,
+    templateId: 2
+  }
+});
+
+layers[19] = poplaryield =  new google.maps.FusionTablesLayer({
+  map: null,
+  heatmap: { enabled: false },
+  query: {
+    select: "col16\x3e\x3e2",
+    from: "1V1yWmGE9U5jxcxOrWhhLiwQ6g4ys0Uvlz-DrXQ0",
+    where: ""
+  },
+  options: {
+    styleId: 3,
+    templateId: 3
+  }
+});
+
+
 
 
 
@@ -359,9 +388,20 @@ function updatemap() {
   	var imgdiv = document.createElement('img');
     imgdiv.setAttribute('src','../bety/images/lmodelout/switchgrass_yield_grid.png-legend.png')
     leg.appendChild(imgdiv);
-	} else {
+	} else if (opt.value <18){
   	leg.style.display='none';
+  } else if (opt.value == 17){
+    var legendtitle = document.createElement('p');
+    legendtitle.id='googft-legend-title';
+    legendtitle.innerHTML=opt.text;
+    leg.appendChild(legendtitle);
+    makeyieldlegend(leg,12)
+  } else if (opt.value == 18){
+    var legendtitle = document.createElement('p');
+    legendtitle.id='googft-legend-title';
+    legendtitle.innerHTML=opt.text;
+    leg.appendChild(legendtitle);
+    makeyieldlegend(leg,15)
   }
-
 
 }
