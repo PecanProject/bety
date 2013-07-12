@@ -1,4 +1,11 @@
-
+function fullscreenmap(isfullscreen){
+  isfullscreen = !isfullscreen
+  if(isfullscreen){
+    document.getElementById('mapcont').setAttribute('style','margin: 0px; width: 95%; height: 800px');
+  } else{
+    document.getElementById('mapcont').setAttribute('style','margin: 10px 100px; width: 80%; height: 600px');
+  }
+}
 
 
 function initialize() {
@@ -228,12 +235,12 @@ layers[18] = willowyield   = new google.maps.FusionTablesLayer({
   heatmap: { enabled: false },
   query: {
     select: "col16\x3e\x3e2",
-    from: "1V1yWmGE9U5jxcxOrWhhLiwQ6g4ys0Uvlz-DrXQ0",
+    from: "1g4LIgl6GmDRbNLXcXumGkwUpx9FdFkUI30sldKw",
     where: ""
   },
   options: {
-    styleId: 2,
-    templateId: 2
+    styleId: 3,
+    templateId: 3
   }
 });
 
@@ -242,12 +249,12 @@ layers[19] = poplaryield =  new google.maps.FusionTablesLayer({
   heatmap: { enabled: false },
   query: {
     select: "col16\x3e\x3e2",
-    from: "1V1yWmGE9U5jxcxOrWhhLiwQ6g4ys0Uvlz-DrXQ0",
+    from: "1g4LIgl6GmDRbNLXcXumGkwUpx9FdFkUI30sldKw",
     where: ""
   },
   options: {
-    styleId: 3,
-    templateId: 3
+    styleId: 2,
+    templateId: 2
   }
 });
 
