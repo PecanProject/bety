@@ -7,12 +7,11 @@ class Posterior < ActiveRecord::Base
   SEARCH_FIELDS = %w{ pfts.name posteriors.filename }
 
   has_and_belongs_to_many :runs
-  has_many :children, :class_name => "Posterior", :foreign_key => "parent_id"
-  belongs_to :parent, :class_name => "Posterior"
+  has_many :files, :as => :container, :class_name => 'DBFile'
   belongs_to :pft
+  belongs_to :format
 
   validates_presence_of     :pft_id
-  validates_presence_of     :filename
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
@@ -20,8 +19,6 @@ class Posterior < ActiveRecord::Base
   comma do
     id
     pft_id
-    filename
-    parent_id
     created_at
     updated_at
   end
