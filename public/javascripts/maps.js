@@ -77,7 +77,7 @@ from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
 where: ""
 },
 options: {
-styleId: 13,
+styleId: 22,
 templateId: 14
 }
 });
@@ -92,7 +92,7 @@ from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
 where: ""
 },
 options: {
-styleId: 14,
+styleId: 23,
 templateId: 15
 }
 });
@@ -107,7 +107,7 @@ from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
 where: ""
 },
 options: {
-styleId: 15,
+styleId: 24,
 templateId: 16
 }
 });
@@ -118,10 +118,10 @@ heatmap: { enabled: false },
 query: {
 select: "col16\x3e\x3e1",
 from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-where: ""
+where: "col9\x3e\x3e0 \x3e\x3d 0.01"
 },
 options: {
-styleId: 16,
+styleId: 25,
 templateId: 17
 }
 });
@@ -301,7 +301,7 @@ layers[19] = poplaryield =  new google.maps.FusionTablesLayer({
   query: {
     select: "col16\x3e\x3e2",
     from: "1g4LIgl6GmDRbNLXcXumGkwUpx9FdFkUI30sldKw",
-    where: ""
+    where: "col8\x3e\x3e1 \x3e\x3d 0"
   },
   options: {
     styleId: 2,
@@ -331,7 +331,7 @@ function reset() {
 }
 
 function makeyieldlegend(legend, max){
-  var colors = ['d9ead3','b6d7a8','93c47d','6aa84f','38761d','274e13'];
+  var colors = ['0000ff','ead1dc','ff0000'];
   for (i=0;i<colors.length;i++){
 
     var swatchdiv = document.createElement('div');
