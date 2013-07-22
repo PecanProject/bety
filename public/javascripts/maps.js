@@ -13,9 +13,47 @@ function downloaddata(){
   var db = document.getElementById('downloadbutton')
   switch(opt.value){
     case 0:
-      //cornstover yield
+      //cornstover yield county
       db.href = 'temp_models/cornstover_yield_county.csv';
     break;
+    case 1:
+      //miscanthus yield county
+      db.href = 'temp_models/miscanthus_yield_county.csv';
+    break;
+    case 2:
+      //switchgrass yield county
+      db.href = ''
+    break;
+    case 3:
+      //energycane yield county
+    break;
+    case 4:
+      //least cost crop
+    break;
+    case 5:
+      //cornstover cost county
+    break;
+    case 6:
+      //miscanthus cost county
+    break;
+    case 7:
+      //switchgrass cost county
+    break;
+    case 8:
+      //energycane cost county
+    break;
+    case 9:
+      //energycane yield(grid)
+    break;
+    case 10:
+      //miscanthus yield(grid)
+    break;
+    case 11:
+      //cornstover yield(grid) missing
+    break;
+    case 12:
+      //poplar yield grid
+    break;    
   }
 
 }
