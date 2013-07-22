@@ -43,15 +43,18 @@
       <option value=8> Energycane Cost</option>
     </optgroup>
     <optgroup label="Poplar">
+      <option value=19>Poplar Yield </option>
       <option value=12>Poplar Yield (grid) </option>
     </optgroup>
     <optgroup label="Willow">
+      <option value=18> Willow Yield </option>
       <option value=13> Willow Yield (grid) </option>
+
     </optgroup>
     <option value=4>Least Cost Crop</option>
   </select>
-
-
+  <br>
+   <a id='downloadbutton' href=''><button class="button button-primary"> Download</button></a>
 
       <% if @fullscreen %>
         <div style="width:100%;margin-top:5px;">
@@ -86,7 +89,13 @@
                           ['County',      '<%= root_path %>temp_models/cornstover_yield_county.csv'     ,{'tw':'0','sb':'County'}]
                         ],
                         ['Poplar','',{'tw':'0','sb':'Poplar'},
+                          ['County',      '<%= root_path %>images/lmodelout/poplar_yield_county.csv'     ,{'tw':'0','sb':'County'}],
                           ['Gridded',     '<%= root_path %>temp_models/poplar_yield_grid.csv'          ,{'tw':'0','sb':'Gridded'}]
+                          ],
+                        ['Willow','',{'tw':'0','sb':'Poplar'},
+                          ['County',      '<%= root_path %>images/lmodelout/willow_yield_county.csv'     ,{'tw':'0','sb':'County'}],
+                          ['Gridded',     '<%= root_path %>images/lmodelout/willow_yield_grid.csv'          ,{'tw':'0','sb':'Gridded'}]
+
                         ]
                       ]
                     ];
@@ -192,7 +201,7 @@
           
       <% end %>
 
-          <div style="width:200px;float:right">
+          <!-- <div style="width:200px;float:right">
             <table cellpadding="0" cellspacing="0" class="moduletable">
               <tr>
                 <td>
@@ -203,21 +212,14 @@
                     <div style="position:absolute; top:0px; width: 200px; height:26px;">
                       <button class="button button-primary" 
 
-                    onclick="javascript: 
-                    fullscreen = ! fullscreen;
-                    if(fullscreen){
-                      document.getElementById('mapcont').setAttribute('style','margin: 0px; width: 95%'; height: 800px);
-                    } else{
-                      document.getElementById('mapcont').setAttribute('style','margin: 10px 100px; width: 80%; height: 600px');
-                    }
-                    " > Fullscreen</button>
+                    onclick="javascript: fullscreenmap(fullscreen)"> Fullscreen</button>
                     </div>
                   </div>
                 </td>
               </tr>
             </table>
           </div>
-        </div>
+        </div> -->
 
 
       <br /><br /><br />

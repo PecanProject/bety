@@ -19,12 +19,8 @@
     <%= f.select :pft_id, Pft.all.collect { |p| [ p.select_default, p.id] } %>
   </p>
   <p>
-    <%= f.label :filename %><br />
-    <%= f.text_field :filename %>
-  </p>
-  <p>
-    <%= f.label :parent %><br />
-    <%= f.select :parent_id, Posterior.all.collect{ |p| [ p.select_default, p.id] }, {:include_blank => true } %>
+    <%= f.label :format_id %><br />
+    <%= f.select :format_id, Format.all.collect { |p| [p.select_default, p.id ] }, :include_blank => true %>
   </p>
   <p>
     <%= f.submit 'Update' %>

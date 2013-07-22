@@ -1,0 +1,18 @@
+<h2>Associated Files</h2>
+
+
+<table>
+  <tr>
+    <th>Machine</th>
+    <th>File Path</th>
+    <th>File Name</th>
+  </tr>
+  <% @posterior.files.all(:limit => 100).each do |c| %>
+  <tr>
+    <td><%=h c.machine_id %></td>
+    <td><%=h c.file_path %></td>
+    <td><%=h c.file_name %></td>
+    <td><%= link_to "Show", dbfile_path(c) %></td>
+  </tr>
+  <% end %>
+</table>

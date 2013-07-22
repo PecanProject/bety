@@ -1,5 +1,62 @@
+function fullscreenmap(isfullscreen){
+  isfullscreen = !isfullscreen
+  if(isfullscreen){
+    document.getElementById('mapcont').setAttribute('style','margin: 0px; width: 95%; height: 800px');
+  } else{
+    document.getElementById('mapcont').setAttribute('style','margin: 10px 100px; width: 80%; height: 600px');
+  }
+}
 
+function downloaddata(){
+  var sm = document.getElementById('selectmap');
+  var opt = sm.options[sm.selectedIndex];
+  var db = document.getElementById('downloadbutton')
+  switch(opt.value){
+    case 0:
+      //cornstover yield county
+      db.href = 'temp_models/cornstover_yield_county.csv';
+    break;
+    case 1:
+      //miscanthus yield county
+      db.href = 'temp_models/miscanthus_yield_county.csv';
+    break;
+    case 2:
+      //switchgrass yield county
+      db.href = ''
+    break;
+    case 3:
+      //energycane yield county
+    break;
+    case 4:
+      //least cost crop
+    break;
+    case 5:
+      //cornstover cost county
+    break;
+    case 6:
+      //miscanthus cost county
+    break;
+    case 7:
+      //switchgrass cost county
+    break;
+    case 8:
+      //energycane cost county
+    break;
+    case 9:
+      //energycane yield(grid)
+    break;
+    case 10:
+      //miscanthus yield(grid)
+    break;
+    case 11:
+      //cornstover yield(grid) missing
+    break;
+    case 12:
+      //poplar yield grid
+    break;    
+  }
 
+}
 
 function initialize() {
 map = new google.maps.Map(document.getElementById('googft-mapCanvas'), {
@@ -8,6 +65,7 @@ zoom: 6,
 mapTypeId: google.maps.MapTypeId.ROADMAP
 });
 map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('googft-legend'));
+
 
 layers = [];
 layers[0] = cornstoveryield= new google.maps.FusionTablesLayer({
@@ -223,6 +281,35 @@ templateId: 4
 }
 });
 
+layers[18] = willowyield   = new google.maps.FusionTablesLayer({
+  map: null,
+  heatmap: { enabled: false },
+  query: {
+    select: "col16\x3e\x3e2",
+    from: "1g4LIgl6GmDRbNLXcXumGkwUpx9FdFkUI30sldKw",
+    where: ""
+  },
+  options: {
+    styleId: 3,
+    templateId: 3
+  }
+});
+
+layers[19] = poplaryield =  new google.maps.FusionTablesLayer({
+  map: null,
+  heatmap: { enabled: false },
+  query: {
+    select: "col16\x3e\x3e2",
+    from: "1g4LIgl6GmDRbNLXcXumGkwUpx9FdFkUI30sldKw",
+    where: ""
+  },
+  options: {
+    styleId: 2,
+    templateId: 2
+  }
+});
+
+
 
 
 
@@ -309,6 +396,7 @@ function updatemap() {
   layers[opt.value].setMap(map);
   document.getElementById('maptitle').innerHTML = opt.text;
   var leg = document.getElementById('googft-legend')
+    leg.style.display='';
     while (leg.firstChild){
       leg.removeChild(leg.firstChild);
     }
@@ -359,9 +447,20 @@ function updatemap() {
   	var imgdiv = document.createElement('img');
     imgdiv.setAttribute('src','../bety/images/lmodelout/switchgrass_yield_grid.png-legend.png')
     leg.appendChild(imgdiv);
-	} else {
+	} else if (opt.value <18){
   	leg.style.display='none';
+  } else if (opt.value == 18){
+    var legendtitle = document.createElement('p');
+    legendtitle.id='googft-legend-title';
+    legendtitle.innerHTML=opt.text;
+    leg.appendChild(legendtitle);
+    makeyieldlegend(leg,12)
+  } else if (opt.value == 19){
+    var legendtitle = document.createElement('p');
+    legendtitle.id='googft-legend-title';
+    legendtitle.innerHTML=opt.text;
+    leg.appendChild(legendtitle);
+    makeyieldlegend(leg,15)
   }
-
-
+  downloaddata();
 }

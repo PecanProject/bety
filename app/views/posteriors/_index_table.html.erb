@@ -36,8 +36,10 @@
       <thead>
         <tr role="row">
 <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px;" aria-sort="ascending"><%= sortable "pfts.name", "Pft" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "posteriors.filename", "Filename" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 67px">Parent</th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "formats.mime_type", "Format" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 67px">Created</th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 67px">Updated</th>
+
 <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 162px">Actions</th>
       </tr>
     </thead>
@@ -45,8 +47,9 @@
       <% @posteriors.each do |posterior| %>
         <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and posterior.id == @search.to_i%>>
           <td class="center"><%= link_to_if posterior.pft, posterior.pft, posterior.pft %></td>
-          <td class="center"><%= posterior.filename %></td>
-          <td class="center"><%= link_to_if posterior.parent, posterior.parent, posterior.parent %></td>
+          <td class="center"><%= link_to_if posterior.format, posterior.format, posterior.format %></td>
+          <td class="center"><%= posterior.created_at -%></td>
+          <td class="center"><%= posterior.updated_at -%></td>
           <td class="center ">
             <!-- SHOW -->
             <%= link_to posterior, :class => "button button-small", :alt => "show" do %>
