@@ -2,7 +2,7 @@
 <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
   <div class="row">
   
-    <div class="span6">
+    <!--<div class="span6">
       <div id="DataTables_Table_0_length" class="dataTables_length">
       
       <label>
@@ -14,17 +14,17 @@
       </select> records per page
       </label>
       
-      </div> <!-- id="DataTables_Table_0_length" -->
-    </div> <!-- class="span6" -->
+      </div>--> <!-- id="DataTables_Table_0_length" -->
+    <!--</div>--> <!-- class="span6" -->
     
     <div class="span6">
       <div class="dataTables_filter" id="DataTables_Table_0_filter">
   			  <div style="height: 30px"><label>Search: <%= text_field_tag :search, params[:search] %></label></div>
 <div>
               <ul style="list-style-type: none"><% logger.info("params[:search_domain] = "); logger.info( params[:search_domain].inspect ) %>
-              <li style="float: right; clear: right"><%= label_tag(:show_yields, raw('Yields' + radio_button_tag(:search_domain, "yields", (params[:search_domain] == 'yields' || params[:search_domain] == nil))), { style: "float: none" }) %></li>
-              <li style="float: right; clear: right"><%= label_tag(:show_traits, raw('Traits' + radio_button_tag(:search_domain, "traits", params[:search_domain] == 'traits')), { style: "float: none" }) %></li>
-              <li style="float: right; clear: right"><%= label_tag(:show_both, raw('Both' + radio_button_tag(:search_domain, "yields traits", params[:search_domain] == 'yields traits')), { style: "float: none" }) %></li>
+              <li style="float: right; clear: right"><%= label_tag(:show_yields, raw('&nbsp;Yields&nbsp;' + radio_button_tag(:search_domain, "yields", params[:search_domain] == 'yields')), { style: "float: none" }) %></li>
+              <li style="float: right; clear: right"><%= label_tag(:show_traits, raw('&nbsp;Traits&nbsp;' + radio_button_tag(:search_domain, "traits", params[:search_domain] == 'traits')), { style: "float: none" }) %></li>
+              <li style="float: right; clear: right"><%= label_tag(:show_both, raw('&nbsp;Both&nbsp;' + radio_button_tag(:search_domain, "yields traits", (params[:search_domain] == 'yields traits' || params[:search_domain] == nil))), { style: "float: none" }) %></li>
               </ul>
 </div>
           <%= hidden_field_tag :direction, params[:direction] %>
@@ -170,18 +170,18 @@
 	  </tbody>
 	</table>
   
-	<div class="row final_paginagte_row">
+	<!--<div class="row final_paginagte_row">
 	  <div class="span6">
 	    <div class="dataTables_info" id="DataTables_Table_0_info">
-	      <%= "page_entries_info @citations" %>
+	      <%#= page_entries_info @citations %>
 	    </div>
 	  </div>
 	  <div class="span6">
 	    <div class="dataTables_paginate paging_bootstrap pagination alternate">
-        <%= "will_paginate @citations" %>
+        <%#= will_paginate @citations %>
       </div>
     </div>
-  </div>
+  </div>-->
 </div>
 
 

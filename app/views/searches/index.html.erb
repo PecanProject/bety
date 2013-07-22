@@ -1,13 +1,9 @@
-<div class="content">
+<div class="content" style="min-height: 380px">
   <div class="container">
 	<div class="sixteen columns">
 	  <header>
 		<h1>Advanced Search</h1>
 	  </header>
-      <div id="process_container">
-        <div id="back"><br /></div>
-        <div id="forward"><%= link_to "Home", root_path %></div>
-      </div>
       <br />
       <%= form_tag "searches", :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
       <div id="simple_search_table" class="simple_search_table_1"><%= render 'index_table' %></div>

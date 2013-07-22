@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130629205658) do
+ActiveRecord::Schema.define(:version => 20130717162614) do
 
   create_table "citations", :force => true do |t|
     t.string   "author"
@@ -345,13 +345,11 @@ ActiveRecord::Schema.define(:version => 20130629205658) do
 
   create_table "posteriors", :force => true do |t|
     t.integer  "pft_id"
-    t.string   "filename"
-    t.integer  "parent_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "format_id"
   end
 
-  add_index "posteriors", ["parent_id"], :name => "index_posteriors_on_parent_id"
   add_index "posteriors", ["pft_id"], :name => "index_posteriors_on_pft_id"
 
   create_table "posteriors_runs", :id => false, :force => true do |t|
