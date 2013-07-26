@@ -16,7 +16,7 @@ To add a new map to the betydb 'model projections' maps page, you should first i
 >         templateId: 25
 >       }
 >     });
->   }
+
 
 
 Paste this section at the end of the function initialize() in the public/javascripts/maps.js file. Change the map property to null and the layer assignment to 
