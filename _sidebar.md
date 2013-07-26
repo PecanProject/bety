@@ -38,6 +38,7 @@
 * [[BETYdb: Bulk Data Upload | Data-Entry#6-betydb-bulk-data-upload]]
 * [[BETYdb: QA/QC with the Web Interface | Data-Entry#7-betydb-qaqc-with-the-web-interface]]
 * [[Acknowledgements | Data-Entry#8-acknowledgements]]
+* [[Adding a map | Adding-a-map]]
 * [[Appendix | Data-Entry#appendix]]
 * [[Bibliography | Data-Entry#12-bibliography]]
 * [[Reference Tables | Data-Entry#13-reference-tables]]
