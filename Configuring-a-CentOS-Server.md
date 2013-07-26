@@ -273,3 +273,37 @@ R --vanilla < scripts/install.dependencies.R
 # compile pecan
 ./scripts/build.sh
 ```
+
+### PostgreSQL
+
+Although BETY currently uses MySQL, support for or migration to PostgresSQL is planned.
+
+#### Installing Postgres
+
+[reference](http://wiki.postgresql.org/wiki/YUM_Installation)
+add `exclude=postgresql*` to the `[base]` and `[updates]` sections of  `/etc/yum.repos.d/CentOS-Base.repo`
+
+```
+# download repo
+curl -O http://yum.postgresql.org/9.2/redhat/rhel-5-x86_64/pgdg-centos92-9.2-6.noarch.rpm
+# install repo
+rpm -ivh pgdg-centos92-9.2-6.noarch.rpm 
+# list available packages
+yum list postgres*
+# install postgres 9.2
+yum install postgresql92-server
+
+# initialize database
+ /sbin/service postgresql-9.2 initdb
+
+# automatically start postgres 
+/sbin/chkconfig postgresql-9.2 on
+``
+
+#### configuring postgres [reference](http://wiki.postgresql.org/wiki/First_steps)
+
+```
+# set root (postgres) password [reference](http://stackoverflow.com/q/12720967)
+sudo -u postgres psql
+alter user postgres with password 'new_password' 
+```
