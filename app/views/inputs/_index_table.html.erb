@@ -1,28 +1,75 @@
-<table class="pretty">
-  <tr>
-    <th><%= sortable "sites.sitename", "Site" -%></th>
-    <th>Variables</th>
-    <th><%= sortable "inputs.name", "Name" -%></th>
-    <th><%= sortable "inputs.start_date", "Start Date" -%></th>
-    <th><%= sortable "inputs.end_date", "End Date" -%></th>
-    <th><%= sortable "inputs.file_id", "File ID" -%></th>
-    <th><%= sortable "inputs.notes", "Notes" -%></th>
-    <th><%= sortable "inputs.created_at", "Created at" -%></th>
-    <th><%= sortable "inputs.updated_at", "Updated at" -%></th>
-    <th><%= sortable "formats.mime_type", "Format" -%></th>
-  </tr>
+<!-- InstanceBeginEditable name="Full Width Content" -->
+<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
+  <div class="row">
+  
+    <div class="span6">
+      <div id="DataTables_Table_0_length" class="dataTables_length">
+      
+      <label>
+      <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0">
+        <option value="10" selected="selected">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select> records per page
+      </label>
+      
+      </div> <!-- id="DataTables_Table_0_length" -->
+    </div> <!-- class="span6" -->
+    
+    <div class="span6">
+      <div class="dataTables_filter" id="DataTables_Table_0_filter">
+        <%= form_tag inputs_path, :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
+          <label>Search: <%= text_field_tag :search, params[:search] %></label>
+          <%= hidden_field_tag :direction, params[:direction] %>
+          <%= hidden_field_tag :sort, params[:sort] %>
+        <% end %>
+      </div> <!-- id="DataTables_Table_0_filter" -->
+    </div> <!-- class="span6" -->
+  </div> <!-- class="row" -->  
+  
 
+
+
+
+<table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+      <thead>
+        <tr role="row">
+    <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px;" aria-sort="ascending"><%= sortable "sites.sitename", "Site" %></th>
+
+    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Variables</th>
+    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "inputs.name", "Name" %></th>
+
+    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "inputs.start_date", "Start Date" %></th>
+
+    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "inputs.end_date", "End Date" %></th>
+
+    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "inputs.file_id", "File ID" %></th>
+
+    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "inputs.notes", "Notes" %></th>
+
+    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "inputs.created_at", "Created at" %></th>
+
+    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "inputs.updated_at", "Updated at" %></th>
+
+    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "formats.mime_type", "Format" %></th>
+    <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 162px">Actions</th>
+
+
+  </tr>
+</thead>
+    <tbody role="alert" aria-live="polite" aria-relevant="all">
   <% @inputs.each do |input| %>
-  <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and input.id == @search.to_i%>>
-    <td><%= link_to_if input.site, input.site, input.site -%></td>
-    <td><% input.variables.each do |iv| -%>
+  <tr <%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and input.id == @search.to_i%> >
+    <td class="center"><%= link_to_if input.site, input.site, input.site -%></td>
+    <td class="center"><% input.variables.each do |iv| -%>
         <%= link_to iv,iv -%>,<br />
         <% end -%>
     </td>
     
     <%#### Test links and if file_path exists ... link it! %>
     <% filepath = @dbfiles[input.file_id].file_path %>
-    <td>
+    <td class="center">
       <% if input.file_id != nil && filepath != nil %>
         <%= link_to input.name, filepath %>
       <% else %>
@@ -31,20 +78,40 @@
     </td>
     
     
-    <td><%= input.start_date -%></td>
-    <td><%= input.end_date -%></td>
-    <td><%= input.file_id -%></td>
-    <td><%= input.notes -%></td>
-    <td><%= input.created_at -%></td>
-    <td><%= input.updated_at -%></td>
-    <td><%= link_to_if input.format, input.format, input.format%></td>
-    <td><%= link_to "Show", input -%></td>
-    <td><%= link_to "Edit", edit_input_path(input) -%></td>
-    <td><%= link_to 'Destroy', input, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td class="center"><%= input.start_date -%></td>
+    <td class="center"><%= input.end_date -%></td>
+    <td class="center"><%= input.file_id -%></td>
+    <td class="center"><%= input.notes -%></td>
+    <td class="center"><%= input.created_at -%></td>
+    <td class="center"><%= input.updated_at -%></td>
+    <td class="center"><%= link_to_if input.format, input.format, input.format%></td>
+    <td>
+    <%= link_to input, :class => "button button-small", :alt => "show" do %>
+              <i class="icon-zoom-in"></i>
+            <% end %>
+            <!-- EDIT -->
+            <%= link_to edit_input_path(input), :class => "button button-small", :alt => "edit" do %>
+              <i class="icon-edit"></i>
+            <% end %>
+            <%= link_to input, :method => :delete, :type => 'input', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
+              <i class="icon-trash"></i> 
+            <% end %>
+    </td>
   </tr>
   <% end %>
-
+</tbody>
 </table>
 
-<%= will_paginate @inputs %>
-
+  <div class="row final_paginate_row">
+    <div class="span6">
+      <div class="dataTables_info" id="DataTables_Table_0_info">
+        <%= page_entries_info @inputs %>
+      </div>
+    </div>
+    <div class="span6">
+      <div class="dataTables_paginate paging_bootstrap pagination alternate">
+        <%= will_paginate @inputs %>
+      </div>
+    </div>
+  </div>
+</div>
