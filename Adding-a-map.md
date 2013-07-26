@@ -17,13 +17,17 @@ To add a new map to the betydb 'model projections' maps page, you should first i
 >       }
 >     });
 >   }
+
+
 Paste this section at the end of the function initialize() in the public/javascripts/maps.js file. Change the map property to null and the layer assignment to 
-> layers[<some number>] = new google.maps.FusionTablesLayer(...)
+
+> layers[some number] = new google.maps.FusionTablesLayer(...)
+
 The index you give the new map should be unique. 
 
 If you are trying to add an image, copy one of the other image maps in the maps.js file and update the file path for the image itself and layers table index it is saved under. 
 
-In apps/views/maps/location_yields.html.erb add a new option to the id="selectmap <select> tag. Set the value equal the index of your new map in the layers table. 
+In apps/views/maps/location_yields.html.erb add a new option to the id="selectmap select tag. Set the value equal the index of your new map in the layers table. 
 
 Except for the legend, you're now done! you should be able to view your map on the google maps canvas by selecting it in the dropdown menu.
 
