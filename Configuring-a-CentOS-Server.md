@@ -298,7 +298,7 @@ yum install postgresql92-server
 
 # automatically start postgres 
 /sbin/chkconfig postgresql-9.2 on
-``
+```
 
 #### configuring postgres [reference](http://wiki.postgresql.org/wiki/First_steps)
 
