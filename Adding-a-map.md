@@ -1,0 +1,1 @@
+To add a new map to the betydb 'model projections' maps page, you should first import the data into google fusion tables and create/style the map you want to show. You may want to merge your data with a census table containing kml data for each county and its shape, if you have county-level data.
