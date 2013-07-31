@@ -51,5 +51,5 @@ end
 
 # Call this to make a link inside a form that submits the form.
 def link_to_submit(*args, &block)
-  link_to_function (block_given? ? capture(&block) : args[0]), "/*$(this).closest('form').submit()*/ $(this).parentNode.parentNode.parentNode.parentNode.submit()", args.extract_options!
+  link_to_function (block_given? ? capture(&block) : args[0]), "jQuery(this).closest('form').submit()", args.extract_options!
 end
