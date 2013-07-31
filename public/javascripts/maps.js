@@ -1,5 +1,62 @@
+function fullscreenmap(isfullscreen){
+  isfullscreen = !isfullscreen
+  if(isfullscreen){
+    document.getElementById('mapcont').setAttribute('style','margin: 0px; width: 95%; height: 800px');
+  } else{
+    document.getElementById('mapcont').setAttribute('style','margin: 10px 100px; width: 80%; height: 600px');
+  }
+}
 
+function downloaddata(){
+  var sm = document.getElementById('selectmap');
+  var opt = sm.options[sm.selectedIndex];
+  var db = document.getElementById('downloadbutton')
+  switch(opt.value){
+    case 0:
+      //cornstover yield county
+      db.href = 'temp_models/cornstover_yield_county.csv';
+    break;
+    case 1:
+      //miscanthus yield county
+      db.href = 'temp_models/miscanthus_yield_county.csv';
+    break;
+    case 2:
+      //switchgrass yield county
+      db.href = ''
+    break;
+    case 3:
+      //energycane yield county
+    break;
+    case 4:
+      //least cost crop
+    break;
+    case 5:
+      //cornstover cost county
+    break;
+    case 6:
+      //miscanthus cost county
+    break;
+    case 7:
+      //switchgrass cost county
+    break;
+    case 8:
+      //energycane cost county
+    break;
+    case 9:
+      //energycane yield(grid)
+    break;
+    case 10:
+      //miscanthus yield(grid)
+    break;
+    case 11:
+      //cornstover yield(grid) missing
+    break;
+    case 12:
+      //poplar yield grid
+    break;    
+  }
 
+}
 
 function initialize() {
 map = new google.maps.Map(document.getElementById('googft-mapCanvas'), {
@@ -8,6 +65,7 @@ zoom: 6,
 mapTypeId: google.maps.MapTypeId.ROADMAP
 });
 map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('googft-legend'));
+
 
 layers = [];
 layers[0] = cornstoveryield= new google.maps.FusionTablesLayer({
@@ -19,7 +77,7 @@ from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
 where: ""
 },
 options: {
-styleId: 13,
+styleId: 22,
 templateId: 14
 }
 });
@@ -34,7 +92,7 @@ from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
 where: ""
 },
 options: {
-styleId: 14,
+styleId: 23,
 templateId: 15
 }
 });
@@ -49,7 +107,7 @@ from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
 where: ""
 },
 options: {
-styleId: 15,
+styleId: 24,
 templateId: 16
 }
 });
@@ -60,10 +118,10 @@ heatmap: { enabled: false },
 query: {
 select: "col16\x3e\x3e1",
 from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-where: ""
+where: "col9\x3e\x3e0 \x3e\x3d 0.01"
 },
 options: {
-styleId: 16,
+styleId: 25,
 templateId: 17
 }
 });
@@ -228,12 +286,12 @@ layers[18] = willowyield   = new google.maps.FusionTablesLayer({
   heatmap: { enabled: false },
   query: {
     select: "col16\x3e\x3e2",
-    from: "1V1yWmGE9U5jxcxOrWhhLiwQ6g4ys0Uvlz-DrXQ0",
+    from: "1g4LIgl6GmDRbNLXcXumGkwUpx9FdFkUI30sldKw",
     where: ""
   },
   options: {
-    styleId: 2,
-    templateId: 2
+    styleId: 3,
+    templateId: 3
   }
 });
 
@@ -242,12 +300,12 @@ layers[19] = poplaryield =  new google.maps.FusionTablesLayer({
   heatmap: { enabled: false },
   query: {
     select: "col16\x3e\x3e2",
-    from: "1V1yWmGE9U5jxcxOrWhhLiwQ6g4ys0Uvlz-DrXQ0",
-    where: ""
+    from: "1g4LIgl6GmDRbNLXcXumGkwUpx9FdFkUI30sldKw",
+    where: "col8\x3e\x3e1 \x3e\x3d 0"
   },
   options: {
-    styleId: 3,
-    templateId: 3
+    styleId: 2,
+    templateId: 2
   }
 });
 
@@ -273,7 +331,7 @@ function reset() {
 }
 
 function makeyieldlegend(legend, max){
-  var colors = ['d9ead3','b6d7a8','93c47d','6aa84f','38761d','274e13'];
+  var colors = ['0000ff','ead1dc','ff0000'];
   for (i=0;i<colors.length;i++){
 
     var swatchdiv = document.createElement('div');
@@ -338,6 +396,7 @@ function updatemap() {
   layers[opt.value].setMap(map);
   document.getElementById('maptitle').innerHTML = opt.text;
   var leg = document.getElementById('googft-legend')
+    leg.style.display='';
     while (leg.firstChild){
       leg.removeChild(leg.firstChild);
     }
@@ -390,18 +449,18 @@ function updatemap() {
     leg.appendChild(imgdiv);
 	} else if (opt.value <18){
   	leg.style.display='none';
-  } else if (opt.value == 17){
+  } else if (opt.value == 18){
     var legendtitle = document.createElement('p');
     legendtitle.id='googft-legend-title';
     legendtitle.innerHTML=opt.text;
     leg.appendChild(legendtitle);
     makeyieldlegend(leg,12)
-  } else if (opt.value == 18){
+  } else if (opt.value == 19){
     var legendtitle = document.createElement('p');
     legendtitle.id='googft-legend-title';
     legendtitle.innerHTML=opt.text;
     leg.appendChild(legendtitle);
     makeyieldlegend(leg,15)
   }
-
+  downloaddata();
 }
