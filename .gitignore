@@ -19,6 +19,5 @@ public/maps/*
 config/initializers/site_keys.rb
 .Rproj.user
 
-*.png
 .ruby-version
 
