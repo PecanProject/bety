@@ -47,7 +47,7 @@
           <td class="center"><%= link_to_if prior.variable, prior.variable, prior.variable %></td>
           <td class="center"><%= prior.phylogeny %></td>
           <td class="center"> <%= link_to prior do%> 
-              <% image_tag "prev/"+prior.id.to_s+".png" %>
+              <% image_tag preview_prior_path(prior.id) %>
               <% end %>
             </td>
           <td class="center"><%= prior.notes %></td>
