@@ -1,0 +1,4 @@
+# Empty .gitignore to convince git to track this directory
+# but not anything in it 
+*
+!.gitignore
