@@ -12,9 +12,7 @@ bparam <- as.numeric( args[7] )
 n <- as.numeric( args[8] )
 
 
-prior1 <- data.frame( distn = priorname, parama = aparam, paramb = bparam)
 
-#prior.density <- create.density.df( distribution = prior1)
 prior.density <- pr.dens(priorname,aparam,bparam)
 png(  imgfile, height = 220, width = 220)
 p<- ggplot( data=prior.density,aes( x = x, y = y))
