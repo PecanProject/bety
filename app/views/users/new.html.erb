@@ -60,11 +60,11 @@
           </div>
           <div class="four columns">
             <%= f.label 'page_access_level', "Page Access Level*" %>
-            <%= select_tag :page_access_level, options_for_select( [ ["1.Administrator", 1], ["2.Manager", 2], ["3.Creator", 3], [ "4.Viewer", 4] ], 4 ) %>
+            <%= f.select :page_access_level, [ ["1.Administrator", 1], ["2.Manager", 2], ["3.Creator", 3], [ "4.Viewer", 4] ], :selected => 4 %>
           </div>
           <div class="four columns omega">
-            <%= f.label 'data_access_level', "Data Access Level*" %>
-            <%= select_tag :access_level, options_for_select( [ ["1.Restricted", 1], ["2.Internal EBI & Collaborators", 2], ["3.External Researcher", 3], ["4.Public", 4] ], 3 ) %>
+            <%= f.label 'access_level', "Data Access Level*" %>
+            <%= f.select :access_level, [ ["1.Restricted", 1], ["2.Internal EBI & Collaborators", 2], ["3.External Researcher", 3], ["4.Public", 4] ], :selected => 3 %>
           </div>
         </div>
 
