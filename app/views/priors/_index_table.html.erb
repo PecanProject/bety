@@ -46,7 +46,10 @@
           <td class="center"><%= link_to_if prior.citation, prior.citation, prior.citation %></td>
           <td class="center"><%= link_to_if prior.variable, prior.variable, prior.variable %></td>
           <td class="center"><%= prior.phylogeny %></td>
-          <td class="center"><a href=priors/<%=prior.id%> ><img src=priors/preview/<%=prior.id%> width=1000></a> </td>
+          <td class="center"> <%= link_to prior do%> 
+              <% image_tag preview_prior_path(prior.id) %>
+              <% end %>
+            </td>
           <td class="center"><%= prior.notes %></td>
           <td class="center">
 					  <!-- SHOW -->
