@@ -161,5 +161,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   # user_guide_path' to create a robust link to
   # /public/dbdocumentation_users.pdf, but it works.
   get '/dbdocumentation_users.pdf' => redirect('/dbdocumentation_users.pdf'), :as => :user_guide
+  # Similarly, data entry guide:
+  get '/dbdocumentation_data_entry.pdf' => redirect('/dbdocumentation_data_entry.pdf'), :as => :data_entry_guide
 
 end
