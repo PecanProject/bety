@@ -156,4 +156,10 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   # RAILS3 commented out below and added next in order to get help bubble docs working
   # match '*path' => 'static#index'
   match ':action' => 'static#:action'
+
+  # This seems a somewhat kludgy way to get 'link_to "User Guide",
+  # user_guide_path' to create a robust link to
+  # /public/dbdocumentation_users.pdf, but it works.
+  get '/dbdocumentation_users.pdf' => redirect('/dbdocumentation_users.pdf'), :as => :user_guide
+
 end
