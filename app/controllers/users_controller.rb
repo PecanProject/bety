@@ -38,7 +38,7 @@ class UsersController < ApplicationController
     page_access_level = ["", "Administrator", "Manager", "Creator", "Viewer"]
     access_level = ["", "Restricted", "Internal EBI & Collaborators", "External Researchers", "Public"]
 
-    if params[:page_access_level].to_i != 4 or params[:access_level].to_i != 3
+    if params[:user][:page_access_level].to_i != 4 or params[:user][:access_level].to_i != 3
       xml = "<issue>"
       xml += "<project name='BETY-db' id='1'/>"
       xml += "<tracker name='Bug' id='1'/>"
@@ -50,8 +50,8 @@ class UsersController < ApplicationController
       xml += "<description>https://www.betydb.org/users/#{@user.id}/edit\n"
       xml += "\n"
       xml += "#{@user.name.to_xs} (#{@user.login.to_xs}) has requested a non-default access level.\n"
-      xml += "Page_access_level: #{page_access_level[params[:page_access_level].to_i]}\n"
-      xml += "Access_level: #{access_level[params[:access_level].to_i]}\n"
+      xml += "Page_access_level: #{page_access_level[params[:user][:page_access_level].to_i]}\n"
+      xml += "Access_level: #{access_level[params[:user][:access_level].to_i]}\n"
       xml += "\n"
       xml += "Reason: #{params[:access_level_reason].to_xs}\n"
       xml += "</description>"

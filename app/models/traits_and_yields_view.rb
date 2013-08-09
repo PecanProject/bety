@@ -16,8 +16,8 @@ class TraitsAndYieldsView < ActiveRecord::Base
     city 'city'
 
     # sprintf will both round to 2 decimal places and ensure that (e.g.) "14" is displayed as "14.00"
-    lat 'lat' do |num| if num.nil? then "[missing]" else sprintf("%0.2f", num.to_f) end end
-    lon 'lon' do |num| if num.nil? then "[missing]" else sprintf("%0.2f", num.to_f) end end
+    lat 'lat' do |num| num = num.nil? ? '[missing]' : sprintf("%0.2f", num) end
+    lon 'lon' do |num| num = num.nil? ? '[missing]' : sprintf("%0.2f", num) end
 
     scientificname 'scientificname'
     commonname 'commonname'

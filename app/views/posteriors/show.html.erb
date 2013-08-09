@@ -2,17 +2,20 @@
   <b>Pft:</b>
   <%= link_to_if @posterior.pft, @posterior.pft, @posterior.pft %>
 </p>
-
 <p>
-  <b>Filename:</b>
-  <%= @posterior.filename %>
+  <b>Format:</b>
+  <%= link_to_if @posterior.format, @posterior.format, @posterior.format %>
 </p>
 
-<p>
-  <b>Parent:</b>
-  <%= link_to_if @posterior.parent, @posterior.parent, @posterior.parent %>
-</p>
-
+<a style="text-decoration: none" href="#" onclick="showHide('show_files')" id="show_show_files">[+] View Associated Files</a>
+<br/>
+<br/>
+<div id="show_files" class="hidden notvisible">
+  <%= render 'show_files' %>
+</div>
+<hr />
+<br />
+<br />
 
 <%= link_to 'Edit', edit_posterior_path(@posterior) %> |
 <%= link_to 'Back', posteriors_path %>

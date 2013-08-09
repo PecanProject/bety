@@ -1,38 +1,105 @@
-<table class="pretty">
-  <tr>
-    <th><%= sortable 'models.model_name', 'Model' -%></th>
-    <th><%= sortable 'sites.sitename', 'Site' -%></th>
-    <th><%= sortable 'runs.start_time', 'Start time' -%></th>
-    <th><%= sortable 'runs.finish_time', 'Finish time' -%></th>
-    <th><%= sortable 'runs.started_at', 'Started at' -%></th>
-    <th><%= sortable 'runs.finished_at', 'Finished at' -%></th>
-    <th><%= sortable 'runs.start_date', 'Start date' -%></th>
-    <th><%= sortable 'runs.end_date', 'End date' -%></th>
-    <th><%= sortable 'runs.outdir', 'Outdir' -%></th>
-    <th><%= sortable 'runs.outprefix', 'Outprefix' -%></th>
-    <th><%= sortable 'runs.setting', 'Setting' -%></th>
-    <th><%= sortable 'runs.paramter_list', 'Parameter List' -%></th>
-  </tr>
+<!-- InstanceBeginEditable name="Full Width Content" -->
+<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
+  <div class="row">
+  
+    <div class="span6">
+      <div id="DataTables_Table_0_length" class="dataTables_length">
+      
+      <label>
+      <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0">
+        <option value="10" selected="selected">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select> records per page
+      </label>
+      
+      </div> <!-- id="DataTables_Table_0_length" -->
+    </div> <!-- class="span6" -->
+    
+    <div class="span6">
+      <div class="dataTables_filter" id="DataTables_Table_0_filter">
+        <%= form_tag runs_path, :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
+              <label>Search: <%= text_field_tag :search, params[:search] %></label>
+          <%= hidden_field_tag :direction, params[:direction] %>
+          <%= hidden_field_tag :sort, params[:sort] %>
+        <% end %>
+      </div> <!-- id="DataTables_Table_0_filter" -->
+    </div> <!-- class="span6" -->
+    </div> <!-- class="row" -->  
+
+
+
+
+
+
+ <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+          <thead>
+          <tr role="row">
+<th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px;" aria-sort="ascending"><%= sortable "models.model_name", "Model" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "sites.sitename", "Site" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.start_time", "Start time" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.finish_time", "Finish time" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.started_at", "Started at" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.finished_at", "Finished at" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.start_date", "Start date" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.end_date", "End date" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.outdir", "Output Directory" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.outprefix", "Output Prefix" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.setting", "Setting" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.paramter_list", "Parameter List" %></th>
+<th role="columnheader" aria-controls="DataTables_Table_0" style="width: 162px">Actions</th>
+      </tr>
+    </thead>
+
+
+
+
 
 <% @runs.each do |run| %>
   <tr>
-    <td><%= link_to_if run.model, run.model, run.model %></td>
-    <td><%= link_to_if run.model, run.site, run.site %></td>
-    <td><%= run.start_time %></td>
-    <td><%= run.finish_time %></td>
-    <td><%= run.started_at %></td>
-    <td><%= run.finished_at %></td>
-    <td><%= run.start_date %></td>
-    <td><%= run.end_date %></td>
-    <td><%= run.outdir %></td>
-    <td><%= run.outprefix %></td>
-    <td><%= run.setting %></td>
-    <td><%= run.parameter_list %></td>
-    <td><%= link_to 'Show', run %></td>
-    <td><%= link_to 'Edit', edit_run_path(run) %></td>
-    <td><%= link_to 'Destroy', run, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td class="center"><%= link_to_if run.model, run.model, run.model %></td>
+    <td class="center"><%= link_to_if run.model, run.site, run.site %></td>
+    <td class="center"><%= run.start_time %></td>
+    <td class="center"><%= run.finish_time %></td>
+    <td class="center"><%= run.started_at %></td>
+    <td class="center"><%= run.finished_at %></td>
+    <td class="center"><%= run.start_date %></td>
+    <td class="center"><%= run.end_date %></td>
+    <td class="center"><%= run.outdir %></td>
+    <td class="center"><%= run.outprefix %></td>
+    <td class="center"><%= run.setting %></td>
+    <td class="center"><%= run.parameter_list %></td>
+    <td class="center ">
+      <!-- SHOW -->
+      <%= link_to run, :class => "button button-small", :alt => "show" do %>
+      <i class="icon-zoom-in"></i>
+      <% end %>
+      <!-- EDIT -->
+      <%= link_to edit_run_path(run), :class => "button button-small", :alt => "edit" do %>
+      <i class="icon-edit"></i>
+      <% end %>
+      <!-- DELETE -->
+      <% if current_user.page_access_level == 1 %>
+      <%= link_to run, :method => :delete, :type => 'run', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
+      <i class="icon-trash"></i> 
+      <% end %>
+      <% end %>
+  </td>
   </tr>
 <% end %>
 </table>
 
-<%= will_paginate @runs %>
+    <div class="row final_paginagte_row">
+      <div class="span6">
+        <div class="dataTables_info" id="DataTables_Table_0_info">
+          <%= page_entries_info @runs %>
+        </div>
+      </div>
+      <div class="span6">
+        <div class="dataTables_paginate paging_bootstrap pagination alternate">
+        <%= will_paginate @runs %>
+      </div>
+    </div>
+  </div>
+</div>
