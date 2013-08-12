@@ -200,6 +200,7 @@ module AuthenticatedSystem
                                 "MapsController.ALL",
                                 "PriorsController.index",
                                 "PriorsController.show",
+                                "PriorsController.preview",
                                 "PriorsController.search",
                                 "PftsController.index",
                                 "PftsController.show",
