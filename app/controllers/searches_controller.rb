@@ -41,7 +41,6 @@ class SearchesController < ApplicationController
       search_terms.flatten!
 
       for symbol in [:sitename, :scientificname, :trait]
-        logger.info("symbol is #{symbol}")
         if params[symbol]
           search_condition += " AND #{symbol.id2name} LIKE CONCAT('%', ?, '%') "
           search_terms << params[symbol]
@@ -73,9 +72,6 @@ class SearchesController < ApplicationController
 
 
   def result_to_csv(result)
-    logger.info(result.class)
-
-
     if result.count == 0
       return ""
     end
@@ -91,8 +87,6 @@ class SearchesController < ApplicationController
       end
     end
 
-    logger.info(csv_string)
-
     return csv_string
   end
 
@@ -104,9 +98,7 @@ class SearchesController < ApplicationController
   # remaining terms are returned as a list.
   def _parse_params
     search_string = params[:search]
-    logger.debug "1 #{search_string}"
     search_terms = search_string.split
-    logger.debug "2 #{search_terms}"
 
     if params[:search_type] == "simple"
 

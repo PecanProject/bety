@@ -21,7 +21,7 @@
       <div class="dataTables_filter" id="DataTables_Table_0_filter">
   			  <div style="height: 30px"><label>Search: <%= text_field_tag :search, params[:search] %></label></div>
 <div>
-              <ul style="list-style-type: none"><% logger.info("params[:search_domain] = "); logger.info( params[:search_domain].inspect ) %>
+              <ul style="list-style-type: none">
               <li style="float: right; clear: right"><%= label_tag(:show_yields, raw('&nbsp;Yields&nbsp;' + radio_button_tag(:search_domain, "yields", params[:search_domain] == 'yields')), { style: "float: none" }) %></li>
               <li style="float: right; clear: right"><%= label_tag(:show_traits, raw('&nbsp;Traits&nbsp;' + radio_button_tag(:search_domain, "traits", params[:search_domain] == 'traits')), { style: "float: none" }) %></li>
               <li style="float: right; clear: right"><%= label_tag(:show_both, raw('&nbsp;Both&nbsp;' + radio_button_tag(:search_domain, "yields traits", (params[:search_domain] == 'yields traits' || params[:search_domain] == nil))), { style: "float: none" }) %></li>
