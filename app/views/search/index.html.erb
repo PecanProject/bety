@@ -5,7 +5,7 @@
 		<h1>Advanced Search</h1>
 	  </header>
       <br />
-      <%= form_tag "searches", :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
+      <%= form_tag "search", :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
       <div id="simple_search_table" class="simple_search_table_1"><%= render 'index_table' %></div>
       <div class="four columns" style="position: absolute; left: 1000px; top: 40px;">
         <%= render 'refine_search' %>
