@@ -1,151 +1,32 @@
 # This controller handles searches.
 include AuthenticatedSystem
-class SearchesController < ApplicationController
 
-  # This should be used on opening the home page ... before a user logs in
-  # On attempting to login from this page ... feed it to the create method in this controller
+class SearchController < ApplicationController
+  before_filter :login_required, :except => [ :show ]
+  helper_method :sort_column, :sort_direction
+
+  require 'csv'
+
+  # GET /species
+  # GET /species.xml
   def index
-#    @user.new = User.new
-#    @session.new = Session.new
-
-    search_string = params[:search]
-    @search_type = params[:search_type] # "simple" or "advanced"
-
-    if !search_string || search_string.strip == ""
-      @results = []
-    else
-
-      search_terms = _parse_params
-
-      # Construct the search condition string; this will have a
-      # *conjunct* for each term (since *all* terms must be found); each
-      # conjunct is a disjunction of three clauses--on for each column
-      # we are searching.
-
-      disjunct_clause = <<-CLAUSE
-        (scientificname LIKE CONCAT('%', ?, '%')
-          OR commonname LIKE CONCAT('%', ?, '%')
-          OR treatment LIKE CONCAT('%', ?, '%'))
-      CLAUSE
-
-      # Make a clause for each search term:
-      clause_array = [disjunct_clause] * search_terms.count
-      # Join these by AND to make the full conjunction:
-      search_condition = "result_type IN #{@search_domain} AND " + clause_array.join(' AND ')
-      
-
-      # We use each term three times, so duplicate them.
-      search_terms.map! do |term|
-        [term, term, term]
-      end
-      search_terms.flatten!
-
-      for symbol in [:sitename, :scientificname, :trait]
-        if params[symbol]
-          search_condition += " AND #{symbol.id2name} LIKE CONCAT('%', ?, '%') "
-          search_terms << params[symbol]
-        end
-      end
-
-      
-          
-
-      @results = TraitsAndYieldsView.find(:all, 
-                                          :conditions => [
-                                                          search_condition,
-                                                          search_terms
-                                                         ].flatten!,
-                                          :order => "scientificname, sitename, trait")
-
-      respond_to do |format|
-        format.html  # show html page as before
-        format.csv do
-          send_data result_to_csv(@results), :content_type => 'text/plain', :filename => 'search_results.csv'
-        end
-      end
-
+    if params[:format].nil? or params[:format] == 'html'
+      @iteration = params[:iteration][/\d+/] rescue 1
+      @results = TraitsAndYieldsView
+        .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
+        .search(params[:search])
+        .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
+    else # Allow url queries of data, with scopes, only xml & csv ( & json? )
+      @results = TraitsAndYieldsView.api_search(params)
     end
 
-  end
-
-
-
-
-  def result_to_csv(result)
-    if result.count == 0
-      return ""
+    respond_to do |format|
+      format.html # index.html.erb
+      format.js
+      format.xml  { render :xml => @results }
+      format.csv  { render :csv => @results }
+      format.json  { render :json => @results }
     end
-    require 'csv'
-
-    row = result[0]
-
-    csv_string = CSV.generate do |csv|
-      csv << row.to_comma_headers
-
-      result.each do |row|
-        csv << row.to_comma
-      end
-    end
-
-    return csv_string
-  end
-
-  # probably should be in a helper, but put here for now:
-  #
-  # Expects a list of search terms.  If the terms "yield" or "trait"
-  # occur (in any case and in either singular or plural form) it
-  # removes them from the list and sets @search_domain accordingly.  The
-  # remaining terms are returned as a list.
-  def _parse_params
-    search_string = params[:search]
-    search_terms = search_string.split
-
-    if params[:search_type] == "simple"
-
-      # Look for and remove search-type keywords.
-      searchtype_keywords = search_terms.select { |term| term =~ /^(trait|yield)s?/i }
-
-      logger.debug "3 #{search_terms}"
-      search_terms -= searchtype_keywords
-      logger.debug "4 #{search_terms}"
-
-      # For now, assume user doesn't use a keyword more than once.
-      if searchtype_keywords.size != 1
-        @search_domain = "('traits', 'yields')"
-        return search_terms
-      end
-
-      if searchtype_keywords.first  =~ /yields?/i
-        @search_domain = "('yields')"
-      else
-        @search_domain = "('traits')"
-      end
-      
-    elsif params[:search_type] == "advanced"
-
-      if params[:search_domain] == 'yields traits'
-        
-        @search_domain = "('traits', 'yields')"
-
-      elsif params[:search_domain] == 'yields'
-
-        @search_domain = "('yields')"
-
-      elsif params[:search_domain] == 'traits'
-
-        @search_domain = "('traits')"
-
-      else
-
-        raise "You must select a search domain"
-
-      end
-
-    end
-
-    params[:search] = search_terms.join ' '
-
-    return search_terms
   end
       
 end
