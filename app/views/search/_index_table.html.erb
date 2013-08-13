@@ -6,12 +6,12 @@
       <div id="DataTables_Table_0_length" class="dataTables_length">
       
       <label>
-      <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0">
-        <option value="10" selected="selected">10</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-      </select> records per page
+      <%= select_tag :DataTables_Table_0_length,
+            options_for_select([['10', 10], ['25', 25], ['50', 50], ['100', 100]],
+              params[:DataTables_Table_0_length] || WillPaginate.per_page),
+              size: "1",
+              "aria-controls" => "DataTables_Table_0"
+          %> records per page
       </label>
       
       </div> <!-- id="DataTables_Table_0_length" -->
