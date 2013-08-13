@@ -3,6 +3,13 @@ class TraitsAndYieldsView < ActiveRecord::Base
 #  attr_accessor :current_user
   set_table_name 'traits_and_yields_view'
 
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ }
+  SEARCH_FIELDS = %w{ traits_and_yields_view.scientificname traits_and_yields_view.commonname traits_and_yields_view.trait }
+
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
+
   # MAYBE SET SCOPE HERE?
 
 
