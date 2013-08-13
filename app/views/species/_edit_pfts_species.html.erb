@@ -14,7 +14,7 @@
         </tr>
         <% @species.pfts.each do |pft| %>
         <tr>
-          <td><%= link_to "X", { :controller => :species, :action => :rem_pfts_species, :id => pft.id, :specie => @species }, :confirm => 'Are you sure?', :remote => true%></td>
+          <td><%= link_to "X", { :controller => :species, :action => :rem_pfts_species, :id => pft.id, :specie => @species }, :confirm => 'Are you sure?', :remote => true %></td>
           <td><%= link_to "edit", edit_pft_path(pft.id) %></td>
           <td><%= pft.name %></td>
           <td><%= pft.definition[0..19] %></td>
