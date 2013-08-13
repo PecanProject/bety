@@ -60,7 +60,7 @@ class PriorsController < ApplicationController
     end
   end
 
-  # GET /priors/preview/1
+  # GET /priors/1/preview
   def preview
     id = params[:id]
     @prior = Prior.find(id)
