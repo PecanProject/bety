@@ -14,7 +14,7 @@ var search_function = function () {
             jQuery('#simple_search_table').addClass('simple_search_table_' + iteration);
             jQuery.get(this.action, jQuery('#simple_search').serialize() + '&iteration=' + iteration, null, 'script');
             return false;
-        }, 250);
+        }, 1000);
     }
 
 jQuery(function () {
