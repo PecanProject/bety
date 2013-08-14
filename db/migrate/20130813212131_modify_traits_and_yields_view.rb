@@ -31,8 +31,7 @@ class ModifyTraitsAndYieldsView < ActiveRecord::Migration
                           traits.n,
                           traits.statname,
                           traits.stat,
-                          traits.notes,
-                          users.name AS user_name
+                          traits.notes
                   FROM
                                     traits
                           LEFT JOIN sites ON traits.site_id = sites.id
@@ -40,7 +39,6 @@ class ModifyTraitsAndYieldsView < ActiveRecord::Migration
                           LEFT JOIN citations ON traits.citation_id = citations.id
                           LEFT JOIN treatments ON traits.treatment_id = treatments.id
                           LEFT JOIN variables ON traits.variable_id = variables.id
-                          LEFT JOIN users ON traits.user_id = users.id
 
       }
 
@@ -74,8 +72,7 @@ class ModifyTraitsAndYieldsView < ActiveRecord::Migration
                           yields.n,
                           yields.statname,
                           yields.stat,
-                          yields.notes,
-                          users.name AS user_name
+                          yields.notes
                           -- mgmtview.planting,
                           -- mgmtview.seeding
                  FROM
@@ -85,7 +82,6 @@ class ModifyTraitsAndYieldsView < ActiveRecord::Migration
                           LEFT JOIN citations ON yields.citation_id = citations.id
                           LEFT JOIN treatments ON yields.treatment_id = treatments.id
                           LEFT JOIN variables ON variables.name = 'Ayield' AND variables.id = 63
-                          LEFT JOIN users ON yields.user_id = users.id
       }
 
 
