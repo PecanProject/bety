@@ -24,7 +24,7 @@
 				<dt>Notes</dt>
                 <dd><%= @prior.notes %></dd>
                 <dt>Graph</dt>
-                <dd><img src="preview/<%=@id%>"> </dd>
+                <dd><%= image_tag preview_prior_path(@prior) %></dd>
 			</dl>
 			<div class="form-actions">
 				<div class="button-group">

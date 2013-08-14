@@ -113,7 +113,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :cultivars
   resources :priors do
     member do
-      get 'preview'
+      get :preview
     end
   end
 

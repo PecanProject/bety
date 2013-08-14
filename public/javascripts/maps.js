@@ -353,7 +353,7 @@ function makeyieldlegend(legend, max){
   }
 }
 function makecroplegend(legend){
-  var colors=['#ffffff','#f1c232','#6aa84f','#0000ff','#ff00ff']
+  var colors=['#ffffff','#00ff00','#ffff00','#ff9900','#ff0000']
   var crops = ['No Crop','Cornstover','Miscanthus','Switchgrass','Energycane']
   for(i = 0;i<colors.length;i++){
     var swatchdiv = document.createElement('div');
