@@ -25,6 +25,7 @@ jQuery(function () {
             return false;
         });
 
+    jQuery('#simple_search select').change(search_function);
     jQuery('#simple_search input').keyup(search_function);
 });
 
