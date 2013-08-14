@@ -41,7 +41,13 @@ class ApplicationController < ActionController::Base
       sort = default_sort
       table = default_table
     end
-    (eval table.sub('species','specie').classify.sub('Method','Methods').sub('Dbfile','DBFile')).column_names.include?(sort) ? "#{table}.#{sort}" : "id"
+    (eval table
+       .sub('species', 'specie') # Rails expects 'Species' (singular) to be the class name for a table called 'species'; but we didn't follow this convention.
+       .sub('search', 'traits_and_yields_view') # The search controller uses the traits_and_yields_view table (a view, actually).
+       .classify
+       .sub('Method', 'Methods') # We named the model for the methods table 'Methods' (plural), contravening convention.
+       .sub('Dbfile', 'DBFile') # We named the model for the dbfiles table 'DBFile' rather than 'Dbfile'.
+     ).column_names.include?(sort) ? "#{table}.#{sort}" : "id"
   end
  
   def sort_direction
