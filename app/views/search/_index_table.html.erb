@@ -2,6 +2,7 @@
 <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
   <div class="row">
   
+    <%= form_tag "search", :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
     <div class="span6">
       <div id="DataTables_Table_0_length" class="dataTables_length">
       
@@ -19,14 +20,13 @@
     
     <div class="span6">
       <div class="dataTables_filter" id="DataTables_Table_0_filter">
-        <%= form_tag "searches", :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
   			  <div style="height: 30px"><label>Search: <%= text_field_tag :search, params[:search] %></label></div>
           <%= hidden_field_tag :direction, params[:direction] %>
           <a href="<%= "#{request.fullpath}&format=csv" %>">Download&nbsp;Search&nbsp;Results</a>
           <%= hidden_field_tag :sort, params[:sort] %>
-        <% end %>
       </div> <!-- id="DataTables_Table_0_filter" -->
     </div> <!-- class="span6" -->
+    <% end %>
 	</div> <!-- class="row" -->          
   <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
 		  <thead>
