@@ -2,7 +2,6 @@
 include AuthenticatedSystem
 
 class SearchController < ApplicationController
-  before_filter :login_required, :except => [ :show ]
   helper_method :sort_column, :sort_direction
 
   require 'csv'
