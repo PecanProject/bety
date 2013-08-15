@@ -4,10 +4,21 @@ include AuthenticatedSystem
 class SearchController < ApplicationController
   helper_method :sort_column, :sort_direction
 
-  require 'csv'
+  HEADER = <<CREDITS
+David LeBauer, Dan Wang, and Michael Dietze, 2010.\
+Biofuel Ecophysiological Traits and Yields Database Version 1.0.\
+Energy Biosciences Institute, Urbana, IL
+CREDITS
 
-  # GET /species
-  # GET /species.xml
+  FORMAT_STRING = <<FORMAT
+# %<credits>s#
+# SQL query: %<query>s
+#
+# Date of query: %<date>s
+#
+%<data>s
+FORMAT
+
   def index
     #if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
@@ -23,7 +34,12 @@ class SearchController < ApplicationController
       format.html # index.html.erb
       format.js
       format.xml  { render :xml => @results }
-      format.csv  { render :csv => @results }
+      format.csv do 
+        sql_query = TraitsAndYieldsView.search(params[:search]).to_sql
+        str = sprintf(FORMAT_STRING, credits: HEADER, query: sql_query, date: Time.now, data: @results.to_comma)
+        send_data str, type: Mime::CSV,
+        disposition: "attachment; filename=search_results.csv"
+      end
       format.json  { render :json => @results }
     end
   end
