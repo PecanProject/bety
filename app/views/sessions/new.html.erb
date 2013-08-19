@@ -12,6 +12,8 @@
 				<div class="inline-block" style="width: 160px; vertical-align:top; margin-left:10px">
                   <%= image_tag 'miscanthus.jpg', class: "inline-block", alt: "Photo by L. Brian Stauffer, provided by University of Illinois at Urbana-Champaign" %>
 				</div>
+
+				
 				
 				<% if current_user.nil? %>
 				  <div class="well">
@@ -77,11 +79,12 @@
                     <% end %>
 				</div>
 				
-				<div>
-					<h3><i class="icon-info-sign"></i> DATABASE <em>STATS</em></h3>
-					<%= image_tag 'database_stats.png', size:"300" %>
-				</div>
+				
 			</div>
+			<div style="margin-top:10px">
+					<h3><i class="icon-info-sign"></i> DATABASE <em>STATS</em></h3>
+					<%= image_tag 'database_stats.png', alt: "Stats for the BETYdb database" %>
+				</div>
 			<!-- InstanceEndEditable --> </div>
 	</div>
 	<!-- container --> 
