@@ -1,5 +1,18 @@
 # Ruby-on-Rails
 
+## Deploying a new version:
+
+1. test on `pecandev.igb.illinois.edu:/usr/local/ebi`
+2. test on `ebi-forecast.igb.illinois.edu:/usr/local/beta`
+3. deploy on `ebi-forecast.igb.illinois.edu:/usr/local/ebi`
+
+```{bash}
+cd /usr/local/ebi
+git status
+git pull
+touch tmp/restart.txt
+```
+
 ## Commenting in the Rails Models
 
 
@@ -14,7 +27,6 @@ And a properly commented covariates model ( /app/models/covariates.rb
 ## Introduction to MVC
 
 ## Source Code Map
-
 
 ## Misc. Information
 
