@@ -84,7 +84,7 @@
 
 ### Development / Production Server Environments
 
-#### [[Deploying BETYdb | BETYdb-Ruby-on-Rails#deploying]]
+#### [[Deploying BETYdb | BETYdb-Ruby-on-Rails#deploying-a-new-version]]
 #### [[Ruby-on-Rails Application Overview | BETYdb-Ruby-on-Rails | BETYdb-Ruby-on-Rails#commenting-in-the-rails-models]]
 * [[Under construction]]
 
