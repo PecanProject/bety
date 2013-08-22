@@ -14,6 +14,9 @@ class TraitsAndYieldsView < ActiveRecord::Base
 
   # MAYBE SET SCOPE HERE?
 
+  # make NumberHelper available inside comma block:
+  extend ActionView::Helpers::NumberHelper
+  @@model = self
 
   comma do
     #result_type 'result_type'
@@ -25,8 +28,8 @@ class TraitsAndYieldsView < ActiveRecord::Base
     city 'city'
 
     # sprintf will both round to 2 decimal places and ensure that (e.g.) "14" is displayed as "14.00"
-    lat 'lat' do |num| num = num.nil? ? '[missing]' : sprintf("%0.2f", num) end
-    lon 'lon' do |num| num = num.nil? ? '[missing]' : sprintf("%0.2f", num) end
+    lat 'lat' do |num| num = num.nil? ? '[missing]' : @@model.number_with_precision(num, precision: 2) end
+    lon 'lon' do |num| num = num.nil? ? '[missing]' : @@model.number_with_precision(num, precision: 2) end
 
     scientificname 'scientificname'
     commonname 'commonname'
@@ -39,11 +42,11 @@ class TraitsAndYieldsView < ActiveRecord::Base
     year 'year'
     dateloc 'dateloc'
     trait 'trait'
-    mean 'mean' do |num| if num.nil? then "[missing]" else num.to_f.round_to_significant_digit(3) end end
+    mean 'mean' do |num| if num.nil? then "[missing]" else @@model.number_with_precision(num, precision: 3, significant: true) end end
     units 'units'
     n 'n'
     statname 'statname'
-    stat 'stat' do |num| if num.nil? then "[missing]" else num.to_f.round_to_significant_digit(3) end end
+    stat 'stat' do |num| if num.nil? then "[missing]" else @@model.number_with_precision(num, precision: 3, significant: true) end end
     notes 'notes'
   end
 
