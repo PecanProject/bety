@@ -61,7 +61,7 @@
           <%
 =end %>
           -->
-          <td class="center"><% link_to site_path(t.site_id.to_i) do %>
+          <td class="center"><%= link_to site_path(t.site_id.to_i) do %>
             <%= t.sitename %><%= if t.sitename && t.city &&
                                  !t.sitename.strip.empty? && !t.city.strip.empty?
                                  then raw("<br>") end
@@ -84,12 +84,12 @@
                                  -->
           <td class="center"><%= t.lat ? t.lat.round(2) : nil  %></td>
           <td class="center"><%= t.lon ? t.lon.round(2) : nil %></td>
-          <td class="center"><% link_to species_path(t.species_id.to_i) do %>
+          <td class="center"><%= link_to species_path(t.species_id.to_i) do %>
             <em><%= t.scientificname.to_s %></em>
             <%= if t.commonname && !t.commonname.strip.blank? then raw("<br>(" + t.commonname.strip + ")") end %>
             <% end %>
           </td>
-          <td class="center"><% link_to (t.result_type == "yields" ? yield_path(t.id) : trait_path(t.id)) do %>
+          <td class="center"><%= link_to (t.result_type == "yields" ? yield_path(t.id) : trait_path(t.id)) do %>
             <%= t.trait %><br>(<%= t.trait_description %>)
             <% end %>
           </td>
@@ -101,7 +101,7 @@
 =end %>
           -->
           <% require 'float' %>
-          <td class="center"><%= "#{t.mean.to_f.round_to_significant_digit(3).pretty_s} #{t.units}"  %></td>
+          <td class="center"><%= "#{number_with_precision(t.mean, precision: 3, significant: true)} #{t.units}"  %></td>
           <!--
               <%
 =begin %>
