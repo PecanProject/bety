@@ -39,8 +39,10 @@ class ManagementsController < ApplicationController
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
       @managements = Management.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      log_searches(Management)
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @managements = Management.api_search(params)
+      log_searches(Management.method(:api_search), params)
     end
 
     respond_to do |format|

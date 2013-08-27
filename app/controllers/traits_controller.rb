@@ -70,8 +70,10 @@ class TraitsController < ApplicationController
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
       @traits = @traits.citation(session["citation"]).sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      log_searches(@traits.citation(session["citation"]).search(params[:search]).to_sql)
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @traits = @traits.exclude_api.api_search(params)
+      log_searches(@traits.exclude_api.api_search(params).to_sql)
     end
 
     respond_to do |format|

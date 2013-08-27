@@ -25,6 +25,8 @@ CREDITS
      # @results = TraitsAndYieldsView.api_search(params)
     #end
 
+    log_searches(TraitsAndYieldsView)
+
     respond_to do |format|
       format.html # index.html.erb
       format.js

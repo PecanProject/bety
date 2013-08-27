@@ -40,8 +40,10 @@ class YieldsController < ApplicationController
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
       @yields = @yields.citation(session["citation"]).sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      log_searches(@yields.citation(session["citation"]).search(params[:search]).to_sql)
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @yields = @yields.api_search(params)
+      log_searches(@yields.api_search(params).to_sql)
     end
 
     respond_to do |format|

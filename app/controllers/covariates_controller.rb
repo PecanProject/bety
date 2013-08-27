@@ -8,8 +8,10 @@ class CovariatesController < ApplicationController
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
       @covariates = Covariate.sorted_order("#{sort_column('covariates')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      log_searches(Covariate)
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @covariates = Covariate.api_search(params)
+      log_searches(Covariate.method(:api_search), params)
     end
 
     respond_to do |format|

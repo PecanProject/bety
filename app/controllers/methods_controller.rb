@@ -9,8 +9,10 @@ class MethodsController < ApplicationController
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
       @methods = Methods.sorted_order("#{sort_column('methods','name')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      log_searches(Methods)
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @methods = Methods.api_search(params)
+      log_searches(Methods.method(:api_search), params)
     end
 
     respond_to do |format|
