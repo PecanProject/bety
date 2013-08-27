@@ -84,7 +84,8 @@ class ApplicationController < ActionController::Base
     end
 
     search_info = "client ip: " + request.remote_ip
-    search_info += "\ncurrent user: " + (current_user && current_user.name || "(no logged in user)")
+    search_info += "\ncurrent user id: " + (current_user && current_user.id.to_s || "(no logged-in user)")
+    search_info += "\ncurrent user e-mail: " + (current_user && current_user.email || "(no logged-in user)")
     search_info += "\nsearch string: \"" + (params['search'] || "") + "\""
     search_info += "\nformat: " + (params['format'] || 'html')
     search_info += "\nSQL query: " + sql # method_object.call(arg).send(additional_method).to_sql
