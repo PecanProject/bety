@@ -54,19 +54,37 @@ class ApplicationController < ActionController::Base
     %w[asc desc].include?(params[:direction]) ?  params[:direction] : "asc"
   end
 
-  def log_searches(m, arg = nil)
+  # Logs searches: who requested the search, the search string, the
+  # return format requested, the and SQL query that will be done.
+  # (Generally, any order or limit clauses will be ignored.)
+  #
+  # In the simplest case, a single parameter is passed that is the
+  # class of the model for the table being searched.  The model's
+  # +search+ method will be called with args (by default,
+  # params[:search]) as the argument.
+  #
+  # If a method is passed as the first argument, it will be called
+  # with +arg+ as argument.
+  #
+  # Finally, if a string is passed as the first arguement, it will be
+  # assumed to be the SQL query itself and +args+ is ignored.
+  def log_searches(m, arg = params[:search])
     # Get the SQL query for this search:
     case 
     when m.instance_of?(Class) && m.respond_to?(:where)
       # It's a model; do the default thing:
-      sql = m.search(params[:search]).to_sql
+      sql = m.search(arg).to_sql
     when m.instance_of?(Method) && m.respond_to?(:call)
       sql = m.call(arg).to_sql
+    when m.instance_of?(String)
+      # assume it's the SQL itself
+      sql = m
     else
       logger.warn("Bad call to log_searches")
     end
 
     search_info = "client ip: " + request.remote_ip
+    search_info += "\ncurrent user: " + (current_user && current_user.name || "(no logged in user)")
     search_info += "\nsearch string: \"" + (params['search'] || "") + "\""
     search_info += "\nformat: " + (params['format'] || 'html')
     search_info += "\nSQL query: " + sql # method_object.call(arg).send(additional_method).to_sql
