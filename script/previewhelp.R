@@ -1,7 +1,4 @@
-
-
 require('PEcAn.priors')
-
 
 args <- commandArgs()
 
@@ -11,11 +8,10 @@ aparam <- as.numeric( args[6] )
 bparam <- as.numeric( args[7] )
 n <- as.numeric( args[8] )
 
+prior.density <- pr.dens(priorname, aparam, bparam)
 
-
-prior.density <- pr.dens(priorname,aparam,bparam)
-png(  imgfile, height = 220, width = 220)
-p<- ggplot( data=prior.density,aes( x = x, y = y))
+png(imgfile, height = 80, width = 80)
+p<- ggplot(data = prior.density, aes(x = x, y = y))
 p <- p + geom_line()
 p <- p + scale_y_continuous(breaks = NULL)
 p <- p + xlab(NULL) + ylab(NULL)
