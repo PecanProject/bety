@@ -10,7 +10,7 @@ n <- as.numeric( args[8] )
 
 prior.density <- pr.dens(priorname, aparam, bparam)
 
-png(imgfile, height = 80, width = 80)
+png(imgfile, height = 220, width = 220)
 p<- ggplot(data = prior.density, aes(x = x, y = y))
 p <- p + geom_line()
 p <- p + scale_y_continuous(breaks = NULL)
