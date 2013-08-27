@@ -54,4 +54,25 @@ class ApplicationController < ActionController::Base
     %w[asc desc].include?(params[:direction]) ?  params[:direction] : "asc"
   end
 
+  def log_searches(m, arg = nil)
+    # Get the SQL query for this search:
+    case 
+    when m.instance_of?(Class) && m.respond_to?(:where)
+      # It's a model; do the default thing:
+      sql = m.search(params[:search]).to_sql
+    when m.instance_of?(Method) && m.respond_to?(:call)
+      sql = m.call(arg).to_sql
+    else
+      logger.warn("Bad call to log_searches")
+    end
+
+    search_info = "client ip: " + request.remote_ip
+    search_info += "\nsearch string: \"" + (params['search'] || "") + "\""
+    search_info += "\nformat: " + (params['format'] || 'html')
+    search_info += "\nSQL query: " + sql # method_object.call(arg).send(additional_method).to_sql
+    search_info += "\nall parameters: " + params.inspect
+
+    logger.info(search_info)
+  end
+
 end
