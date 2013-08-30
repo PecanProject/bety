@@ -15,15 +15,17 @@ CREDITS
 
 
   def index
-    #if params[:format].nil? or params[:format] == 'html'
+    if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
       @results = TraitsAndYieldsView
         .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
         .search(params[:search])
         .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
-    #else # Allow url queries of data, with scopes, only xml & csv ( & json? )
-     # @results = TraitsAndYieldsView.api_search(params)
-    #end
+    else # Allow url queries of data, with scopes, only xml & csv ( & json? )
+      @results = TraitsAndYieldsView
+        .restrict_access(current_user ? current_user.access_level : 4)
+        .search(params[:search])
+    end
 
     log_searches(TraitsAndYieldsView)
 
@@ -32,7 +34,10 @@ CREDITS
       format.js
       format.xml  { render :xml => @results }
       format.csv do 
-        sql_query = TraitsAndYieldsView.search(params[:search]).to_sql
+        sql_query = TraitsAndYieldsView
+          .search(params[:search])
+          .restrict_access(current_user ? current_user.access_level : 4)
+          .to_sql
         header = CSV.generate do |csv|
           csv << [ "# " + CREDITS ]
           csv << [ "#" ]
