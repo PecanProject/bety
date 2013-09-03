@@ -11,6 +11,7 @@ class TraitsAndYieldsView < ActiveRecord::Base
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(advanced_search(search)) }
+  scope :restrict_access, lambda { |access_level| where("access_level >= #{access_level}")  }
 
   # MAYBE SET SCOPE HERE?
 

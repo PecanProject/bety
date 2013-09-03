@@ -15,7 +15,11 @@ p<- ggplot(data = prior.density, aes(x = x, y = y))
 p <- p + geom_line()
 p <- p + scale_y_continuous(breaks = NULL)
 p <- p + xlab(NULL) + ylab(NULL)
+<<<<<<< HEAD
 p <- p + ggtitle(paste(priorname, '(', aparam, ',', bparam, ')', ' N=', n))
+=======
+p <- p + ggtitle(paste0(priorname, '(', aparam, ', ', bparam, ')', 'n = ', n))
+>>>>>>> 9a7baf90807c6dc2c019fbf6682e774f5d7b8c35
 p + theme_minimal()
 
 dev.off()

@@ -34,10 +34,10 @@
 
 			<div class="form-actions">
 				<div class="button-group">
-          <%= link_to( citations_path ) do %>
+          <%= link_to( pfts_path ) do %>
 					  <button class="button"><i class="icon-arrow-left"></i> Go Back</button>
 					<% end %>
-					<%= link_to( edit_citation_path(@citation) ) do %>
+					<%= link_to( edit_pft_path(@pft) ) do %>
     			  <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>	
   				<% end %>
 					<%= link_to( make_clone_pft_path(@pft) ) do %>
