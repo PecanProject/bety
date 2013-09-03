@@ -12,6 +12,8 @@
 				<div class="inline-block" style="width: 160px; vertical-align:top; margin-left:10px">
                   <%= image_tag 'miscanthus.jpg', class: "inline-block", alt: "Photo by L. Brian Stauffer, provided by University of Illinois at Urbana-Champaign" %>
 				</div>
+
+				
 				
 				<% if current_user.nil? %>
 				  <div class="well">
@@ -77,82 +79,16 @@
                     <% end %>
 				</div>
 				
-				<div>
-					<h3><i class="icon-info-sign"></i> DATABASE <em>STATS</em></h3>
-					<table summary="Count of Yield and Trait entries" class="table table-condensed">
-						<tr>
-							<th colspan="4">2765 Species with Trait or Yield Data</th>
-						</tr>
-						<tr>
-							<th colspan="4">3909 Yields</th>
-						</tr>
-						<tr>
-							<th>&nbsp;</th>
-							<th>Public</th>
-							<th>Login</th>
-							<th>Total</th>
-						</tr>
-						<tr>
-							<td>Miscanthus</td>
-							<td>614</td>
-							<td>614</td>
-							<td>630</td>
-						</tr>
-						<tr>
-							<td>Switchgrass</td>
-							<td>1379</td>
-							<td>1379</td>
-							<td>1897</td>
-						</tr>
-						<tr>
-							<td>Poplar</td>
-							<td>0</td>
-							<td>0</td>
-							<td>824</td>
-						</tr>
-						<tr>
-							<td>Willow</td>
-							<td>0</td>
-							<td>0</td>
-							<td>257</td>
-						</tr>
-						<tr>
-							<th  colspan="4">28150 Traits</th>
-						</tr>
-						<tr >
-							<th>&nbsp;</th>
-							<th>Public</th>
-							<th>Login</th>
-							<th>Total</th>
-						</tr>
-						<tr>
-							<td>Miscanthus</td>
-							<td>0</td>
-							<td>0</td>
-							<td>2672</td>
-						</tr>
-						<tr>
-							<td>Switchgrass</td>
-							<td>56</td>
-							<td>56</td>
-							<td>630</td>
-						</tr>
-						<tr>
-							<td>Poplar</td>
-							<td>11</td>
-							<td>11</td>
-							<td>2642</td>
-						</tr>
-						<tr>
-							<td>Willow</td>
-							<td>3</td>
-							<td>3</td>
-							<td>947</td>
-						</tr>
-					</table>
-				</div>
+				
 			</div>
-			<!-- InstanceEndEditable --> </div>
-	</div>
+			</div>
+			</div>
+			<div align="center">
+
+					<h3><i class="icon-info-sign"></i> DATABASE <em>STATS</em></h3>
+					<%= image_tag 'database_stats.png', width:"750", alt: "Stats for the BETYdb database" %>
+				</div>
+			<!-- InstanceEndEditable --> 
+	
 	<!-- container --> 
 </div>
