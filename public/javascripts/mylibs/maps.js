@@ -345,7 +345,7 @@ function makeyieldlegend(legend, max){
     legrange.innerHTML=Math.round(max*(i)/colors.length) 
                         +" - "+
                          Math.round(max*(i+1)/colors.length)
-                         + " Mg/ha";
+                         + " Mg/ha/yr";
     swatchdiv.appendChild(legrange);
     
     swatchdiv.appendChild(document.createElement('br'));
@@ -371,7 +371,7 @@ function makecroplegend(legend){
 }
 function makecostlegend(legend){
   var colors = ['#00ff00','#ffff00','#ff9900','#ff0000'];
-  var texts = ["< 50/ha","<100/ha","<150/ha",">150/ha"]
+  var texts = ["< $50/ha","< $100/ha","< $150/ha","> $150/ha"]
   for(i=0;i<colors.length;i++){
     var swatchdiv = document.createElement('div');
     var swatch = document.createElement('span');
