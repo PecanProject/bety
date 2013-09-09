@@ -1,0 +1,11 @@
+jQuery('.simple_search_table_<%= @iteration -%>').html('<%= escape_javascript(render("#{controller_name}/index_table")) %>');
+jQuery('#simple_search #direction').val('<%= sort_direction %>');
+jQuery('#simple_search #sort').val('<%= sort_column %>');
+jQuery('#simple_search input').keyup(search_function);
+jQuery('#simple_search select').change(search_function);
+jQuery('#search').focus(
+    function() {
+        this.selectionStart = this.selectionEnd = 100; // use a large enough value so that the cursor is at the end of the text
+    }
+);
+jQuery('#search').focus();
