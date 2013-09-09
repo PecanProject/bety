@@ -1,0 +1,27 @@
+  <div class="row">
+
+    <%= form_tag nil, :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
+    <div class="span6">
+      <div id="DataTables_Table_0_length" class="dataTables_length">
+
+      <label>
+      <%= select_tag :DataTables_Table_0_length,
+            options_for_select([['10', 10], ['25', 25], ['50', 50], ['100', 100]],
+              params[:DataTables_Table_0_length] || WillPaginate.per_page),
+              size: "1",
+              "aria-controls" => "DataTables_Table_0"
+          %> records per page
+      </label>
+      
+      </div> <!-- id="DataTables_Table_0_length" -->
+    </div> <!-- class="span6" -->
+    
+    <div class="span6">
+      <div class="dataTables_filter" id="DataTables_Table_0_filter">
+  			  <label>Search: <%= text_field_tag :search, params[:search] %></label>
+          <%= hidden_field_tag :direction, params[:direction] %>
+          <%= hidden_field_tag :sort, params[:sort] %>
+      </div> <!-- id="DataTables_Table_0_filter" -->
+    </div> <!-- class="span6" -->
+    <% end %>
+  </div> <!-- class="row" -->          
