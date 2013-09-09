@@ -40,7 +40,10 @@ class CitationsController < ApplicationController
 
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @citations = Citation.sorted_order("#{sort_column('citations','author')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @citations = Citation.sorted_order("#{sort_column('citations','author')} #{sort_direction}").search(params[:search]).paginate(
+        :page => params[:page], 
+        :per_page => params[:DataTables_Table_0_length]
+      )
       log_searches(Citation)
     else
       @citations = Citation.api_search(params)
