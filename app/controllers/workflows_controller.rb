@@ -10,7 +10,10 @@ class WorkflowsController < ApplicationController
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
       # We will list those already linked above those that are not, so remove them from the list.
-      @workflows = Workflow.sorted_order("#{sort_column('workflows','outdir')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @workflows = Workflow.sorted_order("#{sort_column('workflows','outdir')} #{sort_direction}").search(params[:search]).paginate(
+        :page => params[:page], 
+        :per_page => params[:DataTables_Table_0_length]
+      )
     else
       @workflows = Workflow.api_search(params)
     end

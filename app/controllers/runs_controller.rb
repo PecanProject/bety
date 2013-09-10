@@ -8,7 +8,10 @@ class RunsController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @runs = Run.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @runs = Run.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate(
+        :page => params[:page], 
+        :per_page => params[:DataTables_Table_0_length]
+      )
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @runs = Run.api_search(params)
     end
