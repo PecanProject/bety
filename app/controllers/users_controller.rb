@@ -2,13 +2,22 @@ class UsersController < ApplicationController
   
   before_filter :login_required, :except => [:create,:new]
   #before_filter :login_required
+  helper_method :sort_column, :sort_direction
 
   def index
+    @iteration = params[:iteration][/\d+/] rescue 1
     if current_user.page_access_level == 1
-#      @users = User.all
-      @users = User.paginate(:page => params[:page], :order => 'created_at DESC')
+      @users = User.sorted_order("#{sort_column('users', 'created_at')} DESC").search(params[:search]).paginate(
+        :page => params[:page], 
+        :per_page => params[:DataTables_Table_0_length]
+      )
     else
       @users = User.find(current_user.id)
+    end
+
+    respond_to do |format|
+      format.html
+      format.js
     end
   end
 
