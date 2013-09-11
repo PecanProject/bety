@@ -54,9 +54,21 @@
 					<h3><i class="icon-eye-open"></i> EXPLORE <em>BETYdb</em></h3>
 					<div class="sidebar">
 						<ul class="nav nav-list sidenav">
-							<li><a href="maps/location_yields"><i class="icon-chevron-right"></i> Model Predictions</a></li>
-							<li><a href="maps/traits_from_sites" ><i class="icon-chevron-right"></i> Trait Data for Each Site</a></li>
-							<li><a href="maps/yields_from_sites" ><i class="icon-chevron-right"></i> Yield Data for Each Site</a></li>
+							<li>
+                              <%= link_to controller: "maps", action: "location_yields" do %>
+                              <i class="icon-chevron-right"></i> Model Predictions
+                              <% end %>
+                            </li>
+							<li>
+                              <%= link_to controller: "maps", action: "traits_from_sites" do %>
+                              <i class="icon-chevron-right"></i> Trait Data for Each Site
+                              <% end %>
+                            </li>
+							<li>
+                              <%= link_to controller: "maps", action: "yields_from_sites" do %>
+                              <i class="icon-chevron-right"></i> Yield Data for Each Site
+                              <% end %>
+                            </li>
 						</ul>
 					</div>
 				</div>
