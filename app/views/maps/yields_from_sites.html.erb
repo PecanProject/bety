@@ -1,15 +1,20 @@
-    <h2>Sites with Yield Data</h2>
+<div class="content">
+  <div class="container">
+	<div class="sixteen columns">
+	  <header>
+		<h1>Sites with Yield Data</h1>
+	  </header>
 
-    <div id="map_canvas" style="width: 700px; height: 400px"></div>
+      <div id="map_canvas" style="width: 700px; height: 400px"></div>
 
-    <br />
+      <br />
 
-    <div id="show_yields">
-      <i>Click site bubble to see corresponding Yield data</i>
-    </div>
+      <div id="show_yields">
+        <i>Click site bubble to see corresponding Yield data</i>
+      </div>
 
-    <script type="text/javascript">
-//<![CDATA[ 
+      <script type="text/javascript">
+//<![CDATA[
       var geocoder;
       var address;
       var latlng = new google.maps.LatLng(40.44,-95.98);
@@ -21,7 +26,7 @@
 
       var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
       var marker = [];
-  
+
         <% @sites.each do |c| %>
         <% if !c.lat.nil? %>
           var point = new google.maps.LatLng(<%= c.lat %>,<%= c.lon %>);
@@ -34,10 +39,13 @@
             { <%= remote_function( :url => { :action => "show_yields"}, :with =>  "'site=' + #{c.id}" ) %> });
 
         <% end %>
-      <% end %> 
-  
-//]]>
-    </script>
+      <% end %>
 
+//]]>
+      </script>
+
+	</div> <!-- class="sixteen columns" -->
+  </div> <!-- container -->
+</div>
 
 

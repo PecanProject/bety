@@ -1,23 +1,29 @@
+<div class="content">
+  <div class="container">
+	<div class="sixteen columns">
+	  <header>
+		<h1>Sites from Search</h1>
+	  </header>
 
-    <div id="map_canvas" style="width: 700px; height: 300px"></div>
+      <div id="map_canvas" style="width: 700px; height: 300px"></div>
 
-    <h3>Radius : <select id="radius">
-      <option value="20" selected >20</option>
-      <option value="40">40</option>
-      <option value="60">60</option>
-      <option value="80">80</option>
-      <option value="100">100</option>
-      <option value="200">200</option>
-    </select> miles</h3>
+      <h3>Radius : <select id="radius">
+          <option value="20">20</option>
+          <option value="40">40</option>
+          <option value="60">60</option>
+          <option value="80">80</option>
+          <option value="100">100</option>
+          <option value="200" selected >200</option>
+        </select> miles</h3>
 
-    <h1>Listing sites</h1>
+      <h2>Listing sites</h2>
 
-    <div id="show_sites" style="display:none">
-    </div>
+      <div id="show_sites" style="display:none">
+      </div>
 
 
-    <script type="text/javascript">
-//<![CDATA[ 
+      <script type="text/javascript">
+//<![CDATA[
       var geocoder;
       var address;
       var latlng = new google.maps.LatLng(40.44,-95.98);
@@ -28,12 +34,12 @@
       };
 
       map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
- 
+
       overlay = [];
 
-      google.maps.event.addListener(map, "click", function(event) { 
+      google.maps.event.addListener(map, "click", function(event) {
 
-        if(overlay.length > 0) {        
+        if(overlay.length > 0) {
           overlay[0].setMap(null);
           overlay.length = 0;
         }
@@ -63,5 +69,8 @@
 
 
 //]]>
-    </script>
+      </script>
 
+	</div> <!-- class="sixteen columns" -->
+  </div> <!-- container -->
+</div>
