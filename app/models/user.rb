@@ -5,12 +5,19 @@ class User < ActiveRecord::Base
   include Authentication::ByPassword
   include Authentication::ByCookieToken
 
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{  }
+  SEARCH_FIELDS = %w{ users.login users.name users.email }
+
   has_many :traits
   has_many :yields
   has_many :citations
   has_many :managements
   has_many :treatments
   has_many :sites
+
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
 
   validates_presence_of     :login
   validates_length_of       :login,    :within => 3..40

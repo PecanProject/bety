@@ -9,7 +9,10 @@ class VariablesController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @variables = Variable.sorted_order("#{sort_column('variables','name')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @variables = Variable.sorted_order("#{sort_column('variables','name')} #{sort_direction}").search(params[:search]).paginate(
+        :page => params[:page], 
+        :per_page => params[:DataTables_Table_0_length]
+      )
       log_searches(Variable)
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @variables = Variable.api_search(params)

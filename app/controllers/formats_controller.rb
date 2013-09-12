@@ -33,7 +33,10 @@ class FormatsController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @formats = Format.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @formats = Format.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate(
+        :page => params[:page], 
+        :per_page => params[:DataTables_Table_0_length]
+      )
     else
       @format = Format.api_search(params)
     end

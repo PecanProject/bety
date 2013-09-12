@@ -8,7 +8,10 @@ class LikelihoodsController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @likelihoods = Likelihood.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @likelihoods = Likelihood.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate(
+        :page => params[:page], 
+        :per_page => params[:DataTables_Table_0_length]
+      )
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @likelihoods = Likelihood.api_search(params)
     end

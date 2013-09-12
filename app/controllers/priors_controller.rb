@@ -33,7 +33,10 @@ class PriorsController < ApplicationController
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @priors = Prior.sorted_order("#{sort_column('priors','updated_at')} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @priors = Prior.sorted_order("#{sort_column('priors','updated_at')} #{sort_direction}").search(params[:search]).paginate(
+        :page => params[:page], 
+        :per_page => params[:DataTables_Table_0_length]
+      )
       log_searches(Prior)
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @priors = Prior.api_search(params)

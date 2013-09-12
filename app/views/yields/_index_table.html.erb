@@ -1,34 +1,6 @@
 <!-- InstanceBeginEditable name="Full Width Content" -->
 <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
-  <div class="row">
-  
-    <div class="span6">
-      <div id="DataTables_Table_0_length" class="dataTables_length">
-      
-      <label>
-      <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0">
-        <option value="10" selected="selected">10</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-      </select> records per page
-      </label>
-      
-      </div> <!-- id="DataTables_Table_0_length" -->
-    </div> <!-- class="span6" -->
-    
-    <div class="span6">
-      <div class="dataTables_filter" id="DataTables_Table_0_filter">
-        <%= form_tag yields_path, :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
-  			  <label>Search: <%= text_field_tag :search, params[:search] %></label>
-          <%= hidden_field_tag :direction, params[:direction] %>
-          <%= hidden_field_tag :sort, params[:sort] %>
-        <% end %>
-      </div> <!-- id="DataTables_Table_0_filter" -->
-    </div> <!-- class="span6" -->
-	</div> <!-- class="row" -->
-	
-	   
+  <%= render 'shared/search_form' %>
   <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
 		  <thead>
 	      <tr role="row">

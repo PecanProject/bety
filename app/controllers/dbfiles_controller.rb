@@ -53,7 +53,10 @@ class DbfilesController < ApplicationController
 
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @files = DBFile.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate :page => params[:page]
+      @files = DBFile.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate(
+        :page => params[:page], 
+        :per_page => params[:DataTables_Table_0_length]
+      )
     else
       @files = DBFile.api_search(params)
     end

@@ -1,33 +1,6 @@
 <!-- InstanceBeginEditable name="Full Width Content" -->
 <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
-  <div class="row">
-  
-    <%= form_tag "search", :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
-    <div class="span6">
-      <div id="DataTables_Table_0_length" class="dataTables_length">
-      
-      <label>
-      <%= select_tag :DataTables_Table_0_length,
-            options_for_select([['10', 10], ['25', 25], ['50', 50], ['100', 100]],
-              params[:DataTables_Table_0_length] || WillPaginate.per_page),
-              size: "1",
-              "aria-controls" => "DataTables_Table_0"
-          %> records per page
-      </label>
-      
-      </div> <!-- id="DataTables_Table_0_length" -->
-    </div> <!-- class="span6" -->
-    
-    <div class="span6">
-      <div class="dataTables_filter" id="DataTables_Table_0_filter">
-  			  <div style="height: 30px"><label>Search: <%= text_field_tag :search, params[:search] %></label></div>
-          <%= hidden_field_tag :direction, params[:direction] %>
-          <a href="<%= "#{request.fullpath}&format=csv" %>">Download&nbsp;Search&nbsp;Results</a>
-          <%= hidden_field_tag :sort, params[:sort] %>
-      </div> <!-- id="DataTables_Table_0_filter" -->
-    </div> <!-- class="span6" -->
-    <% end %>
-	</div> <!-- class="row" -->          
+  <%= render 'shared/search_form' %>
   <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
 		  <thead>
 	      <tr role="row">
