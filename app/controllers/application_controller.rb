@@ -41,6 +41,8 @@ class ApplicationController < ActionController::Base
       sort = default_sort
       table = default_table
     end
+    # Make table a copy so modifying it with sub! doesn't modify params[:controller]:
+    table = table.clone
     # The search controller uses the traits_and_yields_view table (a view, actually):
     table.sub!('search', 'traits_and_yields_view')
     (eval table
