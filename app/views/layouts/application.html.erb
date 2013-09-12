@@ -182,8 +182,7 @@
 </div> 
   
   
-  
-  <% if !session['citation'].nil? and Citation.exists?(session['citation']) %>
+  <% if controller_name != 'search' and !session['citation'].nil? and Citation.exists?(session['citation']) %>
     <h5 class="centered">Citation: <%= link_to Citation.find(session['citation']).author_year_title, citation_url( session['citation']) %> <%= link_to '[remove]', :controller => "application", :action => "remove_citation" %> </h5>
   <% elsif !session['citation'].nil? and !Citation.exists?(session['citation'])
        session['citation'] = nil
