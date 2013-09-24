@@ -270,7 +270,7 @@ class MapsController < ApplicationController
  
   def show_sites
     if params[:lat] and params[:lng] and params[:radius]
-      @sites = Site.coordinate_search(params[:lat][/-?\d+\.?\d*/].to_f,params[:lng][/-?\d+\.?\d*/].to_f,params[:radius].to_i)
+      @sites = Site.coordinate_search(params).order("country, state, city")
     else
       @sites = []
     end 

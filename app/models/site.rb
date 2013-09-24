@@ -2,6 +2,8 @@ class Site < ActiveRecord::Base
 
   include Overrides
 
+  extend CoordinateSearch # provides coordinate_search
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ sites.sitename sites.city sites.state sites.country sites.lat sites.lon sites.espg }
@@ -17,14 +19,6 @@ class Site < ActiveRecord::Base
   belongs_to :user
 
   scope :all_order, :order => 'country, state, city'
-
-  #20 miles
-  #lat ~ miles/69.1
-  #lng ~ miles/53.0
-  scope :coordinate_search, lambda { |lat,lon,radius| where({ :lat => (lat-(radius/69.1))..(lat+(radius/69.1)),
-                                                              :lon => (lon-(radius/53.0))..(lon+(radius/53.0)) }).
-                                                              order("country, state, city") }
-
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
   scope :minus_already_linked, lambda {|citation|
