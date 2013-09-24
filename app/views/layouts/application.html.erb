@@ -42,8 +42,11 @@
   <%= javascript_include_tag 'lazy/simple_search.js' %>
   <%= javascript_include_tag 'lazy/application.js' %>
 
-  <% if ['sites','maps','visitors'].include?(params[:controller]) %>
-    <script type="text/javascript" src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyA9Ac4XswpkdjIslQcRJzgwnbkEDdomZS4&amp;sensor=false"></script> 
+  <% if ['sites','maps','visitors','search'].include?(params[:controller]) %>
+    <%= javascript_include_tag 'https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyA9Ac4XswpkdjIslQcRJzgwnbkEDdomZS4&sensor=false' %>
+  <% end %>
+  <% if ['maps','search'].include?(params[:controller]) %>
+    <%= javascript_include_tag 'lazy/map_search' %>
   <% end %>
 
   <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />	
