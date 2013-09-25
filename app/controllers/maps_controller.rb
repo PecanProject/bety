@@ -65,9 +65,10 @@ class MapsController < ApplicationController
   end
 
   def sites_from_search
-    respond_to do |format|
-      format.html # index.html.erb
-    end
+    redirect_to "/404.html" # This page is no longer used or maintained.
+    #respond_to do |format|
+      #format.html # index.html.erb
+    #end
   end
 
   #map showing each site associated with a species
