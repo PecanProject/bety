@@ -17,17 +17,27 @@ CREDITS
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
-      @results = TraitsAndYieldsView
-        .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
-        .search(params[:search])
-        .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
+
+      if params[:search_type] == "map search"
+        @results = TraitsAndYieldsView
+          .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
+          .coordinate_search(params)
+          .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
+        log_searches(TraitsAndYieldsView.method("coordinate_search"), params)
+      else
+        @results = TraitsAndYieldsView
+          .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
+          .search(params[:search])
+          .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
+        log_searches(TraitsAndYieldsView)
+      end
+
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @results = TraitsAndYieldsView
         .restrict_access(current_user ? current_user.access_level : 4)
         .search(params[:search])
+      log_searches(TraitsAndYieldsView)
     end
-
-    log_searches(TraitsAndYieldsView)
 
     respond_to do |format|
       format.html # index.html.erb
