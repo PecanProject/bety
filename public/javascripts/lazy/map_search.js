@@ -21,8 +21,14 @@ onload = function() {
         var lat = event.latLng.lat();
         var lon = event.latLng.lng();
 
+        var iteration = parseInt(jQuery('#simple_search_table').attr('class').match(/\d+/)[0]) + 1;
+        jQuery('#simple_search_table').removeClass();
+        jQuery('#simple_search_table').addClass('simple_search_table_' + iteration);
+
         // Update the search results
-        jQuery.get(ajax_url, { lat: lat, lng: lon, radius: radius, search_type: "map search" }, null, 'script');
+        jQuery.get(ajax_url, { lat: lat, lng: lon, radius: radius,
+                    search_type: "map search",
+                    iteration: iteration }, null, 'script');
 
         var latOffset = radius/(69.1);
         var lonOffset = radius/(53.0);
