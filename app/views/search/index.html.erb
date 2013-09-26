@@ -6,13 +6,18 @@
 	  </header>
       <br />
       
-      <div id="map_canvas" style="width: 700px; height: 300px"></div>
+      <button type="button" id="toggle_map_display">Search Using Map</button>
+
+      <br/>
+      
+      <div id="map_canvas" style="width: 700px; height: 300px; display: none"></div>
+
       <script>
         var ajax_url = "<%= url_for controller: 'search', action: 'index' %>"
       </script>
       
       <br />
-      
+
       <div id="simple_search_table" class="simple_search_table_1"><%= render 'index_table' %></div>
 
 		</div> <!-- class="sixteen columns" -->

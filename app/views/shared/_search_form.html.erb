@@ -22,6 +22,9 @@
         <% if controller_name == "search" %><a href="<%= "#{request.fullpath}&format=csv" %>">Download&nbsp;Search&nbsp;Results</a><% end %>
         <%= hidden_field_tag :direction, params[:direction] %>
         <%= hidden_field_tag :sort, params[:sort] %>
+        <%= hidden_field_tag :lat, params[:lat] %>
+        <%= hidden_field_tag :lng, params[:lng] %>
+        <%= hidden_field_tag :radius, params[:radius] %>
       </div> <!-- id="DataTables_Table_0_filter" -->
     </div> <!-- class="span6" -->
     <% end %>

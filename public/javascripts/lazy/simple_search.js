@@ -6,16 +6,21 @@ var delay = (function () {
     };
 })();
 
-var search_function = function () {
-        delay(function () {
-            var iteration = parseInt(jQuery('#simple_search_table').attr('class').match(/\d+/)[0]) + 1;
-            jQuery('#simple_search_table').removeClass();
-            jQuery('#simple_search_table table').css('opacity', '.3');
-            jQuery('#simple_search_table').addClass('simple_search_table_' + iteration);
-            jQuery.get(this.action, jQuery('#simple_search').serialize() + '&iteration=' + iteration, null, 'script');
-            return false;
-        }, 1000);
+var search_function = function (event, locationParameters) {
+    if (!locationParameters) {
+        var locationParameters = {};
     }
+    delay(function () {
+        var iteration = parseInt(jQuery('#simple_search_table').attr('class').match(/\d+/)[0]) + 1;
+        jQuery('#simple_search_table').removeClass();
+        jQuery('#simple_search_table table').css('opacity', '.3');
+        jQuery('#simple_search_table').addClass('simple_search_table_' + iteration);
+        jQuery.extend(locationParameters, { iteration: iteration });
+        var additionalParams = jQuery.param(locationParameters); // parameters that aren't from the search form
+        jQuery.get(this.action, jQuery('#simple_search').serialize() + '&' + additionalParams, null, 'script');
+        return false;
+    }, 1000);
+}
 
 jQuery(function () {
     jQuery('#simple_search_table th a, #simple_search_table .pagination a').live('click',

@@ -18,19 +18,11 @@ CREDITS
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
 
-      if params[:search_type] == "map search"
-        @results = TraitsAndYieldsView
-          .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
-          .coordinate_search(params)
-          .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
-        log_searches(TraitsAndYieldsView.method("coordinate_search"), params)
-      else
-        @results = TraitsAndYieldsView
-          .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
-          .search(params[:search])
-          .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
-        log_searches(TraitsAndYieldsView)
-      end
+      @results = TraitsAndYieldsView
+        .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
+        .coordinate_search(params)
+        .search(params[:search])
+        .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
 
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @results = TraitsAndYieldsView
