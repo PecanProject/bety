@@ -95,6 +95,8 @@ class ApplicationController < ActionController::Base
     search_info += "\nall parameters: " + params.inspect
 
     logger.info(search_info)
+
+    return sql
   end
 
 end
