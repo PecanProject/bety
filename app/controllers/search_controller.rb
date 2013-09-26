@@ -24,11 +24,23 @@ CREDITS
         .search(params[:search])
         .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
 
+      sql_query = log_searches(TraitsAndYieldsView
+                                 .coordinate_search(params)
+                                 .search(params[:search])
+                                 .to_sql)
+
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @results = TraitsAndYieldsView
         .restrict_access(current_user ? current_user.access_level : 4)
+        .coordinate_search(params)
         .search(params[:search])
-      log_searches(TraitsAndYieldsView)
+
+      sql_query = log_searches(TraitsAndYieldsView
+                                 .restrict_access(current_user ? current_user.access_level : 4)
+                                 .coordinate_search(params)
+                                 .search(params[:search])
+                                 .to_sql)
+
     end
 
     respond_to do |format|
@@ -36,10 +48,6 @@ CREDITS
       format.js
       format.xml  { render :xml => @results }
       format.csv do 
-        sql_query = TraitsAndYieldsView
-          .search(params[:search])
-          .restrict_access(current_user ? current_user.access_level : 4)
-          .to_sql
         header = CSV.generate do |csv|
           csv << [ "# " + CREDITS ]
           csv << [ "#" ]
