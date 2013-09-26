@@ -1,3 +1,4 @@
+// Once map_canvas element is loaded, fill in the map and add a click event listener.
 onload = function() {
 
     var mapOptions = {
@@ -21,6 +22,7 @@ onload = function() {
         var lat = event.latLng.lat();
         var lon = event.latLng.lng();
 
+        // Increment the iteration number in the simple_search_table class name on each search
         var iteration = parseInt(jQuery('#simple_search_table').attr('class').match(/\d+/)[0]) + 1;
         jQuery('#simple_search_table').removeClass();
         jQuery('#simple_search_table').addClass('simple_search_table_' + iteration);
