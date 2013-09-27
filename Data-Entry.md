@@ -1008,6 +1008,7 @@ Most important, there will be a strong covariance between Vcmax and stomatal_slo
 | mm/s | $\mu$ mol CO$_2$ m$^{2}$ s$^{-1}$ | $Y=X\times 0.04$ | |
 | m$^2$ | ha | $Y = X/10^6$ | |
 | g/m$^2$ | kg/ha | $Y=X\times 10$ | |
+| g/m$^2$ | Mg/ha | $Y=X/100$ | |
 | US ton/acre | Mg/ha | $Y = X\times 2.24$ | |
 | m$^3$/ha | cm | $Y=X/100$ | units used for irrigation and rainfall |
 | % roots | root:shoot (q) | $Y=\frac{X}{1-X}$ | $\% \text{roots} = \frac{\text{root biomass}}{\text{total biomass}}$ |
