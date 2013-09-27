@@ -450,7 +450,7 @@ dl {
 dt,
 dd {
 	line-height: 20px;
-    height: 20px; /* prevent empty dd element from collapsing when empty */
+    min-height: 20px; /* prevent empty dd element from collapsing when empty */
 }
 
 dt {
