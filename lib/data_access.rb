@@ -48,7 +48,13 @@ module DataAccess
       access_level = 4
     end
 
-    where("(checked >= ? and access_level >= ?) or user_id = ?",checked,access_level,user)
+    if respond_to?("checked") and respond_to?("user_id")
+      where("(checked >= ? and access_level >= ?) or user_id = ?",
+            checked, access_level, user)
+    else
+      where("access_level >= ?", access_level)
+    end
+
   end
 
 end
