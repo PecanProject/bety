@@ -2,6 +2,8 @@ class Yield < ActiveRecord::Base
 
   include Overrides
 
+  extend DataAccess # provides all_limited
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ citation specie site treatment cultivar }
   SEARCH_FIELDS = %w{ species.genus cultivars.name yields.mean yields.n yields.stat yields.statname citations.author sites.sitename treatments.name }
@@ -28,27 +30,6 @@ class Yield < ActiveRecord::Base
       where("citation_id = ?", citation)
     end
   }
-  def self.all_limited(current_user)
-    if !current_user.nil?
-      if current_user.page_access_level == 1
-        checked = -1
-        access_level = 1
-      elsif current_user.page_access_level <= 2
-        checked = -1
-        access_level = current_user.access_level
-      else
-        checked = 1
-        access_level = current_user.access_level
-      end
-      user = current_user
-    else
-      user = 1000000000000
-      checked = 1
-      access_level = 4
-    end
-
-    where("(checked >= ? and access_level >= ?) or yields.user_id = ?",checked,access_level,user)
-  end
 
   comma do
     id
