@@ -5,6 +5,8 @@ class TraitsAndYieldsView < ActiveRecord::Base
 
   extend CoordinateSearch # provides coordinate_search
 
+  extend DataAccess # provides all_limited
+
   extend AdvancedSearch
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ traits_and_yields_view.scientificname traits_and_yields_view.commonname 
@@ -13,7 +15,6 @@ class TraitsAndYieldsView < ActiveRecord::Base
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(advanced_search(search)) }
-  scope :restrict_access, lambda { |access_level| where("access_level >= #{access_level}")  }
 
   # MAYBE SET SCOPE HERE?
 
