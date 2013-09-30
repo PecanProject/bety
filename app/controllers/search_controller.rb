@@ -19,29 +19,25 @@ CREDITS
       @iteration = params[:iteration][/\d+/] rescue 1
 
       @results = TraitsAndYieldsView
+        .all_limited(current_user)
         .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
         .coordinate_search(params)
         .search(params[:search])
         .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
 
-      sql_query = log_searches(TraitsAndYieldsView
-                                 .coordinate_search(params)
-                                 .search(params[:search])
-                                 .to_sql)
-
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
       @results = TraitsAndYieldsView
-        .restrict_access(current_user ? current_user.access_level : 4)
+        .all_limited(current_user)
         .coordinate_search(params)
         .search(params[:search])
 
-      sql_query = log_searches(TraitsAndYieldsView
-                                 .restrict_access(current_user ? current_user.access_level : 4)
-                                 .coordinate_search(params)
-                                 .search(params[:search])
-                                 .to_sql)
-
     end
+
+    sql_query = log_searches(TraitsAndYieldsView
+                               .all_limited(current_user)
+                               .coordinate_search(params)
+                               .search(params[:search])
+                               .to_sql)
 
     respond_to do |format|
       format.html # index.html.erb
