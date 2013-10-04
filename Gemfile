@@ -20,7 +20,7 @@ gem "bootstrap-will_paginate"
 gem "rspec-rails"
 gem "capybara"
 
-group :development, :test, :postgresql, :mysql do
+group :development, :test, :mysql do
   gem "rspec-rails"
   gem "capybara"
   gem "sqlite3", "1.3.3"
