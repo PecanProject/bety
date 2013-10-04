@@ -1,3 +1,4 @@
+<%= render 'map_markers' %>
 <div class="content" style="min-height: 380px">
   <div class="container">
 	<div class="sixteen columns">
@@ -10,7 +11,7 @@
 
       <br/>
       
-      <div id="map_canvas" style="width: 700px; height: 300px; display: none"></div>
+      <div id="map_canvas" style="width: 900px; height: 300px; display: none"></div>
 
       <script>
         var ajax_url = "<%= url_for controller: 'search', action: 'index' %>"

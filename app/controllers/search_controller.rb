@@ -18,8 +18,12 @@ CREDITS
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
 
-      @results = TraitsAndYieldsView
+      # for making map markers
+      @all_results = TraitsAndYieldsView
         .all_limited(current_user)
+
+      # for search results table
+      @results = @all_results
         .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
         .coordinate_search(params)
         .search(params[:search])

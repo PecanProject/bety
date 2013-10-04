@@ -1,0 +1,24 @@
+<script type="text/javascript">
+//<![CDATA[
+function addMarkers() {
+    var marker = [];
+    
+    <% @all_results.each do |c| %>
+      <% if !c.lat.nil? %>
+        var point = new google.maps.LatLng(<%= c.lat %>,<%= c.lon %>);
+        marker[<%= c.id -%>] = new google.maps.Marker({
+            position: point,
+            title: <%= raw "\"" + (c.sitename || c.city || '') + "\"" -%> ,
+            map: map,
+            icon: {
+                url: "images/redball.png",
+                anchor: new google.maps.Point(7, 7)
+            }
+        });
+        google.maps.event.addListener(marker[<%= c.id -%>], "click", searchBySite);
+    
+      <% end %>
+    <% end %>
+}
+//]]>
+</script>
