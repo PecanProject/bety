@@ -12,11 +12,20 @@ if (jQuery("#simple_search #mapDisplayed").val() == "true") {
         marker[id].setIcon("images/redball.png");
     }
 
-    var nonSelectedSitesAsString = "<%= raw escape_javascript @all_non_result_locations.to_json %>";
-    var nonSelectedSites = eval(nonSelectedSitesAsString);
+    var mapSelectedSitesExcludedBySearchTerms = "<%= raw escape_javascript @map_selected_sites_excluded_by_search_terms.to_json %>";
+    var mapSelectedSitesExcludedBySearch = eval(mapSelectedSitesExcludedBySearchTerms);
 
-    for (var i = 0; i < nonSelectedSites.length; ++i) {
-        var id = nonSelectedSites[i]["site_id"];
+    for (var i = 0; i < mapSelectedSitesExcludedBySearch.length; ++i) {
+        var id = mapSelectedSitesExcludedBySearch[i]["site_id"];
+        marker[id].setIcon("images/yellowball.png");
+    }
+
+
+    var nonMapSelectedSitesAsString = "<%= raw escape_javascript @non_map_selected_sites.to_json %>";
+    var nonMapSelectedSites = eval(nonMapSelectedSitesAsString);
+
+    for (var i = 0; i < nonMapSelectedSites.length; ++i) {
+        var id = nonMapSelectedSites[i]["site_id"];
         marker[id].setIcon("images/whiteball.png");
     }
 

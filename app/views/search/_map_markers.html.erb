@@ -20,6 +20,10 @@ function addMarkers() {
     
 <% end %>
 
+<% @map_selected_sites_excluded_by_search_terms.each do |site| %>
+    marker[<%= site["site_id"] %>].setIcon("images/yellowball.png");
+<% end %>
+
 <% @all_result_locations.each do |site| %>
     marker[<%= site["site_id"] %>].setIcon("images/redball.png");
 <% end %>

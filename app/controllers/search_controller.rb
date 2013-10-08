@@ -57,10 +57,21 @@ CREDITS
         .where("lat IS NOT NULL AND lon IS NOT NULL")
         .group("site_id")
 
+      # intermediate variable used in getting locations in the
+      # selected by clicking the map:
+      results_in_map_region = all_viewable_rows
+        .coordinate_search(params)
+
+      sites_in_map_region = results_in_map_region
+        .select("site_id, city, sitename, lat, lon")
+        .where("lat IS NOT NULL AND lon IS NOT NULL")
+        .group("site_id")
+        .to_a
+        .map { |row| row.serializable_hash }
+
       # intermediate variable used in getting result locations and
       # result table data:
-      search_results = all_viewable_rows
-        .coordinate_search(params)
+      search_results = results_in_map_region
         .search(params[:search])
 
       
@@ -72,7 +83,9 @@ CREDITS
         .map { |row| row.serializable_hash }
 
 
-      @all_non_result_locations = @all_marker_locations.to_a.map { |row| row.serializable_hash } - @all_result_locations
+      @non_map_selected_sites = @all_marker_locations.to_a.map { |row| row.serializable_hash } - sites_in_map_region
+
+      @map_selected_sites_excluded_by_search_terms = sites_in_map_region - @all_result_locations
       
       # for search results table
       @results = search_results
