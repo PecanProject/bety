@@ -3,6 +3,8 @@ class TraitsAndYieldsView < ActiveRecord::Base
 #  attr_accessor :current_user
   set_table_name 'traits_and_yields_view'
 
+  include ActiveModel::Serialization
+
   extend CoordinateSearch # provides coordinate_search
 
   extend DataAccess # provides all_limited
