@@ -16,6 +16,7 @@ jQuery( function() {
         if ( jQuery( "#map_canvas" ).is( ":hidden" ) ) {
 
             jQuery( "#map_canvas" ).show();
+            jQuery( "#remove_map_location_filter" ).show();
             jQuery("#simple_search #mapDisplayed").val("true");
             jQuery("#toggle_map_display").text("Hide Map")
 
@@ -42,6 +43,7 @@ jQuery( function() {
         } else {
 
             jQuery( "#map_canvas" ).hide();
+            jQuery( "#remove_map_location_filter" ).hide();
             jQuery("#simple_search #mapDisplayed").val("false");
             jQuery("#toggle_map_display").text("Show Map")
 
