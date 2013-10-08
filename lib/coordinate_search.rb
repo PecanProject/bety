@@ -2,12 +2,12 @@ module CoordinateSearch
   # degrees lat ~ miles/69.1
   # degrees lng ~ miles/53.0 (at the 40th parallels)
   def coordinate_search(params)
-    if (params[:mapDisplayed] == "true")
+    if (params[:mapSearchMode] == "by site" || params[:mapSearchMode] == "by region")
       lat = params[:lat][/-?\d+\.?\d*/].to_f
       lon = params[:lng][/-?\d+\.?\d*/].to_f
-      if (params[:searchingBySite] == "true")
+      if (params[:mapSearchMode] == "by site")
         radius = 1 # give leeway in case of rounding errors
-      else # == "false"
+      elsif (params[:mapSearchMode] == "by region")
         radius = params[:radius].to_i
       end
 
