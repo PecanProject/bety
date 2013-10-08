@@ -1,24 +1,30 @@
 <script type="text/javascript">
 //<![CDATA[
+
+var marker = [];
 function addMarkers() {
-    var marker = [];
     
-    <% @all_results.each do |c| %>
-      <% if !c.lat.nil? %>
-        var point = new google.maps.LatLng(<%= c.lat %>,<%= c.lon %>);
-        marker[<%= c.id -%>] = new google.maps.Marker({
-            position: point,
-            title: <%= raw "\"" + (c.sitename || c.city || '') + "\"" -%> ,
-            map: map,
-            icon: {
-                url: "images/redball.png",
-                anchor: new google.maps.Point(7, 7)
-            }
-        });
-        google.maps.event.addListener(marker[<%= c.id -%>], "click", searchBySite);
+<% @all_marker_locations.each do |site| %>
+
+    var point = new google.maps.LatLng(<%= site.lat %>,<%= site.lon %>);
+    marker[<%= site.site_id -%>] = new google.maps.Marker({
+        position: point,
+        title: "<%= raw (site.sitename || site.city || '') %>",
+        map: map,
+        icon: {
+            url: "images/whiteball.png",
+            anchor: new google.maps.Point(7, 7)
+        }
+    });
+    google.maps.event.addListener(marker[<%= site.site_id -%>], "click", searchBySite);
     
-      <% end %>
-    <% end %>
+<% end %>
+
+<% @all_result_locations.each do |site| %>
+    marker[<%= site["site_id"] %>].setIcon("images/redball.png");
+<% end %>
+
 }
+
 //]]>
 </script>
