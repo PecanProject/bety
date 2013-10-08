@@ -2,24 +2,21 @@ module CoordinateSearch
   # degrees lat ~ miles/69.1
   # degrees lng ~ miles/53.0 (at the 40th parallels)
   def coordinate_search(params)
-    if (!params[:lat] || !params[:lng] || !params[:radius] ||
-        params[:lat] == '' || !params[:lng] == '' || params[:radius] == '')
-      # Don't restrict by map location:
-      where({})
-    else
-      logger.info(params)
+    if (params[:mapDisplayed] == "true")
       lat = params[:lat][/-?\d+\.?\d*/].to_f
       lon = params[:lng][/-?\d+\.?\d*/].to_f
-      if (params[:searching_by_site])
+      if (params[:searchingBySite] == "true")
         radius = 1 # give leeway in case of rounding errors
-      else
+      else # == "false"
         radius = params[:radius].to_i
       end
 
-        where({ :lat => (lat - (radius/69.1))..(lat + (radius/69.1)),
-                :lon => (lon - (radius/53.0))..(lon + (radius/53.0)) })
-
+      where({ :lat => (lat - (radius/69.1))..(lat + (radius/69.1)),
+              :lon => (lon - (radius/53.0))..(lon + (radius/53.0)) })
+    else
+      where({})
     end
+
   end
 
 end
