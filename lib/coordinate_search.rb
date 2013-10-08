@@ -2,7 +2,8 @@ module CoordinateSearch
   # degrees lat ~ miles/69.1
   # degrees lng ~ miles/53.0 (at the 40th parallels)
   def coordinate_search(params)
-    if (params[:mapSearchMode] == "by site" || params[:mapSearchMode] == "by region")
+    if (params[:mapDisplayed] == "true" && 
+        (params[:mapSearchMode] == "by site" || params[:mapSearchMode] == "by region"))
       lat = params[:lat][/-?\d+\.?\d*/].to_f
       lon = params[:lng][/-?\d+\.?\d*/].to_f
       if (params[:mapSearchMode] == "by site")
