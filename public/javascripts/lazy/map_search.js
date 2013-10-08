@@ -7,6 +7,7 @@ jQuery( function() {
         if ( jQuery( "#map_canvas" ).is( ":hidden" ) ) {
 
             jQuery( "#map_canvas" ).show();
+            jQuery("#simple_search #mapDisplayed").val("true");
             jQuery("#toggle_map_display").text("Hide Map")
 
             // Put the Google Map in the canvas if it hasn't been done:
@@ -14,28 +15,35 @@ jQuery( function() {
                 loadMap();
             }
 
+            // Do a search if we have stored location parameters:
+
+            var lat = jQuery("#simple_search #lat").val();
+            var lng = jQuery("#simple_search #lng").val();
+            var radius = jQuery("#simple_search #radius").val();
+
+            if (lat && lng && radius) {
+                var mapSearchParams =  { lat: lat,
+                                         lng: lng,
+                                         radius: radius,
+                                         searchingBySite: jQuery("#simple_search #searchingBySite").val() };
+
+                search_function(null, mapSearchParams);
+            }
+
         } else {
 
             jQuery( "#map_canvas" ).hide();
+            jQuery("#simple_search #mapDisplayed").val("false");
             jQuery("#toggle_map_display").text("Show Map")
 
-            // Drop location restriction from search and update search results:
-            jQuery( "#radius" ).removeAttr("value");
-            search_function( { radius: null } );
+            search_function();
 
-            if (overlay.length > 0) {
-                overlay[0].setMap(null);
-                overlay.length = 0;
-            }
-
-            // reset hidden input fields
-            jQuery("#simple_search #mapZoomLevel").val(null);
-            jQuery("#simple_search #mapCenterLat").val(null);
-            jQuery("#simple_search #mapCenterLng").val(null);
-
-            
         }
     });
+
+    if (jQuery("#simple_search #mapDisplayed").val() == "true") {
+        jQuery("#toggle_map_display").click();
+    }
 });
 
 // Loads the map into the map_canvas element and adds a click event listener to it.
@@ -82,6 +90,8 @@ function searchByRegion(event) {
 }
 
 function searchByLocation(event, searchingBySite)  {
+
+    jQuery('#simple_search #searchingBySite').val(searchingBySite);
 
     // Store page parameters in local variables
     var lat = event.latLng.lat();
