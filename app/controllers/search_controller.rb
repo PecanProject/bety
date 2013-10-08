@@ -14,19 +14,69 @@ CREDITS
   CONTACT_EMAIL = "dlebauer@illinois.edu"
 
 
+  # Possible paramaters (params):
+  #   set automatically by Rails:
+  #     utf8 = [checkmark]
+  #     controller = "search"
+  #     action = "index"
+  #   visible form controls:
+  #     search (a string of search terms, possibly empty)
+  #     DataTables_Table_0_length (select from 10, 25 (default), 50, 100)
+  #   hidden input fields (set by JavaScript):
+  #     direction ("asc" or "desc")
+  #     sort (name of a column)
+  #     lat (latitude of clicked map point)
+  #     lng (longitude of clicked map point)
+  #     radius (search radius)
+  #     searchBySite ("true" or "false")
+  #     mapDisplayed (2-valued)
+  #     mapZoomLevel (for saving map state)
+  #     mapCenterLat (for saving map state)
+  #     mapCenterLng (for saving map state)
+  #   set by JavaScript in query string:
+  #     iteration
+  #   set by user in URL query string:
+  #     format
+  #
+  # Instance variables:
+  #   @iteration (not clear why this is needed)
+  #   @all_marker_locations (city, sitename, lat, and lon for all distinct sites)
+  #   @all_result_locations (city, sitename, lat, and lon for all distinct sites in the search results)
+  #   @results (all table data for the current page of search results in sorted order)
   def index
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
 
-      # for making map markers
-      @all_results = TraitsAndYieldsView
+      # Ensure only permitted access
+      all_viewable_rows = TraitsAndYieldsView
         .all_limited(current_user)
 
-      # for search results table
-      @results = @all_results
-        .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
+      # for making map markers
+      @all_marker_locations = all_viewable_rows
+        .select("site_id, city, sitename, lat, lon")
+        .where("lat IS NOT NULL AND lon IS NOT NULL")
+        .group("site_id")
+
+      # intermediate variable used in getting result locations and
+      # result table data:
+      search_results = all_viewable_rows
         .coordinate_search(params)
         .search(params[:search])
+
+      
+      @all_result_locations = search_results
+        .select("site_id, city, sitename, lat, lon")
+        .where("lat IS NOT NULL AND lon IS NOT NULL")
+        .group("site_id")
+        .to_a
+        .map { |row| row.serializable_hash }
+
+
+      @all_non_result_locations = @all_marker_locations.to_a.map { |row| row.serializable_hash } - @all_result_locations
+      
+      # for search results table
+      @results = search_results
+        .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
         .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
 
     else # Allow url queries of data, with scopes, only xml & csv ( & json? )
