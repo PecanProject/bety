@@ -3,6 +3,15 @@ var overlay;
 // Once map display button is loaded, add a click event to it:
 jQuery( function() {
 
+    jQuery("#remove_map_location_filter").click(function() {
+        if (jQuery("#simple_search #mapSearchMode").val() == "by region") {
+            removeOverlay();
+        }
+        jQuery("#simple_search #mapSearchMode").val("off");
+        // redo search based only on contents of text box:
+        search_function();
+    });
+
     jQuery("#toggle_map_display").click(function() {
         if ( jQuery( "#map_canvas" ).is( ":hidden" ) ) {
 
@@ -25,7 +34,7 @@ jQuery( function() {
                 var mapSearchParams =  { lat: lat,
                                          lng: lng,
                                          radius: radius,
-                                         searchingBySite: jQuery("#simple_search #searchingBySite").val() };
+                                         mapSearchMode: jQuery("#simple_search #mapSearchMode").val() };
 
                 search_function(null, mapSearchParams);
             }
@@ -82,16 +91,16 @@ function loadMap() {
 }
 
 function searchBySite(event) {
-    searchByLocation(event, true);
+    searchByLocation(event, "by site");
 }
 
 function searchByRegion(event) {
-    searchByLocation(event, false);
+    searchByLocation(event, "by region");
 }
 
-function searchByLocation(event, searchingBySite)  {
+function searchByLocation(event, mapSearchMode)  {
 
-    jQuery('#simple_search #searchingBySite').val(searchingBySite);
+    jQuery('#simple_search #mapSearchMode').val(mapSearchMode);
 
     // Store page parameters in local variables
     var lat = event.latLng.lat();
@@ -106,7 +115,7 @@ function searchByLocation(event, searchingBySite)  {
     jQuery('#simple_search_table').removeClass();
     jQuery('#simple_search_table').addClass('simple_search_table_' + iteration);
 
-    var mapSearchParams =  { lat: lat, lng: lon, radius: radius, searchingBySite: searchingBySite };
+    var mapSearchParams =  { lat: lat, lng: lon, radius: radius, mapSearchMode: mapSearchMode };
 
     // Pass the map search parameters to simple_search's
     // search_function where they will be combined with search term
@@ -115,7 +124,7 @@ function searchByLocation(event, searchingBySite)  {
 
     // UPdate the overlay:
     removeOverlay();
-    if (!searchingBySite) {
+    if (mapSearchMode == "by region") {
         addOverlay(lat, lon, radius);
     }
 }
