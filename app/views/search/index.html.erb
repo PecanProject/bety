@@ -8,10 +8,24 @@
       <br />
       
       <button type="button" id="toggle_map_display">Search Using Map</button>
+      <button type="button" id="remove_map_location_filter" style="display: none; float: right">Remove Map Location Restriction</button>
 
       <br/>
-      
-      <div id="map_canvas" style="width: 900px; height: 300px; display: none"></div>
+
+      <style> /* MOVE TO STYLESHEET !!! */
+        #map_canvas #legend {
+            background-color: #fff;
+            border: 1px solid #000;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 5px;
+            padding: 10px 10px 8px;
+        }
+        #map_canvas #legend img {
+            margin-right: 5px;
+        }
+      </style>
+      <div id="map_canvas" style="width: 100%; height: 300px; display: none"></div>
 
       <script>
         var ajax_url = "<%= url_for controller: 'search', action: 'index' %>"
