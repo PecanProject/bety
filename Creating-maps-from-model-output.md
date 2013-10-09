@@ -7,7 +7,7 @@ This is an instruction for creating maps from arc map 10.1 and upload it to arcg
 1. display your data (must choose WGS1984 projection)
 1. Upload a mask file (us or world maps)
 1. select interpolation from spatial analyst tool from arc tool box (IDW method has been chosen for the past. Take the csv feature file as input)
-1. Select extraction from spatial analyst tool from arc tool box (exctract by a mask has been chosen for the past. Take the interpolated file as input)
+1. Select extraction from spatial analyst tool from arc tool box (extract by a mask has been chosen for the past. Take the interpolated file as input)
 1. save the map as a arcmap
 
 ** Make sure you sign in arcgis from your arcmap**
@@ -17,6 +17,8 @@ This is an instruction for creating maps from arc map 10.1 and upload it to arcg
 1. Type your name and password for ArcGIS Online, then click Sign In.
 
 ### Publishing a hosted tiled map service using a tile package
+
+(see [ArcGIS website](http://resources.arcgis.com/en/help/arcgisonline/index.html#/Publishing_a_hosted_feature_service_to_ArcGIS_Online_using_an_ArcMap_document/010q00000087000000/):
 
 ArcGIS for Desktop allows you to build tiles for a map document and store them in an easily transferrable tile package (.tpk) file. You can share a tile package on ArcGIS Online and choose to publish it as a hosted tiled map service. This workflow allows you to build the tiles using your own computing power, rather than your ArcGIS Online credits.
 
