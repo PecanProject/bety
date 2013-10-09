@@ -71,6 +71,9 @@ function loadMap() {
     };
 
     map = new google.maps.Map($("map_canvas"), mapOptions);
+
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(makeLegend());
+    
     addMarkers();
     overlay = [];
 
@@ -87,9 +90,27 @@ function loadMap() {
 
     });
 
+}
 
-    
+function makeLegend(){
+    var legend = document.createElement('div');
+    legend.setAttribute('id', 'legend')
+    legend.setAttribute('style', "backgroundColor: white; padding: 10px;");
 
+    var images = ['images/redball.png', 'images/yellowball.png','images/whiteball.png']
+    var text = ['Selected Sites Matching Search', 'Selected Sites Not Matching Search', 'Sites Outside Search Area']
+    for (i = 0;  i < images.length; ++i) {
+        var itemdiv = document.createElement('div');
+        var image = document.createElement('img');
+        image.setAttribute('src', images[i]);
+        var explanation = document.createElement('span');
+        explanation.innerHTML = text[i];
+        itemdiv.appendChild(image);
+        itemdiv.appendChild(explanation);
+        
+        legend.appendChild(itemdiv);
+    }
+    return legend;
 }
 
 function searchBySite(event) {
