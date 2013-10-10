@@ -20,30 +20,33 @@ gem "bootstrap-will_paginate"
 gem "rspec-rails"
 gem "capybara"
 
-# MySQL, comment out PostgreSQL section
-gem "mysql2"
-gem "ruby-mysql" # for data upload scripts in local
-gem "activerecord-mysql2-adapter"
-
-# Postgresql, comment out MySQL section
-#gem "pg"
-#gem "activerecord-postgresql-adapter"
-
-group :development, :test do
+group :development, :test, :mysql do
   gem "rspec-rails"
   gem "capybara"
   gem "sqlite3", "1.3.3"
 end
 
-group :test do
+group :test, :mysql do
   gem "rspec-rails"
   gem "webrat", "0.7.1"
   gem "capybara"
   gem "database_cleaner"
 end
 
-group :production do
+group :production, :mysql do
 #  gem "rmagick", "2.13.1"
   gem "passenger"
 end
 
+# MySQL required gems
+group :mysql do
+  gem "mysql2"
+  gem "ruby-mysql" # for data upload scripts in local
+  gem "activerecord-mysql2-adapter"
+end
+
+# Postgresql required gems
+group :postgresql do
+  gem "pg"
+  gem "activerecord-postgresql-adapter"
+end
