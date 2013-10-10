@@ -20,6 +20,12 @@ function addMarkers() {
     
 <% end %>
 
+}
+
+
+// This function is redefined if we do an AJAX search.
+function updateMarkers() {
+
 <% @map_selected_sites_excluded_by_search_terms.each do |site| %>
     marker[<%= site["site_id"] %>].setIcon("images/yellowball.png");
 <% end %>

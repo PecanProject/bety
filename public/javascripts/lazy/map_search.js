@@ -24,7 +24,10 @@ jQuery( function() {
             if (!jQuery( "#map_canvas" ).get(0).hasChildNodes()) {
                 loadMap();
             }
-
+            
+            // Ensure markers are colored according to search results:
+            updateMarkers();
+            
             // Do a search if we have stored location parameters:
 
             var lat = jQuery("#simple_search #lat").val();

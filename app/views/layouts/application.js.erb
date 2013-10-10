@@ -1,8 +1,7 @@
 // Update table with search results:
 jQuery('.simple_search_table_<%= @iteration -%>').html('<%= escape_javascript(render("#{controller_name}/index_table")) %>');
 
-// Update markers if map is showing:
-if (jQuery("#simple_search #mapDisplayed").val() == "true") {
+function updateMarkers() {
 
     var selectedSitesAsString = "<%= raw escape_javascript @all_result_locations.to_json %>";
     var selectedSites = eval(selectedSitesAsString);
@@ -31,6 +30,12 @@ if (jQuery("#simple_search #mapDisplayed").val() == "true") {
 
 }
 
+// Update markers if map is showing:
+if (jQuery("#simple_search #mapDisplayed").val() == "true") {
+    updateMarkers();
+}
+
+    
 // Reset values of hidden variables:
 jQuery('#simple_search #direction').val('<%= sort_direction %>');
 jQuery('#simple_search #sort').val('<%= sort_column %>');
