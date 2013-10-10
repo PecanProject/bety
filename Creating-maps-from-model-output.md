@@ -35,6 +35,9 @@ This enables the menu option you'll use in the next step.
 1.        In the Sharing tab, make sure that the connection information for your ArcGIS Online account is correct.
 1.    Click Share.
 
+@@@@@@@@@@@ tips
+One tip for creating tile package, when you edit the tile format, choose the highest level of detail smaller than the default, which is 20. I chose 10, which gives us enough details and allows us to create a tile within minutes.
+
 You may be prompted to save your map before the tile package can be created.
 It can take a while for a tile package to be generated, especially if you have included large scales.
 
