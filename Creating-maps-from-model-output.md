@@ -4,7 +4,7 @@ This is an instruction for creating maps from arc map 10.1 and upload it to arcg
 ### For creating maps from your arcmap 10.1 on your desktop: (I will work on this when my arcmap resumes)
 
 1. Upload your csv data
-1. display your data (must choose WGS1984 projection)
+1. display your data (first lon, then lat, then field. must choose WGS1984 projection)
 1. Upload a mask file (us or world maps)
 1. select interpolation from spatial analyst tool from arc tool box (IDW method has been chosen for the past. Take the csv feature file as input)
 1. Select extraction from spatial analyst tool from arc tool box (extract by a mask has been chosen for the past. Take the interpolated file as input)
@@ -38,6 +38,8 @@ This enables the menu option you'll use in the next step.
 You may be prompted to save your map before the tile package can be created.
 It can take a while for a tile package to be generated, especially if you have included large scales.
 
+#################################publish online
+
 1. When your tile package has finished generating, log in to your ArcGIS Online organizational account and click My Content.
 1.    Click your tile package to display its item details page.
 1.    Click Publish.
@@ -45,6 +47,19 @@ It can take a while for a tile package to be generated, especially if you have i
       The tiles are unpacked and hosted as a service. You should be able to see the service in the My Content page.
 
 Once you've verified the service is running, you can optionally delete the original tile package so that you don't have to pay credits to store it.
+
+Now you can add the newly generated tile to a map (either existed or new)
+
+Open the map, click content, you should be able to see all the layers of the tile
+Click the layer for which you want to pop-up data, then select "enable pop-up"
+
+from the new enable pop up window, select the features you created before from a csv file.
+
+######################################################################
+
+
+
+
 
 ##  Google Fusion Tables
 
