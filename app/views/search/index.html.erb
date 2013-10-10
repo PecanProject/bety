@@ -5,14 +5,31 @@
 	  <header>
 		<h1>Advanced Search</h1>
 	  </header>
+      <button id="download" href="<%= "#{request.fullpath}&format=csv" %>" type="button">Download Results</button>
       <br />
       
       <button type="button" id="toggle_map_display">Search Using Map</button>
-      <button type="button" id="remove_map_location_filter" style="display: none; float: right">Remove Map Location Restriction</button>
+      <button type="button" id="remove_map_location_filter">Clear Map</button>
 
       <br/>
 
       <style> /* MOVE TO STYLESHEET !!! */
+        button#download {
+            position: absolute;
+            top: 30px;
+            right: 15px;
+        }
+
+        button#toggle_map_display {
+            margin: 10px;
+        }
+
+        button#remove_map_location_filter {
+            margin: 10px;
+            float: right;
+            display: none;
+        }
+        
         #map_canvas #legend {
             background-color: #fff;
             border: 1px solid #000;
