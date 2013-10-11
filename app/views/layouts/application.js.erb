@@ -16,7 +16,7 @@ function updateMarkers() {
 
     for (var i = 0; i < mapSelectedSitesExcludedBySearch.length; ++i) {
         var id = mapSelectedSitesExcludedBySearch[i]["site_id"];
-        marker[id].setIcon("images/yellowball.png");
+        marker[id].setIcon("images/greyball.png");
     }
 
 
@@ -37,8 +37,11 @@ if (jQuery("#simple_search #mapDisplayed").val() == "true") {
 
     
 // Reset values of hidden variables:
+// COMMENTING THIS OUT FOR NOW; WE MAY NEED IT AGAIN IF WE LIMIT AJAX SEARCHES TO REPLACING THE SEARCH RESULTS TABLE AND NOT ALSO THE SEARCH FORM
+/*
 jQuery('#simple_search #direction').val('<%= sort_direction %>');
 jQuery('#simple_search #sort').val('<%= sort_column %>');
+*/
 
 // Reset event handlers:
 jQuery('#simple_search input').keyup(search_function);

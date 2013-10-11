@@ -99,7 +99,6 @@ function loadMap() {
     google.maps.event.addListener(map, 'bounds_changed', function() {
         var zoomLevel = map.getZoom();
         var mapCenter = map.getCenter();
-        console.log(mapCenter.toString());
 
         jQuery("#simple_search #mapZoomLevel").val(zoomLevel);
         jQuery("#simple_search #mapCenterLat").val(mapCenter.lat());
@@ -114,7 +113,7 @@ function makeLegend(){
     legend.setAttribute('id', 'legend')
     legend.setAttribute('style', "backgroundColor: white; padding: 10px;");
 
-    var images = ['images/redball.png', 'images/yellowball.png','images/whiteball.png']
+    var images = ['images/redball.png', 'images/greyball.png','images/whiteball.png']
     var text = ['Selected Sites Matching Search', 'Selected Sites Not Matching Search', 'Sites Outside Search Area']
     for (i = 0;  i < images.length; ++i) {
         var itemdiv = document.createElement('div');
