@@ -3,6 +3,9 @@ var overlay;
 // Once map display button is loaded, add a click event to it:
 jQuery( function() {
 
+    // Add handler for the "Clear Map" button: It should remove the
+    // overlay (if there is one), set the search mode state variable
+    // to "off", and update the search results.
     jQuery("#remove_map_location_filter").click(function() {
         if (jQuery("#simple_search #mapSearchMode").val() == "by region") {
             removeOverlay();
@@ -24,7 +27,7 @@ jQuery( function() {
             if (!jQuery( "#map_canvas" ).get(0).hasChildNodes()) {
                 loadMap();
             }
-            
+
             // Ensure markers are colored according to search results:
             updateMarkers();
             
