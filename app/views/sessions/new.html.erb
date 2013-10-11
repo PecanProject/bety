@@ -54,7 +54,7 @@
 	  <%= form_tag({:controller => :search}, {:id => 'search-form', :class => "no-margin", :method => :get}) do %>
 	  <div class="control-group">
 	    <h3>
-	      <i class="icon-search"></i> SEARCH AND DOWNLOAD<em>TRAIT AND YIELD DATA</em>
+	      <i class="icon-search"></i> SEARCH <em> TRAIT AND YIELD DATA</em>
 	    </h3>
 	    <div class="controls">
 	      <div class="input-append">
@@ -67,15 +67,15 @@
           <% end %>
 	</div>
 	<div>
-	  <h3><i class="icon-eye-open"></i> VISUALIZE <em>MODEL PREDICTIONS</em></h3>
+	  <h3><i class="icon-eye-open"></i> COMPARE <em> CROP FORECASTS </em></h3>
 	  <div class="sidebar">
 	    <ul class="nav nav-list sidenav">
 	      <li>
-		<%= link_to controller: "maps", action: "location_yields" do %>
-                <i class="icon-chevron-right"></i> Model Predictions
+                <%= link_to controller: "maps", action: "location_yields" do %>
+                <i class="icon-chevron-right"></i> Crop Model Maps 
                 <% end %>
-	      </li>
-	    </ul>
+              </li>
+	</ul>
 	  </div>
 	</div>
       </div>
