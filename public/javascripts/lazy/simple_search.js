@@ -7,6 +7,8 @@ var delay = (function () {
 })();
 
 var search_function = function (event, locationParameters) {
+    if (is_ignored(event)) return;
+
     if (!locationParameters) {
         var locationParameters = {};
     }
@@ -21,6 +23,32 @@ var search_function = function (event, locationParameters) {
         return false;
     }, 1000);
 }
+
+// Returns true if "event" is a keyup event on a key we are not
+// interested in.
+function is_ignored(event) {
+    if (event.type == "keyup") {
+        var keyCode = event.which;
+
+        console.log(keyCode);
+
+        var dontIgnore = false;
+
+        // Don't ignore alphabetic keys:
+        if (65 <= keyCode && keyCode <= 90) {
+            dontIgnore = true;
+        }
+
+        // Don't ignore backspace
+        if (keyCode == 8) {
+            dontIgnore = true;
+        }
+        
+       return !dontIgnore;
+    }
+    return false;
+}
+        
 
 function remove_search_term_restriction() {
     jQuery('#simple_search input#search').val('');
