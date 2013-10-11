@@ -22,6 +22,11 @@ var search_function = function (event, locationParameters) {
     }, 1000);
 }
 
+function remove_search_term_restriction() {
+    jQuery('#simple_search input').val('');
+    search_function();
+}
+
 jQuery(function () {
     jQuery('#simple_search_table th a, #simple_search_table .pagination a').live('click',
         function () {
@@ -32,5 +37,6 @@ jQuery(function () {
 
     jQuery('#simple_search select').change(search_function);
     jQuery('#simple_search input').keyup(search_function);
+    jQuery('button#clear_search_terms').click(remove_search_term_restriction);
 });
 
