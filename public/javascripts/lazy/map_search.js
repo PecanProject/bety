@@ -81,7 +81,18 @@ function loadMap() {
     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(makeLegend());
     
     addMarkers();
+    
     overlay = [];
+
+    // Restore overlay if we reloaded the page when searching by region:
+    if (jQuery("#simple_search #mapSearchMode").val() == "by region") {
+        
+        var lat = parseFloat(jQuery("#simple_search #lat").val());
+        var lng = parseFloat(jQuery("#simple_search #lng").val());
+        var radius = parseFloat(jQuery("#simple_search #radius").val());
+
+        addOverlay(lat, lng, radius);
+    }
 
     google.maps.event.addListener(map, "click", searchByRegion);
 
