@@ -1,170 +1,85 @@
 <div class="content">
-	<div class="container">
-		<div class="sixteen columns">
-			<header>
-				<h1>Welcome to BETYdb</h1>
-			</header>
-			<!-- InstanceBeginEditable name="Full Width Content" -->
-			<div class="ten columns alpha">
-				<p class="lead">The emerging biofuel industry may aid in reducing greenhouse gas emissions and decreasing dependence on foreign oil importation.</p>
-				
-				<div class="inline-block" style="width: 400px">How to develop and implement biofuel crops in an ecologically and economically sustainable way requires evaluating the growth and functionality of biofuel crops from the local scale to the regional scale. <strong class="green">BETYdb</strong> has been developed to support research, agriculture, and policy by synthesizing available information on potential biofuel crops.</div>
-				<div class="inline-block" style="width: 160px; vertical-align:top; margin-left:10px">
-                  <%= image_tag 'miscanthus.jpg', class: "inline-block", alt: "Photo by L. Brian Stauffer, provided by University of Illinois at Urbana-Champaign" %>
-				</div>
-				
-				<% if current_user.nil? %>
-				  <div class="well">
-            <%= form_tag({:controller => :sessions , :method => :create}, {:class => "form-horizontal"}) do %>
-				      <fieldset>
-        				<legend>
-						      <h2><i class="icon-lock"></i> Access BETYdb</h2>
-					      </legend>
-                
-                <div class="control-group">
-                  <%= label_tag 'login', 'Login', :class => "control-label" %>
-                  <div class="controls">
-                    <%= text_field_tag 'login', @login, :class => "input-xlarge" %>
-                  </div>
-                </div>
-                
-                <div class="control-group">
-                  <%= label_tag 'password', 'Password', :class => "control-label" %>
-                  <div class="controls">
-                    <%= password_field_tag 'password', nil, :class => "input-xlarge" %>
-                  </div>
-                </div>
-  <!--              <%= label_tag 'remember_me', 'Remember me' %>-->
-  <!--              <%= check_box_tag 'remember_me', '1', @remember_me %>-->
-                <div class="form-actions">
-                  <%= submit_tag 'Log in', :class=> "button button-primary" %>
-                </div>
-              </fieldset>
-            <% end %>
-				  </div>
-				
-				  <h3>Don't have an account?</h3>
-				  <p>Don't miss out on the opportunity to be a part of this project and change the managements for biofuel research. Sign up using the button below:</p>
-				  <p><%= link_to "Register for access to BETYdb", signup_path, :class =>"button" %></p>
-				<% end %>
-
-			</div>
-			<div class="five columns omega offset-by-one">
-				<div>
-					<h3><i class="icon-eye-open"></i> EXPLORE <em>BETYdb</em></h3>
-					<div class="sidebar">
-						<ul class="nav nav-list sidenav">
-							<li>
-                              <%= link_to controller: "maps", action: "location_yields" do %>
-                              <i class="icon-chevron-right"></i> Model Predictions
-                              <% end %>
-                            </li>
-							<li>
-                              <%= link_to controller: "maps", action: "traits_from_sites" do %>
-                              <i class="icon-chevron-right"></i> Trait Data for Each Site
-                              <% end %>
-                            </li>
-							<li>
-                              <%= link_to controller: "maps", action: "yields_from_sites" do %>
-                              <i class="icon-chevron-right"></i> Yield Data for Each Site
-                              <% end %>
-                            </li>
-						</ul>
-					</div>
-				</div>
-				<div>
-					<%= form_tag({:controller => :search}, {:id => 'search-form', :class => "no-margin", :method => :get}) do %>
-						<div class="control-group">
-							<h3>
-								<i class="icon-search"></i> SEARCH <em>FOR TRAITS AND YIELDS</em>
-							</h3>
-							<div class="controls">
-								<div class="input-append">
-
-									<input id="appendedInputButton" name="search" type="text" class="" placeholder="EX: Panicum Nitrogen">
-                                    <%= link_to_submit raw('<i class="icon-search"></i>'), id: "front_page_search_button", class: "button" %>
-                                </div>
-							</div>
-						</div>
-                    <% end %>
-				</div>
-				
-				<div>
-					<h3><i class="icon-info-sign"></i> DATABASE <em>STATS</em></h3>
-					<table summary="Count of Yield and Trait entries" class="table table-condensed">
-						<tr>
-							<th colspan="4">2765 Species with Trait or Yield Data</th>
-						</tr>
-						<tr>
-							<th colspan="4">3909 Yields</th>
-						</tr>
-						<tr>
-							<th>&nbsp;</th>
-							<th>Public</th>
-							<th>Login</th>
-							<th>Total</th>
-						</tr>
-						<tr>
-							<td>Miscanthus</td>
-							<td>614</td>
-							<td>614</td>
-							<td>630</td>
-						</tr>
-						<tr>
-							<td>Switchgrass</td>
-							<td>1379</td>
-							<td>1379</td>
-							<td>1897</td>
-						</tr>
-						<tr>
-							<td>Poplar</td>
-							<td>0</td>
-							<td>0</td>
-							<td>824</td>
-						</tr>
-						<tr>
-							<td>Willow</td>
-							<td>0</td>
-							<td>0</td>
-							<td>257</td>
-						</tr>
-						<tr>
-							<th  colspan="4">28150 Traits</th>
-						</tr>
-						<tr >
-							<th>&nbsp;</th>
-							<th>Public</th>
-							<th>Login</th>
-							<th>Total</th>
-						</tr>
-						<tr>
-							<td>Miscanthus</td>
-							<td>0</td>
-							<td>0</td>
-							<td>2672</td>
-						</tr>
-						<tr>
-							<td>Switchgrass</td>
-							<td>56</td>
-							<td>56</td>
-							<td>630</td>
-						</tr>
-						<tr>
-							<td>Poplar</td>
-							<td>11</td>
-							<td>11</td>
-							<td>2642</td>
-						</tr>
-						<tr>
-							<td>Willow</td>
-							<td>3</td>
-							<td>3</td>
-							<td>947</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-			<!-- InstanceEndEditable --> </div>
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
+	<h1>Welcome to BETYdb</h1>
+      </header>
+      <!-- InstanceBeginEditable name="Full Width Content" -->
+      <div class="ten columns alpha">
+	<p class="lead">The emerging biofuel industry may aid in reducing greenhouse gas emissions and decreasing dependence on foreign oil importation.</p>
+	
+	<div class="inline-block" style="width: 400px">How to develop and implement biofuel crops in an ecologically and economically sustainable way requires evaluating the growth and functionality of biofuel crops from the local scale to the regional scale. <strong class="green">BETYdb</strong> has been developed to support research, agriculture, and policy by synthesizing available information on potential biofuel crops.</div>
+	<div class="inline-block" style="width: 160px; vertical-align:top; margin-left:10px">
+          <%= image_tag 'miscanthus.jpg', class: "inline-block", alt: "Photo by L. Brian Stauffer, provided by University of Illinois at Urbana-Champaign" %>
 	</div>
-	<!-- container --> 
+	
+	<% if current_user.nil? %>
+	<div class="well">
+          <%= form_tag({:controller => :sessions , :method => :create}, {:class => "form-horizontal"}) do %>
+	  <fieldset>
+            <legend>
+	      <h2><i class="icon-lock"></i> Access BETYdb</h2>
+	    </legend>
+            
+            <div class="control-group">
+              <%= label_tag 'login', 'Login', :class => "control-label" %>
+              <div class="controls">
+                <%= text_field_tag 'login', @login, :class => "input-xlarge" %>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <%= label_tag 'password', 'Password', :class => "control-label" %>
+              <div class="controls">
+                <%= password_field_tag 'password', nil, :class => "input-xlarge" %>
+              </div>
+            </div>
+	    <!--              <%= label_tag 'remember_me', 'Remember me' %>-->
+	    <!--              <%= check_box_tag 'remember_me', '1', @remember_me %>-->
+            <div class="form-actions">
+              <%= submit_tag 'Log in', :class=> "button button-primary" %>
+            </div>
+          </fieldset>
+          <% end %>
+	</div>
+	
+	<h3>Don't have an account?</h3>
+	<p>Sign up using the button below:</p>
+	<p><%= link_to "Register for access to BETYdb", signup_path, :class =>"button" %></p>
+	<% end %>
+
+      </div>
+      <div class="five columns omega offset-by-one">
+	<div>
+	  <%= form_tag({:controller => :search}, {:id => 'search-form', :class => "no-margin", :method => :get}) do %>
+	  <div class="control-group">
+	    <h3>
+	      <i class="icon-search"></i> SEARCH AND DOWNLOAD<em>TRAIT AND YIELD DATA</em>
+	    </h3>
+	    <div class="controls">
+	      <div class="input-append">
+
+		<input id="appendedInputButton" name="search" type="text" class="" placeholder="EX: Panicum Nitrogen">
+                <%= link_to_submit raw('<i class="icon-search"></i>'), id: "front_page_search_button", class: "button" %>
+              </div>
+	    </div>
+	  </div>
+          <% end %>
+	</div>
+	<div>
+	  <h3><i class="icon-eye-open"></i> VISUALIZE <em>MODEL PREDICTIONS</em></h3>
+	  <div class="sidebar">
+	    <ul class="nav nav-list sidenav">
+	      <li>
+		<%= link_to controller: "maps", action: "location_yields" do %>
+                <i class="icon-chevron-right"></i> Model Predictions
+                <% end %>
+	      </li>
+	    </ul>
+	  </div>
+	</div>
+      </div>
+      <!-- InstanceEndEditable --> </div>
+  </div>
+  <!-- container --> 
 </div>
