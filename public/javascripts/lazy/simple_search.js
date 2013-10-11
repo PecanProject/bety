@@ -23,7 +23,7 @@ var search_function = function (event, locationParameters) {
 }
 
 function remove_search_term_restriction() {
-    jQuery('#simple_search input').val('');
+    jQuery('#simple_search input#search').val('');
     search_function();
 }
 
