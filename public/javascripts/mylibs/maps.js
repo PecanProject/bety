@@ -136,7 +136,7 @@ where: ""
 },
 options: {
 styleId: 17,
-templateId: 18
+templateId: 19
 }
 });
 
@@ -165,7 +165,7 @@ where: ""
 },
 options: {
 styleId: 19,
-templateId: 20
+templateId: 19
 }
 });
 
@@ -180,7 +180,7 @@ where: ""
 },
 options: {
 styleId: 20,
-templateId: 21
+templateId: 19
 }
 });
 
@@ -194,7 +194,7 @@ where: "energycane_cost > 0.0"
 },
 options: {
 styleId: 21,
-templateId: 22
+templateId: 19
 }
 });
 
