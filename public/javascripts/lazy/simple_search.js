@@ -12,7 +12,7 @@ var delay = (function () {
 // and the 'Show/Hide Map' button, and by the 'search_by_location'
 // function.
 var search_function = function (event, locationParameters) {
-    if (is_ignored(event)) return;
+    if (event && is_ignored(event)) return;
 
     if (!locationParameters) {
         var locationParameters = {};
@@ -34,8 +34,6 @@ var search_function = function (event, locationParameters) {
 function is_ignored(event) {
     if (event.type == "keyup") {
         var keyCode = event.which;
-
-        console.log(keyCode);
 
         var dontIgnore = false;
 
