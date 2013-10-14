@@ -30,7 +30,11 @@ module AdvancedSearch
   # method:
   #   scope :search, lambda { |search| where(advanced_search(search)) }
   def advanced_search(search)
-    words = search.split
+    if search.nil?
+      search = ""
+    end
+
+    words = search.split 
 
     # default to all table columns if SEARCH_FIELDS is nil
     search_columns = (self::SEARCH_FIELDS || self.column_names)
