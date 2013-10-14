@@ -43,11 +43,6 @@ jQuery('#simple_search #direction').val('<%= sort_direction %>');
 jQuery('#simple_search #sort').val('<%= sort_column %>');
 */
 
-// Reset event handlers:
-jQuery('#simple_search input').keyup(search_function);
-jQuery('#simple_search select').change(search_function);
-jQuery('button#clear_search_terms').click(remove_search_term_restriction);
-
 // Make cursor go to the end when search box gets focus ...
 jQuery('#search').focus(
     function() {
