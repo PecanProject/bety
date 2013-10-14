@@ -6,6 +6,11 @@ var delay = (function () {
     };
 })();
 
+
+// Handler for 'keyup' event in search box and 'select records per
+// page' control.  Also called by handlers for the 'Clear Map' button
+// and the 'Show/Hide Map' button, and by the 'search_by_location'
+// function.
 var search_function = function (event, locationParameters) {
     if (is_ignored(event)) return;
 
@@ -24,8 +29,8 @@ var search_function = function (event, locationParameters) {
     }, 1000);
 }
 
-// Returns true if "event" is a keyup event on a key we are not
-// interested in.
+// Auxiliary function used by "search_function".  Returns true if
+// "event" is a keyup event on a key we are not interested in.
 function is_ignored(event) {
     if (event.type == "keyup") {
         var keyCode = event.which;
@@ -50,26 +55,40 @@ function is_ignored(event) {
 }
         
 
+// Handler for 'Clear Map' button
 function remove_search_term_restriction() {
     jQuery('#simple_search input#search').val('');
     search_function();
 }
 
+// Handler for 'Download' button
 function download_search_results() {
     location.search = jQuery('#simple_search').serialize() + '&format=csv';
 }
 
 jQuery(function () {
-    jQuery('#simple_search_table th a, #simple_search_table .pagination a').live('click',
+    // Attach delegated handlers to elements that are within the
+    // portion of the page being replaced:
+
+    // Force table sorting and pagination links to work via AJAX:
+    jQuery('#simple_search_table').on('click', 'th a, .pagination a',
         function () {
             jQuery('#simple_search_table table').css('opacity', '.3');
             jQuery.getScript(this.href);
             return false;
         });
 
-    jQuery('#simple_search select').change(search_function);
-    jQuery('#simple_search input').keyup(search_function);
+    jQuery('#simple_search_table').on('change', 'select', search_function);
+    jQuery('#simple_search_table').on('keyup', 'input', search_function);
+
+
+    
+    // Attach direct handlers to elements outside the portion of the
+    // page being replaced:
     jQuery('button#clear_search_terms').click(remove_search_term_restriction);
     jQuery('button#download').click(download_search_results);
+
+    // Set focus in the search box upon loading:
+    jQuery('#search').focus();
 });
 
