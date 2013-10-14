@@ -2,6 +2,24 @@
 //<![CDATA[
 
 var marker = [];
+
+const DEFAULT_MARKER_ANCHOR = new google.maps.Point(7, 7);
+
+const RED_ICON = {
+    url: "images/redball.png",
+    anchor: DEFAULT_MARKER_ANCHOR
+}
+
+const GREY_ICON = {
+    url: "images/greyball.png",
+    anchor: DEFAULT_MARKER_ANCHOR
+}
+
+const WHITE_ICON = {
+    url: "images/whiteball.png",
+    anchor: DEFAULT_MARKER_ANCHOR
+}
+
 function addMarkers() {
     
 <% @all_marker_locations.each do |site| %>
@@ -11,10 +29,7 @@ function addMarkers() {
         position: point,
         title: "<%= raw (site.sitename || site.city || '') %>",
         map: map,
-        icon: {
-            url: "images/whiteball.png",
-            anchor: new google.maps.Point(7, 7)
-        }
+        icon: WHITE_ICON
     });
     google.maps.event.addListener(marker[<%= site.site_id -%>], "click", searchBySite);
     
@@ -27,11 +42,11 @@ function addMarkers() {
 function updateMarkers() {
 
 <% @map_selected_sites_excluded_by_search_terms.each do |site| %>
-    marker[<%= site["site_id"] %>].setIcon("images/greyball.png");
+    marker[<%= site["site_id"] %>].setIcon(GREY_ICON);
 <% end %>
 
 <% @all_result_locations.each do |site| %>
-    marker[<%= site["site_id"] %>].setIcon("images/redball.png");
+    marker[<%= site["site_id"] %>].setIcon(RED_ICON);
 <% end %>
 
 }
