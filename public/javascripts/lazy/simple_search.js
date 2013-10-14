@@ -42,8 +42,8 @@ function is_ignored(event) {
             dontIgnore = true;
         }
 
-        // Don't ignore backspace
-        if (keyCode == 8) {
+        // Don't ignore backspace or delete button
+        if (keyCode == 8 || keyCode == 46) {
             dontIgnore = true;
         }
         
@@ -78,12 +78,12 @@ jQuery(function () {
 
     jQuery('#simple_search_table').on('change', 'select', search_function);
     jQuery('#simple_search_table').on('keyup', 'input', search_function);
+    jQuery('#simple_search_table').on('click', 'button#clear_search_terms',remove_search_term_restriction);
 
 
     
     // Attach direct handlers to elements outside the portion of the
     // page being replaced:
-    jQuery('button#clear_search_terms').click(remove_search_term_restriction);
     jQuery('button#download').click(download_search_results);
 
     // Set focus in the search box upon loading:
