@@ -10,8 +10,9 @@ function fullscreenmap(isfullscreen) {
 function downloaddata() {
     var sm = document.getElementById('selectmap');
     var opt = sm.options[sm.selectedIndex];
-    var db = document.getElementById('downloadbutton')
-    switch(opt.value) {
+    var db = document.getElementById('downloadbutton');
+
+    switch(parseInt(opt.value)) {
     case 0:
         //cornstover yield county
         db.href = 'temp_models/cornstover_yield_county.csv';
@@ -22,38 +23,88 @@ function downloaddata() {
         break;
     case 2:
         //switchgrass yield county
-        db.href = ''
+        db.href = 'temp_models/switchgrass_yield_county.csv'
         break;
     case 3:
         //energycane yield county
+        db.href = 'temp_models/energycane_yield_county.csv';
         break;
     case 4:
         //least cost crop
+        db.href = 'temp_models/least_cost_crop_county.csv';
         break;
     case 5:
         //cornstover cost county
+        db.href = 'temp_models/cornstover_cost_county.csv';
         break;
     case 6:
         //miscanthus cost county
+        db.href = 'temp_models/miscanthus_cost_county.csv';
         break;
     case 7:
         //switchgrass cost county
+        db.href = 'temp_models/switchgrass_cost_county.csv';
         break;
     case 8:
         //energycane cost county
+        db.href = 'temp_models/energycane_cost_county.csv';
         break;
     case 9:
         //energycane yield(grid)
+        db.href = 'temp_models/energycane_yield_grid.csv';
         break;
     case 10:
         //miscanthus yield(grid)
+        db.href = 'temp_models/miscanthus_yield_grid.csv';
         break;
     case 11:
         //cornstover yield(grid) missing
+        db.href = "";
         break;
     case 12:
         //poplar yield grid
-        break;    
+        db.href = 'temp_models/poplar_yield_grid.csv';
+        break;
+    case 13:
+        //willow yield grid
+        db.href = 'images/lmodelout/willow_yield_grid.csv';
+        break;
+    case 14:
+        //switchgrass yield grid
+        db.href = 'temp_models/switchgrass_yield_grid.csv';
+        break;
+    case 15:
+        //switchgrass evapotranspiration grid (no county data file)
+        db.href = 'temp_models/switchgrass_evapotranspiration_grid.csv';
+        break;
+    case 16:
+        //miscanthus evapotranspiration county
+        db.href = 'temp_models/miscanthus_evapotranspiration_county.csv';
+        break;
+    case 17:
+        //cornstover evapotranspiration grid
+        db.href = 'temp_models/cornstover_evapotranspiration_grid.csv';
+        break;
+    case 18:
+        //willow yield county
+        db.href = 'images/lmodelout/willow_yield_county.csv';
+        break;
+    case 19:
+        //poplar yield county
+        db.href = 'images/lmodelout/poplar_yield_county.csv';
+        break;
+    default:
+        db.href = "";
+        console.log("Unexpected option value in downloaddata function");
+        break;
+    }
+
+    var download_button = jQuery('#downloadbutton');
+    if (db.href == "") {
+        download_button.hide();
+    }
+    else {
+        download_button.show();
     }
 
 }
