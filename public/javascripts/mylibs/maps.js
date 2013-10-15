@@ -12,6 +12,9 @@ function downloaddata() {
     var opt = sm.options[sm.selectedIndex];
     var db = document.getElementById('downloadbutton');
 
+    // There is no download button if the user is not logged in:
+    if (db == null) return;
+
     switch(parseInt(opt.value)) {
     case 0:
         //cornstover yield county
