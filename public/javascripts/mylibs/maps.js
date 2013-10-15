@@ -190,7 +190,7 @@ function initialize() {
         },
         options: {
             styleId: 17,
-            templateId: 18
+            templateId: 19
         }
     });
 
@@ -219,7 +219,7 @@ function initialize() {
         },
         options: {
             styleId: 19,
-            templateId: 20
+            templateId: 19
         }
     });
 
@@ -234,7 +234,7 @@ function initialize() {
         },
         options: {
             styleId: 20,
-            templateId: 21
+            templateId: 19
         }
     });
 
@@ -248,7 +248,7 @@ function initialize() {
         },
         options: {
             styleId: 21,
-            templateId: 22
+            templateId: 19
         }
     });
 
