@@ -136,20 +136,30 @@ format). Do not enter data into excel first as this is prone to errors and
 information such as equations may be lost when uploading or
 copy-pasting.
 
-## 4. Redmine: Reporting errors, suggesting features
-### 4.1 Reporting errors in Redmine 
-1. Go to [Redmine: BetyDB] (https://ebi-forecast.igb.illinois.edu/redmine/projects/bety-db/) project page.
-2. Click the `New Issue` tab in the center of the ribbon. 
-3. Set `Tracker` to `Bug`
-4. Fill out necessary fields
-5. Click `Create`  
+##  Redmine: Reporting errors, suggesting features
 
-### 4.2 Suggesting features in Redmine
-1. Go to [Redmine: BetyDB] (https://ebi-forecast.igb.illinois.edu/redmine/projects/bety-db/) project page.
-2. Click the `New Issue` tab in the center of the ribbon. 
-3. Set `Tracker` to `Feature`
-4. Fill out necessary fields
-5. Click `Create`  
+Create a new issue on [GitHub: BetyDB] (https://github.com/PecanProject/bety/issues/new).
+
+### Required content
+
+1.  Clear Title - to allow efficient review of bug lists
+2.  Bug description - should be concise but complete
+3.  Reproduction steps - minimum steps required to reproduce the bug
+ * state "what I did, what I expected to happen, and what actually happened":
+  * write out the steps (e.g. `menu item -> sub-menu item -> link -> target page`) 
+  * give specific links to the page where the bug has been found (and links of where it does not occur if applicable)
+ * _A bug that can’t be reproduced is not a debuggable bug, perhaps not a bug at all._
+5.  Provide additional information that make digging into the problem easier
+  * any error messages that appear, (and your suggestion for a more informative message, if appropriate)
+  * if the error did not occur in the past hour, state the date and time of the error (so we can search the log)
+  * screen shots (usually not required, unless you want to draw out what you think the page should look like).
+   * operating system and browser
+  
+
+### Suggesting features in Redmine
+
+A feature is similar to a bug, except that the format is "what currently happens and what should happen". Don't focus on how it should be implemented, just the key functionality, information, or design elements that you would like to see.
+
 
 ## 5. BETYdb: Entering new data through the web interface
 Before entering data, it is first necessary to add and select the
