@@ -26,7 +26,7 @@
           <td class="center"><%= link_to_unless citation.pdf.blank?, 'link', citation.pdf do ""; end %></td>
 		  <td class="center ">
 			<!-- USE -->
-			<% if current_user.page_access_level == 1 %>
+			<% if current_user.page_access_level <= 3 # allow 'Creators' to 'use' citations %>
               <%= link_to url_for( action: "use_citation", controller: "application", id: citation.id ), :class =>"button button-small", :alt => "use" do %>
                 <i class="icon-ok"></i> 
               <% end %>
