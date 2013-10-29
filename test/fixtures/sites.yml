@@ -8,15 +8,15 @@ test_site:
   map: 984
   masl: 114
   soil: "sandy loam"
-  som: nil
+  som: NULL
   notes: ""
   soilnotes: "SL with low organic matter"
-  created_at: nil
+  created_at: NULL
   updated_at: "2010-07-09 18:01:49"
   sitename: ""
   greenhouse: false
   user_id: 1
-  local_time: nil
-  sand_pct: nil
-  clay_pct: nil
-  espg: nil
+  local_time: NULL
+  sand_pct: NULL
+  clay_pct: NULL
+  espg: NULL

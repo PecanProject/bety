@@ -1,7 +1,7 @@
 test_dbfile:
   file_name: "CA-Ca3forcing.nc"
   file_path: "ebi-cluster.igb.uiuc.edu:/home/mdietze/inputs/nacp/..."
-  md5: nil
+  md5: NULL
   created_user_id: 1
   updated_user_id: 1
   machine_id: 1

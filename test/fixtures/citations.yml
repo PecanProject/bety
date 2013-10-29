@@ -10,5 +10,5 @@ test_citation:
   pdf: ""
   created_at: "2010-09-21 21:10:43"
   updated_at: "2012-04-10 17:31:31"
-  doi: nil
+  doi: NULL
   user_id: 1

@@ -4,6 +4,6 @@ test_covariate:
   level: #<BigDecimal:2aaaabaaea30,'0.1E3',9(18)>
   created_at: "2011-03-23 16:11:00"
   updated_at: "2011-03-24 16:11:00"
-  n: nil
-  statname: nil
-  stat: nil
+  n: NULL
+  statname: NULL
+  stat: NULL

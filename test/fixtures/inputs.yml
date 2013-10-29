@@ -6,9 +6,9 @@ test_input:
   start_date: "1999-01-01 06:00:00"
   end_date: "2006-12-31 06:00:00"
   name: "ED_MET_DRIVER_HEADER"
-  parent_id: nil
+  parent_id: NULL
   user_id: 1
-  access_level: nil
+  access_level: NULL
   raw: false
   format_id: 1
   file_id: 1
