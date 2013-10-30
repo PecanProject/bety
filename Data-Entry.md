@@ -136,7 +136,7 @@ format). Do not enter data into excel first as this is prone to errors and
 information such as equations may be lost when uploading or
 copy-pasting.
 
-##  Redmine: Reporting errors, suggesting features
+##  Reporting errors, suggesting features
 
 Create a new issue on [GitHub: BetyDB] (https://github.com/PecanProject/bety/issues/new).
 

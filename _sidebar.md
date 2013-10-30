@@ -17,7 +17,7 @@
 * [[Annotating a Reference in Mendeley | Data-Entry#222-annotating-a-reference-in-mendeley]]
 * [[Finding a citation in Mendeley | Data-Entry#23-finding-a-citation-in-mendeley]]
 * [[Google Spreadsheets: Recording data transformations | Data-Entry#3-google-spreadsheets-recording-data-transformations]]
-* [[Redmine: Reporting errors, suggesting features | Data-Entry#4-redmine-reporting-errors-suggesting-features]]
+* [[Reporting errors, suggesting features | Data-Entry#4-redmine-reporting-errors-suggesting-features]]
 * [[BETYdb: Entering new data through the web interface | Data-Entry#5-betydb-entering-new-data-through-the-web-interface]]
 * [[Adding a Citation | Data-Entry#51-adding-a-citation]]
 * [[Adding a Site | Data-Entry#52-adding-a-site]]
