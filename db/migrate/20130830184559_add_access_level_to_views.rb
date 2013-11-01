@@ -1,7 +1,10 @@
 class AddAccessLevelToViews < ActiveRecord::Migration
   def self.up
     begin
+      execute "DROP VIEW IF EXISTS traits_and_yields_view"
+      execute "DROP VIEW IF EXISTS yieldsview"
       execute "DROP VIEW IF EXISTS traitsview"
+
       execute %{
           CREATE VIEW traitsview AS
                   SELECT
@@ -45,7 +48,6 @@ class AddAccessLevelToViews < ActiveRecord::Migration
 
       }
 
-      execute "DROP VIEW IF EXISTS yieldsview"
       execute %{
           CREATE VIEW yieldsview AS
                   SELECT
@@ -91,7 +93,6 @@ class AddAccessLevelToViews < ActiveRecord::Migration
 
 
 
-      execute "DROP VIEW IF EXISTS traits_and_yields_view"
       execute %{
           CREATE VIEW traits_and_yields_view AS
                   SELECT * FROM traitsview
@@ -105,7 +106,10 @@ class AddAccessLevelToViews < ActiveRecord::Migration
   end
 
   def self.down
+    execute "DROP VIEW IF EXISTS traits_and_yields_view"
+    execute "DROP VIEW IF EXISTS yieldsview"
     execute "DROP VIEW IF EXISTS traitsview"
+
     execute %{
           CREATE VIEW traitsview AS
                   SELECT
@@ -148,7 +152,6 @@ class AddAccessLevelToViews < ActiveRecord::Migration
 
     }
 
-    execute "DROP VIEW IF EXISTS yieldsview"
     execute %{
           CREATE VIEW yieldsview AS
                   SELECT
@@ -193,7 +196,6 @@ class AddAccessLevelToViews < ActiveRecord::Migration
 
 
 
-    execute "DROP VIEW IF EXISTS traits_and_yields_view"
     execute %{
         CREATE VIEW traits_and_yields_view AS
                 SELECT * FROM traitsview
