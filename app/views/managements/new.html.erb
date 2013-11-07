@@ -62,56 +62,11 @@
 			      <%= f.submit 'Create', :class => "button button-primary" %>
 		      </div>
 	      </div>
+          <%= f.hidden_field :citation_id, :value => session["citation"] %>
+          <%= hidden_field_tag :treatment, @treatment %>
       <% end %>
     </div>
   </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <p>
-    <%= f.label :date %><br />
-    <%= f.date_select :date,{ :start_year => 1800, :include_blank => true }  %>
-  </p>
-  <p>
-    <%= f.label :dateloc, "Date Level of Confidence" %><br />
-    <%= f.select :dateloc, options_for_select($dateloc_drop.sort) %>
-  </p>
-  <p>
-    <%= f.label :mgmttype, "Management Type" %><br />
-    <%= f.select :mgmttype, Management.management_types %>
-  </p>
-  <p>
-    <%= f.label :level %><br />
-    <%= f.text_field :level %>
-  </p>
-  <p>
-    <%= f.label :units %><br />
-    <%= f.text_field :units %>
-  </p>
-  <p>
-    <%= f.label :notes %><br />
-    <%= f.text_area :notes %>
-  </p>
-  <p>
-    <%= f.label :user %><br />
-    <%= current_user.select_default %>
-  </p>
-  <p>
-    <%= f.hidden_field :citation_id, :value => session["citation"] %>
-    <%= hidden_field_tag :treatment, @treatment %>
-    <%= f.submit 'Create' %>
-  </p>
-<% end %>
 
