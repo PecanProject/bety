@@ -50,7 +50,6 @@ $ mysql -u root -p
 > exit;
 ```
 2. Config the connection to the bety_test in RAILS_DIR/config/database.yml
-
 ```
 test:
   adapter: mysql2
@@ -60,4 +59,26 @@ test:
   pool: 5
   username: bety_user
   password: somepassword
+```
+2. Build up the test database from the current schema:
+```
+$ rake db:test:load
+```
+3. Load the fixtures ( essentially dummy-data used for testing )
+```
+$ rake db:fixtures:load RAILS_ENV=test
+```
+4. Run the tests
+```
+$ rspec spec/
+```
+... OR ...
+5. Run a specific individual test
+```
+$ rspec spec/features/user_integration_spec.rb
+```
+6. Expect to see some kind of output like this:
+```
+Finished in 13.73 seconds
+29 examples, 0 failures
 ```
