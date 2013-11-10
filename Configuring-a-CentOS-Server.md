@@ -307,3 +307,17 @@ yum install postgresql92-server
 sudo -u postgres psql
 alter user postgres with password 'new_password' 
 ```
+
+## Installing Virtualbox
+
+[reference](http://wiki.centos.org/HowTos/Virtualization/VirtualBox#head-81de410879b8e7f18a127f638160e036ab99684e)
+
+```
+cd /etc/yum.repos.d
+wget http://download.virtualbox.org/virtualbox/rpm/rhel/virtualbox.repo
+yum install dkms
+yum groupinstall "Development Tools"
+yum install kernel-devel
+yum install VirtualBox-4.2
+usermod -a -G vboxusers <username>
+```
