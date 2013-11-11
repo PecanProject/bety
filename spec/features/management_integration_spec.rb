@@ -53,3 +53,18 @@ feature 'Creating a new management for a treatment associated with a citation wo
   end
 end
 
+
+feature 'Attempting to create a new management' do
+  before :each do
+    login_test_user
+  end
+
+  context "when no citation has been selected" do
+    it 'should display the "Please choose a citation to work with first."' do
+      visit(managements_path)
+      first(:xpath, ".//a[text() = 'New Management']").click
+      page.should have_content "Please choose a citation to work with first."
+    end
+  end
+end
+
