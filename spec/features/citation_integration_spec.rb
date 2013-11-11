@@ -54,6 +54,7 @@ feature 'Citation index works' do
     end
 
     context 'clicking use citation button for citation with no associated sites' do
+      citation_with_no_sites = nil # make this available outside the block
       Citation.all.each do |c|
         if c.sites.size == 0
           citation_with_no_sites = c.id
