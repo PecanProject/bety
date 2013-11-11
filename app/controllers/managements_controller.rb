@@ -83,6 +83,13 @@ class ManagementsController < ApplicationController
         format.xml  { render :xml => @management }
         format.csv  { render :csv => @management }
         format.json  { render :json => @management }
+      elsif session['citation'].nil?
+        format.html {
+          logger.info("got here")
+          flash[:notice] = "Please choose a citation to work with first."
+          redirect_to managements_path
+          logger.info("got here too")
+        }
       else
         format.html { redirect_to treatments_path }
       end
