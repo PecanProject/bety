@@ -1,0 +1,14 @@
+test_user1:
+    login: 'carlcrott'
+    crypted_password: 'ace7e0ca3ca773bc2ce6ae77c445955283fb3810'
+    salt: 'f210ed33592fb5e1724f48b27000be714d2d28ec'
+    access_level: 1
+    page_access_level: 1
+
+test_user2:
+    login: 'test_admin_user'
+    crypted_password: '1fd4c5fd881ac316702ebcba084b7e89f154de56'
+    salt: 'f210ed33592fb5e1724f48b27000be714d2d28ec'
+    access_level: 1
+    page_access_level: 1
+    
