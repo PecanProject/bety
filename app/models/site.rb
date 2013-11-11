@@ -22,7 +22,7 @@ class Site < ActiveRecord::Base
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
   scope :minus_already_linked, lambda {|citation|
-    if citation.nil?
+    if citation.nil? || citation.sites.size == 0
       {}
     else
       where("id not in (?)", citation.sites.collect(&:id))
