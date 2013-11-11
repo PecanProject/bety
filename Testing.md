@@ -13,4 +13,7 @@
 
 * The simplest way to run the tests is to simply run `rspec` from the root directory of the copy of the bety rails app you are testing. This will run all the tests under the "spec" directory.
 * To run a specific file of tests, run `rspec path/to/testfile`.
-* You can run a specific test in a file by appending a line number: `rspec path/to/testfile:line_number_of_first_line_of_test`.  This command will appear under the "Failed examples" section of a test run (assuming the test failed); for example `rspec ./spec/features/management_integration_spec.rb:48 # Creating a new management for a treatment associated with a citation works when a citation has been selected should display the new management form`.
+* You can run a specific test in a file by appending a line number: `rspec path/to/testfile:line_number_of_first_line_of_test`.  This command will appear under the "Failed examples" section of a test run (assuming the test failed); for example `rspec ./spec/features/management_integration_spec.rb:48`
+* Some useful options to rspec are: 
+  1. --fail-fast (Abort the run on first failure)
+  2. --format doc (get nicely formatted output)
