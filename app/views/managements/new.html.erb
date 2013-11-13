@@ -10,21 +10,17 @@
 
         <div class="row">
           <div class="eight columns alpha">
-            <%= f.label :citation_id %>
-            <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, {:include_blank => ""}, :class => "input-full" %>
-          </div>
-          <div class="eight columns omega">
             <%= f.label :date %>
             <%= f.date_select :date,{ :start_year => 1800, :include_blank => true } %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :dateloc, "Date Level of Confidence" %>
+            <%= f.select :dateloc, options_for_select($dateloc_drop.sort,f.object.dateloc.to_s), :class => "input-full" %>
           </div>
         </div>
         
         <div class="row">
           <div class="four columns alpha">
-            <%= f.label :dateloc, "Date Level of Confidence" %>
-            <%= f.select :dateloc, options_for_select($dateloc_drop.sort,f.object.dateloc.to_s), :class => "input-full" %>
-          </div>
-          <div class="four columns">
             <%= f.label :mgmttype, "Management Type" %>
             <%= f.select :mgmttype, Management.management_types, :class => "input-full" %>
           </div>
