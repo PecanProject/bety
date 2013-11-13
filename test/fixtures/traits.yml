@@ -4,25 +4,25 @@ test_trait:
   citation_id: 1
   cultivar_id: 1
   treatment_id: 1
-  date: nil
-  dateloc: nil
-  time: nil
-  timeloc: nil
-  mean: nil
-  n: nil
-  statname: nil
-  stat: nil
-  notes: nil
-  created_at: nil
-  updated_at: nil
+  date: NULL
+  dateloc: NULL
+  time: NULL
+  timeloc: NULL
+  mean: NULL
+  n: NULL
+  statname: NULL
+  stat: NULL
+  notes: NULL
+  created_at: NULL
+  updated_at: NULL
   variable_id: 1
   user_id: 1
   checked: 0
   access_level: 4
   entity_id: 1
   method_id: 1
-  date_year: nil
-  date_month: nil
-  date_day: nil
-  time_hour: nil
-  time_minute: nil
+  date_year: NULL
+  date_month: NULL
+  date_day: NULL
+  time_hour: NULL
+  time_minute: NULL

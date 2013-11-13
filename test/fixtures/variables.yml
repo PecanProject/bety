@@ -1,9 +1,9 @@
 test_variable:
   description: "Photosynthetic Water Use Efficiency"
   units: "umol CO2 mmol -1 H2O"
-  notes: nil
+  notes: NULL
   created_at: "2011-06-01 14:40:42"
   updated_at: "2011-06-06 14:40:42"
   name: "PWUE"
-  max: nil
+  max: NULL
   min: "0"

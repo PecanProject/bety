@@ -1,6 +1,6 @@
 test_method:
   name: "test"
   description: ""
-  citation_id: nil
+  citation_id: NULL
   created_at: "2012-05-30 16:16:18"
   updated_at: "2012-05-30 16:16:18"

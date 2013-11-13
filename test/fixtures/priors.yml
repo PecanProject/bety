@@ -5,8 +5,8 @@ test_prior:
   distn: "gamma"
   parama: #<BigDecimal:2aaaac2a2e58,'0.147E1',18(18)>
   paramb: #<BigDecimal:2aaaac2a2d68,'0.578E-1',9(18)>
-  paramc: nil
+  paramc: NULL
   n: 0
   notes: "optimized to gamma with 95% CI = [5,80]; median = 2..."
-  created_at: nil
+  created_at: NULL
   updated_at: "2011-12-06 21:10:41"

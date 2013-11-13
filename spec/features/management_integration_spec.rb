@@ -35,4 +35,21 @@ feature 'Managements index works' do
   end
 end
 
+feature 'Creating a new management for a treatment associated with a citation works' do
+  before :each do
+    login_test_user
+  end
+
+  context "when a citation has been selected" do
+    before :each do
+      visit(citations_path)
+      first(:xpath, ".//a[@alt = 'use']").click
+    end
+    it 'should display the new management form' do
+      visit(treatments_path)
+      first(:xpath, ".//a[text() = 'New Management for this treatment']").click
+      page.should_not have_content "We're sorry"
+    end
+  end
+end
 
