@@ -53,7 +53,6 @@ feature 'Creating a new management for a treatment associated with a citation wo
     it 'should not have a citations select box' do
       visit(treatments_path)
       first(:xpath, ".//a[text() = 'New Management for this treatment']").click
-      puts page.html
       page.should_not have_selector(:xpath, '//select[@name="management[citation_id]"]')
     end      
   end
@@ -66,10 +65,20 @@ feature 'Attempting to create a new management' do
   end
 
   context "when no citation has been selected" do
-    it 'should display the "Please choose a citation to work with first."' do
+    it 'should display the message "Please choose a citation to work with first."' do
       visit(managements_path)
       first(:xpath, ".//a[text() = 'New Management']").click
       page.should have_content "Please choose a citation to work with first."
+    end
+  end
+
+  context "when the selected citation has no associated treatment" do
+    it 'should display the message "You must associate a treatment with this citation before adding a new management"' do
+      visit(citations_path)
+      first(:xpath, ".//tr[contains(td, 'Adler')]/td/a[@alt = 'use']").click
+      visit(managements_path)
+      first(:xpath, ".//a[text() = 'New Management']").click
+      page.should have_content "You must associate a treatment with this citation before adding a new management"
     end
   end
 end
