@@ -26,8 +26,8 @@ gem "ruby-mysql" # for data upload scripts in local
 gem "activerecord-mysql2-adapter"
 
 # Postgresql, comment out MySQL section
-#gem "pg"
-#gem "activerecord-postgresql-adapter"
+gem "pg"
+gem "activerecord-postgresql-adapter"
 
 group :development, :test do
   gem "rspec-rails"
