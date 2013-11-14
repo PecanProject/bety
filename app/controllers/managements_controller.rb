@@ -85,12 +85,13 @@ class ManagementsController < ApplicationController
         format.json  { render :json => @management }
       elsif session['citation'].nil?
         format.html {
-          logger.info("got here")
           flash[:notice] = "Please choose a citation to work with first."
           redirect_to managements_path
-          logger.info("got here too")
         }
       else
+        if Citation.find(session["citation"]).treatments.size == 0
+          flash[:notice] = 'You must associate a treatment with this citation before adding a new management'
+        end
         format.html { redirect_to treatments_path }
       end
     end
