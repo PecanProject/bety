@@ -55,7 +55,7 @@ CREDITS
       @all_marker_locations = all_viewable_rows
         .select("site_id, city, sitename, lat, lon")
         .where("lat IS NOT NULL AND lon IS NOT NULL")
-        .group("site_id")
+        .group("site_id, city, sitename, lat, lon")
 
       # intermediate variable used in getting locations in the
       # selected by clicking the map:
@@ -65,7 +65,7 @@ CREDITS
       sites_in_map_region = results_in_map_region
         .select("site_id, city, sitename, lat, lon")
         .where("lat IS NOT NULL AND lon IS NOT NULL")
-        .group("site_id")
+        .group("site_id, city, sitename, lat, lon")
         .to_a
         .map { |row| row.serializable_hash }
 
@@ -78,7 +78,7 @@ CREDITS
       @all_result_locations = search_results
         .select("site_id, city, sitename, lat, lon")
         .where("lat IS NOT NULL AND lon IS NOT NULL")
-        .group("site_id")
+        .group("site_id, city, sitename, lat, lon")
         .to_a
         .map { |row| row.serializable_hash }
 

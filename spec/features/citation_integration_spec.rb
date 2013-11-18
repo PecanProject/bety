@@ -53,6 +53,22 @@ feature 'Citation index works' do
       end
     end
 
+    context 'clicking use citation button for citation with no associated sites' do
+      citation_with_no_sites = nil # make this available outside the block
+      Citation.all.each do |c|
+        if c.sites.size == 0
+          citation_with_no_sites = c.id
+          break
+        end
+      end
+      it 'should list sites under the "Listing Sites" section of the Sites page' do
+        visit '/citations/'
+        first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/#{citation_with_no_sites}')]").click
+        page.should have_content 'Listing Sites'
+        page.should_not have_content 'No entries found'
+      end
+    end
+
   end
 end
 

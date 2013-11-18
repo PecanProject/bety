@@ -26,12 +26,14 @@ GEM
       tzinfo (~> 0.3.23)
     activerecord-mysql2-adapter (0.0.3)
       mysql2
+    activerecord-postgresql-adapter (0.0.1)
+      pg
     activeresource (3.0.18)
       activemodel (= 3.0.18)
       activesupport (= 3.0.18)
     activesupport (3.0.18)
     arel (2.0.10)
-    bootstrap-will_paginate (0.0.9)
+    bootstrap-will_paginate (0.0.10)
       will_paginate
     builder (2.1.2)
     capybara (2.1.0)
@@ -42,9 +44,9 @@ GEM
       xpath (~> 2.0)
     choice (0.1.6)
     comma (3.0.4)
-    daemon_controller (1.1.4)
-    database_cleaner (1.0.1)
-    diff-lcs (1.2.4)
+    daemon_controller (1.1.7)
+    database_cleaner (1.2.0)
+    diff-lcs (1.2.5)
     erubis (2.6.6)
       abstract (>= 1.0.0)
     fastercsv (1.5.5)
@@ -55,17 +57,18 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    mime-types (1.23)
-    mini_portile (0.5.0)
+    mime-types (1.25)
+    mini_portile (0.5.2)
     multi_json (1.3.6)
-    mysql2 (0.3.11)
+    mysql2 (0.3.14)
     narray (0.6.0.4)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
-    passenger (4.0.8)
+    passenger (4.0.24)
       daemon_controller (>= 1.1.0)
       rack
       rake (>= 0.8.1)
+    pg (0.17.0)
     polyglot (0.3.3)
     query_reviewer (0.1.6)
     rack (1.2.8)
@@ -92,17 +95,17 @@ GEM
     rdoc (3.12.2)
       json (~> 1.4)
     recaptcha (0.3.4)
-    rspec-core (2.13.1)
-    rspec-expectations (2.13.0)
+    rspec-core (2.14.7)
+    rspec-expectations (2.14.4)
       diff-lcs (>= 1.1.3, < 2.0)
-    rspec-mocks (2.13.1)
-    rspec-rails (2.13.2)
+    rspec-mocks (2.14.4)
+    rspec-rails (2.14.0)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
-      rspec-core (~> 2.13.0)
-      rspec-expectations (~> 2.13.0)
-      rspec-mocks (~> 2.13.0)
+      rspec-core (~> 2.14.0)
+      rspec-expectations (~> 2.14.0)
+      rspec-mocks (~> 2.14.0)
     ruby-graphviz (1.0.8)
     ruby-mysql (2.9.11)
     safe_attributes (1.0.10)
@@ -110,7 +113,7 @@ GEM
     seer (0.10.0)
     sqlite3 (1.3.3)
     thor (0.14.6)
-    treetop (1.4.14)
+    treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.35)
@@ -127,6 +130,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-mysql2-adapter
+  activerecord-postgresql-adapter
   bootstrap-will_paginate
   capybara
   choice (= 0.1.6)
@@ -139,6 +143,7 @@ DEPENDENCIES
   narray (= 0.6.0.4)
   nokogiri
   passenger
+  pg
   query_reviewer (= 0.1.6)
   railroad (= 0.5.0)
   rails (= 3.0.18)

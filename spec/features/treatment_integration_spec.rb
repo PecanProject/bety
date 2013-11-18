@@ -33,6 +33,13 @@ feature 'Treatment index works' do
 
       page.should have_content 'Listing Treatments'
     end
+
+    it 'should return "Listing Treatments" even if a citation has been chosen' do
+      visit(citations_path)
+      first(:xpath, ".//td[preceding-sibling::td[text() = 'Adler']]/a[contains(@href, 'use_citation')]").click
+      visit(treatments_path)
+      page.should have_content 'Listing Treatments'
+    end
     
     it 'following edit link should return content "Editing Treatment" ' do
       visit '/treatments/'

@@ -10,5 +10,20 @@ test_citation:
   pdf: ""
   created_at: "2010-09-21 21:10:43"
   updated_at: "2012-04-10 17:31:31"
-  doi: nil
+  doi: NULL
   user_id: 1
+
+citation_with_no_associated_treatment:
+  id: 2
+  author: "Adler"
+  year: 2006
+  title: "Biomass yield and biofuel quality of switchgrass harvested in fall or spring"
+  journal: "Agronomy Journal"
+  vol: 98
+  pg: "1518-1525"
+  url: "http://hdl.handle.net/10113/3966"
+  pdf: "http://ddr.nal.usda.gov/dspace/bitstream/10113/3966/1/IND43886658.pdf"
+  created_at: "2010-09-22 21:10:43"
+  updated_at: "2010-09-22 21:10:43"
+  doi: "10.2134/agronj2005.0351"
+  
