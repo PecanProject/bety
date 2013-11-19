@@ -1,49 +1,63 @@
-
 RAILS_ENV='production'
-require '/rails/ebi/config/environment'
+require '../config/environment'
 
 f = File.new "woody_data_import.traits"
 
-woody = Struct.new(:tmpid,:site_id,:specie_id,:citation_id,:cultivar_id,:treatment_id,:date,:dateloc,:time,:timeloc,:mean,:n,:statname,:stat,:notes,:created_at,:updated_at,:variable_id,:user_id,:checked,:access_level)
+Woody = Struct.new(:tmpid,:site_id,:specie_id,:citation_id,:cultivar_id,
+                   :treatment_id,:date,:dateloc,:time,:timeloc,:mean,:n,
+                   :statname,:stat,:notes,:created_at,:updated_at,:variable_id,
+                   :user_id,:checked,:access_level)
 
 woodys = []
 
-f.gets # header
+f.gets # discard the first line, assumed to be the header
 
 f.each_line do |line|
-  woodys << woody.new(*line.chomp!.split(","))
+  # Although the Ruby documentation doesn't state this explicitly, we
+  # assume the arguments passed to Woody.new are assigned to
+  # attributes in the order they are listed in Struct.new.
+  woodys << Woody.new(*line.chomp!.split(","))
 end
 
 f.close
 
+# This stores the Trait objects created for each row of the CSV file.
 traits = []
 
-woodys.each do |wood|
+woodys.each do |woody|
   t = Trait.new
-  wood.members.each do |key|
-    wood[key] = nil if wood[key] == "NA"
+
+  # Normalize all struct member values to nil if "NA" appears in the input CSV file.
+  woody.members.each do |key|
+    woody[key] = nil if woody[key] == "NA"
   end
 
-  t[:site_id] = wood[:site_id].to_i if !wood[:site_id].nil?
-  t[:specie_id] = wood[:specie_id].to_i if !wood[:specie_id].nil?
-  t[:citation_id] = wood[:citation_id].to_i if !wood[:citation_id].nil?
-  t[:cultivar_id] = wood[:cultivar_id].to_i if !wood[:cultivar_id].nil?
-  t[:treatment_id] = wood[:treatment_id].to_i if !wood[:treatment_id].nil?
-  t[:date] = Date.parse(wood[:date]) if !wood[:date].nil?
-  t[:dateloc] = wood[:dateloc].to_f if !wood[:dateloc].nil?
-  t[:time] = DateTime.parse(wood[:time]) if !wood[:time].nil?
-  t[:timeloc] = wood[:timeloc].to_f if !wood[:timeloc].nil?
-  t[:mean] = wood[:mean].to_f if !wood[:mean].nil?
-  t[:n] = wood[:n].to_i if !wood[:n].nil?
-  t[:statname] = wood[:statname] if !wood[:statname].nil?
-  t[:stat] = wood[:stat].to_f if !wood[:stat].nil?
-  t[:notes] = wood[:notes] if !wood[:notes].nil?
+  # The to_i type conversions are probably unnecessary here (they seem to have no effect).
+  # The to_f type conversions may be unnecessare.  They seem only to prevent rounding.
+  # The Date.parse and DateTime.parse calls are probably unnecessary as well.
+  t[:site_id] = woody[:site_id].to_i if !woody[:site_id].nil?
+  t[:specie_id] = woody[:specie_id].to_i if !woody[:specie_id].nil?
+  t[:citation_id] = woody[:citation_id].to_i if !woody[:citation_id].nil?
+  t[:cultivar_id] = woody[:cultivar_id].to_i if !woody[:cultivar_id].nil?
+
+  t[:treatment_id] = woody[:treatment_id].to_i if !woody[:treatment_id].nil?
+  t[:date] = Date.parse(woody[:date]) if !woody[:date].nil?
+  t[:dateloc] = woody[:dateloc].to_f if !woody[:dateloc].nil?
+  t[:time] = DateTime.parse(woody[:time]) if !woody[:time].nil?
+  t[:timeloc] = woody[:timeloc].to_f if !woody[:timeloc].nil?
+  t[:mean] = woody[:mean].to_f if !woody[:mean].nil?
+  t[:n] = woody[:n].to_i if !woody[:n].nil?
+
+  t[:statname] = woody[:statname] if !woody[:statname].nil?
+  t[:stat] = woody[:stat].to_f if !woody[:stat].nil?
+  t[:notes] = woody[:notes] if !woody[:notes].nil?
   t[:created_at] = Time.now 
   t[:updated_at] = Time.now 
-  t[:variable_id] = wood[:variable_id].to_i if !wood[:variable_id].nil?
-  t[:user_id] = wood[:user_id].to_i if !wood[:user_id].nil?
+  t[:variable_id] = woody[:variable_id].to_i if !woody[:variable_id].nil?
+
+  t[:user_id] = woody[:user_id].to_i if !woody[:user_id].nil?
   t[:checked] = 0 
-  t[:access_level] = wood[:access_level].to_i if !wood[:access_level].nil?
+  t[:access_level] = woody[:access_level].to_i if !woody[:access_level].nil?
 
 
   t.save
