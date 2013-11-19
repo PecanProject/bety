@@ -115,14 +115,26 @@ class TreatmentsController < ApplicationController
   
         tts = []
         @treatments = Citation.find(session["citation"]).treatments
-  
+        treatment_ids = @treatments.collect {|x| x.id}
+
         if !params[:unlinked].blank?
-          tts = Treatment.includes({:citations => {:sites => :citations} }).where('(treatments.name like ? or treatments.definition like ? ) and treatments.id not in (?)',params[:treatment], params[:treatment], @treatments.collect {|x| x.id}.join(","))
+          tts = Treatment.includes({:citations => {:sites => :citations} }).where('(treatments.name like ? or treatments.definition like ?) and treatments.id not in (?)',
+                                                                                  params[:treatment],
+                                                                                  params[:treatment],
+                                                                                  treatment_ids)
         else
           if params[:treatment].blank?
-            conditions = ['citations.id = ? and treatments.id not in (?) and citations_sites_2.id != ?', session["citation"], @treatments.collect {|x| x.id}.join(","),session["citation"] ]
+            conditions = ['citations.id = ? and treatments.id not in (?) and citations_sites_2.id != ?', 
+                          session["citation"],
+                          treatment_ids,
+                          session["citation"] ]
           else
-            conditions = ['(treatments.name like ? or treatments.definition like ? ) and citations.id = ? and treatments.id not in (?)and citations_sites_2.id != ?', params[:treatment],params[:treatment], session["citation"], @treatments.collect {|x| x.id}.join(","), session["citation"] ]
+            conditions = ['(treatments.name like ? or treatments.definition like ? ) and citations.id = ? and treatments.id not in (?) and citations_sites_2.id != ?',
+                          params[:treatment],
+                          params[:treatment],
+                          session["citation"],
+                          treatment_ids,
+                          session["citation"] ]
           end
           tts = Treatment.where(conditions).includes({:citations => {:sites => :citations} })
         end
