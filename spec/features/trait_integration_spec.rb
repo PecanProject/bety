@@ -26,7 +26,6 @@ feature 'Traits index works' do
         click_link 'Citations'
         first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
         click_link 'Traits'
-        puts page.html
         click_link 'New Trait'
         click_button 'Create'
         
