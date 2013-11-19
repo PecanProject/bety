@@ -148,8 +148,9 @@ class TraitsController < ApplicationController
         format.xml  { render :xml => @trait, :status => :created, :location => @trait }
         format.csv  { render :csv => @trait, :status => :created, :location => @trait }
       else
-        @treatments = Citation.find(session["citation"]).treatments rescue nil
-        @sites = Citation.find(session["citation"]).sites rescue nil
+        @citation = Citation.find(session["citation"])
+        @treatments = @citation.treatments rescue nil
+        @sites = @citation.sites rescue nil
 
         format.html { render :action => "new" }
         format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
