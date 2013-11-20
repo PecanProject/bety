@@ -1,25 +1,21 @@
 <div id="treatments_container">
-<h1>Search</h1>
+<h2>Search For Treatments</h2>
 <%= form_tag( { :action => 'index'}, :method => :get ) do %>
 <table>
   <tr>
-  <tr>
     <td>Name or Definition:</td>
     <td><%= text_field_tag(:treatment) %></td>
-  </tr>
-  <tr>
-    <td>Include 'unlinked'?:</td>
+    <td>Include all treatments in search?:</td>
     <td><%= check_box_tag(:unlinked) %></td>
-  </tr>
-  <tr>
     <td colspan=2 ><%= submit_tag("Search") %></td>
   </tr>
 </table>
 <% end %>
 <br />
-<h1>Treatments associated with this citation</h1>
 
 <% if !@treatments.nil? and @treatments.length > 0 %>
+<h2>Treatments associated with this citation</h2>
+
 <table>
   <tr>
     <th>Name</th>
@@ -41,7 +37,6 @@
   <tr>
     <td colspan=5>
       <br />
-      <h1>Associated Managements</h1>
       <%= link_to 'New Management for this treatment', new_management_path(:treatment => treatment.id) %><br />
       
       <div id="DataTables_Table_0_length" class="dataTables_length">
@@ -83,13 +78,8 @@
 <br />
 <% end %>
 
-<h1>Treatments from all citations associated with associated sites</h1>
-
-
-
-
-
-
+<h2>Other Treatments And Managements</h2>
+<h3>Treatments and Managements from sites linked to this citation (if any) listed at top</h2>
 
 <div id="DataTables_Table_0_length" class="dataTables_length">
   <table class="table table-striped table-bordered datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
@@ -127,25 +117,22 @@
 
       <% if treatment.managements.length > 0 %>
         <tr>
-          <td colspan=5 class="padded_sides_20px"><br />
-            <h1>Associated Managements</h1>
+          <td colspan=4 class="padded_sides_20px"><br />
               <div id="DataTables_Table_0_length" class="dataTables_length">
                 <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
                   <thead>
                     <tr role="row">
-                      <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 200px">Citation</th>
-                      <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Date</th>
                       <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 80px">Type</th>
                       <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 30px">Level</th>
+                      <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Date</th>
                       <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Actions</th>
                     </tr>
                   </thead>
                 <tbody role="alert" aria-live="polite" aria-relevant="all">
                   <% treatment.managements.each do |management| %>
                   <tr>
-                    <td class="center"><%= management.citation.author_year_title if !management.citation.nil? %></td>
-                    <td class="center"><%= management.date %></td>
                     <td class="center"><%= management.mgmttype %></td>
+                    <td class="center"><%= management.date %></td>
                     <td class="center"><%= management.level %></td>
                     <td class="center">
                     

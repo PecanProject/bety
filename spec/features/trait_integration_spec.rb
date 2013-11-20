@@ -21,6 +21,17 @@ feature 'Traits index works' do
       end
     end
 
+    context 'creating new trait' do
+      it 'should not tell the user to choose a citation when trait creation fails for some other reason' do
+        click_link 'Citations'
+        first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
+        click_link 'Traits'
+        click_link 'New Trait'
+        click_button 'Create'
+        
+        page.should_not have_content 'Please choose a citation to work with first.'
+      end
+    end
 
     ## pending
     it 'should allow creation of new traits' do
