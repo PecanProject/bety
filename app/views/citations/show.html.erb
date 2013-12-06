@@ -29,7 +29,7 @@
 				</dd>
 				<dt>Pdf</dt>
 			  <dd>
-				  <%= link_to_unless @citation.pdf.blank?, "link", @citation.url do; "none"; end %>
+				  <%= link_to_unless @citation.pdf.blank?, "link", @citation.pdf do; "none"; end %>
 				</dd>
 				<dt>DOI</dt>
 				<dd><%= @citation.doi %></dd>
