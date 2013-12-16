@@ -1,0 +1,6 @@
+<%= form_tag({ action: "confirm_data" }, method: "post", multipart: true) do %>
+<%= file_field_tag 'CSV file' %>
+<%= submit_tag("Upload") %>
+<% end %>
+
+      

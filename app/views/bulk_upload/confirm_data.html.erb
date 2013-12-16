@@ -1,0 +1,27 @@
+<%= form_tag({ action: "map_data" }) do %>
+<style>
+  .red { background-color: #f00 }
+  .green { background-color: #0f0 }
+</style>
+<table>
+  <thead>
+    <tr>
+      <% @headers.each do |header| %>
+      <th><%= header %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @data.each do |row| %>
+    <tr>
+      <% row.each do |value| %>
+      <td class="<%= validation2class(value) %>"><%= raw("#{value[1]}#{lookup_value(value)}") %></td>
+      <% end %>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= submit_tag("Confirm data table") %>
+<% end %>
+
+
