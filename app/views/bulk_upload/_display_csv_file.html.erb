@@ -1,8 +1,5 @@
-<%= form_tag({ action: "map_data" }) do %>
-<style>
-  .red { background-color: #f00 }
-  .green { background-color: #0f0 }
-</style>
+<%= form_tag({ action: "map_data" }, remote: true) do %>
+<%= submit_tag("Continue") %>
 <table>
   <thead>
     <tr>
@@ -15,13 +12,12 @@
     <% @data.each do |row| %>
     <tr>
       <% row.each do |value| %>
-      <td class="<%= validation2class(value) %>"><%= raw("#{value[1]}#{lookup_value(value)}") %></td>
+      <td><%= value[1] %></td>
       <% end %>
     </tr>
     <% end %>
   </tbody>
 </table>
-<%= submit_tag("Confirm data table") %>
 <% end %>
 
 

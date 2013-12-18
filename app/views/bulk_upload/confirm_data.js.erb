@@ -1,0 +1,23 @@
+
+jQuery('#validation_stage').show()
+
+jQuery('#mapping_stage').hide()
+
+
+
+var stuff = jQuery('form').serialize()
+
+for (var i = 0; i < data.length; i++) {
+
+    row = "<tr>"
+
+    for (var j = 0; j < displayed_columns.length; j++) {
+        row += "<td>" + data[i][displayed_columns[j]] + "</td>"
+    }
+
+    row += '</tr>'
+    
+jQuery('#insert_data').append(row);
+
+    }
+
