@@ -129,7 +129,7 @@ module SimpleSearch
     when :decimal
 # If we decide to do wildcard searches for decimal types, we need to do something like this to get it to work in PostgreSQL:
 #      search[/[\.\d]*/] == search ? "CAST(#{column} AS TEXT) LIKE :wildcard_search" : nil
-      "#{column} = :search"
+      search[/[\.\d]*/] == search ? "#{column} = :search" : nil
     when :string, :text
       "LOWER(#{column}) LIKE LOWER(:wildcard_search)"
     else
