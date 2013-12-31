@@ -12,12 +12,10 @@ class SpeciesController < ApplicationController
 
     # Strip anything not A-Z, a-z, 0-9, the underscore, or whitespace.
     @query.gsub!(/[^\w\s]+/, '')
-    # Downcase for case-insensitive searches in PostgreSQL.
-    @query.downcase!
 
     if !params[:symbol].nil? and !params[:cont].nil? and params[:symbol].length > 3
-      @species = Specie.where('LOWER(scientificname) LIKE :query OR LOWER(genus) LIKE :query OR LOWER("AcceptedSymbol") LIKE :query OR LOWER(commonname) LIKE :query' +
-                              ' OR LOWER(scientificname) LIKE :query2 OR LOWER(genus) LIKE :query2 OR LOWER("AcceptedSymbol") LIKE :query2 OR LOWER(commonname) LIKE :query2', 
+      @species = Specie.where('LOWER(scientificname) LIKE LOWER(:query) OR LOWER(genus) LIKE LOWER(:query) OR LOWER("AcceptedSymbol") LIKE LOWER(:query) OR LOWER(commonname) LIKE LOWER(:query)' +
+                              ' OR LOWER(scientificname) LIKE LOWER(:query2) OR LOWER(genus) LIKE LOWER(:query2) OR LOWER("AcceptedSymbol") LIKE LOWER(:query2) OR LOWER(commonname) LIKE LOWER(:query2)', 
                               {:query => @query + "%", :query2 => "%" + @query + "%"}).limit(100).order("scientificname")
       @species.uniq!
     else
