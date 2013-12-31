@@ -10,11 +10,15 @@ class SpeciesController < ApplicationController
   def species_search
     @query = params[:symbol] || nil
 
-    #Strip anything not A-Z, 0-9
-    @query.gsub!(/[^\w\s]+/,'')
+    # Strip anything not A-Z, a-z, 0-9, the underscore, or whitespace.
+    @query.gsub!(/[^\w\s]+/, '')
+    # Downcase for case-insensitive searches in PostgreSQL.
+    @query.downcase!
 
     if !params[:symbol].nil? and !params[:cont].nil? and params[:symbol].length > 3
-      @species = Specie.where('scientificname like :query or genus like :query or AcceptedSymbol like :query or commonname like :query or scientificname like :query2 or genus like :query2 or AcceptedSymbol like :query2 or commonname like :query2', {:query => @query + "%", :query2 => "%" + @query + "%"}).limit(100).order("scientificname")
+      @species = Specie.where('LOWER(scientificname) LIKE :query OR LOWER(genus) LIKE :query OR LOWER("AcceptedSymbol") LIKE :query OR LOWER(commonname) LIKE :query' +
+                              ' OR LOWER(scientificname) LIKE :query2 OR LOWER(genus) LIKE :query2 OR LOWER("AcceptedSymbol") LIKE :query2 OR LOWER(commonname) LIKE :query2', 
+                              {:query => @query + "%", :query2 => "%" + @query + "%"}).limit(100).order("scientificname")
       @species.uniq!
     else
       @species = []
