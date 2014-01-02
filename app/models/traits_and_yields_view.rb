@@ -1,3 +1,14 @@
+# This overrides the to_comma method in the "comma" gem, replacing the
+# iterator_method parameter value passed to the Comma::Generator#run
+# method so that it uses "find_all" instead of "find_each".
+# ("find_each" doesn't seem to work correctly with SQL views in rails
+# 3.0.8.)
+class ActiveRecord::Relation
+  def to_comma(style = :default)
+    Comma::Generator.new(self, style).run(:find_all)
+  end
+end
+
 class TraitsAndYieldsView < ActiveRecord::Base
   # Passed from controller for validation of ability
 #  attr_accessor :current_user
