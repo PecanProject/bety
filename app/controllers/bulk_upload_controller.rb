@@ -3,34 +3,39 @@ class BulkUploadController < ApplicationController
   def start_upload
   end
 
-  def finish_upload
+  private
+  def read_data
+    
+    csvpath = session[:csvpath]
+    
+    csv = CSV.open(csvpath, { headers: true })
+    csv.readline
+    session[:headers] = @headers = csv.headers
 
-    # hard code trait columns for now
+
+    @data = csv
+
     @columns = Trait.columns
     @displayed_columns = @columns.select { |col| !['id', 'created_at', 'updated_at'].include?(col.name) }
 
-    # get CSV file path
-    session[:csv_file_path] = @csv_file_path = params["CSV file"].path
+  end
+
+  public
+  def display_csv_file
+
+    if params["CSV file"]
+      uploaded_io = params["CSV file"]
+      file = File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb')
+      file.write(uploaded_io.read)
+      session[:csvpath] = file.path
+    end
 
     begin
-      csv = CSV.open(params["CSV file"].path, { headers: true }) # CSV.new(data, { headers: true })
-      csv.readline
-      @headers = session[:headers] = csv.headers
-      
-      data = csv.read # force exception if not well formed
+      read_data
 
-      rows_of_hashes = []
+      @data.read # force exception if not well formed
+      @data.rewind #
 
-      data.each do |row|
-        rows_of_hashes << row.to_hash
-      end
-
-      @data_json = ActiveSupport::JSON.encode(rows_of_hashes)
-      csv.rewind
-
-      @displayed_columns_json = ActiveSupport::JSON.encode(@displayed_columns.map { |col| col.name })
-
-      @data = csv
     rescue CSV::MalformedCSVError => e
       @errors = e
     end
@@ -47,29 +52,16 @@ class BulkUploadController < ApplicationController
   end
 
 
-  # These are the stages handled by finish_upload:
-
-  # display_CSV_stage
-
-  # mapping_stage
   def map_data
-    #@headers = session[:headers]
 
-    respond_to do |format|
-      format.js { render layout: false }
-    end
+    read_data
+
   end
 
-  # validation_stage
+
   def confirm_data
-    
+    read_data
 
-    respond_to do |format|
-      format.js { render :layout => false }
-    end
   end
-
-
-    
 
 end

@@ -1,0 +1,23 @@
+<%= form_tag({ action: "map_data" }) do %>
+<%= submit_tag("Continue") %>
+<table>
+  <thead>
+    <tr>
+      <% @headers.each do |header| %>
+      <th><%= header %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @data.each do |row| %>
+    <tr>
+      <% row.each do |value| %>
+      <td><%= value[1] %></td>
+      <% end %>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+

@@ -1,5 +1,5 @@
 <%= if @errors then @errors end %>
-<%= form_tag({ action: "finish_upload" }, method: "post", multipart: true) do %>
+<%= form_tag({ action: "display_csv_file" }, method: "post", multipart: true) do %>
 <%= file_field_tag 'CSV file' %>
 <%= submit_tag("Upload") %>
 <% end %>
