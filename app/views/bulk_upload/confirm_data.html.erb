@@ -1,0 +1,25 @@
+
+<table>
+<% params.each do |p| %>
+<tr><td><%= p[0] %></td><td><%= p[1] %></td></tr>
+<% end %>
+</table>
+
+<%= form_tag({ action: "map_data" }) do %>
+<style>
+  .red { background-color: #f00 }
+  .green { background-color: #0f0 }
+</style>
+<table>
+  <thead>
+    <tr>
+      <% @displayed_columns.each do |column| %>
+      <th><%= column.name %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody id="insert_data">
+  </tbody>
+</table>
+<%= submit_tag("Confirm data table") %>
+<% end %>
