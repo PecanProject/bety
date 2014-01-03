@@ -1,26 +1,10 @@
 class BulkUploadController < ApplicationController
 
+  # step 1
   def start_upload
   end
 
-  private
-  def read_data
-    
-    csvpath = session[:csvpath]
-    
-    csv = CSV.open(csvpath, { headers: true })
-    csv.readline
-    session[:headers] = @headers = csv.headers
-
-
-    @data = csv
-
-    @columns = Trait.columns
-    @displayed_columns = @columns.select { |col| !['id', 'created_at', 'updated_at'].include?(col.name) }
-
-  end
-
-  public
+  # step 2
   def display_csv_file
 
     if params["CSV file"]
@@ -52,6 +36,7 @@ class BulkUploadController < ApplicationController
   end
 
 
+  # step 3
   def map_data
 
     read_data
@@ -59,8 +44,35 @@ class BulkUploadController < ApplicationController
   end
 
 
+  # step 4
   def confirm_data
     read_data
+
+  end
+
+
+
+
+
+
+  private
+  # Reads the CSV file at session[:csvpath] and sets @headers and
+  # session[:headers] to the CSV file's header info and sets @data to
+  # the data info.  Also, sets @columns to the columns of the traits
+  # table and @displayed_columns to a subset of these.
+  def read_data
+    
+    csvpath = session[:csvpath]
+    
+    csv = CSV.open(csvpath, { headers: true })
+    csv.readline
+    session[:headers] = @headers = csv.headers
+
+
+    @data = csv
+
+    @columns = Trait.columns
+    @displayed_columns = @columns.select { |col| !['id', 'created_at', 'updated_at'].include?(col.name) }
 
   end
 

@@ -2,19 +2,17 @@
   .column_name { font-weight: bold }
 </style>
 <%= form_tag({ action: :confirm_data }) do %>
-<%= submit_tag("Confirm Data") %>
-<table>
-  <tbody>
-    <% @columns.each do |column| %>
-    <% if ['id', 'created_at', 'updated_at'].include?(column.name) then next end %>
-    <tr>
-      <td>To compute</td>
-      <td class="column_name"><%= column.name %></td>
-      <td><%= raw(default_source_for(column.name)) %></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
-<a href="javascript: jQuery.get('/bulk_upload/confirm_data'); false;">blah</a>
+  <%= submit_tag("Confirm Data") %>
+  <table>
+    <tbody>
+      <% @displayed_columns.each do |column| %>
+      <tr>
+        <td>To compute</td>
+        <td class="column_name"><%= column.name %></td>
+        <td><%= raw(default_source_for(column.name)) %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
 <% end %>
 
