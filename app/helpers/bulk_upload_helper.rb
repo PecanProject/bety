@@ -146,5 +146,20 @@ module BulkUploadHelper
     ""
   end
 
+  def validate(column, value)
+    return "gray" if value.nil? || value.empty?
+
+    if column.match(/_id$/)
+      table = column.sub(/_id$/, '').classify.constantize
+      if table.find_by_id(value)
+        "green"
+      else
+        "red"
+      end
+    else
+      "green"
+    end
+  end
+
 
 end
