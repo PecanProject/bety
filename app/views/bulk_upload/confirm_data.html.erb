@@ -20,11 +20,12 @@
     </tr>
   </thead>
   <tbody id="insert_data">
-  <% @data.each do |row| %>
+    <% @data.each do |row| %>
     <tr>
-    <% @displayed_columns.each do |column| %>
-      <td class="<%= validate(column.name, row.to_hash[column.name] || params[column.name])%>"><%= row.to_hash[column.name] || params[column.name] || "default" %></td>
-    <% end %>
+      <%# Iterate through the database table columns and show the value that will be inserted for each column in this row. %>
+      <% @displayed_columns.each do |column| %>
+      <td class="<%= validate(column.name, row.to_hash[column.name] || params[column.name]) %>"><%= row.to_hash[params["mapping"]["source_column"][column.name]] || params["mapping"]["value"][column.name] || (column.default.nil? ? "NULL" : column.default) %></td>
+      <% end %>
     </tr>
   <% end %>
   </tbody>
