@@ -5,16 +5,17 @@ module BulkUploadHelper
   # A user-entered uniform value for all rows; (3) A value obtained
   # from a column in the CSV input file.
   def default_source_for(column)
-    @headers = session[:headers]
+    # convenience variable
+    headers = session[:headers]
 
     case column
       when /(.+)_id/,  "date", "dateloc", "time", "timeloc", "access_level"
-      if @headers.include?(column)
+      if headers.include?(column)
         use = "the value of this CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       else
         if column == "specie_id" && 
-            (@headers.include?("scientificname") || @headers.include?("species.scientificname"))
-          use = "the id for the row in the species table corresponding to the value of CSV column:</td><td class='column_name'>" + (@headers.include?("species.scientificname") ? "species.scientificname" : "scientificname")
+            (headers.include?("scientificname") || headers.include?("species.scientificname"))
+          use = "the id for the row in the species table corresponding to the value of CSV column:</td><td class='column_name'>" + (headers.include?("species.scientificname") ? "species.scientificname" : "scientificname") + " #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
         elsif column == "access_level"
           use = "this user-supplied value:</td><td>#{text_field_tag ("mapping[value][#{column.to_sym}]"), "4"}"
         else
@@ -23,9 +24,9 @@ module BulkUploadHelper
       end
 
       when /date_(.+)/
-      if @headers.include?(column)
+      if headers.include?(column)
         use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
-      elsif @headers.include?("date")
+      elsif headers.include?("date")
         use = "the value of SQL #{$1.upcase} function applied to CSV column</td><td class='column_name'>date"
       else
         use = "this user-supplied value:</td><td>#{text_field_tag (column.to_sym)}"
@@ -33,9 +34,9 @@ module BulkUploadHelper
 
 
       when /time_(.+)/
-      if @headers.include?(column)
-        use = "the value of CSV column:</td><td class='column_name'>#{column}"
-      elsif @headers.include?("time")
+      if headers.include?(column)
+        use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
+      elsif headers.include?("time")
         use = "the value of SQL #{$1.upcase} function applied to CSV column</td><td class='column_name'>time"
       else
         use = "this user-supplied value:</td><td>#{text_field_tag (column.to_sym)}"
@@ -46,15 +47,15 @@ module BulkUploadHelper
       use = "always use</td><td>0"
 
       when "mean", "stat", "statname", "n"
-      if @headers.include?(column)
-        use = "the value of CSV column:</td><td class='column_name'>#{column}"
+      if headers.include?(column)
+        use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       else
         use = "database default</td><td>#{column.default || "NULL"}"
       end
 
       when "notes"
-      if @headers.include?(column)
-        use = "the value of CSV column:</td><td class='column_name'>#{column}"
+      if headers.include?(column)
+        use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       else
         use = "(leave blank)</td><td>"
       end
