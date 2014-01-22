@@ -61,28 +61,7 @@ class BulkUploadController < ApplicationController
     read_data
     session[:mapping] = params["mapping"]
 
-    # look up scientificname to get specie_id (if needed)
-    species_key = nil
-    if @headers.include?("scientificname")
-      species_key = "scientificname"
-    elsif @headers.include?("species.scientificname")
-      species_key = "species.scientificname"
-    end
-
-    if !species_key.nil?
-      data_copy = Array.new
-      @data.each do |row|
-        row = row.to_hash
-        sp = nil
-        begin
-          sp = Specie.find_by_scientificname(row[species_key])
-        rescue
-        end
-        row["specie_id"] = sp ? sp.id.to_s : "NOT FOUND"
-        data_copy << row
-      end
-      @data = data_copy
-    end
+    get_insertion_data
 
     @displayed_columns = Trait.columns.select { |col| !['id', 'created_at', 'updated_at'].include?(col.name) }
   end
@@ -91,9 +70,11 @@ class BulkUploadController < ApplicationController
   def insert_data
      # reads CSV file and sets @data and @headers
     read_data
+    get_insertion_data
 
     @data.each do |row|
-      Trait.new()
+      logger.info("about to insert #{row.inspect}")
+      Trait.create(row)
     end
 
 
@@ -123,6 +104,43 @@ class BulkUploadController < ApplicationController
     # store CSV object in instance variable
     @data = csv
 
+  end
+
+  # Uses the session value of mapping to change @data from a CSV object to an Array of Hashes suitable for inserting into the traits table.
+  def get_insertion_data
+    mapping = session[:mapping]
+    default_values = mapping["value"]
+
+    insertion_data = Array.new
+    @data.each do |csv_row|
+      csv_row_as_hash = csv_row.to_hash
+
+      # look up scientificname to get specie_id (if needed)
+      species_key = nil
+      if @headers.include?("scientificname")
+        species_key = "scientificname"
+      elsif @headers.include?("species.scientificname")
+        species_key = "species.scientificname"
+      end
+      if !species_key.nil?
+        sp = nil
+        begin
+          sp = Specie.find_by_scientificname(csv_row_as_hash[species_key])
+        rescue
+        end
+        csv_row_as_hash["specie_id"] = sp ? sp.id.to_s : "NOT FOUND"
+      end
+
+      insertion_row = default_values.merge(csv_row_as_hash)
+
+      # eliminate extraneous data from CSV row
+      insertion_row.keep_if { |key, value| Trait.columns.collect { |column| column.name }.include?(key) }
+
+      insertion_data << insertion_row
+
+    end
+
+    @data = insertion_data
   end
 
 end
