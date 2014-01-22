@@ -4,12 +4,15 @@
 <%= form_tag({ action: :confirm_data }) do %>
   <%= submit_tag("Confirm Data") %>
   <table>
+    <thead>
+      <tr>
+        <th>To compute &hellip;</th>
+        <th>use &hellip;</th>
     <tbody>
       <% @displayed_columns.each do |column| %>
       <tr>
-        <td>To compute</td>
         <td class="column_name"><%= column.name %></td>
-        <td><%= raw(default_source_for(column.name)) %></td>
+        <td style="text-align: right"><%= raw(default_source_for(column.name)) %></td>
       </tr>
       <% end %>
     </tbody>
