@@ -1,40 +1,44 @@
 module BulkUploadHelper
 
+  # Use the database column name to decide what to use as the source
+  # for the column value.  This will either be: (1) A fixed value; (2)
+  # A user-entered uniform value for all rows; (3) A value obtained
+  # from a column in the CSV input file.
   def default_source_for(column)
     @headers = session[:headers]
 
     case column
       when /(.+)_id/,  "date", "dateloc", "time", "timeloc", "access_level"
       if @headers.include?(column)
-        use = "use the value of CSV column</td><td class='column_name'>#{column}"
+        use = "the value of this CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       else
         if column == "specie_id" && 
             (@headers.include?("scientificname") || @headers.include?("species.scientificname"))
-          use = "use the id for the row in the species table corresponding to the value of CSV column</td><td class='column_name'>" + (@headers.include?("species.scientificname") ? "species.scientificname" : "scientificname")
+          use = "the id for the row in the species table corresponding to the value of CSV column:</td><td class='column_name'>" + (@headers.include?("species.scientificname") ? "species.scientificname" : "scientificname")
         elsif column == "access_level"
-          use = "use user-supplied value</td><td>#{text_field_tag (column.to_sym), "4"}"
+          use = "this user-supplied value:</td><td>#{text_field_tag ("mapping[value][#{column.to_sym}]"), "4"}"
         else
-          use = "use user-supplied value</td><td>#{text_field_tag (column.to_sym)}"
+          use = "this user-supplied value:</td><td>#{text_field_tag ("mapping[value][#{column.to_sym}]")}"
         end
       end
 
       when /date_(.+)/
       if @headers.include?(column)
-        use = "use the value of CSV column</td><td class='column_name'>#{column}"
+        use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       elsif @headers.include?("date")
-        use = "use the value of SQL #{$1.upcase} function applied to CSV column</td><td class='column_name'>date"
+        use = "the value of SQL #{$1.upcase} function applied to CSV column</td><td class='column_name'>date"
       else
-        use = "use user-supplied value</td><td>#{text_field_tag (column.to_sym)}"
+        use = "this user-supplied value:</td><td>#{text_field_tag (column.to_sym)}"
       end
 
 
       when /time_(.+)/
       if @headers.include?(column)
-        use = "use the value of CSV column</td><td class='column_name'>#{column}"
+        use = "the value of CSV column:</td><td class='column_name'>#{column}"
       elsif @headers.include?("time")
-        use = "use the value of SQL #{$1.upcase} function applied to CSV column</td><td class='column_name'>time"
+        use = "the value of SQL #{$1.upcase} function applied to CSV column</td><td class='column_name'>time"
       else
-        use = "use user-supplied value</td><td>#{text_field_tag (column.to_sym)}"
+        use = "this user-supplied value:</td><td>#{text_field_tag (column.to_sym)}"
       end
 
       
@@ -43,14 +47,14 @@ module BulkUploadHelper
 
       when "mean", "stat", "statname", "n"
       if @headers.include?(column)
-        use = "use the value of CSV column</td><td class='column_name'>#{column}"
+        use = "the value of CSV column:</td><td class='column_name'>#{column}"
       else
         use = "database default</td><td>#{column.default || "NULL"}"
       end
 
       when "notes"
       if @headers.include?(column)
-        use = "use the value of CSV column</td><td class='column_name'>#{column}"
+        use = "the value of CSV column:</td><td class='column_name'>#{column}"
       else
         use = "(leave blank)</td><td>"
       end
@@ -60,6 +64,8 @@ module BulkUploadHelper
     end
     use
   end
+
+=begin
 
   def source(dbcolumn)
     @headers = session[:headers]
@@ -145,6 +151,8 @@ module BulkUploadHelper
     end
     ""
   end
+
+=end
 
   def validate(column, value)
     return "gray" if value.nil? || value.empty?
