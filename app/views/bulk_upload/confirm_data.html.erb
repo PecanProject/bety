@@ -5,7 +5,8 @@
 <% end %>
 </table>
 
-<%= form_tag({ action: "map_data" }) do %>
+<%= form_tag({ action: "insert_data" }) do %>
+<%= submit_tag("Confirm data table and insert data") %>
 <style>
   .red { background-color: #f00 }
   .green { background-color: #0f0 }
@@ -21,14 +22,20 @@
   </thead>
   <tbody id="insert_data">
     <% @data.each do |row| %>
+    <% if row.respond_to?("to_hash")
+       row = row.to_hash
+       end
+       logger.info("row = #{row.inspect}")
+       logger.info(params["mapping"]["source_column"]) %>
     <tr>
       <%# Iterate through the database table columns and show the value that will be inserted for each column in this row. %>
       <% @displayed_columns.each do |column| %>
-      <td class="<%= validate(column.name, row.to_hash[column.name] || params[column.name]) %>"><%= row.to_hash[params["mapping"]["source_column"][column.name]] || params["mapping"]["value"][column.name] || (column.default.nil? ? "NULL" : column.default) %></td>
+        <td class="<%= validate(column.name, row.to_hash[column.name] || params[column.name]) %>">
+          <%= row[params["mapping"]["source_column"][column.name]] || params["mapping"]["value"][column.name] || (column.default.nil? ? "NULL" : column.default) %>
+        </td>
       <% end %>
     </tr>
   <% end %>
   </tbody>
 </table>
-<%= submit_tag("Confirm data table") %>
 <% end %>
