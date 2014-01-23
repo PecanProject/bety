@@ -12,7 +12,7 @@ BETYdb runs on a Red Hat Enterprise Linux version 5.8 Server. To simulate this e
  * burn to CD
  * boot from CD
 * ftp server: `vault.centos.org`
-* directory: `/centos/5.8/os/x86_64`
+* directory: `5.8/os/x86_64`
 
 ### Configuration
 
