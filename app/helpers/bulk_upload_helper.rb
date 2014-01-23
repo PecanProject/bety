@@ -4,9 +4,10 @@ module BulkUploadHelper
   # for the column value.  This will either be: (1) A fixed value; (2)
   # A user-entered uniform value for all rows; (3) A value obtained
   # from a column in the CSV input file.
-  def default_source_for(column)
-    # convenience variable
-    headers = session[:headers]
+  def default_source_for(column_object)
+    # convenience variables
+    headers = @headers
+    column = column_object.name
 
     case column
     when /(.+)_id/,  "date", "dateloc", "time", "timeloc", "access_level"
@@ -50,7 +51,7 @@ module BulkUploadHelper
       if headers.include?(column)
         use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       else
-        use = "database default</td><td>#{column.default || "NULL"}"
+        use = "database default</td><td>#{column_object.default || "NULL"}"
       end
 
     when "notes"
@@ -62,9 +63,9 @@ module BulkUploadHelper
       
     else
       use = "DEFAULT"
-    end
+    end # case column
     use
-  end
+  end # default_source_for
 
 =begin
 

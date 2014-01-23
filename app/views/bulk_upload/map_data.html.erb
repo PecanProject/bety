@@ -12,7 +12,7 @@
       <% @displayed_columns.each do |column| %>
       <tr>
         <td class="column_name"><%= column.name %></td>
-        <td style="text-align: right"><%= raw(default_source_for(column.name)) %></td>
+        <td style="text-align: right"><%= raw(default_source_for(column)) %></td>
       </tr>
       <% end %>
     </tbody>
