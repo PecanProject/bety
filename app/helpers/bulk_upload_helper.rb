@@ -9,7 +9,7 @@ module BulkUploadHelper
     headers = session[:headers]
 
     case column
-      when /(.+)_id/,  "date", "dateloc", "time", "timeloc", "access_level"
+    when /(.+)_id/,  "date", "dateloc", "time", "timeloc", "access_level"
       if headers.include?(column)
         use = "the value of this CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       else
@@ -23,7 +23,7 @@ module BulkUploadHelper
         end
       end
 
-      when /date_(.+)/
+    when /date_(.+)/
       if headers.include?(column)
         use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       elsif headers.include?("date")
@@ -33,7 +33,7 @@ module BulkUploadHelper
       end
 
 
-      when /time_(.+)/
+    when /time_(.+)/
       if headers.include?(column)
         use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       elsif headers.include?("time")
@@ -43,24 +43,24 @@ module BulkUploadHelper
       end
 
       
-      when "checked"
+    when "checked"
       use = "always use</td><td>0"
 
-      when "mean", "stat", "statname", "n"
+    when "mean", "stat", "statname", "n"
       if headers.include?(column)
         use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       else
         use = "database default</td><td>#{column.default || "NULL"}"
       end
 
-      when "notes"
+    when "notes"
       if headers.include?(column)
         use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       else
         use = "(leave blank)</td><td>"
       end
       
-      else
+    else
       use = "DEFAULT"
     end
     use
