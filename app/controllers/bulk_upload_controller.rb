@@ -13,32 +13,36 @@ class BulkUploadController < ApplicationController
   #     @headers, an array of the headers of the CSV file; equals the corresponding session variable
   #     @errors (if there are any)
   def display_csv_file
+    error = nil
 
     if params["CSV file"]
       uploaded_io = params["CSV file"]
       file = File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb')
       file.write(uploaded_io.read)
       session[:csvpath] = file.path
+      file.close
 
       begin
         # reads CSV file and sets @data and @headers
         read_data
 
-        @data.read # force exception if not well formed
+        check_well_formed # force exception if not well formed
+
         @data.rewind # rewinds to the first line after the header
 
       rescue CSV::MalformedCSVError => e
-        @errors = e
+        errors = e.message
       end
 
     else
-      @errors = "No file chosen"
+      errors = "No file chosen"
     end
 
     respond_to do |format|
       format.html {
-        if @errors
-          render action: "start_upload"
+        if errors
+          flash[:notice] = errors
+          redirect_to(action: "start_upload")
         else
           render
         end
@@ -68,18 +72,32 @@ class BulkUploadController < ApplicationController
 
   # step 5
   def insert_data
-     # reads CSV file and sets @data and @headers
+    # reads CSV file and sets @data and @headers
     read_data
     get_insertion_data
 
-    @data.each do |row|
-      logger.info("about to insert #{row.inspect}")
-      Trait.create(row)
+    errors = nil
+    Trait.transaction do
+      begin
+        @data.each do |row|
+          logger.info("about to insert #{row.inspect}")
+          Trait.create(row)
+        end
+      rescue => e
+        errors = e.message
+      end
     end
 
-
-
-    render action: "start_upload"
+    respond_to do |format|
+      format.html {
+        if errors
+          flash[:notice] = errors
+          redirect_to(action: "confirm_data")
+        else
+          redirect_to(action: "start_upload")
+        end
+      }
+    end
   end
     
 
@@ -141,6 +159,13 @@ class BulkUploadController < ApplicationController
     end
 
     @data = insertion_data
+  end
+
+  def check_well_formed
+    @data.each do |row| # force exception if not well formed
+      row.each do |c|
+      end
+    end
   end
 
 end
