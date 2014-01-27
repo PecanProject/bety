@@ -1,15 +1,8 @@
-
-<table>
-<% params.each do |p| %>
-<tr><td><%= p[0] %></td><td><%= p[1] %></td></tr>
-<% end %>
-</table>
-
 <%= form_tag({ action: "insert_data" }) do %>
 <%= submit_tag("Confirm data table and insert data") %>
 <style>
-  .red { background-color: #f00 }
-  .green { background-color: #0f0 }
+  .red { background-color: #ff9966 }
+  .green { background-color: #99ff66 }
   .gray { background-color: #aaa }
 </style>
 <table>
@@ -22,11 +15,6 @@
   </thead>
   <tbody id="insert_data">
     <% @data.each do |row| %>
-    <% if row.respond_to?("to_hash")
-       row = row.to_hash
-       end
-       logger.info("row = #{row.inspect}")
-       logger.info(params["mapping"]["source_column"]) %>
     <tr>
       <%# Iterate through the database table columns and show the value that will be inserted for each column in this row. %>
       <% @displayed_columns.each do |column| %>
