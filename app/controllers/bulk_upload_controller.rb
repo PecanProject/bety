@@ -61,10 +61,18 @@ class BulkUploadController < ApplicationController
 
   # step 4
   def confirm_data
+
     # reads CSV file and sets @data and @headers
     read_data
-    session[:mapping] = params["mapping"]
 
+    # Only set the mapping session value if the value from params is
+    # non-nil: we might get here from a failed attempt at insert_data.
+    if !params["mapping"].nil?
+      session[:mapping] = params["mapping"]
+    end
+    @mapping = session[:mapping]
+
+    # update @data based on the mapping
     get_insertion_data
 
     @displayed_columns = Trait.columns.select { |col| !['id', 'created_at', 'updated_at'].include?(col.name) }
