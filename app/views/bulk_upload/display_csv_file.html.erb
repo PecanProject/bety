@@ -1,6 +1,7 @@
 <%= form_tag({ action: "map_data" }) do %>
 <%= submit_tag("Continue") %>
 <table>
+  <caption>Uploaded file: <span style="font-size: larger; font-weight: bold"><%= File.basename(session[:csvpath]) %></span></p></caption>
   <thead>
     <tr>
       <% @headers.each do |header| %>
