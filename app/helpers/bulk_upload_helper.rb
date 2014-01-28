@@ -20,7 +20,7 @@ module BulkUploadHelper
         elsif column == "access_level"
           use = "this user-supplied value:</td><td>#{text_field_tag ("mapping[value][#{column.to_sym}]"), "4"}"
         else
-          use = "this user-supplied value:</td><td>#{text_field_tag ("mapping[value][#{column.to_sym}]")}"
+          use = "this user-supplied value:</td><td>#{text_field_tag ("mapping[value][#{column.to_sym}]"), nil, placeholder: "DEFAULT: #{column_object.default.nil? ? "NULL" : column_object.default }" }"
         end
       end
 
@@ -30,7 +30,7 @@ module BulkUploadHelper
       elsif headers.include?("date")
         use = "the value of SQL #{$1.upcase} function applied to CSV column</td><td class='column_name'>date"
       else
-        use = "this user-supplied value:</td><td>#{text_field_tag (column.to_sym)}"
+        use = "this user-supplied value:</td><td>#{text_field_tag ("mapping[value][#{column.to_sym}]"), nil, placeholder: "DEFAULT: #{column_object.default.nil? ? "NULL" : column_object.default }" }"
       end
 
 
@@ -40,7 +40,7 @@ module BulkUploadHelper
       elsif headers.include?("time")
         use = "the value of SQL #{$1.upcase} function applied to CSV column</td><td class='column_name'>time"
       else
-        use = "this user-supplied value:</td><td>#{text_field_tag (column.to_sym)}"
+        use = "this user-supplied value:</td><td>#{text_field_tag ("mapping[value][#{column.to_sym}]"), nil, placeholder: "DEFAULT: #{column_object.default.nil? ? "NULL" : column_object.default }" }"
       end
 
       
