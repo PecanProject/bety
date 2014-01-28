@@ -85,15 +85,15 @@ class BulkUploadController < ApplicationController
     get_insertion_data
 
     errors = nil
-    Trait.transaction do
-      begin
+    begin
+      Trait.transaction do
         @data.each do |row|
           logger.info("about to insert #{row.inspect}")
           Trait.create(row)
         end
-      rescue => e
-        errors = e.message
       end
+    rescue => e
+      errors = e.message
     end
 
     respond_to do |format|
