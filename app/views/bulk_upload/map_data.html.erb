@@ -1,10 +1,10 @@
 <style>
-  .column_name { font-weight: bold }
+  .column_name { font-family: courier }
 </style>
 <%= form_tag({ action: :confirm_data }) do %>
-  <%= submit_tag("Confirm Data") %>
+  <%= submit_tag("Set data mapping") %>
   <table>
-    <caption>Data Mapping</caption>
+    <caption><h2>Specify Data Mapping</h2></caption>
     <thead>
       <tr>
         <th>To compute &hellip;</th>
