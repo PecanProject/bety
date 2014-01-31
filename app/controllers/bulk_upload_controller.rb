@@ -15,29 +15,34 @@ class BulkUploadController < ApplicationController
   def display_csv_file
     error = nil
 
-    if params["CSV file"]
+    # Store the selected CSV file if we got here via the "upload file" button:
+    if params["new upload"]
       uploaded_io = params["CSV file"]
-      file = File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb')
-      file.write(uploaded_io.read)
-      session[:csvpath] = file.path
-      file.close
+      if uploaded_io
+        file = File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb')
+        file.write(uploaded_io.read)
+        session[:csvpath] = file.path
+        file.close
+      else
+        # blank submission; no file was chosen
+        session[:csvpath] = nil
+      end
+      session[:mapping] = nil # any existing mapping was for a (possibly) different file
+    end
 
+    # Get data out of the file and store in @headers and @data:
+    if session[:csvpath]
       begin
-        # reads CSV file and sets @data and @headers
-        read_data
-
-        check_well_formed # force exception if not well formed
-
-        @data.rewind # rewinds to the first line after the header
-
+        validate_csv = true # check CSV file is well-formed and throw exception if not
+        read_data(validate_csv) # read CSV file at session[:cvspath] and set @data and @headers
       rescue CSV::MalformedCSVError => e
         errors = e.message
       end
-
     else
       errors = "No file chosen"
     end
 
+    # Display the data in the file:
     respond_to do |format|
       format.html {
         if errors
@@ -54,8 +59,8 @@ class BulkUploadController < ApplicationController
   # step 3
   def map_data
     # reads CSV file and sets @data and @headers
-    read_data
-    @displayed_columns = Trait.columns.select { |col| !['id', 'created_at', 'updated_at'].include?(col.name) }
+    read_data # uses session[:csvpath] to set @headers and @data
+    @displayed_columns = displayed_columns
   end
 
 
@@ -72,10 +77,10 @@ class BulkUploadController < ApplicationController
     end
     @mapping = session[:mapping]
 
-    # update @data based on the mapping
+    # set @mapped_data from @data based on the mapping
     get_insertion_data
 
-    @displayed_columns = Trait.columns.select { |col| !['id', 'created_at', 'updated_at'].include?(col.name) }
+    @displayed_columns = displayed_columns
   end
 
   # step 5
@@ -87,7 +92,7 @@ class BulkUploadController < ApplicationController
     errors = nil
     begin
       Trait.transaction do
-        @data.each do |row|
+        @mapped_data.each do |row|
           logger.info("about to insert #{row.inspect}")
           Trait.create(row)
         end
@@ -119,11 +124,24 @@ class BulkUploadController < ApplicationController
   #     @headers, the CSV file's header info
   #     @data, a CSV object corresponding to the uploaded file,
   #         positioned to read the first line after the header line
-  def read_data
+  def read_data(validate_csv = false)
     
     csvpath = session[:csvpath]
     
     csv = CSV.open(csvpath, { headers: true })
+
+    if validate_csv
+      # Checks that the file referenced by the CSV object @data is
+      # well formed and triggers a CSV::MalformedCSVError exception if
+      # it is not.
+      csv.each do |row| # force exception if not well formed
+        row.each do |c|
+        end
+      end
+
+      csv.rewind # rewinds to the first line
+    end
+
     csv.readline # need to read first line to get headers
     @headers = csv.headers
 
@@ -132,12 +150,14 @@ class BulkUploadController < ApplicationController
 
   end
 
-  # Uses the session value of mapping to change @data from a CSV object to an Array of Hashes suitable for inserting into the traits table.
+  # Uses the specified data mapping to convert @data from a CSV object
+  # to an Array of Hashes suitable for inserting into the traits
+  # table.
   def get_insertion_data
     mapping = session[:mapping]
     default_values = mapping["value"]
 
-    insertion_data = Array.new
+    @mapped_data = Array.new
     @data.each do |csv_row|
       csv_row_as_hash = csv_row.to_hash
 
@@ -157,23 +177,20 @@ class BulkUploadController < ApplicationController
         csv_row_as_hash["specie_id"] = sp ? sp.id.to_s : "NOT FOUND"
       end
 
-      insertion_row = default_values.merge(csv_row_as_hash)
+      mapped_row = default_values.merge(csv_row_as_hash)
 
       # eliminate extraneous data from CSV row
-      insertion_row.keep_if { |key, value| Trait.columns.collect { |column| column.name }.include?(key) }
+      mapped_row.keep_if { |key, value| Trait.columns.collect { |column| column.name }.include?(key) }
 
-      insertion_data << insertion_row
+      @mapped_data << mapped_row
 
     end
 
-    @data = insertion_data
+    @mapped_data
   end
 
-  def check_well_formed
-    @data.each do |row| # force exception if not well formed
-      row.each do |c|
-      end
-    end
+  def displayed_columns
+    Trait.columns.select { |col| !['id', 'created_at', 'updated_at'].include?(col.name) }
   end
 
 end
