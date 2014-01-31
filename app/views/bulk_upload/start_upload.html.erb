@@ -1,5 +1,7 @@
 <%= form_tag({ action: "display_csv_file" }, method: "post", multipart: true) do %>
-<%= file_field_tag 'CSV file' %>
+<%= label_tag 'CSV file', "Data File: #{if session[:csvpath]; "(Currently #{session[:csvpath]})"; end}" %>
+<%= file_field_tag 'CSV file', accept: 'text/csv' %>
+<%= hidden_field_tag 'new upload', value: true %>
 <%= submit_tag("Upload") %>
 <% end %>
 
