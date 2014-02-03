@@ -12,6 +12,7 @@ module BulkUploadHelper
     case column
     when /(.+)_id/,  "date", "dateloc", "time", "timeloc", "access_level"
       if headers.include?(column)
+        # If the database column name exactly matches the CSV heading, use that as the source column.
         use = "the value of this CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       else
         if column == "specie_id" && 
