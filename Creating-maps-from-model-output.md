@@ -1,6 +1,16 @@
 ## ArcGIS online
 
-This is an instruction for creating maps from arc map 10.1 and upload it to arcgis online account 
+This is an instruction for creating maps on ArcGIS Online. 
+1) Sign into https://univofillinois.maps.arcgis.com/home/signin.html
+2) Click on the “My Content” button of the top ribbon. 
+3) Click on “Create Map” 
+4) Click on the “Basemap” button and select desired basemap. 
+5) Select the Add+ button to insert layers. For a .csv file saved on the computer select “Add Layer from File”
+6) Left pane of the screen shows 3 buttons. The second button will show the contents (layers) of the map. Here you can make certain layers visible/invisible if desired. The drop down button next to each layer provides options to changing the display. For example, you can change the symbols depicting the coordinates, the information displayed when a coordinate is chosen, and perform analysis if needed. 
+7) Save the map with a title, tags, and summary. 
+8) To share the map, select share and choose whom to share it to or copy the link.  
+
+This is an instruction for creating maps from arc map 10.1 and uploading it to arcgis online account 
 ### For creating maps from your arcmap 10.1 on your desktop: (I will work on this when my arcmap resumes)
 
 1. Upload your csv data
