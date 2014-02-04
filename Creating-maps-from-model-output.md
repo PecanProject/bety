@@ -12,7 +12,7 @@ This is an instruction for creating maps on ArcGIS Online.
 1. To share the map, select share and choose whom to share it to or copy the link.  
 
 This is an instruction for creating maps from arc map 10.1 and uploading it to arcgis online account 
-### For creating maps from your arcmap 10.1 on your desktop: (I will work on this when my arcmap resumes)
+####For creating maps from your arcmap 10.1 on your desktop: (I will work on this when my arcmap resumes)
 
 1. Upload your csv data
 1. display your data (first lon, then lat, then field. must choose WGS1984 projection)
