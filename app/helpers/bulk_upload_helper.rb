@@ -19,7 +19,7 @@ module BulkUploadHelper
             (headers.include?("scientificname") || headers.include?("species.scientificname"))
           use = "the id for the row in the species table corresponding to the value of CSV column:</td><td class='column_name'>" + (headers.include?("species.scientificname") ? "species.scientificname" : "scientificname") + " #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
         elsif column == "access_level"
-          use = "this user-supplied value:</td><td>#{text_field_tag ("mapping[value][#{column.to_sym}]"), "4"}"
+          use = "this user-supplied value:</td><td>#{select_tag("mapping[value][#{column.to_sym}]", options_for_select([ ["1. Restricted", 1], ["2. Internal EBI & Collaborators", 2], ["3. External Researcher", 3], ["4. Public", 4]], 4))}"
         else
           use = "this user-supplied value:</td><td>#{text_field_tag ("mapping[value][#{column.to_sym}]"), nil, placeholder: "DEFAULT: #{column_object.default.nil? ? "NULL" : column_object.default }" }"
         end
@@ -50,7 +50,7 @@ module BulkUploadHelper
 
     when "mean", "stat", "statname", "n"
       if headers.include?(column)
-        use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
+        use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}</td><td>rounded to</td><td>#{select_tag("sd", options_for_select([['0', 0], ['1', 1], ['2', 2], ['3', 3], ['4', 4]])) }</td><td>places"
       else
         use = "database default</td><td>#{column_object.default || "NULL"}"
       end
@@ -59,7 +59,7 @@ module BulkUploadHelper
       if headers.include?(column)
         use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       else
-        use = "(leave blank)</td><td>"
+        use = "</td><td>(leave blank)"
       end
       
     else
