@@ -1,10 +1,15 @@
 <%= form_tag({ action: "insert_data" }) do %>
 <%= submit_tag("Confirm data table and insert data") %>
 <style>
-  .red { background-color: #ff9966 }
-  .green { background-color: #99ff66 }
-  .gray { background-color: #aaa }
+  .not_found { background-color: #ff9966 }
+  .found { background-color: #99ff66 }
+  .no_validation { background-color: #aaa }
 </style>
+
+<% if @errors %>
+<p class="not_found">Values highlighted in red were not found in the database</p>
+<% end %>
+
 <table>
   <thead>
     <tr>
@@ -19,7 +24,7 @@
       <%# Iterate through the database table columns and show the value that will be inserted for each column in this row. %>
       <% @displayed_columns.each do |column| %>
         <td class="<%= validate(column.name, row[column.name] || params[column.name]) %>">
-          <%= row[@mapping["source_column"][column.name]] || @mapping["value"][column.name] || (column.default.nil? ? "NULL" : column.default) %>
+          <%= row[column.name] %>
         </td>
       <% end %>
     </tr>

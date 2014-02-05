@@ -78,9 +78,22 @@ class BulkUploadController < ApplicationController
     @mapping = session[:mapping]
 
     # set @mapped_data from @data based on the mapping
-    get_insertion_data
+    get_insertion_data(true)
 
     @displayed_columns = displayed_columns
+
+
+    respond_to do |format|
+      format.html {
+        if @global_errors.size > 0
+          flash[:notice] = @global_errors
+          redirect_to(action: "map_data")
+        else
+          render
+        end
+      }
+    end
+
   end
 
   # step 5
@@ -89,12 +102,17 @@ class BulkUploadController < ApplicationController
     read_data
     get_insertion_data
 
+    if @errors
+      flash[:notice] = @errors
+      redirect_to(action: "confirm_data")
+      return
+    end
+
     errors = nil
     begin
       Trait.transaction do
         @mapped_data.each do |row|
-          logger.info("about to insert #{row.inspect}")
-          Trait.create(row)
+          Trait.create!(row)
         end
       end
     rescue => e
@@ -153,10 +171,30 @@ class BulkUploadController < ApplicationController
   # Uses the specified data mapping to convert @data from a CSV object
   # to an Array of Hashes suitable for inserting into the traits
   # table.
-  def get_insertion_data
+  def get_insertion_data(for_display = false)
     mapping = session[:mapping]
-    default_values = mapping["value"]
 
+    user_supplied_values = mapping["value"]
+
+    validate(user_supplied_values)
+
+    @database_default_values = {}
+    Trait.columns.each do |col|
+      @database_default_values[col.name] = col.default
+    end
+
+    # combine user-supplied values with database defaults
+    defaults = @database_default_values.merge(user_supplied_values) # user-supplied values take precedence over database defaults
+    if for_display
+      # replace nil and empty string with "NULL"
+      defaults.each do |k, v|
+        if v.nil? or v.to_s.empty?
+          defaults[k] = "NULL"
+        end
+      end
+    end
+
+    @errors = false
     @mapped_data = Array.new
     @data.each do |csv_row|
       csv_row_as_hash = csv_row.to_hash
@@ -174,10 +212,25 @@ class BulkUploadController < ApplicationController
           sp = Specie.find_by_scientificname(csv_row_as_hash[species_key])
         rescue
         end
-        csv_row_as_hash["specie_id"] = sp ? sp.id.to_s : "NOT FOUND"
+        if sp
+          csv_row_as_hash["specie_id"] = sp.id.to_s
+        else
+          csv_row_as_hash["specie_id"] = for_display ? "#{csv_row_as_hash[species_key]} NOT FOUND" : nil
+          @errors = "Can't submit invalid data."
+        end
       end
 
-      mapped_row = default_values.merge(csv_row_as_hash)
+      # apply rounding
+      if csv_row_as_hash["mean"]
+        precision = mapping["rounding"]["mean"].to_i
+        csv_row_as_hash["mean"] = sprintf("%.#{precision}f", csv_row_as_hash["mean"].to_f.round(precision))
+      end
+      if csv_row_as_hash["stat"]
+        precision = mapping["rounding"]["stat"].to_i
+        csv_row_as_hash["stat"] = sprintf("%.#{precision}f", csv_row_as_hash["stat"].to_f.round(precision))
+      end
+
+      mapped_row = defaults.merge(csv_row_as_hash) # csv row values take precedence over defaults
 
       # eliminate extraneous data from CSV row
       mapped_row.keep_if { |key, value| Trait.columns.collect { |column| column.name }.include?(key) }
@@ -191,6 +244,26 @@ class BulkUploadController < ApplicationController
 
   def displayed_columns
     Trait.columns.select { |col| !['id', 'created_at', 'updated_at'].include?(col.name) }
+  end
+
+  def validate(user_supplied_data)
+    @global_errors ||= []
+    user_supplied_data.each do |column, value|
+      if value.nil? or value.to_s.empty?
+        next
+      end
+      if column.match(/_id$/)
+        tablename = column.sub(/_id$/, '').classify
+        if tablename == "Method"
+          tablename = "Methods"
+        end
+        table = tablename.constantize
+        logger.info("table is #{tablename}")
+        if !table.find_by_id(value)
+          @global_errors << "Couldn't find row with id #{value} in table #{tablename}"
+        end
+      end
+    end
   end
 
 end
