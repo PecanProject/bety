@@ -46,11 +46,14 @@ module BulkUploadHelper
 
       
     when "checked"
-      use = "always use</td><td>0"
+      use = "always use</td><td>0 #{hidden_field_tag("mapping[source_column][#{column}]", 0)}"
 
     when "mean", "stat", "statname", "n"
       if headers.include?(column)
-        use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}</td><td>rounded to</td><td>#{select_tag("sd", options_for_select([['0', 0], ['1', 1], ['2', 2], ['3', 3], ['4', 4]])) }</td><td>places"
+        use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
+        if ["mean", "stat"].include?(column)
+          use += "</td><td>rounded to</td><td>#{select_tag("mapping[rounding][#{column}]", options_for_select([['0', 0], ['1', 1], ['2', 2], ['3', 3], ['4', 4]], '4')) }</td><td>places"
+        end
       else
         use = "database default</td><td>#{column_object.default || "NULL"}"
       end
@@ -59,7 +62,7 @@ module BulkUploadHelper
       if headers.include?(column)
         use = "the value of CSV column:</td><td class='column_name'>#{column} #{hidden_field_tag("mapping[source_column][#{column}]", column)}"
       else
-        use = "</td><td>(leave blank)"
+        use = "</td><td>(leave blank) #{hidden_field_tag("mapping[source_column][#{column}]", "")}"
       end
       
     else
@@ -158,17 +161,22 @@ module BulkUploadHelper
 =end
 
   def validate(column, value)
-    return "gray" if value.nil? || value.empty?
+    return "no_validation" if value.nil? || value.to_s.empty? || value == "NULL"
 
     if column.match(/_id$/)
-      table = column.sub(/_id$/, '').classify.constantize
+      tablename = column.sub(/_id$/, '').classify
+      if tablename == "Method"
+        tablename = "Methods"
+      end
+      table = tablename.constantize
       if table.find_by_id(value)
-        "green"
+        "found"
       else
-        "red"
+        @errors = true
+        "not_found"
       end
     else
-      "green"
+      "no_validation"
     end
   end
 
