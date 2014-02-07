@@ -162,6 +162,7 @@ class BulkUploadController < ApplicationController
 
     csv.readline # need to read first line to get headers
     @headers = csv.headers
+    csv.rewind
 
     # store CSV object in instance variable
     @data = csv
