@@ -74,7 +74,7 @@ class BulkUploadController < ApplicationController
     respond_to do |format|
       format.html {
         if @global_errors.size > 0
-          flash[:notice] = @global_errors
+          flash[:error] = @global_errors
           redirect_to(action: "map_data")
         else
           render
@@ -91,7 +91,7 @@ class BulkUploadController < ApplicationController
     get_insertion_data
 
     if @errors
-      flash[:notice] = @errors
+      flash[:error] = @errors
       redirect_to(action: "confirm_data")
       return
     end
@@ -110,7 +110,7 @@ class BulkUploadController < ApplicationController
     respond_to do |format|
       format.html {
         if errors
-          flash[:notice] = errors
+          flash[:error] = errors
           redirect_to(action: "confirm_data")
         else
           redirect_to(action: "start_upload")
