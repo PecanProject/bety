@@ -214,7 +214,7 @@ class BulkUploadController < ApplicationController
           csv_row_as_hash["specie_id"] = sp.id.to_s
         else
           csv_row_as_hash["specie_id"] = for_display ? "#{csv_row_as_hash[species_key]} NOT FOUND" : nil
-          @errors = "Can't submit invalid data."
+          @errors = "Can't submit invalid data.<br>Values highlighted in red were not found in the database"
         end
       end
 
