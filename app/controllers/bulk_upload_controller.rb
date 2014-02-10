@@ -19,10 +19,7 @@ class BulkUploadController < ApplicationController
     if params["new upload"]
       uploaded_io = params["CSV file"]
       if uploaded_io
-        file = File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb')
-        file.write(uploaded_io.read)
-        session[:csvpath] = file.path
-        file.close
+        store_file(uploaded_io)
       else
         # blank submission; no file was chosen
         session[:csvpath] = nil
@@ -36,23 +33,14 @@ class BulkUploadController < ApplicationController
         validate_csv = true # check CSV file is well-formed and throw exception if not
         read_data(validate_csv) # read CSV file at session[:cvspath] and set @data and @headers
       rescue CSV::MalformedCSVError => e
-        errors = e.message
+        flash[:error] = e.message
+        redirect_to(action: "start_upload")
       end
     else
-      errors = "No file chosen"
+      flash[:error] = "No file chosen"
+      redirect_to(action: "start_upload")
     end
 
-    # Display the data in the file:
-    respond_to do |format|
-      format.html {
-        if errors
-          flash[:notice] = errors
-          redirect_to(action: "start_upload")
-        else
-          render
-        end
-      }
-    end
   end
 
 
@@ -136,6 +124,15 @@ class BulkUploadController < ApplicationController
 
 
   private
+
+  
+  def store_file(uploaded_io)
+    file = File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb')
+    file.write(uploaded_io.read)
+    session[:csvpath] = file.path
+    file.close
+  end
+
   # Uses: 
   #     session[:csvpath], the path to the uploaded CSV file
   # Sets:
