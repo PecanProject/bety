@@ -3183,6 +3183,7 @@ input[type="submit"].button.button-mini {
 	line-height: 20px;
 }
 
+.alert-notice,
 .alert-success {
 	color: #237825;
   background-color: #99FF66;
