@@ -35,6 +35,11 @@ class BulkUploadController < ApplicationController
       flash[:error] = "Couldn't parse #{File.basename(session[:csvpath])}: #{e.message}"
       # flash[:display_csv_file] = true
       redirect_to(action: "start_upload")
+      return
+    rescue ArgumentError => e
+      flash[:error] = e.message
+      redirect_to(action: "start_upload")
+      return
     end
 
     check_header_list
