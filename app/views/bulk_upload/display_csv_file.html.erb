@@ -1,3 +1,4 @@
+<%= render "csv_error_messages" %>
 <%= form_tag({ action: "map_data" }) do %>
 <%= submit_tag("Continue") %>
 <table>
@@ -10,10 +11,17 @@
     </tr>
   </thead>
   <tbody>
-    <% @data.each do |row| %>
+    <% @validated_data.each do |row| %>
     <tr>
       <% row.each do |value| %>
-      <td><%= value[1] %></td>
+      <% color = nil
+         case value[:validation_result]
+         when :valid
+         color = "green"
+         when :fatal_error
+         color = "red"
+         end %>
+      <td style="background-color: <%= color %>" title="<%= value[:validation_message] %>"><%= value[:data] %></td>
       <% end %>
     </tr>
     <% end %>
