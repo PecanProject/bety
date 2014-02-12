@@ -36,7 +36,7 @@ class BulkUploadController < ApplicationController
       # flash[:display_csv_file] = true
       redirect_to(action: "start_upload")
       return
-    rescue ArgumentError => e
+    rescue ArgumentError => e # catches invalid UTF-8 byte sequence errors
       flash[:error] = e.message
       redirect_to(action: "start_upload")
       return
@@ -310,6 +310,11 @@ class BulkUploadController < ApplicationController
       @csv_errors << 'If you include a "citation_year" column, then you must also include columns for "citation_title" and "citation_author."'
     end
 
+    # If cultivar is in the field list, species must be as well
+    if @headers.include?('cultivar') && !@headers.include?('species')
+      @csv_errors << 'If you have a "cultivar" column, you must have a "species" column as well.'
+    end
+
     ignored_columns = []
     @headers.each do |field_name|
       if !RECOGNIZED_COLUMNS.include? field_name
@@ -345,8 +350,14 @@ class BulkUploadController < ApplicationController
         when "yield"
 
           begin
-            Float(column[:data])
-            column[:validation_result] = :valid
+            # yield is a keyword; hence "amount_of_yield"
+            amount_of_yield = Float(column[:data])
+            if amount_of_yield <= 0
+              column[:validation_result] = :fatal_error
+              column[:validation_message] = "yield can't be less than zero"
+            else
+              column[:validation_result] = :valid
+            end
           rescue ArgumentError => e
             column[:validation_result] = :fatal_error
             column[:validation_message] = e.message
@@ -425,7 +436,25 @@ class BulkUploadController < ApplicationController
 
         when "cultivar"
 
-          # skip for now
+          # we need the species id to validation this
+          species_index = row.index { |h| h[:fieldname] == "species" }
+          if species_index.nil?
+            column[:validation_result] = :fatal_error
+            column[:validation_message] = "Cultivar can't be looked up when species is not in the field list."
+          else            
+            species_id = existing_species(row[species_index][:data])
+            if species_id.nil?
+              column[:validation_result] = :fatal_error
+              column[:validation_message] = "Cultivar can't be looked up when species is not in species table."
+            else
+              if existing_cultivar(column[:data], species_id)
+                column[:validation_result] = :valid
+              else
+                column[:validation_result] = :fatal_error
+                column[:validation_message] = "No cultivar for this species with this name found in cultivars table"
+              end
+            end
+          end
 
         when "date"
 
@@ -490,6 +519,11 @@ class BulkUploadController < ApplicationController
 
           # accept anything for now
 
+        else
+
+          column[:validation_result] = :ignored
+          column[:validation_message] = "This column will be ignored."
+
         end # case
 
         # validation of citation information by author, year, and date
@@ -528,27 +562,33 @@ class BulkUploadController < ApplicationController
 
   def existing_species?(name)
     s = Specie.find_by_scientificname(name)
-    return !s.nil?
+    return s
   end
 
   def existing_site?(name)
     s = Site.find_by_sitename(name)
-    return !s.nil?
+    return s
   end
 
   def existing_treatment?(name)
     t = Treatment.find_by_name(name)
-    return !t.nil?
+    return t
   end
 
   def doi_of_existing_citation?(doi)
     c = Citation.find_by_doi(doi)
-    return !c.nil?
+    return c
   end
 
   def existing_citation(author, year, title)
     c = Citation.where("author = :author AND year = :year AND title LIKE :title_matcher",
                        { author: author, year: year, title_matcher: "#{title}%" })
+    return c.size == 1
+  end
+
+  def existing_cultivar(name, species_id)
+    c = Cultivar.where("name = :name AND specie_id = :species_id",
+                       { name: name, species_id: species_id })
     return c.size == 1
   end
 
