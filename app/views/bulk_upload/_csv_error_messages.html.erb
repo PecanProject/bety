@@ -1,0 +1,21 @@
+<% if @csv_errors.any? %>
+  <div id="error_explanation" style="width:850px; margin:auto" class="">
+    <div class="fade in alert alert-error centered" >
+      Your file contains an error.
+    </div>
+    <ul>
+    <% @csv_errors.each do |msg| %>
+      <li>* <%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+<% if @csv_warnings.any? %>
+  <div id="warning_explanation" style="width:850px; margin:auto" class="">
+    <ul>
+    <% @csv_warnings.each do |msg| %>
+      <li>* Warning: <%= raw msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
