@@ -2,18 +2,17 @@ class BulkUploadController < ApplicationController
 
   # step 1: Choose a file to upload.
   def start_upload
+    # To-do: decide whether to display raw content of CSV file when we can't parse it.
+#    if flash[:display_csv_file]
+#      read_raw_contents
+#    end
+    # clean session upload data
+    session[:csvpath] = nil
+    session[:mapping] = nil
   end
 
   # step 2: Display the CSV file as a table.
-  #
-  # Session variables set:
-  #     "csvpath", the path to where the uploaded file is stored
-  # Instance variables set:
-  #     @data, a CSV object containing the CSV file data
-  #     @headers, an array of the headers of the CSV file; equals the corresponding session variable
-  #     @errors (if there are any)
   def display_csv_file
-    error = nil
 
     # Store the selected CSV file if we got here via the "upload file" button:
     if params["new upload"]
@@ -22,25 +21,31 @@ class BulkUploadController < ApplicationController
         store_file(uploaded_io)
       else
         # blank submission; no file was chosen
-        session[:csvpath] = nil
+        flash[:error] = "No file chosen"
+        redirect_to(action: "start_upload")
+        return # we're done here
       end
-      session[:mapping] = nil # any existing mapping was for a (possibly) different file
     end
 
     # Get data out of the file and store in @headers and @data:
-    if session[:csvpath]
-      begin
-        validate_csv = true # check CSV file is well-formed and throw exception if not
-        read_data(validate_csv) # read CSV file at session[:cvspath] and set @data and @headers
-      rescue CSV::MalformedCSVError => e
-        flash[:error] = e.message
-        redirect_to(action: "start_upload")
-      end
-    else
-      flash[:error] = "No file chosen"
+    begin
+      validate_csv = true # check CSV file is well-formed and throw exception if not
+      read_data(validate_csv) # read CSV file at session[:cvspath] and set @data and @headers
+    rescue CSV::MalformedCSVError => e
+      flash[:error] = "Couldn't parse #{File.basename(session[:csvpath])}: #{e.message}"
+      # flash[:display_csv_file] = true
       redirect_to(action: "start_upload")
     end
 
+    check_header_list
+
+    if @csv_errors.any?
+      # to do: decide whether to go on to validate data even when there are errors in the heading field list
+#      return
+    end
+
+    # No heading errors; go on to validate data
+    validate_csv_data
   end
 
 
@@ -133,6 +138,13 @@ class BulkUploadController < ApplicationController
     file.close
   end
 
+  def read_raw_contents
+    csvpath = session[:csvpath]
+    csv = File.open(csvpath)
+    @file_contents = csv.read
+    csv.close
+  end
+
   # Uses: 
   #     session[:csvpath], the path to the uploaded CSV file
   # Sets:
@@ -143,8 +155,6 @@ class BulkUploadController < ApplicationController
     
     csvpath = session[:csvpath]
     
-    csv = CSV.open(csvpath, { headers: true })
-
     if validate_csv
       # Checks that the file referenced by the CSV object @data is
       # well formed and triggers a CSV::MalformedCSVError exception if
@@ -262,6 +272,234 @@ class BulkUploadController < ApplicationController
         end
       end
     end
+  end
+
+  RECOGNIZED_COLUMNS =  %w{yield citation_doi citation_author citation_year citation_name site species treatment access_level cultivar date n SE notes}
+  def check_header_list
+
+    @csv_errors = []
+    @csv_warnings = []
+
+    # Check for required yields field
+    if !@headers.include?('yield')
+      @csv_errors << "You must have a yield column in your CSV file."
+    end
+
+    # Check for consistent stat information
+    if @headers.include?('SE') && !@headers.include?('n')
+      @csv_errors << 'If you have an "SE" column, you must have an "n" column as well.'
+    elsif !@headers.include?("SE") && @headers.include?("n")
+      @csv_errors << 'If you have an "n" column, you must have an "SE" column as well.'
+    end
+
+    # Check citation information
+    if @headers.include?('citation_doi') && (@headers.include?('citation_author') || @headers.include?('citation_year') || @headers.include?('citation_name'))
+      @csv_errors << 'If you include a "citation_doi" column, then you must not include columns for "citation_author", "citation_name", or "citation_year."'
+    elsif @headers.include?('citation_author') && (!@headers.include?('citation_year') || !@headers.include?('citation_name'))
+      @csv_errors << 'If you include a "citation_author" column, then you must also include columns for "citation_name" and "citation_year."'
+    elsif @headers.include?('citation_name') && (!@headers.include?('citation_author') || !@headers.include?('citation_year'))
+      @csv_errors << 'If you include a "citation_name" column, then you must also include columns for "citation_author" and "citation_year."'
+    elsif @headers.include?('citation_year') && (!@headers.include?('citation_author') || !@headers.include?('citation_name'))
+      @csv_errors << 'If you include a "citation_year" column, then you must also include columns for "citation_name" and "citation_author."'
+    end
+
+    ignored_columns = []
+    @headers.each do |field_name|
+      if !RECOGNIZED_COLUMNS.include? field_name
+        ignored_columns << field_name
+      end
+    end
+
+    if ignored_columns.size > 0
+      @csv_warnings << "These columns will be ignored:<br>#{ignored_columns.join('<br>')}"
+    end
+    
+  end
+
+  REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)(-(?<month>\d\d)(-(?<day>\d\d))?)?$/
+
+  # Given a CSV object (vis. "@data") with lineno = 0, convert it to
+  # an array of arrays of hashes where each hash has at least two
+  # keys: :data for the data value copied from the CSV object, and
+  # :validation_result, the result of performing validation on that
+  # value.  For invalid data, a third key, :validation_message, gives
+  # details about the validation error.
+  def validate_csv_data
+    @validated_data = []
+    @data.each do |row|
+      validated_row = row.collect { |value| { fieldname: value[0], data: value[1] } }
+      @validated_data << validated_row
+    end
+
+    @validated_data.each do |row|
+      row.each do |column|
+        case column[:fieldname]
+
+        when "yield"
+
+          begin
+            Float(column[:data])
+            column[:validation_result] = :valid
+          rescue ArgumentError => e
+            column[:validation_result] = :fatal_error
+            column[:validation_message] = e.message
+          end
+
+        when "citation_doi"
+
+          # do this until we find a spec:
+          column[:validation_result] = :valid
+
+        when "citation_author"
+
+          # accept anything for now
+
+        when "citation_year"
+
+          begin
+            year = Integer(column[:data])
+            if year > Date.today.next_year.year
+              # Don't allow citation year to be more than one year in the future
+              column[:validation_result] = :fatal_error
+              column[:validation_message] = "Citation year is in the future."
+            elsif year < 1436
+              column[:validation_result] = :fatal_error
+              column[:validation_message] = "Citation year is before Gutenberg invented his press!"
+            end
+          rescue ArgumentError => e
+            column[:validation_result] = :fatal_error
+            column[:validation_message] = e.message
+          end
+
+        when "citation_name"
+
+          # accept anything for now
+        
+        when "site"
+
+          if existing_site?(column[:data])
+            column[:validation_result] = :valid
+          else
+            column[:validation_result] = :fatal_error
+            column[:validation_message] = "Not found in sites table"
+          end
+
+        when "species"
+
+          if existing_species?(column[:data])
+            column[:validation_result] = :valid
+          else
+            column[:validation_result] = :fatal_error
+            column[:validation_message] = "Not found in species table"
+          end
+
+        when "treatment"
+
+          if existing_treatment?(column[:data])
+            column[:validation_result] = :valid
+          else
+            column[:validation_result] = :fatal_error
+            column[:validation_message] = "Not found in treatments table"
+          end
+
+        when "access_level"
+
+          access_level = Integer(column[:data])
+          if !(1..4).include? access_level
+            column[:validation_result] = :fatal_error
+            column[:validation_message] = "access_level must be 1, 2, 3, or 4"
+          else
+            column[:validation_result] = :valid
+          end
+
+        when "cultivar"
+
+          # skip for now
+
+        when "date"
+
+          year = month = day = nil
+          REQUIRED_DATE_FORMAT.match column[:data] do |match_data|
+            # to-do: set an appropriate dateloc value when day or month is not supplied
+            year = match_data[:year]
+            month = match_data[:month] || 1
+            day = match_data[:day] || 1
+          end
+
+          if year.nil?
+            column[:validation_result] = :fatal_error
+            column[:validation_message] = "dates must be in the form 1999-01-01, 1999-01, or 1999"
+          else
+            # Make sure it's a valid date
+            begin
+              date = Date.new(year.to_i, month.to_i, day.to_i)
+
+              # Date is valid; but make sure the range is reasonable
+              
+              if date > Date.today
+                # Don't allow date to be in the future
+                column[:validation_result] = :fatal_error
+                column[:validation_message] = "Date is in the future."
+              else
+                column[:validation_result] = :valid
+              end
+            rescue ArgumentError => e
+              column[:validation_result] = :fatal_error
+              column[:validation_message] = e.message + "year: #{year}; month: #{month}; day: #{day}"
+            end
+          end
+
+        when "n"
+
+          begin
+            n = Integer(column[:data])
+            if n <= 1
+              column[:validation_result] = :fatal_error
+              column[:validation_message] = "n must be at least 2"
+            else
+              column[:validation_result] = :valid
+            end
+          rescue ArgumentError => e
+            column[:validation_result] = :fatal_error
+            column[:validation_message] = e.message
+          end
+
+        when "SE"
+
+          begin
+            Float(column[:data])
+            # For now, accept any valid float
+            column[:validation_result] = :valid
+          rescue ArgumentError => e
+            column[:validation_result] = :fatal_error
+            column[:validation_message] = e.message
+          end
+
+        when "notes"
+
+          # accept anything for now
+
+        end # case
+              
+      end # row.each
+
+    end # @validated_data.each
+
+  end # def validate_csv_data
+
+  def existing_species?(name)
+    s = Specie.find_by_scientificname(name)
+    return !s.nil?
+  end
+
+  def existing_site?(name)
+    s = Site.find_by_sitename(name)
+    return !s.nil?
+  end
+
+  def existing_treatment?(name)
+    s = Treatment.find_by_name(name)
+    return !s.nil?
   end
 
 end
