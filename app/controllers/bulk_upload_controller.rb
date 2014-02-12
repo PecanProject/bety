@@ -155,6 +155,8 @@ class BulkUploadController < ApplicationController
     
     csvpath = session[:csvpath]
     
+    csv = CSV.open(csvpath, { headers: true })
+
     if validate_csv
       # Checks that the file referenced by the CSV object @data is
       # well formed and triggers a CSV::MalformedCSVError exception if
@@ -274,7 +276,7 @@ class BulkUploadController < ApplicationController
     end
   end
 
-  RECOGNIZED_COLUMNS =  %w{yield citation_doi citation_author citation_year citation_name site species treatment access_level cultivar date n SE notes}
+  RECOGNIZED_COLUMNS =  %w{yield citation_doi citation_author citation_year citation_title site species treatment access_level cultivar date n SE notes}
   def check_header_list
 
     @csv_errors = []
@@ -293,14 +295,14 @@ class BulkUploadController < ApplicationController
     end
 
     # Check citation information
-    if @headers.include?('citation_doi') && (@headers.include?('citation_author') || @headers.include?('citation_year') || @headers.include?('citation_name'))
-      @csv_errors << 'If you include a "citation_doi" column, then you must not include columns for "citation_author", "citation_name", or "citation_year."'
-    elsif @headers.include?('citation_author') && (!@headers.include?('citation_year') || !@headers.include?('citation_name'))
-      @csv_errors << 'If you include a "citation_author" column, then you must also include columns for "citation_name" and "citation_year."'
-    elsif @headers.include?('citation_name') && (!@headers.include?('citation_author') || !@headers.include?('citation_year'))
-      @csv_errors << 'If you include a "citation_name" column, then you must also include columns for "citation_author" and "citation_year."'
-    elsif @headers.include?('citation_year') && (!@headers.include?('citation_author') || !@headers.include?('citation_name'))
-      @csv_errors << 'If you include a "citation_year" column, then you must also include columns for "citation_name" and "citation_author."'
+    if @headers.include?('citation_doi') && (@headers.include?('citation_author') || @headers.include?('citation_year') || @headers.include?('citation_title'))
+      @csv_errors << 'If you include a "citation_doi" column, then you must not include columns for "citation_author", "citation_title", or "citation_year."'
+    elsif @headers.include?('citation_author') && (!@headers.include?('citation_year') || !@headers.include?('citation_title'))
+      @csv_errors << 'If you include a "citation_author" column, then you must also include columns for "citation_title" and "citation_year."'
+    elsif @headers.include?('citation_title') && (!@headers.include?('citation_author') || !@headers.include?('citation_year'))
+      @csv_errors << 'If you include a "citation_title" column, then you must also include columns for "citation_author" and "citation_year."'
+    elsif @headers.include?('citation_year') && (!@headers.include?('citation_author') || !@headers.include?('citation_title'))
+      @csv_errors << 'If you include a "citation_year" column, then you must also include columns for "citation_title" and "citation_author."'
     end
 
     ignored_columns = []
@@ -347,8 +349,12 @@ class BulkUploadController < ApplicationController
 
         when "citation_doi"
 
-          # do this until we find a spec:
-          column[:validation_result] = :valid
+          if doi_of_existing_citation?(column[:data])
+            column[:validation_result] = :valid
+          else
+            column[:validation_result] = :fatal_error
+            column[:validation_message] = "Not found in citations table"
+          end
 
         when "citation_author"
 
@@ -371,7 +377,7 @@ class BulkUploadController < ApplicationController
             column[:validation_message] = e.message
           end
 
-        when "citation_name"
+        when "citation_title"
 
           # accept anything for now
         
@@ -480,12 +486,40 @@ class BulkUploadController < ApplicationController
           # accept anything for now
 
         end # case
-              
+
+        # validation of citation information by author, year, and date
+        # happens outside the case statement since it involves
+        # multiple columns
+
+        author_index = row.index { |h| h[:fieldname] == "citation_author" }
+        year_index = row.index { |h| h[:fieldname] == "citation_year" }
+        name_index = row.index { |h| h[:fieldname] == "citation_title" }
+        logger.info(author_index)
+        logger.info(year_index)
+        logger.info(name_index)
+        if existing_citation(row[author_index][:data], row[year_index][:data], row[name_index][:data])
+          row[author_index][:validation_result] = :valid
+          row[year_index][:validation_result] = :valid
+          row[name_index][:validation_result] = :valid
+        else
+          row[author_index][:validation_result] = :fatal_error
+          row[year_index][:validation_result] = :fatal_error
+          row[name_index][:validation_result] = :fatal_error
+          row[author_index][:validation_message] = "Couldn't find a unique matching citation for this row."
+          row[year_index][:validation_message] = "Couldn't find a unique matching citation for this row."
+          row[name_index][:validation_message] = "Couldn't find a unique matching citation for this row."
+        end
+
       end # row.each
 
     end # @validated_data.each
 
   end # def validate_csv_data
+
+
+  # TO-DO: Decide if these methods should fail if we don't find a
+  # *unique* referent in the database (at least until we add
+  # uniqueness constraints on the database).
 
   def existing_species?(name)
     s = Specie.find_by_scientificname(name)
@@ -498,8 +532,19 @@ class BulkUploadController < ApplicationController
   end
 
   def existing_treatment?(name)
-    s = Treatment.find_by_name(name)
-    return !s.nil?
+    t = Treatment.find_by_name(name)
+    return !t.nil?
+  end
+
+  def doi_of_existing_citation?(doi)
+    c = Citation.find_by_doi(doi)
+    return !c.nil?
+  end
+
+  def existing_citation(author, year, title)
+    c = Citation.where("author = :author AND year = :year AND title LIKE :title_matcher",
+                       { author: author, year: year, title_matcher: "#{title}%" })
+    return c.size == 1
   end
 
 end
