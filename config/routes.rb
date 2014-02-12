@@ -164,4 +164,9 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   # Similarly, data entry guide:
   get '/dbdocumentation_data_entry.pdf' => redirect('/dbdocumentation_data_entry.pdf'), :as => :data_entry_guide
 
+  # add named routes for bulk_upload controller:
+  match '/bulk_upload/start_upload' => 'sessions#new', :as => :start_upload
+  match '/bulk_upload/display_csv_file', :as => :show_upload_file_contents
+  match '/bulk_upload/map_data', :as => :map_data
+
 end
