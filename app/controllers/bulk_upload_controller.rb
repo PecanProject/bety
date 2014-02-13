@@ -42,9 +42,9 @@ class BulkUploadController < ApplicationController
       return
     end
 
-    check_header_list
+    check_header_list # initializes @validation_summary and @validation_summary[:field_list_errors]
 
-    if @csv_errors.any?
+    if @validation_summary[:field_list_errors].any?
       # to do: decide whether to go on to validate data even when there are errors in the heading field list
 #      return
     end
@@ -284,35 +284,36 @@ class BulkUploadController < ApplicationController
   RECOGNIZED_COLUMNS =  %w{yield citation_doi citation_author citation_year citation_title site species treatment access_level cultivar date n SE notes}
   def check_header_list
 
-    @csv_errors = []
+    @validation_summary = {}
+    @validation_summary[:field_list_errors] = []
     @csv_warnings = []
 
     # Check for required yields field
     if !@headers.include?('yield')
-      @csv_errors << "You must have a yield column in your CSV file."
+      @validation_summary[:field_list_errors] << "You must have a yield column in your CSV file."
     end
 
     # Check for consistent stat information
     if @headers.include?('SE') && !@headers.include?('n')
-      @csv_errors << 'If you have an "SE" column, you must have an "n" column as well.'
+      @validation_summary[:field_list_errors] << 'If you have an "SE" column, you must have an "n" column as well.'
     elsif !@headers.include?("SE") && @headers.include?("n")
-      @csv_errors << 'If you have an "n" column, you must have an "SE" column as well.'
+      @validation_summary[:field_list_errors] << 'If you have an "n" column, you must have an "SE" column as well.'
     end
 
     # Check citation information
     if @headers.include?('citation_doi') && (@headers.include?('citation_author') || @headers.include?('citation_year') || @headers.include?('citation_title'))
-      @csv_errors << 'If you include a "citation_doi" column, then you must not include columns for "citation_author", "citation_title", or "citation_year."'
+      @validation_summary[:field_list_errors] << 'If you include a "citation_doi" column, then you must not include columns for "citation_author", "citation_title", or "citation_year."'
     elsif @headers.include?('citation_author') && (!@headers.include?('citation_year') || !@headers.include?('citation_title'))
-      @csv_errors << 'If you include a "citation_author" column, then you must also include columns for "citation_title" and "citation_year."'
+      @validation_summary[:field_list_errors] << 'If you include a "citation_author" column, then you must also include columns for "citation_title" and "citation_year."'
     elsif @headers.include?('citation_title') && (!@headers.include?('citation_author') || !@headers.include?('citation_year'))
-      @csv_errors << 'If you include a "citation_title" column, then you must also include columns for "citation_author" and "citation_year."'
+      @validation_summary[:field_list_errors] << 'If you include a "citation_title" column, then you must also include columns for "citation_author" and "citation_year."'
     elsif @headers.include?('citation_year') && (!@headers.include?('citation_author') || !@headers.include?('citation_title'))
-      @csv_errors << 'If you include a "citation_year" column, then you must also include columns for "citation_title" and "citation_author."'
+      @validation_summary[:field_list_errors] << 'If you include a "citation_year" column, then you must also include columns for "citation_title" and "citation_author."'
     end
 
     # If cultivar is in the field list, species must be as well
     if @headers.include?('cultivar') && !@headers.include?('species')
-      @csv_errors << 'If you have a "cultivar" column, you must have a "species" column as well.'
+      @validation_summary[:field_list_errors] << 'If you have a "cultivar" column, you must have a "species" column as well.'
     end
 
     ignored_columns = []
@@ -343,8 +344,12 @@ class BulkUploadController < ApplicationController
       @validated_data << validated_row
     end
 
-    @validated_data.each do |row|
+    @validated_data.each_with_index do |row, i|
+      row_number = i + 1
       row.each do |column|
+
+        column[:data] ||= ""
+
         case column[:fieldname]
 
         when "yield"
@@ -355,12 +360,22 @@ class BulkUploadController < ApplicationController
             if amount_of_yield <= 0
               column[:validation_result] = :fatal_error
               column[:validation_message] = "yield can't be less than zero"
+              if @validation_summary.has_key? :negative_yield
+                @validation_summary[:negative_yield] << row_number
+              else
+                @validation_summary[:negative_yield] = [ row_number ]
+              end
             else
               column[:validation_result] = :valid
             end
           rescue ArgumentError => e
             column[:validation_result] = :fatal_error
             column[:validation_message] = e.message
+            if @validation_summary.has_key? :unparsable_yield
+              @validation_summary[:unparsable_yield] << row_number
+            else
+              @validation_summary[:unparsable_yield] = [ row_number ]
+            end
           end
 
         when "citation_doi"
@@ -370,6 +385,11 @@ class BulkUploadController < ApplicationController
           else
             column[:validation_result] = :fatal_error
             column[:validation_message] = "Not found in citations table"
+            if @validation_summary.has_key? :unresolvable_citation_reference
+              @validation_summary[:unresolvable_citation_reference] << row_number
+            else
+              @validation_summary[:unresolvable_citation_reference] = [ row_number ]
+            end
           end
 
         when "citation_author"
@@ -384,13 +404,28 @@ class BulkUploadController < ApplicationController
               # Don't allow citation year to be more than one year in the future
               column[:validation_result] = :fatal_error
               column[:validation_message] = "Citation year is in the future."
+              if @validation_summary.has_key? :future_citation_year
+                @validation_summary[:future_citation_year] << row_number
+              else
+                @validation_summary[:future_citation_year] = [ row_number ]
+              end
             elsif year < 1436
               column[:validation_result] = :fatal_error
               column[:validation_message] = "Citation year is before Gutenberg invented his press!"
+              if @validation_summary.has_key? :too_old_citation_year
+                @validation_summary[:too_old_citation_year] << row_number
+              else
+                @validation_summary[:too_old_citation_year] = [ row_number ]
+              end
             end
           rescue ArgumentError => e
             column[:validation_result] = :fatal_error
             column[:validation_message] = e.message
+              if @validation_summary.has_key? :unparsable_citation_year
+                @validation_summary[:unparsable_citation_year] << row_number
+              else
+                @validation_summary[:unparsable_citation_year] = [ row_number ]
+              end
           end
 
         when "citation_title"
@@ -404,6 +439,11 @@ class BulkUploadController < ApplicationController
           else
             column[:validation_result] = :fatal_error
             column[:validation_message] = "Not found in sites table"
+            if @validation_summary.has_key? :unresolvable_site_reference
+              @validation_summary[:unresolvable_site_reference] << row_number
+            else
+              @validation_summary[:unresolvable_site_reference] = [ row_number ]
+            end
           end
 
         when "species"
@@ -413,6 +453,11 @@ class BulkUploadController < ApplicationController
           else
             column[:validation_result] = :fatal_error
             column[:validation_message] = "Not found in species table"
+            if @validation_summary.has_key? :unresolvable_species_reference
+              @validation_summary[:unresolvable_species_reference] << row_number
+            else
+              @validation_summary[:unresolvable_species_reference] = [ row_number ]
+            end
           end
 
         when "treatment"
@@ -422,16 +467,36 @@ class BulkUploadController < ApplicationController
           else
             column[:validation_result] = :fatal_error
             column[:validation_message] = "Not found in treatments table"
+            if @validation_summary.has_key? :unresolvable_treatment_reference
+              @validation_summary[:unresolvable_treatment_reference] << row_number
+            else
+              @validation_summary[:unresolvable_treatment_reference] = [ row_number ]
+            end
           end
 
         when "access_level"
 
-          access_level = Integer(column[:data])
-          if !(1..4).include? access_level
+          begin
+            access_level = Integer(column[:data])
+            if !(1..4).include? access_level
+              column[:validation_result] = :fatal_error
+              column[:validation_message] = "access_level must be 1, 2, 3, or 4"
+              if @validation_summary.has_key? :out_of_bounds_access_level
+                @validation_summary[:out_of_bounds_access_level] << row_number
+              else
+                @validation_summary[:out_of_bounds_access_level] = [ row_number ]
+              end
+            else
+              column[:validation_result] = :valid
+            end
+          rescue ArgumentError => e
             column[:validation_result] = :fatal_error
-            column[:validation_message] = "access_level must be 1, 2, 3, or 4"
-          else
-            column[:validation_result] = :valid
+            column[:validation_message] = e.message
+            if @validation_summary.has_key? :unparsable_access_level
+              @validation_summary[:unparsable_access_level] << row_number
+            else
+              @validation_summary[:unparsable_access_level] = [ row_number ]
+            end
           end
 
         when "cultivar"
@@ -442,7 +507,7 @@ class BulkUploadController < ApplicationController
             column[:validation_result] = :fatal_error
             column[:validation_message] = "Cultivar can't be looked up when species is not in the field list."
           else            
-            species_id = existing_species(row[species_index][:data])
+            species_id = existing_species?(row[species_index][:data])
             if species_id.nil?
               column[:validation_result] = :fatal_error
               column[:validation_message] = "Cultivar can't be looked up when species is not in species table."
@@ -452,6 +517,11 @@ class BulkUploadController < ApplicationController
               else
                 column[:validation_result] = :fatal_error
                 column[:validation_message] = "No cultivar for this species with this name found in cultivars table"
+                if @validation_summary.has_key? :unresolvable_cultivar_reference
+                  @validation_summary[:unresolvable_cultivar_reference] << row_number
+                else
+                  @validation_summary[:unresolvable_cultivar_reference] = [ row_number ]
+                end
               end
             end
           end
@@ -469,6 +539,11 @@ class BulkUploadController < ApplicationController
           if year.nil?
             column[:validation_result] = :fatal_error
             column[:validation_message] = "dates must be in the form 1999-01-01, 1999-01, or 1999"
+            if @validation_summary.has_key? :unacceptable_date_format
+              @validation_summary[:unacceptable_date_format] << row_number
+            else
+              @validation_summary[:unacceptable_date_format] = [ row_number ]
+            end
           else
             # Make sure it's a valid date
             begin
@@ -480,12 +555,22 @@ class BulkUploadController < ApplicationController
                 # Don't allow date to be in the future
                 column[:validation_result] = :fatal_error
                 column[:validation_message] = "Date is in the future."
+                if @validation_summary.has_key? :future_date
+                  @validation_summary[:future_date] << row_number
+                else
+                  @validation_summary[:future_date] = [ row_number ]
+                end
               else
                 column[:validation_result] = :valid
               end
             rescue ArgumentError => e
               column[:validation_result] = :fatal_error
               column[:validation_message] = e.message + "year: #{year}; month: #{month}; day: #{day}"
+              if @validation_summary.has_key? :invalid_date
+                @validation_summary[:invalid_date] << row_number
+              else
+                @validation_summary[:invalid_date] = [ row_number ]
+              end
             end
           end
 
@@ -496,12 +581,22 @@ class BulkUploadController < ApplicationController
             if n <= 1
               column[:validation_result] = :fatal_error
               column[:validation_message] = "n must be at least 2"
+              if @validation_summary.has_key? :invalid_sample_size
+                @validation_summary[:invalid_sample_size] << row_number
+              else
+                @validation_summary[:invalid_sample_size] = [ row_number ]
+              end
             else
               column[:validation_result] = :valid
             end
           rescue ArgumentError => e
             column[:validation_result] = :fatal_error
             column[:validation_message] = e.message
+            if @validation_summary.has_key? :unparsable_sample_size
+              @validation_summary[:unparsable_sample_size] << row_number
+            else
+              @validation_summary[:unparsable_sample_size] = [ row_number ]
+            end
           end
 
         when "SE"
@@ -513,6 +608,11 @@ class BulkUploadController < ApplicationController
           rescue ArgumentError => e
             column[:validation_result] = :fatal_error
             column[:validation_message] = e.message
+            if @validation_summary.has_key? :unparsable_standard_error_value
+              @validation_summary[:unparsable_standard_error_value] << row_number
+            else
+              @validation_summary[:unparsable_standard_error_value] = [ row_number ]
+            end
           end
 
         when "notes"
@@ -526,9 +626,13 @@ class BulkUploadController < ApplicationController
 
         end # case
 
-        # validation of citation information by author, year, and date
-        # happens outside the case statement since it involves
-        # multiple columns
+      end # row.each
+
+      # validation of citation information by author, year, and date
+      # happens outside the case statement since it involves
+      # multiple columns
+      
+      if @headers.include?('citation_author') && @headers.include?('citation_year') && @headers.include?('citation_title')
 
         author_index = row.index { |h| h[:fieldname] == "citation_author" }
         year_index = row.index { |h| h[:fieldname] == "citation_year" }
@@ -547,10 +651,14 @@ class BulkUploadController < ApplicationController
           row[author_index][:validation_message] = "Couldn't find a unique matching citation for this row."
           row[year_index][:validation_message] = "Couldn't find a unique matching citation for this row."
           row[name_index][:validation_message] = "Couldn't find a unique matching citation for this row."
+          if @validation_summary.has_key? :unresolvable_citation_reference
+            @validation_summary[:unresolvable_citation_reference] << row_number
+          else
+            @validation_summary[:unresolvable_citation_reference] = [ row_number ]
+          end
         end
 
-      end # row.each
-
+      end
     end # @validated_data.each
 
   end # def validate_csv_data
