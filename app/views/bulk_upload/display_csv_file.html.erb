@@ -4,7 +4,8 @@
   <div id="new">&nbsp;</div>
   <div id="forward"><%= submit_tag "Choose Dataset-wide values >>" %></div>
 </div>
-<%= render "csv_error_messages" %>
+<%= make_validation_summary %>
+<%= make_warning_summary  %>
 <table>
   <caption>Uploaded file: <span style="font-size: larger; font-weight: bold"><%= File.basename(session[:csvpath]) %></span></p></caption>
   <thead>
