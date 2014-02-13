@@ -1,5 +1,39 @@
 module BulkUploadHelper
 
+  ERROR_MESSAGE_MAP = {
+    negative_yield: "Negative value for yield",
+    unparsable_yield: "Yield value can't be parsed as a number",
+    unresolvable_citation_reference: "Unresolvable citation reference",
+    future_citation_year: "Citation year is in the future",
+    too_old_citation_year: "Citation year is too far in the past",
+    unparsable_citation_year: "Citation year can't be parsed as an integer",
+    unresolvable_site_reference: "Unresolvable site reference",
+    unresolvable_species_reference: "Unresovable species reference",
+    unresolvable_treatment_reference: "Unresolvable treatment reference",
+    unparsable_access_level: "Access level can't be parsed as an integer",
+    unresolvable_cultivar_reference: "Unresolvable cultivar reference",
+    unacceptable_date_format: "Unacceptable date format",
+    future_date: "Date is in the future",
+    invalid_date: "Date is invalid",
+    invalid_sample_size: "Invalid sample size (n)",
+    unparsable_sample_size: "Sample size (n) can't be parsed as an integer",
+    unparsable_standard_error_value: "Standard error value (SE) can't be parsed as a number"
+  }
+
+  def make_validation_summary
+    summary = content_tag :h2, "Field List Errors"
+    @validation_summary[:field_list_errors].each do |message|
+      summary += content_tag :li, "* " + message
+    end
+    summary += content_tag :h2, "Data Value Errors"
+    @validation_summary.each_pair do |key, value|
+      if ERROR_MESSAGE_MAP.has_key?(key)
+        summary += content_tag :li, "* " + ERROR_MESSAGE_MAP[key] + " in these rows: " + value.join(', ')
+      end
+    end
+    return summary
+  end
+
   # Use the database column name to decide what to use as the source
   # for the column value.  This will either be: (1) A fixed value; (2)
   # A user-entered uniform value for all rows; (3) A value obtained
