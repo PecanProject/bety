@@ -21,14 +21,62 @@ module BulkUploadHelper
   }
 
   def make_validation_summary
-    summary = content_tag :h2, "Field List Errors"
-    @validation_summary[:field_list_errors].each do |message|
-      summary += content_tag :li, "* " + message
-    end
-    summary += content_tag :h2, "Data Value Errors"
-    @validation_summary.each_pair do |key, value|
-      if ERROR_MESSAGE_MAP.has_key?(key)
-        summary += content_tag :li, "* " + ERROR_MESSAGE_MAP[key] + " in these rows: " + value.join(', ')
+    field_list_error_count = @validation_summary[:field_list_errors].size
+    data_value_error_count = (@validation_summary.keys - [ :field_list_errors ]).collect{|key| @validation_summary[key].size}.reduce(:+)
+    total_error_count = field_list_error_count + data_value_error_count
+    @file_has_fatal_errors = !total_error_count.zero?
+
+    summary = "" # default to empty string if no errors
+    if @file_has_fatal_errors
+      
+      summary = content_tag :div, id: "error_explanation", style: "width:850px; margin: auto" do
+        contents = content_tag :div, "Your file contains #{pluralize(total_error_count, "error")}.", class: "fade in alert alert-error centered"
+        if field_list_error_count > 0
+          contents += content_tag :h2, "Field List Errors"
+
+          contents += content_tag :ul do
+            list_items = "".html_safe
+            @validation_summary[:field_list_errors].each do |message|
+              list_items += content_tag :li, "* " + message
+            end
+            list_items
+          end # content_tag :ul
+        end # if field_list_error_count > 0
+
+        if data_value_error_count > 0
+          contents += content_tag :h2, "Data Value Errors"
+
+          contents += content_tag :ul do
+            list_items = "".html_safe
+            @validation_summary.each_pair do |key, value|
+              if ERROR_MESSAGE_MAP.has_key?(key)
+                list_items += content_tag :li, "* " + ERROR_MESSAGE_MAP[key] + " in these rows: " + value.join(', ')
+              end # if .. has_key?
+            end # each_pair do
+            list_items
+          end # content_tag :ul
+        end # if data_value_error_count > 0
+
+        contents
+      end # content_tag :div
+
+    end # if @file_has_fatal_errors
+    return summary
+  end
+
+  def make_warning_summary
+    summary = "" # default to empty string if no warnings
+    if  @csv_warnings.any?
+      summary = content_tag :div, id: "warning_explanation", style: "width:850px; margin:auto" do
+        div_content = content_tag :h2, "Warnings"
+        div_content += content_tag :ul do
+          list_items = ""
+          @csv_warnings.each do |msg|
+            list_items += content_tag :li, raw("* #{msg}") # use raw because msg may contain markup
+          end
+          list_items
+        end
+        div_content
       end
     end
     return summary
