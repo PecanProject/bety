@@ -14,76 +14,17 @@ class BulkUploadDataSet
 
     if @session[:csvpath].nil?
       # shouldn't ever get here
-      raise "csvpath is missing form the session"
+      raise "csvpath is missing from the session"
     end
 
-    begin
-      # Get data out of the file and store in @headers and @data:
-      read_data
-
-      
-    end
-
-
+    # Get data out of the file and store in @headers and @data:
+    read_data
 
   end
 
-
-
-
-
-
-
-
-  private
-
-  # Takes the file parameter submitted by the upload form, uploads the
-  # file, and store a reference to it in the session.
-  def store_file(uploaded_io)
-    file = File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb')
-    file.write(uploaded_io.read)
-    @session[:csvpath] = file.path
-    file.close
-  end
-
-
-  # Uses: 
-  #     @session[:csvpath], the path to the uploaded CSV file
-  # Sets:
-  #     @headers, the CSV file's header info
-  #     @data, a CSV object corresponding to the uploaded file,
-  #         positioned to read the first line after the header line
-  def read_data
-    
-    csvpath = @session[:csvpath]
-    
-    csv = CSV.open(csvpath, { headers: true })
-
-    if @unvalidated
-      # Checks that the file referenced by the CSV object @data is
-      # well formed and triggers a CSV::MalformedCSVError exception if
-      # it is not.
-      csv.each do |row| # force exception if not well formed
-        if row.size == 0
-          raise "Blank lines are not allowed."
-        end
-        row.each do |c|
-        end
-      end
-
-      csv.rewind # rewinds to the first line
-    end
-
-    csv.readline # need to read first line to get headers
-    @headers = csv.headers
-    csv.rewind
-
-    # store CSV object in instance variable
-    @data = csv
-
-  end
-
-  public
+  # sets:
+  #     @csv_warnings: a List of warning messages
+  #     @validation_summary: a Hash containing the validations results
   def check_header_list
 
     @validation_summary = {}
@@ -471,8 +412,55 @@ class BulkUploadDataSet
 
   end # def validate_csv_data
 
-
+####################################################################################################################################
   private
+
+
+  # Takes the file parameter submitted by the upload form, uploads the
+  # file, and store a reference to it in the session.
+  def store_file(uploaded_io)
+    file = File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb')
+    file.write(uploaded_io.read)
+    @session[:csvpath] = file.path
+    file.close
+  end
+
+
+  # Uses: 
+  #     @session[:csvpath], the path to the uploaded CSV file
+  # Sets:
+  #     @headers, the CSV file's header info
+  #     @data, a CSV object corresponding to the uploaded file,
+  #         positioned to read the first line after the header line
+  def read_data
+    
+    csvpath = @session[:csvpath]
+    
+    csv = CSV.open(csvpath, { headers: true })
+
+    if @unvalidated
+      # Checks that the file referenced by the CSV object @data is
+      # well formed and triggers a CSV::MalformedCSVError exception if
+      # it is not.
+      csv.each do |row| # force exception if not well formed
+        if row.size == 0
+          raise "Blank lines are not allowed."
+        end
+        row.each do |c|
+        end
+      end
+
+      csv.rewind # rewinds to the first line
+    end
+
+    csv.readline # need to read first line to get headers
+    @headers = csv.headers
+    csv.rewind
+
+    # store CSV object in instance variable
+    @data = csv
+
+  end
 
 
   # TO-DO: Decide if these methods should fail if we don't find a
