@@ -1,4 +1,13 @@
 module BulkUploadHelper
+  INTERACTIVE_COLUMNS = %w{site species treatment access_level cultivar date}
+
+  def need_interactively_specified_data
+    missing_columns = INTERACTIVE_COLUMNS - @headers
+  end
+
+  def need_citation_selection
+    @headers.select { |field| field =~ /citation_/ }.empty? && session['citation'].nil?
+  end
 
   ERROR_MESSAGE_MAP = {
     negative_yield: "Negative value for yield",
@@ -21,17 +30,12 @@ module BulkUploadHelper
   }
 
   def make_validation_summary
-    field_list_error_count = @validation_summary[:field_list_errors].size
-    data_value_error_count = (@validation_summary.keys - [ :field_list_errors ]).collect{|key| @validation_summary[key].size}.reduce(:+)
-    total_error_count = field_list_error_count + data_value_error_count
-    @file_has_fatal_errors = !total_error_count.zero?
-
     summary = "" # default to empty string if no errors
     if @file_has_fatal_errors
       
       summary = content_tag :div, id: "error_explanation", style: "width:850px; margin: auto" do
-        contents = content_tag :div, "Your file contains #{pluralize(total_error_count, "error")}.", class: "fade in alert alert-error centered"
-        if field_list_error_count > 0
+        contents = content_tag :div, "Your file contains #{pluralize(@total_error_count, "error")}.", class: "fade in alert alert-error centered"
+        if @field_list_error_count > 0
           contents += content_tag :h2, "Field List Errors"
 
           contents += content_tag :ul do
@@ -41,9 +45,9 @@ module BulkUploadHelper
             end
             list_items
           end # content_tag :ul
-        end # if field_list_error_count > 0
+        end # if @field_list_error_count > 0
 
-        if data_value_error_count > 0
+        if @data_value_error_count > 0
           contents += content_tag :h2, "Data Value Errors"
 
           contents += content_tag :ul do
@@ -55,7 +59,7 @@ module BulkUploadHelper
             end # each_pair do
             list_items
           end # content_tag :ul
-        end # if data_value_error_count > 0
+        end # if @data_value_error_count > 0
 
         contents
       end # content_tag :div
@@ -70,7 +74,7 @@ module BulkUploadHelper
       summary = content_tag :div, id: "warning_explanation", style: "width:850px; margin:auto" do
         div_content = content_tag :h2, "Warnings"
         div_content += content_tag :ul do
-          list_items = ""
+          list_items = "".html_safe
           @csv_warnings.each do |msg|
             list_items += content_tag :li, raw("* #{msg}") # use raw because msg may contain markup
           end

@@ -36,7 +36,7 @@ class BulkUploadController < ApplicationController
       # flash[:display_csv_file] = true
       redirect_to(action: "start_upload")
       return
-    rescue ArgumentError => e # catches invalid UTF-8 byte sequence errors
+    rescue Exception => e # catches invalid UTF-8 byte sequence errors and empty lines
       flash[:error] = e.message
       redirect_to(action: "start_upload")
       return
@@ -55,6 +55,13 @@ class BulkUploadController < ApplicationController
 
 
   # step 3
+  def choose_global_data_values
+    read_data
+    check_header_list
+    validate_csv_data
+  end
+    
+
   def map_data
     # reads CSV file and sets @data and @headers
     read_data # uses session[:csvpath] to set @headers and @data
@@ -132,7 +139,7 @@ class BulkUploadController < ApplicationController
 
 
 
-
+################################################################################
   private
 
   
@@ -167,6 +174,9 @@ class BulkUploadController < ApplicationController
       # well formed and triggers a CSV::MalformedCSVError exception if
       # it is not.
       csv.each do |row| # force exception if not well formed
+        if row.size == 0
+          raise "Blank lines are not allowed."
+        end
         row.each do |c|
         end
       end
@@ -660,6 +670,12 @@ class BulkUploadController < ApplicationController
 
       end
     end # @validated_data.each
+
+    @field_list_error_count = @validation_summary[:field_list_errors].size
+    @data_value_error_count = (@validation_summary.keys - [ :field_list_errors ]).
+      collect{|key| @validation_summary[key].size}.reduce(:+) || 0 # || 0 "fixes" the case where there are no data value errors
+    @total_error_count = @field_list_error_count + @data_value_error_count
+    @file_has_fatal_errors = !@total_error_count.zero?
 
   end # def validate_csv_data
 
