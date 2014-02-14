@@ -2,11 +2,11 @@ module BulkUploadHelper
   INTERACTIVE_COLUMNS = %w{site species treatment access_level cultivar date}
 
   def need_interactively_specified_data
-    missing_columns = INTERACTIVE_COLUMNS - @headers
+    missing_columns = INTERACTIVE_COLUMNS - @data_set.headers
   end
 
   def need_citation_selection
-    @headers.select { |field| field =~ /citation_/ }.empty? && session['citation'].nil?
+    @data_set.headers.select { |field| field =~ /citation_/ }.empty? && session['citation'].nil?
   end
 
   ERROR_MESSAGE_MAP = {
@@ -70,12 +70,12 @@ module BulkUploadHelper
 
   def make_warning_summary
     summary = "" # default to empty string if no warnings
-    if  @csv_warnings.any?
+    if  @data_set.csv_warnings.any?
       summary = content_tag :div, id: "warning_explanation", style: "width:850px; margin:auto" do
         div_content = content_tag :h2, "Warnings"
         div_content += content_tag :ul do
           list_items = "".html_safe
-          @csv_warnings.each do |msg|
+          @data_set.csv_warnings.each do |msg|
             list_items += content_tag :li, raw("* #{msg}") # use raw because msg may contain markup
           end
           list_items

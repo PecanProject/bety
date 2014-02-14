@@ -2,7 +2,7 @@
   <div id="back"><%= link_to "<< Choose a different file to upload", start_upload_path %></div>
   <div id="new">&nbsp;</div>
   <div id="forward">
-    <% if @file_has_fatal_errors %>
+    <% if @data_set.file_has_fatal_errors %>
        &nbsp;
     <% elsif need_citation_selection %>
        <%= link_to "Select a Citation", citations_path %>
@@ -19,13 +19,13 @@
   <thead>
     <tr>
       <th>row number</th>
-      <% @headers.each do |header| %>
+      <% @data_set.headers.each do |header| %>
       <th><%= header %></th>
       <% end %>
     </tr>
   </thead>
   <tbody>
-    <% @validated_data.each_with_index do |row, i| %>
+    <% @data_set.validated_data.each_with_index do |row, i| %>
     <% row_number = i + 1 %>
     <tr>
       <td style="background-color: lightblue"><%= row_number %></td>
