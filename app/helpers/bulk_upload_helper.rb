@@ -1,14 +1,4 @@
 module BulkUploadHelper
-  INTERACTIVE_COLUMNS = %w{site species treatment access_level cultivar date}
-
-  def need_interactively_specified_data
-    missing_columns = INTERACTIVE_COLUMNS - @data_set.headers
-  end
-
-  def need_citation_selection
-    @data_set.headers.select { |field| field =~ /citation_/ }.empty? && session['citation'].nil?
-  end
-
   ERROR_MESSAGE_MAP = {
     negative_yield: "Negative value for yield",
     unparsable_yield: "Yield value can't be parsed as a number",
@@ -31,40 +21,40 @@ module BulkUploadHelper
 
   def make_validation_summary
     summary = "" # default to empty string if no errors
-    if @file_has_fatal_errors
+    if @data_set.file_has_fatal_errors
       
       summary = content_tag :div, id: "error_explanation", style: "width:850px; margin: auto" do
-        contents = content_tag :div, "Your file contains #{pluralize(@total_error_count, "error")}.", class: "fade in alert alert-error centered"
-        if @field_list_error_count > 0
+        contents = content_tag :div, "Your file contains #{pluralize(@data_set.total_error_count, "error")}.", class: "fade in alert alert-error centered"
+        if @data_set.field_list_error_count > 0
           contents += content_tag :h2, "Field List Errors"
 
           contents += content_tag :ul do
             list_items = "".html_safe
-            @validation_summary[:field_list_errors].each do |message|
+            @data_set.validation_summary[:field_list_errors].each do |message|
               list_items += content_tag :li, "* " + message
             end
             list_items
           end # content_tag :ul
-        end # if @field_list_error_count > 0
+        end # if @data_set.field_list_error_count > 0
 
-        if @data_value_error_count > 0
+        if @data_set.data_value_error_count > 0
           contents += content_tag :h2, "Data Value Errors"
 
           contents += content_tag :ul do
             list_items = "".html_safe
-            @validation_summary.each_pair do |key, value|
+            @data_set.validation_summary.each_pair do |key, value|
               if ERROR_MESSAGE_MAP.has_key?(key)
                 list_items += content_tag :li, "* " + ERROR_MESSAGE_MAP[key] + " in these rows: " + value.join(', ')
               end # if .. has_key?
             end # each_pair do
             list_items
           end # content_tag :ul
-        end # if @data_value_error_count > 0
+        end # if @data_set.data_value_error_count > 0
 
         contents
       end # content_tag :div
 
-    end # if @file_has_fatal_errors
+    end # if @data_set.file_has_fatal_errors
     return summary
   end
 

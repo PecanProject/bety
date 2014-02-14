@@ -1,5 +1,7 @@
 class BulkUploadDataSet
-  attr_reader :data, :headers, :validation_summary, :csv_warnings, :file_has_fatal_errors, :validated_data
+  attr_reader :headers, :validated_data
+  attr_reader :validation_summary, :csv_warnings
+  attr_reader :file_has_fatal_errors, :total_error_count, :field_list_error_count, :data_value_error_count
 
   def initialize(session, uploaded_io = nil)
 
@@ -24,7 +26,9 @@ class BulkUploadDataSet
 
   # sets:
   #     @csv_warnings: a List of warning messages
-  #     @validation_summary: a Hash containing the validations results
+  #     @validation_summary: a Hash containing the validation results;
+  #         this method sets only the portion related to field list
+  #         errors.
   def check_header_list
 
     @validation_summary = {}
@@ -83,6 +87,34 @@ class BulkUploadDataSet
   # :validation_result, the result of performing validation on that
   # value.  For invalid data, a third key, :validation_message, gives
   # details about the validation error.
+  #
+  # This method sets or alters the following instance variables:
+  #     @validation_summary:
+  #         A key is added for each type of error found; the
+  #         corresponding value is a list of rows (by number) where
+  #         that type of error was found
+  #     @validated_data:
+  #         This is a list of Hashes, one hash for each row of the
+  #         input file (excluding the heading row).  Each hash has
+  #         these keys:
+  #             fieldname: The field name for the corresponding value
+  #                 (as given by the heading)
+  #             data: The value itself, except with nil values
+  #                 normalized to the empty string
+  #         If validation on a particular value fails, these keys are
+  #         added:
+  #             validation_result: This will always be :valid,
+  #                 :ignored, or :fatal_error
+  #             validation_message: This gives information about the
+  #                 nature of the validation error.
+  #     @field_list_error_count:
+  #         The number of errors pertaining to the field list of the uploaded file.
+  #     @data_value_error_count:
+  #         The number of data values that failed validation
+  #     @total_error_count:
+  #         The total number of errors, both heading-related and data-related.
+  #     @file_has_fatal_errors:
+  #         A boolean telling whether there were any fatal errors found.
   def validate_csv_data
     @validated_data = []
     @data.each do |row|
@@ -411,6 +443,16 @@ class BulkUploadDataSet
     @file_has_fatal_errors = !@total_error_count.zero?
 
   end # def validate_csv_data
+
+  INTERACTIVE_COLUMNS = %w{site species treatment access_level cultivar date}
+
+  def need_interactively_specified_data
+    missing_columns = INTERACTIVE_COLUMNS - @headers
+  end
+
+  def need_citation_selection
+    @headers.select { |field| field =~ /citation_/ }.empty? && session['citation'].nil?
+  end
 
 ####################################################################################################################################
   private

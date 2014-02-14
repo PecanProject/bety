@@ -4,9 +4,9 @@
   <div id="forward">
     <% if @data_set.file_has_fatal_errors %>
        &nbsp;
-    <% elsif need_citation_selection %>
+    <% elsif @data_set.need_citation_selection %>
        <%= link_to "Select a Citation", citations_path %>
-    <% elsif need_interactively_specified_data %>
+    <% elsif @data_set.need_interactively_specified_data %>
        <%= link_to "Specify Dataset-wide values >>", choose_global_data_values_path %>
     <% else %>
        <%= link_to "Insert Data >>", bulk_upload_data_insertion_path %>
