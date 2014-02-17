@@ -7,7 +7,7 @@ module BulkUploadHelper
     too_old_citation_year: "Citation year is too far in the past",
     unparsable_citation_year: "Citation year can't be parsed as an integer",
     unresolvable_site_reference: "Unresolvable site reference",
-    unresolvable_species_reference: "Unresovable species reference",
+    unresolvable_species_reference: "Unresolvable species reference",
     unresolvable_treatment_reference: "Unresolvable treatment reference",
     unparsable_access_level: "Access level can't be parsed as an integer",
     unresolvable_cultivar_reference: "Unresolvable cultivar reference",
@@ -19,12 +19,26 @@ module BulkUploadHelper
     unparsable_standard_error_value: "Standard error value (SE) can't be parsed as a number"
   }
 
+  # maps data reference errors to appropriate page for finding or
+  # adding referents
+  ERROR_REMEDY_MAP = {
+    unresolvable_citation_reference: { link_url: :citations, link_text: "Search for or add citation" },
+    unresolvable_site_reference: { link_url:  :sites, link_text: "Search for or add site" },
+    unresolvable_species_reference: { link_url:  :species_index, link_text: "Search for or add species" },
+    unresolvable_treatment_reference: { link_url: :treatments, link_text: "Search for or add treatment" },
+    unresolvable_cultivar_reference: { link_url: :cultivars, link_text: "Search for or add cultivar" }
+  }
+
   def make_validation_summary
     summary = "" # default to empty string if no errors
     if @data_set.file_has_fatal_errors
       
       summary = content_tag :div, id: "error_explanation", style: "width:850px; margin: auto" do
-        contents = content_tag :div, "Your file contains #{pluralize(@data_set.total_error_count, "error")}.", class: "fade in alert alert-error centered"
+        contents = content_tag :div, class: "fade in alert alert-error centered" do
+          div = "Your file contains #{pluralize(@data_set.total_error_count, "error")}."
+          div << "<br>You can not upload your data set until #{@data_set.total_error_count > 1 ? "these are" : "this is"} corrected."
+          raw div
+        end
         if @data_set.field_list_error_count > 0
           contents += content_tag :h2, "Field List Errors"
 
@@ -44,7 +58,16 @@ module BulkUploadHelper
             list_items = "".html_safe
             @data_set.validation_summary.each_pair do |key, value|
               if ERROR_MESSAGE_MAP.has_key?(key)
-                list_items += content_tag :li, "* " + ERROR_MESSAGE_MAP[key] + " in these rows: " + value.join(', ')
+                list_items += content_tag :li do
+                  li_content = "* " + ERROR_MESSAGE_MAP[key]
+                  li_content << " in these rows: " + value.join(', ')
+                  if ERROR_REMEDY_MAP.has_key?(key)
+                    # provide a link to page to search for or add
+                    # missing referent:
+                    li_content << (link_to ERROR_REMEDY_MAP[key][:link_text], ERROR_REMEDY_MAP[key][:link_url])
+                  end
+                  raw li_content
+                end
               end # if .. has_key?
             end # each_pair do
             list_items
