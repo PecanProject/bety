@@ -99,32 +99,35 @@ class BulkUploadController < ApplicationController
 
   # step 5
   def insert_data
-    # reads CSV file and sets @data and @headers
-    read_data
-    get_insertion_data
 
+    @data_set = BulkUploadDataSet.new(session)
+    insertion_data = @data_set.get_insertion_data({})
+
+=begin
     if @errors
       flash[:error] = @errors
       redirect_to(action: "confirm_data")
       return
     end
+=end
 
     errors = nil
     begin
-      Trait.transaction do
-        @mapped_data.each do |row|
-          Trait.create!(row)
+      Yield.transaction do
+        insertion_data.each do |row|
+          Yield.create!(row)
         end
       end
     rescue => e
       errors = e.message
+      logger.info(e.backtrace.join("\n"))
     end
 
     respond_to do |format|
       format.html {
         if errors
           flash[:error] = errors
-          redirect_to(action: "confirm_data")
+          redirect_to(action: "display_csv_file") # TO-DO: should probably go to last page, which could ge global data specification page
         else
           redirect_to(action: "start_upload")
         end
@@ -151,80 +154,6 @@ class BulkUploadController < ApplicationController
     csv = File.open(csvpath)
     @file_contents = csv.read
     csv.close
-  end
-
-  # Uses the specified data mapping to convert @data from a CSV object
-  # to an Array of Hashes suitable for inserting into the traits
-  # table.
-  def get_insertion_data(for_display = false)
-    mapping = session[:mapping]
-
-    user_supplied_values = mapping["value"]
-
-    validate(user_supplied_values)
-
-    @database_default_values = {}
-    Trait.columns.each do |col|
-      @database_default_values[col.name] = col.default
-    end
-
-    # combine user-supplied values with database defaults
-    defaults = @database_default_values.merge(user_supplied_values) # user-supplied values take precedence over database defaults
-    if for_display
-      # replace nil and empty string with "NULL"
-      defaults.each do |k, v|
-        if v.nil? or v.to_s.empty?
-          defaults[k] = "NULL"
-        end
-      end
-    end
-
-    @errors = false
-    @mapped_data = Array.new
-    @data.each do |csv_row|
-      csv_row_as_hash = csv_row.to_hash
-
-      # look up scientificname to get specie_id (if needed)
-      species_key = nil
-      if @headers.include?("scientificname")
-        species_key = "scientificname"
-      elsif @headers.include?("species.scientificname")
-        species_key = "species.scientificname"
-      end
-      if !species_key.nil?
-        sp = nil
-        begin
-          sp = Specie.find_by_scientificname(csv_row_as_hash[species_key])
-        rescue
-        end
-        if sp
-          csv_row_as_hash["specie_id"] = sp.id.to_s
-        else
-          csv_row_as_hash["specie_id"] = for_display ? "#{csv_row_as_hash[species_key]} NOT FOUND" : nil
-          @errors = "Can't submit invalid data.<br>Values highlighted in red were not found in the database"
-        end
-      end
-
-      # apply rounding
-      if csv_row_as_hash["mean"]
-        precision = mapping["rounding"]["mean"].to_i
-        csv_row_as_hash["mean"] = sprintf("%.#{precision}f", csv_row_as_hash["mean"].to_f.round(precision))
-      end
-      if csv_row_as_hash["stat"]
-        precision = mapping["rounding"]["stat"].to_i
-        csv_row_as_hash["stat"] = sprintf("%.#{precision}f", csv_row_as_hash["stat"].to_f.round(precision))
-      end
-
-      mapped_row = defaults.merge(csv_row_as_hash) # csv row values take precedence over defaults
-
-      # eliminate extraneous data from CSV row
-      mapped_row.keep_if { |key, value| Trait.columns.collect { |column| column.name }.include?(key) }
-
-      @mapped_data << mapped_row
-
-    end
-
-    @mapped_data
   end
 
   def displayed_columns

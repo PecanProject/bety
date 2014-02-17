@@ -2,6 +2,7 @@ class BulkUploadDataSet
   attr_reader :headers, :validated_data
   attr_reader :validation_summary, :csv_warnings
   attr_reader :file_has_fatal_errors, :total_error_count, :field_list_error_count, :data_value_error_count
+  attr_reader :missing_interactively_specified_fields
 
   def initialize(session, uploaded_io = nil)
 
@@ -447,11 +448,77 @@ class BulkUploadDataSet
   INTERACTIVE_COLUMNS = %w{site species treatment access_level cultivar date}
 
   def need_interactively_specified_data
+    !missing_interactively_specified_fields.empty?
+  end
+
+  def missing_interactively_specified_fields
     missing_columns = INTERACTIVE_COLUMNS - @headers
   end
 
   def need_citation_selection
     @headers.select { |field| field =~ /citation_/ }.empty? && session['citation'].nil?
+  end
+
+
+  # Uses the global data values specified interactively by the user to
+  # convert @data to an Array of Hashes suitable for inserting into
+  # the traits table.
+  def get_insertion_data(interactively_specified_values)
+
+    #validate(interactively_specified_values)
+
+=begin
+    @database_default_values = {}
+    Trait.columns.each do |col|
+      @database_default_values[col.name] = col.default
+    end
+
+    # combine user-supplied values with database defaults
+    defaults = @database_default_values.merge(user_supplied_values) # user-supplied values take precedence over database defaults
+    if for_display
+      # replace nil and empty string with "NULL"
+      defaults.each do |k, v|
+        if v.nil? or v.to_s.empty?
+          defaults[k] = "NULL"
+        end
+      end
+    end
+=end
+
+    #@errors = false
+
+    @mapped_data = Array.new
+    @data.each do |csv_row|
+      csv_row_as_hash = csv_row.to_hash
+
+      csv_row_as_hash.merge(interactively_specified_values)
+
+      sp = Specie.find_by_scientificname(csv_row_as_hash["species"])
+      csv_row_as_hash["specie_id"] = sp.id.to_s
+
+      csv_row_as_hash["mean"] = csv_row_as_hash["yield"]
+
+      # apply rounding
+
+=begin
+      if csv_row_as_hash["mean"]
+        precision = mapping["rounding"]["mean"].to_i
+        csv_row_as_hash["mean"] = sprintf("%.#{precision}f", csv_row_as_hash["mean"].to_f.round(precision))
+      end
+      if csv_row_as_hash["stat"]
+        precision = mapping["rounding"]["stat"].to_i
+        csv_row_as_hash["stat"] = sprintf("%.#{precision}f", csv_row_as_hash["stat"].to_f.round(precision))
+      end
+=end
+
+      # eliminate extraneous data from CSV row
+      csv_row_as_hash.keep_if { |key, value| Trait.columns.collect { |column| column.name }.include?(key) }
+
+      @mapped_data << csv_row_as_hash
+
+    end
+
+    @mapped_data
   end
 
 ####################################################################################################################################
