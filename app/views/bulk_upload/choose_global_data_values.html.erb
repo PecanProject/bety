@@ -15,8 +15,8 @@
       <ul>
         <% @data_set.missing_interactively_specified_fields.each do |field| %>
         <li>
-          <%= label_tag field, field %>
-          <%= text_field_tag "global_values[#{field.to_sym}]" %>
+          <%= label_tag field, field + (field == "cultivar" ? " (optional)" : "") %>
+          <%= text_field_tag "global_values[#{field.to_sym}]", "#{@session[:global_values][field.to_sym]}" %>
         </li>
         <% end %>
       </ul>
