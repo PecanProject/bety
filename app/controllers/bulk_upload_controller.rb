@@ -128,6 +128,7 @@ class BulkUploadController < ApplicationController
           flash[:error] = errors
           redirect_to(params.merge({action: :choose_global_data_values})) # TO-DO: should probably go to the last-visited page, which could be the csv display page instead
         else
+          flash[:success] = "Data was successfully uploaded."
           redirect_to(action: "start_upload")
         end
       }
