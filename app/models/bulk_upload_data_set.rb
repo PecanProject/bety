@@ -291,7 +291,7 @@ class BulkUploadDataSet
               column[:validation_result] = :fatal_error
               column[:validation_message] = "Cultivar can't be looked up when species is not in species table."
             else
-              if existing_cultivar(column[:data], species_id)
+              if existing_cultivar?(column[:data], species_id)
                 column[:validation_result] = :valid
               else
                 column[:validation_result] = :fatal_error
@@ -456,7 +456,9 @@ class BulkUploadDataSet
   end
 
   def need_citation_selection
-    @headers.select { |field| field =~ /citation_/ }.empty? && session['citation'].nil?
+    !@headers.include?("citation_author") && # only need to check one of citation_author, citation_year, and citation_title
+      !@headers.include?("citation_doi") &&
+      @session['citation'].nil?
   end
 
 
@@ -465,37 +467,51 @@ class BulkUploadDataSet
   # the traits table.
   def get_insertion_data(interactively_specified_values)
 
-    #validate(interactively_specified_values)
-
-=begin
-    @database_default_values = {}
-    Trait.columns.each do |col|
-      @database_default_values[col.name] = col.default
+    # Double-check that all form fields are were non-empty:
+    interactively_specified_values.keep_if do |key, value|
+      !(value.empty? || value.nil?)
     end
 
-    # combine user-supplied values with database defaults
-    defaults = @database_default_values.merge(user_supplied_values) # user-supplied values take precedence over database defaults
-    if for_display
-      # replace nil and empty string with "NULL"
-      defaults.each do |k, v|
-        if v.nil? or v.to_s.empty?
-          defaults[k] = "NULL"
-        end
-      end
+    # For each foreign-key column, look up the value to use and add
+    # it to the hash:
+    validation_errors = []
+    
+    # error_list is an "out" parameter
+    global_values = lookup_and_add_ids({ input_hash: interactively_specified_values, error_list: validation_errors })
+
+    if validation_errors.size > 0
+      raise validation_errors.join("<br>").html_safe
     end
-=end
 
-    #@errors = false
+    # For bulk uploads, "checked" should always be set to zero:
+    global_values.merge!({
+        "checked" => 0,
+        "user_id" => @session[:user_id]
+    })
 
+    if !@headers.include?("citation_author")
+      # if we get here, the citation id must be in the session
+      global_values["citation_id"] = @session["citation"]
+    end
+                  
     @mapped_data = Array.new
     @data.each do |csv_row|
       csv_row_as_hash = csv_row.to_hash
 
-      csv_row_as_hash.merge(interactively_specified_values)
+      # Don't allow id values to be specified in CSV file:
+      csv_row_as_hash.keep_if do |key, value|
+        !(key =~ /_id/)
+      end
 
-      sp = Specie.find_by_scientificname(csv_row_as_hash["species"])
-      csv_row_as_hash["specie_id"] = sp.id.to_s
+      # error_list is anonymous here since we don't need to use it: we've already validated the per-row data
+      id_values = lookup_and_add_ids({ input_hash: csv_row_as_hash, error_list: [] })
 
+      csv_row_as_hash.merge!(id_values)
+
+      # Merge the global interactively-specified values into this row:
+      csv_row_as_hash.merge!(global_values)
+
+      # In the yields table, the yield is stored in the "mean" column:
       csv_row_as_hash["mean"] = csv_row_as_hash["yield"]
 
       # apply rounding
@@ -511,8 +527,12 @@ class BulkUploadDataSet
       end
 =end
 
+
       # eliminate extraneous data from CSV row
-      csv_row_as_hash.keep_if { |key, value| Trait.columns.collect { |column| column.name }.include?(key) }
+      yield_columns = Yield.columns.collect { |column| column.name }
+      csv_row_as_hash.keep_if do |key, value|
+        yield_columns.include?(key)
+      end
 
       @mapped_data << csv_row_as_hash
 
@@ -599,14 +619,72 @@ class BulkUploadDataSet
   def existing_citation(author, year, title)
     c = Citation.where("author = :author AND year = :year AND title LIKE :title_matcher",
                        { author: author, year: year, title_matcher: "#{title}%" })
-    return c.size == 1
+    return c.first
   end
 
-  def existing_cultivar(name, species_id)
+  def existing_cultivar?(name, species_id)
     c = Cultivar.where("name = :name AND specie_id = :species_id",
                        { name: name, species_id: species_id })
-    return c.size == 1
+    return c.first
   end
 
+
+  def lookup_and_add_ids(args)
+    specified_values = args[:input_hash]
+    validation_errors = args[:error_list]
+    
+    id_values = {}
+    id_lookups = ["site", "species", "treatment", "cultivar", "citation_author"] # put cultivar after species because we need the specie_id to look up the cultivar
+    id_lookups.each do |key|
+      if !specified_values.keys.include?(key)
+        next
+      end
+      value = specified_values[key]
+      
+      case key
+      when "site"
+        site = existing_site?(value)
+        if site.nil?
+          validation_errors << "No site named \"#{value}\" in database."
+        else
+          id_values["site_id"] = site.id
+        end
+      when "species"
+        species = existing_species?(value)
+        if species.nil?
+          validation_errors << "No species named \"#{value}\" in database."
+        else
+          id_values["specie_id"] = species.id
+        end
+      when "treatment"
+        treatment = existing_treatment?(value)
+        if treatment.nil?
+          validation_errors << "No treatment named \"#{value}\" in database."
+        else
+          id_values["treatment_id"] = treatment.id
+        end
+      when "cultivar"
+        # cultivar is optional ...
+        if value.nil? or value.empty?
+          next
+        end
+        # ... but if provided, it should validate
+        cultivar = existing_cultivar?(value, id_values["site_id"])
+        if cultivar.nil?
+          validation_errors << "No cultivar named \"#{value}\" in database."
+        else
+          id_values["cultivar_id"] = cultivar.id
+        end
+      when "citation_author"
+        # This is never specified globally, so we only get here when it's a field in the CSV file
+        citation = existing_citation(value, specified_values["citation_year"], specified_values["citation_title"])
+        # no need to validate
+        id_values["citation_id"] = citation.id
+      end # case
+    end # each key
+
+    specified_values.merge!(id_values)
+
+  end
 
 end
