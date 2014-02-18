@@ -8,7 +8,7 @@ class BulkUploadController < ApplicationController
 #    end
     # clean session upload data
     session[:csvpath] = nil
-    session[:mapping] = nil
+    session[:global_values] = {}
   end
 
   # step 2: Display the CSV file as a table.
@@ -55,6 +55,7 @@ class BulkUploadController < ApplicationController
   # step 3
   def choose_global_data_values
     @data_set = BulkUploadDataSet.new(session)
+    @session = session # needed for sticky form fields
   end
     
 
@@ -99,18 +100,17 @@ class BulkUploadController < ApplicationController
 
   # step 5
   def insert_data
-
+    session[:global_values] = params["global_values"]
     @data_set = BulkUploadDataSet.new(session)
-    insertion_data = @data_set.get_insertion_data({})
 
-=begin
-    if @errors
-      flash[:error] = @errors
-      redirect_to(action: "confirm_data")
+    begin
+      insertion_data = @data_set.get_insertion_data(params["global_values"])
+    rescue => e
+      flash[:error] = e.message
+      redirect_to(params.merge( {action: :choose_global_data_values})) # TO-DO: should probably go to the last-visited page, which could be the csv display page instead
       return
     end
-=end
-
+    
     errors = nil
     begin
       Yield.transaction do
@@ -120,14 +120,13 @@ class BulkUploadController < ApplicationController
       end
     rescue => e
       errors = e.message
-      logger.info(e.backtrace.join("\n"))
     end
 
     respond_to do |format|
       format.html {
         if errors
           flash[:error] = errors
-          redirect_to(action: "display_csv_file") # TO-DO: should probably go to last page, which could ge global data specification page
+          redirect_to(params.merge({action: :choose_global_data_values})) # TO-DO: should probably go to the last-visited page, which could be the csv display page instead
         else
           redirect_to(action: "start_upload")
         end
