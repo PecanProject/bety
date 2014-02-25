@@ -48,7 +48,29 @@ feature 'Treatment index works' do
     end
   end
 
-
 end
 
+feature 'Editing treatments works' do
+  before :each do
+    login_test_user
+  end
+
+  # This tests for the problem mentioned in Redmine issue #1928
+  context 'Get /treatments/1' do
+    it 'should show a value of "Yes" for "Control"' do
+      visit '/treatments/1'
+      first(:xpath, ".//dt[child::text() = 'Control']/following-sibling::dd[1]").text.should eq "Yes"
+    end
+
+    it 'should show a value of "No" for "Control" after we update it' do
+      visit '/treatments/1/edit'
+      select('False', from: "treatment_control")
+      first(:xpath, ".//input[@id = 'treatment_submit']").click
+      visit '/treatments/1'
+      first(:xpath, ".//dt[child::text() = 'Control']/following-sibling::dd[1]").text.should eq "No"
+    end
+  end
+
+end 
+  
 
