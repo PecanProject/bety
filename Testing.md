@@ -17,3 +17,7 @@
 * Some useful options to rspec are: 
   1. --fail-fast (Abort the run on first failure)
   2. --format doc (get nicely formatted output)
+
+## Troubleshooting
+
+Sometimes it is useful to carry out a features test manually as a web site user.  To do this, start up the rails server in the _test_ environment using the command `rails s -etest`.  Many or most of the features tests are written in such a way that you can figure out exactly what actions to carry out in order to mimic the test.
