@@ -23,6 +23,8 @@
   <%= javascript_include_tag 'libs/respond.min.js', 'libs/modernizr-2.0.6.min.js' %>
 
   <% if params[:controller] == 'bulk_upload' && params[:action] == 'choose_global_data_values' %>
+  <!-- bulk_upload.js needs to know the root -->
+  <script type="text/javascript" charset="utf-8">var ROOT_PATH = '<%= root_path %>';</script>
   <%= javascript_include_tag 'lazy/bulk_upload.js' %>
   <% end %>
 

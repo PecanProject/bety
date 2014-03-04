@@ -2,20 +2,20 @@ jQuery(function() {
     // initialize any and all autocompletion fields found on the page:
 
         jQuery('#autocomplete_site').autocomplete({
-            source: "/sites/autocomplete.json"
+            source: ROOT_PATH + "/sites/autocomplete.json"
         });
 
         jQuery('#autocomplete_species').autocomplete({
-            source: "/species/autocomplete.json",
+            source: ROOT_PATH + "/species/autocomplete.json",
 
             // update source for the cultivars fields: cultivar suggestions depend on what species was chosen
             change: function(event, ui) {
-                jQuery('#autocomplete_cultivar').autocomplete("option", "source", "/cultivars/autocomplete.json?species=" + jQuery('#autocomplete_species').val())
+                jQuery('#autocomplete_cultivar').autocomplete("option", "source", ROOT_PATH + "/cultivars/autocomplete.json?species=" + jQuery('#autocomplete_species').val())
             }
         });
 
         jQuery('#autocomplete_treatment').autocomplete({
-            source: "/treatments/autocomplete.json"
+            source: ROOT_PATH + "/treatments/autocomplete.json"
         });
 
         jQuery('#autocomplete_cultivar').autocomplete({
