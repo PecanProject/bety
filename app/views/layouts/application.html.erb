@@ -24,7 +24,7 @@
 
   <% if params[:controller] == 'bulk_upload' && params[:action] == 'choose_global_data_values' %>
   <!-- bulk_upload.js needs to know the root -->
-  <script type="text/javascript" charset="utf-8">var ROOT_PATH = '<%= root_path %>';</script>
+  <script type="text/javascript" charset="utf-8">var ROOT_URL = '<%= root_url %>';</script>
   <%= javascript_include_tag 'lazy/bulk_upload.js' %>
   <% end %>
 
