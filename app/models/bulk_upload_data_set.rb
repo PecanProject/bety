@@ -669,7 +669,7 @@ class BulkUploadDataSet
           next
         end
         # ... but if provided, it should validate
-        cultivar = existing_cultivar?(value, id_values["site_id"])
+        cultivar = existing_cultivar?(value, id_values["specie_id"])
         if cultivar.nil?
           validation_errors << "No cultivar named \"#{value}\" in database."
         else
