@@ -16,7 +16,15 @@
         <% @data_set.missing_interactively_specified_fields.each do |field| %>
         <li>
           <%= label_tag field, field + (field == "cultivar" ? " (optional)" : "") %>
+          <% if field == "access_level" %>
+          <%= select_tag "global_values[access_level]",
+              options_for_select([['1', 1], ['2', 2], ['3', 3], ['4', 4]],
+              @session[:global_values]["access_level"] || 4),
+              size: "1"
+          %>
+          <% else %>
           <%= text_field_tag "global_values[#{field.to_sym}]", "#{@session[:global_values][field.to_sym]}" %>
+          <% end %>
         </li>
         <% end %>
       </ul>
