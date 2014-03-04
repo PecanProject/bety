@@ -1,86 +1,29 @@
 jQuery(function() {
-
-
-    if (jQuery('#autocomplete_site').length) {
-        var sites;
-        jQuery.get("/sites/autocomplete.json", function( data ) {
-            sites = data;
-        });
+    // initialize any and all autocompletion fields found on the page:
 
         jQuery('#autocomplete_site').autocomplete({
-            
-            source: function(request, response) {
-                var matcher = new RegExp("^" + jQuery.ui.autocomplete.escapeRegex( request.term ), "i" );
-                
-                response( jQuery.grep( sites, function( item ) {
-                    return matcher.test( item );
-                }) );
-            }
+            source: "/sites/autocomplete.json"
         });
-    }
 
-
-    if (jQuery('#autocomplete_species').length) {
-        /*
-        var species;
-        jQuery.get("/species/autocomplete.json", function( data ) {
-            species = data;
-        });
-        */
         jQuery('#autocomplete_species').autocomplete({
-            /*
-            source: function(request, response) {
-                var matcher = new RegExp("^" + jQuery.ui.autocomplete.escapeRegex( request.term ), "i" );
-                
-                response( jQuery.grep( species, function( item ) {
-                    return matcher.test( item );
-                }) );
+            source: "/species/autocomplete.json",
+
+            // update source for the cultivars fields: cultivar suggestions depend on what species was chosen
+            change: function(event, ui) {
+                jQuery('#autocomplete_cultivar').autocomplete("option", "source", "/cultivars/autocomplete.json?species=" + jQuery('#autocomplete_species').val())
             }
-            */
-            source: "/species/autocomplete.json"
-        });
-    }
-
-
-    if (jQuery('#autocomplete_treatment').length) {
-        var treatments;
-        jQuery.get("/treatments/autocomplete.json", function( data ) {
-            treatments = data;
         });
 
         jQuery('#autocomplete_treatment').autocomplete({
-            
-            source: function(request, response) {
-                var matcher = new RegExp("^" + jQuery.ui.autocomplete.escapeRegex( request.term ), "i" );
-                
-                response( jQuery.grep( treatments, function( item ) {
-                    return matcher.test( item );
-                }) );
-            }
-        });
-    }
-
-
-    if (jQuery('#autocomplete_cultivar').length) {
-        var cultivars;
-        jQuery.get("/cultivars/autocomplete.json", function( data ) {
-            cultivars = data;
+            source: "/treatments/autocomplete.json"
         });
 
         jQuery('#autocomplete_cultivar').autocomplete({
-            
+            // set source to this until it gets updated by the species field change method
             source: function(request, response) {
-                var matcher = new RegExp("^" + jQuery.ui.autocomplete.escapeRegex( request.term ), "i" );
-                
-                response( jQuery.grep( cultivars, function( item ) {
-                    return matcher.test( item );
-                }) );
+                // no matter what the user types, this option will be all that is displayed until a species is chosen
+                response([{ label: "Please choose a species", value: null}])
             }
         });
-    }
-
-
-
-    
 
 });

@@ -23,7 +23,7 @@
               size: "1"
           %>
           <% else %>
-          <%= text_field_tag "global_values[#{field.to_sym}]", "#{@session[:global_values][field.to_sym]}" %>
+          <%= text_field_tag "global_values[#{field.to_sym}]", "#{@session[:global_values][field.to_sym]}", id: "autocomplete_#{field}" %>
           <% end %>
         </li>
         <% end %>

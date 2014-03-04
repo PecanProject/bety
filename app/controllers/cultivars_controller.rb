@@ -4,6 +4,25 @@ class CultivarsController < ApplicationController
 
   require 'csv'
 
+  def autocomplete
+    species_ids = Specie.where("scientificname LIKE ?", 
+                               params[:species] + '%').to_a.map do |row|
+      row.id
+    end
+    cultivars = Cultivar.where("specie_id IN (#{species_ids.join(", ")}) AND name LIKE ?",
+                               params[:term] + '%' ).to_a.map do |item|
+       item.name
+    end
+
+    # don't show rows where name is null or empty
+    # TO-DO: eliminate these from the database and prevent them with a constraint
+    cultivars.delete_if { |item| item.nil? || item.empty? }
+
+    respond_to do |format|
+      format.json { render :json => cultivars }
+    end
+  end
+
   # GET /cultivars
   # GET /cultivars.xml
   def index

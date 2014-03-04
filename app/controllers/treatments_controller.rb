@@ -5,6 +5,23 @@ class TreatmentsController < ApplicationController
 
   require 'csv'
 
+  def autocomplete
+    # match agains the beginning of the treatment name only
+    treatments = Treatment.where("name LIKE ?", params[:term] + '%').to_a.map do |item|
+       item.name
+    end
+
+    # don't show rows where name is null or empty
+    # TO-DO: eliminate these from the database and prevent them with a
+    # constraint, OR: if the definition field should be part of the
+    # key, figure out how to include it in the match
+     treatments.delete_if { |item| item.nil? || item.empty? }
+
+    respond_to do |format|
+      format.json { render :json => treatments }
+    end
+  end
+
   def new_management
     @management = Management.new 
 
