@@ -20,6 +20,14 @@ class Yield < ActiveRecord::Base
   validates_numericality_of :mean
   validates_presence_of     :statname, :if => Proc.new { |y| !y.stat.blank? }
 
+  validates_presence_of     :citation_id
+  validates_presence_of     :site_id
+  validates_presence_of     :specie_id
+  validates_presence_of     :treatment_id
+  validates_presence_of     :user_id
+  validates_presence_of     :access_level
+  validates_presence_of     :date
+  
   scope :all_order, includes(:specie).order('species.genus, species.species')
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
