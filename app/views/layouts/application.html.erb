@@ -10,9 +10,9 @@
   <meta name="robots" content="index, follow" />
 
   <%= csrf_meta_tag %>
-
-  <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
-  <!--  It seems so far that everything works in 1.7.2.-->
+  <%= javascript_include_tag 'lazy/jquery-1.11.0.js' %>
+  <%= javascript_include_tag 'libs/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js' %>
+  <%= javascript_include_tag 'libs/jquery-migrate-1.2.1.js' %>
   <%#= javascript_include_tag 'libs/jquery-1.6.2.min.js' %>
   <%= javascript_include_tag :all, :cache => "cache/all" %>
 
@@ -22,6 +22,9 @@
   <![endif]-->
   <%= javascript_include_tag 'libs/respond.min.js', 'libs/modernizr-2.0.6.min.js' %>
 
+  <% if params[:controller] == 'bulk_upload' && params[:action] == 'choose_global_data_values' %>
+  <%= javascript_include_tag 'lazy/bulk_upload.js' %>
+  <% end %>
 
   <!-- For iPhone 4 -->
   <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/h/apple-touch-icon.png">
@@ -70,6 +73,7 @@
   <%= stylesheet_link_tag "scaffold" %>
   <!-- Redesign CSS -->
   <%= stylesheet_link_tag "base", "grid", "layout", "dropdown", "tables", "demo" %>
+  <%= stylesheet_link_tag "jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" %>
 </head>
 
 
