@@ -28,7 +28,7 @@
     <% @data_set.validated_data.each_with_index do |row, i| %>
     <% row_number = i + 1 %>
     <tr>
-      <td style="background-color: lightblue"><%= row_number %></td>
+      <td style="background-color: lightblue"><%= row_number %><%= link_to "", {}, name: "row_#{row_number}" %></td>
       <% row.each do |value| %>
       <% color = nil
          case value[:validation_result]
