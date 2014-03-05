@@ -60,7 +60,7 @@ module BulkUploadHelper
               if ERROR_MESSAGE_MAP.has_key?(key)
                 list_items += content_tag :li do
                   li_content = "* " + ERROR_MESSAGE_MAP[key]
-                  li_content << " in these rows: " + value.join(', ')
+                  li_content << " in these rows: " + value.map { |row_no| link_to row_no, anchor: "row_#{row_no}" }.join(', ')
                   if ERROR_REMEDY_MAP.has_key?(key)
                     # provide a link to page to search for or add
                     # missing referent:
