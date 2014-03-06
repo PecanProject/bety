@@ -63,11 +63,11 @@ class SitesController < ApplicationController
   def autocomplete
     # filter site list by citation
     @citation = Citation.find_by_id(session["citation"])
-    #if @citation.nil?
+    if @citation.nil?
       sites = Site
-    #else
-     # sites = @citation.sites
-    #end
+    else
+      sites = @citation.sites
+    end
 
     # match against any portion of the sitename, city, state, or country
     match_string = '%' + params[:term] + '%'
