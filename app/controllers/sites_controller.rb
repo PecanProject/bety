@@ -61,9 +61,18 @@ class SitesController < ApplicationController
   end
 
   def autocomplete
+    # filter site list by citation
+    @citation = Citation.find_by_id(session["citation"])
+    #if @citation.nil?
+      sites = Site
+    #else
+     # sites = @citation.sites
+    #end
+
     # match against any portion of the sitename, city, state, or country
     match_string = '%' + params[:term] + '%'
-    sites = Site.where("sitename LIKE ? OR city LIKE ? OR state LIKE ? OR country LIKE ?", match_string, match_string, match_string, match_string).to_a.map do |item|
+
+    sites = sites.where("sitename LIKE ? OR city LIKE ? OR state LIKE ? OR country LIKE ?", match_string, match_string, match_string, match_string).to_a.map do |item|
       {
         # show city, state, and country information in site suggestions, but only show sitename after selection
         label: "#{item.sitename} (#{item.city}, #{!(item.state.nil? || item.state.empty?) ? " #{item.state}," : ""} #{item.country})",
