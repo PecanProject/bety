@@ -4,10 +4,7 @@
 <table>
   <tr>
     <td>Name or Definition:</td>
-    <td><%= text_field_tag(:treatment) %></td>
-    <td>Include all treatments in search?:</td>
-    <td><%= check_box_tag(:unlinked) %></td>
-    <td colspan=2 ><%= submit_tag("Search") %></td>
+    <td><%= text_field_tag(:treatment, params[:treatment], { id: "search"}) %></td>
   </tr>
 </table>
 <% end %>
