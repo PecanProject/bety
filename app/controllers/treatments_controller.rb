@@ -106,6 +106,7 @@ class TreatmentsController < ApplicationController
   # GET /treatments.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
+      @iteration = params[:iteration][/\d+/] rescue 1
       if !session["citation"].nil?
   
         # If they have selected a citation we want to find all the sites
@@ -164,6 +165,7 @@ class TreatmentsController < ApplicationController
       format.xml  { render :xml => @treatments }
       format.csv  { render :csv => @treatments }
       format.json  { render :json => @treatments }
+      format.js
     end
   end
 
