@@ -30,7 +30,11 @@ var search_function = function (event, locationParameters) {
 }
 
 // Auxiliary function used by "search_function".  Returns true if
-// "event" is a keyup event on a key we are not interested in.
+// "event" is a keyup event on a key we are not interested in.  Since
+// this is only used in deciding what key presses trigger a search, we
+// don't have to be too fussy.  The main thing is to ignore keys like
+// TAB and arrow keys.  See http://unixpapa.com/js/key.html for
+// information about key codes.
 function is_ignored(event) {
     if (event.type == "keyup") {
         var keyCode = event.which;
@@ -46,7 +50,19 @@ function is_ignored(event) {
         if (keyCode == 8 || keyCode == 46) {
             dontIgnore = true;
         }
-        
+
+        // Don't ignore numbers, spaces, or certain symbols
+        if (48 <= keyCode && keyCode <= 57 // number keys
+            || 96 <= keyCode && keyCode <= 105 // number keys on keypad
+            || keyCode == 187 || keyCode == 107 || keyCode == 61 // + sign
+            || keyCode == 189 || keyCode == 109 || keyCode == 45 // - sign; underscore
+            || keyCode == 190 || keyCode == 110 || keyCode == 46 // period
+            || keyCode == 188 || keyCode == 44 // comma
+            || keyCode == 191 || keyCode == 111 || keyCode == 47 // forward slash/division sign
+            || keyCode == 32) /* space */ {
+            dontIgnore = true;
+        }
+
        return !dontIgnore;
     }
     return false;
