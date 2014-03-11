@@ -5,7 +5,7 @@ class Citation < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{  }
-  SEARCH_FIELDS = %w{ citations.author citations.year citations.title citations.journal citations.vol citations.pg citations.url citations.pdf }
+  SEARCH_FIELDS = %w{ citations.author citations.year citations.title citations.journal citations.vol citations.pg citations.url citations.doi }
 
   has_many :citation_sites, :class_name => "CitationsSites"
   has_many :sites, :through =>  :citation_sites
