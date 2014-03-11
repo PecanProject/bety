@@ -107,7 +107,7 @@ class BulkUploadController < ApplicationController
       insertion_data = @data_set.get_insertion_data(params["global_values"])
     rescue => e
       flash[:error] = e.message
-      redirect_to(params.merge( {action: :choose_global_data_values})) # TO-DO: should probably go to the last-visited page, which could be the csv display page instead
+      redirect_to(:back)
       return
     end
     
@@ -126,7 +126,7 @@ class BulkUploadController < ApplicationController
       format.html {
         if errors
           flash[:error] = errors
-          redirect_to(params.merge({action: :choose_global_data_values})) # TO-DO: should probably go to the last-visited page, which could be the csv display page instead
+          redirect_to(:back)
         else
           flash[:success] = "Data was successfully uploaded."
           redirect_to(action: "start_upload")
