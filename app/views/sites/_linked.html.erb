@@ -34,7 +34,7 @@
         <td class="center">
 				  <!-- UNLINK -->
 			    <% if current_user.page_access_level == 1 %>
-            <%= link_to "/sites/linked/#{site.id}", :id => site.id, :remote => true, :class =>"button button-small" do %>
+            <%= link_to url_for({ :controller => "sites", :action => "linked", id: site.id }), :id => site.id, :remote => true, :class =>"button button-small" do %>
               <i class="icon-remove"></i> 
             <% end %>
           <% end %>
