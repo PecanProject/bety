@@ -245,20 +245,6 @@ class BulkUploadDataSet
             end
           end
 
-        when "treatment"
-
-          if treatment_id = existing_treatment?(column[:data])
-            column[:validation_result] = :valid
-          else
-            column[:validation_result] = :fatal_error
-            column[:validation_message] = "Not found in treatments table"
-            if @validation_summary.has_key? :unresolvable_treatment_reference
-              @validation_summary[:unresolvable_treatment_reference] << row_number
-            else
-              @validation_summary[:unresolvable_treatment_reference] = [ row_number ]
-            end
-          end
-
         when "access_level"
 
           begin
@@ -421,18 +407,18 @@ class BulkUploadDataSet
 
         author_index = row.index { |h| h[:fieldname] == "citation_author" }
         year_index = row.index { |h| h[:fieldname] == "citation_year" }
-        name_index = row.index { |h| h[:fieldname] == "citation_title" }
-        if citation_id = existing_citation(row[author_index][:data], row[year_index][:data], row[name_index][:data])
+        title_index = row.index { |h| h[:fieldname] == "citation_title" }
+        if citation_id = existing_citation(row[author_index][:data], row[year_index][:data], row[title_index][:data])
           row[author_index][:validation_result] = :valid
           row[year_index][:validation_result] = :valid
-          row[name_index][:validation_result] = :valid
+          row[title_index][:validation_result] = :valid
         else
           row[author_index][:validation_result] = :fatal_error
           row[year_index][:validation_result] = :fatal_error
-          row[name_index][:validation_result] = :fatal_error
+          row[title_index][:validation_result] = :fatal_error
           row[author_index][:validation_message] = "Couldn't find a unique matching citation for this row."
           row[year_index][:validation_message] = "Couldn't find a unique matching citation for this row."
-          row[name_index][:validation_message] = "Couldn't find a unique matching citation for this row."
+          row[title_index][:validation_message] = "Couldn't find a unique matching citation for this row."
           if @validation_summary.has_key? :unresolvable_citation_reference
             @validation_summary[:unresolvable_citation_reference] << row_number
           else
@@ -454,7 +440,7 @@ class BulkUploadDataSet
         if !site_id.nil?
           if !citation.sites.include?(site_id)
             site_index = row.index { |h| h[:fieldname] == "site" }
- 
+
             row[site_index][:validation_result] = :fatal_error
             row[site_index][:validation_message] = "Site is not consistent with citation"
             if @validation_summary.has_key? :inconsistent_site_reference
@@ -466,17 +452,17 @@ class BulkUploadDataSet
         end
 
         # ensure the treatment in this row is consistent with the citation
-        if !treatment_id.nil?
-          if !citation.treatments.include?(treatment_id)
-            treatment_index = row.index { |h| h[:fieldname] == "treatment" }
- 
-            row[treatment_index][:validation_result] = :fatal_error
-            row[treatment_index][:validation_message] = "Treatment is not consistent with citation"
-            if @validation_summary.has_key? :inconsistent_treatment_reference
-              @validation_summary[:inconsistent_treatment_reference] << row_number
-            else
-              @validation_summary[:inconsistent_treatment_reference] = [ row_number ]
-            end
+        treatment_index = row.index { |h| h[:fieldname] == "treatment" }
+        treatment = row[treatment_index][:data]
+        if citation.treatments.map {|t| t.name }.include?(treatment)
+          row[treatment_index][:validation_result] = :valid
+        else
+          row[treatment_index][:validation_result] = :fatal_error
+          row[treatment_index][:validation_message] = "Treatment is not consistent with citation"
+          if @validation_summary.has_key? :inconsistent_treatment_reference
+            @validation_summary[:inconsistent_treatment_reference] << row_number
+          else
+            @validation_summary[:inconsistent_treatment_reference] = [ row_number ]
           end
         end
       end  
@@ -512,6 +498,8 @@ class BulkUploadDataSet
   # convert @data to an Array of Hashes suitable for inserting into
   # the traits table.
   def get_insertion_data(interactively_specified_values)
+    # Handle the case where no data is specified interactively:
+    interactively_specified_values ||= {}
 
     # Double-check that all form fields are were non-empty:
     interactively_specified_values.keep_if do |key, value|
