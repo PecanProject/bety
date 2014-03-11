@@ -116,7 +116,7 @@ class BulkUploadDataSet
   #         The total number of errors, both heading-related and data-related.
   #     @file_has_fatal_errors:
   #         A boolean telling whether there were any fatal errors found.
-  def validate_csv_data
+  def validate_csv_data(session)
     @validated_data = []
     @data.each do |row|
       validated_row = row.collect { |value| { fieldname: value[0], data: value[1] } }
@@ -125,6 +125,12 @@ class BulkUploadDataSet
 
     @validated_data.each_with_index do |row, i|
       row_number = i + 1
+
+      # collect some data about the row as we do the validation
+      citation_id = nil
+      site_id = nil
+      treatment_id = nil
+
       row.each do |column|
 
         column[:data] ||= ""
@@ -159,7 +165,7 @@ class BulkUploadDataSet
 
         when "citation_doi"
 
-          if doi_of_existing_citation?(column[:data])
+          if citation_id = doi_of_existing_citation?(column[:data])
             column[:validation_result] = :valid
           else
             column[:validation_result] = :fatal_error
@@ -213,7 +219,7 @@ class BulkUploadDataSet
           
         when "site"
 
-          if existing_site?(column[:data])
+          if site_id = existing_site?(column[:data])
             column[:validation_result] = :valid
           else
             column[:validation_result] = :fatal_error
@@ -241,7 +247,7 @@ class BulkUploadDataSet
 
         when "treatment"
 
-          if existing_treatment?(column[:data])
+          if treatment_id = existing_treatment?(column[:data])
             column[:validation_result] = :valid
           else
             column[:validation_result] = :fatal_error
@@ -416,7 +422,7 @@ class BulkUploadDataSet
         author_index = row.index { |h| h[:fieldname] == "citation_author" }
         year_index = row.index { |h| h[:fieldname] == "citation_year" }
         name_index = row.index { |h| h[:fieldname] == "citation_title" }
-        if existing_citation(row[author_index][:data], row[year_index][:data], row[name_index][:data])
+        if citation_id = existing_citation(row[author_index][:data], row[year_index][:data], row[name_index][:data])
           row[author_index][:validation_result] = :valid
           row[year_index][:validation_result] = :valid
           row[name_index][:validation_result] = :valid
@@ -435,6 +441,46 @@ class BulkUploadDataSet
         end
 
       end
+
+      # If there's no citation column, validate against the session citation.
+      citation_id ||= session[:citation]
+
+      if citation_id.nil?
+        # to-do: decide how to handle this
+      else
+        citation = Citation.find_by_id(citation_id)
+
+        # ensure the site in this row is consistent with the citation
+        if !site_id.nil?
+          if !citation.sites.include?(site_id)
+            site_index = row.index { |h| h[:fieldname] == "site" }
+ 
+            row[site_index][:validation_result] = :fatal_error
+            row[site_index][:validation_message] = "Site is not consistent with citation"
+            if @validation_summary.has_key? :inconsistent_site_reference
+              @validation_summary[:inconsistent_site_reference] << row_number
+            else
+              @validation_summary[:inconsistent_site_reference] = [ row_number ]
+            end
+          end
+        end
+
+        # ensure the treatment in this row is consistent with the citation
+        if !treatment_id.nil?
+          if !citation.treatments.include?(treatment_id)
+            treatment_index = row.index { |h| h[:fieldname] == "treatment" }
+ 
+            row[treatment_index][:validation_result] = :fatal_error
+            row[treatment_index][:validation_message] = "Treatment is not consistent with citation"
+            if @validation_summary.has_key? :inconsistent_treatment_reference
+              @validation_summary[:inconsistent_treatment_reference] << row_number
+            else
+              @validation_summary[:inconsistent_treatment_reference] = [ row_number ]
+            end
+          end
+        end
+      end  
+
     end # @validated_data.each
 
     @field_list_error_count = @validation_summary[:field_list_errors].size
