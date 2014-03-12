@@ -523,7 +523,7 @@ class BulkUploadDataSet
         "user_id" => @session[:user_id]
     })
 
-    if !@headers.include?("citation_author")
+    if !@headers.include?("citation_author") && !@headers.include?("citation_doi")
       # if we get here, the citation id must be in the session
       global_values["citation_id"] = @session["citation"]
     end
@@ -560,7 +560,6 @@ class BulkUploadDataSet
         csv_row_as_hash["stat"] = sprintf("%.#{precision}f", csv_row_as_hash["stat"].to_f.round(precision))
       end
 =end
-
 
       # eliminate extraneous data from CSV row
       yield_columns = Yield.columns.collect { |column| column.name }
@@ -640,8 +639,8 @@ class BulkUploadDataSet
     return s
   end
 
-  def existing_treatment?(name)
-    t = Treatment.find_by_name(name)
+  def existing_treatment?(name, citation_id)
+    t = Citation.find(citation_id).treatments.find_by_name(name)
     return t
   end
 
@@ -668,7 +667,13 @@ class BulkUploadDataSet
     validation_errors = args[:error_list]
     
     id_values = {}
-    id_lookups = ["site", "species", "treatment", "cultivar", "citation_author"] # put cultivar after species because we need the specie_id to look up the cultivar
+
+    # Put cultivar after species because we need the specie_id to look
+    # up the cultivar, and put treatment after citation_doi and
+    # citation_author because we need to look up the treatment_id by
+    # the treatment name AND the citation.
+    id_lookups = ["citation_doi", "citation_author", "site", "species", "treatment", "cultivar"]
+
     id_lookups.each do |key|
       if !specified_values.keys.include?(key)
         next
@@ -691,7 +696,7 @@ class BulkUploadDataSet
           id_values["specie_id"] = species.id
         end
       when "treatment"
-        treatment = existing_treatment?(value)
+        treatment = existing_treatment?(value, id_values["citation_id"])
         if treatment.nil?
           validation_errors << "No treatment named \"#{value}\" in database."
         else
@@ -712,6 +717,11 @@ class BulkUploadDataSet
       when "citation_author"
         # This is never specified globally, so we only get here when it's a field in the CSV file
         citation = existing_citation(value, specified_values["citation_year"], specified_values["citation_title"])
+        # no need to validate
+        id_values["citation_id"] = citation.id
+      when "citation_doi"
+        # This is never specified globally, so we only get here when it's a field in the CSV file
+        citation = doi_of_existing_citation?(value)
         # no need to validate
         id_values["citation_id"] = citation.id
       end # case
