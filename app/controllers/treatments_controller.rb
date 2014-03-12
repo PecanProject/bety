@@ -110,8 +110,6 @@ class TreatmentsController < ApplicationController
 
       search_term_matcher = "%#{params[:treatment]}%"
 
-=begin # commenting out implementation of "Include all treatments in search?" checkbox
-
       if !session["citation"].nil?
   
         # If they have selected a citation we want to find all the sites
@@ -123,12 +121,14 @@ class TreatmentsController < ApplicationController
         @treatments = Citation.find(session["citation"]).treatments
         treatment_ids = @treatments.collect {|x| x.id}
 
+=begin # commenting out implementation of "Include all treatments in search?" checkbox
         if !params[:unlinked].blank?
           tts = Treatment.includes({:citations => {:sites => :citations} }).where('(treatments.name like ? or treatments.definition like ?) and treatments.id not in (?)',
                                                                                   search_term_matcher,
                                                                                   search_term_matcher,
                                                                                   treatment_ids)
         else
+=end
           if params[:treatment].blank?
             conditions = ['citations.id = ? and treatments.id not in (?) and citations_sites_2.id != ?', 
                           session["citation"],
@@ -143,22 +143,19 @@ class TreatmentsController < ApplicationController
                           session["citation"] ]
           end
           tts = Treatment.where(conditions).includes({:citations => {:sites => :citations} })
+=begin # commenting out implementation of "Include all treatments in search?" checkbox
         end
+=end
         @other_treatments = tts.paginate :page => params[:page]
         
       else
-
-=end
-
         if !params[:treatment].blank?
           conditions = ['LOWER(name) like LOWER(?) or LOWER(definition) like LOWER(?)', search_term_matcher, search_term_matcher]
         else
           conditions = []
         end
         @other_treatments = Treatment.paginate :page => params[:page], :conditions => conditions
-=begin
       end
-=end
     else
       conditions = {}
       params.each do |k, v|
