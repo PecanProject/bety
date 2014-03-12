@@ -9,7 +9,7 @@
     <% elsif @data_set.need_interactively_specified_data %>
        <%= link_to "Specify Dataset-wide values >>", choose_global_data_values_path %>
     <% else %>
-       <%= link_to "Insert Data >>", bulk_upload_data_insertion_path %>
+       <%= link_to "Specify Amount of Rounding >>", choose_global_data_values_path %>
     <% end %>
 </div>
 <%= make_validation_summary %>

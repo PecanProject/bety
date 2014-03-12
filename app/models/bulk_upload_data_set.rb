@@ -1,4 +1,6 @@
 class BulkUploadDataSet
+  include ActionView::Helpers::NumberHelper # for rounding
+
   attr_reader :headers, :validated_data
   attr_reader :validation_summary, :csv_warnings
   attr_reader :file_has_fatal_errors, :total_error_count, :field_list_error_count, :data_value_error_count
@@ -501,9 +503,9 @@ class BulkUploadDataSet
   # Uses the global data values specified interactively by the user to
   # convert @data to an Array of Hashes suitable for inserting into
   # the traits table.
-  def get_insertion_data(interactively_specified_values)
-    # Handle the case where no data is specified interactively:
-    interactively_specified_values ||= {}
+  def get_insertion_data(params)
+    # Get interactively-specified values, or set to empty hash if nil:
+    interactively_specified_values = params["global_values"] || {}
 
     # Double-check that all form fields are were non-empty:
     interactively_specified_values.keep_if do |key, value|
@@ -549,10 +551,21 @@ class BulkUploadDataSet
       # Merge the global interactively-specified values into this row:
       csv_row_as_hash.merge!(global_values)
 
-      # In the yields table, the yield is stored in the "mean" column:
-      csv_row_as_hash["mean"] = csv_row_as_hash["yield"]
+      # apply rounding to the yield
+      rounded_yield = number_with_precision(csv_row_as_hash["yield"].to_f, precision: params["rounding"]["yields"].to_i, significant: true)
 
-      # apply rounding
+      # In the yields table, the yield is stored in the "mean" column:
+      csv_row_as_hash["mean"] = rounded_yield
+
+      if csv_row_as_hash.has_key?("SE")
+        # apply rounding to the standard error
+        rounded_se = number_with_precision(csv_row_as_hash["SE"].to_f, precision: params["rounding"]["SE"].to_i, significant: true)
+
+        # In the yields table, the standard error is stored in the "stat" column:
+        csv_row_as_hash["stat"] = rounded_se
+        # The statname should be set to "SE":
+        csv_row_as_hash["statname"] = "SE"
+      end
 
 =begin
       if csv_row_as_hash["mean"]

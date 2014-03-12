@@ -2,7 +2,7 @@
   <div class="container">
 	<div class="sixteen columns">
 	  <header>
-        <h1>Specify Data-Set Wide Values</h1>
+        <h1>Specify Upload Options and Global Values</h1>
       </header>
       <%= form_tag(bulk_upload_data_insertion_path, method: "post", multipart: true) do %>
       <div id="process_container">
@@ -12,6 +12,30 @@
           <%= submit_tag "Insert Data >>" %>
         </div>
       </div>
+      <h2>Specify Rounding</h2>
+      <ul>
+        <li>
+          <%= label_tag "rounding_yields" do %>
+          Round yields to
+          <%= select_tag("rounding[yields]",
+              options_for_select([['1', 1], ['2', 2], ['3', 3], ['4', 4]], '2')
+              ) %> significant digits
+          <% end %>
+        </li>
+        <% if @data_set.headers.include?("SE") %>
+        <li>
+          <%= label_tag "rounding_SE" do %>
+          Round standard error to
+          <%= select_tag("rounding[SE]",
+              options_for_select([['1', 1], ['2', 2], ['3', 3], ['4', 4]], '2')
+              ) %>
+          significant digits
+          <% end %>
+        </li>
+        <% end %>
+      </ul>
+      <% if @data_set.missing_interactively_specified_fields.length > 0 %>
+      <h2>Specify Data-Set Wide Values</h2>
       <ul>
         <% @data_set.missing_interactively_specified_fields.each do |field| %>
         <li>
@@ -28,6 +52,7 @@
         </li>
         <% end %>
       </ul>
+      <% end # Data-Set Wide Value specification block %>
       <% end %>
 
     </div>

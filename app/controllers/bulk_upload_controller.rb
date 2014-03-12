@@ -104,7 +104,7 @@ class BulkUploadController < ApplicationController
     @data_set = BulkUploadDataSet.new(session)
 
     begin
-      insertion_data = @data_set.get_insertion_data(params["global_values"])
+      insertion_data = @data_set.get_insertion_data(params)
     rescue => e
       flash[:error] = e.message
       redirect_to(:back)
