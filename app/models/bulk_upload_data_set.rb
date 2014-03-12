@@ -436,7 +436,8 @@ class BulkUploadDataSet
       else
         citation = Citation.find_by_id(citation_id)
 
-        # ensure the site in this row is consistent with the citation
+        # If a valid site was specified in this row, ensure that it is
+        # consistent with the citation.
         if !site_id.nil?
           if !citation.sites.include?(site_id)
             site_index = row.index { |h| h[:fieldname] == "site" }
@@ -451,22 +452,25 @@ class BulkUploadDataSet
           end
         end
 
-        # ensure the treatment in this row is consistent with the citation
+        # If a treatment was specified in this row, ensure that it is
+        # consistent with the citation.
         treatment_index = row.index { |h| h[:fieldname] == "treatment" }
-        treatment = row[treatment_index][:data]
-        if citation.treatments.map {|t| t.name }.include?(treatment)
-          row[treatment_index][:validation_result] = :valid
-        else
-          row[treatment_index][:validation_result] = :fatal_error
-          row[treatment_index][:validation_message] = "Treatment is not consistent with citation"
-          if @validation_summary.has_key? :inconsistent_treatment_reference
-            @validation_summary[:inconsistent_treatment_reference] << row_number
+        if !treatment_index.nil?
+          treatment = row[treatment_index][:data]
+          if citation.treatments.map {|t| t.name }.include?(treatment)
+            row[treatment_index][:validation_result] = :valid
           else
-            @validation_summary[:inconsistent_treatment_reference] = [ row_number ]
+            row[treatment_index][:validation_result] = :fatal_error
+            row[treatment_index][:validation_message] = "Treatment is not consistent with citation"
+            if @validation_summary.has_key? :inconsistent_treatment_reference
+              @validation_summary[:inconsistent_treatment_reference] << row_number
+            else
+              @validation_summary[:inconsistent_treatment_reference] = [ row_number ]
+            end
           end
-        end
-      end  
+        end  
 
+      end
     end # @validated_data.each
 
     @field_list_error_count = @validation_summary[:field_list_errors].size
