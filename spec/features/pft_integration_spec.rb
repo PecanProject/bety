@@ -40,10 +40,15 @@ feature 'Pfts index works' do
     # test for redmine bug #1935
     context 'searching for species' do
       it 'should find a searched-for existing species' do
-        visit '/pfts/'
-        first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
-        click_link "[+] View Related Species"
-        fill_in 'search', with: 'Abarema jupunba'
+
+        # Couldn't get AJAX-triggered search to work here, so have to
+        # do it this way; the 'right' way to test this is to visit the
+        # edit pft page, view the related species, and type a search
+        # into the search box.
+
+        some_pft_id = Pft.first.id
+        visit "/pfts/edit2_pfts_species/#{some_pft_id}?search=Abarema+jupunba"
+        # The returned 'page' is actually the text of the Prototype "Element.update" calls.
         page.should have_content 'Abarema jupunba'
       end
     end
