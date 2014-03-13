@@ -37,6 +37,16 @@ feature 'Pfts index works' do
       end
     end
 
+    # test for redmine bug #1935
+    context 'searching for species' do
+      it 'should find a searched-for existing species' do
+        visit '/pfts/'
+        first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
+        click_link "[+] View Related Species"
+        fill_in 'search', with: 'Abarema jupunba'
+        page.should have_content 'Abarema jupunba'
+      end
+    end
   end
 end
 
