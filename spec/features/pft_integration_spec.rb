@@ -51,6 +51,16 @@ feature 'Pfts index works' do
         # The returned 'page' is actually the text of the Prototype "Element.update" calls.
         page.should have_content 'Abarema jupunba'
       end
+
+      it 'should not be case-sensitive' do
+
+        # see not above
+        some_pft_id = Pft.first.id
+        visit "/pfts/edit2_pfts_species/#{some_pft_id}?search=ABAREMA+JUPUNBA"
+        # The returned 'page' is actually the text of the Prototype "Element.update" calls.
+        page.should have_content 'Abarema jupunba'
+      end
+
     end
   end
 end
