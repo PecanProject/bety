@@ -12,6 +12,14 @@ feature 'Pfts index works' do
       page.should have_content 'Listing PFTs'
     end
 
+    # tests for redmine bug #1936
+    it 'should redirect to the home page if user is logged out' do
+      visit '/pfts'
+      click_link 'Logout'
+      visit '/pfts'
+      page.should have_content "Welcome to BETYdb"
+    end
+
     it 'should allow creation of new pfts' do
       visit '/pfts/new'
       fill_in 'Name', :with =>'tester'
