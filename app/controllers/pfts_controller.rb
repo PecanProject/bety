@@ -69,7 +69,7 @@ class PftsController < ApplicationController
       if wildcards 
        @search = "%#{@search}%"
      end
-     search_cond = [["scientificname", "commonname", "genus"].collect {|x| "species." + x }.join(" LIKE :search OR ") + " LIKE :search", {:search => @search}] 
+      search_cond = [["scientificname", "commonname", "genus"].collect {|x| "LOWER(species.#{x})" }.join(" LIKE LOWER(:search) OR ") + " LIKE LOWER(:search)", {:search => @search}] 
      search = "Showing records for \"#{@search}\""
     else
       @search = ""
