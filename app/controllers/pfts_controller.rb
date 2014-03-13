@@ -7,7 +7,7 @@ class PftsController < ApplicationController
   # restful-authentication override 
   def access_denied
     flash[:notice] = 'You have insufficient permissions to create new PFTs'
-    redirect_to :action => "index"
+    redirect_to root_path
   end
 
   def rem_pfts_priors
