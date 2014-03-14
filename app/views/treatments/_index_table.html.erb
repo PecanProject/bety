@@ -1,13 +1,10 @@
 <div id="treatments_container">
 <h2>Search For Treatments</h2>
-<%= form_tag( { :action => 'index'}, :method => :get ) do %>
+<%= form_tag( { :action => 'index'}, :method => :get, :id => 'simple_search' ) do %>
 <table>
   <tr>
     <td>Name or Definition:</td>
-    <td><%= text_field_tag(:treatment) %></td>
-    <td>Include all treatments in search?:</td>
-    <td><%= check_box_tag(:unlinked) %></td>
-    <td colspan=2 ><%= submit_tag("Search") %></td>
+    <td><%= text_field_tag(:treatment, params[:treatment], { id: "search"}) %></td>
   </tr>
 </table>
 <% end %>

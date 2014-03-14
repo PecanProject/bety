@@ -131,6 +131,10 @@ class TreatmentsController < ApplicationController
   # GET /treatments.xml
   def index
     if params[:format].nil? or params[:format] == 'html'
+      @iteration = params[:iteration][/\d+/] rescue 1
+
+      search_term_matcher = "%#{params[:treatment]}%"
+
       if !session["citation"].nil?
   
         # If they have selected a citation we want to find all the sites
@@ -142,12 +146,14 @@ class TreatmentsController < ApplicationController
         @treatments = Citation.find(session["citation"]).treatments
         treatment_ids = @treatments.collect {|x| x.id}
 
+=begin # commenting out implementation of "Include all treatments in search?" checkbox
         if !params[:unlinked].blank?
           tts = Treatment.includes({:citations => {:sites => :citations} }).where('(treatments.name like ? or treatments.definition like ?) and treatments.id not in (?)',
-                                                                                  params[:treatment],
-                                                                                  params[:treatment],
+                                                                                  search_term_matcher,
+                                                                                  search_term_matcher,
                                                                                   treatment_ids)
         else
+=end
           if params[:treatment].blank?
             conditions = ['citations.id = ? and treatments.id not in (?) and citations_sites_2.id != ?', 
                           session["citation"],
@@ -155,19 +161,21 @@ class TreatmentsController < ApplicationController
                           session["citation"] ]
           else
             conditions = ['(treatments.name like ? or treatments.definition like ? ) and citations.id = ? and treatments.id not in (?) and citations_sites_2.id != ?',
-                          params[:treatment],
-                          params[:treatment],
+                          search_term_matcher,
+                          search_term_matcher,
                           session["citation"],
                           treatment_ids,
                           session["citation"] ]
           end
           tts = Treatment.where(conditions).includes({:citations => {:sites => :citations} })
+=begin # commenting out implementation of "Include all treatments in search?" checkbox
         end
+=end
         @other_treatments = tts.paginate :page => params[:page]
         
       else
         if !params[:treatment].blank?
-          conditions = ['name like ? or definition like ?',params[:treatment],params[:treatment]]
+          conditions = ['LOWER(name) like LOWER(?) or LOWER(definition) like LOWER(?)', search_term_matcher, search_term_matcher]
         else
           conditions = []
         end
@@ -175,7 +183,7 @@ class TreatmentsController < ApplicationController
       end
     else
       conditions = {}
-      params.each do |k,v|
+      params.each do |k, v|
         next if !Treatment.column_names.include?(k)
         conditions[k] = v
       end
@@ -189,6 +197,7 @@ class TreatmentsController < ApplicationController
       format.xml  { render :xml => @treatments }
       format.csv  { render :csv => @treatments }
       format.json  { render :json => @treatments }
+      format.js
     end
   end
 

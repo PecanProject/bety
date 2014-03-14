@@ -126,6 +126,12 @@ module SimpleSearch
        date_search == [nil, nil] ? nil : "(#{column} > :date_start_search and #{column} < :date_end_search)"
     when :integer
       search[/\d*/] == search ? "#{column} = :search" : nil
+    when :decimal
+# If we decide to do wildcard searches for decimal types, we need to do something like this to get it to work in PostgreSQL:
+#      search[/[\.\d]*/] == search ? "CAST(#{column} AS TEXT) LIKE :wildcard_search" : nil
+      search[/[\.\d]*/] == search ? "#{column} = :search" : nil
+    when :string, :text
+      "LOWER(#{column}) LIKE LOWER(:wildcard_search)"
     else
       "#{column} like :wildcard_search"
     end

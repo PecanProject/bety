@@ -7,7 +7,7 @@ class PftsController < ApplicationController
   # restful-authentication override 
   def access_denied
     flash[:notice] = 'You have insufficient permissions to create new PFTs'
-    redirect_to :action => "index"
+    redirect_to root_path
   end
 
   def rem_pfts_priors
@@ -59,14 +59,17 @@ class PftsController < ApplicationController
 
     # RAILS3 had to add the || '' in order for @search not be nil when params[:search] is nil
     @search = params[:search] || ''
+
     # If they search just a number it is probably an id, and we do not want to wrap that in wildcards.
-    @search.match(/\D/) ? wildcards = true : wildcards = false
+    # @search.match(/\D/) ? wildcards = true : wildcards = false
+    # We now ALWAYS use wildcards (unless the search is blank).
+    wildcards = true
 
     if !@search.blank? 
       if wildcards 
        @search = "%#{@search}%"
      end
-     search_cond = [Specie.column_names.collect {|x| "species." + x }.join(" like :search or ") + " like :search", {:search => @search}] 
+      search_cond = [["scientificname", "commonname", "genus"].collect {|x| "LOWER(species.#{x})" }.join(" LIKE LOWER(:search) OR ") + " LIKE LOWER(:search)", {:search => @search}] 
      search = "Showing records for \"#{@search}\""
     else
       @search = ""

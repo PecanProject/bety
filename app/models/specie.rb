@@ -4,7 +4,7 @@ class Specie < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
-  SEARCH_FIELDS = %w{ species.AcceptedSymbol species.scientificname species.commonname }
+  SEARCH_FIELDS = %w{ species.scientificname species.commonname }
 
   has_and_belongs_to_many :pfts
 

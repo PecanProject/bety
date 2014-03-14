@@ -34,7 +34,7 @@ module AdvancedSearch
       search = ""
     end
 
-    words = search.split 
+    words = search.downcase.split 
 
     # default to all table columns if SEARCH_FIELDS is nil
     search_columns = (self::SEARCH_FIELDS || self.column_names)
@@ -43,7 +43,7 @@ module AdvancedSearch
 
     # a conjunct for each word
     conjuncts = [ "(" +
-                  search_columns.collect { |x| "#{x} LIKE ?" }
+                  search_columns.collect { |x| "LOWER(#{x}) LIKE ?" }
                     .compact
                     .join(" OR ") + ")" # a disjunction for each search column
                 ] * words.length

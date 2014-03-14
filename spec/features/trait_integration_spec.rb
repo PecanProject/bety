@@ -27,7 +27,6 @@ feature 'Traits index works' do
         first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
         click_link 'Traits'
         click_link 'New Trait'
-        click_button 'Create'
         
         page.should_not have_content 'Please choose a citation to work with first.'
       end
