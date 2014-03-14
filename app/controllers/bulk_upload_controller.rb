@@ -58,55 +58,31 @@ class BulkUploadController < ApplicationController
     @session = session # needed for sticky form fields
   end
     
-
+=begin
   def map_data
     # reads CSV file and sets @data and @headers
     read_data # uses session[:csvpath] to set @headers and @data
     @displayed_columns = displayed_columns
   end
-
+=end
 
   # step 4
   def confirm_data
-
-    # reads CSV file and sets @data and @headers
-    read_data
-
-    # Only set the mapping session value if the value from params is
-    # non-nil: we might get here from a failed attempt at insert_data.
-    if !params["mapping"].nil?
-      session[:mapping] = params["mapping"]
-    end
-    @mapping = session[:mapping]
-
-    # set @mapped_data from @data based on the mapping
-    get_insertion_data(true)
-
-    @displayed_columns = displayed_columns
-
-
-    respond_to do |format|
-      format.html {
-        if @global_errors.size > 0
-          flash[:error] = @global_errors
-          redirect_to(action: "map_data")
-        else
-          render
-        end
-      }
-    end
-
+    session[:global_values] = params["global_values"]
+    session[:rounding] = params["rounding"]
+    @data_set = BulkUploadDataSet.new(session)
+    @upload_sites = @data_set.get_upload_sites
   end
 
   # step 5
   def insert_data
-    session[:global_values] = params["global_values"]
     @data_set = BulkUploadDataSet.new(session)
 
     begin
       insertion_data = @data_set.get_insertion_data(params)
     rescue => e
       flash[:error] = e.message
+      logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
       redirect_to(:back)
       return
     end
@@ -120,6 +96,7 @@ class BulkUploadController < ApplicationController
       end
     rescue => e
       errors = e.message
+      logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
     end
 
     respond_to do |format|

@@ -499,6 +499,21 @@ class BulkUploadDataSet
       @session['citation'].nil?
   end
 
+  def get_upload_sites
+    site_names = []
+    if @headers.include?("site")
+      @data.each do |row|
+        site_names << row["site"]
+      end
+    else
+    end
+    distinct_site_names = site_names.uniq
+    upload_sites = []
+    distinct_site_names.each do |site_name|
+      upload_sites << Site.find_by_sitename(site_name)
+    end
+    upload_sites
+  end
 
   # Uses the global data values specified interactively by the user to
   # convert @data to an Array of Hashes suitable for inserting into
@@ -551,15 +566,16 @@ class BulkUploadDataSet
       # Merge the global interactively-specified values into this row:
       csv_row_as_hash.merge!(global_values)
 
+      Rails.logger.debug("csv_row_as_hash = #{csv_row_as_hash.inspect}")
       # apply rounding to the yield
-      rounded_yield = number_with_precision(csv_row_as_hash["yield"].to_f, precision: params["rounding"]["yields"].to_i, significant: true)
+      rounded_yield = number_with_precision(csv_row_as_hash["yield"].to_f, precision: @session["rounding"]["yields"].to_i, significant: true)
 
       # In the yields table, the yield is stored in the "mean" column:
       csv_row_as_hash["mean"] = rounded_yield
 
       if csv_row_as_hash.has_key?("SE")
         # apply rounding to the standard error
-        rounded_se = number_with_precision(csv_row_as_hash["SE"].to_f, precision: params["rounding"]["SE"].to_i, significant: true)
+        rounded_se = number_with_precision(csv_row_as_hash["SE"].to_f, precision: @session["rounding"]["SE"].to_i, significant: true)
 
         # In the yields table, the standard error is stored in the "stat" column:
         csv_row_as_hash["stat"] = rounded_se

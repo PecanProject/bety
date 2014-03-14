@@ -1,0 +1,36 @@
+<div class="content">
+  <div class="container">
+	<div class="sixteen columns">
+	  <header>
+        <h1>Please Verify Data-Set References Before Uploading</h1>
+      </header>
+      <%= form_tag(bulk_upload_data_insertion_path, method: "post", multipart: true) do %>
+      <div id="process_container">
+        <div id="back">
+          <% if @data_set.need_interactively_specified_data %>
+          <%= link_to "<< Specify Dataset-wide values", choose_global_data_values_path %>
+          <% else %>
+          <%= link_to "<< Specify Amount of Rounding", choose_global_data_values_path %>
+          <% end %>
+        </div>
+        <div id="new">&nbsp;</div>
+        <div id="forward">
+          <%= submit_tag "Insert Data >>" %>
+        </div>
+      </div>
+      <h2>Review these sites and make sure they correspond to the sites referenced by your data set</h2>
+      <table>
+        <thead>
+          <tr><th>Site Name</th><th>City</th><th>State</th><th>Country</th><th>Latitude</th><th>Longitude</th><th>Soil Type</th><th>Soil Notes</th></tr>
+        </thead>
+        <tbody>
+          <% @upload_sites.each do |s| %>
+          <tr><td><%= s.sitename %></td><td><%= s.city %></td><td><%= s.state %></td><td><%= s.country %></td><td><%= s.lat %></td><td><%= s.lon %></td><td><%= s.soil %></td><td><%= s.soilnotes %></td></tr>
+          <% end %>
+        </tbody>
+      </table>
+      <% end %>
+
+    </div>
+  </div>
+</div>

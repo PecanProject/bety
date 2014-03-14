@@ -4,12 +4,12 @@
 	  <header>
         <h1>Specify Upload Options and Global Values</h1>
       </header>
-      <%= form_tag(bulk_upload_data_insertion_path, method: "post", multipart: true) do %>
+      <%= form_tag(bulk_upload_data_confirmation_path, method: "post", multipart: true) do %>
       <div id="process_container">
         <div id="back"><%= link_to "<< View Validation Results", show_upload_file_contents_path %></div>
         <div id="new">&nbsp;</div>
         <div id="forward">
-          <%= submit_tag "Insert Data >>" %>
+          <%= submit_tag "Confirm Data >>" %>
         </div>
       </div>
       <h2>Specify Rounding</h2>
