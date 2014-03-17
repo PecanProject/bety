@@ -431,7 +431,7 @@ class BulkUploadDataSet
       end
 
       # If there's no citation column, validate against the session citation.
-      citation_id ||= session[:citation]
+      citation_id ||= @session[:citation]
 
       if citation_id.nil?
         # to-do: decide how to handle this
