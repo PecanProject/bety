@@ -68,8 +68,10 @@ class BulkUploadController < ApplicationController
 
   # step 4
   def confirm_data
-    session[:global_values] = params["global_values"]
-    session[:rounding] = params["rounding"]
+    if params["global_values"]
+      session[:global_values] = params["global_values"]
+      session[:rounding] = params["rounding"]
+    end
     @data_set = BulkUploadDataSet.new(session)
     @upload_sites = @data_set.get_upload_sites
   end
@@ -79,7 +81,7 @@ class BulkUploadController < ApplicationController
     @data_set = BulkUploadDataSet.new(session)
 
     begin
-      insertion_data = @data_set.get_insertion_data(params)
+      insertion_data = @data_set.get_insertion_data
     rescue => e
       flash[:error] = e.message
       logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
