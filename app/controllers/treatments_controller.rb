@@ -6,11 +6,22 @@ class TreatmentsController < ApplicationController
   require 'csv'
 
   def autocomplete
-    # filter treatment list by citation
-    @citation = Citation.find_by_id(session["citation"])
-    if @citation.nil?
-      treatments = Treatment
-    else
+    # filter treatment list by citation(s)
+
+    if session[:citation_id_list]
+
+      where_condition = <<"CONDITION"
+EXISTS (
+    SELECT 1 FROM citations_treatments ct
+        WHERE ct.treatment_id = treatments.id
+            AND ct.citation_id IN (?))
+CONDITION
+
+      treatments = Treatment.where(where_condition,
+                                   session[:citation_id_list])
+
+    elsif session[:citation] 
+      @citation = Citation.find_by_id(session["citation"])
       treatments = @citation.treatments
     end
 

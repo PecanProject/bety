@@ -59,6 +59,9 @@ class BulkUploadDataSet
       @validation_summary[:field_list_errors] << 'If you include a "citation_title" column, then you must also include columns for "citation_author" and "citation_year."'
     elsif @headers.include?('citation_year') && (!@headers.include?('citation_author') || !@headers.include?('citation_title'))
       @validation_summary[:field_list_errors] << 'If you include a "citation_year" column, then you must also include columns for "citation_title" and "citation_author."'
+    elsif @headers.include?('citation_author') || @headers.include?('citation_doi')
+      # the upload file has citation information, so initialize a list of citation ids in the session variable
+      @session[:citation_id_list] = []
     end
 
     # If cultivar is in the field list, species must be as well
@@ -430,8 +433,14 @@ class BulkUploadDataSet
 
       end
 
-      # If there's no citation column, validate against the session citation.
-      citation_id ||= @session[:citation]
+      if citation_id
+        if !@session[:citation_id_list].include?(citation_id)
+          @session[:citation_id_list] << citation_id
+        end
+      else
+        # There's no citation column; validate against the session citation.
+        citation_id = @session[:citation]
+      end
 
       if citation_id.nil?
         # to-do: decide how to handle this
@@ -695,6 +704,8 @@ class BulkUploadDataSet
   end
 
 
+  # This is called in two contexts: Once for the interactively
+  # specified data, and once for each data row of the CSV file.
   def lookup_and_add_ids(args)
     specified_values = args[:input_hash]
     validation_errors = args[:error_list]
@@ -729,7 +740,7 @@ class BulkUploadDataSet
           id_values["specie_id"] = species.id
         end
       when "treatment"
-        treatment = existing_treatment?(value, id_values["citation_id"])
+        treatment = existing_treatment?(value, id_values["citation_id"] || @session[:citation_id_list][0])
         if treatment.nil?
           validation_errors << "No treatment named \"#{value}\" in database."
         else

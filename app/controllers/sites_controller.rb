@@ -61,11 +61,22 @@ class SitesController < ApplicationController
   end
 
   def autocomplete
-    # filter site list by citation
-    @citation = Citation.find_by_id(session["citation"])
-    if @citation.nil?
-      sites = Site
-    else
+    # filter site list by citation(s)
+
+    if session[:citation_id_list]
+
+      where_condition = <<"CONDITION"
+EXISTS (
+    SELECT 1 FROM citations_sites cs
+        WHERE cs.site_id = sites.id
+            AND cs.citation_id IN (?))
+CONDITION
+
+      sites = Site.where(where_condition,
+                         session[:citation_id_list])
+
+    elsif session[:citation]
+      @citation = Citation.find_by_id(session["citation"])
       sites = @citation.sites
     end
 
