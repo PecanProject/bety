@@ -29,6 +29,17 @@ class BulkUploadController < ApplicationController
       else
         @data_set = BulkUploadDataSet.new(session)
       end
+
+      # Remove the linked citation if the file includes citation data:
+      if !session[:citation].nil? &&
+          (@data_set.headers.include?("citation_author") || 
+           @data_set.headers.include?("citation_doi"))
+
+        flash.now[:warning] = "Removing linked citation since you have citation information in your data set"
+        session[:citation] = nil
+
+      end
+
     rescue CSV::MalformedCSVError => e
       flash[:error] = "Couldn't parse #{File.basename(session[:csvpath])}: #{e.message}"
       # flash[:display_csv_file] = true
