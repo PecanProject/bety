@@ -518,9 +518,9 @@ class BulkUploadDataSet
   # Uses the global data values specified interactively by the user to
   # convert @data to an Array of Hashes suitable for inserting into
   # the traits table.
-  def get_insertion_data(params)
+  def get_insertion_data
     # Get interactively-specified values, or set to empty hash if nil:
-    interactively_specified_values = params["global_values"] || {}
+    interactively_specified_values = @session["global_values"] || {}
 
     # Double-check that all form fields are were non-empty:
     interactively_specified_values.keep_if do |key, value|
