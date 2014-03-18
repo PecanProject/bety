@@ -63,7 +63,7 @@
             <%= f.select :cultivar_id, Cultivar.joins(:specie).order('species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true}, :class => "input-full" %>
             <br />
             <%= f.label :dateloc, "Date Level of Confidence" %>
-            <%= f.select :dateloc, options_for_select($dateloc_drop.sort,f.object.dateloc.to_s), :class => "input-full" %>
+            <%= f.select :dateloc, options_for_select($dateloc_drop.sort, f.object.dateloc || $dateloc_drop_default), :class => "input-full" %>
             <br />
             <%= f.label :access_level %>
             <%= f.select :access_level, [["1.Restricted",1],['2.EBI',2],['3.External',3],['4.Public',4]], :selected => current_user.access_level, :class => "input-full" %>

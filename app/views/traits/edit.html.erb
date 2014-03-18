@@ -61,7 +61,7 @@
               </div>
               <div class="four columns">
                 <%= f.label :dateloc, "Date Level of Confidence" %>
-                <%= f.select :dateloc, options_for_select($dateloc_drop.sort,f.object.dateloc.to_s) %>
+                <%= f.select :dateloc, options_for_select($dateloc_drop.sort, f.object.dateloc || $dateloc_drop_default) %>
               </div>
               <div class="four columns">
                 <%= f.label :time %>
@@ -70,7 +70,7 @@
               </div>
               <div class="four columns omega">
                 <%= f.label :timeloc, "Time Level of Confidence" %>
-                <%= f.select :timeloc, options_for_select($timeloc_drop.sort,f.object.timeloc.to_s) %>
+                <%= f.select :timeloc, options_for_select($timeloc_drop.sort, f.object.timeloc || $timeloc_drop_default) %>
               </div>
             </div>
 
