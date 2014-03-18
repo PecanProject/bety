@@ -6,6 +6,8 @@ class TreatmentsController < ApplicationController
   require 'csv'
 
   def autocomplete
+    search_term = params[:term]
+
     # filter treatment list by citation(s)
 
     if session[:citation_id_list]
@@ -26,8 +28,14 @@ CONDITION
     end
 
     # match agains the beginning of the treatment name only
-    treatments = treatments.where("name LIKE ?", params[:term] + '%').to_a.map do |item|
-       item.name
+    filtered_treatments = treatments.where("name LIKE ?", search_term + '%')
+
+    if filtered_treatments.size > 0 || search_term.size > 1
+      treatments = filtered_treatments
+    end
+
+    treatments = treatments.to_a.map do |item|
+      item.name
     end
 
     # don't show rows where name is null or empty

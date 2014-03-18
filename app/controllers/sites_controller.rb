@@ -61,6 +61,8 @@ class SitesController < ApplicationController
   end
 
   def autocomplete
+    search_term = params[:term]
+
     # filter site list by citation(s)
 
     if session[:citation_id_list]
@@ -81,9 +83,17 @@ CONDITION
     end
 
     # match against any portion of the sitename, city, state, or country
-    match_string = '%' + params[:term] + '%'
+    match_string = '%' + search_term + '%'
 
-    sites = sites.where("sitename LIKE ? OR city LIKE ? OR state LIKE ? OR country LIKE ?", match_string, match_string, match_string, match_string).to_a.map do |item|
+    filtered_sites = sites.where("sitename LIKE :match_string OR city LIKE :match_string OR state LIKE :match_string OR country LIKE :match_string",
+                                 match_string: match_string)
+
+    if filtered_sites.size > 0 || search_term.size > 1
+      sites = filtered_sites
+      # else if there are no matches and the user has only typed one letter, just return everything
+    end
+
+    sites = sites.to_a.map do |item|
       {
         # show city, state, and country information in site suggestions, but only show sitename after selection
         label: "#{item.sitename} (#{item.city}, #{!(item.state.nil? || item.state.empty?) ? " #{item.state}," : ""} #{item.country})",
