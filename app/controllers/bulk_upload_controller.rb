@@ -84,7 +84,18 @@ class BulkUploadController < ApplicationController
       session[:rounding] = params["rounding"]
     end
     @data_set = BulkUploadDataSet.new(session)
-    @upload_sites = @data_set.get_upload_sites
+
+    begin
+      @upload_sites = @data_set.get_upload_sites
+      @upload_species = @data_set.get_upload_species
+      @upload_citations = @data_set.get_upload_citations
+      @upload_treatments = @data_set.get_upload_treatments
+    rescue => e
+      flash[:error] = e.message
+      redirect_to(:back)
+      return
+    end
+
   end
 
   # step 5

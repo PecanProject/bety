@@ -509,19 +509,97 @@ class BulkUploadDataSet
   end
 
   def get_upload_sites
+    @data.rewind
+
     site_names = []
     if @headers.include?("site")
       @data.each do |row|
         site_names << row["site"]
       end
     else
+      global_site = @session[:global_values][:site]
+      if global_site.empty?
+        raise "Site name can't be blank"
+      end
+      site_names << global_site
     end
     distinct_site_names = site_names.uniq
     upload_sites = []
     distinct_site_names.each do |site_name|
-      upload_sites << Site.find_by_sitename(site_name)
+      site = Site.find_by_sitename(site_name)
+      if site.nil?
+        raise "Site #{site_name} is not in the database."
+      end
+      upload_sites << site
     end
     upload_sites
+  end
+
+  def get_upload_species
+    @data.rewind
+
+    species_names = []
+    if @headers.include?("species")
+      @data.each do |row|
+        species_names << row["species"]
+      end
+    else
+      global_species = @session[:global_values][:species]
+      if global_species.empty?
+        raise "Species name can't be blank"
+      end
+      species_names << global_species
+    end
+    distinct_species_names = species_names.uniq
+    upload_species = []
+    distinct_species_names.each do |species_name|
+      species = Specie.find_by_scientificname(species_name)
+      if species.nil?
+        raise "Species #{species_name} is not in the database."
+      end
+      upload_species << species
+    end
+    upload_species
+  end
+
+  def get_upload_citations
+    @data.rewind
+
+    # all validation has been done already at this point
+    citation_id_list = @session[:citation_id_list] || [ @session[:citation].id ]
+    upload_citations = []
+    citation_id_list.each do |citation_id|
+      citation = Citation.find_by_id(citation_id)
+      upload_citations << citation
+    end
+    upload_citations
+  end
+
+  def get_upload_treatments
+    @data.rewind
+
+    treatment_names = []
+    if @headers.include?("treatment")
+      @data.each do |row|
+        treatment_names << row["treatment"]
+      end
+    else
+      global_treatment = @session[:global_values][:treatment]
+      if global_treatment.empty?
+        raise "Treatment name can't be blank"
+      end
+      treatment_names << global_treatment
+    end
+    distinct_treatment_names = treatment_names.uniq
+    upload_treatments = []
+    distinct_treatment_names.each do |treatment_name|
+      treatment = Treatment.find_by_name(treatment_name)
+      if treatment.nil?
+        raise "Treatment #{treatment_name} is not in the database."
+      end
+      upload_treatments << treatment
+    end
+    upload_treatments
   end
 
   # Uses the global data values specified interactively by the user to

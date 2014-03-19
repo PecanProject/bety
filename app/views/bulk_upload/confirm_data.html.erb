@@ -18,7 +18,20 @@
           <%= submit_tag "Insert Data >>" %>
         </div>
       </div>
-      <h2>Review these sites and make sure they correspond to the sites referenced by your data set</h2>
+      <% end %>
+      <h2>Review these citations and make sure they correspond to the citations referenced by your data set:</h2>
+      <table>
+        <thead>
+          <tr><th>Title</th><th>Author</th><th>Year</th><th>Journal</th><th>DOI</th></tr>
+        </thead>
+        <tbody>
+          <% @upload_citations.each do |c| %>
+          <tr><td><%= c.title %></td><td><%= c.author %></td><td><%= c.year %></td><td><%= c.journal %></td><td><%= c.doi %></td></tr>
+          <% end %>
+        </tbody>
+      </table>
+      <hr>
+      <h2>Review these sites and make sure they correspond to the sites referenced by your data set:</h2>
       <table>
         <thead>
           <tr><th>Site Name</th><th>City</th><th>State</th><th>Country</th><th>Latitude</th><th>Longitude</th><th>Soil Type</th><th>Soil Notes</th></tr>
@@ -29,8 +42,30 @@
           <% end %>
         </tbody>
       </table>
-      <% end %>
-
+      <hr>
+      <h2>Review these species and make sure they correspond to the species referenced by your data set:</h2>
+      <table>
+        <thead>
+          <tr><th>Species Name</th><th>Genus</th><th>Common Name</th><th>Accepted Symbol</th></tr>
+        </thead>
+        <tbody>
+          <% @upload_species.each do |s| %>
+          <tr><td><%= s.scientificname %></td><td><%= s.genus %></td><td><%= s.commonname %></td><td><%= s.AcceptedSymbol %></tr>
+          <% end %>
+        </tbody>
+      </table>
+      <hr>
+      <h2>Review these treatments and make sure they correspond to the treatments referenced by your data set:</h2>
+      <table>
+        <thead>
+          <tr><th>Treatment Name</th><th>Definition</th><th>Control?</th></tr>
+        </thead>
+        <tbody>
+          <% @upload_treatments.each do |t| %>
+          <tr><td><%= t.name %></td><td><%= t.definition %></td><td><%= t.control %></td></tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
