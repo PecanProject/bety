@@ -5,13 +5,23 @@ class CultivarsController < ApplicationController
   require 'csv'
 
   def autocomplete
-    species_ids = Specie.where("scientificname LIKE ?", 
-                               params[:species] + '%').to_a.map do |row|
-      row.id
+    search_term = params[:term]
+
+    species_id = Specie.find_by_scientificname(params[:species])
+
+    cultivars = Cultivar.where("specie_id = ?", species_id)
+
+    logger.debug("cultivars for autocompletion: #{cultivars.inspect}")
+
+    filtered_cultivars = cultivars.where("name LIKE ?", '%' + search_term + '%')
+
+    if filtered_cultivars.size > 0 || search_term.size > 1
+      cultivars = filtered_cultivars
+      # else if there are no matches and the user has only typed one letter, just return every cultivar associated with the chosen species
     end
-    cultivars = Cultivar.where("specie_id IN (#{species_ids.join(", ")}) AND name LIKE ?",
-                               params[:term] + '%' ).to_a.map do |item|
-       item.name
+
+    cultivars = cultivars.to_a.map do |item|
+      item.name
     end
 
     # don't show rows where name is null or empty

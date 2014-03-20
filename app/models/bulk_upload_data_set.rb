@@ -562,6 +562,39 @@ class BulkUploadDataSet
     upload_species
   end
 
+  def get_upload_cultivars
+    @data.rewind
+
+    cultivars = []
+    if @headers.include?("cultivar")
+      @data.each do |row|
+        # We can do this since (for now at least) we require a species field if there is a cultivar field:
+        cultivars << { cultivar_name: row["cultivar"], species_name: row["species"] }
+      end
+    else
+      upload_species = get_upload_species
+      globally_specified_cultivar = @session[:global_values][:cultivar]
+      if !globally_specified_cultivar.empty?
+        if upload_species.size > 1
+          global_cultivar = { cultivar_name: globally_specified_cultivar, species_name: upload_species[0].scientificname }
+          cultivars << global_cultivar
+        else
+          raise "If you specify the cultivar globally, you can only have one species in your data set."
+        end
+      end
+    end
+    distinct_cultivars = cultivars.uniq
+    upload_cultivars = []
+    distinct_cultivars.each do |cultivar_info|
+      cultivar = Cultivar.joins("JOIN species ON species.id = cultivars.specie_id").where("cultivars.name = :cultivar_name AND species.scientificname = :species_name", cultivar_info).first
+      if cultivar.nil?
+        raise "Cultivar #{cultivar_info[:cultivar_name]} associated with species #{cultivar_info[:species_name]} is not in the database."
+      end
+      upload_cultivars << { cultivar: cultivar, species_name: cultivar_info[:species_name] }
+    end
+    upload_cultivars
+  end
+
   def get_upload_citations
     @data.rewind
 

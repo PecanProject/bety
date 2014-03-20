@@ -55,6 +55,20 @@
         </tbody>
       </table>
       <hr>
+      <% if !@upload_cultivars.empty? %>
+      <h2>Review these cultivars and make sure they correspond to the cultivars referenced by your data set:</h2>
+      <table>
+        <thead>
+          <tr><th>Cultivar Name</th><th>Ecotype</th><th>Associated Species</th></tr>
+        </thead>
+        <tbody>
+          <% @upload_cultivars.each do |c| %>
+          <tr><td><%= c[:cultivar].name %></td><td><%= c[:cultivar].ecotype %></td><td><%= c[:species_name] %></tr>
+          <% end %>
+        </tbody>
+      </table>
+      <hr>
+      <% end %>
       <h2>Review these treatments and make sure they correspond to the treatments referenced by your data set:</h2>
       <table>
         <thead>
