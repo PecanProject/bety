@@ -1,5 +1,12 @@
 class BulkUploadController < ApplicationController
 
+  before_filter :record_stage
+
+  def record_stage
+    session[:bulk_upload_stage] = params[:action]
+  end
+
+
   # step 1: Choose a file to upload.
   def start_upload
     # To-do: decide whether to display raw content of CSV file when we can't parse it.
@@ -67,15 +74,13 @@ class BulkUploadController < ApplicationController
   def choose_global_data_values
     @data_set = BulkUploadDataSet.new(session)
     @session = session # needed for sticky form fields
+    @placeholders = {
+      site: "Enter any portion of the site name, city, state, or country",
+      species: "Enter the first few letters of the scientific name",
+      treatement: "Enter any portion of the treatment name",
+      cultivar: "(optional)"
+    }
   end
-    
-=begin
-  def map_data
-    # reads CSV file and sets @data and @headers
-    read_data # uses session[:csvpath] to set @headers and @data
-    @displayed_columns = displayed_columns
-  end
-=end
 
   # step 4
   def confirm_data
