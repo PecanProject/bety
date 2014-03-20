@@ -121,7 +121,7 @@ class BulkUploadDataSet
   #         The total number of errors, both heading-related and data-related.
   #     @file_has_fatal_errors:
   #         A boolean telling whether there were any fatal errors found.
-  def validate_csv_data(session)
+  def validate_csv_data
     @validated_data = []
     @data.each do |row|
       validated_row = row.collect { |value| { fieldname: value[0], data: value[1] } }

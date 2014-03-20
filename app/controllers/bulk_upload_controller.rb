@@ -59,7 +59,7 @@ class BulkUploadController < ApplicationController
     end
 
     # No heading errors; go on to validate data
-    @data_set.validate_csv_data(session)
+    @data_set.validate_csv_data
   end
 
 
