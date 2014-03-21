@@ -28,7 +28,7 @@ feature 'Citation index works' do
                                               'fixtures', 
                                               'files',
                                               'bulk_upload',
-                                              'sample_yields_with_no_citation.csv')
+                                              'sample_yields_with_treatment_but_no_citation.csv')
       click_button 'Upload'
       click_link 'Select a Citation'
       first(:xpath, ".//td[text() = 'Adams']/ancestor::tr/td[8]/a[1]").click
