@@ -1,3 +1,7 @@
 test_citation_treatment:
     citation_id: 1
     treatment_id: 1
+
+test_citation_treatment_for_bulk_upload:
+    citation_id: 3
+    treatment_id: 1

@@ -26,4 +26,14 @@ citation_with_no_associated_treatment:
   created_at: "2010-09-22 21:10:43"
   updated_at: "2010-09-22 21:10:43"
   doi: "10.2134/agronj2005.0351"
-  
+
+citation_for_bulk_upload:
+  id: 3
+  author: Adams
+  year: 1986
+  title: "Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange"
+  journal: "Plant Physiology"
+  vol: 81
+  pg: "297-300"
+  url: "http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1075323/?page=1"
+  user: 1

@@ -1,4 +1,5 @@
 test_site:
+  id: 1
   city: "Aliartos"
   state: ""
   country: "Greece"
@@ -20,3 +21,14 @@ test_site:
   sand_pct: NULL
   clay_pct: NULL
   espg: NULL
+
+
+  
+test_site_2:
+  id: 2
+  sitename: "University of Nevada Biological Sciences Center"
+  city: "Reno"
+  state: "Nevada"
+  country: US
+  lat: 39.538264
+  lon: -119.812071

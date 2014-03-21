@@ -86,3 +86,89 @@ test_specie:
   Seeds_per_Pound: NULL
   SeedSpreadRate: NULL
   SeedlingVigor: NULL
+
+test_species_for_bulk_upload:
+  Spcd:
+  Genus: Lolium
+  Species: perenne
+  Scientificname: "Lolium perenne"
+  Commonname: "perennial ryegrass"
+  Acceptedsymbol: LOPE
+  Synonymsymbol:
+  Symbol: LOPE
+  Plants_floristic_area: "NA (L48, AK, CAN, GL, SPM), HI, PR"
+  State: "<strong>USA</strong> (AK, AL, AR, AZ, CO, CT, DC, DE, FL, GA, HI, IA, ID, IL, IN, KS, KY, LA, MA, MD, ME, MI, MN, MO, MS, MT, NC, ND, NE, NH, NJ, NM, NV, NY, OH, OK, OR, PA, RI, SC, SD, TN, TX, UT, VA, VT, WA, WI, WV, WY), <strong>USA+</strong> (PR), <strong>CAN</strong> (AB, BC, MB, NB, NF, NS, NT, ON, PE, QC, SK, YT, CA), <strong>DEN</strong> (GL), <strong>FRA</strong> (SPM)"
+  Category: Monocot
+  Family: Poaceae
+  Familysymbol: POACEA
+  Familycommonname: Grass family
+  Xorder: Cyperales
+  Subclass: Commelinidae
+  Class: Liliopsida
+  Subdivision:
+  Division: Magnoliophyta
+  Superdivision: Spermatophyta
+  Subkingdom: Tracheobionta
+  Kingdom: Plantae
+  Itis_tsn: 40893
+  Duration: "Perennial, Annual"
+  Growthhabit: Graminoid
+  Nativestatus: "L48 (I), AK (I), HI (I), PR (I), CAN (I), GL (I), SPM (I)"
+  Nationalwetlandindicatorstatus: "FACU-, FAC"
+  Regionalwetlandindicatorstatus: "1(FACU-), 2(FACU), 3(FACU), 4(FACU), 5(FACU), 6(FACU), 7(FACU), 8(FACU), 9(FACU), 0(FAC*), A(FACU), C(FAC)"
+  Activegrowthperiod: "Spring and Fall"
+  Afterharvestregrowthrate: Moderate
+  Bloat: None
+  C2n_ratio: Low
+  Coppicepotential: No
+  Fallconspicuous: No
+  Fireresistance: No
+  Foliagetexture: Fine
+  Growthform: Bunch
+  Growthrate: Rapid
+  Maxheight20yrs: 0
+  Matureheight: 4
+  Knownallelopath: No
+  Leafretention: No
+  Lifespan: Short
+  Lowgrowinggrass: No
+  Nitrogenfixation:
+  Resproutability: No
+  Adaptedcoarsesoils: No
+  Adaptedmediumsoils: Yes
+  Adaptedfinesoils: Yes
+  Anaerobictolerance: Low
+  Caco3tolerance: Medium
+  Coldstratification: No
+  Droughttolerance: Low
+  Fertilityrequirement: High
+  Firetolerance: Low
+  Minfrostfreedays: 100
+  Hedgetolerance: None
+  Moistureuse: High
+  Ph_minimum: 5.0
+  Ph_maximum: 8.0
+  Min_plantingdensity: 0
+  Max_plantingdensity: 0
+  Precipitation_minimum: 30
+  Precipitation_maximum: 65
+  Rootdepthminimum: 10
+  Salinitytolerance: Medium
+  Shadetolerance: Intolerant
+  Temperatureminimum: -18
+  Bloomperiod: "Mid Spring"
+  Commercialavailability: "Routinely Available"
+  Fruitseedperiodbegin: Spring
+  Fruitseedperiodend: Summer
+  Propogated_by_bareroot: No
+  Propogated_by_bulbs: No
+  Propogated_by_container: No
+  Propogated_by_corms: No
+  Propogated_by_cuttings: No
+  Propogated_by_seed: Yes
+  Propogated_by_sod: No
+  Propogated_by_sprigs: No
+  Propogated_by_tubers: No
+  Seeds_per_pound: 240400
+  Seedspreadrate: Moderate
+  Seedlingvigor: High
