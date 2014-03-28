@@ -7,11 +7,11 @@ class Pft < ActiveRecord::Base
   SEARCH_INCLUDES = %w{  }
   SEARCH_FIELDS = %w{ pfts.name pfts.definition }
 
-  has_many :pft_priors, :class_name => "PftsPriors"
-  has_many :priors, :through => :pft_priors
+  has_many :pfts_priors, :class_name => "PftsPriors"
+  has_many :priors, :through => :pfts_priors
 
-  has_many :pft_species, :class_name => "PftsSpecies"
-  has_many :specie, :through => :pft_species
+  has_many :pfts_species, :class_name => "PftsSpecies"
+  has_many :specie, :through => :pfts_species
 
   has_many :posteriors
 
