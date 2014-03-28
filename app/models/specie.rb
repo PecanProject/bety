@@ -6,7 +6,8 @@ class Specie < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ species.scientificname species.commonname }
 
-  has_and_belongs_to_many :pfts
+  has_many :pft_species, :class_name => "PftsSpecies"
+  has_many :pfts, :through => :pft_species
 
   has_many :yields
   has_many :traits

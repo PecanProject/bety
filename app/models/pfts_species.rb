@@ -1,4 +1,7 @@
 class PftsSpecies < ActiveRecord::Base
+  belongs_to :pft
+  belongs_to :specie
+
   validates_presence_of     :pft_id
   validates_presence_of     :specie_id
   comma do

@@ -7,8 +7,12 @@ class Pft < ActiveRecord::Base
   SEARCH_INCLUDES = %w{  }
   SEARCH_FIELDS = %w{ pfts.name pfts.definition }
 
-  has_and_belongs_to_many :priors
-  has_and_belongs_to_many :specie
+  has_many :pft_priors, :class_name => "PftsPriors"
+  has_many :priors, :through => :pft_priors
+
+  has_many :pft_species, :class_name => "PftsSpecies"
+  has_many :specie, :through => :pft_species
+
   has_many :posteriors
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
