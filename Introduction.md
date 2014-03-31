@@ -1,9 +1,11 @@
 
 A discussion around the costs and benefits of workflows for enabling reproducibility and interoperability
+
 * Pros 
 * Cons
  
 Where in ecology and environmental science does there appear to be a compelling need?
+
 * Pros.
 * Cons.
  
