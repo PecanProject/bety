@@ -1,1 +1,1 @@
-Convex homomorphisms and high-\(T_c\) spin flux
+Software practices that promote interoperability {and reproducibility} for ecological forecasting
