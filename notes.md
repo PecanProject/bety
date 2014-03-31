@@ -125,6 +125,7 @@ Day 2 Discussion
 Standard grammars for defining data-data and data-model and model-model interfaces
 
 "Best practices in ecological computing" 
+
  * in R: Commit to S4 classes instead of S3, all languages: well-specified APIs, contractual committment
  * continuous integration e.g. Travis-CI (or is this too high level?)
  * testing (too high level?)
@@ -134,6 +135,7 @@ Standard grammars for defining data-data and data-model and model-model interfac
 What do we need to do to up our game, computationally, in producing actionable predictions of ecosystems - data input standards, workflows, probabilities, cloud
 
 Proposal of what to work on
+
 1. High profile perspective on the needs to get towards reproducibility in the prediction of complex multicomponent systems - for which ecological systems are a prime example but Earth System Models are another - and how advances in workflow technology are needed to achieve that - potentially with a section on case study examples of where we really need this reproducibility in order to keep advancing. Tailed by 5-10 year goal for the development of workflow technology to meet the needs of ecological / earth system research.
 2. Discuss further how the specifics of conducting multicomponent multi-dataset inference based research raises new challenges for developing workflows.
 3. Discuss the challenges of managing multi-component modelling with workflows 
@@ -166,6 +168,7 @@ Titles:
  * examples
 
 Outline/Topics
+
  * Intro general background of sw best practices (e.g., White paper), plus acknowledge these are well-established software engineering practices
  * Discussion of desiridata: Reproducible, Traceable, Usable, Comparable, {Reusable}
    * define the terms
@@ -242,7 +245,8 @@ Allen Hierarchy: Perspectives for Ecological Complexity
 
 http://blogs.msdn.com/b/martinca/archive/2009/11/02/microsoft-computational-science-studio.aspx
 
-Coming Soon to a Lab Near You: Drag-and-Drop Virtual Worlds                                         
+Coming Soon to a Lab Near You: Drag-and-Drop Virtual Worlds                   
+
    * Robert F. Service
    * Science 11 February 2011:  669-671. [DOI:10.1126/science.331.6018.669] 
 
