@@ -4,6 +4,10 @@ Ecological Forecasting Workshop
 Workflows breakout group
 -------------------------------------
 
+
+Target audience and scope would be scientists, developers and funders aiming to contribute to these key areas in ecological forecasting to remind them that they should consider developing the state of the art in our ability to act interoperably and reproduibly in those areas... so that they may adopt some of our recommendations.
+
+
 ### SUMMARY AFTER MEETING 1 AND WHOLE GROUP DISCUSSION
 
 Discussion focused on 
@@ -148,15 +152,18 @@ Achieving greater levels of interoperability:
 
 Paper Outline
 ---------------------
+
+
 Titles:
- * "Reproducibility in ecological and environmental modelling: whether and why scientific workflows, and where next?"
+
+* "Reproducibility in ecological and environmental modelling: whether and why scientific workflows, and where next?"
  * "Software practices that promote interoperability {and reproducibility} for ecological forecasting"
 
-# rhetorical approach framework
-## name and define practice
-## what do you want to achieve and how to get there
-## pros and cons
-## examples
+* rhetorical approach framework
+ * name and define practice
+ * what do you want to achieve and how to get there
+ * pros and cons
+ * examples
 
 Outline/Topics
  * Intro general background of sw best practices (e.g., White paper), plus acknowledge these are well-established software engineering practices
@@ -217,34 +224,6 @@ Outline/Topics
  * examples and/or case studies (or integrated into practices above)
 
 
-DEFINE AUDIENCE AND SCOPE
-
-Day 3
-Note from Matthew Smith -
-
-In the absence of me for the next hour or two and in light of the workflows review structure I thought I d share a few thoughts in this thing
-
-I think most people if they think about it can identify what the advantages and disadvantages of workflows are. I am still thinking it would be better to orient any communication around this issue towards saying something much more specific about the particular needs for and from workflows in a few specific areas of ecological forecasting, rather than ecological forecasting/prediction in general.
- 
-On top of that, rather than a lengthy itemised list I wonder if it would be a more impactful structure if we structure it like a discussion or question and answer paper (like they do at the end of stats papers), or a pro’s and con’s discussion paper. E.g.
- 
-A discussion around the costs and benefits of workflows for enabling reproducibility and interoperability
-Pros 
-Cons
- 
-Where in ecology and environmental science does there appear to be a compelling need?
-Pros.
-Cons.
- 
-What is or can be done for improving reproducibility and interoperability in specific parts of the workflow
-                Data input output
-                Model component interfaces
- 
-So in conclusion, do we as a group feel certain areas (e.g. the CMIP6 endeavour) really MUST take a lead in defining standards for the data input output and model component  interfaces if they are to achieve their longer term goals and then if we are convinced then what are the, say, key recommendations to be implemented within the next 5-10 years for achieving that. Having a specific nod to CMIP6 would be great.
-
-In conclusion, the target audience and scope would be scientists, developers and funders aiming to contribute to these key areas in ecological forecasting to remind them that they should consider developing the state of the art in our ability to act interoperably and reproduibly in those areas... so that they may adopt some of our recommendations.
-
--> see you soon
 
 
 
