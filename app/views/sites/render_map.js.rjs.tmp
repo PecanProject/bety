@@ -1,1 +1,0 @@
-page.replace_html "site", :partial => "render_map", :object => @site

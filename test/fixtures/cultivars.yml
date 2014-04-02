@@ -1,8 +1,0 @@
-test_cultivar:
-  specie_id: 938
-  name: "HYLDC3"
-  ecotype: "Upland"
-  notes: "asdfasdfasdfasdfasdfasdfasdf"
-  created_at: "2013-03-31 23:16:35"
-  updated_at: "2013-03-31 23:16:35"
-  previous_id: "pvhyl"
