@@ -9,7 +9,8 @@
             options_for_select([['10', 10], ['25', 25], ['50', 50], ['100', 100]],
               params[:DataTables_Table_0_length] || WillPaginate.per_page),
               size: "1",
-              "aria-controls" => "DataTables_Table_0"
+              "aria-controls" => "DataTables_Table_0",
+              id: nil
           %> records per page
       </label>
       
