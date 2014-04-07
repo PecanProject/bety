@@ -13,6 +13,42 @@
 	<div class="inline-block" style="width: 160px; vertical-align:top; margin-left:10px">
           <%= image_tag 'miscanthus.jpg', class: "inline-block", alt: "Photo by L. Brian Stauffer, provided by University of Illinois at Urbana-Champaign" %>
 	</div>
+	
+	<% if current_user.nil? %>
+	<div class="well row">
+          <%= form_tag({:controller => :sessions , :method => :create}, {:class => "form-horizontal", id: "loginform" }) do %>
+	  <fieldset>
+            <div class="row control-group">
+              <div class="column alpha">
+              <%= label_tag 'login', 'Login', :class => "control-label" %>
+              <div class="controls">
+                <%= text_field_tag 'login', @login || '', :class => "input-medium" %>
+              </div>
+            </div>
+            
+            <div class="column omega">
+              <%= label_tag 'password', 'Password', :class => "control-label" %>
+              <div class="controls">
+                <%= password_field_tag 'password', nil, :class => "input-medium" %>
+              </div>
+            </div>
+      </div>
+    
+      <div class="row clear-fix form-actions button-block">
+        <div class="column one columns">
+          <%= submit_tag 'Log in', :class=> "button button-primary" %>
+        </div>
+        <div class="column three columns offset-by-one">
+          <p><%= link_to "Log in as Guest", nil, :class =>"button", id: "guest-login" %></p>
+        </div>
+        <div class="column four columns">
+          <p><%= link_to "Register for BETYdb", signup_path, :class =>"button" %></p>
+        </div>
+      </div>
+      </fieldset>
+      <% end %><!-- end of well div -->
+    </div>
+    <% end %><!-- end of login block -->
 
       </div>
       <div class="five columns omega offset-by-one">
@@ -40,53 +76,13 @@
                 <%= link_to controller: "maps", action: "location_yields" do %>
                 <i class="icon-chevron-right"></i> Crop Model Maps 
                 <% end %>
-              </li>
-	</ul>
+	      </li>
+	    </ul>
 	  </div>
 	</div>
       </div>
 </div>
 
-      
-<% if current_user.nil? %>
-<div class="well row">
-  <%= form_tag({:controller => :sessions , :method => :create}, {:class => "form-horizontal", id: "loginform" }) do %>
-  <fieldset>
-    <div class="row">
-      
-      <div class="control-group column alpha">
-        <%= label_tag 'login', 'Login', :class => "control-label" %>
-        <div class="controls">
-          <%= text_field_tag 'login', @login || '', :class => "input-medium" %>
-          <%#= text_field_tag 'login', @login || 'guestuser', :class => "input-medium" %>
-        </div>
-      </div>
-      
-      <div class="control-group column omega">
-        <%= label_tag 'password', 'Password', :class => "control-label" %>
-        <div class="controls">
-          <%#= password_field_tag 'password', @password || 'guestuser', :class => "input-medium" %>
-          <%= password_field_tag 'password', nil, :class => "input-medium" %>
-        </div>
-      </div>
-    </div>
-    
-    <div class="row clear-fix form-actions button-block">
-      <div class="column three columns offset-by-two">
-        <%= submit_tag 'Log in', :class=> "button button-primary" %>
-      </div>
-      <div class="column three columns offset-by-two">
-	    <p><%= link_to "Log in as Guest", nil, :class =>"button", id: "guest-login" %></p>
-
-      </div>
-      <div class="column five columns">
-	    <p><%= link_to "Register for access to BETYdb", signup_path, :class =>"button" %></p>
-      </div>
-    </div>
-  </fieldset>
-  <% end %>
-</div>
-<% end %>
 
 
       
