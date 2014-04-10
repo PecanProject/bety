@@ -1,4 +1,4 @@
-class TraitsController < ApplicationController
+2class TraitsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
   helper_method :sort_column, :sort_direction
 
@@ -96,8 +96,14 @@ class TraitsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @trait }
-      format.json { render :json => @trait }
+      format.xml  {
+        @trait.user = nil
+        render :xml => @trait
+      }
+      format.json { 
+        @trait.user = nil
+        render :json => @trait 
+      }
       format.csv  { render :csv => @trait }
     end
   end

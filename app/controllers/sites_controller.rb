@@ -93,9 +93,15 @@ class SitesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @site }
+      format.xml  {
+        @site.user = nil
+        render :xml => @site 
+      }
       format.csv  { render :csv => @site }
-      format.json  { render :json => @site }
+      format.json  {
+        @site.user = nil
+        render :json => @site 
+      }
     end
   end
 

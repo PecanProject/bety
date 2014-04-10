@@ -82,9 +82,15 @@ class InputsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @input }
+      format.xml  {
+        @input.user = nil
+        render :xml => @input 
+      }
       format.csv  { render :csv => @input }
-      format.json  { render :json => @input }
+      format.json  { 
+        @input.user = nil
+        render :json => @input 
+      }
     end
   end
 

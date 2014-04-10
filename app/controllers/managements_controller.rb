@@ -64,9 +64,15 @@ class ManagementsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @management }
+      format.xml  {
+        @management.user = nil
+        render :xml => @management
+      }
       format.csv  { render :csv => @management }
-      format.json  { render :json => @management }
+      format.json  {
+        @management.user = nil
+        render :json => @management 
+      }
     end
   end
 
