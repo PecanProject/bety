@@ -73,10 +73,7 @@ class YieldsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  {
-        @yield.user = nil
-        render :xml => @yield
-      }
+      format.xml  { render :xml => @yield }
       format.csv  { render :csv => @yield }
     end
   end

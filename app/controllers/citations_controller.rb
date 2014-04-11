@@ -66,15 +66,9 @@ class CitationsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  {
-        @citation.user = nil
-        render :xml => @citation 
-      }
+      format.xml  { render :xml => @citation }
       format.csv  { render :csv => @citation }
-      format.json  {
-        @citation.user = nil
-        render :json => @citation
-      }
+      format.json  { render :json => @citation }
     end
   end
 

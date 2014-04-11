@@ -96,14 +96,8 @@ class TraitsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  {
-        @trait.user = nil
-        render :xml => @trait
-      }
-      format.json { 
-        @trait.user = nil
-        render :json => @trait 
-      }
+      format.xml  { render :xml => @trait }
+      format.json { render :json => @trait }
       format.csv  { render :csv => @trait }
     end
   end

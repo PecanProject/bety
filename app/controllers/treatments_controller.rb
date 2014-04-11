@@ -183,15 +183,9 @@ class TreatmentsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  {
-        @treatment.user = nil
-        render :xml => @treatment 
-      }
+      format.xml  { render :xml => @treatment }
       format.csv  { render :csv => @treatment }
-      format.json  {
-        @treatment.user = nil
-        render :json => @treatment 
-      }
+      format.json  { render :json => @treatment }
     end
   end
 
