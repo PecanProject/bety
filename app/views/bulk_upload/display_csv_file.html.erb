@@ -11,11 +11,12 @@
     <% else %>
        <%= link_to "Specify Amount of Rounding >>", choose_global_data_values_path %>
     <% end %>
+  </div>
 </div>
 <%= make_validation_summary %>
 <%= make_warning_summary  %>
 <table>
-  <caption>Uploaded file: <span style="font-size: larger; font-weight: bold"><%= File.basename(session[:csvpath]) %></span></p></caption>
+  <caption>Uploaded file: <span style="font-size: larger; font-weight: bold"><%= File.basename(session[:csvpath]) %></span></caption>
   <thead>
     <tr>
       <th>row number</th>
