@@ -150,44 +150,11 @@ class BulkUploadController < ApplicationController
 ################################################################################
   private
 
-  
-  def store_file(uploaded_io)
-    file = File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb')
-    file.write(uploaded_io.read)
-    session[:csvpath] = file.path
-    file.close
-  end
-
   def read_raw_contents
     csvpath = session[:csvpath]
     csv = File.open(csvpath)
     @file_contents = csv.read
     csv.close
   end
-
-  def displayed_columns
-    Trait.columns.select { |col| !['id', 'created_at', 'updated_at'].include?(col.name) }
-  end
-
-  def validate(user_supplied_data)
-    @global_errors ||= []
-    user_supplied_data.each do |column, value|
-      if value.nil? or value.to_s.empty?
-        next
-      end
-      if column.match(/_id$/)
-        tablename = column.sub(/_id$/, '').classify
-        if tablename == "Method"
-          tablename = "Methods"
-        end
-        table = tablename.constantize
-        logger.info("table is #{tablename}")
-        if !table.find_by_id(value)
-          @global_errors << "Couldn't find row with id #{value} in table #{tablename}"
-        end
-      end
-    end
-  end
-
 
 end
