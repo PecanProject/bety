@@ -575,7 +575,7 @@ class BulkUploadDataSet
       upload_species = get_upload_species
       globally_specified_cultivar = @session[:global_values][:cultivar]
       if !globally_specified_cultivar.empty?
-        if upload_species.size > 1
+        if upload_species.size = 1
           global_cultivar = { cultivar_name: globally_specified_cultivar, species_name: upload_species[0].scientificname }
           cultivars << global_cultivar
         else
