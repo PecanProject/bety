@@ -6,7 +6,13 @@
       </header>
       <%= form_tag(bulk_upload_data_confirmation_path, method: "post", multipart: true) do %>
       <div id="process_container">
-        <div id="back"><%= link_to "<< View Validation Results", show_upload_file_contents_path %></div>
+        <div id="back">
+          <%= link_to "<< View Validation Results", show_upload_file_contents_path %>
+          <br />
+          <%= link_to start_upload_path do
+              content_tag :em, "START OVER with a different file"
+              end %>
+        </div>
         <div id="new">&nbsp;</div>
         <div id="forward">
           <%= submit_tag "Confirm Data >>" %>

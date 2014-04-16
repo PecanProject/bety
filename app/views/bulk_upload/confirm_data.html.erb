@@ -12,6 +12,10 @@
           <% else %>
           <%= link_to "<< Specify Amount of Rounding", choose_global_data_values_path %>
           <% end %>
+          <br />
+          <%= link_to start_upload_path do
+              content_tag :em, "START OVER with a different file"
+              end %>
         </div>
         <div id="new">&nbsp;</div>
         <div id="forward">
