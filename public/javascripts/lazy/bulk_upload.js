@@ -20,12 +20,18 @@ jQuery(function() {
         source: ROOT_URL + "/treatments/autocomplete.json"
     });
 
+
+    // Set the cultivar autocompletion list based upon whether or not the user has chosen a species:
+    if (jQuery('#autocomplete_species').val() == '') {
+        optionList = [{ label: "Please choose a species", value: null}]
+    }
+    else {
+        // We only get here in the case the species value was prepopulated at the time the page was loaded.
+        optionList = ROOT_URL + "/cultivars/autocomplete.json?species=" + jQuery('#autocomplete_species').val()
+    }
     jQuery('#autocomplete_cultivar').autocomplete({
         // set source to this until it gets updated by the species field change method
-        source: function(request, response) {
-            // no matter what the user types, this option will be all that is displayed until a species is chosen
-            response([{ label: "Please choose a species", value: null}])
-        }
+        source: optionList
     });
 
 });
