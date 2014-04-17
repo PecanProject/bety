@@ -13,7 +13,7 @@ class CultivarsController < ApplicationController
 
     logger.debug("cultivars for autocompletion: #{cultivars.inspect}")
 
-    filtered_cultivars = cultivars.where("name LIKE ?", '%' + search_term + '%')
+    filtered_cultivars = cultivars.where("LOWER(name) LIKE LOWER(?)", '%' + search_term + '%')
 
     if filtered_cultivars.size > 0 || search_term.size > 1
       cultivars = filtered_cultivars

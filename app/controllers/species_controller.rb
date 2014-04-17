@@ -9,7 +9,7 @@ class SpeciesController < ApplicationController
 
   def autocomplete
     # match against the initial portion of the scientificname only
-    species = Specie.where("scientificname LIKE ?", params[:term] + '%' ).to_a.map do |item|
+    species = Specie.where("LOWER(scientificname) LIKE LOWER(?)", params[:term] + '%' ).to_a.map do |item|
        item.scientificname
     end
 

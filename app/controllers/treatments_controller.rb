@@ -28,7 +28,7 @@ CONDITION
     end
 
     # match agains the beginning of the treatment name only
-    filtered_treatments = treatments.where("name LIKE ?", search_term + '%')
+    filtered_treatments = treatments.where("LOWER(name) LIKE LOWER(?)", search_term + '%')
 
     if filtered_treatments.size > 0 || search_term.size > 1
       treatments = filtered_treatments

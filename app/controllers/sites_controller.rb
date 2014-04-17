@@ -85,7 +85,7 @@ CONDITION
     # match against any portion of the sitename, city, state, or country
     match_string = '%' + search_term + '%'
 
-    filtered_sites = sites.where("sitename LIKE :match_string OR city LIKE :match_string OR state LIKE :match_string OR country LIKE :match_string",
+    filtered_sites = sites.where("LOWER(sitename) LIKE LOWER(:match_string) OR LOWER(city) LIKE LOWER(:match_string) OR LOWER(state) LIKE LOWER(:match_string) OR LOWER(country) LIKE LOWER(:match_string)",
                                  match_string: match_string)
 
     if filtered_sites.size > 0 || search_term.size > 1
