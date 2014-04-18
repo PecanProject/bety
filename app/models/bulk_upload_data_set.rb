@@ -599,7 +599,7 @@ class BulkUploadDataSet
     @data.rewind
 
     # all validation has been done already at this point
-    citation_id_list = @session[:citation_id_list] || [ @session[:citation].id ]
+    citation_id_list = @session[:citation_id_list] || [ @session[:citation] ]
     upload_citations = []
     citation_id_list.each do |citation_id|
       citation = Citation.find_by_id(citation_id)
