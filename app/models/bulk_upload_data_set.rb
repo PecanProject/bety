@@ -851,7 +851,23 @@ class BulkUploadDataSet
           id_values["specie_id"] = species.id
         end
       when "treatment"
-        treatment = existing_treatment?(value, id_values["citation_id"] || @session[:citation_id_list][0])
+        citation_id = nil
+        if id_values["citation_id"]
+          # We are looking at a row of the CSV file and both the
+          # citation information and the treatment information are in
+          # the file.
+          citation_id = id_values["citation_id"]
+        elsif !@session[:citation].nil?
+          # The citation was specified globally.
+          citation_id = @session[:citation]
+        else
+          # We are looking up the treatment id for a
+          # globally-specified treatment name, but the citation
+          # information is in the CSV file.
+          citation_id = @session[:citation_id_list][0]
+        end
+
+        treatment = existing_treatment?(value, citation_id)
         if treatment.nil?
           validation_errors << "No treatment named \"#{value}\" in database."
         else
