@@ -11,7 +11,7 @@ class BulkUploadController < ApplicationController
     session.delete_if do |key|
       # delete bulk-upload-related session data (except for :citation,
       # which is "global"):
-      [:csvpath, :global_values, :rounding, :citation_id_list].include?(key)
+      ["csvpath", "global_values", "rounding", "citation_id_list"].include?(key)
     end
   end
 
