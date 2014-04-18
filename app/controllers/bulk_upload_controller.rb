@@ -1,11 +1,19 @@
 class BulkUploadController < ApplicationController
 
   before_filter :record_stage
+  before_filter :clear_session_data, only: :start_upload
 
   def record_stage
     session[:bulk_upload_stage] = params[:action]
   end
 
+  def clear_session_data
+    session.delete_if do |key|
+      # delete bulk-upload-related session data (except for :citation,
+      # which is "global"):
+      [:csvpath, :global_values, :rounding, :citation_id_list].include?(key)
+    end
+  end
 
   # step 1: Choose a file to upload.
   def start_upload
@@ -13,9 +21,6 @@ class BulkUploadController < ApplicationController
 #    if flash[:display_csv_file]
 #      read_raw_contents
 #    end
-    # clean session upload data
-    session[:csvpath] = nil
-    session[:global_values] = {}
   end
 
   # step 2: Display the CSV file as a table.
