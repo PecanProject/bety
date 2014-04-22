@@ -96,7 +96,6 @@ class PftsController < ApplicationController
     pft.specie = orig_pft.specie
     pft.priors = orig_pft.priors
     pft.save
-    #pft.parent_id = orig_pft.id
 
     respond_to do |format|
       format.html { redirect_to(pft_url(pft)) }
