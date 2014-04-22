@@ -1,44 +1,40 @@
 <div class="content">
   <div class="container">
-	<div class="fifteen columns">
-	  <header>
-		<h1>Editing File</h1>
-	  <hearder>
-		<%= form_for @file, :url => dbfile_path(@path) do |f| %>
-		<%= f.error_messages %>
-    <div class="row">
-			<div class="five columns alpha">
-    		<%= f.label :machine_id %><br />
-    		<%= f.select :machine_id, Machine.all.collect { |p| [p.select_default, p.id] } %>
-		  </div> 
-      <div class="five columns ">
-      	<%= f.label :file_path %><br />
-      	<%= f.text_field :file_path %>
-      </div>
-      <div class="five columns omega">
-        <%= f.label :file_name %><br />
-        <%= f.text_field :file_name%>
-      </div>
-    </div>
-    <div class="row">
-      <div class="sixteen columns">
-        <%= f.label :created_user_id, 'Created by' %><br />
-        <%= @file.created_user ? @file.created_user : "none" %>
-      </div>
-    </div>
-    <div class="row">
-      <div class="sixteen columns">
-        <%= f.label :updated_user_id, 'Last updated by' %><br />
-        <%= @file.updated_user ? @file.updated_user : "none" %>
-      </div>
-    </div>
+  	<div class="sixteen columns">
+  	  <header>
+    		<h1>Editing File</h1>
+  	  <hearder>
+  		<%= form_for @file, :url => dbfile_path(@path) do |f| %>
+  		  <%= f.error_messages %>
+        <div class="row">
+    			<div class="eight columns alpha">
+        		<%= f.label :machine_id %><br />
+        		<%= f.select :machine_id, Machine.all.collect { |p| [p.select_default, p.id] }, :class => "input-full" %>
+    		  </div> 
+        </div>
+        <div class="row">
+          <div class="sixteen columns alpha">
+          	<%= f.label :file_path %><br />
+          	<%= f.text_field :file_path, :class => "input-full" %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :file_name %><br />
+            <%= f.text_field :file_name, :class => "input-full" %>
+          </div>
+        </div>
 
-    <div class="form-actions">
-      <div class="button-group pull-right">
-        <%= f.submit 'Create', :class => "button button-primary" %>
-      </div>
+        <div class="form-actions">
+          <div>
+            <%= link_to "Show", dbfile_path(@dbfile) %>
+            <%= link_to "Back", dbfiles_path %>
+            <div class="button-group pull-right">
+              <%= f.submit 'Update', :class => "button button-primary" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </div>
-	 <% end %>
-  </div>
   </div>
 </div>
