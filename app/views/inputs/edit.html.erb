@@ -64,12 +64,16 @@
         </div>
 
         <div class="form-actions">
-          <div>
-            <%= link_to "Show", @input %>
-            <%= link_to "Back", inputs_path %>
-            <div class="button-group pull-right">
-              <%= f.submit 'Update', :class => "button button-primary" %>
-            </div>
+          <div class="button-group">
+            <%= link_to( @input ) do %>
+              <button class="button" type="button">Show</button>
+            <% end%>
+            <%= link_to( inputs_path ) do %>
+              <button class="button" type="button">Back</button>
+            <% end%>
+          </div>
+          <div class="button-group pull-right">
+            <%= f.submit 'Update', :class => "button button-primary" %>
           </div>
         </div>
 
