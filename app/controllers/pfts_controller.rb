@@ -95,8 +95,8 @@ class PftsController < ApplicationController
     pft = orig_pft.clone()
     pft.specie = orig_pft.specie
     pft.priors = orig_pft.priors
+    pft.parent_id = orig_pft.id
     pft.save
-    #pft.parent_id = orig_pft.id
 
     respond_to do |format|
       format.html { redirect_to(pft_url(pft)) }
