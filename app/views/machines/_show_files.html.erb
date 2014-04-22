@@ -1,0 +1,17 @@
+<h2>Associated Files</h2>
+
+<table>
+  <tr>
+    <th>File Path</th>
+    <th>File Name</th>
+    <th>File Type</th>
+  </tr>
+  <% @machine.files.all(:limit => 100).each do |c| %>
+  <tr>
+    <td><%=h c.file_path %></td>
+    <td><%=h c.file_name %></td>
+    <td><%=h c.container_type %></td>
+    <td><%= link_to "Show", dbfile_path(c) %></td>
+  </tr>
+  <% end %>
+</table>

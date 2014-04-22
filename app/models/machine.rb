@@ -8,7 +8,7 @@ class Machine < ActiveRecord::Base
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
-  has_many :bety_files
+  has_many :files, :class_name => 'DBFile'
 
   def select_default
     self.to_s
