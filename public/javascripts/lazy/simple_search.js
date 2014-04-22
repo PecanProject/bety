@@ -92,7 +92,7 @@ jQuery(function () {
             return false;
         });
 
-    jQuery('#simple_search_table').on('change', 'select', search_function);
+    jQuery('#simple_search_table').on('change', 'select[name="DataTables_Table_0_length"]', search_function);
     jQuery('#simple_search_table').on('keyup', 'input', search_function);
     jQuery('#simple_search_table').on('click', 'button#clear_search_terms',remove_search_term_restriction);
 

@@ -45,7 +45,7 @@ margin-top: 20px;
 					box-shadow:  0 1px 7px rgba(0, 0, 0, 0.1);
 }
 .home .well form {
-	margin-top: -6px;
+	margin-top: 0;
 	margin-bottom: -10px;
 }
 .home .well form legend {
@@ -54,6 +54,7 @@ margin-top: 20px;
 }
 .home .well form .form-actions {
 	margin-bottom: 0;
+	padding-left: 0;
 }
 
 .the-icons {

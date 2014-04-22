@@ -42,6 +42,9 @@
   <%= javascript_include_tag 'lazy/simple_search.js' %>
   <%= javascript_include_tag 'lazy/application.js' %>
 
+  <% if params[:controller] == 'sessions' %>
+    <%= javascript_include_tag 'lazy/login' %>
+  <% end %>
   <% if ['sites','maps','visitors','search'].include?(params[:controller]) %>
     <%= javascript_include_tag 'https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyA9Ac4XswpkdjIslQcRJzgwnbkEDdomZS4&sensor=false' %>
   <% end %>

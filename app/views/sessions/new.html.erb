@@ -5,6 +5,7 @@
 	<h1>Welcome to BETYdb</h1>
       </header>
       <!-- InstanceBeginEditable name="Full Width Content" -->
+      <div class="row">
       <div class="ten columns alpha">
 	<p class="lead">The emerging biofuel industry may aid in reducing greenhouse gas emissions and decreasing dependence on foreign oil importation.</p>
 	
@@ -14,39 +15,40 @@
 	</div>
 	
 	<% if current_user.nil? %>
-	<div class="well">
-          <%= form_tag({:controller => :sessions , :method => :create}, {:class => "form-horizontal"}) do %>
+	<div class="well row">
+          <%= form_tag({:controller => :sessions , :method => :create}, {:class => "form-horizontal", id: "loginform" }) do %>
 	  <fieldset>
-            <legend>
-	      <h2><i class="icon-lock"></i> Access BETYdb</h2>
-	    </legend>
-            
-            <div class="control-group">
+            <div class="row control-group">
+              <div class="column alpha">
               <%= label_tag 'login', 'Login', :class => "control-label" %>
               <div class="controls">
-                <%= text_field_tag 'login', @login, :class => "input-xlarge" %>
+                <%= text_field_tag 'login', @login || '', :class => "input-medium" %>
               </div>
             </div>
             
-            <div class="control-group">
+            <div class="column omega">
               <%= label_tag 'password', 'Password', :class => "control-label" %>
               <div class="controls">
-                <%= password_field_tag 'password', nil, :class => "input-xlarge" %>
+                <%= password_field_tag 'password', nil, :class => "input-medium" %>
               </div>
             </div>
-	    <!--              <%= label_tag 'remember_me', 'Remember me' %>-->
-	    <!--              <%= check_box_tag 'remember_me', '1', @remember_me %>-->
-            <div class="form-actions">
-              <%= submit_tag 'Log in', :class=> "button button-primary" %>
-            </div>
-          </fieldset>
-          <% end %>
-	</div>
-	
-	<h3>Don't have an account?</h3>
-	<p>Sign up using the button below:</p>
-	<p><%= link_to "Register for access to BETYdb", signup_path, :class =>"button" %></p>
-	<% end %>
+      </div>
+    
+      <div class="row clear-fix form-actions button-block">
+        <div class="column one columns">
+          <%= submit_tag 'Log in', :class=> "button button-primary" %>
+        </div>
+        <div class="column three columns offset-by-one">
+          <p><%= link_to "Log in as Guest", nil, :class =>"button", id: "guest-login" %></p>
+        </div>
+        <div class="column four columns">
+          <p><%= link_to "Register for BETYdb", signup_path, :class =>"button" %></p>
+        </div>
+      </div>
+      </fieldset>
+      <% end %><!-- end of well div -->
+    </div>
+    <% end %><!-- end of login block -->
 
       </div>
       <div class="five columns omega offset-by-one">
@@ -74,11 +76,16 @@
                 <%= link_to controller: "maps", action: "location_yields" do %>
                 <i class="icon-chevron-right"></i> Crop Model Maps 
                 <% end %>
-              </li>
-	</ul>
+	      </li>
+	    </ul>
 	  </div>
 	</div>
       </div>
+</div>
+
+
+
+      
       <!-- InstanceEndEditable --> </div>
   </div>
   <!-- container --> 
