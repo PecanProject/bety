@@ -30,6 +30,12 @@
 				<dd><%= @pft.name %></dd>
 				<dt>Definition</dt>
 				<dd><%= @pft.definition %></dd>
+				<dt>Parent</dt>
+				<dd><%= link_to_if @pft.parent, @pft.parent, @pft.parent %></dd>
+				<dt>Clones</dt>
+				<% @pft.children.each do |child| %>					
+					<dd><%= link_to_if child, child, child %></dd>
+				<% end %>
 			</dl>
 
 			<div class="form-actions">

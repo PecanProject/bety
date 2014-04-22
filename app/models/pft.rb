@@ -14,6 +14,10 @@ class Pft < ActiveRecord::Base
 
   has_many :posteriors
 
+  #Self reference
+  has_many :children, :class_name => "Pft", :foreign_key => "parent_id"
+  belongs_to :parent, :class_name => "Pft", :foreign_key => "parent_id"
+
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
