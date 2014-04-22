@@ -1,7 +1,6 @@
 class Pft < ActiveRecord::Base
 
   include Overrides
-  include Cloner
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{  }
