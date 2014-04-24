@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140422155957) do
+ActiveRecord::Schema.define(:version => 20140423220457) do
 
   create_table "citations", :force => true do |t|
     t.string    "author"
@@ -25,14 +25,14 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.timestamp "created_at", :limit => 6
     t.timestamp "updated_at", :limit => 6
     t.string    "doi"
-    t.integer   "user_id"
+    t.integer   "user_id",    :limit => 8
   end
 
   add_index "citations", ["user_id"], :name => "index_citations_on_user_id"
 
   create_table "citations_sites", :id => false, :force => true do |t|
-    t.integer   "citation_id"
-    t.integer   "site_id"
+    t.integer   "citation_id", :limit => 8
+    t.integer   "site_id",     :limit => 8
     t.timestamp "created_at",  :limit => 6
     t.timestamp "updated_at",  :limit => 6
   end
@@ -40,8 +40,8 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   add_index "citations_sites", ["citation_id", "site_id"], :name => "index_citations_sites_on_citation_id_and_site_id", :unique => true
 
   create_table "citations_treatments", :id => false, :force => true do |t|
-    t.integer   "citation_id"
-    t.integer   "treatment_id"
+    t.integer   "citation_id",  :limit => 8
+    t.integer   "treatment_id", :limit => 8
     t.timestamp "created_at",   :limit => 6
     t.timestamp "updated_at",   :limit => 6
   end
@@ -58,8 +58,8 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   end
 
   create_table "covariates", :force => true do |t|
-    t.integer   "trait_id"
-    t.integer   "variable_id"
+    t.integer   "trait_id",    :limit => 8
+    t.integer   "variable_id", :limit => 8
     t.decimal   "level",                    :precision => 16, :scale => 4
     t.timestamp "created_at",  :limit => 6
     t.timestamp "updated_at",  :limit => 6
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   add_index "covariates", ["trait_id", "variable_id"], :name => "index_covariates_on_trait_id_and_variable_id"
 
   create_table "cultivars", :force => true do |t|
-    t.integer   "specie_id"
+    t.integer   "specie_id",   :limit => 8
     t.string    "name"
     t.string    "ecotype"
     t.text      "notes"
@@ -86,13 +86,13 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.string    "file_name"
     t.string    "file_path"
     t.string    "md5"
-    t.integer   "created_user_id"
-    t.integer   "updated_user_id"
-    t.integer   "machine_id"
+    t.integer   "created_user_id", :limit => 8
+    t.integer   "updated_user_id", :limit => 8
+    t.integer   "machine_id",      :limit => 8
     t.timestamp "created_at",      :limit => 6
     t.timestamp "updated_at",      :limit => 6
     t.string    "container_type"
-    t.integer   "container_id"
+    t.integer   "container_id",    :limit => 8
   end
 
   add_index "dbfiles", ["container_type"], :name => "index_dbfiles_on_container_id_and_container_type"
@@ -105,11 +105,11 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.timestamp "created_at",  :limit => 6
     t.timestamp "updated_at",  :limit => 6
     t.string    "runtype"
-    t.integer   "workflow_id"
+    t.integer   "workflow_id", :limit => 8
   end
 
   create_table "entities", :force => true do |t|
-    t.integer   "parent_id"
+    t.integer   "parent_id",  :limit => 8
     t.string    "name"
     t.text      "notes"
     t.timestamp "created_at", :limit => 6
@@ -132,8 +132,8 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   add_index "formats", ["mime_type"], :name => "index_formats_on_mime_type"
 
   create_table "formats_variables", :force => true do |t|
-    t.integer   "format_id"
-    t.integer   "variable_id"
+    t.integer   "format_id",     :limit => 8
+    t.integer   "variable_id",   :limit => 8
     t.string    "name"
     t.string    "unit"
     t.string    "storage_type"
@@ -145,19 +145,18 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   add_index "formats_variables", ["format_id", "variable_id"], :name => "index_formats_variables_on_format_id_and_variable_id"
 
   create_table "inputs", :force => true do |t|
-    t.integer   "site_id"
+    t.integer   "site_id",      :limit => 8
     t.text      "notes"
     t.timestamp "created_at",   :limit => 6
     t.timestamp "updated_at",   :limit => 6
     t.timestamp "start_date",   :limit => 6
     t.timestamp "end_date",     :limit => 6
     t.string    "name"
-    t.integer   "parent_id"
-    t.integer   "user_id"
+    t.integer   "parent_id",    :limit => 8
+    t.integer   "user_id",      :limit => 8
     t.integer   "access_level"
     t.boolean   "raw"
-    t.integer   "format_id"
-    t.integer   "file_id"
+    t.integer   "format_id",    :limit => 8
   end
 
   add_index "inputs", ["format_id"], :name => "index_inputs_on_format_id"
@@ -166,8 +165,8 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   add_index "inputs", ["user_id"], :name => "index_inputs_on_user_id"
 
   create_table "inputs_runs", :id => false, :force => true do |t|
-    t.integer   "input_id"
-    t.integer   "run_id"
+    t.integer   "input_id",   :limit => 8
+    t.integer   "run_id",     :limit => 8
     t.timestamp "created_at", :limit => 6
     t.timestamp "updated_at", :limit => 6
   end
@@ -175,8 +174,8 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   add_index "inputs_runs", ["input_id", "run_id"], :name => "index_inputs_runs_on_input_id_and_run_id", :unique => true
 
   create_table "inputs_variables", :id => false, :force => true do |t|
-    t.integer   "input_id"
-    t.integer   "variable_id"
+    t.integer   "input_id",    :limit => 8
+    t.integer   "variable_id", :limit => 8
     t.timestamp "created_at",  :limit => 6
     t.timestamp "updated_at",  :limit => 6
   end
@@ -184,9 +183,9 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   add_index "inputs_variables", ["input_id", "variable_id"], :name => "index_inputs_variables_on_input_id_and_variable_id", :unique => true
 
   create_table "likelihoods", :force => true do |t|
-    t.integer   "run_id"
-    t.integer   "variable_id"
-    t.integer   "input_id"
+    t.integer   "run_id",        :limit => 8
+    t.integer   "variable_id",   :limit => 8
+    t.integer   "input_id",      :limit => 8
     t.decimal   "loglikelihood",              :precision => 10, :scale => 0
     t.decimal   "n_eff",                      :precision => 10, :scale => 0
     t.decimal   "weight",                     :precision => 10, :scale => 0
@@ -204,7 +203,7 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.string    "species"
     t.timestamp "created_at", :limit => 6
     t.timestamp "updated_at", :limit => 6
-    t.integer   "county_id"
+    t.integer   "county_id",  :limit => 8
   end
 
   add_index "location_yields", ["county_id"], :name => "index_location_yields_on_county_id"
@@ -221,7 +220,7 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   add_index "machines", ["hostname"], :name => "index_machines_on_hostname"
 
   create_table "managements", :force => true do |t|
-    t.integer   "citation_id"
+    t.integer   "citation_id", :limit => 8
     t.date      "date"
     t.decimal   "dateloc",                  :precision => 4,  :scale => 2
     t.string    "mgmttype"
@@ -230,15 +229,15 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.text      "notes"
     t.timestamp "created_at",  :limit => 6
     t.timestamp "updated_at",  :limit => 6
-    t.integer   "user_id"
+    t.integer   "user_id",     :limit => 8
   end
 
   add_index "managements", ["citation_id"], :name => "index_managements_on_citation_id"
   add_index "managements", ["user_id"], :name => "index_managements_on_user_id"
 
   create_table "managements_treatments", :id => false, :force => true do |t|
-    t.integer   "treatment_id"
-    t.integer   "management_id"
+    t.integer   "treatment_id",  :limit => 8
+    t.integer   "management_id", :limit => 8
     t.timestamp "created_at",    :limit => 6
     t.timestamp "updated_at",    :limit => 6
   end
@@ -248,7 +247,7 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   create_table "methods", :force => true do |t|
     t.string    "name"
     t.text      "description"
-    t.integer   "citation_id"
+    t.integer   "citation_id", :limit => 8
     t.timestamp "created_at",  :limit => 6
     t.timestamp "updated_at",  :limit => 6
   end
@@ -263,7 +262,7 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.string    "model_name"
     t.string    "model_path"
     t.string    "revision"
-    t.integer   "parent_id"
+    t.integer   "parent_id",  :limit => 8
     t.timestamp "created_at", :limit => 6
     t.timestamp "updated_at", :limit => 6
     t.string    "model_type"
@@ -276,12 +275,12 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.timestamp "created_at", :limit => 6
     t.timestamp "updated_at", :limit => 6
     t.string    "name"
-    t.integer   "parent_id"
+    t.integer   "parent_id",  :limit => 8
   end
 
   create_table "pfts_priors", :id => false, :force => true do |t|
-    t.integer   "pft_id"
-    t.integer   "prior_id"
+    t.integer   "pft_id",     :limit => 8
+    t.integer   "prior_id",   :limit => 8
     t.timestamp "created_at", :limit => 6
     t.timestamp "updated_at", :limit => 6
   end
@@ -289,8 +288,8 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   add_index "pfts_priors", ["pft_id", "prior_id"], :name => "index_pfts_priors_on_pft_id_and_prior_id", :unique => true
 
   create_table "pfts_species", :id => false, :force => true do |t|
-    t.integer   "pft_id"
-    t.integer   "specie_id"
+    t.integer   "pft_id",     :limit => 8
+    t.integer   "specie_id",  :limit => 8
     t.timestamp "created_at", :limit => 6
     t.timestamp "updated_at", :limit => 6
   end
@@ -298,17 +297,17 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   add_index "pfts_species", ["pft_id", "specie_id"], :name => "index_pfts_species_on_pft_id_and_specie_id", :unique => true
 
   create_table "posteriors", :force => true do |t|
-    t.integer   "pft_id"
+    t.integer   "pft_id",     :limit => 8
     t.timestamp "created_at", :limit => 6
     t.timestamp "updated_at", :limit => 6
-    t.integer   "format_id"
+    t.integer   "format_id",  :limit => 8
   end
 
   add_index "posteriors", ["pft_id"], :name => "index_posteriors_on_pft_id"
 
   create_table "posteriors_runs", :id => false, :force => true do |t|
-    t.integer   "posterior_id"
-    t.integer   "run_id"
+    t.integer   "posterior_id", :limit => 8
+    t.integer   "run_id",       :limit => 8
     t.timestamp "created_at",   :limit => 6
     t.timestamp "updated_at",   :limit => 6
   end
@@ -316,8 +315,8 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   add_index "posteriors_runs", ["posterior_id", "run_id"], :name => "index_posteriors_runs_on_posterior_id_and_run_id", :unique => true
 
   create_table "priors", :force => true do |t|
-    t.integer   "citation_id"
-    t.integer   "variable_id"
+    t.integer   "citation_id", :limit => 8
+    t.integer   "variable_id", :limit => 8
     t.string    "phylogeny"
     t.string    "distn"
     t.decimal   "parama",                   :precision => 16, :scale => 4
@@ -333,8 +332,8 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   add_index "priors", ["variable_id"], :name => "index_priors_on_variable_id"
 
   create_table "runs", :force => true do |t|
-    t.integer   "model_id"
-    t.integer   "site_id"
+    t.integer   "model_id",       :limit => 8
+    t.integer   "site_id",        :limit => 8
     t.timestamp "start_time",     :limit => 6
     t.timestamp "finish_time",    :limit => 6
     t.string    "outdir"
@@ -345,7 +344,7 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.timestamp "updated_at",     :limit => 6
     t.timestamp "started_at",     :limit => 6
     t.timestamp "finished_at",    :limit => 6
-    t.integer   "ensemble_id"
+    t.integer   "ensemble_id",    :limit => 8
     t.string    "start_date"
     t.string    "end_date"
   end
@@ -381,7 +380,7 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.timestamp "updated_at", :limit => 6
     t.string    "sitename"
     t.boolean   "greenhouse"
-    t.integer   "user_id"
+    t.integer   "user_id",    :limit => 8
     t.integer   "local_time"
     t.decimal   "sand_pct",                :precision => 9, :scale => 5
     t.decimal   "clay_pct",                :precision => 9, :scale => 5
@@ -481,11 +480,11 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   end
 
   create_table "traits", :force => true do |t|
-    t.integer   "site_id"
-    t.integer   "specie_id"
-    t.integer   "citation_id"
-    t.integer   "cultivar_id"
-    t.integer   "treatment_id"
+    t.integer   "site_id",      :limit => 8
+    t.integer   "specie_id",    :limit => 8
+    t.integer   "citation_id",  :limit => 8
+    t.integer   "cultivar_id",  :limit => 8
+    t.integer   "treatment_id", :limit => 8
     t.timestamp "date",         :limit => 6
     t.decimal   "dateloc",                   :precision => 4,  :scale => 2
     t.time      "time",         :limit => 6
@@ -497,12 +496,12 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.text      "notes"
     t.timestamp "created_at",   :limit => 6
     t.timestamp "updated_at",   :limit => 6
-    t.integer   "variable_id"
-    t.integer   "user_id"
+    t.integer   "variable_id",  :limit => 8
+    t.integer   "user_id",      :limit => 8
     t.integer   "checked"
     t.integer   "access_level"
-    t.integer   "entity_id"
-    t.integer   "method_id"
+    t.integer   "entity_id",    :limit => 8
+    t.integer   "method_id",    :limit => 8
     t.integer   "date_year"
     t.integer   "date_month"
     t.integer   "date_day"
@@ -526,7 +525,7 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.timestamp "created_at", :limit => 6
     t.timestamp "updated_at", :limit => 6
     t.boolean   "control"
-    t.integer   "user_id"
+    t.integer   "user_id",    :limit => 8
   end
 
   add_index "treatments", ["user_id"], :name => "index_treatments_on_user_id"
@@ -570,8 +569,8 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.timestamp "finished_at",   :limit => 6
     t.timestamp "created_at",    :limit => 6
     t.timestamp "updated_at",    :limit => 6
-    t.integer   "site_id"
-    t.integer   "model_id",                                      :null => false
+    t.integer   "site_id",       :limit => 8
+    t.integer   "model_id",      :limit => 8,                    :null => false
     t.string    "hostname"
     t.text      "params"
     t.boolean   "advanced_edit",              :default => false
@@ -580,11 +579,11 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
   end
 
   create_table "yields", :force => true do |t|
-    t.integer   "citation_id"
-    t.integer   "site_id"
-    t.integer   "specie_id"
-    t.integer   "treatment_id"
-    t.integer   "cultivar_id"
+    t.integer   "citation_id",  :limit => 8
+    t.integer   "site_id",      :limit => 8
+    t.integer   "specie_id",    :limit => 8
+    t.integer   "treatment_id", :limit => 8
+    t.integer   "cultivar_id",  :limit => 8
     t.date      "date"
     t.decimal   "dateloc",                   :precision => 4,  :scale => 2
     t.string    "statname"
@@ -594,10 +593,10 @@ ActiveRecord::Schema.define(:version => 20140422155957) do
     t.text      "notes"
     t.timestamp "created_at",   :limit => 6
     t.timestamp "updated_at",   :limit => 6
-    t.integer   "user_id"
+    t.integer   "user_id",      :limit => 8
     t.integer   "checked"
     t.integer   "access_level"
-    t.integer   "method_id"
+    t.integer   "method_id",    :limit => 8
   end
 
   add_index "yields", ["citation_id"], :name => "index_yields_on_citation_id"
