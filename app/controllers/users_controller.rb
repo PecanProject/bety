@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  
+
   before_filter :login_required, :except => [:create,:new]
   #before_filter :login_required
   helper_method :sort_column, :sort_direction
@@ -55,14 +55,14 @@ class UsersController < ApplicationController
       xml += "<priority name='Normal' id='4'/>"
       xml += "<author name='BETY Bug Report' id='32'/>"
       xml += "<assigned_to id='3'/>"
-      xml += "<subject>Access request for #{@user.name.to_xs} (#{@user.login.to_xs})</subject>"
+      xml += "<subject>Access request for #{@user.name.encode("ascii", invalid: :replace, undef: :replace)} (#{@user.login})</subject>"
       xml += "<description>https://www.betydb.org/users/#{@user.id}/edit\n"
       xml += "\n"
-      xml += "#{@user.name.to_xs} (#{@user.login.to_xs}) has requested a non-default access level.\n"
+      xml += "#{@user.name.encode("ascii", invalid: :replace, undef: :replace)} (#{@user.login}) has requested a non-default access level.\n"
       xml += "Page_access_level: #{page_access_level[params[:user][:page_access_level].to_i]}\n"
       xml += "Access_level: #{access_level[params[:user][:access_level].to_i]}\n"
       xml += "\n"
-      xml += "Reason: #{params[:access_level_reason].to_xs}\n"
+      xml += "Reason: #{params[:access_level_reason]}\n"
       xml += "</description>"
       xml += "</issue>'"
 
