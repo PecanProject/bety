@@ -3,54 +3,115 @@ class InputsController < ApplicationController
   before_filter :login_required 
   helper_method :sort_direction, :sort_column
 
-  def rem_inputs_runs
-    @input = Input.find(params[:input_id])
-    @run = Run.find(params[:run_id])
-
-    render :update do |page|
-      @input.runs.delete(@run)
-      page.replace_html 'edit_inputs_runs', :partial => 'edit_inputs_runs'
-    end
-  end
-
-  def edit_inputs_runs
-
-    @input = Input.find(params[:input_id])
-
-    render :update do |page|
-      if !params[:run].nil?
-        params[:run][:id].each do |run|
-          @input.runs << Run.find(run)
-        end
-      end
-      page.replace_html 'edit_inputs_runs', :partial => 'edit_inputs_runs'
-    end
-  end
-
-  def rem_inputs_variables
-    @input = Input.find(params[:input_id])
-    @variable = Variable.find(params[:variable_id])
-
-    render :update do |page|
-      @input.variables.delete(@variable)
-      page.replace_html 'edit_inputs_variables', :partial => 'edit_inputs_variables'
-    end
-  end
-
   def edit_inputs_variables
+    @input = Input.find(params[:id])
+    variable = params[:variable]
 
-    @input = Input.find(params[:input_id])
+    if @input and variable
+      _variable = Variable.find(variable)
+      # If relationship exists we must want to remove it...
+      if @input.variables.include?(_variable)
+        @input.variables.delete(_variable)
+        logger.info "deleted input:#{@input.id} - file:#{_variable.id}"
+      # Otherwise add it
+      else
+        @input.variables << _variable
+        logger.info "add input:#{@input.id} - file:#{_variable.id}"
+      end
+    end
+
+    @page = params[:page]
+
+    # RAILS3 had to add the || '' in order for @search not be nil when params[:search] is nil
+    @search = params[:search] || ''
+    @searchparam = @search
+
+    # If they search just a number it is probably an id, and we do not want to wrap that in wildcards.
+    # @search.match(/\D/) ? wildcards = true : wildcards = false
+    # We now ALWAYS use wildcards (unless the search is blank).
+    wildcards = true
+
+    if !@search.blank? 
+      if wildcards 
+        @search = "%#{@search}%"
+      end
+      search_cond = [["description", "name"].collect {|x| "variables.#{x}" }.join(" LIKE :search OR ") + " LIKE :search", {:search => @search}] 
+      search = "Showing records for \"#{@search}\""
+    else
+      @search = ""
+      search = "Showing all results"
+      search_cond = ""
+    end
+
+    if @input and @search.blank?
+      search = "Showing already related records"
+      if @input.variables
+        @variables = @input.variables.paginate :page => params[:page]
+      end
+    else
+      @variables = Variable.paginate :select => "id,name,units", :page => params[:page], :conditions => search_cond
+    end
 
     render :update do |page|
-      if !params[:variable].nil?
-        params[:variable][:id].each do |variable|
-          @input.variables << Variable.find(variable)
-        end
-      end
-      page.replace_html 'edit_inputs_variables', :partial => 'edit_inputs_variables'
+      page.replace_html :vars_index_table, :partial => "edit_inputs_variables_table"
+      page.replace_html :vars_search_term, search
     end
   end
 
+  def edit_inputs_files
+    @input = Input.find(params[:id])
+    file = params[:file]
+
+    if @input and file
+      _file = DBFile.find(file)
+      # If relationship exists we must want to remove it...
+      if @input.files.include?(_file)
+        @input.files.delete(_file)
+        logger.info "deleted input:#{@input.id} - file:#{_file.id}"
+      # Otherwise add it
+      else
+        @input.files << _file
+        logger.info "add input:#{@input.id} - file:#{_file.id}"
+      end
+    end
+
+    @page = params[:page]
+
+    # RAILS3 had to add the || '' in order for @search not be nil when params[:search] is nil
+    @search = params[:search] || ''
+    @searchparam = @search
+
+    # If they search just a number it is probably an id, and we do not want to wrap that in wildcards.
+    # @search.match(/\D/) ? wildcards = true : wildcards = false
+    # We now ALWAYS use wildcards (unless the search is blank).
+    wildcards = true
+
+    if !@search.blank? 
+      if wildcards 
+        @search = "%#{@search}%"
+      end
+      search_cond = [["file_path", "file_name"].collect {|x| "dbfiles.#{x}" }.join(" LIKE :search OR ") + " LIKE :search", {:search => @search}] 
+      search = "Showing records for \"#{@search}\""
+    else
+      @search = ""
+      search = "Showing all results"
+      search_cond = ""
+    end
+
+    if @input and @search.blank?
+      search = "Showing already related records"
+      if @input.files
+        @files = @input.files.paginate :page => params[:page]
+      end
+    else
+      @files = DBFile.paginate :select => "id,file_name", :page => params[:page], :conditions => search_cond
+    end
+
+    render :update do |page|
+      page.replace_html :files_index_table, :partial => "edit_inputs_files_table"
+      page.replace_html :files_search_term, search
+    end
+  end
 
   # GET /inputs
   # GET /inputs.xml
@@ -104,6 +165,8 @@ class InputsController < ApplicationController
   # GET /inputs/1/edit
   def edit
     @input = Input.find(params[:id])
+    @files = @input.files.paginate :page => params[:page]
+    @variables = @input.variables.paginate :page => params[:page]
   end
 
   # POST /inputs

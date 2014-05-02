@@ -1,0 +1,18 @@
+<h2>Associated Runs</h2>
+
+
+<table>
+  <tr>
+    <th>Model</th>
+    <th>Start Time</th>
+    <th>Finish Time</th>
+  </tr>
+  <% @input.runs.all(:limit => 100).each do |c| %>
+  <tr>
+    <td><%=h link_to_if c.model, c.model, c.model %></td>
+    <td><%=h c.start_time %></td>
+    <td><%=h c.finish_time %></td>
+    <td><%= link_to "Show", run_path(c) %></td>
+  </tr>
+  <% end %>
+</table>

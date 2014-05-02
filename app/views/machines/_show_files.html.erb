@@ -1,17 +1,16 @@
 <h2>Associated Files</h2>
 
-
 <table>
   <tr>
-    <th>Machine</th>
     <th>File Path</th>
     <th>File Name</th>
+    <th>File Type</th>
   </tr>
-  <% @input.files.all(:limit => 100).each do |c| %>
+  <% @machine.files.all(:limit => 100).each do |c| %>
   <tr>
-    <td><%=h link_to_if c.machine, c.machine, c.machine %></td>
     <td><%=h c.file_path %></td>
     <td><%=h c.file_name %></td>
+    <td><%=h c.container_type %></td>
     <td><%= link_to "Show", dbfile_path(c) %></td>
   </tr>
   <% end %>

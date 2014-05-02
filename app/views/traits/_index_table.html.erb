@@ -7,7 +7,8 @@
 	      <tr role="row">
 <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px"><%= sortable "variables.name", "Trait" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "species.genus", "Species" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 200px"><%= sortable "traits.mean", "Mean" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px"><%= sortable "traits.cultivar",  "Cultivar" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px"><%= sortable "traits.mean", "Mean" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 67px"><%= sortable "traits.n", "N" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 25px"><%= sortable "traits.stat", "Stat" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "traits.statname", "Statname" %></th>
@@ -24,6 +25,7 @@
         <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and trait.id == @search.to_i%>>
           <td class="center"><%= link_to_if trait.variable, trait.variable, trait.variable %></td>
           <td class="center"><%= link_to_if trait.specie, trait.specie, trait.specie %></td>
+		  <td class="center"><%= link_to_if trait.cultivar, trait.cultivar, trait.cultivar %></td>
           <td class="center"><%= trait.mean %></td>
           <td class="center"><%= trait.n %></td>
           <td class="center"><%= trait.stat %></td>
