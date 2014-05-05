@@ -9,3 +9,9 @@ Third run your script ./querymaketables
 The files should be generated in the fire of your script. querymaketables will generate information about each table
 query.c will make a series on comments on each table. You should run query.c first.
 
+=======================================================================================
+For dbtables.cpp:
+In the code, change DB, USER, PASSWORD, HOST to the right values.
+Compile with "g++ dbtables.cpp -lpqxx -lpq" (the pqxx library must be installed on the machine).
+Run with "./a.out"
+The output should be written into the the file defined as OUT_FILE (test.html if not modified). 
