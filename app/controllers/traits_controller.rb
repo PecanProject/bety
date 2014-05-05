@@ -157,6 +157,10 @@ class TraitsController < ApplicationController
         format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::StatementInvalid => e
+    # Constraint violations not handled by Rails in the else clause
+    # are handled here.
+    handle_constraint_violations(e)
   end
 
   # PUT /traits/1
@@ -177,6 +181,10 @@ class TraitsController < ApplicationController
         format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::StatementInvalid => e
+    # Constraint violations not handled by Rails in the else clause
+    # are handled here.
+    handle_constraint_violations(e)
   end
 
   # DELETE /traits/1
@@ -190,6 +198,16 @@ class TraitsController < ApplicationController
       format.xml  { head :ok }
       format.csv  { head :ok }
     end
+  end
+
+  private
+
+  def handle_constraint_violations(e)
+    # Extract the expected "user-friendly" part of the message if it
+    # comes from the restrict_range trigger function:
+    match = e.message.match /The value of mean for trait .*? must be between .*? and .*?\./
+    flash[:error] = match && match[0] || e.message
+    redirect_to :back
   end
 
 end
