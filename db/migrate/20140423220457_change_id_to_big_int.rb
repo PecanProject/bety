@@ -328,7 +328,7 @@ class ChangeIdToBigInt < ActiveRecord::Migration
     change_column :pfts_priors, :prior_id, :integer, :limit => 4
 
     change_column :pfts_species, :pft_id, :integer, :limit => 4
-    change_column :pfts_priors, :specie_id, :integer, :limit => 4
+    change_column :pfts_species, :specie_id, :integer, :limit => 4
 
     change_column :posteriors, :id, :integer, :limit => 4
     change_column :posteriors, :pft_id, :integer, :limit => 4
