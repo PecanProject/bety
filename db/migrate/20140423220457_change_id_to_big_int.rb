@@ -149,7 +149,7 @@ class ChangeIdToBigInt < ActiveRecord::Migration
       execute %{
           CREATE VIEW traitsview AS
                   SELECT
-                          'traits'::text AS result_type,
+                          CAST('traits' AS CHAR(10)) AS result_type,
                           traits.id AS id,
                           traits.citation_id,
                           traits.site_id,
@@ -192,7 +192,7 @@ class ChangeIdToBigInt < ActiveRecord::Migration
       execute %{
           CREATE VIEW yieldsview AS
                   SELECT
-                          'yields'::text AS result_type,
+                          CAST('yields' AS CHAR(10)) AS result_type,
                           yields.id AS id,
                           yields.citation_id,
                           yields.site_id,
@@ -387,7 +387,7 @@ class ChangeIdToBigInt < ActiveRecord::Migration
     execute %{
           CREATE VIEW traitsview AS
                   SELECT
-                          'traits'::text AS result_type,
+                          CAST('traits' AS CHAR(10)) AS result_type,
                           traits.id AS id,
                           traits.citation_id,
                           traits.site_id,
@@ -430,7 +430,7 @@ class ChangeIdToBigInt < ActiveRecord::Migration
       execute %{
           CREATE VIEW yieldsview AS
                   SELECT
-                          'yields'::text AS result_type,
+                          CAST('yields' AS CHAR(10)) AS result_type,
                           yields.id AS id,
                           yields.citation_id,
                           yields.site_id,
