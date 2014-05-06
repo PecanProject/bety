@@ -1360,6 +1360,79 @@ COMMENT ON COLUMN treatments.control IS 'Boolean, indicates if treatment is a co
 
 
 --
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE users (
+    id bigint DEFAULT nextval('users_id_seq'::regclass) NOT NULL,
+    login character varying(40),
+    name character varying(100),
+    email character varying(100),
+    city character varying(255),
+    country character varying(255),
+    area character varying(255),
+    crypted_password character varying(40),
+    salt character varying(40),
+    created_at timestamp(6) without time zone,
+    updated_at timestamp(6) without time zone,
+    remember_token character varying(40),
+    remember_token_expires_at timestamp(6) without time zone,
+    access_level integer,
+    page_access_level integer,
+    apikey character varying(255),
+    state_prov character varying(255),
+    postal_code character varying(255)
+);
+
+
+--
+-- Name: COLUMN users.login; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN users.login IS 'login id';
+
+
+--
+-- Name: COLUMN users.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN users.name IS 'User name';
+
+
+--
+-- Name: COLUMN users.email; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN users.email IS 'email address';
+
+
+--
+-- Name: COLUMN users.access_level; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN users.access_level IS 'data to which user has access';
+
+
+--
+-- Name: COLUMN users.page_access_level; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN users.page_access_level IS 'Determines the extent of data, if any, that user can edit.';
+
+
+--
 -- Name: variables_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1410,10 +1483,10 @@ COMMENT ON COLUMN variables.name IS 'variable name, this is the name used by PEc
 
 
 --
--- Name: traitsview; Type: VIEW; Schema: public; Owner: -
+-- Name: traitsview_private; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW traitsview AS
+CREATE VIEW traitsview_private AS
  SELECT 'traits'::character(10) AS result_type, 
     traits.id, 
     traits.citation_id, 
@@ -1427,6 +1500,7 @@ CREATE VIEW traitsview AS
     species.commonname, 
     species.genus, 
     species.id AS species_id, 
+    traits.cultivar_id, 
     citations.author, 
     citations.year AS citation_year, 
     treatments.name AS treatment, 
@@ -1442,14 +1516,18 @@ CREATE VIEW traitsview AS
     traits.statname, 
     traits.stat, 
     traits.notes, 
-    traits.access_level
-   FROM (((((traits
+    traits.access_level, 
+    traits.checked, 
+    users.login, 
+    users.name, 
+    users.email
+   FROM ((((((traits
    LEFT JOIN sites ON ((traits.site_id = sites.id)))
    LEFT JOIN species ON ((traits.specie_id = species.id)))
    LEFT JOIN citations ON ((traits.citation_id = citations.id)))
    LEFT JOIN treatments ON ((traits.treatment_id = treatments.id)))
    LEFT JOIN variables ON ((traits.variable_id = variables.id)))
-  WHERE (traits.checked > 0);
+   LEFT JOIN users ON ((traits.user_id = users.id)));
 
 
 --
@@ -1590,10 +1668,10 @@ COMMENT ON COLUMN yields.access_level IS 'Level of access required to view data.
 
 
 --
--- Name: yieldsview; Type: VIEW; Schema: public; Owner: -
+-- Name: yieldsview_private; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE VIEW yieldsview AS
+CREATE VIEW yieldsview_private AS
  SELECT 'yields'::character(10) AS result_type, 
     yields.id, 
     yields.citation_id, 
@@ -1607,6 +1685,7 @@ CREATE VIEW yieldsview AS
     species.commonname, 
     species.genus, 
     species.id AS species_id, 
+    yields.cultivar_id, 
     citations.author, 
     citations.year AS citation_year, 
     treatments.name AS treatment, 
@@ -1622,14 +1701,96 @@ CREATE VIEW yieldsview AS
     yields.statname, 
     yields.stat, 
     yields.notes, 
-    yields.access_level
-   FROM (((((yields
+    yields.access_level, 
+    yields.checked, 
+    users.login, 
+    users.name, 
+    users.email
+   FROM ((((((yields
    LEFT JOIN sites ON ((yields.site_id = sites.id)))
    LEFT JOIN species ON ((yields.specie_id = species.id)))
    LEFT JOIN citations ON ((yields.citation_id = citations.id)))
    LEFT JOIN treatments ON ((yields.treatment_id = treatments.id)))
-   LEFT JOIN variables ON ((((variables.name)::text = 'Ayield'::text) AND (variables.id = 63))))
-  WHERE (yields.checked > 0);
+   LEFT JOIN variables ON (((variables.name)::text = 'Ayield'::text)))
+   LEFT JOIN users ON ((yields.user_id = users.id)));
+
+
+--
+-- Name: traits_and_yields_view_private; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW traits_and_yields_view_private AS
+         SELECT traitsview_private.result_type, 
+            traitsview_private.id, 
+            traitsview_private.citation_id, 
+            traitsview_private.site_id, 
+            traitsview_private.treatment_id, 
+            traitsview_private.sitename, 
+            traitsview_private.city, 
+            traitsview_private.lat, 
+            traitsview_private.lon, 
+            traitsview_private.scientificname, 
+            traitsview_private.commonname, 
+            traitsview_private.genus, 
+            traitsview_private.species_id, 
+            traitsview_private.cultivar_id, 
+            traitsview_private.author, 
+            traitsview_private.citation_year, 
+            traitsview_private.treatment, 
+            traitsview_private.date, 
+            traitsview_private.month, 
+            traitsview_private.year, 
+            traitsview_private.dateloc, 
+            traitsview_private.trait, 
+            traitsview_private.trait_description, 
+            traitsview_private.mean, 
+            traitsview_private.units, 
+            traitsview_private.n, 
+            traitsview_private.statname, 
+            traitsview_private.stat, 
+            traitsview_private.notes, 
+            traitsview_private.access_level, 
+            traitsview_private.checked, 
+            traitsview_private.login, 
+            traitsview_private.name, 
+            traitsview_private.email
+           FROM traitsview_private
+UNION ALL 
+         SELECT yieldsview_private.result_type, 
+            yieldsview_private.id, 
+            yieldsview_private.citation_id, 
+            yieldsview_private.site_id, 
+            yieldsview_private.treatment_id, 
+            yieldsview_private.sitename, 
+            yieldsview_private.city, 
+            yieldsview_private.lat, 
+            yieldsview_private.lon, 
+            yieldsview_private.scientificname, 
+            yieldsview_private.commonname, 
+            yieldsview_private.genus, 
+            yieldsview_private.species_id, 
+            yieldsview_private.cultivar_id, 
+            yieldsview_private.author, 
+            yieldsview_private.citation_year, 
+            yieldsview_private.treatment, 
+            yieldsview_private.date, 
+            yieldsview_private.month, 
+            yieldsview_private.year, 
+            yieldsview_private.dateloc, 
+            yieldsview_private.trait, 
+            yieldsview_private.trait_description, 
+            yieldsview_private.mean, 
+            yieldsview_private.units, 
+            yieldsview_private.n, 
+            yieldsview_private.statname, 
+            yieldsview_private.stat, 
+            yieldsview_private.notes, 
+            yieldsview_private.access_level, 
+            yieldsview_private.checked, 
+            yieldsview_private.login, 
+            yieldsview_private.name, 
+            yieldsview_private.email
+           FROM yieldsview_private;
 
 
 --
@@ -1637,140 +1798,38 @@ CREATE VIEW yieldsview AS
 --
 
 CREATE VIEW traits_and_yields_view AS
-         SELECT traitsview.result_type, 
-            traitsview.id, 
-            traitsview.citation_id, 
-            traitsview.site_id, 
-            traitsview.treatment_id, 
-            traitsview.sitename, 
-            traitsview.city, 
-            traitsview.lat, 
-            traitsview.lon, 
-            traitsview.scientificname, 
-            traitsview.commonname, 
-            traitsview.genus, 
-            traitsview.species_id, 
-            traitsview.author, 
-            traitsview.citation_year, 
-            traitsview.treatment, 
-            traitsview.date, 
-            traitsview.month, 
-            traitsview.year, 
-            traitsview.dateloc, 
-            traitsview.trait, 
-            traitsview.trait_description, 
-            traitsview.mean, 
-            traitsview.units, 
-            traitsview.n, 
-            traitsview.statname, 
-            traitsview.stat, 
-            traitsview.notes, 
-            traitsview.access_level
-           FROM traitsview
-UNION ALL 
-         SELECT yieldsview.result_type, 
-            yieldsview.id, 
-            yieldsview.citation_id, 
-            yieldsview.site_id, 
-            yieldsview.treatment_id, 
-            yieldsview.sitename, 
-            yieldsview.city, 
-            yieldsview.lat, 
-            yieldsview.lon, 
-            yieldsview.scientificname, 
-            yieldsview.commonname, 
-            yieldsview.genus, 
-            yieldsview.species_id, 
-            yieldsview.author, 
-            yieldsview.citation_year, 
-            yieldsview.treatment, 
-            yieldsview.date, 
-            yieldsview.month, 
-            yieldsview.year, 
-            yieldsview.dateloc, 
-            yieldsview.trait, 
-            yieldsview.trait_description, 
-            yieldsview.mean, 
-            yieldsview.units, 
-            yieldsview.n, 
-            yieldsview.statname, 
-            yieldsview.stat, 
-            yieldsview.notes, 
-            yieldsview.access_level
-           FROM yieldsview;
-
-
---
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE users_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE users (
-    id bigint DEFAULT nextval('users_id_seq'::regclass) NOT NULL,
-    login character varying(40),
-    name character varying(100),
-    email character varying(100),
-    city character varying(255),
-    country character varying(255),
-    area character varying(255),
-    crypted_password character varying(40),
-    salt character varying(40),
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
-    remember_token character varying(40),
-    remember_token_expires_at timestamp(6) without time zone,
-    access_level integer,
-    page_access_level integer,
-    apikey character varying(255),
-    state_prov character varying(255),
-    postal_code character varying(255)
-);
-
-
---
--- Name: COLUMN users.login; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN users.login IS 'login id';
-
-
---
--- Name: COLUMN users.name; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN users.name IS 'User name';
-
-
---
--- Name: COLUMN users.email; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN users.email IS 'email address';
-
-
---
--- Name: COLUMN users.access_level; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN users.access_level IS 'data to which user has access';
-
-
---
--- Name: COLUMN users.page_access_level; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN users.page_access_level IS 'Determines the extent of data, if any, that user can edit.';
+ SELECT traits_and_yields_view_private.result_type, 
+    traits_and_yields_view_private.id, 
+    traits_and_yields_view_private.citation_id, 
+    traits_and_yields_view_private.site_id, 
+    traits_and_yields_view_private.treatment_id, 
+    traits_and_yields_view_private.sitename, 
+    traits_and_yields_view_private.city, 
+    traits_and_yields_view_private.lat, 
+    traits_and_yields_view_private.lon, 
+    traits_and_yields_view_private.scientificname, 
+    traits_and_yields_view_private.commonname, 
+    traits_and_yields_view_private.genus, 
+    traits_and_yields_view_private.species_id, 
+    traits_and_yields_view_private.cultivar_id, 
+    traits_and_yields_view_private.author, 
+    traits_and_yields_view_private.citation_year, 
+    traits_and_yields_view_private.treatment, 
+    traits_and_yields_view_private.date, 
+    traits_and_yields_view_private.month, 
+    traits_and_yields_view_private.year, 
+    traits_and_yields_view_private.dateloc, 
+    traits_and_yields_view_private.trait, 
+    traits_and_yields_view_private.trait_description, 
+    traits_and_yields_view_private.mean, 
+    traits_and_yields_view_private.units, 
+    traits_and_yields_view_private.n, 
+    traits_and_yields_view_private.statname, 
+    traits_and_yields_view_private.stat, 
+    traits_and_yields_view_private.notes, 
+    traits_and_yields_view_private.access_level
+   FROM traits_and_yields_view_private
+  WHERE (traits_and_yields_view_private.checked > 0);
 
 
 --
@@ -2517,3 +2576,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140418005637');
 INSERT INTO schema_migrations (version) VALUES ('20140422155957');
 
 INSERT INTO schema_migrations (version) VALUES ('20140423220457');
+
+INSERT INTO schema_migrations (version) VALUES ('20140506210037');
