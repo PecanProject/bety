@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140506210037) do
+ActiveRecord::Schema.define(:version => 20140515064550) do
 
   create_table "citations", :force => true do |t|
     t.string    "author"
@@ -81,6 +81,15 @@ ActiveRecord::Schema.define(:version => 20140506210037) do
   end
 
   add_index "cultivars", ["specie_id"], :name => "index_cultivars_on_specie_id"
+
+  create_table "current_posteriors", :force => true do |t|
+    t.integer  "pft_id"
+    t.integer  "variable_id"
+    t.integer  "posteriors_samples_id"
+    t.integer  "project_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "dbfiles", :force => true do |t|
     t.string    "file_name"
@@ -276,6 +285,7 @@ ActiveRecord::Schema.define(:version => 20140506210037) do
     t.timestamp "updated_at", :limit => 6
     t.string    "name"
     t.integer   "parent_id",  :limit => 8
+    t.string    "pft_type",                :default => "plant"
   end
 
   create_table "pfts_priors", :id => false, :force => true do |t|
@@ -296,6 +306,15 @@ ActiveRecord::Schema.define(:version => 20140506210037) do
 
   add_index "pfts_species", ["pft_id", "specie_id"], :name => "index_pfts_species_on_pft_id_and_specie_id", :unique => true
 
+  create_table "posterior_samples", :force => true do |t|
+    t.integer  "posterior_id"
+    t.integer  "variable_id"
+    t.integer  "pft_id"
+    t.integer  "parent_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "posteriors", :force => true do |t|
     t.integer   "pft_id",     :limit => 8
     t.timestamp "created_at", :limit => 6
@@ -304,15 +323,6 @@ ActiveRecord::Schema.define(:version => 20140506210037) do
   end
 
   add_index "posteriors", ["pft_id"], :name => "index_posteriors_on_pft_id"
-
-  create_table "posteriors_runs", :id => false, :force => true do |t|
-    t.integer   "posterior_id", :limit => 8
-    t.integer   "run_id",       :limit => 8
-    t.timestamp "created_at",   :limit => 6
-    t.timestamp "updated_at",   :limit => 6
-  end
-
-  add_index "posteriors_runs", ["posterior_id", "run_id"], :name => "index_posteriors_runs_on_posterior_id_and_run_id", :unique => true
 
   create_table "priors", :force => true do |t|
     t.integer   "citation_id", :limit => 8
@@ -330,6 +340,15 @@ ActiveRecord::Schema.define(:version => 20140506210037) do
 
   add_index "priors", ["citation_id"], :name => "index_priors_on_citation_id"
   add_index "priors", ["variable_id"], :name => "index_priors_on_variable_id"
+
+  create_table "projects", :force => true do |t|
+    t.string   "name"
+    t.string   "outdir"
+    t.integer  "machine_id"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "runs", :force => true do |t|
     t.integer   "model_id",       :limit => 8
