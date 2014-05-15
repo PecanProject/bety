@@ -88,6 +88,10 @@ class CovariatesController < ApplicationController
         format.json  { render :json => @covariate.errors, :status => :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::StatementInvalid => e
+    # Constraint violations not handled by Rails in the else clause
+    # are handled here.
+    handle_constraint_violations(e)
   end
 
   # PUT /covariates/1
@@ -109,6 +113,10 @@ class CovariatesController < ApplicationController
         format.json  { render :json => @covariate.errors, :status => :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::StatementInvalid => e
+    # Constraint violations not handled by Rails in the else clause
+    # are handled here.
+    handle_constraint_violations(e)
   end
 
   # DELETE /covariates/1
@@ -123,6 +131,17 @@ class CovariatesController < ApplicationController
       format.csv  { head :ok }
       format.json  { head :ok }
     end
+  end
+
+  private
+
+  def handle_constraint_violations(e)
+    # Extract the expected "user-friendly" part of the message if it
+    # comes from the restrict_range trigger function:
+    logger.info(e)
+    match = e.message.match /The value of level for covariate .*? must be between .*? and .*?\./
+    flash[:error] = match && match[0] || e.message
+    redirect_to :back
   end
 
 end
