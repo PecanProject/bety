@@ -1,6 +1,15 @@
 BetyRails3::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  config.active_record.schema_format = :sql
+
+  # Configure static asset server for tests with Cache-Control for performance
+  config.serve_static_assets = true
+  config.static_cache_control = "public, max-age=3600"
+
+  config.action_controller.relative_url_root = ""
+  ActionController::Base.config.relative_url_root = ''
+
   # In the development environment your application's code is reloaded on
   # every request.  This slows down response time but is perfect for development
   # since you don't have to restart the webserver when you make code changes.
