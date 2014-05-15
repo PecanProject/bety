@@ -21,9 +21,9 @@ gem "rspec-rails"
 gem "capybara"
 
 # MySQL, comment out PostgreSQL section
-gem "mysql2"
-gem "ruby-mysql" # for data upload scripts in local
-gem "activerecord-mysql2-adapter"
+#gem "mysql2"
+#gem "ruby-mysql" # for data upload scripts in local
+#gem "activerecord-mysql2-adapter"
 
 # Postgresql, comment out MySQL section
 gem "pg"
