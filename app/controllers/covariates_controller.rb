@@ -133,15 +133,4 @@ class CovariatesController < ApplicationController
     end
   end
 
-  private
-
-  def handle_constraint_violations(e)
-    # Extract the expected "user-friendly" part of the message if it
-    # comes from the restrict_range trigger function:
-    logger.info(e)
-    match = e.message.match /The value of level for covariate .*? must be between .*? and .*?\./
-    flash[:error] = match && match[0] || e.message
-    redirect_to :back
-  end
-
 end
