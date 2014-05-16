@@ -170,7 +170,7 @@ $$ LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS prevent_conflicting_range_changes ON variables;
 CREATE TRIGGER prevent_conflicting_range_changes
-  BEFORE INSERT OR UPDATE ON variables 
+  BEFORE UPDATE ON variables 
   FOR EACH ROW 
 EXECUTE PROCEDURE prevent_conflicting_range_changes();
 
