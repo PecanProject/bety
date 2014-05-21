@@ -1,0 +1,33 @@
+// dot 2.26.3 on Linux 3.8.0-39-generic
+// SchemaSpy rev Unknown
+digraph "sessions" {
+  graph [
+    rankdir="RL"
+    bgcolor="#ffffff"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Helvetica"
+    fontsize="11"
+  ];
+  node [
+    fontname="Helvetica"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "sessions" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#FFFFFF">
+      <TR><TD COLSPAN="4" BGCOLOR="#72ECA1" ALIGN="CENTER">sessions</TD></TR>
+      <TR><TD PORT="id" COLSPAN="4" BGCOLOR="#bcfdad !important" ALIGN="LEFT">id</TD></TR>
+      <TR><TD PORT="session_id" COLSPAN="4" BGCOLOR="#c4fdda !important" ALIGN="LEFT">session_id</TD></TR>
+      <TR><TD PORT="data" COLSPAN="4" ALIGN="LEFT">data</TD></TR>
+      <TR><TD PORT="created_at" COLSPAN="4" ALIGN="LEFT">created_at</TD></TR>
+      <TR><TD PORT="updated_at" COLSPAN="4" BGCOLOR="#c4fdda !important" ALIGN="LEFT">updated_at</TD></TR>
+    </TABLE>>
+    URL="tables/sessions.html"
+    tooltip="sessions"
+  ];
+}

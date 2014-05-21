@@ -1,0 +1,32 @@
+// dot 2.26.3 on Linux 3.8.0-39-generic
+// SchemaSpy rev Unknown
+digraph "citations_sites" {
+  graph [
+    rankdir="RL"
+    bgcolor="#ffffff"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Helvetica"
+    fontsize="11"
+  ];
+  node [
+    fontname="Helvetica"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "citations_sites" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#FFFFFF">
+      <TR><TD COLSPAN="4" BGCOLOR="#72ECA1" ALIGN="CENTER">citations_sites</TD></TR>
+      <TR><TD PORT="citation_id" COLSPAN="4" BGCOLOR="#c4fdda !important" ALIGN="LEFT">citation_id</TD></TR>
+      <TR><TD PORT="site_id" COLSPAN="4" BGCOLOR="#c4fdda !important" ALIGN="LEFT">site_id</TD></TR>
+      <TR><TD PORT="created_at" COLSPAN="4" ALIGN="LEFT">created_at</TD></TR>
+      <TR><TD PORT="updated_at" COLSPAN="4" ALIGN="LEFT">updated_at</TD></TR>
+    </TABLE>>
+    URL="tables/citations_sites.html"
+    tooltip="citations_sites"
+  ];
+}

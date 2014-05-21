@@ -1,0 +1,35 @@
+// dot 2.26.3 on Linux 3.8.0-39-generic
+// SchemaSpy rev Unknown
+digraph "counties" {
+  graph [
+    rankdir="RL"
+    bgcolor="#ffffff"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Helvetica"
+    fontsize="11"
+  ];
+  node [
+    fontname="Helvetica"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "counties" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#FFFFFF">
+      <TR><TD COLSPAN="4" BGCOLOR="#72ECA1" ALIGN="CENTER">counties</TD></TR>
+      <TR><TD PORT="id" COLSPAN="4" BGCOLOR="#bcfdad !important" ALIGN="LEFT">id</TD></TR>
+      <TR><TD PORT="name" COLSPAN="4" ALIGN="LEFT">name</TD></TR>
+      <TR><TD PORT="created_at" COLSPAN="4" ALIGN="LEFT">created_at</TD></TR>
+      <TR><TD PORT="updated_at" COLSPAN="4" ALIGN="LEFT">updated_at</TD></TR>
+      <TR><TD PORT="state" COLSPAN="4" ALIGN="LEFT">state</TD></TR>
+      <TR><TD PORT="state_fips" COLSPAN="4" ALIGN="LEFT">state_fips</TD></TR>
+      <TR><TD PORT="county_fips" COLSPAN="4" ALIGN="LEFT">county_fips</TD></TR>
+    </TABLE>>
+    URL="tables/counties.html"
+    tooltip="counties"
+  ];
+}
