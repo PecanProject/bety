@@ -24,8 +24,6 @@ GEM
       activesupport (= 3.0.18)
       arel (~> 2.0.10)
       tzinfo (~> 0.3.23)
-    activerecord-mysql2-adapter (0.0.3)
-      mysql2
     activerecord-postgresql-adapter (0.0.1)
       pg
     activeresource (3.0.18)
@@ -60,7 +58,6 @@ GEM
     mime-types (1.25)
     mini_portile (0.5.2)
     multi_json (1.3.6)
-    mysql2 (0.3.14)
     narray (0.6.0.4)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
@@ -107,7 +104,6 @@ GEM
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
     ruby-graphviz (1.0.8)
-    ruby-mysql (2.9.11)
     safe_attributes (1.0.10)
       activerecord (>= 3.0.0)
     seer (0.10.0)
@@ -129,7 +125,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord-mysql2-adapter
   activerecord-postgresql-adapter
   bootstrap-will_paginate
   capybara
@@ -139,7 +134,6 @@ DEPENDENCIES
   fastercsv (= 1.5.5)
   json (= 1.5.5)
   multi_json (= 1.3.6)
-  mysql2
   narray (= 0.6.0.4)
   nokogiri
   passenger
@@ -150,7 +144,6 @@ DEPENDENCIES
   recaptcha (= 0.3.4)
   rspec-rails
   ruby-graphviz (= 1.0.8)
-  ruby-mysql
   safe_attributes
   seer (= 0.10.0)
   sqlite3 (= 1.3.3)
