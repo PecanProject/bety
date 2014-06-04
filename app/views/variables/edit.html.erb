@@ -7,23 +7,53 @@
 
       <%= form_for(@variable) do |f| %>
         <%= f.error_messages %>
-
-        <div class="row">
+       <div class="row">
           <div class="eight columns alpha">
-            <%= f.label :name %>
-            <%= f.text_field :name, :class => "input-full" %>
-            <br />
-            <%= f.label :description %>
-            <%= f.text_field :description, :class => "input-full" %>
-            <br />
-            <%= f.label :units %>
-            <%= f.text_field :units, :class => "input-full" %>
+            <div class="four columns alpha">
+              <%= f.label :name %>
+              <%= f.text_field :name, :class => "input-full" %>
+            </div>
+            <% if current_user.page_access_level==1 %>
+            <div class="four columns alpha">
+              <%= f.label :standard_name ,"CF Standard Name"%>
+              <%= f.text_field :standard_name, :class => "input-full" %>
+            </div>
+            <% end %>
+            <div class="four columns alpha">
+              <%= f.label :units %>
+              <%= f.text_field :units, :class => "input-full" %>
+            </div>
+            <% if current_user.page_access_level==1 %>
+            <div class="four columns alpha">
+              <%= f.label :standard_units,"CF Standard Units" %>
+              <%= f.text_field :standard_units, :class => "input-full" %>
+            </div>
+            <% end %>
+            <div class="four columns alpha">
+              <%= f.label :description %>
+              <%= f.text_field :description, :class => "input-full" %>
+            </div>
+            <% if current_user.page_access_level==1 %>
+            <div class="four columns alpha">
+              <%= f.label :label %>
+              <%= f.text_field :label, :class => "input-full" %>
+            </div>
+            <div class="four columns alpha">
+              <%= f.label :type %>
+              <%= f.select :type, ["plant trait","ecosystem","covariate","model","model-ED2","model-BioCro","model-Sipnet"] %>
+            </div>
+            <% end %>
           </div>
-          <div class="eight columns omega">
+          <div class="eight columns alpha">
             <%= f.label :notes %>
-            <%= f.text_area :notes, :rows => 10, :class => "input-full" %>
+            <%= f.text_area :notes, :rows => 5, :class => "input-full" %>
           </div>
+          <% if current_user.page_access_level==1 %>
+          <%= link_to "CF Guidelines", "/guidelines.html",:title => "guidelines for CF standard names",:target => "_blank"%>
+          <% end %>
         </div>
+
+
 
         <div class="form-actions">
           <div class="button-group">
@@ -38,9 +68,9 @@
 						<%= f.submit 'Update', :class => "button button-primary" %>
 					</div>
 				</div>
-          
+
       <% end %>
-      
+
     </div>
   </div>
 </div>

@@ -8,6 +8,12 @@
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "variables.description", "Description" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px"><%= sortable "variables.units", "Units" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 67px"><%= sortable "variables.notes", "Notes" %></th>
+<% if current_user.page_access_level ==1 %>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px;" ><%= sortable "variables.standard_name", "Standard Name" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "variables.label", "Label" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px"><%= sortable "variables.standard_units", "Standard Units" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "variables.type", "Type" %></th>
+<% end %>
 <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 110px">Actions</th>
       </tr>
     </thead>
@@ -19,6 +25,13 @@
           <td class="center"><%= variable.description %></td>
           <td class="center"><%= variable.units %></td>
           <td class="center"><%= variable.notes %></td>
+          <% if current_user.page_access_level ==1 %>
+          <td class="center"><%= variable.standard_name %></td>
+          <td class="center"><%= variable.label %></td>
+          <td class="center"><%= variable.standard_units %></td>
+          <td class="center"><%= variable.type %></td>
+          <% end %>
+
 					<td class="center ">
 					  <!-- SHOW -->
 					  <%= link_to variable, :class => "button button-small", :alt => "show" do %>
