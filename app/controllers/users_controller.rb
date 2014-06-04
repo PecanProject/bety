@@ -47,36 +47,11 @@ class UsersController < ApplicationController
     page_access_level = ["", "Administrator", "Manager", "Creator", "Viewer"]
     access_level = ["", "Restricted", "Internal EBI & Collaborators", "External Researchers", "Public"]
 
-    if params[:user][:page_access_level].to_i != 4 or params[:user][:access_level].to_i != 3
-      xml = "<issue>"
-      xml += "<project name='BETY-db' id='1'/>"
-      xml += "<tracker name='Bug' id='1'/>"
-      xml += "<status name='New' id='1'/>"
-      xml += "<priority name='Normal' id='4'/>"
-      xml += "<author name='BETY Bug Report' id='32'/>"
-      xml += "<assigned_to id='3'/>"
-      xml += "<subject>Access request for #{@user.name.encode("ascii", invalid: :replace, undef: :replace)} (#{@user.login})</subject>"
-      xml += "<description>https://www.betydb.org/users/#{@user.id}/edit\n"
-      xml += "\n"
-      xml += "#{@user.name.encode("ascii", invalid: :replace, undef: :replace)} (#{@user.login}) has requested a non-default access level.\n"
-      xml += "Page_access_level: #{page_access_level[params[:user][:page_access_level].to_i]}\n"
-      xml += "Access_level: #{access_level[params[:user][:access_level].to_i]}\n"
-      xml += "\n"
-      xml += "Reason: #{params[:access_level_reason]}\n"
-      xml += "</description>"
-      xml += "</issue>'"
-
-      uri = URI.parse("https://ebi-forecast.igb.illinois.edu/redmine/projects/bety-db/issues.xml")
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-
-      request = Net::HTTP::Post.new(uri.request_uri)
-      request.basic_auth "betybug", "ch#pRUr9"
-      request.body = xml
-      request.content_type = "application/xml"
-      response = http.request(request)
-    end
     if success && @user.errors.empty?
+      if params[:user][:page_access_level].to_i < 4 or params[:user][:access_level].to_i < 3
+        ContactMailer::admin_approval(params[:user]).deliver
+      end
+      ContactMailer::signup_email(@user).deliver
       # Protects against session fixation attacks, causes request forgery
       # protection if visitor resubmits an earlier form using back
       # button. Uncomment if you understand the tradeoffs.
