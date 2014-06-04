@@ -23,6 +23,16 @@
   <%= link_to_if @model.parent, @model.parent, @model.parent %>
 </p>
 
+<div class="form-actions">
+        <div class="button-group">
+          <%= link_to( models_path ) do %>
+            <button class="button"><i class="icon-arrow-left"></i> Go Back</button>
+          <% end %>
+          <%= link_to( edit_model_path(@model) ) do %>
+            <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>  
+          <% end %>
+          
+        </div>
+      </div>
 
-<%= link_to 'Edit', edit_model_path(@model) %> |
-<%= link_to 'Back', models_path %>
+
