@@ -83,3 +83,18 @@ feature 'Attempting to create a new management' do
   end
 end
 
+feature 'Searching managements' do
+  before :each do
+    login_test_user
+  end
+
+  context "When searching for a management inside the management listings" do
+    it 'should display the search results page' do
+      begin
+        visit '/managements?utf8=%E2%9C%93%DataTables_Table_0_length=25&search=use&direction=&sort='
+      rescue
+        fail 'searching caused error'
+      end
+    end
+  end
+end
