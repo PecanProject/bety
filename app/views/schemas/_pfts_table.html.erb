@@ -107,4 +107,21 @@
  </tr>
 </table>
 </div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=posteriors_table" title="posteriors" alt="" coords="283,5,389,153">
+<area shape="rect" id="node3" href="schemas?partial=pfts_table" title="pfts" alt="" coords="5,25,237,178">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/pfts.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=posteriors_table" title="posteriors" alt="" coords="283,34,389,182">
+<area shape="rect" id="node3" href="schemas?partial=formats_table" title="formats" alt="" coords="81,174,161,231">
+<area shape="rect" id="node5" href="schemas?partial=pfts_table" title="pfts" alt="" coords="5,5,237,158">
+<area shape="rect" id="node6" href="schemas?partial=posteriors_runs_table" title="posteriors_runs" alt="" coords="436,33,569,90">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/pfts.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
 </div>

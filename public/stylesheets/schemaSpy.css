@@ -119,14 +119,6 @@ table {
   padding: 2px;
 }
 
-a:link {
-  color: #489148;
-}
-
-a:visited {
-  color: #183118;
-}
-
 .sortedByColumn {
   background-color: #ffffff;
 }

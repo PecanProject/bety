@@ -144,4 +144,26 @@ models_table')%> </td>
  </tr>
 </table>
 </div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=models_table" title="models" alt="" coords="26,301,255,523">
+<area shape="rect" id="node3" href="schemas?partial=runs_table" title="runs" alt="" coords="302,5,425,403">
+<area shape="rect" id="node5" href="schemas?partial=workflows_table" title="workflows" alt="" coords="302,419,425,749">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/models.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=ensembles_table" title="ensembles" alt="" coords="471,289,573,346">
+<area shape="rect" id="node3" href="schemas?partial=workflows_table" title="workflows" alt="" coords="302,205,425,534">
+<area shape="rect" id="node9" href="schemas?partial=models_table" title="models" alt="" coords="26,331,255,552">
+<area shape="rect" id="node16" href="schemas?partial=sites_table" title="sites" alt="" coords="105,201,177,258">
+<area shape="rect" id="node4" href="schemas?partial=inputs_runs_table" title="inputs_runs" alt="" coords="802,5,909,62">
+<area shape="rect" id="node6" href="schemas?partial=runs_table" title="runs" alt="" coords="619,80,742,477">
+<area shape="rect" id="node7" href="schemas?partial=likelihoods_table" title="likelihoods" alt="" coords="807,78,903,135">
+<area shape="rect" id="node11" href="schemas?partial=posteriors_runs_table" title="posteriors_runs" alt="" coords="789,151,922,209">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/models.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
 </div>
