@@ -1,0 +1,321 @@
+<div class='content' style='clear:both;'>
+<div class='container'>
+<table width='100%' border='0' cellpadding='0'>
+ <tr>
+  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>yields</span></span></td>
+ </tr>
+</table>
+<div>
+<span class='legend'>Legend:</span>
+<span class='legend primaryKey'>Primary key columns</span>
+<span class='legend indexedColumn'>Indexed columns</span>
+</div>
+<div class='sixteen colums'>
+<a name='columns'></a>
+<table id='columns' class='dataTable' border='1' rules='groups'>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup class='fkey'>
+<colgroup class='comment'>
+<thead align='left'>
+<tr>
+  <th>Column</th>
+  <th>Type</th>
+  <th>Size</th>
+  <th title='Are nulls allowed?'>Nulls</th>
+  <th title='Is column automatically updated?'>Auto</th>
+  <th title='Default value'>Default</th>
+  <th class='fkey' title='Columns in tables that are referenced by this column'><span class='notSortedByColumn fkey'>References</span></th>
+  <th title='Comments' class='comment'><span class='notSortedByColumn'>Comments</span></th>
+</tr>
+</thead>
+<tbody valign='top'>
+<tr>
+ <td class='primaryKey' title='Primary Key'>id</td>
+ <td class='detail'>serial</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='right'>nextval('yields_id_seq'::regclass)</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='indexedColumn' title='Indexed'>citation_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'citations.id',schemas_path(:partial => '
+citations_table')%> </td>
+ <td class='comment detail'>Citation in which data originally reported.</td>
+</tr>
+<tr>
+ <td class='indexedColumn' title='Indexed'>site_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'>Site at which crop was harvested.</td>
+</tr>
+<tr>
+ <td class='indexedColumn' title='Indexed'>specie_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'species.id',schemas_path(:partial => '
+species_table')%> </td>
+ <td class='comment detail'>Species for which yield was measured.</td>
+</tr>
+<tr>
+ <td class='indexedColumn' title='Indexed'>treatment_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'treatments.id',schemas_path(:partial => '
+treatments_table')%> </td>
+ <td class='comment detail'>Experimental treatment identification. Required, can indicate observational study.</td>
+</tr>
+<tr>
+ <td class='indexedColumn' title='Indexed'>cultivar_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'>Cultivar information, if any.</td>
+</tr>
+<tr>
+ <td class='detail'>date</td>
+ <td class='detail'>date</td>
+ <td class='detail' align='right'>13</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'>Date on which crop was harvested.</td>
+</tr>
+<tr>
+ <td class='detail'>dateloc</td>
+ <td class='detail'>numeric</td>
+ <td class='detail' align='right'>4,2</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'>Level of confidence in harvest date. See documentation.</td>
+</tr>
+<tr>
+ <td class='detail'>statname</td>
+ <td class='detail'>varchar</td>
+ <td class='detail' align='right'>255</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'>Name of reported statistic.</td>
+</tr>
+<tr>
+ <td class='detail'>stat</td>
+ <td class='detail'>numeric</td>
+ <td class='detail' align='right'>16,4</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'>Value of reported statistic.</td>
+</tr>
+<tr>
+ <td class='detail'>mean</td>
+ <td class='detail'>numeric</td>
+ <td class='detail' align='right'>16,4</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'>Mean yield reported.</td>
+</tr>
+<tr>
+ <td class='detail'>n</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'>Number of replicates used to estimate mean and statistical summary.</td>
+</tr>
+<tr>
+ <td class='detail'>notes</td>
+ <td class='detail'>text</td>
+ <td class='detail' align='right'>2147483647</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>created_at</td>
+ <td class='detail'>timestamp</td>
+ <td class='detail' align='right'>29,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>updated_at</td>
+ <td class='detail'>timestamp</td>
+ <td class='detail' align='right'>29,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='indexedColumn' title='Indexed'>user_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'users.id',schemas_path(:partial => '
+users_table')%> </td>
+ <td class='comment detail'>ID of user who entered data.</td>
+</tr>
+<tr>
+ <td class='detail'>checked</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'>accepts values [-1, 0, 1]. 0 is default, and means that data have not been checked. 1 indicates that the data have been checked and are correct, -1 indicates that data have been checked and found to be incorrect or suspicious, e.g. outside of the acceptab</td>
+</tr>
+<tr>
+ <td class='detail'>access_level</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'>Level of access required to view data.</td>
+</tr>
+<tr>
+ <td class='indexedColumn' title='Indexed'>method_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'methods.id',schemas_path(:partial => '
+methods_table')%> </td>
+ <td class='comment detail'></td>
+</tr>
+</table>
+</div>
+<div class='indent'>
+<b>Indexes:</b>
+<table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
+<thead>
+ <tr>
+  <th>Column(s)</th>
+  <th>Type</th>
+  <th>Sort</th>
+  <th class='constraint' style='text-align:left;'>Constraint Name</th>
+ </tr>
+</thead>
+<tbody>
+ <tr>
+  <td class='primaryKey'>id</td>
+  <td class='detail'>Primary key</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>yields_pkey</td>
+ </tr>
+ <tr>
+  <td class='indexedColumn'>citation_id</td>
+  <td class='detail'>Performance</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>index_yields_on_citation_id</td>
+ </tr>
+ <tr>
+  <td class='indexedColumn'>cultivar_id</td>
+  <td class='detail'>Performance</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>index_yields_on_cultivar_id</td>
+ </tr>
+ <tr>
+  <td class='indexedColumn'>method_id</td>
+  <td class='detail'>Performance</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>index_yields_on_method_id</td>
+ </tr>
+ <tr>
+  <td class='indexedColumn'>site_id</td>
+  <td class='detail'>Performance</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>index_yields_on_site_id</td>
+ </tr>
+ <tr>
+  <td class='indexedColumn'>specie_id</td>
+  <td class='detail'>Performance</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>index_yields_on_specie_id</td>
+ </tr>
+ <tr>
+  <td class='indexedColumn'>treatment_id</td>
+  <td class='detail'>Performance</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>index_yields_on_treatment_id</td>
+ </tr>
+ <tr>
+  <td class='indexedColumn'>user_id</td>
+  <td class='detail'>Performance</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>index_yields_on_user_id</td>
+ </tr>
+</table>
+</div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="333,5,440,334">
+<area shape="rect" id="node3" href="schemas?partial=users_table" title="users" alt="" coords="7,1428,220,1871">
+<area shape="rect" id="node4" href="schemas?partial=yields_table" title="yields" alt="" coords="552,2230,792,2701">
+<area shape="rect" id="node7" href="schemas?partial=methods_table" title="methods" alt="" coords="333,2643,440,2813">
+<area shape="rect" id="node9" href="schemas?partial=species_table" title="species" alt="" coords="267,351,507,2380">
+<area shape="rect" id="node11" href="schemas?partial=treatments_table" title="treatments" alt="" coords="333,2397,440,2590">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/yields.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="333,78,440,407">
+<area shape="rect" id="node3" href="schemas?partial=users_table" title="users" alt="" coords="7,180,220,623">
+<area shape="rect" id="node4" href="schemas?partial=dbfiles_table" title="dbfiles" alt="" coords="349,5,424,62">
+<area shape="rect" id="node7" href="schemas?partial=priors_table" title="priors" alt="" coords="636,77,708,134">
+<area shape="rect" id="node9" href="schemas?partial=yields_table" title="yields" alt="" coords="552,2303,792,2774">
+<area shape="rect" id="node12" href="schemas?partial=methods_table" title="methods" alt="" coords="333,2716,440,2887">
+<area shape="rect" id="node14" href="schemas?partial=species_table" title="species" alt="" coords="267,424,507,2453">
+<area shape="rect" id="node16" href="schemas?partial=treatments_table" title="treatments" alt="" coords="333,2470,440,2663">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/yields.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
+</div>
