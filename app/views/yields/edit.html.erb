@@ -75,6 +75,13 @@
           </div>
         </div>
 
+        <div class="row">
+          <div class="four columns alpha">
+            <label>Record Creator</label>
+            <%= user_for_view(@yield.user) %>
+          </div>
+        </div>
+
         <div class="form-actions">
           <div class="button-group">
             <%= link_to( @yield ) do %>
