@@ -154,8 +154,8 @@ class SitesController < ApplicationController
     respond_to do |format|
       if @site.update_attributes(params[:site])
         @site.user = current_user
-	@site.save
-	flash[:notice] = 'Site was successfully updated.'
+        @site.save
+        flash[:notice] = 'Site was successfully updated.'
         format.html { redirect_to(:action => :edit) }
         format.xml  { head :ok }
         format.csv  { head :ok }
