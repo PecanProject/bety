@@ -1,0 +1,126 @@
+<div class='content' style='clear:both;'>
+<div class='container'>
+<table width='100%' border='0' cellpadding='0'>
+ <tr>
+  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>posteriors_runs</span></span></td>
+ </tr>
+</table>
+<div>
+<span class='legend'>Legend:</span>
+<span class='legend primaryKey'>Primary key columns</span>
+<span class='legend indexedColumn'>Indexed columns</span>
+</div>
+<div class='sixteen colums'>
+<a name='columns'></a>
+<table id='columns' class='dataTable' border='1' rules='groups'>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup class='fkey'>
+<colgroup class='comment'>
+<thead align='left'>
+<tr>
+  <th>Column</th>
+  <th>Type</th>
+  <th>Size</th>
+  <th title='Are nulls allowed?'>Nulls</th>
+  <th title='Is column automatically updated?'>Auto</th>
+  <th title='Default value'>Default</th>
+  <th class='fkey' title='Columns in tables that are referenced by this column'><span class='notSortedByColumn fkey'>References</span></th>
+  <th title='Comments' class='comment'><span class='notSortedByColumn'>Comments</span></th>
+</tr>
+</thead>
+<tbody valign='top'>
+<tr>
+ <td class='indexedColumn' title='Indexed'>posterior_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'posteriors.id',schemas_path(:partial => '
+posteriors_table')%> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='indexedColumn' title='Indexed'>run_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'runs.id',schemas_path(:partial => '
+runs_table')%> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>created_at</td>
+ <td class='detail'>timestamp</td>
+ <td class='detail' align='right'>29,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>updated_at</td>
+ <td class='detail'>timestamp</td>
+ <td class='detail' align='right'>29,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+</table>
+</div>
+<script>jQuery('.comment').hide()</script>
+<div class='indent'>
+<b>Indexes:</b>
+<table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
+<thead>
+ <tr>
+  <th>Column(s)</th>
+  <th>Type</th>
+  <th>Sort</th>
+  <th class='constraint' style='text-align:left;'>Constraint Name</th>
+ </tr>
+</thead>
+<tbody>
+ <tr>
+  <td class='indexedColumn'>posterior_id + run_id</td>
+  <td class='detail'>Must be unique</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>index_posteriors_runs_on_posterior_id_and_run_id</td>
+ </tr>
+</table>
+</div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=posteriors_runs_table" title="posteriors_runs" alt="" coords="176,73,397,204">
+<area shape="rect" id="node3" href="schemas?partial=posteriors_table" title="posteriors" alt="" coords="15,5,121,153">
+<area shape="rect" id="node5" href="schemas?partial=runs_table" title="runs" alt="" coords="7,169,129,567">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/posteriors_runs.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=inputs_runs_table" title="inputs_runs" alt="" coords="381,78,488,135">
+<area shape="rect" id="node3" href="schemas?partial=runs_table" title="runs" alt="" coords="155,43,277,440">
+<area shape="rect" id="node15" href="schemas?partial=ensembles_table" title="ensembles" alt="" coords="7,337,108,394">
+<area shape="rect" id="node17" href="schemas?partial=models_table" title="models" alt="" coords="17,38,97,95">
+<area shape="rect" id="node19" href="schemas?partial=sites_table" title="sites" alt="" coords="21,111,93,169">
+<area shape="rect" id="node4" href="schemas?partial=likelihoods_table" title="likelihoods" alt="" coords="387,5,483,62">
+<area shape="rect" id="node6" href="schemas?partial=posteriors_table" title="posteriors" alt="" coords="163,457,269,605">
+<area shape="rect" id="node8" href="schemas?partial=formats_table" title="formats" alt="" coords="17,549,97,606">
+<area shape="rect" id="node10" href="schemas?partial=pfts_table" title="pfts" alt="" coords="21,475,93,533">
+<area shape="rect" id="node11" href="schemas?partial=posteriors_runs_table" title="posteriors_runs" alt="" coords="324,285,545,416">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/posteriors_runs.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
+</div>
