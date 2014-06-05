@@ -7,21 +7,44 @@
 
       <%= form_for(@variable) do |f| %>
         <%= f.error_messages %>
-
-        <div class="row">
-          <div class="eight columns alpha">
+       
+          <div class="eight columns omega">         
             <%= f.label :name %>
-            <%= f.text_field :name, :class => "input-full" %>
-            <br />
-            <%= f.label :description %>
-            <%= f.text_field :description, :class => "input-full" %>
-            <br />
-            <%= f.label :units %>
-            <%= f.text_field :units, :class => "input-full" %>
+            <%= f.text_field :name, :class => "input-half" %>
           </div>
           <div class="eight columns omega">
+            <%= f.label :standard_name %>
+            <%= f.text_field :standard_name, :class => "input-half" %>
+          </div>
+             
+          <div class="eight columns omega">  
+            <%= f.label :units %>
+            <%= f.text_field :units, :class => "input-half" %>
+          </div>
+          <div class="eight columns omega">  
+            <%= f.label :standard_units %>
+            <%= f.text_field :standard_units, :class => "input-half" %>
+          </div>
+              
+          <div class="eight columns omega">  
+            <%= f.label :description %>
+            <%= f.text_field :description, :class => "input-half" %>
+          </div>
+          <div class="eight columns omega">  
+            <%= f.label :label %>
+            <%= f.text_field :label, :class => "input-half" %>
+          </div>
+       
+          <div class="eight columns omega">  
+            <%= f.label :type %>
+            <%= f.select :type, ["plant trait","ecosystem","covariate","model","model-ED2","model-BioCro","model-Sipnet"] %>
+          </div>
+        
+        <br>
+        <div class="row">
+          <div class="sixteen columns omega">
             <%= f.label :notes %>
-            <%= f.text_area :notes, :rows => 10, :class => "input-full" %>
+            <%= f.text_area :notes, :rows => 5, :class => "input-full" %>
           </div>
         </div>
 
