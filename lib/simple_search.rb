@@ -120,7 +120,7 @@ module SimpleSearch
     case type
     when :boolean
       search[/[10tfTF]/] == search ? "#{column} = :search" : nil
-    when :datetime
+    when :datetime, :date
       # Check to see if valid date in string, most of line is error catching.
       # If valid wrap in date range +- 1 day
        date_search == [nil, nil] ? nil : "(#{column} > :date_start_search and #{column} < :date_end_search)"
