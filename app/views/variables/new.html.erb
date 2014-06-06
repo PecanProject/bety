@@ -13,8 +13,10 @@
             <%= f.text_field :name, :class => "input-half" %>
           </div>
           <div class="eight columns omega">
-            <%= f.label :standard_name %>
+            <%= f.label :standard_name ,"CF Standard Name"%>
             <%= f.text_field :standard_name, :class => "input-half" %>
+            &nbsp
+            <%= link_to "CF Guidelines", "/guidelines.html",:title => "guidelines for CF standard names",:target => "_blank" %>
           </div>
              
           <div class="eight columns omega">  
@@ -22,7 +24,7 @@
             <%= f.text_field :units, :class => "input-half" %>
           </div>
           <div class="eight columns omega">  
-            <%= f.label :standard_units %>
+            <%= f.label :standard_units,"CF Standard Units" %>
             <%= f.text_field :standard_units, :class => "input-half" %>
           </div>
               
@@ -47,6 +49,7 @@
             <%= f.text_area :notes, :rows => 5, :class => "input-full" %>
           </div>
         </div>
+
 
         <div class="form-actions">
           <div class="button-group">
