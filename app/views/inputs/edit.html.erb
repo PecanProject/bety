@@ -62,6 +62,12 @@
             <%= f.text_area :notes, :rows => 10, :class => "input-full" %>
           </div>
         </div>
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :record_creator %>
+            <%= user_for_view(@input.user) %>
+          </div>
+        </div>
 
         <div class="form-actions">
           <div class="button-group">

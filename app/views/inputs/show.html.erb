@@ -46,10 +46,8 @@
         <dd><%= @input.notes %></dd>
         <dt>Format</dt>
         <dd><%= @input.format %></dd>
-        <% if logged_in? %>
-          <dt>User</dt>
-          <dd><%=h link_to_if @input.user, @input.user, @input.user %></dd>
-        <% end %>
+        <dt>Record Creator</dt>
+        <dd><%= user_for_view(@input.user) %></dd>
       </dl>
 
       <div class="form-actions">

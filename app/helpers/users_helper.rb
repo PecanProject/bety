@@ -90,4 +90,12 @@ module UsersHelper
     end
   end
 
+  def user_for_view(user)
+    if user
+      user
+    else
+      "Unknown"
+    end
+  end
+
 end
