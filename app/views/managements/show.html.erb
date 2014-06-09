@@ -21,8 +21,8 @@
 				<dd><%= @management.units %></dd>
 				<dt>Notes</dt>
 				<dd><%= @management.notes %></dd>
-				<dt>User</dt>
-			  <dd><%= @management.user %></dd>
+				<dt>Record Creator</dt>
+			  <dd><%= @management.user ? @management.user : "Unknown" %></dd>
 			</dl>
 			<div class="form-actions">
 				<div class="button-group">
