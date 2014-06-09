@@ -32,6 +32,7 @@ gem "activerecord-postgresql-adapter"
 group :development, :test do
   gem "rspec-rails"
   gem "capybara"
+  gem "capybara-webkit"
   gem "sqlite3", "1.3.3"
 end
 
