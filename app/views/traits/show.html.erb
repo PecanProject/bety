@@ -31,8 +31,8 @@
 
       <% if logged_in? %>
       <p>
-        <dt>User:</dt>
-        <dd><%= @trait.user %></dd>
+        <dt>Record Creator:</dt>
+        <dd><%= user_for_view(@trait.user) %></dd>
       </p>
       <% end %>
 
