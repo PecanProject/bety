@@ -90,4 +90,8 @@ module UsersHelper
     end
   end
 
+  def user_for_view(user)
+    user || "Unknown"
+  end
+
 end

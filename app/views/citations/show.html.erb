@@ -34,8 +34,8 @@
 				<dt>DOI</dt>
 				<dd><%= @citation.doi %></dd>
 
-				<dt>User</dt>
-				<dd><%= @citation.user %></dd>
+				<dt>Record Creator</dt>
+				<dd><%= user_for_view(@citation.user) %></dd>
 
 			</dl>
 			<div class="form-actions">

@@ -13,8 +13,8 @@
 			  <dd><%= @treatment.definition %></dd>
 				<dt>Control</dt>
 				<dd><%= @treatment.control ? "Yes" : "No"  %></dd>
-				<dt>User</dt>
-				<dd><%= @treatment.user %></dd>
+				<dt>Record Creator</dt>
+				<dd><%= user_for_view(@treatment.user) %></dd>
 			</dl>
 			<div class="form-actions">
 				<div class="button-group">

@@ -62,8 +62,8 @@
         <dd><%= @site.notes %></dt>
         <dt>Soilnotes:</dt>
         <dd><%= @site.soilnotes %></dt>
-        <dt>User:</dt>
-        <dd><%= @site.user %></dd>
+        <dt>Record Creator:</dt>
+        <dd><%= user_for_view(@site.user) %></dd>
 			</dl>
 			
 			<div class="form-actions">
