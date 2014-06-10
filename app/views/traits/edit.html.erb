@@ -74,6 +74,17 @@
               </div>
             </div>
 
+            <div class="row">
+              <div class="eight columns omega">
+                <%= f.label :site_id %>
+                <%= f.select :site_id, @citation.sites.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+              </div>
+              <div class="eight columns omega">
+                <%= f.label :treatment_id %>
+                <%= f.select :treatment_id, @citation.treatments.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+              </div>
+            </div>
+
             <%= render :partial => "species/species_search" %>
             
             <div class="row">

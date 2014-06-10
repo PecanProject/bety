@@ -126,6 +126,7 @@ class TraitsController < ApplicationController
   def edit
     @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.specie.nil? ? @species = nil : @species = [@trait.specie]
+    @citation = @trait.citation
   end
 
   # POST /traits
