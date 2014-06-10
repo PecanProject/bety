@@ -72,7 +72,8 @@
   <!-- Old CSS -->
   <%= stylesheet_link_tag "scaffold" %>
   <!-- Redesign CSS -->
-  <%= stylesheet_link_tag "schemaSpy", "base", "grid", "layout", "dropdown", "tables", "demo" %>
+  <%= yield :schemaCSS %>
+  <%= stylesheet_link_tag "base", "grid", "layout", "dropdown", "tables", "demo" %>
 </head>
 
 
