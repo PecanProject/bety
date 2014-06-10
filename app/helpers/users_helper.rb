@@ -91,11 +91,7 @@ module UsersHelper
   end
 
   def user_for_view(user)
-    if user
-      user
-    else
-      "Unknown"
-    end
+    user || "Unknown"
   end
 
 end
