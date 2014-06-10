@@ -29,12 +29,8 @@
       <dt>Method:</dt>
       <dd><%= link_to_if @trait.ebi_method, @trait.ebi_method, @trait.ebi_method %></dd>
 
-      <% if logged_in? %>
-      <p>
-        <dt>Record Creator:</dt>
-        <dd><%= user_for_view(@trait.user) %></dd>
-      </p>
-      <% end %>
+      <dt>Record Creator:</dt>
+      <dd><%= user_for_view(@trait.user) %></dd>
 
       <dt>Date:</dt>
       <dd><%= @trait.pretty_date %></dd>

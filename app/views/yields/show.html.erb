@@ -30,10 +30,8 @@
         <dt>Method:</dt>
         <dd><%= link_to_if @yield.ebi_method, @yield.ebi_method, @yield.ebi_method %></dd>
 
-        <% if logged_in? %>
         <dt>Record Creator:</dt>
         <dd><%=  user_for_view(@yield.user) %></dd>
-        <% end %>
 
         <dt>Date:</dt>
         <dd><%=  @yield.date %></dd>
