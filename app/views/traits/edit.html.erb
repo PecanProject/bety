@@ -135,7 +135,7 @@
           <p>
             <%= f.label :user %>
             <%= current_user %>
-            <%= f.hidden_field :citation_id, :value => session['citation'] %>
+            <%= f.hidden_field :citation_id, :value => @citation.id %>
           </p>
 
         <div class="form-actions">
