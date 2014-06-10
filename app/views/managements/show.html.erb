@@ -22,7 +22,7 @@
 				<dt>Notes</dt>
 				<dd><%= @management.notes %></dd>
 				<dt>Record Creator</dt>
-			  <dd><%= @management.user ? @management.user : "Unknown" %></dd>
+			  <dd><%= user_for_view(@management.user) %></dd>
 			</dl>
 			<div class="form-actions">
 				<div class="button-group">
