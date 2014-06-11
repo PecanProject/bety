@@ -122,7 +122,7 @@
             <%= render :partial => 'new_covariate' %>
           </div>
           <p>
-            <%= f.label :record_creator %>
+            <label>Record Creator</label>
             <%= user_for_view(@trait.user) %>
             <%= f.hidden_field :citation_id, :value => session['citation'] %>
           </p>
