@@ -45,8 +45,8 @@
         
         <div class="row">
           <div class="two columns alpha">
-            <%= f.label :user %>
-            <%= current_user %>
+            <label>Record Creator</label>
+            <%= user_for_view(@treatment.user) %>
           </div>
           <div class="fourteen columns omega">
             &nbsp;
