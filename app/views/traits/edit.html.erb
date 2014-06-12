@@ -132,11 +132,11 @@
 
         <div class="form-actions">
           <div class="button-group">
+            <%= link_to( traits_path ) do %>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
+            <% end%>
             <%= link_to( @trait ) do %>
               <button class="button" type="button">Show</button>
-            <% end%>
-            <%= link_to( traits_path ) do %>
-              <button class="button" type="button">Back</button>
             <% end%>
           </div>
 					<div class="button-group pull-right">
