@@ -31,7 +31,8 @@ feature 'Citation index works' do
                                               'sample_yields_with_treatment_but_no_citation.csv')
       click_button 'Upload'
       click_link 'Select a Citation'
-      first(:xpath, ".//td[text() = 'Adams']/ancestor::tr/td[8]/a[1]").click
+#      first(:xpath, ".//td[text() = 'Adams']/ancestor::tr/td[8]/a[1]").click
+      first(:xpath, ".//tr[td/text() = 'Adams']/td/a[@alt = 'use']").click
       click_link 'Bulk Upload'
       page.should_not have_content 'Select a Citation'
       page.should have_content 'Specify Dataset-wide values'

@@ -454,7 +454,7 @@ class BulkUploadDataSet
             site_index = row.index { |h| h[:fieldname] == "site" }
 
             row[site_index][:validation_result] = :fatal_error
-            row[site_index][:validation_message] = "Site is not consistent with citation"
+            row[site_index][:validation_message] = "Site is not consistent with citation (site_id = #{site_id})"
             if @validation_summary.has_key? :inconsistent_site_reference
               @validation_summary[:inconsistent_site_reference] << row_number
             else
@@ -588,9 +588,10 @@ class BulkUploadDataSet
     distinct_cultivars.each do |cultivar_info|
       cultivar = Cultivar.joins("JOIN species ON species.id = cultivars.specie_id").where("cultivars.name = :cultivar_name AND species.scientificname = :species_name", cultivar_info).first
       if cultivar.nil?
-        raise "Cultivar #{cultivar_info[:cultivar_name]} associated with species #{cultivar_info[:species_name]} is not in the database."
+        #raise "Cultivar #{cultivar_info[:cultivar_name]} associated with species #{cultivar_info[:species_name]} is not in the database."
+      else
+        upload_cultivars << { cultivar: cultivar, species_name: cultivar_info[:species_name] }
       end
-      upload_cultivars << { cultivar: cultivar, species_name: cultivar_info[:species_name] }
     end
     upload_cultivars
   end
@@ -660,7 +661,7 @@ class BulkUploadDataSet
 
     # For bulk uploads, "checked" should always be set to zero:
     global_values.merge!({
-        "checked" => 0,
+        "checked" => 1,
         "user_id" => @session[:user_id]
     })
 
@@ -788,6 +789,11 @@ class BulkUploadDataSet
   end
 
   def existing_site?(name)
+    if name == ''
+      return Site.find_by_sitename("Unspecified Site")
+    elsif Site.find_all_by_sitename(name).size != 1
+      raise "Couldn't find a unique site with sitename #{name}"
+    end
     s = Site.find_by_sitename(name)
     return s
   end
@@ -809,6 +815,11 @@ class BulkUploadDataSet
   end
 
   def existing_cultivar?(name, species_id)
+    # Do this for now since cultivars are optional:
+    if name.empty?
+      return 0
+    end
+
     c = Cultivar.where("name = :name AND specie_id = :species_id",
                        { name: name, species_id: species_id })
     return c.first
@@ -883,6 +894,8 @@ class BulkUploadDataSet
         if cultivar.nil?
           validation_errors << "No cultivar named \"#{value}\" in database."
         else
+          Rails.logger.info("Cultivar #{value}  has id #{cultivar.id}")
+          Rails.logger.info("Hash was #{specified_values.inspect}")
           id_values["cultivar_id"] = cultivar.id
         end
       when "citation_author"

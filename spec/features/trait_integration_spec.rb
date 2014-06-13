@@ -24,6 +24,7 @@ feature 'Traits index works' do
     context 'creating new trait' do
       it 'should not tell the user to choose a citation when trait creation fails for some other reason' do
         click_link 'Citations'
+        # choose a citation to use
         first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
         click_link 'Traits'
         click_link 'New Trait'

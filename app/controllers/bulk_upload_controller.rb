@@ -71,7 +71,13 @@ class BulkUploadController < ApplicationController
     end
 
     # No heading errors; go on to validate data
-    @data_set.validate_csv_data
+    begin
+      @data_set.validate_csv_data
+    rescue Exception => e
+      flash[:error] = e.message
+      #redirect_to(action: "start_upload")
+      #return
+    end
   end
 
 
