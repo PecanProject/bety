@@ -169,9 +169,13 @@ class TraitsController < ApplicationController
   def update
     @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.current_user = current_user #Used to validate that they are allowed to change checked
-
     respond_to do |format|
       if @trait.update_attributes(params[:trait])
+        params[:covariate].each do |covariate|
+          unless covariate[:variable_id].blank?
+            @trait.covariates << Covariate.new(covariate)
+          end
+        end
         flash[:notice] = 'Trait was successfully updated.'
         format.html { redirect_to(@trait) }
         format.xml  { head :ok }
