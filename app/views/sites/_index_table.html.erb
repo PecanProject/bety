@@ -10,6 +10,8 @@
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "sites.lat", "Lat" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "sites.lon", "Lon" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "sites.espg", "Espg" %></th>
+<th class="sorting" role="columnheader" aria-controls="
+DataTables_Table_0" style="width: 160px"><%= sortable "sites.map", "Map" %></th>
 <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 162px">Actions</th>
       </tr>
     </thead>
@@ -23,15 +25,26 @@
     <td class="center"><%= site.lat %></td>
     <td class="center"><%= site.lon %></td>
     <td class="center"><%= site.espg %></td>
-    <td><%= link_to_prototype_window("map", "#{site.id}", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :title =>  "#{site.sitename}", :draggable => "true", :wiredDrag => "true", :url => "/sites/map?id=#{site.id}" }) %> <br />
+   <td><%= link_to_prototype_window("map", "#{site.id}", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :title =>  "#{site.sitename}", :draggable => "true", :wiredDrag => "true", :url => "/sites/map?id=#{site.id}" }) %> <br />
 
     </td>
     <% if !session["citation"].nil? %>
     <td><%= link_to 'Link', {:action => "linked", :id => site.id }, :remote => true %></td>
     <% end %>
-    <td><%= link_to 'Show', site %></td>
-    <td><%= link_to 'Edit', edit_site_path(site) %></td>
-    <td><%= link_to 'Destroy', site, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td>
+    <ul>
+    <li><%= link_to site, :class => "button button-small", :alt => "show" do %>
+              <i class="icon-zoom-in"></i></li>
+            <% end %></li>
+    <li><%= link_to edit_site_path(site), :class => "button button-small", :alt => "edit" do %>
+              <i class="icon-edit"></i>
+            <% end %></li>
+    <li> <% if current_user.page_access_level == 1 %>
+              <%= link_to site, :method => :delete, :type => 'site', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
+                <i class="icon-trash"></i> 
+              <% end %>
+            <% end %>
+    </li></ul></td>
   </tr>
 <% end %>
 </tbody>
@@ -51,4 +64,3 @@
     </div>
   </div>
 </div>
-
