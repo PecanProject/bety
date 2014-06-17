@@ -33,7 +33,7 @@
       <%= form_for(@trait) do |f| %>
         <%= f.error_messages %>
         
-            <div class="row">
+             <div class="row">
               <div class="four columns alpha">
                 <%= f.label :mean %>
                 <%= f.text_field :mean, :class => "input-full"  %>
@@ -46,31 +46,46 @@
                 <%= f.label :method_id, "Method" %>
                 <%= f.select :method_id, Methods.all.collect { |p| [ p.select_default, p.id ] }, {:include_blank => true}, :class => "input-full" %>
               </div>
-              <div class="four columns omega">
+              <div class="two columns omega">
                 <%= f.label :statname %>
                 <%= f.select :statname, $statname_list, :class => "input-full" %>
               </div>
             </div>
 
             <div class="row">
-              <div class="four columns alpha">
-                <%= f.label :date %>
-                <%= f.select :date_year, [''] + (1800..Time.now.year).to_a %>
-                <%= f.select :date_month, [''] + (1..12).to_a %>
-                <%= f.select :date_day, [''] + (1..31).to_a %>
+              <div class="four columns alpha">               
+                <fieldset>
+                  <legend>Date</legend>
+                  <%= f.select :date_year, [''] + (1800..Time.now.year).to_a %>
+                  <%= f.select :date_month, [''] + (1..12).to_a %>
+                  <%= f.select :date_day, [''] + (1..31).to_a %>
+                </fieldset>
               </div>
-              <div class="four columns">
+              <div class="four columns alpha">
                 <%= f.label :dateloc, "Date Level of Confidence" %>
                 <%= f.select :dateloc, options_for_select($dateloc_drop.sort, f.object.dateloc || $dateloc_drop_default) %>
               </div>
-              <div class="four columns">
-                <%= f.label :time %>
-                <%= f.select :time_hour, [''] + (0..23).to_a %>
-                <%= f.select :time_minute, [''] + (0..59).to_a %>
+              <div class="three columns">
+                <fieldset>
+                  <legend>Time</legend>
+                  <%= f.select :time_hour, [''] + (0..23).to_a %>
+                  <%= f.select :time_minute, [''] + (0..59).to_a %>
+                </fieldset>
               </div>
-              <div class="four columns omega">
+              <div class="four columns">
                 <%= f.label :timeloc, "Time Level of Confidence" %>
                 <%= f.select :timeloc, options_for_select($timeloc_drop.sort, f.object.timeloc || $timeloc_drop_default) %>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="eight columns alpha">
+                <%= f.label :site_id %>
+                <%= f.select :site_id, @citation.sites.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+              </div>
+              <div class="eight columns omega">
+                <%= f.label :treatment_id %>
+                <%= f.select :treatment_id, @citation.treatments.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
               </div>
             </div>
 
@@ -93,47 +108,35 @@
 
             <div class="row">
               <div class="eight columns alpha">
-
-              </div>
-              <div class="five columns">
-
-              </div>
-              <div class="three columns omega">
-
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="eight columns alpha">
                 <%= f.label :notes %>
-                <%= f.text_area :notes, :rows => 10, :class => "input-full"%>
+                <%= f.text_area :notes, :rows => 5, :class => "input-full"%>
               </div>
-              <div class="eight columns omega">
+              <div class="four columns omega">
                 <%= f.label :access_level %>
-                <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :selected => 2 %>
+                <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :selected => 2,:class => "input-full" %>
               </div>
             </div>
         
           <div id="covariates">
           <h3>Add a covariate to this trait</h3>
           <p><em>Leave blank if not adding a covariate</em></p>
-          <p>
-          <input name="Add Covariate" type="button" onclick="add_covariate()" value="Add another covariate" /></p>
+          <p>          
             <%= render :partial => 'new_covariate' %>
           </div>
+          <input name="Add Covariate" class="button" type="button" onclick="add_covariate()" value="Add another covariate" /></p>
           <p>
-            <%= f.label :user %>
-            <%= current_user %>
-            <%= f.hidden_field :citation_id, :value => session['citation'] %>
+            <label>Record Creator</label>&nbsp
+            <%= user_for_view(@trait.user) %>
+            <%= f.hidden_field :citation_id, :value => @citation.id %>
           </p>
 
         <div class="form-actions">
           <div class="button-group">
+            <%= link_to( traits_path ) do %>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
+            <% end%>
             <%= link_to( @trait ) do %>
               <button class="button" type="button">Show</button>
-            <% end%>
-            <%= link_to( traits_path ) do %>
-              <button class="button" type="button">Back</button>
             <% end%>
           </div>
 					<div class="button-group pull-right">
@@ -166,6 +169,10 @@
       $$(id)[0].innerText += "*";
       $('explain').show();
     }
+  }
+  function add_covariate() {
+    jQuery('div#covariates').append('<%= escape_javascript(render :partial => "new_covariate") %>');
+    return false;
   }
 <% ['site_id','citation_id','variable_id','treatment_id','dateloc','specie_id'].each do |column| %>
 <%= "  missingFields(\"trait_#{column}\");" if @trait[column.to_sym].nil? %>

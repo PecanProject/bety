@@ -67,18 +67,18 @@
 
         <div class="row">
           <div class="sixteen columns alpha omega">
-            <%= f.label :user %>
-            <%= @citation.user %>
+            <label>Record Creator</label>
+            <%= user_for_view(@citation.user) %>
           </div>
         </div>
 
         <div class="form-actions">
           <div class="button-group">
+            <%= link_to( citations_path ) do %>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
+            <% end%>
             <%= link_to( @citation ) do %>
               <button class="button" type="button">Show</button>
-            <% end%>
-            <%= link_to( citations_path ) do %>
-              <button class="button" type="button">Back</button>
             <% end%>
           </div>
 					<div class="button-group pull-right">
