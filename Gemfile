@@ -31,14 +31,14 @@ group :development, :test do
   # Although rspec-rails is mainly for the test environment, we
   # include it in development in case we want to have access to
   # RSpec-specific generators.
-  gem "rspec-rails"   
+  gem "rspec-rails"
   gem "sqlite3", "1.3.3"
 end
 
 group :test do
   gem "webrat", "0.7.1"
   gem "capybara"
-  gem "capybara-webkit"
+#  gem "capybara-webkit"
   gem "database_cleaner"
 end
 
