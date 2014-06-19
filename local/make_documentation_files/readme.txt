@@ -15,3 +15,11 @@ In the code, change DB, USER, PASSWORD, HOST to the right values.
 Compile with "g++ dbtables.cpp -lpqxx -lpq" (the pqxx library must be installed on the machine).
 Run with "./a.out"
 The output should be written into the the file defined as OUT_FILE (test.html if not modified). 
+=======================================================================================
+Instructions for schemaSpy:
+The modified schemaSpy source code is under "schemaspy_modified" and the executable is named "schema_sources.jar".
+To execute the source code from the command line:
+java -jar [executable name] -t pgsql -host localhost -dp postgresql-9.3-1101.jdbc3.jar -db bety -s public -u [username] -p [password] -o [output directory]
+
+note:
+-dp specifies the path to drivers. If the driver is not found, just re-download it.

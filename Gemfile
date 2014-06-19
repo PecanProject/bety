@@ -17,8 +17,6 @@ gem "seer", "0.10.0"
 gem "tzinfo", "0.3.35"
 gem "will_paginate", "3.0.4"
 gem "bootstrap-will_paginate"
-gem "rspec-rails"
-gem "capybara"
 
 # MySQL, comment out PostgreSQL section
 gem "mysql2"
@@ -30,15 +28,17 @@ gem "pg"
 gem "activerecord-postgresql-adapter"
 
 group :development, :test do
-  gem "rspec-rails"
-  gem "capybara"
+  # Although rspec-rails is mainly for the test environment, we
+  # include it in development in case we want to have access to
+  # RSpec-specific generators.
+  gem "rspec-rails"   
   gem "sqlite3", "1.3.3"
 end
 
 group :test do
-  gem "rspec-rails"
   gem "webrat", "0.7.1"
   gem "capybara"
+  gem "capybara-webkit"
   gem "database_cleaner"
 end
 

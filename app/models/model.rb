@@ -4,8 +4,9 @@ class Model < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
-  SEARCH_FIELDS = %w{ models.model_name models.model_path models.revision }
+  SEARCH_FIELDS = %w{ models.model_name models.revision }
 
+  has_many :files, :as => :container, :class_name => 'DBFile'
   has_many :runs
   has_many :children, :class_name => "Model", :foreign_key => "parent_id"
   belongs_to :parent, :class_name => "Model"
@@ -18,7 +19,6 @@ class Model < ActiveRecord::Base
   comma do
     id
     model_name
-    model_path
     revision
     parent_id
     created_at

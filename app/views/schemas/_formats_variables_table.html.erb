@@ -1,0 +1,179 @@
+<div class='content' style='clear:both;'>
+<div class='container'>
+<table width='100%' border='0' cellpadding='0'>
+ <tr>
+  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>formats_variables</span></span></td>
+ </tr>
+</table>
+<div>
+<span class='legend'>Legend:</span>
+<span class='legend primaryKey'>Primary key columns</span>
+<span class='legend indexedColumn'>Indexed columns</span>
+</div>
+<div class='sixteen colums'>
+<a name='columns'></a>
+<table id='columns' class='dataTable' border='1' rules='groups'>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup class='fkey'>
+<colgroup class='comment'>
+<thead align='left'>
+<tr>
+  <th>Column</th>
+  <th>Type</th>
+  <th>Size</th>
+  <th title='Are nulls allowed?'>Nulls</th>
+  <th title='Is column automatically updated?'>Auto</th>
+  <th title='Default value'>Default</th>
+  <th class='fkey' title='Columns in tables that are referenced by this column'><span class='notSortedByColumn fkey'>References</span></th>
+  <th title='Comments' class='comment'><span class='notSortedByColumn'>Comments</span></th>
+</tr>
+</thead>
+<tbody valign='top'>
+<tr>
+ <td class='primaryKey' title='Primary Key'>id</td>
+ <td class='detail'>serial</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='right'>nextval('formats_variables_id_seq'::regclass)</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='indexedColumn' title='Indexed'>format_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'formats.id',schemas_path(:partial => '
+formats_table')%> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='indexedColumn' title='Indexed'>variable_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'variables.id',schemas_path(:partial => '
+variables_table')%> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>name</td>
+ <td class='detail'>varchar</td>
+ <td class='detail' align='right'>255</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>unit</td>
+ <td class='detail'>varchar</td>
+ <td class='detail' align='right'>255</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>storage_type</td>
+ <td class='detail'>varchar</td>
+ <td class='detail' align='right'>255</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>column_number</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>created_at</td>
+ <td class='detail'>timestamp</td>
+ <td class='detail' align='right'>29,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>updated_at</td>
+ <td class='detail'>timestamp</td>
+ <td class='detail' align='right'>29,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+</table>
+</div>
+<script>jQuery('.comment').hide()</script>
+<div class='indent'>
+<b>Indexes:</b>
+<table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
+<thead>
+ <tr>
+  <th>Column(s)</th>
+  <th>Type</th>
+  <th>Sort</th>
+  <th class='constraint' style='text-align:left;'>Constraint Name</th>
+ </tr>
+</thead>
+<tbody>
+ <tr>
+  <td class='primaryKey'>id</td>
+  <td class='detail'>Primary key</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>formats_variables_pkey</td>
+ </tr>
+ <tr>
+  <td class='indexedColumn'>format_id + variable_id</td>
+  <td class='detail'>Performance</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>index_formats_variables_on_format_id_and_variable_id</td>
+ </tr>
+</table>
+</div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=formats_variables_table" title="formats_variables" alt="" coords="159,95,409,339">
+<area shape="rect" id="node3" href="schemas?partial=formats_table" title="formats" alt="" coords="7,5,113,243">
+<area shape="rect" id="node5" href="schemas?partial=variables_table" title="variables" alt="" coords="7,259,113,498">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/formats_variables.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=formats_variables_table" title="formats_variables" alt="" coords="312,5,563,249">
+<area shape="rect" id="node3" href="schemas?partial=formats_table" title="formats" alt="" coords="7,330,113,569">
+<area shape="rect" id="node5" href="schemas?partial=variables_table" title="variables" alt="" coords="160,74,267,313">
+<area shape="rect" id="node6" href="schemas?partial=inputs_table" title="inputs" alt="" coords="177,402,249,459">
+<area shape="rect" id="node8" href="schemas?partial=inputs_variables_table" title="inputs_variables" alt="" coords="371,275,504,333">
+<area shape="rect" id="node11" href="schemas?partial=likelihoods_table" title="likelihoods" alt="" coords="389,370,485,427">
+<area shape="rect" id="node14" href="schemas?partial=posteriors_table" title="posteriors" alt="" coords="165,329,261,386">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/formats_variables.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
+</div>

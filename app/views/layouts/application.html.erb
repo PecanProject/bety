@@ -72,6 +72,7 @@
   <!-- Old CSS -->
   <%= stylesheet_link_tag "scaffold" %>
   <!-- Redesign CSS -->
+  <%= yield :schemaCSS %>
   <%= stylesheet_link_tag "base", "grid", "layout", "dropdown", "tables", "demo" %>
 </head>
 
@@ -94,7 +95,7 @@
 			  <h1 class="remove-bottom"><a href="/" class="org">Energy Biosciences Institute</a> <a href="/" class="site"><strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small></a></h1>
 			  <div id="header_user_name">
 		      <% if current_user != nil %>
-			      User: <%= current_user %>
+			      Logged in as: <%= current_user %>
 			    <% end %>
 		    </div>
 		    
@@ -145,7 +146,7 @@
                 <li><%= link_to "Data Entry","https://www.authorea.com/users/5574/articles/6800/_show_article", :target =>"_blank" %></li>
                 <li><%= link_to "Data Access","https://authorea.com/users/5574/articles/7062/_show_article", :target =>"_blank" %>></li>
                 <li><%= link_to "Implementation","https://github.com/PecanProject/bety/wiki/The-Biofuel-Ecophysiological-Traits-and-Yields-Database", :target =>"_blank" %></li>
-                <li><%= link_to "Schema", schemas_path, :target =>"_blank" %>></li>
+                <li><%= link_to "Schema", schemas_path %>></li>
               </ul>
             </li>
             

@@ -11,6 +11,7 @@ test_user1:
     salt: <%= salt %>
     access_level: 1
     page_access_level: 1
+    email: cc@example.com
 
 test_user2:
     login: 'test_admin_user'
@@ -20,4 +21,4 @@ test_user2:
     salt: <%= salt %>
     access_level: 1
     page_access_level: 1
-    
+    email: tau@example.com

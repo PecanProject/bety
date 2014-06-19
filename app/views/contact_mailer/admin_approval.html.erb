@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Access request for <%= @user[:name].encode("ascii", invalid: :replace, undef: :replace) %> (<%= @user[:login] %>)</h1>
+    <p>
+    <%= @user[:name].encode("ascii", invalid: :replace, undef: :replace) %> (<%= @user[:login] %>) has
+    requested a non-default access level at <%= @url %>.
+    </p>
+    <table>
+    <tr><th>Page_access_level :</th><td><%= @user[:page_access_level] %></td></tr>
+    <tr><th>Access_level      :</th><td><%= @user[:access_level] %></td></tr>
+    </table>
+  </body>
+</html>
