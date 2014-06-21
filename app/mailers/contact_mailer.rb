@@ -11,10 +11,11 @@ class ContactMailer < ActionMailer::Base
   def feedback_email(email_params)
     @email_body = email_params[:feedback_text]
     @sender_name = email_params[:sender]
+    @sender_email = email_params[:sender_email]
     @type = email_params[:type]
     mail(:to => "betydb@gmail.com",
          :subject => "[BETY "+ @type+"] "+email_params[:feedback_subject],
-         :from => @sender_name,
+         :from => @sender_email,
          :date => Time.now)
   end
 

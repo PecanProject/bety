@@ -5,6 +5,7 @@
   <%=form_for :feedback_email, :url =>{:controller =>'feedback', :action =>'feedback_email'}, :remote =>true do |f|%>
     <%=f.hidden_field :type, :value =>"Suggest Feature" %>
     <%=f.hidden_field :sender,:value =>current_user %>
+    <%=f.hidden_field :sender_email,:value =>current_user.email %>
     <%=f.label :feedback_subject,"Subject",{:style =>"font-weight:normal"} %>
     <%=f.text_field :feedback_subject %>
     <%=f.label :feedback_text,"Description",{:style =>"font-weight:normal"} %>
@@ -20,6 +21,7 @@
   <%=form_for :feedback_email, :url =>{:controller =>'feedback', :action =>'feedback_email'}, :remote =>true do |f|%>
   	<%=f.hidden_field :type, :value =>"Report Problem" %>
   	<%=f.hidden_field :sender,:value =>current_user %>
+  	<%=f.hidden_field :sender_email,:value =>current_user.email %>
     <%=f.label :feedback_subject,"Subject",{:style =>"font-weight:normal"} %>
     <%=f.text_field :feedback_subject %>
     <%=f.label :feedback_text,"Description",{:style =>"font-weight:normal"} %>
