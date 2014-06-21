@@ -66,6 +66,10 @@ jQuery(".dialog-all").dialog({
       	at: "right",
       	of: "#feedback-tab",
     },
+    close: function(){
+    	jQuery("#feedback_email_feedback_subject").val("");
+    	jQuery("#feedback_email_feedback_text").val("");
+    }
 });
 
 jQuery( ".dialog-form" ).dialog({
