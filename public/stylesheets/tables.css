@@ -223,18 +223,19 @@ table.table thead .sorting_desc_disabled {
 }
 table.table .sorting_asc {
 	background: url('../images/sort_asc.png') no-repeat center right;
-	
 	color: #007eac;
+	padding-right: 20px;
 }
 
 table.table .sorting_desc {
 	background: url('../images/sort_desc.png') no-repeat center right;
-	
 	color: #007eac;
+	padding-right: 20px;
 }
 
 table.table .sorting {
 	background: url('../images/sort_both.png') no-repeat center right;
+	padding-right: 20px;
 }
 
 table.table .sorting_asc_disabled {
