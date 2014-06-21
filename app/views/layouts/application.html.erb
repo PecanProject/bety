@@ -10,8 +10,14 @@
   <meta name="robots" content="index, follow" />
 
   <%= csrf_meta_tag %>
+ 
+  <!--<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>-->
+  <!--<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>-->
 
   <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
+  <%= javascript_include_tag 'lazy/jquery-ui-1.10.4.min.js' %>
+  <%= stylesheet_link_tag "jquery-ui-1.10.4.min" %>
+  <!--<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">-->
   <!--  It seems so far that everything works in 1.7.2.-->
   <%#= javascript_include_tag 'libs/jquery-1.6.2.min.js' %>
   <%= javascript_include_tag :all, :cache => "cache/all" %>
@@ -74,6 +80,7 @@
   <!-- Redesign CSS -->
   <%= yield :schemaCSS %>
   <%= stylesheet_link_tag "base", "grid", "layout", "dropdown", "tables", "demo" %>
+
 </head>
 
 
@@ -208,6 +215,9 @@
 	    </div>
 	  </div>
   <% end %>
+  <% if current_user != nil %>
+  <%= render 'feedback/fbtab'%>
+  <%end%>
 
   <%= yield  %>
   
@@ -217,6 +227,7 @@
   
   <div class="footer">
 	  <div class="container">
+
 		  <div class="row">
 			  <h2>Footer</h2>
 			  <div class="three columns alpha">
