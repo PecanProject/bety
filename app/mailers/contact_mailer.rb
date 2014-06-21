@@ -8,6 +8,16 @@ class ContactMailer < ActionMailer::Base
          :date => Time.now)
   end
 
+  def feedback_email(email_params)
+    @email_body = email_params[:feedback_text]
+    @sender_name = email_params[:sender]
+    @type = email_params[:type]
+    mail(:to => "betydb@gmail.com",
+         :subject => "[BETY "+ @type+"] "+email_params[:feedback_subject],
+         :from => @sender_name,
+         :date => Time.now)
+  end
+
   def signup_email(user)
   	@user = user
   	@url = root_path
