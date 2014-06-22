@@ -25,6 +25,26 @@
 <script>
 jQuery(function(){jQuery(".ui-dialog-titlebar").hide();});
 
+jQuery('body').click(function(e){
+	x = e.clientX ;
+	y = e.clientY+jQuery(document).scrollTop();
+	jQuery('.dialog-all').each(function(){
+		if(jQuery(this).dialog("isOpen")){
+			minx = jQuery(this).offset().left -5;
+			maxx = jQuery(this).offset().left + jQuery(this).dialog("option","width") + 5;
+			miny = jQuery(this).offset().top -5;
+			maxy = jQuery(this).offset().top + jQuery(this).dialog("option","height") + 5;
+			tminx = jQuery("#feedback-tab").offset().left-5;
+			tmaxx = jQuery("#feedback-tab").offset().left+ jQuery("#feedback-tab").width() + 5;
+			tminy = jQuery("#feedback-tab").offset().top-5 ;
+			tmaxy = jQuery("#feedback-tab").offset().top+ jQuery("#feedback-tab").height() + 5;
+			inthis = x>=minx && x<=maxx && y>=miny && y<=maxy;
+			intab = x>=tminx && x<=tmaxx && y>=tminy && y<=tmaxy;
+			if(!inthis && !intab)
+				jQuery(this).dialog("close");
+		}
+	});
+});
 
 jQuery(".dialog-cancel").click(function(){
 	jQuery(".dialog-all").dialog("close");
@@ -39,15 +59,15 @@ jQuery(".dialog-all").dialog({
     dialogClass: "fixed-dialog",
 	show:{
 		effect:"fade",
-		duration:400,
+		duration:300,
 	},
 	hide:{
 		effect:"fade",
-		duration:400,
+		duration:300,
 	},
 	position: {
-      	my: "left+10",
-      	at: "right",
+      	my: "left+10 center",
+      	at: "right center",
       	of: "#feedback-tab",
     },
     close: function(){
@@ -84,12 +104,10 @@ jQuery(".dialog-close").css({
 
 jQuery(".fixed-dialog").css
 ({
-	
-	"left": "0px", 
-	"top": "50%",
-	"z-index": "9999",
-	"margin-top": "-62px",
 	"position": "fixed", 
+	"left": "0px", 
+	"top": "50%",	
+	"margin-top": "-62px",
 });
 
 jQuery(".fixed-dialog form").css
