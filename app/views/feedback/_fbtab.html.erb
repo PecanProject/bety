@@ -49,33 +49,33 @@ jQuery('body').click(function(e){
 });
 
 jQuery(".dialog-cancel").click(function(){
-	jQuery(".dialog-all").dialog("close");
-	return false;
+  jQuery(".dialog-all").dialog("close");
+  return false;
 });
 
 jQuery(".dialog-all").dialog({
-	autoOpen: false,
-    modal: false,
-    draggable: false,
-    resizable: false,
-    dialogClass: "fixed-dialog",
-	show:{
-		effect:"fade",
-		duration:300,
-	},
-	hide:{
-		effect:"fade",
-		duration:300,
-	},
-	position: {
-      	my: "left+10 center",
-      	at: "right center",
-      	of: "#feedback-tab",
-    },
-    close: function(){
-    	jQuery("#feedback_email_feedback_subject").val("");
-    	jQuery("#feedback_email_feedback_text").val("");
-    }
+  autoOpen: false,
+  modal: false,
+  draggable: false,
+  resizable: false,
+  dialogClass: "fixed-dialog",
+  show:{
+    effect:"fade",
+    duration:300,
+  },
+  hide:{
+    effect:"fade",
+    duration:300,
+  },
+  position: {
+    my: "left+10 center",
+    at: "right center",
+    of: "#feedback-tab",
+  },
+  close: function(){
+    jQuery("#feedback_email_feedback_subject").val("");
+    jQuery("#feedback_email_feedback_text").val("");
+  }
 });
 
 jQuery( ".dialog-form" ).dialog({
