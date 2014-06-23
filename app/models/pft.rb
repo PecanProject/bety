@@ -4,7 +4,7 @@ class Pft < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{  }
-  SEARCH_FIELDS = %w{ pfts.name pfts.definition }
+  SEARCH_FIELDS = %w{ pfts.name pfts.definition pfts.model_type }
 
   has_many :pfts_priors, :class_name => "PftsPriors"
   has_many :priors, :through => :pfts_priors
@@ -24,6 +24,7 @@ class Pft < ActiveRecord::Base
   comma do
     id
     definition
+    model_type
     created_at
     updated_at
     name
@@ -42,6 +43,6 @@ class Pft < ActiveRecord::Base
   #Columns we search when referenced from another model
   #Fields present in 'select_default'
   def self.search_columns
-    return ["pfts.id", "pfts.name", "pfts.definition"]
+    return ["pfts.id", "pfts.name", "pfts.definition", "pfts.model_type"]
   end
 end
