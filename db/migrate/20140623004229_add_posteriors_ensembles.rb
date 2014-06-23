@@ -8,6 +8,6 @@ class AddPosteriorsEnsembles < ActiveRecord::Migration
   end
 
   def self.down
-	drop_table :posteriors_runs
+	drop_table :posteriors_ensembles
   end
 end
