@@ -7,12 +7,12 @@
   <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
       <thead>
         <tr role="row">
-<th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px;" aria-sort="ascending"><%= sortable "pfts.name", "Pft" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "formats.mime_type", "Format" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 67px">Created</th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 67px">Updated</th>
+          <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px;" aria-sort="ascending"><%= sortable "pfts.name", "Pft" %></th>
+          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "formats.mime_type", "Format" %></th>
+          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 67px">Created</th>
+          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 67px">Updated</th>
 
-<th role="columnheader" aria-controls="DataTables_Table_0" style="width: 162px">Actions</th>
+          <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 150px">Actions</th>
       </tr>
     </thead>
     <tbody role="alert" aria-live="polite" aria-relevant="all">
@@ -26,10 +26,6 @@
             <!-- SHOW -->
             <%= link_to posterior, :class => "button button-small", :alt => "show" do %>
               <i class="icon-zoom-in"></i>
-            <% end %>
-            <!-- EDIT -->
-            <%= link_to edit_posterior_path(posterior), :class => "button button-small", :alt => "edit" do %>
-              <i class="icon-edit"></i>
             <% end %>
             <!-- DELETE -->
             <% if current_user.page_access_level == 1 %>
