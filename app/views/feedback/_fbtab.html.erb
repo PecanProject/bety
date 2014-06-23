@@ -17,9 +17,11 @@
 </div>
 <div id="dialog-main" class="dialog-all" title="Feedback">
 	<span class="dialog-close">x</span>
-	<button class="button button-warning" id="suggest" style="width:100%;font-size:12px;margin-bottom:5px;padding:3px">Suggest a Feature</button>
+	<button class="button button-primary" id="suggest" style="width:100%;font-size:12px;margin-bottom:5px;padding:3px">Suggest a Feature</button>
 	<hr class="hr">&nbsp;or&nbsp;<hr class="hr">
-	<button class="button button-info" id="report" style="width:100%;font-size:12px;margin-top:8px;padding:3px">Report a Problem</button>
+	<button class="button button-warning" id="report" style="width:100%;font-size:12px;margin-top:8px;padding:3px">Report a Problem</button>
+	<hr class="hr">&nbsp;or&nbsp;<hr class="hr">
+	<button class="button button-info" id="contact" style="width:100%;font-size:12px;margin-top:8px;padding:3px">Contact Us</button>
 </div>
 
 <script>
@@ -82,7 +84,7 @@ jQuery( ".dialog-form" ).dialog({
 });
 
 jQuery( "#dialog-main" ).dialog({
-	  height: 160,
+	  height: 240,
 	  width: 150,
 });
 
@@ -128,6 +130,13 @@ jQuery("#suggest").click(function(){
 	jQuery(".dialog-form").dialog("open");
 	jQuery("#form-title").html("Suggest a Feature");
 	jQuery("#feedback_email_type").val("Suggest a Feature");
+	jQuery("#dialog-main").dialog("close");
+});
+
+jQuery("#contact").click(function(){	
+	jQuery(".dialog-form").dialog("open");
+	jQuery("#form-title").html("Contact Us");
+	jQuery("#feedback_email_type").val("Contact");
 	jQuery("#dialog-main").dialog("close");
 });
 
