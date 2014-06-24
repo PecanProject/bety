@@ -11,15 +11,15 @@
         <div class="row">
           <div class="sixteen columns alpha">
             <%= f.label :site %>
-            <%= f.select :site_id, Site.all.collect { |p| [ p.select_default, p.id ] }, :class => "input-full" %>
+            <%= f.select :site_id, Site.order("id ASC").all.collect { |p| [ p.select_default, p.id ] }, :class => "input-full" %>
           </div>
-        </div>          
+        </div>
         <div class="row">
           <div class="sixteen columns alpha">
             <%= f.label :parent %>
-            <%= f.select :parent_id, Input.all.collect { |p| [ p.select_default, p.id ] }, {include_blank: 'None', :class => "input-full" } %>
+            <%= f.select :parent_id, Input.order("id ASC").all.collect { |p| [ p.select_default, p.id ] }, {include_blank: 'None', :class => "input-full" } %>
           </div>
-        </div>          
+        </div>
         <div class="row">
           <div class="eight columns alpha">
             <%= f.label :name %>
@@ -27,9 +27,9 @@
           </div>
           <div class="eight columns omega">
             <%= f.label :format_id %>
-            <%= f.select :format_id, Format.all.collect { |p| [ p.select_default, p.id ] }, :class => "input-full" %>
+            <%= f.select :format_id, Format.order("id ASC").all.collect { |p| [ p.select_default, p.id ] }, :class => "input-full" %>
           </div>
-        </div>          
+        </div>
         <div class="row">
           <div class="eight columns alpha">
             <%= f.label :start_date %>
@@ -59,7 +59,7 @@
         </div>
 
       <% end %>
-  
+
     </div>
   </div>
 </div>
