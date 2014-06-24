@@ -33,7 +33,7 @@
         <div class="row">
           <div class="sixteen columns alpha">
             <%= f.label :parent %>
-            <%= f.select :parent_id, Input.all.collect { |p| [ p.select_default, p.id ] }, :class => "input-full" %>
+            <%= f.select :parent_id, Input.all.collect { |p| [ p.select_default, p.id ] }, {include_blank: 'None', :class => "input-full" } %>
           </div>
         </div>          
         <div class="row">
@@ -51,7 +51,7 @@
             <%= f.label :start_date %>
             <%= f.datetime_select :start_date, { :start_year => 1800, :end_year => 2155, :include_blank => "0000", :default => "0000"}, {} %>
           </div>
-          <div class="eight columns alpha">
+          <div class="eight columns omega">
             <%= f.label :end_date %>
             <%= f.datetime_select :end_date, { :start_year => 1800, :end_year => 2155, :include_blank => "0000", :default => "0000"}, {} %>
           </div>
