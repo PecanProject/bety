@@ -46,16 +46,7 @@ module AuthenticatedSystem
       # RAILS3 changed below line with second below line. controller_class_name appears to have been removed Rails3
       # controller_class = controller_class_name if controller_class.nil?
       controller_class = "#{controller_name.camelize}Controller" if controller_class.nil?
-      admin_requirement = ["UsersController.ALL",
-                                "PosteriorsController.ALL",
-                                "PosteriorsRunsController.ALL",
-                                "RunsController.ALL",
-                                "LikelihoodsController.ALL",
-                                "ModelsController.ALL",
-                                "InputsRunsController.ALL",
-                                "YieldsviewsController.ALL",
-                                "InputsVariablesController.ALL",
-                                "InputsController.ALL" ]
+      admin_requirement = ["UsersController.ALL"],
       manage_requirement = ["CitationsController.ALL",
                                 "CovariatesController.ALL",
                                 "CultivarsController.ALL",
