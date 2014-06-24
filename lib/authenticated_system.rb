@@ -79,7 +79,16 @@ module AuthenticatedSystem
                                 "VariablesController.ALL",
                                 "VisitorsController.ALL",
                                 "WorkflowsController.ALL",
-                                "YieldsController.ALL"]
+                                "YieldsController.ALL",
+                                "PosteriorsController.ALL",
+                                "PosteriorsRunsController.ALL",
+                                "RunsController.ALL",
+                                "LikelihoodsController.ALL",
+                                "ModelsController.ALL",
+                                "InputsRunsController.ALL",
+                                "YieldsviewsController.ALL",
+                                "InputsVariablesController.ALL",
+                                "InputsController.ALL" ]
       create_requirement = ["ApplicationsController.ALL",
                                 "CitationsController.new",
                                 "CitationsController.create",
