@@ -288,7 +288,8 @@ class BulkUploadDataSet
               column[:validation_result] = :fatal_error
               column[:validation_message] = "Cultivar can't be looked up when species is not in species table."
             else
-              if existing_cultivar?(column[:data], species_id)
+              if column[:data].strip.empty? || # cultivar is optional!
+                  existing_cultivar?(column[:data], species_id)
                 column[:validation_result] = :valid
               else
                 column[:validation_result] = :fatal_error
