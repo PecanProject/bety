@@ -2,6 +2,16 @@ class Site < ActiveRecord::Base
 
   include Overrides
 
+  def to_json(options = {})
+    options[:only] = [city, :state, :country, :lat, :lon, :sitename, :greenhouse, :notes]
+    super(options)
+  end
+
+  def to_xml(options = {})
+    options[:only] = [city, :state, :country, :lat, :lon, :sitename, :greenhouse, :notes]
+    super(options)
+  end
+
   extend CoordinateSearch # provides coordinate_search
 
   extend SimpleSearch
@@ -36,22 +46,10 @@ class Site < ActiveRecord::Base
     country
     lat
     lon
-    mat
-    map
-    masl
-    soil
-    som
-    notes
-    soilnotes
     created_at
     updated_at
     sitename
     greenhouse
-    user_id
-    local_time
-    sand_pct
-    clay_pct
-    espg
   end
 
 

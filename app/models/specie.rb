@@ -2,11 +2,22 @@ class Specie < ActiveRecord::Base
   require "comma"
   include Overrides
 
+  def to_json(options = {})
+    options[:only] = [:genus, :species, :scientificname, :yields]
+    super(options)
+  end
+
+  def to_xml(options = {})
+    options[:only] = [:genus, :species, :scientificname, :yields]
+    super(options)
+  end
+
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ species.scientificname species.commonname }
 
-  has_and_belongs_to_many :pfts
+  has_many :pfts_species, :class_name => "PftsSpecies"
+  has_many :pfts, :through => :pfts_species
 
   has_many :yields
   has_many :traits
@@ -27,85 +38,6 @@ class Specie < ActiveRecord::Base
     f.notes
     f.created_at
     f.updated_at
-    f.AcceptedSymbol
-    f.SynonymSymbol
-    f.Symbol
-    f.PLANTS_Floristic_Area
-    f.State
-    f.Category
-    f.Family
-    f.FamilySymbol
-    f.FamilyCommonName
-    f.xOrder
-    f.SubClass
-    f.Class
-    f.SubDivision
-    f.Division
-    f.SuperDivision
-    f.SubKingdom
-    f.Kingdom
-    f.ITIS_TSN
-    f.Duration
-    f.GrowthHabit
-    f.NativeStatus
-    f.NationalWetlandIndicatorStatus
-    f.RegionalWetlandIndicatorStatus
-    f.ActiveGrowthPeriod
-    f.AfterHarvestRegrowthRate
-    f.Bloat
-    f.C2N_Ratio
-    f.CoppicePotential
-    f.FallConspicuous
-    f.FireResistance
-    f.FoliageTexture
-    f.GrowthForm
-    f.GrowthRate
-    f.MaxHeight20Yrs
-    f.MatureHeight
-    f.KnownAllelopath
-    f.LeafRetention
-    f.Lifespan
-    f.LowGrowingGrass
-    f.NitrogenFixation
-    f.ResproutAbility
-    f.AdaptedCoarseSoils
-    f.AdaptedMediumSoils
-    f.AdaptedFineSoils
-    f.AnaerobicTolerance
-    f.CaCO3Tolerance
-    f.ColdStratification
-    f.DroughtTolerance
-    f.FertilityRequirement
-    f.FireTolerance
-    f.MinFrostFreeDays
-    f.HedgeTolerance
-    f.MoistureUse
-    f.pH_Minimum
-    f.pH_Maximum
-    f.Min_PlantingDensity
-    f.Max_PlantingDensity
-    f.Precipitation_Minimum
-    f.Precipitation_Maximum
-    f.RootDepthMinimum
-    f.SalinityTolerance
-    f.ShadeTolerance
-    f.TemperatureMinimum
-    f.BloomPeriod
-    f.CommercialAvailability
-    f.FruitSeedPeriodBegin
-    f.FruitSeedPeriodEnd
-    f.Propogated_by_BareRoot
-    f.Propogated_by_Bulbs
-    f.Propogated_by_Container
-    f.Propogated_by_Corms
-    f.Propogated_by_Cuttings
-    f.Propogated_by_Seed
-    f.Propogated_by_Sod
-    f.Propogated_by_Sprigs
-    f.Propogated_by_Tubers
-    f.Seeds_per_Pound
-    f.SeedSpreadRate
-    f.SeedlingVigor
   end
 
 

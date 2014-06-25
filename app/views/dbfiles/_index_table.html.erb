@@ -7,7 +7,6 @@
 <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px;" aria-sort="ascending"><%= sortable "machines.hostname", "Machine" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "dbfiles.file_path", "File Path" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "dbfiles.file_name", "File Name" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" >Created by</th>
 <th role="columnheader" aria-controls="DataTables_Table_0" >Actions</th>
       </tr>
     </thead>
@@ -17,7 +16,6 @@
     <td class="center"><%= link_to_if file.machine, file.machine, file.machine %></td>
     <td class="center"><%= file.file_path %></td>
     <td class="center"><%= file.file_name %></td>
-    <td class="center"><%= link_to_if file.created_user, file.created_user, file.updated_user %></td>
     <td>
     <%= link_to  dbfile_path(file), :class =>"button button-small" do %>
       <i class="icon-zoom-in"> </i>

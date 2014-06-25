@@ -135,6 +135,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
 
   resources :errors, :only => [:index, :create]
   resources :users
+  resources :schemas, :only => [:index]
 
   match '/maps' => 'maps#location_yields'
 

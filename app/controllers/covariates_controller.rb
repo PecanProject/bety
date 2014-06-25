@@ -88,6 +88,10 @@ class CovariatesController < ApplicationController
         format.json  { render :json => @covariate.errors, :status => :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::StatementInvalid => e
+    # Constraint violations not handled by Rails in the else clause
+    # are handled here.
+    handle_constraint_violations(e)
   end
 
   # PUT /covariates/1
@@ -109,6 +113,10 @@ class CovariatesController < ApplicationController
         format.json  { render :json => @covariate.errors, :status => :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::StatementInvalid => e
+    # Constraint violations not handled by Rails in the else clause
+    # are handled here.
+    handle_constraint_violations(e)
   end
 
   # DELETE /covariates/1

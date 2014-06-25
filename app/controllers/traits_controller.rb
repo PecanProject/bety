@@ -126,6 +126,7 @@ class TraitsController < ApplicationController
   def edit
     @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.specie.nil? ? @species = nil : @species = [@trait.specie]
+    @citation = @trait.citation
   end
 
   # POST /traits
@@ -157,6 +158,10 @@ class TraitsController < ApplicationController
         format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::StatementInvalid => e
+    # Constraint violations not handled by Rails in the else clause
+    # are handled here.
+    handle_constraint_violations(e)
   end
 
   # PUT /traits/1
@@ -177,6 +182,10 @@ class TraitsController < ApplicationController
         format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::StatementInvalid => e
+    # Constraint violations not handled by Rails in the else clause
+    # are handled here.
+    handle_constraint_violations(e)
   end
 
   # DELETE /traits/1

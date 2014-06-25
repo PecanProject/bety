@@ -1,7 +1,7 @@
 <h1>Listing traits for <%= @title %></h1>
-
-<%= link_to 'CSV Format', sanitize("#{url_for(:action => 'traits')}.csv?site=#{params[:species]}") %>
-
+<h2>
+<%= link_to 'download data', sanitize("#{url_for(:action => 'traits')}.csv?species=#{params[:species]}") %>
+</h2>
 <table>
   <tr>
     <th>Trait</th>

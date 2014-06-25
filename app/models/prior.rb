@@ -6,7 +6,8 @@ class Prior < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ citation variable }
   SEARCH_FIELDS = %w{ citations.author variables.name priors.phylogeny priors.distn priors.parama priors.paramb priors.n priors.notes }
 
-  has_and_belongs_to_many :pfts
+  has_many :pfts_priors, :class_name => "PftsPriors"
+  has_many :pfts, :through => :pfts_priors
 
   belongs_to :variable
   belongs_to :citation

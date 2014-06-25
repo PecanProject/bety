@@ -1,18 +1,36 @@
-  <p>
-    Machine: <%= @file.machine %>
-  </p>
-  <p>
-    File path: <%= @file.file_path %>
-  </p>
-  <p>
-    File name: <%=h @file.file_name %>
-  </p>
-  <p>
-    File created by: <%= link_to_if @file.created_user, @file.created_user, @file.created_user %>
-  </p>
-  <p>
-    Last User to update: <%= link_to_if @file.updated_user, @file.updated_user, @file.updated_user %>
-  </p>
+<div class="content">
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
+        <h1>Viewing File</h1>
+      </header>
 
-<%= link_to 'Edit', edit_dbfile_path(@file) %> |
-<%= link_to 'Back', dbfile_path %>
+      <!-- InstanceBeginEditable name="Full Width Content" --> 
+      <dl class="dl-horizontal">
+        <dt>Machine:</dt>
+        <dd><%= link_to_if @file.machine, @file.machine, @file.machine %></dd>
+        <dt>File Path:</dt>
+        <dd><%= @file.file_path %></dd>
+        <dt>File Name:</dt>
+        <dd><%= @file.file_name %></dd>
+        <dt>Created by:</dt>
+        <dd><%= link_to_if @file.created_user, @file.created_user, @file.created_user %></dd>
+        <dt>Last updated by:</dt>
+        <dd><%= link_to_if @file.updated_user, @file.updated_user, @file.updated_user %></dd>
+      </dl>
+      <div class="form-actions">
+        <div class="button-group">
+          <%= link_to( dbfiles_path ) do %>
+            <button class="button"><i class="icon-arrow-left"></i> All Records</button>
+          <% end %>
+          <%= link_to( edit_dbfile_path(@file) ) do %>
+            <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>  
+          <% end %>
+          
+        </div>
+      </div>
+      <!-- InstanceEndEditable --> </div>
+  </div>
+  <!-- container --> 
+</div>
+

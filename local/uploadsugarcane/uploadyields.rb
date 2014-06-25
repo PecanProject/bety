@@ -111,7 +111,7 @@ quitting
           exit
         end
       else # exactly one row found
-        (cultivar_id,) = site_id_query.fetch
+        (cultivar_id,) = cultivar_id_query.fetch
       end
     else
       cultivar_id = nil
