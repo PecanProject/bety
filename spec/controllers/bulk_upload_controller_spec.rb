@@ -72,4 +72,38 @@ describe BulkUploadController, :type => :controller do
 
   end # "display_csv_file"
 
+  describe "choose global data values" do
+
+    before(:each) do
+      get 'start_upload'
+      @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv","text/csv")
+      @form ={'new upload' => true, "CSV file" =>@file}
+      post 'display_csv_file', @form
+      get 'choose_global_data_values'
+    end
+
+    it "should respond with success" do 
+      assert_equal(response.status, 200, "Failed to respond")
+    end
+
+  end # "choose global data values"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end
