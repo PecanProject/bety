@@ -9,7 +9,7 @@ class Posterior < ActiveRecord::Base
   has_many :posteriors_ensembles, :class_name => "PosteriorsEnsembles"
   has_many :ensembles, :through => :posteriors_ensembles
 
-  has_many :posterior_samples, :class_name => "PosteriorSaples"
+  has_many :posterior_samples, :class_name => "PosteriorSamples"
   
   has_many :files, :as => :container, :class_name => 'DBFile'
 
