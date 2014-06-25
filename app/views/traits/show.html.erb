@@ -58,8 +58,32 @@
 
       <dt>Notes:</dt>
       <dd><%= @trait.notes %></dd>
+      <div id="covariate-list">
+        <dt>Covariates:</dt>
+        <br>
+        <div style="margin-left:-100px">
+          <dd>
+            <table>
+              <tr><th>Variable</th><th>Level</th></tr>
+              <% @trait.covariates.each do |covariate| %>
+              <tr>
+                <td><%= link_to covariate.variable, covariate.variable%></td>
+                <td><%= covariate.level %></td>
+              </tr>
+              <% end %>
+            </table>
+          </dd>
+        </div>
+      </div>
+      <% if @trait.covariates.size ==0 then %>
+      <%=javascript_tag do%>
+        jQuery('#covariate-list').hide();
+      <%end%>
+      <%end%>
 
 			</dl>
+
+
 			<div class="form-actions">
 				<div class="button-group">
           <%= link_to( traits_path ) do %>
