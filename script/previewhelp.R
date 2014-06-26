@@ -1,3 +1,4 @@
+require('ggplot2')
 pr.dens <- function(distn, parama, paramb, n = 1000, alpha = 0.001) {
   alpha <- ifelse(alpha < 0.5, alpha, 1-alpha)
   n <- ifelse(alpha == 0.5, 1, n)
