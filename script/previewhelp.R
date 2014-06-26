@@ -1,4 +1,13 @@
-require('PEcAn.priors')
+pr.dens <- function(distn, parama, paramb, n = 1000, alpha = 0.001) {
+  alpha <- ifelse(alpha < 0.5, alpha, 1-alpha)
+  n <- ifelse(alpha == 0.5, 1, n)
+  range.x <- do.call(paste('q', distn, sep = ""), list(c(alpha, 1-alpha), parama, paramb))
+  seq.x   <- seq(from = range.x[1], to = range.x[2], length.out = n)
+  dens.df <- data.frame(x = seq.x,
+                        y = do.call(paste('d', distn, sep=""),
+                                    list(seq.x, parama, paramb)))
+  return(dens.df)
+}
 
 args <- commandArgs()
 
