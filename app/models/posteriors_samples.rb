@@ -1,4 +1,4 @@
-class PosteriorSamples < ActiveRecord::Base
+class PosteriorsSamples < ActiveRecord::Base
 
   validates_presence_of     :posterior_id
   validates_presence_of     :variable_id
