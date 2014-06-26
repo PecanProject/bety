@@ -1,0 +1,7 @@
+Access request for <%= @user[:name].encode("ascii", invalid: :replace, undef: :replace) %>  (<%= @user[:login] %>)
+
+<%= @user[:name].encode("ascii", invalid: :replace, undef: :replace) %>  (<%= @user[:login] %>) has
+requested a non-default access level level at <%= @url %>.
+
+Page_access_level : <%= @user[:page_access_level] %>
+Access_level      : <%= @user[:access_level] %>

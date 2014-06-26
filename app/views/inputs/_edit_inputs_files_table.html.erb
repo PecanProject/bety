@@ -1,0 +1,29 @@
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th>Name</th>
+  </tr>
+    <% @files.each do |file| %>
+    <tr>
+      <td>
+      <% if @input.files.include?(file) %>
+        <%= link_to "X", { :controller => :inputs, :action => :edit_inputs_files, :id => @input.id, :file => file, :search => @searchparam }, :confirm => 'Are you sure?', :remote => true,
+                          :html => { :style => "text-decoration: none" } %>
+
+
+      <% else %>
+        <%= link_to "+", { :controller => :inputs, :action => :edit_inputs_files, :id => @input.id, :file => file, :search => @searchparam }, :confirm => 'Are you sure?', :remote => true,
+                          :html => { :style => "text-decoration: none" } %>
+
+
+      <% end %>
+      </td>
+      <td><%= link_to "edit", edit_dbfile_path(file) %></td>
+      <td><%= link_to file, dbfile_path(file) %></td>
+      </tr>
+    <% end %>
+</table>
+
+<%= will_paginate @files, :renderer => 'WillPaginate::ActionView::RemoteLinkRenderer' , :params => {:action => :edit_inputs_files, :id => @input.id, :search => @searchparam}, :remote => { :loading => "Element.show('spinner')", :complete => "Element.hide('spinner')" } %>
+

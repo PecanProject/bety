@@ -1,15 +1,22 @@
 class Pft < ActiveRecord::Base
 
   include Overrides
-  include Cloner
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{  }
-  SEARCH_FIELDS = %w{ pfts.name pfts.definition }
+  SEARCH_FIELDS = %w{ pfts.name pfts.definition pfts.model_type }
 
-  has_and_belongs_to_many :priors
-  has_and_belongs_to_many :specie
+  has_many :pfts_priors, :class_name => "PftsPriors"
+  has_many :priors, :through => :pfts_priors
+
+  has_many :pfts_species, :class_name => "PftsSpecies"
+  has_many :specie, :through => :pfts_species
+
   has_many :posteriors
+
+  #Self reference
+  has_many :children, :class_name => "Pft", :foreign_key => "parent_id"
+  belongs_to :parent, :class_name => "Pft", :foreign_key => "parent_id"
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
@@ -17,6 +24,7 @@ class Pft < ActiveRecord::Base
   comma do
     id
     definition
+    model_type
     created_at
     updated_at
     name
@@ -35,6 +43,6 @@ class Pft < ActiveRecord::Base
   #Columns we search when referenced from another model
   #Fields present in 'select_default'
   def self.search_columns
-    return ["pfts.id", "pfts.name", "pfts.definition"]
+    return ["pfts.id", "pfts.name", "pfts.definition", "pfts.model_type"]
   end
 end

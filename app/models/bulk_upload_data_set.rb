@@ -288,7 +288,8 @@ class BulkUploadDataSet
               column[:validation_result] = :fatal_error
               column[:validation_message] = "Cultivar can't be looked up when species is not in species table."
             else
-              if existing_cultivar?(column[:data], species_id)
+              if column[:data].strip.empty? || # cultivar is optional!
+                  existing_cultivar?(column[:data], species_id)
                 column[:validation_result] = :valid
               else
                 column[:validation_result] = :fatal_error
@@ -568,8 +569,11 @@ class BulkUploadDataSet
     cultivars = []
     if @headers.include?("cultivar")
       @data.each do |row|
-        # We can do this since (for now at least) we require a species field if there is a cultivar field:
-        cultivars << { cultivar_name: row["cultivar"], species_name: row["species"] }
+        cultivar_name = row["cultivar"]
+        if !cultivar_name.nil? and !cultivar_name.strip.empty?
+          # We can do this since (for now at least) we require a species field if there is a cultivar field:
+          cultivars << { cultivar_name: row["cultivar"], species_name: row["species"] }
+        end
       end
     else
       upload_species = get_upload_species

@@ -1,4 +1,7 @@
 class PftsPriors < ActiveRecord::Base
+  belongs_to :pft
+  belongs_to :prior
+
   validates_presence_of     :pft_id
   validates_presence_of     :prior_id
   comma do

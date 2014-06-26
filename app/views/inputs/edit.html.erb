@@ -1,80 +1,90 @@
+<div class="content">
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
+        <h1>Editing Input</h1>
+      </header>
 
-<a style="text-decoration: none" href="#" onclick="showHide('edit_inputs_runs')" id="show_edit_inputs_runs">[+] View Related Runs</a>
-<br/>
-<br/>
-<div id="edit_inputs_runs" class="hidden notvisible">
-  <%= render 'edit_inputs_runs' %>
+      <a style="text-decoration: none" href="#" onclick="showHide('edit_inputs_variables'); return false;" id="show_edit_inputs_variables">[+] View Related Variables</a>
+      <div id="edit_inputs_variables" class="hidden notvisible">
+        <%= render 'edit_inputs_variables' %>
+      </div>
+
+      <br>
+      <br>
+
+      <a style="text-decoration: none" href="#" onclick="showHide('edit_inputs_files'); return false;" id="show_edit_inputs_files">[+] View Related Files</a>
+      <br/>
+      <div id="edit_inputs_files" class="hidden notvisible">
+        <%= render 'edit_inputs_files' %>
+      </div>
+
+      <hr />
+      
+      <%= form_for(@input) do |f| %>
+        <%= f.error_messages %>
+
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :site %>
+            <%= f.select :site_id, Site.all.collect { |p| [ p.select_default, p.id ] }, :class => "input-full" %>
+          </div>
+        </div>          
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :parent %>
+            <%= f.select :parent_id, Input.all.collect { |p| [ p.select_default, p.id ] }, :class => "input-full" %>
+          </div>
+        </div>          
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :format_id %>
+            <%= f.select :format_id, Format.all.collect { |p| [ p.select_default, p.id ] }, :class => "input-full" %>
+          </div>
+        </div>          
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :start_date %>
+            <%= f.datetime_select :start_date, { :start_year => 1800, :end_year => 2155, :include_blank => "0000", :default => "0000"}, {} %>
+          </div>
+          <div class="eight columns alpha">
+            <%= f.label :end_date %>
+            <%= f.datetime_select :end_date, { :start_year => 1800, :end_year => 2155, :include_blank => "0000", :default => "0000"}, {} %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :notes %>
+            <%= f.text_area :notes, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="eight columns alpha">
+            <label>Record Creator</label>
+            <%= user_for_view(@input.user) %>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( inputs_path ) do %>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
+            <% end%>
+            <%= link_to( @input ) do %>
+              <button class="button" type="button">Show</button>
+            <% end%>
+          </div>
+          <div class="button-group pull-right">
+            <%= f.submit 'Update', :class => "button button-primary" %>
+          </div>
+        </div>
+
+      <% end %>
+  
+    </div>
+  </div>
 </div>
-<hr />
-<br />
-<br />
-<a style="text-decoration: none" href="#" onclick="showHide('edit_inputs_variables')" id="show_edit_inputs_variables">[+] View Related Variables</a>
-<br/>
-<br/>
-<div id="edit_inputs_variables" class="hidden notvisible">
-  <%= render 'edit_inputs_variables' %>
-</div>
-<hr />
-<br />
-<br />
-
-<h1>Editing input</h1>
-
-<%= form_for @input, :html => {:multipart => true} do |f| %>
-  <%= f.error_messages %>
-
-  <p>
-    <%= f.label :site %><br />
-    <%= f.select :site_id, Site.all.collect { |p| [ p.select_default, p.id ] }, {} %>
-  </p>
-  <p>
-    <%= f.label :parent %><br />
-    <%= f.select :parent_id, Input.all.collect { |p| [ p.select_default, p.id ] }, {:include_blank => true} %>
-  </p>
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :start_date %><br />
-    <%= f.datetime_select :start_date, { :start_year => 1800, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
-  </p>
-  <p>
-    <%= f.label :end_date %><br />
-    <%= f.datetime_select :end_date, { :start_year => 1800, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
-  </p>
-  <p>
-    <%= f.label :file_id, 'File ID' %><br />
-    <%= f.text_field :file_id %>
-  </p>
-  <p>
-    <%= f.label :format_id %><br />
-    <%= f.select :format_id, Format.all.collect { |p| [p.select_default, p.id ] }, :include_blank => true %>
-  </p>
-  <h2>Associated Files</h2>
-  <%= link_to 'New File', new_dbfile_path %>
-  <p>
-    <%= f.label :dbfile_id %><br />
-    <%= select_tag :dbfile_id, options_for_select(['']+DBFile.all.collect { |p| [ p.select_default, p.id ] }) %>
-  </p>
-
-  <% unless f.object.files.empty? %>
-  <p>Files associated with input</p>
-    <% f.object.files.each do |file| %>
-  <p>
-    <%= link_to_if file,file,dbfile_path(file) %> <%= link_to "[X]",unlink_dbfile_path(file.id) %><br />
-  </p>
-    <% end %>
-  <% end %>
-
-  <p>
-    <%= f.label :notes %><br />
-    <%= f.text_area :notes %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
-
-<%= link_to 'Show', @input %> |
-<%= link_to 'Back', inputs_path %>

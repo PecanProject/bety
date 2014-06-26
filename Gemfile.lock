@@ -42,6 +42,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-webkit (1.1.1)
+      capybara (>= 2.0.2, < 2.2.0)
+      json
     choice (0.1.6)
     comma (3.0.4)
     daemon_controller (1.1.7)
@@ -133,6 +136,7 @@ DEPENDENCIES
   activerecord-postgresql-adapter
   bootstrap-will_paginate
   capybara
+  capybara-webkit
   choice (= 0.1.6)
   comma (= 3.0.4)
   database_cleaner

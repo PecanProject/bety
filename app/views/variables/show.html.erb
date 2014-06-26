@@ -15,11 +15,22 @@
         <dd><%= @variable.units %></dd>
         <dt>Notes:</dt>
         <dd><%= @variable.notes %></dd>
+        <% if current_user.access_level==1 %>
+        <br>
+        <dt>Standard Name:</dt>
+        <dd><%= @variable.standard_name %></dd>
+        <dt>Label:</dt>
+        <dd><%= @variable.label %></dd>
+        <dt>Standard Units:</dt>
+        <dd><%= @variable.standard_units %></dd>
+        <dt>Type:</dt>
+        <dd><%= @variable.type %></dd>
+        <% end %>
 			</dl>
 			<div class="form-actions">
 				<div class="button-group">
           <%= link_to( variables_path ) do %>
-					  <button class="button"><i class="icon-arrow-left"></i> Go Back</button>
+					  <button class="button"><i class="icon-arrow-left"></i> All Records</button>
 					<% end %>
 					<%= link_to( edit_variable_path(@variable) ) do %>
     			  <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>	

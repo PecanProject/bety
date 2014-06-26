@@ -5,7 +5,7 @@
         <h1>New Format</h1>
       </header>
 
-      <%= form_for :form, @format, :url => { :action => "create" } do |f| %>
+      <%= form_for @format, :as => :form, :url => { :action => "create" } do |f| %>
         <%= f.error_messages %>
 
         <div class="row">
@@ -51,7 +51,7 @@
         <div class="form-actions">
           <div class="button-group">
             <%= link_to( formats_path ) do %>
-              <button class="button">Back</button>
+              <button class="button" type="button">Back</button>
             <% end%>
           </div>
 		      <div class="button-group pull-right">
