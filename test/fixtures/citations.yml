@@ -37,3 +37,15 @@ citation_for_bulk_upload:
   pg: "297-300"
   url: "http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1075323/?page=1"
   user: 1
+
+citation_for_bulk_upload_rounding:
+  id: 4
+  author: Wood
+  year: 1996
+  title: "Growth of sugarcane under high input conditions in tropical Australia. III. Accumulation, partitioning and use of nitrogen"
+  journal: "Field Crops Research"
+  vol: 81
+  pg: "297-300"
+  url: "http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1075323/?page=1"
+  doi: "10.1016/S0378-4290(96)00043-3"
+  user: 1

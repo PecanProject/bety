@@ -5,3 +5,7 @@ test_citation_treatment:
 test_citation_treatment_for_bulk_upload:
     citation_id: 3
     treatment_id: 1
+
+test_citation_treatment_for_bulk_upload_rounding:
+    citation_id: 4
+    treatment_id: 1

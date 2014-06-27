@@ -6,3 +6,12 @@ test_cultivar:
   created_at: "2013-03-31 23:16:35"
   updated_at: "2013-03-31 23:16:35"
   previous_id: "pvhyl"
+
+test_cultivar_bulk_upload:
+  specie_id: 3
+  name: "s5-14"
+  ecotype: "Upland"
+  notes: "asdfasdfasdfasdfasdfasdfasdf"
+  created_at: "2013-03-31 23:16:35"
+  updated_at: "2013-03-31 23:16:35"
+  previous_id: "pvhyl"

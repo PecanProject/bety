@@ -32,3 +32,12 @@ test_site_2:
   country: US
   lat: 39.538264
   lon: -119.812071
+
+test_site_3:
+  id: 3
+  sitename: "Macknade Research Station"
+  city: "xxx"
+  state: "xxx"
+  country: xxx
+  lat: 39.538264
+  lon: -119.812071
