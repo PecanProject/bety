@@ -127,7 +127,20 @@ dataset.validated_data = nil
         "statname"=>"SE"
       }
      assert_equal(@insertion_data[0],@expected_data,"Insertion data does not match expected")
+    end
+  end
 
+  context "test rounding" do 
+    it "should round data to precision" do
+      @session = { csvpath: Rails.root.join('spec/fixtures/files/bulk_upload/rounding_demo.csv'), :user_id=>1}
+      @dataset = BulkUploadDataSet.new(@session)
+      @dataset.check_header_list
+      @dataset.validate_csv_data
+      @session.merge!({"rounding"=>{"yields"=>2}})
+      @dataset = BulkUploadDataSet.new(@session)
+      @insertion_data = @dataset.get_insertion_data
+      @rounded_yield= @insertion_data[0]["mean"]
+      assert_equal(@rounded_yield.to_f,5.9,"Rounded value does not match expected")
     end
   end
 
