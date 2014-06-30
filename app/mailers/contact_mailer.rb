@@ -8,9 +8,9 @@ class ContactMailer < ActionMailer::Base
          :date => Time.now)
   end
 
-  def signup_email(user)
+  def signup_email(user, url)
   	@user = user
-  	@url = root_path
+  	@url = url
 
   	email_from = "#{@user[:name]} <#{@user[:email]}>"
 	email_to = User.where(page_access_level: 1).map! do |attributes|
@@ -24,9 +24,9 @@ class ContactMailer < ActionMailer::Base
          :date => Time.now)
   end
 
-  def admin_approval(user)
+  def admin_approval(user, url)
   	@user = user
-  	@url = root_path
+  	@url = url
 
   	email_from = "#{@user[:name]} <#{@user[:email]}>"
 	email_to = User.where(page_access_level: 1).map! do |attributes|
