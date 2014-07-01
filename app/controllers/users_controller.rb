@@ -49,9 +49,9 @@ class UsersController < ApplicationController
 
     if success && @user.errors.empty?
       if params[:user][:page_access_level].to_i < 4 or params[:user][:access_level].to_i < 3
-        ContactMailer::admin_approval(params[:user]).deliver
+        ContactMailer::admin_approval(params[:user], root_url).deliver
       end
-      ContactMailer::signup_email(@user).deliver
+      ContactMailer::signup_email(@user, root_url).deliver
       # Protects against session fixation attacks, causes request forgery
       # protection if visitor resubmits an earlier form using back
       # button. Uncomment if you understand the tradeoffs.
