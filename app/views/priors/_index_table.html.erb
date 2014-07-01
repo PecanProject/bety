@@ -7,7 +7,7 @@
 <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px;"><%= sortable "citations.author", "Citation" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "variables.name", "Variable" %></th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "priors.phylogeny", "Phylogeny" %></th>
-<th class="center" role="columnheader" style="width:220px"> Distribution </th>
+<th class="center" role="columnheader" style="width:220px"> Distribution <br> Median, [95%CI]</th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "priors.notes", "Notes" %></th>
 <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 110px">Actions</th>
       </tr>
@@ -20,9 +20,10 @@
           <td class="center"><%= link_to_if prior.variable, prior.variable, prior.variable %></td>
           <td class="center"><%= prior.phylogeny %></td>
           <td class="center"> <%= link_to prior do%> 
-              <% image_tag preview_prior_path(prior.id) %>
-              <% end %>
-            </td>
+            <% @alt = "Distribution: " + prior.distn.to_s + "(" + prior.parama.to_s + "," + prior.paramb.to_s + ")" %>
+            <% image_tag preview_prior_path(prior.id), :alt => @alt %>
+          <% end %>
+          </td>
           <td class="center"><%= prior.notes %></td>
           <td class="center">
 					  <!-- SHOW -->
