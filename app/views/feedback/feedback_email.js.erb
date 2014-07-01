@@ -1,0 +1,8 @@
+jQuery('.feedback-spinner').html("<span id='thx' style='color:#40C748;font-weight:bold;font-size:15px;'>&nbsp;Thank You</span>");
+
+setTimeout(function(){
+	jQuery(".dialog-cancel").removeAttr("disabled");
+	jQuery(".feedback-submit").removeAttr("disabled");
+	jQuery('.feedback-spinner').html("");
+	jQuery('.dialog-all').dialog("close");
+},1000);
