@@ -8,6 +8,20 @@ class ContactMailer < ActionMailer::Base
          :date => Time.now)
   end
 
+  def feedback_email(email_params)
+    @email_body = email_params[:feedback_text]
+    @sender_name = email_params[:sender]
+    @sender_email = email_params[:sender_email]
+    @type = email_params[:type]
+    admins = User.where(page_access_level: 1).map! do |attributes|
+      "#{attributes.name} < #{attributes.email}>"
+    end
+    mail(:to => admins,
+         :subject => "[BETY][#{@type}] #{email_params[:feedback_subject]}",
+         :from => "#{@sender_name}<#{@sender_email}>",
+         :date => Time.now)
+  end
+
   def signup_email(user, url)
   	@user = user
   	@url = url
