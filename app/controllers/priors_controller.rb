@@ -81,7 +81,13 @@ class PriorsController < ApplicationController
     end
 
     if !File.exist?( imgfile ) or File.atime(imgfile) < updatetime
-      system("R --vanilla --args #{imgfile} #{distname} #{aparam} #{bparam} #{n} < #{Rails.root.join('script/previewhelp.R')}")
+      error_output = `R --vanilla --args #{imgfile} #{distname} #{aparam} #{bparam} #{n} < #{Rails.root.join('script/previewhelp.R')} 2>&1 >/dev/null`
+      if !error_output.empty?
+        logger.error("\nR error output:")
+        logger.error("========================================")
+        logger.error(error_output)
+        logger.error("========================================\n\n")
+      end
       # for debugging purposes only if something goes wrong
       #r=%x[R --vanilla --args #{imgfile} #{distname} #{aparam} #{bparam} #{n} < #{Rails.root.join('script/previewhelp.R')} 2>&1]
       #logger.error(r)
