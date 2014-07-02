@@ -1,48 +1,65 @@
-<h1>New input</h1>
+<div class="content">
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
+        <h1>New Input</h1>
+      </header>
 
-<%= form_for @input, :html => { :multipart => true } do |f| %>
-  <%= f.error_messages %>
+      <%= form_for(@input) do |f| %>
+        <%= f.error_messages %>
 
-  <p>
-    <%= f.label :site %><br />
-    <%= f.select :site_id, Site.all.collect { |p| [ p.select_default, p.id ] }, {} %>
-  </p>
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :parent %><br />
-    <%= f.select :parent_id, Input.all.collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %>
-  </p>
-   <p>
-    <%= f.label :start_date %><br />
-    <%= f.datetime_select :start_date, { :start_year => 1800, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
-  </p>
-  <p>
-    <%= f.label :end_date %><br />
-    <%= f.datetime_select :end_date, { :start_year => 1800, :end_year => 2155, :include_blank => "0000", :default => "0000"} %>
-  </p>
-  <p>
-    <%= f.label :raw, "Raw?" %><br />
-    <%= f.select :raw, [["True",true],['False',false]], :selected => false %>
-  </p>
-  <p>
-    <%= f.label :format_id, 'Format <em>*Required</em' %><br />
-    <%= f.select :format_id, Format.all.collect { |p| [p.select_default, p.id ] } %>
-  </p>
-  <p>
-    <%= f.label :access_level %><br />
-    <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :selected => current_user.access_level %>
-  </p>
-  <p>
-    <%= f.label :notes %><br />
-    <%= f.text_area :notes %>
-  </p>
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :site %>
+            <%= f.select :site_id, Site.order("id ASC").all.collect { |p| [ p.select_default, p.id ] }, :class => "input-full" %>
+          </div>
+        </div>          
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :parent %>
+            <%= f.select :parent_id, Input.order("id ASC").all.collect { |p| [ p.select_default, p.id ] }, {include_blank: 'None', :class => "input-full" } %>
+          </div>
+        </div>          
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :name %>
+            <%= f.text_field :name, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :format_id %>
+            <%= f.select :format_id, Format.order("id ASC").all.collect { |p| [ p.select_default, p.id ] }, :class => "input-full" %>
+          </div>
+        </div>          
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :start_date %>
+            <%= f.datetime_select :start_date, { :start_year => 1800, :end_year => 2155, :include_blank => "0000", :default => "0000"}, {} %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :end_date %>
+            <%= f.datetime_select :end_date, { :start_year => 1800, :end_year => 2155, :include_blank => "0000", :default => "0000"}, {} %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :notes %>
+            <%= f.text_area :notes, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
 
-  <p>
-    <%= f.submit 'Create' %>
-  </p>
-<% end %>
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( inputs_path ) do %>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
+            <% end%>
+          </div>
+          <div class="button-group pull-right">
+            <%= f.submit 'Create', :class => "button button-primary" %>
+          </div>
+        </div>
 
-<%= link_to 'Back', inputs_path %>
+      <% end %>
+  
+    </div>
+  </div>
+</div>
