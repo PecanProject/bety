@@ -8,7 +8,7 @@
     <%=f.hidden_field :sender_email,:value =>current_user.email %>
     <%=f.label :feedback_subject,"Subject",{:style =>"font-weight:normal"} %>
     <%=f.text_field :feedback_subject %>
-    <%=f.label :feedback_text,"Description",{:style =>"font-weight:normal"} %>
+    <%=f.label :feedback_text,"Details",{:style =>"font-weight:normal"} %>
     <%=f.text_area :feedback_text , {:rows=> 5, :style=>"font-size:13px;"}%>
     <%=submit_tag "Submit", {:class => "button button-warning feedback-submit", :style =>"font-size:12px"}%>
     <button class="button button-info dialog-cancel" style="float:right;font-size:12px">Cancel</button>
