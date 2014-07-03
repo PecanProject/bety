@@ -49,11 +49,11 @@
         <div class="row">
           <div class="eight columns alpha">
             <%= f.label :site_id %>
-            <%= f.select :site_id, @citation.sites.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+            <%= f.select :site_id, @sites.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
           </div>
           <div class="eight columns omega">
             <%= f.label :treatment_id %>
-            <%= f.select :treatment_id, @citation.treatments.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+            <%= f.select :treatment_id, @treatments.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
           </div>
         </div>
         
