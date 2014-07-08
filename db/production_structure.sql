@@ -886,7 +886,8 @@ CREATE TABLE pfts (
     updated_at timestamp(6) without time zone,
     name character varying(255),
     parent_id bigint,
-    pft_type character varying(255) DEFAULT 'plant'::character varying
+    pft_type character varying(255) DEFAULT 'plant'::character varying,
+    model_type character varying(255)
 );
 
 
@@ -984,6 +985,18 @@ CREATE TABLE posteriors (
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
     format_id bigint
+);
+
+
+--
+-- Name: posteriors_ensembles; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE posteriors_ensembles (
+    posterior_id bigint,
+    ensemble_id bigint,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -1188,7 +1201,7 @@ CREATE TABLE sites (
     country character varying(255),
     lat numeric(9,6),
     lon numeric(9,6),
-    mat integer,
+    mat numeric(4,2),
     map integer,
     masl integer,
     soil character varying(255),
@@ -2917,3 +2930,11 @@ INSERT INTO schema_migrations (version) VALUES ('20140521180349');
 INSERT INTO schema_migrations (version) VALUES ('20140604192901');
 
 INSERT INTO schema_migrations (version) VALUES ('20140617163304');
+
+INSERT INTO schema_migrations (version) VALUES ('20140610210928');
+
+INSERT INTO schema_migrations (version) VALUES ('20140621060009');
+
+INSERT INTO schema_migrations (version) VALUES ('20140623004229');
+
+INSERT INTO schema_migrations (version) VALUES ('20140624185610');
