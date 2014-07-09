@@ -48,7 +48,7 @@ int main(int argc, char** argv){
 			}
 			while ((row=mysql_fetch_row(result))){
 				for (i=0; i<num_fields;i++){
-					fprintf(file,"%s,",tcrow[i]);
+					fprintf(file,"%s,",row[i]);
 				}
 				fprintf(file,"\n","");
 			}

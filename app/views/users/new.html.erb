@@ -71,7 +71,7 @@
 
         <p id="al_reason" style="display:none">
         <%= f.label 'reason_for_access', "Reason for non-default access?" %>
-        <%= text_area_tag :access_level_reason, :class => "input-full" %></p>
+        <%= text_area_tag :access_level_reason, nil, :class => "input-full" %></p>
 
         <em>* Any request for page access higher then Viewer or data access higher then External researcher must be approved by an administrator</em>
 
@@ -82,7 +82,7 @@
         <div class="form-actions">
           <div class="button-group">
             <%= link_to( users_path ) do %>
-              <button class="button">Back</button>
+              <button class="button" type="button">Back</button>
             <% end%>
           </div>
 		      <div class="button-group pull-right">
@@ -95,10 +95,10 @@
 </div>
 
 
-<%= observe_field :page_access_level,
-      :function => "if($('page_access_level').value < 4 || $('access_level').value < 3 ) { $('al_reason').show() } else { $('al_reason').hide() }" %>
-<%= observe_field :access_level,
-      :function => "if($('page_access_level').value < 4 || $('access_level').value < 3 ) { $('al_reason').show() } else { $('al_reason').hide() }" %>
+<%= observe_field 'user_page_access_level',
+      :function => "if($('user_page_access_level').value < 4 || $('user_access_level').value < 3 ) { $('al_reason').show() } else { $('al_reason').hide() }" %>
+<%= observe_field 'user_access_level',
+      :function => "if($('user_page_access_level').value < 4 || $('user_access_level').value < 3 ) { $('al_reason').show() } else { $('al_reason').hide() }" %>
 
 
 

@@ -32,10 +32,13 @@ module ApplicationHelper
                      "7.5 " => "7.5" ,
                      "8   year" => "8.0" ,
                      "9   no data" => "9.0"  }
+  $dateloc_drop_default = "9.0"
   $timeloc_drop = {  "1   second" => "1.0" ,
                      "2   minute" => "2.0" ,
                      "2.5 quarter-hour" => "2.5" ,
-                     "3   hour" => "3.0" }
+                     "3   hour" => "3.0" ,
+                     "9   no data" => "9.0"  }
+  $timeloc_drop_default = "9.0"
 
   $statname_list =  ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD", "P", "HSD"]
 

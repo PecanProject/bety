@@ -45,6 +45,21 @@ feature 'Citation index works' do
       end
     end
 
+    # test for Redmine bug #1921
+    context 'editing the volume field of a citation' do
+      it 'should change the value stored in the database and shown on the Show page' do
+        visit '/citations/'
+        # edit the first-listed citation
+        first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
+        first(:xpath, "//label[text() = 'Vol']/following-sibling::input[1]").set('1066')
+        click_button 'Update'
+        # In case the Show button doesn't work, go to the show page via the index:
+        visit '/citations/'
+        first(:xpath, "//a[@alt = 'show']").click
+        first(:xpath, "//div[@class = 'content']//dl/dd[preceding-sibling::dt[1][text() = 'Vol']]").text.should eq '1066'
+      end
+    end
+
     context 'clicking use citation button' do
       it 'should return "Sites already associated with this citation" ' do
         visit '/citations/'

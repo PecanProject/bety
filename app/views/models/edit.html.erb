@@ -1,39 +1,69 @@
-<h1>Editing model</h1>
+<div class="content">
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
+        <h1>Editing Model</h1>
+      </header>
 
-<%= form_for(@model) do |f| %>
-  <%= f.error_messages %>
+      <a style="text-decoration: none" href="#" onclick="showHide('edit_models_files'); return false;" id="show_edit_models_files">[+] View Related Files</a>
+      <br/>
+      <div id="edit_models_files" class="hidden notvisible">
+        <%= render 'edit_models_files' %>
+      </div>
 
-  <p>
-    <%= f.label :model_name %><br />
-    <%= f.text_field :model_name %>
-  </p>
-  <p>
-    <%= f.label :model_type %><br />
-    <%= f.select :model_type, options_for_select([
+      <hr />
+      
+      <%= form_for(@model) do |f| %>
+        <%= f.error_messages %>
+
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :model_name %><br />
+            <%= f.text_field :model_name %>
+          </div>
+        </div>          
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :revision %><br />
+            <%= f.text_field :revision %>
+          </div>
+        </div>          
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :model_type %>
+            <%= f.select :model_type, options_for_select([
                 ["BIOCRO", "BIOCRO"], 
                 ["ED2", "ED2"],
                 ["GHGVC", "GHGVC"],
                 ["ISIS", "ISIS"],
                 ["SIPNET", "SIPNET"],
-              ]) 
-    %>
-  </p>
-  <p>
-    <%= f.label :model_path %><br />
-    <%= f.text_field :model_path %>
-  </p>
-  <p>
-    <%= f.label :revision %><br />
-    <%= f.text_field :revision %>
-  </p>
-  <p>
-    <%= f.label :parent %><br />
-    <%= f.select :parent_id, Model.all.collect {|p| [ p.select_default, p.id] },{:include_blank => true} %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+              ], @model.model_type) %> 
+          </div>
+        </div>          
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :parent %>
+            <%= f.select :parent_id, Model.all.collect { |p| [ p.select_default, p.id ] }, { include_blank: true, :class => "model-full"} %>
+          </div>
+        </div>          
 
-<%= link_to 'Show', @model %> |
-<%= link_to 'Back', models_path %>
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( models_path ) do %>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
+            <% end%>
+            <%= link_to( @model ) do %>
+              <button class="button" type="button">Show</button>
+            <% end%>
+          </div>
+          <div class="button-group pull-right">
+            <%= f.submit 'Update', :class => "button button-primary" %>
+          </div>
+        </div>
+
+      <% end %>
+  
+    </div>
+  </div>
+</div>
+

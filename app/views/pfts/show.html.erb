@@ -28,14 +28,24 @@
 			<dl class="dl-horizontal">
 				<dt>Name</dt>
 				<dd><%= @pft.name %></dd>
+				<dt>Model Type</dt>
+				<dd><%= @pft.model_type %></dd>
 				<dt>Definition</dt>
 				<dd><%= @pft.definition %></dd>
+				<dt>Type</dt>
+				<dd><%= @pft.pft_type %></dd>
+				<dt>Parent</dt>
+				<dd><%= link_to_if @pft.parent, @pft.parent, @pft.parent %></dd>
+				<dt>Clones</dt>
+				<% @pft.children.each do |child| %>					
+					<dd><%= link_to_if child, child, child %></dd>
+				<% end %>
 			</dl>
 
 			<div class="form-actions">
 				<div class="button-group">
           <%= link_to( pfts_path ) do %>
-					  <button class="button"><i class="icon-arrow-left"></i> Go Back</button>
+					  <button class="button"><i class="icon-arrow-left"></i> All Records</button>
 					<% end %>
 					<%= link_to( edit_pft_path(@pft) ) do %>
     			  <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>	

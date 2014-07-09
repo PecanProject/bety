@@ -409,20 +409,20 @@
 
         <div class="row">
           <div class="sixteen columns alpha">
-            <%= f.label :user %>
-            <%= current_user %>
+            <label>Record Creator</label>
+            <%= user_for_view(@site.user) %>
           </div>
         </div>
         
         <div class="form-actions">
           <div class="button-group">
-            <%= link_to( @site ) do %>
-              <button class="button">Show</button>
-            <% end%>
             <%= link_to( sites_path ) do %>
-              <button class="button">Back</button>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
             <% end%>
-          	</div>
+            <%= link_to( @site ) do %>
+              <button class="button" type="button">Show</button>
+            <% end%>
+          </div>
 				<div class="button-group pull-right">
 					<%= f.submit 'Update', :class => "button button-primary" %>
 				</div>

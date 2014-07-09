@@ -31,6 +31,7 @@ class Trait < ActiveRecord::Base
   validates_format_of       :time_hour, :with => /^\d{1,2}$/, :allow_blank => true
   validates_format_of       :time_minute, :with => /^\d{1,2}$/, :allow_blank => true
   validate :can_change_checked
+  validate :mean_in_range
 
   # Only allow admins/managers to change traits marked as failed.
   def can_change_checked
@@ -38,6 +39,17 @@ class Trait < ActiveRecord::Base
       checked == -1 and current_user.page_access_level > 2
   end
 
+  # To do: change the database type of min and max and constrain to be
+  # non-null so that these tests can be simplified.
+  def mean_in_range
+    v = Variable.find(variable_id)
+    if !v.min.nil? and mean < v.min.to_f
+      errors.add(:mean, "The value of mean for the #{v.name} trait must be at least #{v.min}.")
+    end
+    if !v.max.nil? and mean > v.max.to_f
+      errors.add(:mean, "The value of mean for the #{v.name} trait must be at most #{v.max}.")
+    end
+  end
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }

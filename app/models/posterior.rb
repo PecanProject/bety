@@ -4,10 +4,15 @@ class Posterior < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ pft }
-  SEARCH_FIELDS = %w{ pfts.name posteriors.filename }
+  SEARCH_FIELDS = %w{ pfts.name }
 
-  has_and_belongs_to_many :runs
+  has_many :posteriors_ensembles, :class_name => "PosteriorsEnsembles"
+  has_many :ensembles, :through => :posteriors_ensembles
+
+  has_many :posterior_samples, :class_name => "PosteriorSamples"
+  
   has_many :files, :as => :container, :class_name => 'DBFile'
+
   belongs_to :pft
   belongs_to :format
 

@@ -629,12 +629,10 @@ legend {
 	display: block;
 	width: 100%;
 	padding: 0;
-	margin-bottom: 20px;
-	font-size: 21px;
-	line-height: 40px;
+	margin-bottom: 5px;
+	font-size: 13px;
 	color: #333333;
 	border: 0;
-	border-bottom: 1px solid #e5e5e5;
 }
 
 legend small {
@@ -1517,7 +1515,7 @@ legend + .control-group {
 
 .form-horizontal .control-label {
 	float: left;
-	width: 160px;
+	width: 60px;
 	padding-top: 5px;
 	text-align: right;
 }
@@ -1525,7 +1523,7 @@ legend + .control-group {
 .form-horizontal .controls {
 	*display: inline-block;
 	*padding-left: 20px;
-	margin-left: 180px;
+	margin-left: 80px;
 	*margin-left: 0;
 }
 

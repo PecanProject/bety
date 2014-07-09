@@ -1,0 +1,31 @@
+<% content_for :schemaCSS do %>
+  <%= stylesheet_link_tag "schemaSpy" %>
+<% end %>
+<script type="text/javascript">jQuery(function(){jQuery(".dataTable").removeClass("dataTable").addClass("table table-striped table-bordered table-hover datatable dataTable");jQuery(".even").removeClass("even");jQuery(".odd").removeClass("odd")});</script>
+<div class='content' style='clear:both;'>
+<div class='container'>
+<%= render @partial %>
+</div>
+</div>
+</div>
+<script type="text/javascript">	jQuery("#showNonKeys").click(function () {
+  jQuery('.diagram').hide();
+  var showNonKeys = jQuery('#showNonKeys').attr('checked'); 
+  if (showNonKeys && jQuery('#realLargeImg').size() > 0) 
+    jQuery('#realLargeImg').show();
+  else 
+    jQuery('#realCompactImg').show();       
+});
+jQuery(".showdiagram").click(function () {
+  var showone = jQuery('#showone').attr('checked');
+  var showtwo = jQuery('#showtwo').attr('checked');  
+  if(showone)
+  	jQuery('#oneDegreeImg').show();
+  else 
+  	jQuery('#oneDegreeImg').hide();
+  if(showtwo)
+  	jQuery('#twoDegreesImg').show();
+  else 
+  	jQuery('#twoDegreesImg').hide();
+});
+</script>
