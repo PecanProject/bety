@@ -26,11 +26,3 @@ feature 'Posteriors search' do
     end
   end
 end
-
-feature'Posterior edit' do
-  it 'should show edit page' do
-    login_test_user
-    visit '/posteriors/1/edit'
-    page.should have_content "Editing Posterior"
-  end
-end

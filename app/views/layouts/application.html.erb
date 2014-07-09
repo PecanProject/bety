@@ -10,9 +10,23 @@
   <meta name="robots" content="index, follow" />
 
   <%= csrf_meta_tag %>
+
+  <!-- to do: reconcile these two sets of includes: -->
+
+  <!-- Set One -->
   <%= javascript_include_tag 'lazy/jquery-1.11.0.js' %>
   <%= javascript_include_tag 'libs/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js' %>
   <%= javascript_include_tag 'libs/jquery-migrate-1.2.1.js' %>
+
+  <!-- Set Two -->
+  <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
+  <%= javascript_include_tag 'lazy/jquery-ui-1.10.4.min.js' %>
+  <%= stylesheet_link_tag "jquery-ui-1.10.4.min" %>
+  
+  <!--  It seems so far that everything works in 1.7.2.-->
+
+  <!-- End of alternate sets -->
+  
   <%#= javascript_include_tag 'libs/jquery-1.6.2.min.js' %>
   <%= javascript_include_tag :all, :cache => "cache/all" %>
 
@@ -79,7 +93,9 @@
   <!-- Redesign CSS -->
   <%= yield :schemaCSS %>
   <%= stylesheet_link_tag "base", "grid", "layout", "dropdown", "tables", "demo" %>
+
   <%= stylesheet_link_tag "jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" %>
+
 </head>
 
 
@@ -137,9 +153,7 @@
                 <li><%= link_to "Species", species_index_path %></li>
                 <li><%= link_to "Traits", traits_path %></li>
                 <li><%= link_to "Treatments", treatments_path %></li>
-                <% if current_user != nil && current_user.page_access_level <= 2 %>
                 <li><%= link_to "Users", users_path %></li>
-                <% end %>
                 <li><%= link_to "Variables", variables_path %></li>
                 <li><%= link_to "Yields", yields_path %></li>
               </ul>
@@ -161,16 +175,16 @@
             <% if current_user != nil && current_user.page_access_level < 4 %>
               <li class="menu-new"><a>Runs</a>
                 <ul class="sub-menu">
+                  <li><%= link_to "Ensembles", ensembles_path %></li>
+                  <li><%= link_to "Files", dbfiles_path %></li>
+                  <li><%= link_to "Formats", formats_path %></li>
+                  <li><%= link_to "Inputs", inputs_path %></li>
+                  <li><%= link_to "Likelihoods", likelihoods_path %></li>
+                  <li><%= link_to "Machines", machines_path%></li>
+                  <li><%= link_to "Models", models_path %></li>
                   <li><%= link_to "Posteriors", posteriors_path %></li>
                   <li><%= link_to "Runs", runs_path %></li>
-                  <li><%= link_to "Likelihoods", likelihoods_path %></li>
-                  <li><%= link_to "Models", models_path %></li>
-                  <li><%= link_to "Machines", machines_path%></li>
-                  <li><%= link_to "Files", dbfiles_path %></li>
                   <li><%= link_to "Workflows", workflows_path %></li>
-                  <li><%= link_to "Inputs", inputs_path %></li>
-                  <li><%= link_to "Formats", formats_path %></li>
-                  <li><%= link_to "Ensembles", ensembles_path %></li>
                 </ul>
               </li>
             <% end %>
@@ -216,6 +230,9 @@
       </div>
     <% end %>
   <% end %>
+  <% if current_user != nil %>
+    <%= render 'feedback/fbtab'%>
+  <%end%>
 
   <%= yield  %>
   
@@ -225,6 +242,7 @@
   
   <div class="footer">
 	  <div class="container">
+
 		  <div class="row">
 			  <h2>Footer</h2>
 			  <div class="three columns alpha">

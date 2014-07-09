@@ -44,6 +44,17 @@
             <%= text_field_tag "julianday" %> / <%= text_field_tag "julianyear" %>
           </div>
         </div>
+
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :site_id %>
+            <%= f.select :site_id, @sites.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+          </div>
+          <div class="eight columns omega">
+            <%= f.label :treatment_id %>
+            <%= f.select :treatment_id, @treatments.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+          </div>
+        </div>
         
         <div class="row">
           <div class="four columns alpha">
