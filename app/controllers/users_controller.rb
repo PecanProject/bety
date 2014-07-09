@@ -12,7 +12,11 @@ class UsersController < ApplicationController
         :per_page => params[:DataTables_Table_0_length]
       )
     else
-      @users = User.find(current_user.id)
+      @users = User.where("id = #{current_user.id}").paginate(
+        :page => params[:page], 
+        :per_page => params[:DataTables_Table_0_length]
+      )
+      
     end
 
     respond_to do |format|
