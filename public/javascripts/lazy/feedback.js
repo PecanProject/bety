@@ -21,7 +21,10 @@ $('body').click(function(e){
         $(this).dialog("close");
     }
   });
-  if(!$('#dialog-main').dialog("isOpen") && !$('.dialog-form').dialog("isOpen") && !intab)
+  if(!$('#dialog-main').dialog("isOpen") && 
+    !$('.dialog-form-suggest').dialog("isOpen")&& 
+    !$('.dialog-form-problem').dialog("isOpen")&& 
+    !$('.dialog-form-contact').dialog("isOpen") && !intab)
     $('#feedback-tab').stop().animate({left:-18});
 });
 
@@ -53,15 +56,21 @@ $(".fixed-dialog").css
   "left": "0px", 
   "top": "50%", 
   "margin-top": "-62px",
+  "background" : "rgba(220,220,220,0.8)",
 });
 
 $(".fixed-dialog form").css
 ({
   "margin-top": "10px",
 });
+$(".feedback-submit").css
+({
+  "float":"right",
+});
+
 $(".dialog-cancel").click(function(){
+  $('form').trigger('reset');
   $(".dialog-all").dialog("close");
-  return false;
 });
 $("#feedback-tab").click(function(){
   if(!$("#dialog-main").dialog("isOpen")){
@@ -73,27 +82,22 @@ $("#feedback-tab").click(function(){
 });
 
 $("#suggest").click(function(){	
-  $(".dialog-form").dialog("open");
-  $("#form-title").html("Suggest a Feature");
-  $("#feedback_email_type").val("Suggest a Feature");
+  $(".dialog-form-suggest").dialog("open");
   $("#dialog-main").dialog("close");
 });
 
 $("#contact").click(function(){	
-  $(".dialog-form").dialog("open");
-  $("#form-title").html("Contact Us");
-  $("#feedback_email_type").val("Contact");
+  $(".dialog-form-contact").dialog("open");
   $("#dialog-main").dialog("close");
 });
 
 $("#report").click(function(){
-  $(".dialog-form").dialog("open");
-  $("#form-title").html("Report a Problem");
-  $("#feedback_email_type").val("Report a Problem");
+  $(".dialog-form-problem").dialog("open");
   $("#dialog-main").dialog("close");
 });
 
 $(".dialog-close").click(function(){
+  $('form').trigger('reset');
   $(".dialog-all").dialog("close");
 });
 
