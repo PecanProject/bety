@@ -147,7 +147,7 @@ class BulkUploadDataSet
           begin
             # yield is a keyword; hence "amount_of_yield"
             amount_of_yield = Float(column[:data])
-            if amount_of_yield <= 0
+            if amount_of_yield < 0
               column[:validation_result] = :fatal_error
               column[:validation_message] = "yield can't be less than zero"
               if @validation_summary.has_key? :negative_yield
