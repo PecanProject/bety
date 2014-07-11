@@ -11,6 +11,7 @@ class AddGeometryToSite < ActiveRecord::Migration
     end
 
     add_column :sites, :geometry, :geometry, :srid => 4326, :has_z => true
+    add_index :sites, :geometry, :spatial => true
     execute %{
       UPDATE sites SET geometry=ST_SetSRID(ST_MakePoint(lon, lat, masl), 4326);
     }
@@ -183,6 +184,7 @@ class AddGeometryToSite < ActiveRecord::Migration
     execute %{
       UPDATE sites SET lon=ST_X(geometry), lat=ST_Y(geometry), masl=ST_Z(geometry);
     }
+    remove_index :sites, :geometry
     remove_column :sites, :geometry
 
     begin

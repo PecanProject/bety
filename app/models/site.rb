@@ -13,7 +13,15 @@ class Site < ActiveRecord::Base
   end
 
   def lat
-    return self[:geometry] ? self[:geometry].y : nil
+    if self[:geometry]
+      if self[:geometry].geometry_type.type_name == 'Point'
+        return self[:geometry].y
+      else
+        return self[:geometry].centroid.y
+      end
+    else
+      return nil
+    end
   end
 
   def lat=(val)
@@ -25,7 +33,15 @@ class Site < ActiveRecord::Base
   end
 
   def lon
-    return self[:geometry] ? self[:geometry].x : nil
+    if self[:geometry]
+      if self[:geometry].geometry_type.type_name == 'Point'
+        return self[:geometry].x
+      else
+        return self[:geometry].centroid.x
+      end
+    else
+      return nil
+    end
   end
 
   def lon=(val)
@@ -37,7 +53,15 @@ class Site < ActiveRecord::Base
   end
 
   def masl
-    return self[:geometry] ? self[:geometry].z : nil
+    if self[:geometry]
+      if self[:geometry].geometry_type.type_name == 'Point'
+        return self[:geometry].z
+      else
+        return self[:geometry].centroid.z
+      end
+    else
+      return nil
+    end
   end
 
   def masl=(val)

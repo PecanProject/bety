@@ -25,7 +25,6 @@ gem "bootstrap-will_paginate"
 
 # Postgresql, comment out MySQL section
 gem "pg"
-gem "activerecord-postgresql-adapter"
 gem "activerecord-postgis-adapter"
 
 group :development, :test do
