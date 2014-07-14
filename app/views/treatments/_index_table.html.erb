@@ -98,7 +98,7 @@
         <td class="center"><%= link_to treatment.control ? "Yes" : "No", :action => "flag_control", :id => treatment.id %></td>
         <td class="center">
         	<!-- LINK -->
-				  <%= link_to "/treatments/linked?id=#{treatment.id}", :class => "button button-small", :alt => "show" do %>
+				  <%= link_to "/treatments/linked?id=#{treatment.id}", :class => "button button-small", :alt => "link" do %>
 				    <i class="icon-ok"></i>
 				  <% end %>
         	<!-- SHOW -->
