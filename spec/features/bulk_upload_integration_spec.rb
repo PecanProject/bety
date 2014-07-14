@@ -1,7 +1,7 @@
 require 'spec_helper'
 include LoginHelper
 
-feature 'Citation index works' do
+feature 'CSV file upload works' do
   before :each do
     login_test_user
   end
