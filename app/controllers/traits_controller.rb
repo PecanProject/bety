@@ -169,6 +169,7 @@ class TraitsController < ApplicationController
   def update
     @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.current_user = current_user #Used to validate that they are allowed to change checked
+    errors = []
     respond_to do |format|
       if @trait.update_attributes(params[:trait])
         params[:covariate].each do |covariate|
@@ -177,14 +178,16 @@ class TraitsController < ApplicationController
             if(!@covariate.save)
               cov_id = covariate[:variable_id]
               cov_name = Variable.find(cov_id).name
-              flash[:error] = "Level out of range for covariate #{cov_name}."
+              errors << "Level #{covariate[:level]} is out of range for covariate #{cov_name}."
             else
               @trait.covariates << @covariate
             end            
           end
-          if(!flash[:error])
-            flash[:notice] = 'Trait was successfully updated.'
-          end
+        end
+        if(errors.size!=0)
+          flash[:error] = errors.join("<br>").html_safe
+        else
+          flash[:notice] = 'Trait was successfully updated.'
         end
         format.html { redirect_to(@trait) }
         format.xml  { head :ok }
