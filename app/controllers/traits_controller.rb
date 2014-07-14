@@ -173,10 +173,19 @@ class TraitsController < ApplicationController
       if @trait.update_attributes(params[:trait])
         params[:covariate].each do |covariate|
           unless covariate[:variable_id].blank?
-            @trait.covariates << Covariate.new(covariate)
+            @covariate = Covariate.new(covariate)
+            if(!@covariate.save)
+              cov_id = covariate[:variable_id]
+              cov_name = Variable.find(cov_id).name
+              flash[:error] = "Level out of range for covariate #{cov_name}."
+            else
+              @trait.covariates << @covariate
+            end            
+          end
+          if(!flash[:error])
+            flash[:notice] = 'Trait was successfully updated.'
           end
         end
-        flash[:notice] = 'Trait was successfully updated.'
         format.html { redirect_to(@trait) }
         format.xml  { head :ok }
         format.csv  { head :ok }
