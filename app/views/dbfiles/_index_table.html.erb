@@ -17,16 +17,16 @@
     <td class="center"><%= file.file_path %></td>
     <td class="center"><%= file.file_name %></td>
     <td>
-    <%= link_to  dbfile_path(file), :class =>"button button-small" do %>
+    <%= link_to  dbfile_path(file), :class =>"button button-small", :alt =>"show" do %>
       <i class="icon-zoom-in"> </i>
     <% end %>
     <% if current_user.page_access_level <= 3 %>
-      <%= link_to  edit_dbfile_path(file), :class =>"button button-small" do %>
+      <%= link_to  edit_dbfile_path(file), :class =>"button button-small", :alt =>"edit" do %>
         <i class="icon-edit"></i>
       <% end %>
     <% end %>
     <% if current_user.page_access_level == 1 %>
-      <%= link_to  dbfile_path(file), :confirm => 'Are you sure?', :method => :delete, :class => "button button-small button-danger"  do %>
+      <%= link_to  dbfile_path(file), :confirm => 'Are you sure?', :method => :delete, :class => "button button-small button-danger",  :alt =>"delete" do %>
         <i class="icon-trash"></i>
       <% end %>
     <% end %>
