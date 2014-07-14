@@ -26,6 +26,157 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 SET search_path = public, pg_catalog;
 
 --
+-- Name: prevent_conflicting_range_changes(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION prevent_conflicting_range_changes() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+    DECLARE name varchar;
+    DECLARE min float;
+    DECLARE max float;
+BEGIN
+    SELECT
+        min(mean), max(mean) INTO min, max
+    FROM
+        traits
+    WHERE
+        NEW.id = traits.variable_id;
+
+    IF
+        NEW.min::float > min::float
+    THEN
+        IF
+            NEW.max::float < max
+        THEN
+            RAISE EXCEPTION 'There are traits having values that are greater than % and traits having values that are less than %.', NEW.max, NEW.min;
+        ELSE
+            RAISE EXCEPTION 'There are traits having values that are less than %.', NEW.min;
+        END IF;
+    ELSE
+        IF
+            NEW.max::float < max
+        THEN
+            RAISE EXCEPTION 'There are traits having values that are greater than % .', NEW.max;
+        END IF;
+    END IF;        
+
+
+    SELECT
+        min(level), max(level) INTO min, max
+    FROM
+        covariates
+    WHERE
+        NEW.id = covariates.variable_id;
+
+    IF
+        NEW.min::float > min::float
+    THEN
+        IF
+            NEW.max::float < max
+        THEN
+            RAISE EXCEPTION 'There are covariates having values that are greater than % and covariates having values that are less than %.', NEW.max, NEW.min;
+        ELSE
+            RAISE EXCEPTION 'There are covariates having values that are less than %.', NEW.min;
+        END IF;
+    ELSE
+        IF
+            NEW.max::float < max
+        THEN
+            RAISE EXCEPTION 'There are covariates having values that are greater than % .', NEW.max;
+        END IF;
+    END IF;        
+
+    RETURN NEW ;
+END;
+$$;
+
+
+--
+-- Name: restrict_covariate_range(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION restrict_covariate_range() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+    DECLARE name varchar;
+    DECLARE min float;
+    DECLARE max float;
+BEGIN
+    SELECT
+
+
+        -- If min and max are constrained to be non-null, then the
+        -- COALESCE call is not needed.  In this case, some very large
+        -- number would be used for unconstrained maximimum values and
+        -- some large negative number would be used for unconstrained
+        -- minimum values.  Alternatively, the type could be changed
+        -- to float so that values '-infinity' and 'infinity' could be
+        -- used.  In any case, the min and max columns should probably
+        -- at least be altered to some numeric type.
+
+        -- If min, max and level are all altered to be of the same
+        -- type, then the casts will not be needed.
+        
+        -- Treat NULLs as if they were infinity.        
+        variables.name, CAST(COALESCE(variables.min, '-infinity') AS float), CAST(COALESCE(variables.max, 'infinity') AS float) INTO name, min, max
+    FROM
+        variables
+    WHERE
+        variables.id = NEW.variable_id;
+    IF
+        NEW.level::float < min OR NEW.level::float > max
+    THEN
+        RAISE EXCEPTION 'The value of level for covariate % must be between % and %.', name, min::text, max::text;
+    END IF;
+    RETURN NEW ;
+END;
+$$;
+
+
+--
+-- Name: restrict_trait_range(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION restrict_trait_range() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+    DECLARE name varchar;
+    DECLARE min float;
+    DECLARE max float;
+BEGIN
+    SELECT
+
+
+        -- If min and max are constrained to be non-null, then the
+        -- COALESCE call is not needed.  In this case, some very large
+        -- number would be used for unconstrained maximimum values and
+        -- some large negative number would be used for unconstrained
+        -- minimum values.  Alternatively, the type could be changed
+        -- to float so that values '-infinity' and 'infinity' could be
+        -- used.  In any case, the min and max columns should probably
+        -- at least be altered to some numeric type.
+
+        -- If min, max and mean are all altered to be of the same
+        -- type, then the casts will not be needed.
+        
+        -- Treat NULLs as if they were infinity.        
+        variables.name, CAST(COALESCE(variables.min, '-infinity') AS float), CAST(COALESCE(variables.max, 'infinity') AS float) INTO name, min, max
+    FROM
+        variables
+    WHERE
+        variables.id = NEW.variable_id;
+    IF
+        NEW.mean::float < min OR NEW.mean::float > max
+    THEN
+        RAISE EXCEPTION 'The value of mean for trait % must be between % and %.', name, min::text, max::text;
+    END IF;
+    RETURN NEW ;
+END;
+$$;
+
+
+--
 -- Name: citations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -245,6 +396,40 @@ COMMENT ON COLUMN cultivars.name IS 'Cultivar name given by breeder or reported 
 --
 
 COMMENT ON COLUMN cultivars.ecotype IS 'Does not apply for all species, used in the case of switchgrass to differentiate lowland and upland genotypes.';
+
+
+--
+-- Name: current_posteriors; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE current_posteriors (
+    id bigint NOT NULL,
+    pft_id bigint,
+    variable_id bigint,
+    posteriors_samples_id bigint,
+    project_id bigint,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: current_posteriors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE current_posteriors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: current_posteriors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE current_posteriors_id_seq OWNED BY current_posteriors.id;
 
 
 --
@@ -670,7 +855,6 @@ CREATE SEQUENCE models_id_seq
 CREATE TABLE models (
     id bigint DEFAULT nextval('models_id_seq'::regclass) NOT NULL,
     model_name character varying(255),
-    model_path character varying(255),
     revision character varying(255),
     parent_id bigint,
     created_at timestamp(6) without time zone,
@@ -701,7 +885,9 @@ CREATE TABLE pfts (
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
     name character varying(255),
-    parent_id bigint
+    parent_id bigint,
+    pft_type character varying(255) DEFAULT 'plant'::character varying,
+    model_type character varying(255)
 );
 
 
@@ -744,6 +930,40 @@ CREATE TABLE pfts_species (
 
 
 --
+-- Name: posterior_samples; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE posterior_samples (
+    id bigint NOT NULL,
+    posterior_id bigint,
+    variable_id bigint,
+    pft_id bigint,
+    parent_id bigint,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: posterior_samples_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE posterior_samples_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: posterior_samples_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE posterior_samples_id_seq OWNED BY posterior_samples.id;
+
+
+--
 -- Name: posteriors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -769,14 +989,14 @@ CREATE TABLE posteriors (
 
 
 --
--- Name: posteriors_runs; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: posteriors_ensembles; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE posteriors_runs (
+CREATE TABLE posteriors_ensembles (
     posterior_id bigint,
-    run_id bigint,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone
+    ensemble_id bigint,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -852,6 +1072,40 @@ COMMENT ON COLUMN priors.paramc IS 'A third parameter, if required.';
 --
 
 COMMENT ON COLUMN priors.n IS 'number of observations used to specify prior.';
+
+
+--
+-- Name: projects; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE projects (
+    id bigint NOT NULL,
+    name character varying(255),
+    outdir character varying(255),
+    machine_id bigint,
+    description character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
 
 
 --
@@ -947,7 +1201,7 @@ CREATE TABLE sites (
     country character varying(255),
     lat numeric(9,6),
     lon numeric(9,6),
-    mat integer,
+    mat numeric(4,2),
     map integer,
     masl integer,
     soil character varying(255),
@@ -1457,7 +1711,11 @@ CREATE TABLE variables (
     updated_at timestamp(6) without time zone,
     name character varying(255),
     max character varying(255),
-    min character varying(255)
+    min character varying(255),
+    standard_name character varying(255),
+    standard_units character varying(255),
+    label character varying(255),
+    type character varying(255)
 );
 
 
@@ -1866,6 +2124,27 @@ CREATE TABLE workflows (
 
 
 --
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY current_posteriors ALTER COLUMN id SET DEFAULT nextval('current_posteriors_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posterior_samples ALTER COLUMN id SET DEFAULT nextval('posterior_samples_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
+
+
+--
 -- Name: citations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1895,6 +2174,14 @@ ALTER TABLE ONLY covariates
 
 ALTER TABLE ONLY cultivars
     ADD CONSTRAINT cultivars_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: current_posteriors_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY current_posteriors
+    ADD CONSTRAINT current_posteriors_pkey PRIMARY KEY (id);
 
 
 --
@@ -2010,6 +2297,14 @@ ALTER TABLE ONLY pfts
 
 
 --
+-- Name: posterior_samples_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY posterior_samples
+    ADD CONSTRAINT posterior_samples_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: posteriors_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2023,6 +2318,14 @@ ALTER TABLE ONLY posteriors
 
 ALTER TABLE ONLY priors
     ADD CONSTRAINT priors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
 
 
 --
@@ -2344,13 +2647,6 @@ CREATE INDEX index_posteriors_on_pft_id ON posteriors USING btree (pft_id);
 
 
 --
--- Name: index_posteriors_runs_on_posterior_id_and_run_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_posteriors_runs_on_posterior_id_and_run_id ON posteriors_runs USING btree (posterior_id, run_id);
-
-
---
 -- Name: index_priors_on_citation_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2540,6 +2836,54 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: prevent_conflicting_range_changes; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER prevent_conflicting_range_changes BEFORE UPDATE ON variables FOR EACH ROW EXECUTE PROCEDURE prevent_conflicting_range_changes();
+
+
+--
+-- Name: TRIGGER prevent_conflicting_range_changes ON variables; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TRIGGER prevent_conflicting_range_changes ON variables IS 'Trigger function to ensure that updates to the min or max values in
+   the variables table do not cause any existing trait or covariate
+   values to be out of range.';
+
+
+--
+-- Name: restrict_covariate_range; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER restrict_covariate_range BEFORE INSERT OR UPDATE ON covariates FOR EACH ROW EXECUTE PROCEDURE restrict_covariate_range();
+
+
+--
+-- Name: TRIGGER restrict_covariate_range ON covariates; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TRIGGER restrict_covariate_range ON covariates IS 'Trigger function to ensure values of level in the covariates table
+   are within the range specified by min and max in the variables
+   table.  A NULL in the min or max column means "no limit".';
+
+
+--
+-- Name: restrict_trait_range; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER restrict_trait_range BEFORE INSERT OR UPDATE ON traits FOR EACH ROW EXECUTE PROCEDURE restrict_trait_range();
+
+
+--
+-- Name: TRIGGER restrict_trait_range ON traits; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TRIGGER restrict_trait_range ON traits IS 'Trigger function to ensure values of mean in the traits table are
+   within the range specified by min and max in the variables table.
+   A NULL in the min or max column means "no limit".';
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -2578,3 +2922,19 @@ INSERT INTO schema_migrations (version) VALUES ('20140422155957');
 INSERT INTO schema_migrations (version) VALUES ('20140423220457');
 
 INSERT INTO schema_migrations (version) VALUES ('20140506210037');
+
+INSERT INTO schema_migrations (version) VALUES ('20140515205254');
+
+INSERT INTO schema_migrations (version) VALUES ('20140521180349');
+
+INSERT INTO schema_migrations (version) VALUES ('20140604192901');
+
+INSERT INTO schema_migrations (version) VALUES ('20140617163304');
+
+INSERT INTO schema_migrations (version) VALUES ('20140610210928');
+
+INSERT INTO schema_migrations (version) VALUES ('20140621060009');
+
+INSERT INTO schema_migrations (version) VALUES ('20140623004229');
+
+INSERT INTO schema_migrations (version) VALUES ('20140624185610');

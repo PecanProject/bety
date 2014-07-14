@@ -43,6 +43,9 @@ module BetyRails3
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :password_authentication]
 
+    # Don't bother making schema.rb any more:
+    config.active_record.schema_format = :sql
+
     # Load any local configuration that is kept out of source control
     # (e.g. gems, patches).
     if File.exists?(File.join(File.dirname(__FILE__), 'additional_environment.rb'))

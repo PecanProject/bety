@@ -24,12 +24,17 @@
         <%= f.error_messages %>
 
         <div class="row">
-          <div class="eight columns alpha">
+          <div class="sixteen columns alpha">
             <%= f.label :name %>
             <%= f.text_field :name, :class => "input-full" %>
           </div>
-          
-          <div class="eight columns omega">
+          <div class="row">
+            <div class="sixteen columns alpha">
+              <%= f.label :model_type %>
+              <%= f.collection_select(:model_type, Model.find(:all, :select => "DISTINCT model_type"), :model_type, :model_type, {:selected => @pft.model_type}) %>
+            </div>
+          </div>                    
+          <div class="sixteen columns alpha">
             <%= f.label :definition %>
             <%= f.text_area :definition, :rows => 10, :class => "input-full" %>
           </div>

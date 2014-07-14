@@ -3,6 +3,61 @@ class ModelsController < ApplicationController
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
 
+  def edit_models_files
+    @model = Model.find(params[:id])
+    file = params[:file]
+
+    if @model and file
+      _file = DBFile.find(file)
+      # If relationship exists we must want to remove it...
+      if @model.files.include?(_file)
+        @model.files.delete(_file)
+        logger.info "deleted model:#{@model.id} - file:#{_file.id}"
+      # Otherwise add it
+      else
+        @model.files << _file
+        logger.info "add model:#{@model.id} - file:#{_file.id}"
+      end
+    end
+
+    @page = params[:page]
+
+    # RAILS3 had to add the || '' in order for @search not be nil when params[:search] is nil
+    @search = params[:search] || ''
+    @searchparam = @search
+
+    # If they search just a number it is probably an id, and we do not want to wrap that in wildcards.
+    # @search.match(/\D/) ? wildcards = true : wildcards = false
+    # We now ALWAYS use wildcards (unless the search is blank).
+    wildcards = true
+
+    if !@search.blank? 
+      if wildcards 
+        @search = "%#{@search}%"
+      end
+      search_cond = ["container_id IS NULL AND (file_path LIKE :search OR file_name LIKE :search)", {:search => @search}] 
+      search = "Showing records for \"#{@search}\""
+    else
+      @search = ""
+      search = "Showing all results"
+      search_cond = ""
+    end
+
+    if @model and @search.blank?
+      search = "Showing already related records"
+      if @model.files
+        @files = @model.files.paginate :page => params[:page]
+      end
+    else
+      @files = DBFile.paginate :select => "id,file_name", :page => params[:page], :conditions => search_cond
+    end
+
+    render :update do |page|
+      page.replace_html :files_index_table, :partial => "edit_models_files_table"
+      page.replace_html :files_search_term, search
+    end
+  end
+
   # GET /models
   # GET /models.xml
   def index
@@ -54,6 +109,7 @@ class ModelsController < ApplicationController
   # GET /models/1/edit
   def edit
     @model = Model.find(params[:id])
+    @files = @model.files.paginate :page => params[:page]
   end
 
   # POST /models

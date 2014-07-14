@@ -24,7 +24,7 @@ class Ensemble < ActiveRecord::Base
 
 
   def to_s
-    notes[0..20]
+    (notes || '')[0..20]
   end
   def select_default
     "#{id}: #{self}"

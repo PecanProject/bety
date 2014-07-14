@@ -69,7 +69,7 @@ class User < ActiveRecord::Base
   end
 
   def to_s
-    name
+    name || ''
   end
   def select_default
     "#{id}: #{self}"

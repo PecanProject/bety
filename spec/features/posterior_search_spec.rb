@@ -15,7 +15,7 @@ feature 'Posteriors search' do
 
 
   context 'search on posteriors' do
-    it 'should show search result on current page' do
+    it 'should show search result on current page', :js => true do
       visit '/posteriors'
       fill_in 'search', :with => 'testsearch'        
       expect(page).to have_content 'No entries'
@@ -25,5 +25,4 @@ feature 'Posteriors search' do
       expect(page).to have_content 'No entries'
     end
   end
-
 end
