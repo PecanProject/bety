@@ -20,13 +20,15 @@ jQuery(function($){
   });
   $(".ui-dialog-titlebar").hide();
   addpopup();
-  $("#simple_search_table").on('mouseover',function(){addpopup();});
+  $("#simple_search_table").on('mouseenter',function(){addpopup();});
   var $outerdiv = $("#popup-dialog");
   var $innerdiv = $("#popup-show");
 
   function addpopup(){  
-    $('#simple_search_table table tr').on('mouseenter','td',function(){ 
+    $('table tr').on('mouseenter','td',function(){ 
       var elem = $(this);
+      if(elem.find('table').length)
+        return false;
       var id = setTimeout(function(){popup(elem);},1000);
       elem.find('a').each(function(){
         $(this).hover(function(){
@@ -55,8 +57,8 @@ jQuery(function($){
   } 
 
   function popup(elem){
-    var row = elem.parent();
-    var last = row.find('td:last');
+    var row = elem.closest('tr');
+    var last = row.children('td:last');
     var show_link = last.find('a:first');
     while(show_link.attr("alt")!="show"){
       show_link=show_link.next();
