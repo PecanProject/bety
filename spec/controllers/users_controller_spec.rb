@@ -9,7 +9,6 @@ describe UsersController do
 #    end
 #  end
 #  
-
 #  
 #  context 'User login with captcha' do
 #    it 'should login with correct recaptcha' do
@@ -20,17 +19,6 @@ describe UsersController do
 #    end
 #  end
 
-=begin	
-  	subject { page }
-
-	describe " click on the data link" do
-		it 'should contains the link of user page' do
-		 	visit root_path
-		 	click_link "Users"
-		 	expect(page).to have_title("Listing Users")
-
-		end
-	end
-=end
-
+  
+  
 end
