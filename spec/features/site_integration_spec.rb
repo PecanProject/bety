@@ -45,7 +45,7 @@ feature 'Sites index works' do
         visit '/sites/'
          first(:xpath,".//a[ contains(@alt,'edit')]").click
         page.should have_content 'Editing Site'
-      end
+        end
     end
 
     context 'clicking use site button' do
