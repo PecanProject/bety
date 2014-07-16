@@ -24,8 +24,8 @@ jQuery(function($){
   var $outerdiv = $("#popup-dialog");
   var $innerdiv = $("#popup-show");
 
-  function addpopup(){  
-    $('table tr').on('mouseenter','td',function(){ 
+  function addpopup(){
+    $('table tr').on('mouseenter','td',function(){
       var elem = $(this);
       if(elem.find('table').length)
         return false;
@@ -46,7 +46,7 @@ jQuery(function($){
           $(this).parent().removeClass("popup-highlight");
         });
       });
-      $(this).on('mouseleave',function(){       
+      $(this).on('mouseleave',function(){
         clearTimeout(id);
         if(!$outerdiv.dialog("isOpen")){
           $innerdiv.empty();
@@ -54,7 +54,7 @@ jQuery(function($){
         }
       });
     });
-  } 
+  }
 
   function popup(elem){
     var row = elem.closest('tr');
@@ -80,16 +80,17 @@ jQuery(function($){
       $innerdiv.css({'height':'auto'});
     });
   }
-  
+
   $('body').click(function(e){
-  x = e.clientX;
-  y = e.clientY+$(document).scrollTop();
-  tminx = $outerdiv.offset().left-5;
-  tmaxx = $outerdiv.offset().left+ $outerdiv.width() + 5;
-  tminy = $outerdiv.offset().top-5 ;
-  tmaxy = $outerdiv.offset().top+ $outerdiv.height() + 5;
-  inthis = x>=tminx && x<=tmaxx && y>=tminy && y<=tmaxy;
-  if(!inthis)
-    $outerdiv.dialog("close");   
+    x = e.clientX;
+    y = e.clientY+$(document).scrollTop();
+    tminx = $outerdiv.offset().left-5;
+    tmaxx = $outerdiv.offset().left+ $outerdiv.width() + 5;
+    tminy = $outerdiv.offset().top-5 ;
+    tmaxy = $outerdiv.offset().top+ $outerdiv.height() + 5;
+    inthis = x>=tminx && x<=tmaxx && y>=tminy && y<=tmaxy;
+    if(!inthis)
+      $outerdiv.dialog("close");
   });
+
 });
