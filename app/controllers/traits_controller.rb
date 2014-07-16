@@ -193,7 +193,7 @@ class TraitsController < ApplicationController
         format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
       end
     end
-    rescue ActiveRecord::StatementInvalid => e
+  rescue ActiveRecord::StatementInvalid => e
     # Constraint violations not handled by Rails in the else clause
     # are handled here.
     handle_constraint_violations(e)
