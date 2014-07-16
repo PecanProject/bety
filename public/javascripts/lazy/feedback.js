@@ -1,5 +1,36 @@
 jQuery( document ).ready(function($) {
 
+$(".dialog-all").dialog({
+  autoOpen: false,
+  modal: false,
+  draggable: true,
+  resizable: false,
+  dialogClass: "fixed-dialog",
+  show:{
+    effect:"fade",
+    duration:300,
+  },
+  hide:{
+    effect:"fade",
+    duration:300,
+  },
+  position: {
+    my: "left+10 center",
+    at: "right center",
+    of: "#feedback-tab",
+  },
+});
+
+$( ".dialog-all" ).dialog({
+  height: 'auto',
+  width: 250,
+});
+
+$( "#dialog-main" ).dialog({
+  height: 190,
+  width: 150,
+});
+
 $(".ui-dialog-titlebar").hide();
 
 $('body').click(function(e){
@@ -10,22 +41,23 @@ $('body').click(function(e){
   tminy = $("#feedback-tab").offset().top-5 ;
   tmaxy = $("#feedback-tab").offset().top+ $("#feedback-tab").height() + 5;
   intab = x>=tminx && x<=tmaxx && y>=tminy && y<=tmaxy;
+  if(!$('#dialog-main').dialog("isOpen") &&
+    !$('.dialog-form-suggest').dialog("isOpen")&&
+    !$('.dialog-form-problem').dialog("isOpen")&&
+    !$('.dialog-form-contact').dialog("isOpen") &&
+    !intab)
+    $('#feedback-tab').stop().animate({left:-18});
   $('.dialog-all').each(function(){
     if($(this).dialog("isOpen")){
       minx = $(this).offset().left -5;
-      maxx = $(this).offset().left + $(this).dialog("option","width") + 5;
+      maxx = $(this).offset().left + $(this).width() + 5;
       miny = $(this).offset().top -5;
-      maxy = $(this).offset().top + $(this).dialog("option","height") + 5;
+      maxy = $(this).offset().top + $(this).height() + 5;
       inthis = x>=minx && x<=maxx && y>=miny && y<=maxy;
       if(!inthis && !intab)
         $(this).dialog("close");
     }
   });
-  if(!$('#dialog-main').dialog("isOpen") && 
-    !$('.dialog-form-suggest').dialog("isOpen")&& 
-    !$('.dialog-form-problem').dialog("isOpen")&& 
-    !$('.dialog-form-contact').dialog("isOpen") && !intab)
-    $('#feedback-tab').stop().animate({left:-18});
 });
 
 $(document).mousemove(function(e){
@@ -53,8 +85,8 @@ $(".dialog-close").css({
 $(".fixed-dialog").css
 ({
   "position": "fixed", 
-  "left": "0px", 
-  "top": "50%", 
+  "left": "0px",
+  "top": "50%",
   "margin-top": "-62px",
   "background" : "rgba(220,220,220,0.8)",
 });
@@ -81,12 +113,12 @@ $("#feedback-tab").click(function(){
     $(".dialog-all").dialog("close");
 });
 
-$("#suggest").click(function(){	
+$("#suggest").click(function(){
   $(".dialog-form-suggest").dialog("open");
   $("#dialog-main").dialog("close");
 });
 
-$("#contact").click(function(){	
+$("#contact").click(function(){
   $(".dialog-form-contact").dialog("open");
   $("#dialog-main").dialog("close");
 });
