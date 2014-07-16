@@ -6,9 +6,9 @@
 <body>
   <p>Feedback Type: <%= @type %></p>
   <p>Username: <%= @sender_name %></p>
-  <%if @problem_location!=nil%>
-  <p>Problem URL: <%=@problem_location%></p>
-  <%end%>
+  <% if @problem_location != nil %>
+  <p>Problem URL: <%= @problem_location %></p>
+  <% end %>
   <p>Message:</p>
   <p><%= @email_body %></p>
 </body>
