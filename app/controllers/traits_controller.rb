@@ -169,36 +169,31 @@ class TraitsController < ApplicationController
   def update
     @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.current_user = current_user #Used to validate that they are allowed to change checked
-    errors = []
     respond_to do |format|
       if @trait.update_attributes(params[:trait])
         params[:covariate].each do |covariate|
           unless covariate[:variable_id].blank?
-            @covariate = Covariate.new(covariate)
-            if(!@covariate.save)
-              cov_id = covariate[:variable_id]
-              cov_name = Variable.find(cov_id).name
-              errors << "Level #{covariate[:level]} is out of range for covariate #{cov_name}."
-            else
+            begin
+              @covariate = Covariate.new(covariate)
+              @covariate.save!
               @trait.covariates << @covariate
-            end            
+            rescue ActiveRecord::StatementInvalid, ActiveRecord::RecordInvalid => e
+              handle_constraint_violations(e) and return
+            end
           end
         end
-        if(errors.size!=0)
-          flash[:error] = errors.join("<br>").html_safe
-        else
-          flash[:notice] = 'Trait was successfully updated.'
-        end
+        flash[:notice] = 'Trait was successfully updated.'
         format.html { redirect_to(@trait) }
         format.xml  { head :ok }
         format.csv  { head :ok }
       else
-        format.html { render :action => "edit" }
+        flash[:error] = "Trait couldn't be updated"
+        format.html { redirect_to edit_trait_path(@trait) }
         format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
       end
     end
-  rescue ActiveRecord::StatementInvalid => e
+    rescue ActiveRecord::StatementInvalid => e
     # Constraint violations not handled by Rails in the else clause
     # are handled here.
     handle_constraint_violations(e)
