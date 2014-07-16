@@ -1,5 +1,5 @@
-<script type="text/javascript">//<![CDATA[ 
-  function drawMap(id,lat,lon) { 
+<script type="text/javascript">//<![CDATA[
+  function drawMap(id,lat,lon) {
     var latlng = new google.maps.LatLng(lat,lon);
     var myOptions = {
       zoom: 2,
@@ -11,15 +11,15 @@
 </script>
 
 <div class="content">
-	<div class="container">
-		<div class="sixteen columns">
+  <div class="container">
+    <div class="sixteen columns">
       <div id="linked">
         <%= render 'linked' %>
       </div>
-      
-			<header>
-				<h1>Listing Sites</h1>
-			</header>
+
+      <header>
+        <h1>Listing Sites</h1>
+      </header>
       <div id="process_container">
         <div id="back"><%= link_to '<< Citations', citations_path %></div>
         <div id="new"><%= link_to 'New Site', new_site_path, :class => "button button-primary" %></div>
@@ -30,7 +30,6 @@
 
       <div id="simple_search_table" class="simple_search_table_1"><%= render 'index_table' %></div>
 
-		</div> <!-- class="sixteen columns" -->
-	</div> <!-- container --> 
+    </div> <!-- class="sixteen columns" -->
+  </div> <!-- container -->
 </div>
-
