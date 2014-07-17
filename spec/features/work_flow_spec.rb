@@ -21,11 +21,7 @@ feature 'Work_flow index works' do
  		it ' should have "Listing Inputs" ' do
  			visit '/users'
  			click_link('Inputs')
- 			page.should have_content 'Listing Inputs'
- 			
+ 			page.should have_content 'Listing Inputs' 			
  		end
  	end
-
- 
-
 end
