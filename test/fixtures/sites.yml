@@ -20,3 +20,27 @@ test_site:
   sand_pct: NULL
   clay_pct: NULL
   espg: NULL
+
+test_trait_site:
+  id: 2
+  city: ""
+  state: ""
+  country: "USA"
+  lat: #<BigDecimal:2aaaac2d4c00,'0.3837E2',18(18)>
+  lon: #<BigDecimal:2aaaac2d4b38,'0.2317E2',18(18)>
+  mat: 17
+  map: 984
+  masl: 114
+  soil: "sandy loam"
+  som: NULL
+  notes: ""
+  soilnotes: "SL with low organic matter"
+  created_at: NULL
+  updated_at: "2010-07-09 18:01:49"
+  sitename: ""
+  greenhouse: false
+  user_id: 1
+  local_time: NULL
+  sand_pct: NULL
+  clay_pct: NULL
+  espg: NULL

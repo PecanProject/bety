@@ -86,3 +86,11 @@ test_specie:
   Seeds_per_Pound: NULL
   SeedSpreadRate: NULL
   SeedlingVigor: NULL
+
+test_trait_specie:
+  id: 2
+  spcd: NULL
+  genus: "Abarema"
+  species: "jupunba"
+  scientificname: "Abarema jupunba"
+  commonname: NULL
