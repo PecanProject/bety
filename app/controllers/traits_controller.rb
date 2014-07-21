@@ -127,6 +127,7 @@ class TraitsController < ApplicationController
     @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.specie.nil? ? @species = nil : @species = [@trait.specie]
     @citation = @trait.citation
+    @new_covariates = @new_covariates || [Covariate.new]
   end
 
   # POST /traits
@@ -168,26 +169,44 @@ class TraitsController < ApplicationController
   # PUT /traits/1.xml
   def update
     @trait = Trait.all_limited(current_user).find(params[:id])
+    @citation = @trait.citation
     @trait.current_user = current_user #Used to validate that they are allowed to change checked
-
+    @new_covariates = []
     respond_to do |format|
-      if @trait.update_attributes(params[:trait])
-        flash[:notice] = 'Trait was successfully updated.'
-        format.html { redirect_to(@trait) }
-        format.xml  { head :ok }
-        format.csv  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
-        format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
+      Trait.transaction do
+          @trait.update_attributes(params[:trait])
+          params[:covariate].each do |c|
+            unless c[:variable_id].blank?
+              @covariate = Covariate.new(c)
+              @new_covariates << @covariate
+              if @covariate.save
+                @trait.covariates << @covariate
+              else
+                if !@trait.errors.include?(:covariates)
+                  @trait.errors.merge!({:covariates =>[]})
+                end
+                @trait.errors[:covariates]<< (@covariate.errors.get(:level))[0]
+              end
+            end
+          end
+          if @trait.errors.size >0
+            raise StandardError, "Trait could not be saved. Please see error messages"
+          end
       end
+      flash[:notice] = 'Trait was successfully updated.'
+      format.html { redirect_to(@trait) }
+      format.xml  { head :ok }
+      format.csv  { head :ok }
     end
-  rescue ActiveRecord::StatementInvalid => e
-    # Constraint violations not handled by Rails in the else clause
-    # are handled here.
-    handle_constraint_violations(e)
+  rescue StandardError, ActiveRecord::StatementInvalid => e
+    logger.info(e)
+    flash[:error] = e.message
+    respond_to do |format|
+      format.html { render :action =>"edit" }
+      format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
+      format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
+    end
   end
-
   # DELETE /traits/1
   # DELETE /traits/1.xml
   def destroy

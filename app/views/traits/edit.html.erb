@@ -32,7 +32,6 @@
       
       <%= form_for(@trait) do |f| %>
         <%= f.error_messages %>
-        
              <div class="row">
               <div class="four columns alpha">
                 <%= f.label :mean %>
@@ -120,9 +119,13 @@
           <div id="covariates">
           <h3>Add a covariate to this trait</h3>
           <p><em>Leave blank if not adding a covariate</em></p>
-          <p>          
-            <%= render :partial => 'new_covariate' %>
+          <p>
+          <% @new_covariates.each do |c| %>
+            <% @covariate = c %>
+            <%= render 'new_covariate'%>
+          <% end %>
           </div>
+          <% @covariate = Covariate.new %>
           <input name="Add Covariate" class="button" type="button" onclick="add_covariate()" value="Add another covariate" /></p>
           <p>
             <label>Record Creator</label>&nbsp
@@ -175,7 +178,7 @@
     return false;
   }
 <% ['site_id','citation_id','variable_id','treatment_id','dateloc','specie_id'].each do |column| %>
-<%= "  missingFields(\"trait_#{column}\");" if @trait[column.to_sym].nil? %>
+<%= "  missingFields(trait_#{column});" if @trait[column.to_sym].nil? %>
 <% end %>
 
 </script>
