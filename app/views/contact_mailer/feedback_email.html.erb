@@ -4,10 +4,11 @@
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 </head>
 <body>
-  <p>Feedback Type:</p>
-  <p><%= @type %></p>
-  <p>Username:</p>
-  <p><%= @sender_name %></p>
+  <p>Feedback Type: <%= @type %></p>
+  <p>Username: <%= @sender_name %></p>
+  <% if @problem_location != nil %>
+  <p>Problem URL: <%= @problem_location %></p>
+  <% end %>
   <p>Message:</p>
   <p><%= @email_body %></p>
 </body>

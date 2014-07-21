@@ -35,7 +35,7 @@ feature 'Sites index works' do
     context 'clicking view site button' do
       it 'should return "Viewing Site" ' do
         visit '/sites/'
-        first(:xpath,".//a[text()='Show' and contains(@href,'/sites/')]").click
+         first(:xpath,".//a[contains(@alt,'show')]").click
         page.should have_content 'Viewing Site'
       end
     end
@@ -43,7 +43,7 @@ feature 'Sites index works' do
     context 'clicking edit site button' do
       it 'should return "Editing Site" ' do
         visit '/sites/'
-        first(:xpath,".//a[text()='Edit' and contains(@href,'/edit')]").click
+         first(:xpath,".//a[ contains(@alt,'edit')]").click
         page.should have_content 'Editing Site'
       end
     end
