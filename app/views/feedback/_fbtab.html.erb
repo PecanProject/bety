@@ -1,0 +1,62 @@
+<%= javascript_include_tag 'lazy/feedback.js' %>
+
+<div id = "feedback-tab" style="cursor:pointer;height:90px; width:25px;border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-style: solid solid solid none; border-top-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-left-radius: 0px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 0px; -webkit-box-shadow: rgba(255, 255, 255, 0.247059) 1px 1px 1px inset, rgba(0, 0, 0, 0.498039) 0px 1px 2px; box-shadow: rgba(255, 255, 255, 0.247059) 1px 1px 1px inset, rgba(0, 0, 0, 0.498039) 0px 1px 2px; font-style: normal; font-variant: normal; font-weight: bold; font-size: 14px; line-height: 1em; font-family: Arial, sans-serif; position: fixed; left: 0px; top: 50%; z-index: 9999; margin-top: -62px;background: url(http://widget.uservoice.com/dcache/widget/feedback-tab.png?t=Feedback&c=ffffff&r=90) 50% 10px no-repeat rgb(70,70,70); "></div>
+<div class="dialog-all dialog-form-suggest">
+  <span class="dialog-close">x</span><br>
+  <div style="width:100%;text-align:center;font-weight:bold;font-size:14px">How can we improve this site?</div>
+  <%= form_for :feedback_email, :url =>{:controller =>'feedback', :action =>'feedback_email'}, :remote =>true do |f| %>
+    <%= f.hidden_field :type, :value =>"suggest feature" %>
+    <%= f.hidden_field :sender,:value =>current_user %>
+    <%= f.hidden_field :sender_email,:value =>current_user.email %>
+    <%= f.label :feedback_subject,"Subject",{:style =>"font-weight:normal"} %>
+    <%= f.text_field :feedback_subject %>
+    <%= f.label :feedback_text,"Details",{:style =>"font-weight:normal"} %>
+    <%= f.text_area :feedback_text , {:rows=> 5, :style=>"font-size:13px;"} %>
+    <%= submit_tag "Submit", {:class => "button button-primary feedback-submit", :style =>"font-size:12px"} %>
+    <button class="button button-info dialog-cancel" style="float:left;font-size:12px">Cancel</button>
+    <span class="feedback-spinner" style="font-size:12px"></span>
+  <% end %>
+</div>
+<div class="dialog-all dialog-form-problem">
+  <span class="dialog-close">x</span><br>
+  <div style="width:100%;text-align:center;font-weight:bold;">Report a Problem</div>
+  <%= form_for :feedback_email, :url =>{:controller =>'feedback', :action =>'feedback_email'}, :remote =>true do |f| %>
+    <%= f.hidden_field :type, :value =>"report problem" %>
+    <%= f.hidden_field :sender,:value =>current_user %>
+    <%= f.hidden_field :sender_email,:value =>current_user.email %>
+    <%= f.label :feedback_subject,"Subject",{:style =>"font-weight:normal"} %>
+    <%= f.text_field :feedback_subject %>
+    <%= f.label :location,"Problem encountered on",{:style =>"font-weight:normal"} %>
+    <% @current_url = request.url %>
+    <%= f.text_field :location, :value=>@current_url %>
+    <%= f.label :feedback_text,"Details",{:style =>"font-weight:normal"} %>
+    <%= f.text_area :feedback_text , {:rows=> 5, :style=>"font-size:13px;"} %>
+    <%= submit_tag "Submit", {:class => "button button-primary feedback-submit", :style =>"font-size:12px"} %>
+    <button class="button button-info dialog-cancel" style="float:left;font-size:12px">Cancel</button>
+    <span class="feedback-spinner" style="font-size:12px"></span>
+  <% end %>
+</div>
+<div class="dialog-all dialog-form-contact">
+  <span class="dialog-close">x</span><br>
+  <div style="width:100%;text-align:center;font-weight:bold;">Contact Us</div>
+  <%= form_for :feedback_email, :url =>{:controller =>'feedback', :action =>'feedback_email'}, :remote =>true do |f| %>
+    <%= f.hidden_field :type, :value =>"contact" %>
+    <%= f.hidden_field :sender,:value =>current_user %>
+    <%= f.hidden_field :sender_email,:value =>current_user.email %>
+    <%= f.label :feedback_subject,"Subject",{:style =>"font-weight:normal"} %>
+    <%= f.text_field :feedback_subject %>
+    <%= f.label :feedback_text,"Details",{:style =>"font-weight:normal"} %>
+    <%= f.text_area :feedback_text , {:rows=> 5, :style=>"font-size:13px;"} %>
+    <%= submit_tag "Submit", {:class => "button button-primary feedback-submit", :style =>"font-size:12px"} %>
+    <button class="button button-info dialog-cancel" style="float:left;font-size:12px">Cancel</button>
+    <span class="feedback-spinner" style="font-size:12px"></span>
+  <% end %>
+</div>
+<div id="dialog-main" class="dialog-all" title="Feedback">
+  <span class="dialog-close">x</span>
+  <button class="button button-primary" id="suggest" style="width:100%;font-size:12px;padding:3px">Suggest a Feature</button>
+  <br><br>
+  <button class="button button-warning" id="report" style="width:100%;font-size:12px;padding:3px">Report a Problem</button>
+  <br><br>
+  <button class="button button-info" id="contact" style="width:100%;font-size:12px;padding:3px">Contact Us</button>
+</div>

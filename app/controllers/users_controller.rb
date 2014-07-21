@@ -8,11 +8,14 @@ class UsersController < ApplicationController
     @iteration = params[:iteration][/\d+/] rescue 1
     if current_user.page_access_level == 1
       @users = User.sorted_order("#{sort_column('users', 'created_at')} DESC").search(params[:search]).paginate(
-        :page => params[:page], 
+        :page => params[:page],
         :per_page => params[:DataTables_Table_0_length]
       )
     else
-      @users = User.find(current_user.id)
+      @users = User.where("id = #{current_user.id}").paginate(
+        :page => params[:page],
+        :per_page => params[:DataTables_Table_0_length]
+      )
     end
 
     respond_to do |format|
@@ -21,7 +24,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def show 
+  def show
     if current_user.page_access_level == 1
       user_id = params[:id]
     else
@@ -33,7 +36,7 @@ class UsersController < ApplicationController
   def new
     @user = User.new
   end
- 
+
   def create
     logout_keeping_session!
     @user = User.new(params[:user])
@@ -41,7 +44,7 @@ class UsersController < ApplicationController
     @user.page_access_level = 4
     if Rails.env == "test"
       success = @user && @user.save
-    else 
+    else
       success = verify_recaptcha(:model => @user, :message => "Please re-enter the words from the image again.") && @user && @user.save
     end
     page_access_level = ["", "Administrator", "Manager", "Creator", "Viewer"]
@@ -49,9 +52,9 @@ class UsersController < ApplicationController
 
     if success && @user.errors.empty?
       if params[:user][:page_access_level].to_i < 4 or params[:user][:access_level].to_i < 3
-        ContactMailer::admin_approval(params[:user]).deliver
+        ContactMailer::admin_approval(params[:user], root_url).deliver
       end
-      ContactMailer::signup_email(@user).deliver
+      ContactMailer::signup_email(@user, root_url).deliver
       # Protects against session fixation attacks, causes request forgery
       # protection if visitor resubmits an earlier form using back
       # button. Uncomment if you understand the tradeoffs.

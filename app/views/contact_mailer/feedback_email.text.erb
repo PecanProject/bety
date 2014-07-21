@@ -1,0 +1,10 @@
+Feedback Type: <%= @type %>
+
+Userame: <%= @sender_name %>
+
+<% if @problem_location != nil %>
+Problem URL: <%= @problem_location %>
+<% end %>
+
+Message:
+<%= @email_body %>
