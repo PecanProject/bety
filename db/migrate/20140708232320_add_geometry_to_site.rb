@@ -1,3 +1,6 @@
+# 4326 is WGS84 which is common standard format, for more information
+# see http://spatialreference.org/ref/epsg/4326/ as well as 
+# http://en.wikipedia.org/wiki/World_Geodetic_System
 class AddGeometryToSite < ActiveRecord::Migration
   def self.up
     begin
