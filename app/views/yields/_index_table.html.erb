@@ -25,14 +25,7 @@
           <td class="center"><%= link_to_if y.specie, y.specie, y.specie %></td>
           <td class="center"><%= link_to_if y.cultivar, y.cultivar, y.cultivar %></td>
           <td class="center"><%= y.mean %></td>
-          <td class="center">
-            <%if (y.statname!=nil && y.stat!=nil)%><%= "#{y.statname} = #{y.stat}"%>
-            <%if y.n%><%=","%><%end%>
-            <%end%>
-            <%if y.n!=nil%>
-            <%="n = #{y.n}"%>
-            <%end%>
-          </td>
+          <td class="center"><%= format_stat(y) %></td>
           <td class="center"><%= link_to_if y.citation, y.citation, y.citation %></td>
           <td class="center"><%= link_to_if y.site, y.site, y.site %></td>
           <td class="center"><%= link_to_if y.treatment, y.treatment, y.treatment %></td>
