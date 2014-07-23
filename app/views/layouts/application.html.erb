@@ -128,7 +128,9 @@
                 <li><%= link_to "Covariates", covariates_path %></li>
                 <li><%= link_to "Cultivars", cultivars_path %></li>
                 <li><%= link_to "Managements", managements_path %></li>
-                <li><%= link_to "Methods", methods_path %></li>
+                <% if current_user.page_access_level <= 2 %>
+                  <li><%= link_to "Methods", methods_path %></li>
+                <% end %>
                 <li><%= link_to "PFTs", pfts_path %></li>
                 <li><%= link_to "Priors", priors_path %></li>
                 <li><%= link_to "Sites", sites_path %></li>
