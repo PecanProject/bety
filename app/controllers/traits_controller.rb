@@ -181,10 +181,7 @@ class TraitsController < ApplicationController
               if @covariate.save
                 @trait.covariates << @covariate
               else
-                if !@trait.errors.include?(:covariates)
-                  @trait.errors.merge!({:covariates =>[]})
-                end
-                @trait.errors[:covariates]<< (@covariate.errors.get(:level))[0]
+                @trait.errors.add(:covariates, (@covariate.errors.get(:level))[0])
               end
             end
           end
