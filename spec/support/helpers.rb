@@ -9,15 +9,9 @@ module LoginHelper
   end
 
   def login_nonadmin_test_user
-  	visit root_path
+    visit root_path
     fill_in 'Login',    :with => 'robben_yang'
     fill_in 'Password', :with => 'paozong'
     click_button 'Log in'
-
   end
-
-
 end
-
-
-

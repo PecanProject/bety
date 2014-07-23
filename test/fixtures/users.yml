@@ -2,8 +2,6 @@
    test_user1_password = 'asdfasdf'
    test_user2_password = 'Ciuleandra'
    test_user3_password = "paozong"
-   test_user4_password = "betydb2014"
-   test_user5_password = "quora"
 %>
 
 test_user1:
@@ -35,4 +33,3 @@ test_user3:
     access_level: 2
     page_access_level: 2
     email: robbenyang@example.com
-

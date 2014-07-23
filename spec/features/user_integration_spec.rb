@@ -19,7 +19,7 @@ feature 'Users index works' do
         page.should have_content 'Viewing User'
       end
     end
-    
+
     context 'clicking edit user button' do
       it 'should return "Editing User" ' do
         visit '/users/'
@@ -29,22 +29,20 @@ feature 'Users index works' do
     end
 
     #test for visitor
-    describe "  users with access equal to 1" do
-      it ' should see more than 1 user in list' do  
-     expect all(:xpath,".//tr/td").length >= 2   
+    describe " users with access equal to 1" do
+      it ' should see more than 1 user in list' do
+      expect all(:xpath,".//tr/td").length >= 2
+      end
     end
-  end   
-  
   end
 end
 
 feature ' User index for nonadministrators' do
-  
   before :each do
     login_nonadmin_test_user
   end
 
-  describe " click on the data link" do 
+  describe " click on the data link" do
     it 'should contain the link of user page' do
       visit root_path
       click_link "Users"
@@ -55,7 +53,7 @@ feature ' User index for nonadministrators' do
   #test for administrator
   describe " users with access greater than 1" do
     it ' show see only 1 users in list ' do
-    expect all(:xpath,".//tr/td").length ==1 
+    expect all(:xpath,".//tr/td").length ==1
     end
   end
 
