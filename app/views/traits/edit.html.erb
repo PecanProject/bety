@@ -102,11 +102,10 @@
           <p><em>Leave blank if not adding a covariate</em></p>
           <p>
           <% @new_covariates.each do |c| %>
-            <% @covariate = c %>
-            <%= render 'new_covariate'%>
+            <%= render 'new_covariate', :covariate => c %>
           <% end %>
           </div>
-          <% @covariate = Covariate.new %>
+          <%# @covariate = Covariate.new %>
           <input name="Add Covariate" class="button" type="button" onclick="add_covariate()" value="Add another covariate" /></p>
           <p>
             <label>Record Creator</label>&nbsp
@@ -155,7 +154,7 @@
     }
   }
   function add_covariate() {
-    jQuery('div#covariates').append('<%= escape_javascript(render :partial => "new_covariate") %>');
+    jQuery('div#covariates').append('<%= escape_javascript(render "new_covariate", :covariate => Covariate.new) %>');
     return false;
   }
 <% ['site_id','citation_id','variable_id','treatment_id','dateloc','specie_id'].each do |column| %>

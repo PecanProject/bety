@@ -1,13 +1,13 @@
 <div class="row">
-	<% if @covariate.errors.size >0 %>
-	  <%= content_tag(:div, "<b>Error</b> : #{(@covariate.errors.get(:level))[0]}".html_safe) %>
+	<% if covariate.errors.size >0 %>
+	  <%= content_tag(:div, "<b>Error</b> : #{(covariate.errors.get(:level))[0]}".html_safe) %>
 	<% end %>
   <div class="eight columns alpha">
     <%= label_tag :variable_id %>
-    <%= select_tag 'covariate[][variable_id]', options_for_select(["",""] + Variable.order('name').collect { |p| [ p.name_units, p.id ]},@covariate.variable_id) %>
+    <%= select_tag 'covariate[][variable_id]', options_for_select(["",""] + Variable.order('name').collect { |p| [ p.name_units, p.id ]},covariate.variable_id) %>
   </div>
   <div class="four columns omega">
     <%= label_tag :level %>
-    <%= text_field_tag 'covariate[][level]',@covariate.level%>
+    <%= text_field_tag 'covariate[][level]',covariate.level%>
   </div>
 </div>
