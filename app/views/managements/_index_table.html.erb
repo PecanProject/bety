@@ -33,7 +33,7 @@
 					    <i class="icon-edit"></i>
 					  <% end %>
 					  <!-- DELETE -->
-					  <% if current_user.page_access_level == 1 %>
+					  <% if current_user.page_access_level <=2 && management.traits == nil && management.yields == nil%>
               <%= link_to management, :method => :delete, :type => 'management', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
                 <i class="icon-trash"></i> 
               <% end %>

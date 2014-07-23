@@ -12,24 +12,49 @@
 
 <% if !@treatments.nil? and @treatments.length > 0 %>
 <h2>Treatments associated with this citation</h2>
+<div id="DataTables_Table_0_length" class="dataTables_length">
+  <table class="table table-striped table-bordered datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+  <thead>
+    <tr role="row">
+      <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Name</th>
+      <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Def</th>
+      <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Control</th>
+      <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 162px">Actions</th>
+    </tr>
+  </thead>
+  <tbody role="alert" aria-live="polite" aria-relevant="all">
+  <% @treatments.each do |treatment| %>
+    <tr>
+      <td><%= treatment.name %></td>
+      <td><%= treatment.definition %></td>
+      <td><%= link_to treatment.control ? "Yes" : "No", :action => "flag_control", :id => treatment.id %></td>
+      <td class="center">
+                <!-- UNLINK -->
+          <% if current_user.page_access_level <=2 %>
+            <%= link_to url_for({ :controller => "treatments", :action => "linked", id: treatment.id }), :id => treatment.id, :remote => true, :class =>"button button-small" do %>
+              <i class="icon-remove"></i> 
+            <% end %>
+          <% end %>
+          <!-- SHOW -->
+          <%= link_to treatment, :class => "button button-small" do %>
+            <i class="icon-zoom-in"></i>
+          <% end %>
+          <!-- EDIT -->
+          <%= link_to edit_treatment_path(treatment), :class => "button button-small" do %>
+            <i class="icon-edit"></i>
+          <% end %>
+          <!-- DELETE -->
+          <% if current_user.page_access_level <= 2 && treatment.traits == nil && treatment.yields == nil && treatment.managements == nil%>
+            <%= link_to treatment, :method => :delete, :type => 'treatment', :confirm => 'Are you sure?', :class=> 'button button-small button-danger' do %>
+              <i class="icon-trash"></i> 
+            <% end %>
+          <% end %>
+      </td>
+    </tr>
+  </tbody>
+  </table>
+</div>
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Def</th>
-    <th>Control</th>
-  </tr>
-
-<% @treatments.each do |treatment| %>
-
-  <tr>
-    <td><%= treatment.name %></td>
-    <td><%= treatment.definition %></td>
-    <td><%= link_to treatment.control ? "Yes" : "No", :action => "flag_control", :id => treatment.id %></td>
-    <td><%= link_to 'Unlink', :action => "linked", :id => treatment.id %></td>
-    <td><%= link_to 'Show', treatment %></td>
-    <td><%= link_to 'Edit', edit_treatment_path(treatment) %></td>
-  </tr>
 
   <tr>
     <td colspan=5>
