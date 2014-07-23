@@ -169,7 +169,6 @@ class TraitsController < ApplicationController
   # PUT /traits/1.xml
   def update
     @trait = Trait.all_limited(current_user).find(params[:id])
-    @citation = @trait.citation
     @trait.current_user = current_user #Used to validate that they are allowed to change checked
     @new_covariates = []
     respond_to do |format|
@@ -201,6 +200,7 @@ class TraitsController < ApplicationController
   rescue StandardError, ActiveRecord::StatementInvalid => e
     logger.info(e)
     flash[:error] = e.message
+    @citation = @trait.citation
     respond_to do |format|
       format.html { render :action =>"edit" }
       format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
