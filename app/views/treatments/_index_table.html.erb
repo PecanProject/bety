@@ -44,7 +44,7 @@
             <i class="icon-edit"></i>
           <% end %>
           <!-- DELETE -->
-          <% if current_user.page_access_level <= 2 && treatment.traits == nil && treatment.yields == nil && treatment.managements == nil%>
+          <% if current_user.page_access_level <= 2 && treatment.traits.empty? && treatment.yields.empty? && treatment.managements.empty?%>
             <%= link_to treatment, :method => :delete, :type => 'treatment', :confirm => 'Are you sure?', :class=> 'button button-small button-danger' do %>
               <i class="icon-trash"></i> 
             <% end %>
