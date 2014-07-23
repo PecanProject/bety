@@ -7,26 +7,7 @@
 
       <a style="text-decoration: none" href="#" onclick="showHide('edit_covariates_traits')" id="show_edit_covariates_traits">[+] View Covariates</a>
       <div id="edit_covariates_traits" class="hidden notvisible">
-      <table width="100%">
-        <tr>
-          <td width="100%"><h3>Existing Covariates <%= link_to "[new]", new_covariate_path(:trait_id => @trait.id) %></h3></td>
-        </tr>
-        <tr>
-          <td>
-            <table>
-              <tr> <th></th><th></th><th>Variable</th><th>Level</th><th></th> </tr>
-              <% @trait.covariates.each do |c| %>
-              <tr>
-                <td><%= link_to 'X', c, :confirm => 'Are you sure?', :method => :delete %></td>
-                <td><%= link_to "edit", edit_covariate_path(c.id) %></td>
-                <td><%= link_to_if c.variable, c.variable, c.variable %></td>
-                <td><%= c.level %></td>
-              </tr>
-              <% end %>
-            </table>
-          </td>
-        </tr>
-      </table>
+      <%= render "edit_covariates_traits" %>
       </div>
       <hr />
       
