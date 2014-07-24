@@ -1,35 +1,9 @@
-jQuery(function(){jQuery(".ui-dialog-titlebar").hide();});
+jQuery( document ).ready(function($) {
 
-jQuery('body').click(function(e){
-  x = e.clientX ;
-  y = e.clientY+jQuery(document).scrollTop();
-  jQuery('.dialog-all').each(function(){
-    if(jQuery(this).dialog("isOpen")){
-      minx = jQuery(this).offset().left -5;
-      maxx = jQuery(this).offset().left + jQuery(this).dialog("option","width") + 5;
-      miny = jQuery(this).offset().top -5;
-      maxy = jQuery(this).offset().top + jQuery(this).dialog("option","height") + 5;
-      tminx = jQuery("#feedback-tab").offset().left-5;
-      tmaxx = jQuery("#feedback-tab").offset().left+ jQuery("#feedback-tab").width() + 5;
-      tminy = jQuery("#feedback-tab").offset().top-5 ;
-      tmaxy = jQuery("#feedback-tab").offset().top+ jQuery("#feedback-tab").height() + 5;
-      inthis = x>=minx && x<=maxx && y>=miny && y<=maxy;
-      intab = x>=tminx && x<=tmaxx && y>=tminy && y<=tmaxy;
-      if(!inthis && !intab)
-        jQuery(this).dialog("close");
-	}
-  });
-});
-
-jQuery(".dialog-cancel").click(function(){
-  jQuery(".dialog-all").dialog("close");
-  return false;
-});
-
-jQuery(".dialog-all").dialog({
+$(".dialog-all").dialog({
   autoOpen: false,
   modal: false,
-  draggable: false,
+  draggable: true,
   resizable: false,
   dialogClass: "fixed-dialog",
   show:{
@@ -45,30 +19,61 @@ jQuery(".dialog-all").dialog({
     at: "right center",
     of: "#feedback-tab",
   },
-  close: function(){
-    jQuery("#feedback_email_feedback_subject").val("");
-    jQuery("#feedback_email_feedback_text").val("");
-  }
 });
 
-jQuery( ".dialog-form" ).dialog({
-  height: 340,
+$( ".dialog-all" ).dialog({
+  height: 'auto',
   width: 250,
 });
 
-jQuery( "#dialog-main" ).dialog({
-  height: 220,
+$( "#dialog-main" ).dialog({
+  height: 190,
   width: 150,
 });
 
-jQuery(".hr").css({
+$(".ui-dialog-titlebar").hide();
+
+$('body').click(function(e){
+  x = e.clientX ;
+  y = e.clientY+$(document).scrollTop();
+  tminx = $("#feedback-tab").offset().left-5;
+  tmaxx = $("#feedback-tab").offset().left+ $("#feedback-tab").width() + 5;
+  tminy = $("#feedback-tab").offset().top-5 ;
+  tmaxy = $("#feedback-tab").offset().top+ $("#feedback-tab").height() + 5;
+  intab = x>=tminx && x<=tmaxx && y>=tminy && y<=tmaxy;
+  if(!$('#dialog-main').dialog("isOpen") &&
+    !$('.dialog-form-suggest').dialog("isOpen")&&
+    !$('.dialog-form-problem').dialog("isOpen")&&
+    !$('.dialog-form-contact').dialog("isOpen") &&
+    !intab)
+    $('#feedback-tab').stop().animate({left:-18});
+  $('.dialog-all').each(function(){
+    if($(this).dialog("isOpen")){
+      minx = $(this).offset().left -5;
+      maxx = $(this).offset().left + $(this).width() + 5;
+      miny = $(this).offset().top -5;
+      maxy = $(this).offset().top + $(this).height() + 5;
+      inthis = x>=minx && x<=maxx && y>=miny && y<=maxy;
+      if(!inthis && !intab)
+        $(this).dialog("close");
+    }
+  });
+});
+
+$(document).mousemove(function(e){
+  xpos = e.pageX;
+  if(xpos<10)
+    $('#feedback-tab').stop().animate({left:0},'fast');
+});
+
+$(".hr").css({
   "border-top":"1px solid #000000",
   "display":"inline-block",
   "width":"39%",
   "margin":"0px",
 });
 
-jQuery(".dialog-close").css({
+$(".dialog-close").css({
   "float":"right",
   "color":"#aaa",
   "margin-bottom":"10px",
@@ -77,55 +82,61 @@ jQuery(".dialog-close").css({
   "cursor":"pointer",
 });
 
-jQuery(".fixed-dialog").css
+$(".fixed-dialog").css
 ({
   "position": "fixed", 
-  "left": "0px", 
-  "top": "50%",	
+  "left": "0px",
+  "top": "50%",
   "margin-top": "-62px",
+  "background" : "rgba(220,220,220,0.8)",
 });
 
-jQuery(".fixed-dialog form").css
+$(".fixed-dialog form").css
 ({
   "margin-top": "10px",
 });
+$(".feedback-submit").css
+({
+  "float":"right",
+});
 
-jQuery("#feedback-tab").click(function(){
-  if(!jQuery("#dialog-main").dialog("isOpen")){
-    jQuery(".dialog-all").dialog("close");
-    jQuery("#dialog-main").dialog("open");
+$(".dialog-cancel").click(function(){
+  $('form').trigger('reset');
+  $(".dialog-all").dialog("close");
+});
+$("#feedback-tab").click(function(){
+  if(!$("#dialog-main").dialog("isOpen")){
+    $(".dialog-all").dialog("close");
+    $("#dialog-main").dialog("open");
   }
   else
-    jQuery(".dialog-all").dialog("close");
+    $(".dialog-all").dialog("close");
 });
 
-jQuery("#suggest").click(function(){	
-  jQuery(".dialog-form").dialog("open");
-  jQuery("#form-title").html("Suggest a Feature");
-  jQuery("#feedback_email_type").val("Suggest a Feature");
-  jQuery("#dialog-main").dialog("close");
+$("#suggest").click(function(){
+  $(".dialog-form-suggest").dialog("open");
+  $("#dialog-main").dialog("close");
 });
 
-jQuery("#contact").click(function(){	
-  jQuery(".dialog-form").dialog("open");
-  jQuery("#form-title").html("Contact Us");
-  jQuery("#feedback_email_type").val("Contact");
-  jQuery("#dialog-main").dialog("close");
+$("#contact").click(function(){
+  $(".dialog-form-contact").dialog("open");
+  $("#dialog-main").dialog("close");
 });
 
-jQuery("#report").click(function(){
-  jQuery(".dialog-form").dialog("open");
-  jQuery("#form-title").html("Report a Problem");
-  jQuery("#feedback_email_type").val("Report a Problem");
-  jQuery("#dialog-main").dialog("close");
+$("#report").click(function(){
+  $(".dialog-form-problem").dialog("open");
+  $("#dialog-main").dialog("close");
 });
 
-jQuery(".dialog-close").click(function(){
-  jQuery(".dialog-all").dialog("close");
+$(".dialog-close").click(function(){
+  $('form').trigger('reset');
+  $(".dialog-all").dialog("close");
 });
 
-jQuery(".feedback-submit").click(function(){
-  jQuery(".feedback-spinner").html("&nbsp;processing&nbsp;<img height='10px' width='10px' src='http://d3fildg3jlcvty.cloudfront.net/20140604-01/graphics/ajax-loader.gif' />");
-  jQuery(".dialog-cancel").attr("disabled","disabled");
-  setTimeout(function(){jQuery(".feedback-submit").attr("disabled","disabled");},500);
+$(".feedback-submit").click(function(){
+  $(".feedback-spinner").html("&nbsp;processing&nbsp;<img height='10px' width='10px' src='http://d3fildg3jlcvty.cloudfront.net/20140604-01/graphics/ajax-loader.gif' />");
+  $(".dialog-cancel").attr("disabled","disabled");
+  setTimeout(function(){$(".feedback-submit").attr("disabled","disabled");},500);
+});
+
 });

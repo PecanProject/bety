@@ -12,6 +12,7 @@ class ContactMailer < ActionMailer::Base
     @email_body = email_params[:feedback_text]
     @sender_name = email_params[:sender]
     @sender_email = email_params[:sender_email]
+    @problem_location = email_params[:location]
     @type = email_params[:type]
     admins = User.where(page_access_level: 1).map! do |attributes|
       "#{attributes.name} < #{attributes.email}>"

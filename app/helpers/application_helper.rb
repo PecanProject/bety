@@ -50,6 +50,21 @@ module ApplicationHelper
     direction = (column == sort_column && sort_direction == "asc") ? "desc" : "asc"
     link_to title, params.merge(:sort => column, :direction => direction, :page => nil), {:class => css_class}
   end
+
+  def format_stat(record)
+    if (record.statname!=nil && !record.statname.empty? && record.stat!=nil)
+      if (record.n!=nil)
+        "#{record.statname}&nbsp;=&nbsp;#{record.stat}, n&nbsp;=&nbsp;#{record.n}".html_safe
+      else
+         "#{record.statname}&nbsp;=&nbsp;#{record.stat}".html_safe
+      end
+    else
+      if(record.n!=nil)
+        "n&nbsp;=&nbsp;#{record.n}".html_safe
+      end
+    end
+  end
+
 end
 
 # Call this to make a link inside a form that submits the form.
