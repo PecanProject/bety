@@ -127,7 +127,7 @@ class TraitsController < ApplicationController
     @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.specie.nil? ? @species = nil : @species = [@trait.specie]
     @citation = @trait.citation
-    @new_covariates = @new_covariates || [Covariate.new]
+    @new_covariates = [Covariate.new]
   end
 
   # POST /traits
