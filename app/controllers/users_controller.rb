@@ -42,7 +42,7 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.access_level = 3
     @user.page_access_level = 4
-    if Rails.env == "test"
+    if Rails.env =~ /test(_js)?/
       success = @user && @user.save
     else
       success = verify_recaptcha(:model => @user, :message => "Please re-enter the words from the image again.") && @user && @user.save
