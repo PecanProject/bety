@@ -7,32 +7,12 @@
 
       <a style="text-decoration: none" href="#" onclick="showHide('edit_covariates_traits')" id="show_edit_covariates_traits">[+] View Covariates</a>
       <div id="edit_covariates_traits" class="hidden notvisible">
-      <table width="100%">
-        <tr>
-          <td width="100%"><h3>Existing Covariates <%= link_to "[new]", new_covariate_path(:trait_id => @trait.id) %></h3></td>
-        </tr>
-        <tr>
-          <td>
-            <table>
-              <tr> <th></th><th></th><th>Variable</th><th>Level</th><th></th> </tr>
-              <% @trait.covariates.each do |c| %>
-              <tr>
-                <td><%= link_to 'X', c, :confirm => 'Are you sure?', :method => :delete %></td>
-                <td><%= link_to "edit", edit_covariate_path(c.id) %></td>
-                <td><%= link_to_if c.variable, c.variable, c.variable %></td>
-                <td><%= c.level %></td>
-              </tr>
-              <% end %>
-            </table>
-          </td>
-        </tr>
-      </table>
+      <%= render "edit_covariates_traits" %>
       </div>
       <hr />
       
       <%= form_for(@trait) do |f| %>
         <%= f.error_messages %>
-        
              <div class="row">
               <div class="four columns alpha">
                 <%= f.label :mean %>
@@ -120,8 +100,10 @@
           <div id="covariates">
           <h3>Add a covariate to this trait</h3>
           <p><em>Leave blank if not adding a covariate</em></p>
-          <p>          
-            <%= render :partial => 'new_covariate' %>
+          <p>
+          <% @new_covariates.each do |c| %>
+            <%= render 'new_covariate', :covariate => c %>
+          <% end %>
           </div>
           <input name="Add Covariate" class="button" type="button" onclick="add_covariate()" value="Add another covariate" /></p>
           <p>
@@ -171,11 +153,11 @@
     }
   }
   function add_covariate() {
-    jQuery('div#covariates').append('<%= escape_javascript(render :partial => "new_covariate") %>');
+    jQuery('div#covariates').append('<%= escape_javascript(render "new_covariate", :covariate => Covariate.new) %>');
     return false;
   }
 <% ['site_id','citation_id','variable_id','treatment_id','dateloc','specie_id'].each do |column| %>
-<%= "  missingFields(\"trait_#{column}\");" if @trait[column.to_sym].nil? %>
+<%= "  missingFields(trait_#{column});" if @trait[column.to_sym].nil? %>
 <% end %>
 
 </script>
