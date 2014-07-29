@@ -22,17 +22,21 @@
           <%= f.error_messages %>
 
             <div class="row">
+              <div class="eight columns alpha">
+                <%= f.label :variable_id, "Trait" %>
+                <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }.sort { |a,b| a[0].split(': ')[1] <=> b[0].split(': ')[1] }, {}, :class => "input-full" %>
+              </div> 
               <div class="four columns alpha">
                 <%= f.label :mean %>
                 <%= f.text_field :mean, :class => "input-full"  %>
               </div>
               <div class="four columns ">
-                <%= f.label :stat %>
-                <%= f.text_field :stat, :class => "input-full" %>
+                <%= f.label :Stat %>              
+                <%= f.select :statname, $statname_list, :class => "input-full" %>
               </div>
               <div class="four columns">
                 <%= f.label :method_id, "Method" %>
-                <%= f.select :method_id, Methods.all.collect { |p| [ p.select_default, p.id ] }, {:include_blank => true}, :class => "input-full" %>
+                <%= f.select :method_id, Methods.all.collect { |p| [ p.select_default, p.id ] }, {:include_blank => true}, :input_html => { :value => nil },:class => "input-full" %>
               </div>
                <div class="two columns omega">
                 <%= f.label :statname %>
@@ -85,10 +89,6 @@
             </div>
 
             <div class="row">
-              <div class="eight columns alpha">
-                <%= f.label :variable_id, "Trait" %>
-                <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }.sort { |a,b| a[0].split(': ')[1] <=> b[0].split(': ')[1] }, {}, :class => "input-full" %>
-              </div>
               <div class="four columns alpha">
                 <%= f.label :n %>
                 <%= f.text_field :n, :class => "input-full" %>
