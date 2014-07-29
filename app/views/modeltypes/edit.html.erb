@@ -1,0 +1,37 @@
+<div class="content">
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
+        <h1>Editing Model Type</h1>
+      </header>
+      
+      <%= form_for(@modeltype) do |f| %>
+        <%= f.error_messages %>
+
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :name %><br />
+            <%= f.text_field :name %>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( modeltypes_path ) do %>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
+            <% end%>
+            <%= link_to( @modeltype ) do %>
+              <button class="button" type="button">Show</button>
+            <% end%>
+          </div>
+          <div class="button-group pull-right">
+            <%= f.submit 'Update', :class => "button button-primary" %>
+          </div>
+        </div>
+
+      <% end %>
+  
+    </div>
+  </div>
+</div>
+

@@ -9,12 +9,16 @@
         <%= f.error_messages %>
 
         <div class="row">
-          <div class="eight columns alpha">
+          <div class="sixteen columns alpha">
             <%= f.label :name %>
             <%= f.text_field :name, :class => "input-full" %>
           </div>
+          <div class="sixteen columns alpha">
+            <%= f.label :modeltype_id %>
+            <%= f.collection_select(:modeltype_id, Modeltype.order('name'), :id, :name) %>
+          </div>
           
-          <div class="eight columns omega">
+          <div class="sixteen columns alpha">
             <%= f.label :definition %>
             <%= f.text_area :definition, :rows => 10, :class => "input-full" %>
           </div>

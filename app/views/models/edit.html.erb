@@ -30,14 +30,8 @@
         </div>          
         <div class="row">
           <div class="sixteen columns alpha">
-            <%= f.label :model_type %>
-            <%= f.select :model_type, options_for_select([
-                ["BIOCRO", "BIOCRO"], 
-                ["ED2", "ED2"],
-                ["GHGVC", "GHGVC"],
-                ["ISIS", "ISIS"],
-                ["SIPNET", "SIPNET"],
-              ], @model.model_type) %> 
+            <%= f.label :modeltype_id %>
+            <%= f.collection_select(:modeltype_id, Modeltype.order('name'), :id, :name) %>
           </div>
         </div>          
         <div class="row">

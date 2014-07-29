@@ -1,0 +1,15 @@
+<h2>Associated PFTs</h2>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+  </tr>
+  <% @modeltype.pfts.all(:limit => 100).each do |c| %>
+  <tr>
+    <td><%=h c.name %></td>
+    <td><%=h c.definition %></td>
+    <td><%= link_to "Show", pft_path(c) %></td>
+  </tr>
+  <% end %>
+</table>

@@ -1,0 +1,16 @@
+<h2>Associated Models</h2>
+
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Revision</th>
+  </tr>
+  <% @modeltype.models.all(:limit => 100).each do |c| %>
+  <tr>
+    <td><%=h c.model_name %></td>
+    <td><%=h c.revision %></td>
+    <td><%= link_to "Show", model_path(c) %></td>
+  </tr>
+  <% end %>
+</table>

@@ -84,6 +84,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :likelihoods
   resources :inputs
   resources :models
+  resources :modeltypes
   resources :runs
   resources :posteriors
   resources :covariates
