@@ -169,15 +169,26 @@ class TraitsController < ApplicationController
   def update
     @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.current_user = current_user #Used to validate that they are allowed to change checked
-
     respond_to do |format|
       if @trait.update_attributes(params[:trait])
+        params[:covariate].each do |covariate|
+          unless covariate[:variable_id].blank?
+            begin
+              @covariate = Covariate.new(covariate)
+              @covariate.save!
+              @trait.covariates << @covariate
+            rescue ActiveRecord::StatementInvalid, ActiveRecord::RecordInvalid => e
+              handle_constraint_violations(e) and return
+            end
+          end
+        end
         flash[:notice] = 'Trait was successfully updated.'
         format.html { redirect_to(@trait) }
         format.xml  { head :ok }
         format.csv  { head :ok }
       else
-        format.html { render :action => "edit" }
+        flash[:error] = "Trait couldn't be updated"
+        format.html { redirect_to edit_trait_path(@trait) }
         format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
       end
