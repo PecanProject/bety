@@ -3,11 +3,12 @@ class AddModelTypeTable < ActiveRecord::Migration
 
   def self.up
     create_table :modeltypes do |t|
-      t.string :name
+      t.string :name, :unique => true
       t.integer :user_id
       t.datetime :created_at
       t.datetime :updated_at
     end
+    add_index :modeltypes, [:name], :unique => true
 
     Models.update_all("model_type = 'UNKNOWN'", "model_type IS NULL or model_type=''")
     execute("insert into modeltypes(name) (select distinct model_type from models);")
@@ -30,6 +31,7 @@ class AddModelTypeTable < ActiveRecord::Migration
       t.datetime :created_at
       t.datetime :updated_at
     end
+    add_index :modeltypes_formats, [:modeltype_id, :format_id, :input], :name => "index_modeltypes_formats_on_modeltype_id_format_id_input", :unique => true
 
   end
 

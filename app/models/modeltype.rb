@@ -13,6 +13,8 @@ class Modeltype < ActiveRecord::Base
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
+  validates_uniqueness_of :name
+
   comma do
     id
     name
