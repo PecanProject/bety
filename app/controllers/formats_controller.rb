@@ -16,12 +16,21 @@ class FormatsController < ApplicationController
     end
   end
 
-  def edit_formats_variables
+  def add_formats_variables
     @format = Format.find(params[:id])
     formats_variable = FormatsVariable.new(params[:formats_variable])
     formats_variable.format = @format
     formats_variable.variable = Variable.find(params[:variable_id])
     formats_variable.save
+
+    render :update do |page|
+      page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
+    end
+  end
+
+  def edit_formats_variables
+    @formats_variable = FormatsVariable.find(params[:id])
+    @formats_variable.update_attributes(params[:formats_variable])
 
     render :update do |page|
       page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
