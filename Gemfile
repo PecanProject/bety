@@ -35,13 +35,11 @@ group :development, :test do
   gem "sqlite3", "1.3.3"
 end
 
-group :test, :test_no_js do
+group :test do
   gem "webrat", "0.7.1"
   gem "capybara"
   gem "database_cleaner"
-end
-
-group :test do
+  # Comment this out if you can't or don't wish to install capybara-webkit:
   gem "capybara-webkit"
 end
 
