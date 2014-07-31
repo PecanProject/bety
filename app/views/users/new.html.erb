@@ -75,7 +75,7 @@
 
         <em>* Any request for page access higher then Viewer or data access higher then External researcher must be approved by an administrator</em>
 
-        <% if Rails.env !=~ /test(_js)?/ %>
+        <% if Rails.env !~ /test(_no_js)?/ %>
           <%= recaptcha_tags ssl: true %>
         <% end %>
 

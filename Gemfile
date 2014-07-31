@@ -35,13 +35,13 @@ group :development, :test do
   gem "sqlite3", "1.3.3"
 end
 
-group :test, :test_js do
+group :test, :test_no_js do
   gem "webrat", "0.7.1"
   gem "capybara"
   gem "database_cleaner"
 end
 
-group :test_js do
+group :test do
   gem "capybara-webkit"
 end
 
