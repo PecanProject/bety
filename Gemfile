@@ -19,13 +19,13 @@ gem "will_paginate", "3.0.4"
 gem "bootstrap-will_paginate"
 
 # MySQL, comment out PostgreSQL section
-gem "mysql2"
-gem "ruby-mysql" # for data upload scripts in local
-gem "activerecord-mysql2-adapter"
+#gem "mysql2"
+#gem "ruby-mysql" # for data upload scripts in local
+#gem "activerecord-mysql2-adapter"
 
 # Postgresql, comment out MySQL section
 gem "pg"
-gem "activerecord-postgresql-adapter"
+gem "activerecord-postgis-adapter"
 
 group :development, :test do
   # Although rspec-rails is mainly for the test environment, we
