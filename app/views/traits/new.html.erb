@@ -36,7 +36,7 @@
               </div>
                <div class="two columns omega">
                 <%= f.label :statname %>
-                <%= f.select :statname, $statname_list, :class => "input-full" %>
+                <%= f.select :statname, ["SE", "SD", "LSD", "HSD", "MSE", "95%CI"], :class => "input-full" %>
               </div>
             </div>
             <div class="row">
