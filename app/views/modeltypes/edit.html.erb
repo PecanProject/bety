@@ -5,6 +5,15 @@
         <h1>Editing Model Type</h1>
       </header>
       
+      <a style="text-decoration: none" href="#" onclick="showHide('edit_formats')" id="show_edit_formats">[+] Edit Associated Formats</a>
+      <br/>
+      <div id="edit_formats" class="hidden notvisible">
+        <%= render 'edit_formats' %>
+      </div>
+
+      <br>
+      <hr>
+
       <%= form_for(@modeltype) do |f| %>
         <%= f.error_messages %>
 

@@ -1,0 +1,19 @@
+<h2>Associated Formats</h2>
+
+<table>
+  <tr>
+    <th>Mime Type</th>
+    <th>Name</th>
+    <th>Required</th>
+    <th>Input</th>
+  </tr>
+  <% @modeltype.modeltypes_formats.all(:limit => 100).each do |c| %>
+  <tr>
+    <td><%=h c.format.mime_type %></td>
+    <td><%=h c.format.name %></td>
+    <td><%=h c.required %></td>
+    <td><%=h c.input %></td>
+    <td><%= link_to "Show", formats_path(c.format) %></td>
+  </tr>
+  <% end %>
+</table>

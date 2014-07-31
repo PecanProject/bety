@@ -3,6 +3,41 @@ class ModeltypesController < ApplicationController
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
 
+  def rem_modeltypes_format
+    @modeltypes_format = ModeltypesFormat.find(params[:id])
+    @modeltype = @modeltypes_format.modeltype
+
+    render :update do |page|
+      if @modeltypes_format.destroy
+        page.replace_html 'edit_formats', :partial => 'edit_formats'
+      else
+        page.replace_html 'edit_formats', :partial => 'edit_formats'
+      end
+    end
+  end
+
+  def add_modeltypes_format
+    @modeltype = Modeltype.find(params[:id])
+    modeltypes_format = ModeltypesFormat.new(params[:modeltypes_format])
+    modeltypes_format.modeltype = @modeltype
+    modeltypes_format.format = Format.find(params[:format_id])
+    modeltypes_format.save
+
+    render :update do |page|
+      page.replace_html 'edit_formats', :partial => 'edit_formats'
+    end
+  end
+
+  def edit_modeltypes_format
+    @modeltypes_format = ModeltypesFormat.find(params[:id])
+    @modeltype = @modeltypes_format.modeltype
+    @modeltypes_format.update_attributes(params[:modeltypes_format])
+
+    render :update do |page|
+      page.replace_html 'edit_formats', :partial => 'edit_formats'
+    end
+  end
+
   # GET /modeltypes
   # GET /modeltypes.xml
   def index

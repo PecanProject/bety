@@ -5,6 +5,9 @@
   <thead>
     <tr role="row">
       <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" aria-sort="none"><%= sortable "modeltypes.name", "Name" -%></th>
+      <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" aria-sort="none"># models</th>
+      <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" aria-sort="none"># pfts</th>
+      <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" aria-sort="none"># inputs</th>
       <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 150px">Actions</th>
     </tr>
   </thead>
@@ -13,6 +16,9 @@
     <% @modeltypes.each do |modeltype| %>
       <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and modeltype.id == @search.to_i%>>
         <td class="center"><%= modeltype.name %></td>
+        <td class="center"><%= modeltype.models.count %></td>
+        <td class="center"><%= modeltype.pfts.count %></td>
+        <td class="center"><%= modeltype.modeltypes_formats.count %></td>
         <td class="center ">
           <!-- SHOW -->
           <%= link_to modeltype, :class => "button button-small", :alt => "show" do %>

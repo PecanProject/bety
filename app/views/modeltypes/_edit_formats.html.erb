@@ -1,0 +1,52 @@
+<div class="row" style="margin-bottom: 0px">
+  <div class="one columns alpha">&nbsp;</div>
+  <div class="one columns">&nbsp;</div>
+  <div class="six columns">Format</div>
+  <div class="two columns">Required</div>
+  <div class="two columns">Input</div>
+</div>
+
+<% @modeltype.modeltypes_formats.each do |modeltypes_format| %>
+  <%= form_tag url_for(:controller => :modeltypes, :action => :edit_modeltypes_format), :remote => true, :style => "margin: 0px" do %>
+    <div class="row" style="margin-bottom: 0px">
+      <div class="one columns alpha">
+        <%= hidden_field_tag 'id', modeltypes_format.id %>
+        <%= link_to "X", { :controller => :modeltypes, :action => :rem_modeltypes_format, :id => modeltypes_format.id }, :confirm => 'Are you sure?', :remote => true %>
+      </div>
+      <div class="one columns">
+        <%= submit_tag "save" %>
+      </div>
+      <div class="six columns">
+        <%= link_to modeltypes_format.format, edit_format_path(modeltypes_format.format_id) %>
+      </div>
+      <div class="two columns">
+        <%= hidden_field_tag 'modeltypes_format[required]', 0 %>
+        <%= check_box_tag 'modeltypes_format[required]', 1, modeltypes_format.required %>
+      </div>
+      <div class="two columns">
+        <%= hidden_field_tag 'modeltypes_format[input]', 0 %>
+        <%= check_box_tag 'modeltypes_format[input]', 1, modeltypes_format.input %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<%= form_tag url_for(:controller => :modeltypes, :action => :add_modeltypes_format), :remote => true, :style  => "margin: 0px" do %>
+  <div class="row" style="margin-bottom: 0px">
+    <div class="one columns alpha">
+      <%= hidden_field_tag 'id', @modeltype.id %>
+    </div>
+    <div class="one columns">
+      <%= submit_tag "add" %>
+    </div>
+    <div class="six columns">
+      <%= select_tag :format_id, options_for_select(Format.all.collect { |x| [x.select_default,x.id] }) %>
+    </div>
+    <div class="two columns">
+      <%= check_box_tag 'modeltypes_format[required]' %>
+    </div>
+    <div class="two columns">
+      <%= check_box_tag 'modeltypes_format[input]', 1, true %>
+    </div>
+  </div>
+<% end %>
