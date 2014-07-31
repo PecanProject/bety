@@ -1,5 +1,5 @@
 <% if @trait.covariates.size>0 %>
-<table width="100%"> 
+<table width="100%">
         <tr align="left"> <th>Variable</th><th>Level</th><th align="center" colspan="2">Actions</th> </tr>
           <% @trait.covariates.each do |c| %>
             <tr>
@@ -9,6 +9,5 @@
               <td><%= link_to "edit", edit_covariate_path(c.id) %></td>
              </tr>
           <% end %>
-   
 </table>
 <% end %>

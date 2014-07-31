@@ -27,7 +27,7 @@
                 <div class="eight columns omega">
                   <%= f.label :cultivar_id %>
                   <%= f.select :cultivar_id, Cultivar.joins(:specie).order('species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true}, :class => "input-full" %>
-                </div>                         
+                </div>
               </div>
               <div class="row">
                 <div class="four columns alpha">
@@ -53,7 +53,7 @@
               </div>
 
               <div class="row">
-                <div class="four columns alpha">               
+                <div class="four columns alpha">
                   <fieldset>
                     <legend>Date</legend>
                     <%= f.select :date_year, [''] + (1800..Time.now.year).to_a %>
@@ -104,9 +104,9 @@
         
               <label>Record Creator</label>&nbsp
               <%= user_for_view(@trait.user) %>
-              <%= f.hidden_field :citation_id, :value => @citation.id %> 
+              <%= f.hidden_field :citation_id, :value => @citation.id %>
           </div>
-          <div id="divider" style="float:right;border:0;margin-top:-20px;border-left:1px solid #eeeeee;width:1px;"></div>     
+          <div id="divider" style="float:right;border:0;margin-top:-20px;border-left:1px solid #eeeeee;width:1px;"></div>
         </div><!--sixteen-->
 
         <div class="five columns omega" style="float:right">

@@ -11,7 +11,7 @@
       <select class="input-full" id="<%= controller.controller_name.singularize %>_specie_id" name="<%= controller.controller_name.singularize %>[specie_id]">
         <% if !@species.nil? %>  
           <%= options_from_collection_for_select(@species, :id, :select_default) %>
-        <% else -%> 
+        <% else -%>
           <option value=''>No species associated with this record.</option>
         <% end %>
       </select>
