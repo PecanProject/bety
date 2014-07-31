@@ -7,7 +7,7 @@
         <h2> There are no treatments associated with this citation. Please create a treatment that is associated with this citation first. <%= link_to 'Treatments', treatments_path %></h2>
       <% elsif @citation.sites.length == 0 %>
         <h2> There are no sites associated with this citation. Please create a site that is associated with this citation first. <%= link_to 'Sites', sites_path %></h2>
-      <% end %>
+      <% else %>
 
     <div class="row" >
       <header>
@@ -131,6 +131,7 @@
           </div>
       </div>
     <% end %>
+  <% end %>
 
   </div><!--container-->
 </div><!--content-->
