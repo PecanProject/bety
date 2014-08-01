@@ -4,14 +4,14 @@ class Workflow < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{  }
-  SEARCH_FIELDS = %w{ workflows.outdir workflows.started_at workflows.finished_at workflows.created_at workflows.updated_at }
+  SEARCH_FIELDS = %w{ workflows.folder workflows.started_at workflows.finished_at workflows.created_at workflows.updated_at }
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do
     id
-    outdir
+    folder
     started_at
     finished_at
     created_at
@@ -21,9 +21,9 @@ class Workflow < ActiveRecord::Base
   def to_s(format=nil)
     case format
     when :long
-      "#{outdir} #{started_at} #{finished_at}"
+      "#{folder} #{started_at} #{finished_at}"
     else
-      outdir
+      folder
     end
   end
   # Used in forms to unify fields show in select boxes across site.
@@ -34,7 +34,7 @@ class Workflow < ActiveRecord::Base
   #Columns we search when referenced from another model
   #Fields present in 'select_default'
   def self.search_columns
-    ["workflows.id", "workflows.outdir"]
+    ["workflows.id", "workflows.folder"]
   end
 
 end

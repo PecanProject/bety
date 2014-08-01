@@ -111,7 +111,7 @@
           <h3>Add a covariate to this trait</h3>
           <p><em>Leave blank if not adding a covariate</em></p>
           <p>
-            <%= render :partial => 'new_covariate' %>
+            <%= render 'new_covariate', :covariate => Covariate.new %>
           </div>
           <input name="Add Covariate" class="button" type="button" onclick="add_covariate()" value="Add another covariate" /></p>
           <p>
@@ -136,7 +136,7 @@
 
       <script>
         function add_covariate() {
-          jQuery('div#covariates').append('<%= escape_javascript(render :partial => "new_covariate") %>');
+          jQuery('div#covariates').append('<%= escape_javascript(render "new_covariate", :covariate => Covariate.new) %>');
           return false;
         }
       </script>

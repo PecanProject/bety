@@ -86,6 +86,8 @@ class YieldsController < ApplicationController
       redirect_to :citations
     else
       @citation = Citation.find(session["citation"])
+      @sites = @citation.sites
+      @treatments = @citation.treatments
       
       if params[:id].nil?
         @yield = Yield.new
@@ -107,6 +109,8 @@ class YieldsController < ApplicationController
     @yield = Yield.all_limited(current_user).find(params[:id])
     @yield.specie.nil? ? @species = nil : @species = [@yield.specie]
     @citation = @yield.citation
+    @sites = @citation.sites
+    @treatments = @citation.treatments
   end
 
   # POST /yields
@@ -154,6 +158,8 @@ class YieldsController < ApplicationController
         format.xml  { head :ok }
         format.csv  { head :ok }
       else
+        @treatments = Citation.find_by_id(session["citation"]).treatments rescue nil
+        @sites = Citation.find_by_id(session["citation"]).sites rescue nil
         format.html { render :action => "edit" }
         format.xml  { render :xml => @yield.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @yield.errors, :status => :unprocessable_entity }
