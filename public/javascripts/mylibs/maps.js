@@ -18,47 +18,47 @@ function downloaddata() {
     switch(parseInt(opt.value)) {
     case 0:
         //cornstover yield county
-        db.href = 'temp_models/cornstover_yield_county.csv';
+        db.href = 'modeloutput/cornstover_yield_county.csv';
         break;
     case 1:
         //miscanthus yield county
-        db.href = 'temp_models/miscanthus_yield_county.csv';
+        db.href = 'modeloutput/miscanthus_yield_county.csv';
         break;
     case 2:
         //switchgrass yield county
-        db.href = 'temp_models/switchgrass_yield_county.csv'
+        db.href = 'modeloutput/switchgrass_yield_county.csv'
         break;
     case 3:
         //energycane yield county
-        db.href = 'temp_models/energycane_yield_county.csv';
+        db.href = 'modeloutput/energycane_yield_county.csv';
         break;
     case 4:
         //least cost crop
-        db.href = 'temp_models/least_cost_crop_county.csv';
+        db.href = 'modeloutput/least_cost_crop_county.csv';
         break;
     case 5:
         //cornstover cost county
-        db.href = 'temp_models/cornstover_cost_county.csv';
+        db.href = 'modeloutput/cornstover_cost_county.csv';
         break;
     case 6:
         //miscanthus cost county
-        db.href = 'temp_models/miscanthus_cost_county.csv';
+        db.href = 'modeloutput/miscanthus_cost_county.csv';
         break;
     case 7:
         //switchgrass cost county
-        db.href = 'temp_models/switchgrass_cost_county.csv';
+        db.href = 'modeloutput/switchgrass_cost_county.csv';
         break;
     case 8:
         //energycane cost county
-        db.href = 'temp_models/energycane_cost_county.csv';
+        db.href = 'modeloutput/energycane_cost_county.csv';
         break;
     case 9:
         //energycane yield(grid)
-        db.href = 'temp_models/energycane_yield_grid.csv';
+        db.href = 'modeloutput/energycane_yield_grid.csv';
         break;
     case 10:
         //miscanthus yield(grid)
-        db.href = 'temp_models/miscanthus_yield_grid.csv';
+        db.href = 'modeloutput/miscanthus_yield_grid.csv';
         break;
     case 11:
         //cornstover yield(grid) missing
@@ -66,35 +66,35 @@ function downloaddata() {
         break;
     case 12:
         //poplar yield grid
-        db.href = 'temp_models/poplar_yield_grid.csv';
+        db.href = 'modeloutput/poplar_yield_grid.csv';
         break;
     case 13:
         //willow yield grid
-        db.href = 'images/lmodelout/willow_yield_grid.csv';
+        db.href = 'modeloutput/willow_yield_grid.csv';
         break;
     case 14:
         //switchgrass yield grid
-        db.href = 'temp_models/switchgrass_yield_grid.csv';
+        db.href = 'modeloutput/switchgrass_yield_grid.csv';
         break;
     case 15:
         //switchgrass evapotranspiration grid (no county data file)
-        db.href = 'temp_models/switchgrass_evapotranspiration_grid.csv';
+        db.href = 'modeloutput/switchgrass_evapotranspiration_grid.csv';
         break;
     case 16:
         //miscanthus evapotranspiration county
-        db.href = 'temp_models/miscanthus_evapotranspiration_county.csv';
+        db.href = 'modeloutput/miscanthus_evapotranspiration_county.csv';
         break;
     case 17:
         //cornstover evapotranspiration grid
-        db.href = 'temp_models/cornstover_evapotranspiration_grid.csv';
+        db.href = 'modeloutput/cornstover_evapotranspiration_grid.csv';
         break;
     case 18:
         //willow yield county
-        db.href = 'images/lmodelout/willow_yield_county.csv';
+        db.href = 'modeloutput/willow_yield_county.csv';
         break;
     case 19:
         //poplar yield county
-        db.href = 'images/lmodelout/poplar_yield_county.csv';
+        db.href = 'modeloutput/poplar_yield_county.csv';
         break;
     default:
         db.href = "";
@@ -258,7 +258,7 @@ function initialize() {
     );
 
     layers[9]= bz_sugarcane =
-        new google.maps.GroundOverlay( '../bety/images/lmodelout/energycane_yield_grid.png',
+        new google.maps.GroundOverlay( 'images/lmodelout/energycane_yield_grid.png',
                                        bz_sugarcane_bounds, overlayOptions );
     bz_sugarcane.setMap(null);
 
