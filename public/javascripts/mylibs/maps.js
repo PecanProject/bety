@@ -18,47 +18,47 @@ function downloaddata() {
     switch(parseInt(opt.value)) {
     case 0:
         //cornstover yield county
-        db.href = 'temp_models/cornstover_yield_county.csv';
+        db.href = 'modeloutput/cornstover_yield_county.csv';
         break;
     case 1:
         //miscanthus yield county
-        db.href = 'temp_models/miscanthus_yield_county.csv';
+        db.href = 'modeloutput/miscanthus_yield_county.csv';
         break;
     case 2:
         //switchgrass yield county
-        db.href = 'temp_models/switchgrass_yield_county.csv'
+        db.href = 'modeloutput/switchgrass_yield_county.csv'
         break;
     case 3:
         //energycane yield county
-        db.href = 'temp_models/energycane_yield_county.csv';
+        db.href = 'modeloutput/energycane_yield_county.csv';
         break;
     case 4:
         //least cost crop
-        db.href = 'temp_models/least_cost_crop_county.csv';
+        db.href = 'modeloutput/least_cost_crop_county.csv';
         break;
     case 5:
         //cornstover cost county
-        db.href = 'temp_models/cornstover_cost_county.csv';
+        db.href = 'modeloutput/cornstover_cost_county.csv';
         break;
     case 6:
         //miscanthus cost county
-        db.href = 'temp_models/miscanthus_cost_county.csv';
+        db.href = 'modeloutput/miscanthus_cost_county.csv';
         break;
     case 7:
         //switchgrass cost county
-        db.href = 'temp_models/switchgrass_cost_county.csv';
+        db.href = 'modeloutput/switchgrass_cost_county.csv';
         break;
     case 8:
         //energycane cost county
-        db.href = 'temp_models/energycane_cost_county.csv';
+        db.href = 'modeloutput/energycane_cost_county.csv';
         break;
     case 9:
         //energycane yield(grid)
-        db.href = 'temp_models/energycane_yield_grid.csv';
+        db.href = 'modeloutput/energycane_yield_grid.csv';
         break;
     case 10:
         //miscanthus yield(grid)
-        db.href = 'temp_models/miscanthus_yield_grid.csv';
+        db.href = 'modeloutput/miscanthus_yield_grid.csv';
         break;
     case 11:
         //cornstover yield(grid) missing
@@ -66,35 +66,35 @@ function downloaddata() {
         break;
     case 12:
         //poplar yield grid
-        db.href = 'temp_models/poplar_yield_grid.csv';
+        db.href = 'modeloutput/poplar_yield_grid.csv';
         break;
     case 13:
         //willow yield grid
-        db.href = 'images/lmodelout/willow_yield_grid.csv';
+        db.href = 'modeloutput/willow_yield_grid.csv';
         break;
     case 14:
         //switchgrass yield grid
-        db.href = 'temp_models/switchgrass_yield_grid.csv';
+        db.href = 'modeloutput/switchgrass_yield_grid.csv';
         break;
     case 15:
         //switchgrass evapotranspiration grid (no county data file)
-        db.href = 'temp_models/switchgrass_evapotranspiration_grid.csv';
+        db.href = 'modeloutput/switchgrass_evapotranspiration_grid.csv';
         break;
     case 16:
         //miscanthus evapotranspiration county
-        db.href = 'temp_models/miscanthus_evapotranspiration_county.csv';
+        db.href = 'modeloutput/miscanthus_evapotranspiration_county.csv';
         break;
     case 17:
         //cornstover evapotranspiration grid
-        db.href = 'temp_models/cornstover_evapotranspiration_grid.csv';
+        db.href = 'modeloutput/cornstover_evapotranspiration_grid.csv';
         break;
     case 18:
         //willow yield county
-        db.href = 'images/lmodelout/willow_yield_county.csv';
+        db.href = 'modeloutput/willow_yield_county.csv';
         break;
     case 19:
         //poplar yield county
-        db.href = 'images/lmodelout/poplar_yield_county.csv';
+        db.href = 'modeloutput/poplar_yield_county.csv';
         break;
     default:
         db.href = "";
@@ -258,7 +258,7 @@ function initialize() {
     );
 
     layers[9]= bz_sugarcane =
-        new google.maps.GroundOverlay( '../bety/images/lmodelout/energycane_yield_grid.png',
+        new google.maps.GroundOverlay( 'modeloutput/figures/energycane_yield_grid.png',
                                        bz_sugarcane_bounds, overlayOptions );
     bz_sugarcane.setMap(null);
 
@@ -270,24 +270,24 @@ function initialize() {
     );
 
     layers[10] = us_miscanthus =
-        new google.maps.GroundOverlay( 'images/lmodelout/miscanthus_yield_grid.png',
+        new google.maps.GroundOverlay( 'modeloutput/figures/miscanthus_yield_grid.png',
                                        us_miscanthus_bounds, overlayOptions );
     us_miscanthus.setMap(null);
 
     layers[11] = cornstovergrid =
-        new google.maps.GroundOverlay('images/lmodelout/cornstover_yield_grid.png',
+        new google.maps.GroundOverlay('modeloutput/figures/cornstover_yield_grid.png',
                                       us_miscanthus_bounds, overlayOptions);
     cornstovergrid.setMap(null);
 
-    layers[12] = poplaryield = new google.maps.GroundOverlay('images/lmodelout/poplar_yield_grid.png',
+    layers[12] = poplaryield = new google.maps.GroundOverlay('modeloutput/figures/poplar_yield_grid.png',
                                                              us_miscanthus_bounds, overlayOptions);
     poplaryield.setMap(null);
 
-    layers[13] = willowyield = new google.maps.GroundOverlay('images/lmodelout/willow_yield_grid.png',
+    layers[13] = willowyield = new google.maps.GroundOverlay('modeloutput/figures/willow_yield_grid.png',
                                                              us_miscanthus_bounds, overlayOptions);
     willowyield.setMap(null);
 
-    layers[14] = switchgrassyieldgrid = new google.maps.GroundOverlay('images/lmodelout/switchgrass_yield_grid.png',
+    layers[14] = switchgrassyieldgrid = new google.maps.GroundOverlay('modeloutput/figures/switchgrass_yield_grid.png',
                                                                       us_miscanthus_bounds, overlayOptions);
     switchgrassyieldgrid.setMap(null);
 
@@ -497,27 +497,27 @@ function updatemap() {
         //make cost legend
     } else if (opt.value == 9) {
         var imgdiv = document.createElement('img');
-        imgdiv.setAttribute('src', 'images/lmodelout/energycane_yield_grid.png-legend.png')
+        imgdiv.setAttribute('src', 'modeloutput/figures/energycane_yield_grid.png-legend.png')
         leg.appendChild(imgdiv);
         //make energycane legend
     } else if (opt.value == 10) {
         var imgdiv = document.createElement('img');
-        imgdiv.setAttribute('src', 'images/lmodelout/miscanthus_yield_grid.png-legend.png')
+        imgdiv.setAttribute('src', 'modeloutput/figures/miscanthus_yield_grid.png-legend.png')
         leg.appendChild(imgdiv);
         //miscanthus legend
     } else if (opt.value == 12) {
         var imgdiv = document.createElement('img');
-        imgdiv.setAttribute('src', 'images/lmodelout/poplar_yield_grid.png-legend.png')
+        imgdiv.setAttribute('src', 'modeloutput/figures/poplar_yield_grid.png-legend.png')
         leg.appendChild(imgdiv);
         //poplar
     } else if (opt.value == 13) {
         var imgdiv = document.createElement('img');
-        imgdiv.setAttribute('src', 'images/lmodelout/willow_yield_grid.png-legend.png')
+        imgdiv.setAttribute('src', 'modeloutput/figures/willow_yield_grid.png-legend.png')
         leg.appendChild(imgdiv);
         //willow
     } else if (opt.value == 14) {
         var imgdiv = document.createElement('img');
-        imgdiv.setAttribute('src', 'images/lmodelout/switchgrass_yield_grid.png-legend.png')
+        imgdiv.setAttribute('src', 'modeloutput/figures/switchgrass_yield_grid.png-legend.png')
         leg.appendChild(imgdiv);
     } else if (opt.value < 18) {
         makeaetlegend(leg);
