@@ -219,10 +219,7 @@ class TraitsController < ApplicationController
 
   def unlink_covariate
     @trait = Trait.all_limited(current_user).find(params[:id])
-    @covariate = Covariate.find(params[:covariate])
-    if @trait.covariates.delete(@covariate)
-      @covariate.destroy
-    end
+    Covariate.find(params[:covariate]).destroy
     respond_to do |format|
       format.html {
         render :action =>"edit" do |page|
