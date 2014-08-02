@@ -2,6 +2,7 @@
   <div class="one columns alpha">&nbsp;</div>
   <div class="one columns">&nbsp;</div>
   <div class="six columns">Format</div>
+  <div class="two columns">Tag</div>
   <div class="two columns">Required</div>
   <div class="two columns">Input</div>
 </div>
@@ -18,6 +19,9 @@
       </div>
       <div class="six columns">
         <%= link_to modeltypes_format.format, edit_format_path(modeltypes_format.format_id) %>
+      </div>
+      <div class="two columns">
+        <%= text_field_tag 'modeltypes_format[tag]', modeltypes_format.tag %>
       </div>
       <div class="two columns">
         <%= hidden_field_tag 'modeltypes_format[required]', 0 %>
@@ -41,6 +45,9 @@
     </div>
     <div class="six columns">
       <%= select_tag :format_id, options_for_select(Format.all.collect { |x| [x.select_default,x.id] }) %>
+    </div>
+    <div class="two columns">
+      <%= text_field_tag 'modeltypes_format[tag]' %>
     </div>
     <div class="two columns">
       <%= check_box_tag 'modeltypes_format[required]' %>
