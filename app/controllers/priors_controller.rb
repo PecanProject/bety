@@ -81,7 +81,10 @@ class PriorsController < ApplicationController
     end
 
     if !File.exist?( imgfile ) or File.atime(imgfile) < updatetime
-      error_output = `R --vanilla --args #{imgfile} #{distname} #{aparam} #{bparam} #{n} < #{Rails.root.join('script/previewhelp.R')} 2>&1 >/dev/null`
+      # On ebi-forecast, the version of R we want to use is in
+      # /usr/local/R-3.1.0/bin, so prepend it to the path so that that
+      # version gets used if it exists:
+      error_output = `PATH=/usr/local/R-3.1.0/bin:$PATH R --vanilla --args #{imgfile} #{distname} #{aparam} #{bparam} #{n} < #{Rails.root.join('script/previewhelp.R')} 2>&1 >/dev/null`
       if !error_output.empty?
         logger.error("\nR error output:")
         logger.error("========================================")
