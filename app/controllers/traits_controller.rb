@@ -140,24 +140,28 @@ class TraitsController < ApplicationController
     @new_covariates = []
     respond_to do |format|
       Trait.transaction do
-          @trait.save
-          params[:covariate].each do |c|
-            unless c[:variable_id].blank?
-              @covariate = Covariate.new(c)
-              @new_covariates << @covariate
-              if @covariate.save
-                @trait.covariates << @covariate
-              else
-                @trait.errors.add(:covariates, (@covariate.errors.get(:level))[0])
-              end
+        saved_covariates = []
+        @trait.save
+        params[:covariate].each do |c|
+          unless c[:variable_id].blank?
+            @covariate = Covariate.new(c)
+            @new_covariates << @covariate
+            if @covariate.save
+              # these "saved" covariates are rolled back if any save errors occur
+              saved_covariates << @covariate
+            else
+              @trait.errors.add(:covariates, (@covariate.errors.get(:level))[0])
             end
           end
-          if @trait.errors.size >0
-            raise StandardError, "Trait could not be created. Please see error messages"
-          end
+        end
+        if @trait.errors.size > 0
+          raise StandardError, "Trait could not be created. Please see error messages"
+        else
+          @trait.covariates += saved_covariates
+        end
       end
       flash[:notice] = "Trait was successfully created. #{@trait.covariates.length} covariate(s) added"
-      format.html { redirect_to (@trait) }
+      format.html { redirect_to(@trait) }
       format.xml  { head :ok }
       format.csv  { head :ok }
     end
@@ -166,7 +170,7 @@ class TraitsController < ApplicationController
     flash[:error] = e.message
     @citation = @trait.citation
     respond_to do |format|
-      format.html { render :action =>"new" }
+      format.html { render :action => "new" }
       format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
       format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
     end
@@ -181,21 +185,25 @@ class TraitsController < ApplicationController
     @new_covariates = []
     respond_to do |format|
       Trait.transaction do
-          @trait.update_attributes(params[:trait])
-          params[:covariate].each do |c|
-            unless c[:variable_id].blank?
-              @covariate = Covariate.new(c)
-              @new_covariates << @covariate
-              if @covariate.save
-                @trait.covariates << @covariate
-              else
-                @trait.errors.add(:covariates, (@covariate.errors.get(:level))[0])
-              end
+        saved_covariates = []
+        @trait.update_attributes(params[:trait])
+        params[:covariate].each do |c|
+          unless c[:variable_id].blank?
+            @covariate = Covariate.new(c)
+            @new_covariates << @covariate
+            if @covariate.save
+              # these "saved" covariates are rolled back if any save errors occur
+              saved_covariates << @covariate
+            else
+              @trait.errors.add(:covariates, (@covariate.errors.get(:level))[0])
             end
           end
-          if @trait.errors.size >0
-            raise StandardError, "Trait could not be saved. Please see error messages"
-          end
+        end
+        if @trait.errors.size > 0
+          raise StandardError, "Trait could not be saved. Please see error messages"
+        else
+          @trait.covariates += saved_covariates
+        end
       end
       flash[:notice] = 'Trait was successfully updated.'
       format.html { redirect_to(@trait) }
