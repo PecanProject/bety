@@ -1,0 +1,2 @@
+citation_doi,site,species,treatment,date,yield,access_level,cultivar,notes
+10.1016/S0378-4290(96)00043-3,Macknade Research Station,Saccharum officinarum,observational,1991-11-18,5.906480103,4,s5-14,"This is a test of how much rounding takes place.  yield was specified as ""5.906480103"".  That's 9 decimal places!!!"
