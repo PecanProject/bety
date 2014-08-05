@@ -40,7 +40,7 @@ module ApplicationHelper
                      "9   no data" => "9.0"  }
   $timeloc_drop_default = "9.0"
 
-  $statname_list =  ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD", "P", "HSD"]
+  $statname_list =  ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD"]
 
 
   # Simple Search
