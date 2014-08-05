@@ -119,6 +119,7 @@ class YieldsController < ApplicationController
     params[:yield]['date(1i)'] = "9999" if params[:yield]['date(1i)'].blank? and !params[:yield]['date(2i)'].blank?
 
     @yield = Yield.new(params[:yield])
+    @yield.checked = 0
 
     # they can also enter the date in julian format, so if they do overwrite the
     # other date field
