@@ -18,8 +18,8 @@
       <dl class="dl-horizontal">
         <dt>name</dt>
         <dd><%= @model.model_name %></dd>
-        <dt>Type</dt>
-        <dd><%= @model.modeltype.name %></dd>
+        <dt>Model Type</dt>
+        <dd><%= link_to @model.modeltype, @model.modeltype %></dd>
         <dt>Revision</dt>
         <dd><%= @model.revision %></dd>
         <dt>Parent</dt>
