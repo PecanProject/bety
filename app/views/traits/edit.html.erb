@@ -1,157 +1,138 @@
 <div class="content">
-	<div class="container">
-		<div class="sixteen columns">
-			<header>
-	      <h1>Editing Trait</h1>
-			</header>
-
-      <a style="text-decoration: none" href="#" onclick="showHide('edit_covariates_traits')" id="show_edit_covariates_traits">[+] View Covariates</a>
-      <div id="edit_covariates_traits" class="hidden notvisible">
-      <table width="100%">
-        <tr>
-          <td width="100%"><h3>Existing Covariates <%= link_to "[new]", new_covariate_path(:trait_id => @trait.id) %></h3></td>
-        </tr>
-        <tr>
-          <td>
-            <table>
-              <tr> <th></th><th></th><th>Variable</th><th>Level</th><th></th> </tr>
-              <% @trait.covariates.each do |c| %>
-              <tr>
-                <td><%= link_to 'X', c, :confirm => 'Are you sure?', :method => :delete %></td>
-                <td><%= link_to "edit", edit_covariate_path(c.id) %></td>
-                <td><%= link_to_if c.variable, c.variable, c.variable %></td>
-                <td><%= c.level %></td>
-              </tr>
-              <% end %>
-            </table>
-          </td>
-        </tr>
-      </table>
-      </div>
-      <hr />
-      
-      <%= form_for(@trait) do |f| %>
-        <%= f.error_messages %>
-        
-             <div class="row">
-              <div class="four columns alpha">
-                <%= f.label :mean %>
-                <%= f.text_field :mean, :class => "input-full"  %>
-              </div>
-              <div class="four columns">
-                <%= f.label :stat %>
-                <%= f.text_field :stat, :class => "input-full" %>
-              </div>
-              <div class="four columns">
-                <%= f.label :method_id, "Method" %>
-                <%= f.select :method_id, Methods.all.collect { |p| [ p.select_default, p.id ] }, {:include_blank => true}, :class => "input-full" %>
-              </div>
-              <div class="two columns omega">
-                <%= f.label :statname %>
-                <%= f.select :statname, $statname_list, :class => "input-full" %>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="four columns alpha">               
-                <fieldset>
-                  <legend>Date</legend>
-                  <%= f.select :date_year, [''] + (1800..Time.now.year).to_a %>
-                  <%= f.select :date_month, [''] + (1..12).to_a %>
-                  <%= f.select :date_day, [''] + (1..31).to_a %>
-                </fieldset>
-              </div>
-              <div class="four columns alpha">
-                <%= f.label :dateloc, "Date Level of Confidence" %>
-                <%= f.select :dateloc, options_for_select($dateloc_drop.sort, f.object.dateloc || $dateloc_drop_default) %>
-              </div>
-              <div class="three columns">
-                <fieldset>
-                  <legend>Time</legend>
-                  <%= f.select :time_hour, [''] + (0..23).to_a %>
-                  <%= f.select :time_minute, [''] + (0..59).to_a %>
-                </fieldset>
-              </div>
-              <div class="four columns">
-                <%= f.label :timeloc, "Time Level of Confidence" %>
-                <%= f.select :timeloc, options_for_select($timeloc_drop.sort, f.object.timeloc || $timeloc_drop_default) %>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="eight columns alpha">
-                <%= f.label :site_id %>
-                <%= f.select :site_id, @citation.sites.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
-              </div>
-              <div class="eight columns omega">
-                <%= f.label :treatment_id %>
-                <%= f.select :treatment_id, @citation.treatments.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
-              </div>
-            </div>
-
-            <%= render :partial => "species/species_search" %>
-            
-            <div class="row">
-              <div class="seven columns alpha">
-                <%= f.label :cultivar_id %>
-                <%= f.select :cultivar_id, Cultivar.joins(:specie).order('species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true}, :class => "input-full" %>
-              </div>
-              <div class="seven columns">
-                <%= f.label :variable_id, "Trait" %>
-                <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }.sort { |a,b| a[0].split(': ')[1] <=> b[0].split(': ')[1] }, {}, :class => "input-full" %>
-              </div>
-              <div class="two columns omega">
-                <%= f.label :n %>
-                <%= f.text_field :n, :class => "input-full" %>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="eight columns alpha">
-                <%= f.label :notes %>
-                <%= f.text_area :notes, :rows => 5, :class => "input-full"%>
-              </div>
-              <div class="four columns omega">
-                <%= f.label :access_level %>
-                <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :selected => 2,:class => "input-full" %>
-              </div>
-            </div>
-        
-          <div id="covariates">
-          <h3>Add a covariate to this trait</h3>
-          <p><em>Leave blank if not adding a covariate</em></p>
-          <p>          
-            <%= render :partial => 'new_covariate' %>
-          </div>
-          <input name="Add Covariate" class="button" type="button" onclick="add_covariate()" value="Add another covariate" /></p>
-          <p>
-            <label>Record Creator</label>&nbsp
-            <%= user_for_view(@trait.user) %>
-            <%= f.hidden_field :citation_id, :value => @citation.id %>
-          </p>
-
-        <div class="form-actions">
-          <div class="button-group">
-            <%= link_to( traits_path ) do %>
-              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
-            <% end%>
-            <%= link_to( @trait ) do %>
-              <button class="button" type="button">Show</button>
-            <% end%>
-          </div>
-					<div class="button-group pull-right">
-						<%= f.submit 'Update', :class => "button button-primary" %>
-					</div>
-				</div>
-
-
-      <% end %>
-      
-
-  
+  <div class="container " style="margin-left:100px; width:1260px">
+    <div class="row" >
+      <header>
+        <h1>Editing Trait</h1>
+      </header>
     </div>
-  </div>
-</div>
+    <%= form_for(@trait) do |f| %>
+      <div class="row">
+        <div class="sixteen columns alpha" style="width:950px;float:left" >
+          <div style="float:left">
+            <%= f.error_messages %>
+              <div class="row">
+                <div class="eight columns alpha">
+                  <%= f.label :variable_id, "Trait" %>
+                  <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }.sort { |a,b| a[0].split(': ')[1] <=> b[0].split(': ')[1] }, {}, :class => "input-full" %>
+                </div>
+                <div class="eight columns omega">
+                  <%= f.label :cultivar_id %>
+                  <%= f.select :cultivar_id, Cultivar.joins(:specie).order('species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true}, :class => "input-full" %>
+                </div>
+              </div>
+              <div class="row">
+                <div class="four columns alpha">
+                  <%= f.label :mean %>
+                  <%= f.text_field :mean, :class => "input-full"  %>
+                </div>
+                <div class="four columns">
+                  <%= f.label :stat %>
+                  <%= f.text_field :stat, :class => "input-full" %>
+                </div>
+                <div class="two columns">
+                  <%= f.label :statname %>
+                  <%= f.select :statname, $statname_list, :class => "input-full" %>
+                </div>
+                <div class="two columns">
+                  <%= f.label :n %>
+                  <%= f.text_field :n, :class => "input-full" %>
+                </div>
+                <div class="four columns omega">
+                  <%= f.label :method_id, "Method" %>
+                  <%= f.select :method_id, Methods.all.collect { |p| [ p.select_default, p.id ] }, {:include_blank => true}, :class => "input-full" %>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="four columns alpha">
+                  <fieldset>
+                    <legend>Date</legend>
+                    <%= f.select :date_year, [''] + (1800..Time.now.year).to_a %>
+                    <%= f.select :date_month, [''] + (1..12).to_a %>
+                    <%= f.select :date_day, [''] + (1..31).to_a %>
+                  </fieldset>
+                </div>
+                <div class="four columns">
+                  <%= f.label :dateloc, "Date Level of Confidence" %>
+                  <%= f.select :dateloc, options_for_select($dateloc_drop.sort, f.object.dateloc || $dateloc_drop_default) %>
+                </div>
+                <div class="four columns">
+                  <fieldset>
+                    <legend>Time</legend>
+                    <%= f.select :time_hour, [''] + (0..23).to_a %>
+                    <%= f.select :time_minute, [''] + (0..59).to_a %>
+                  </fieldset>
+                </div>
+                <div class="four columns omega">
+                  <%= f.label :timeloc, "Time Level of Confidence" %>
+                  <%= f.select :timeloc, options_for_select($timeloc_drop.sort, f.object.timeloc || $timeloc_drop_default),{},:class => "input-full" %>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="eight columns alpha">
+                  <%= f.label :site_id %>
+                  <%= f.select :site_id, @citation.sites.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+                </div>
+                <div class="eight columns omega">
+                  <%= f.label :treatment_id %>
+                  <%= f.select :treatment_id, @citation.treatments.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+                </div>
+              </div>
+
+              <%= render :partial => "species/species_search" %>
+
+              <div class="row">
+                <div class="eight columns alpha">
+                  <%= f.label :notes %>
+                  <%= f.text_area :notes, :rows => 5, :class => "input-full"%>
+                </div>
+                <div class="four columns omega">
+                  <%= f.label :access_level %>
+                  <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :selected => 2,:class => "input-full" %>
+                </div>
+              </div>
+        
+              <label>Record Creator</label>&nbsp
+              <%= user_for_view(@trait.user) %>
+              <%= f.hidden_field :citation_id, :value => @citation.id %>
+          </div>
+          <div id="divider" style="float:right;border:0;margin-top:-20px;border-left:1px solid #eeeeee;width:1px;"></div>
+        </div><!--sixteen-->
+
+        <div class="five columns omega" style="float:right">
+          <div><h3 style="margin-top:0;float:left">Covariates linked with this trait</h3><button class="button button-primary" style="float:right;text-decoration:none;margin-top:-5px" onclick="add_covariate();return false;">Add</button></div>
+          <div id="covariates" style="clear:both">
+            <a style="text-decoration: none" href="#" onclick="showHide('edit_covariates_traits'); return false;" id="show_edit_covariates_traits">[+] View Existing Covariates</a>
+            <div id="edit_covariates_traits" class="hidden notvisible">
+              <%= render "edit_covariates_traits" %>
+            </div>
+            <p>
+            <% @new_covariates.each do |c| %>
+              <%= render 'new_covariate', :covariate => c %>
+            <% end %>
+          </div>
+        </div><!--five-->
+
+      </div><!--row-->
+
+      <div class="row form-actions">
+        <div class="button-group">
+          <%= link_to( traits_path ) do %>
+            <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
+          <% end%>
+          <%= link_to( @trait ) do %>
+            <button class="button" type="button">Show</button>
+          <% end%>
+        </div>
+        <div class="button-group pull-right">
+          <%= f.submit 'Update', :class => "button button-primary" %>
+        </div>
+      </div>
+    <% end %>
+
+  </div><!--container-->
+</div><!--content-->
 
 <div id="explain" style="display: none">* = This field for this Trait is NULL in the database. We do not allow this field to be blank, so if you update the record incorrect values might be saved.</div>
 
@@ -162,6 +143,8 @@
 </style>
 
 <script>
+  jQuery('#divider').height(jQuery('.sixteen.columns.alpha').height()+30);
+
   function missingFields(id) {
     id = "label[for=" + id + "]";
     if (typeof $$(id)[0] != "undefined") {
@@ -171,11 +154,11 @@
     }
   }
   function add_covariate() {
-    jQuery('div#covariates').append('<%= escape_javascript(render :partial => "new_covariate") %>');
+    jQuery('div#covariates').append('<%= escape_javascript(render "new_covariate", :covariate => Covariate.new) %>');
     return false;
   }
 <% ['site_id','citation_id','variable_id','treatment_id','dateloc','specie_id'].each do |column| %>
-<%= "  missingFields(\"trait_#{column}\");" if @trait[column.to_sym].nil? %>
+<%= "  missingFields(trait_#{column});" if @trait[column.to_sym].nil? %>
 <% end %>
 
 </script>
