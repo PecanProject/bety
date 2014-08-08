@@ -3,7 +3,7 @@ class ModeltypesController < ApplicationController
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
 
-  def rem_modeltypes_format
+  def remove_modeltypes_format
     @modeltypes_format = ModeltypesFormat.find(params[:id])
     @modeltype = @modeltypes_format.modeltype
 

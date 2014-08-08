@@ -3,8 +3,8 @@ class Pft < ActiveRecord::Base
   include Overrides
 
   extend SimpleSearch
-  SEARCH_INCLUDES = %w{  }
-  SEARCH_FIELDS = %w{ pfts.name pfts.definition pfts.modeltype.name }
+  SEARCH_INCLUDES = %w{ modeltype }
+  SEARCH_FIELDS = %w{ pfts.name pfts.definition modeltype.name }
 
   has_many :pfts_priors, :class_name => "PftsPriors"
   has_many :priors, :through => :pfts_priors

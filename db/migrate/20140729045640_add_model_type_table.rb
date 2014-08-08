@@ -1,16 +1,16 @@
 class AddModelTypeTable < ActiveRecord::Migration
-  class Models < ActiveRecord::Base; end
+  class Model < ActiveRecord::Base; end
 
   def self.up
     create_table :modeltypes do |t|
-      t.string :name, :unique => true
+      t.string :name, :unique => true, :null => false
       t.integer :user_id
       t.datetime :created_at
       t.datetime :updated_at
     end
     add_index :modeltypes, [:name], :unique => true
 
-    Models.update_all("model_type = 'UNKNOWN'", "model_type IS NULL or model_type=''")
+    Model.update_all("model_type = 'UNKNOWN'", "model_type IS NULL or model_type=''")
     execute("insert into modeltypes(name) (select distinct model_type from models);")
 
     add_column :models, :modeltype_id, :integer, :limit => 8

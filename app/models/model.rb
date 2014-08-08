@@ -3,7 +3,7 @@ class Model < ActiveRecord::Base
   include Overrides
 
   extend SimpleSearch
-  SEARCH_INCLUDES = %w{ }
+  SEARCH_INCLUDES = %w{ modeltype }
   SEARCH_FIELDS = %w{ models.model_name models.revision }
 
   has_many :files, :as => :container, :class_name => 'DBFile'

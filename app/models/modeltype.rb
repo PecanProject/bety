@@ -3,7 +3,7 @@ class Modeltype < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
-  SEARCH_FIELDS = %w{ model_types.name }
+  SEARCH_FIELDS = %w{ modeltypes.name }
 
   has_many :modeltypes_formats
   has_many :models
