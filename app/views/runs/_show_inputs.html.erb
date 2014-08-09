@@ -1,0 +1,21 @@
+<h2>Related Inputs</h2>
+
+<table>
+  <tr>
+    <th>Site</th>
+    <th>Name</th>
+    <th>Format</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+  </tr>
+  <% @run.inputs.limit(100).each do |c| %>
+    <tr>
+      <td><%= c.site %></td>
+      <td><%= c.name %></td>
+      <td><%= c.format %></td>
+      <td><%= c.start_date %></td>
+      <td><%= c.end_date %></td>
+      <td><%= link_to "Show", c %></td>
+    </tr>
+  <% end %>
+</table>
