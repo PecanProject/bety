@@ -6,6 +6,10 @@ class Workflow < ActiveRecord::Base
   SEARCH_INCLUDES = %w{  }
   SEARCH_FIELDS = %w{ workflows.folder workflows.started_at workflows.finished_at workflows.created_at workflows.updated_at }
 
+  has_many :ensembles
+  belongs_to :model
+  belongs_to :site
+
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 

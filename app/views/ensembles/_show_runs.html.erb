@@ -1,0 +1,19 @@
+<h2>Related Runs</h2>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Started at</th>
+    <th>Finished at</th>
+    <th>Parameter List</th>
+  </tr>
+  <% @ensemble.runs.limit(100).each do |c| %>
+    <tr>
+      <td><%= c.id %></td>
+      <td><%= c.started_at %></td>
+      <td><%= c.finished_at %></td>
+      <td><%= c.parameter_list %></td>
+      <td><%= link_to "Show", c %></td>
+    </tr>
+  <% end %>
+</table>
