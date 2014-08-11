@@ -3,11 +3,8 @@ test_site:
   city: "Aliartos"
   state: ""
   country: "Greece"
-  lat: #<BigDecimal:2aaaac2d4c00,'0.3837E2',18(18)>
-  lon: #<BigDecimal:2aaaac2d4b38,'0.2317E2',18(18)>
   mat: 17
   map: 984
-  masl: 114
   soil: "sandy loam"
   som: NULL
   notes: ""
@@ -20,9 +17,27 @@ test_site:
   local_time: NULL
   sand_pct: NULL
   clay_pct: NULL
-  espg: NULL
+  geometry: #<RGeo::Geos::CAPIPointImpl:0x3fcccda246d8 "POINT (23.17 38.37 114.0)">
 
-
+test_trait_site:
+  id: 2
+  city: ""
+  state: ""
+  country: "USA"
+  mat: 17
+  map: 984
+  soil: "sandy loam"
+  som: NULL
+  notes: ""
+  soilnotes: "SL with low organic matter"
+  created_at: NULL
+  updated_at: "2010-07-09 18:01:49"
+  sitename: ""
+  greenhouse: false
+  user_id: 1
+  local_time: NULL
+  sand_pct: NULL
+  clay_pct: NULL
   
 test_site_2:
   id: 2
@@ -30,14 +45,15 @@ test_site_2:
   city: "Reno"
   state: "Nevada"
   country: US
-  lat: 39.538264
-  lon: -119.812071
-
+  geometry: "POINT (
+   39.538264
+   -119.812071
+   0)"
+   
 test_site_3:
   id: 3
   sitename: "Macknade Research Station"
   city: "xxx"
   state: "xxx"
   country: xxx
-  lat: 39.538264
-  lon: -119.812071
+  geometry: "POINT ( 39.538264 -119.812071 0)"

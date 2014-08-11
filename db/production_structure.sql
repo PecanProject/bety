@@ -9,20 +9,6 @@ SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
 SET search_path = public, pg_catalog;
 
 --
@@ -1199,11 +1185,8 @@ CREATE TABLE sites (
     city character varying(255),
     state character varying(255),
     country character varying(255),
-    lat numeric(9,6),
-    lon numeric(9,6),
     mat numeric(4,2),
     map integer,
-    masl integer,
     soil character varying(255),
     som numeric(4,2),
     notes text,
@@ -1216,7 +1199,7 @@ CREATE TABLE sites (
     local_time integer,
     sand_pct numeric(9,5),
     clay_pct numeric(9,5),
-    espg character varying(255)
+    geometry geometry(GeometryZ,4326)
 );
 
 
@@ -1235,20 +1218,6 @@ COMMENT ON COLUMN sites.state IS 'If in the United States, state in which study 
 
 
 --
--- Name: COLUMN sites.lat; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN sites.lat IS 'Latitude, in decimal degrees';
-
-
---
--- Name: COLUMN sites.lon; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN sites.lon IS 'Longitude, in decimal degrees.';
-
-
---
 -- Name: COLUMN sites.mat; Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -1260,13 +1229,6 @@ COMMENT ON COLUMN sites.mat IS 'Mean Annual Temperature (C)';
 --
 
 COMMENT ON COLUMN sites.map IS 'Mean Annual Precipitation (mm)';
-
-
---
--- Name: COLUMN sites.masl; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN sites.masl IS 'Elevation (m above sea level)';
 
 
 --
@@ -1745,47 +1707,47 @@ COMMENT ON COLUMN variables.name IS 'variable name, this is the name used by PEc
 --
 
 CREATE VIEW traitsview_private AS
- SELECT 'traits'::character(10) AS result_type, 
-    traits.id, 
-    traits.citation_id, 
-    traits.site_id, 
-    traits.treatment_id, 
-    sites.sitename, 
-    sites.city, 
-    sites.lat, 
-    sites.lon, 
-    species.scientificname, 
-    species.commonname, 
-    species.genus, 
-    species.id AS species_id, 
-    traits.cultivar_id, 
-    citations.author, 
-    citations.year AS citation_year, 
-    treatments.name AS treatment, 
-    traits.date, 
-    date_part('month'::text, traits.date) AS month, 
-    date_part('year'::text, traits.date) AS year, 
-    traits.dateloc, 
-    variables.name AS trait, 
-    variables.description AS trait_description, 
-    traits.mean, 
-    variables.units, 
-    traits.n, 
-    traits.statname, 
-    traits.stat, 
-    traits.notes, 
-    traits.access_level, 
-    traits.checked, 
-    users.login, 
-    users.name, 
+ SELECT 'traits'::character(10) AS result_type,
+    traits.id,
+    traits.citation_id,
+    traits.site_id,
+    traits.treatment_id,
+    sites.sitename,
+    sites.city,
+    st_y(sites.geometry) AS lat,
+    st_x(sites.geometry) AS lon,
+    species.scientificname,
+    species.commonname,
+    species.genus,
+    species.id AS species_id,
+    traits.cultivar_id,
+    citations.author,
+    citations.year AS citation_year,
+    treatments.name AS treatment,
+    traits.date,
+    date_part('month'::text, traits.date) AS month,
+    date_part('year'::text, traits.date) AS year,
+    traits.dateloc,
+    variables.name AS trait,
+    variables.description AS trait_description,
+    traits.mean,
+    variables.units,
+    traits.n,
+    traits.statname,
+    traits.stat,
+    traits.notes,
+    traits.access_level,
+    traits.checked,
+    users.login,
+    users.name,
     users.email
    FROM ((((((traits
-   LEFT JOIN sites ON ((traits.site_id = sites.id)))
-   LEFT JOIN species ON ((traits.specie_id = species.id)))
-   LEFT JOIN citations ON ((traits.citation_id = citations.id)))
-   LEFT JOIN treatments ON ((traits.treatment_id = treatments.id)))
-   LEFT JOIN variables ON ((traits.variable_id = variables.id)))
-   LEFT JOIN users ON ((traits.user_id = users.id)));
+     LEFT JOIN sites ON ((traits.site_id = sites.id)))
+     LEFT JOIN species ON ((traits.specie_id = species.id)))
+     LEFT JOIN citations ON ((traits.citation_id = citations.id)))
+     LEFT JOIN treatments ON ((traits.treatment_id = treatments.id)))
+     LEFT JOIN variables ON ((traits.variable_id = variables.id)))
+     LEFT JOIN users ON ((traits.user_id = users.id)));
 
 
 --
@@ -1930,47 +1892,47 @@ COMMENT ON COLUMN yields.access_level IS 'Level of access required to view data.
 --
 
 CREATE VIEW yieldsview_private AS
- SELECT 'yields'::character(10) AS result_type, 
-    yields.id, 
-    yields.citation_id, 
-    yields.site_id, 
-    yields.treatment_id, 
-    sites.sitename, 
-    sites.city, 
-    sites.lat, 
-    sites.lon, 
-    species.scientificname, 
-    species.commonname, 
-    species.genus, 
-    species.id AS species_id, 
-    yields.cultivar_id, 
-    citations.author, 
-    citations.year AS citation_year, 
-    treatments.name AS treatment, 
-    yields.date, 
-    date_part('month'::text, yields.date) AS month, 
-    date_part('year'::text, yields.date) AS year, 
-    yields.dateloc, 
-    variables.name AS trait, 
-    variables.description AS trait_description, 
-    yields.mean, 
-    variables.units, 
-    yields.n, 
-    yields.statname, 
-    yields.stat, 
-    yields.notes, 
-    yields.access_level, 
-    yields.checked, 
-    users.login, 
-    users.name, 
+ SELECT 'yields'::character(10) AS result_type,
+    yields.id,
+    yields.citation_id,
+    yields.site_id,
+    yields.treatment_id,
+    sites.sitename,
+    sites.city,
+    st_y(sites.geometry) AS lat,
+    st_x(sites.geometry) AS lon,
+    species.scientificname,
+    species.commonname,
+    species.genus,
+    species.id AS species_id,
+    yields.cultivar_id,
+    citations.author,
+    citations.year AS citation_year,
+    treatments.name AS treatment,
+    yields.date,
+    date_part('month'::text, yields.date) AS month,
+    date_part('year'::text, yields.date) AS year,
+    yields.dateloc,
+    variables.name AS trait,
+    variables.description AS trait_description,
+    yields.mean,
+    variables.units,
+    yields.n,
+    yields.statname,
+    yields.stat,
+    yields.notes,
+    yields.access_level,
+    yields.checked,
+    users.login,
+    users.name,
     users.email
    FROM ((((((yields
-   LEFT JOIN sites ON ((yields.site_id = sites.id)))
-   LEFT JOIN species ON ((yields.specie_id = species.id)))
-   LEFT JOIN citations ON ((yields.citation_id = citations.id)))
-   LEFT JOIN treatments ON ((yields.treatment_id = treatments.id)))
-   LEFT JOIN variables ON (((variables.name)::text = 'Ayield'::text)))
-   LEFT JOIN users ON ((yields.user_id = users.id)));
+     LEFT JOIN sites ON ((yields.site_id = sites.id)))
+     LEFT JOIN species ON ((yields.specie_id = species.id)))
+     LEFT JOIN citations ON ((yields.citation_id = citations.id)))
+     LEFT JOIN treatments ON ((yields.treatment_id = treatments.id)))
+     LEFT JOIN variables ON (((variables.name)::text = 'Ayield'::text)))
+     LEFT JOIN users ON ((yields.user_id = users.id)));
 
 
 --
@@ -1978,77 +1940,77 @@ CREATE VIEW yieldsview_private AS
 --
 
 CREATE VIEW traits_and_yields_view_private AS
-         SELECT traitsview_private.result_type, 
-            traitsview_private.id, 
-            traitsview_private.citation_id, 
-            traitsview_private.site_id, 
-            traitsview_private.treatment_id, 
-            traitsview_private.sitename, 
-            traitsview_private.city, 
-            traitsview_private.lat, 
-            traitsview_private.lon, 
-            traitsview_private.scientificname, 
-            traitsview_private.commonname, 
-            traitsview_private.genus, 
-            traitsview_private.species_id, 
-            traitsview_private.cultivar_id, 
-            traitsview_private.author, 
-            traitsview_private.citation_year, 
-            traitsview_private.treatment, 
-            traitsview_private.date, 
-            traitsview_private.month, 
-            traitsview_private.year, 
-            traitsview_private.dateloc, 
-            traitsview_private.trait, 
-            traitsview_private.trait_description, 
-            traitsview_private.mean, 
-            traitsview_private.units, 
-            traitsview_private.n, 
-            traitsview_private.statname, 
-            traitsview_private.stat, 
-            traitsview_private.notes, 
-            traitsview_private.access_level, 
-            traitsview_private.checked, 
-            traitsview_private.login, 
-            traitsview_private.name, 
-            traitsview_private.email
-           FROM traitsview_private
-UNION ALL 
-         SELECT yieldsview_private.result_type, 
-            yieldsview_private.id, 
-            yieldsview_private.citation_id, 
-            yieldsview_private.site_id, 
-            yieldsview_private.treatment_id, 
-            yieldsview_private.sitename, 
-            yieldsview_private.city, 
-            yieldsview_private.lat, 
-            yieldsview_private.lon, 
-            yieldsview_private.scientificname, 
-            yieldsview_private.commonname, 
-            yieldsview_private.genus, 
-            yieldsview_private.species_id, 
-            yieldsview_private.cultivar_id, 
-            yieldsview_private.author, 
-            yieldsview_private.citation_year, 
-            yieldsview_private.treatment, 
-            yieldsview_private.date, 
-            yieldsview_private.month, 
-            yieldsview_private.year, 
-            yieldsview_private.dateloc, 
-            yieldsview_private.trait, 
-            yieldsview_private.trait_description, 
-            yieldsview_private.mean, 
-            yieldsview_private.units, 
-            yieldsview_private.n, 
-            yieldsview_private.statname, 
-            yieldsview_private.stat, 
-            yieldsview_private.notes, 
-            yieldsview_private.access_level, 
-            yieldsview_private.checked, 
-            yieldsview_private.login, 
-            yieldsview_private.name, 
-            yieldsview_private.email
-           FROM yieldsview_private;
+ SELECT traitsview_private.result_type,
+    traitsview_private.id,
+    traitsview_private.citation_id,
+    traitsview_private.site_id,
+    traitsview_private.treatment_id,
+    traitsview_private.sitename,
+    traitsview_private.city,
+    traitsview_private.lat,
+    traitsview_private.lon,
+    traitsview_private.scientificname,
+    traitsview_private.commonname,
+    traitsview_private.genus,
+    traitsview_private.species_id,
+    traitsview_private.cultivar_id,
+    traitsview_private.author,
+    traitsview_private.citation_year,
+    traitsview_private.treatment,
+    traitsview_private.date,
+    traitsview_private.month,
+    traitsview_private.year,
+    traitsview_private.dateloc,
+    traitsview_private.trait,
+    traitsview_private.trait_description,
+    traitsview_private.mean,
+    traitsview_private.units,
+    traitsview_private.n,
+    traitsview_private.statname,
+    traitsview_private.stat,
+    traitsview_private.notes,
+    traitsview_private.access_level,
+    traitsview_private.checked,
+    traitsview_private.login,
+    traitsview_private.name,
+    traitsview_private.email
+   FROM traitsview_private
+UNION ALL
+ SELECT yieldsview_private.result_type,
+    yieldsview_private.id,
+    yieldsview_private.citation_id,
+    yieldsview_private.site_id,
+    yieldsview_private.treatment_id,
+    yieldsview_private.sitename,
+    yieldsview_private.city,
+    yieldsview_private.lat,
+    yieldsview_private.lon,
+    yieldsview_private.scientificname,
+    yieldsview_private.commonname,
+    yieldsview_private.genus,
+    yieldsview_private.species_id,
+    yieldsview_private.cultivar_id,
+    yieldsview_private.author,
+    yieldsview_private.citation_year,
+    yieldsview_private.treatment,
+    yieldsview_private.date,
+    yieldsview_private.month,
+    yieldsview_private.year,
+    yieldsview_private.dateloc,
+    yieldsview_private.trait,
+    yieldsview_private.trait_description,
+    yieldsview_private.mean,
+    yieldsview_private.units,
+    yieldsview_private.n,
+    yieldsview_private.statname,
+    yieldsview_private.stat,
+    yieldsview_private.notes,
+    yieldsview_private.access_level,
+    yieldsview_private.checked,
+    yieldsview_private.login,
+    yieldsview_private.name,
+    yieldsview_private.email
+   FROM yieldsview_private;
 
 
 --
@@ -2056,35 +2018,35 @@ UNION ALL
 --
 
 CREATE VIEW traits_and_yields_view AS
- SELECT traits_and_yields_view_private.result_type, 
-    traits_and_yields_view_private.id, 
-    traits_and_yields_view_private.citation_id, 
-    traits_and_yields_view_private.site_id, 
-    traits_and_yields_view_private.treatment_id, 
-    traits_and_yields_view_private.sitename, 
-    traits_and_yields_view_private.city, 
-    traits_and_yields_view_private.lat, 
-    traits_and_yields_view_private.lon, 
-    traits_and_yields_view_private.scientificname, 
-    traits_and_yields_view_private.commonname, 
-    traits_and_yields_view_private.genus, 
-    traits_and_yields_view_private.species_id, 
-    traits_and_yields_view_private.cultivar_id, 
-    traits_and_yields_view_private.author, 
-    traits_and_yields_view_private.citation_year, 
-    traits_and_yields_view_private.treatment, 
-    traits_and_yields_view_private.date, 
-    traits_and_yields_view_private.month, 
-    traits_and_yields_view_private.year, 
-    traits_and_yields_view_private.dateloc, 
-    traits_and_yields_view_private.trait, 
-    traits_and_yields_view_private.trait_description, 
-    traits_and_yields_view_private.mean, 
-    traits_and_yields_view_private.units, 
-    traits_and_yields_view_private.n, 
-    traits_and_yields_view_private.statname, 
-    traits_and_yields_view_private.stat, 
-    traits_and_yields_view_private.notes, 
+ SELECT traits_and_yields_view_private.result_type,
+    traits_and_yields_view_private.id,
+    traits_and_yields_view_private.citation_id,
+    traits_and_yields_view_private.site_id,
+    traits_and_yields_view_private.treatment_id,
+    traits_and_yields_view_private.sitename,
+    traits_and_yields_view_private.city,
+    traits_and_yields_view_private.lat,
+    traits_and_yields_view_private.lon,
+    traits_and_yields_view_private.scientificname,
+    traits_and_yields_view_private.commonname,
+    traits_and_yields_view_private.genus,
+    traits_and_yields_view_private.species_id,
+    traits_and_yields_view_private.cultivar_id,
+    traits_and_yields_view_private.author,
+    traits_and_yields_view_private.citation_year,
+    traits_and_yields_view_private.treatment,
+    traits_and_yields_view_private.date,
+    traits_and_yields_view_private.month,
+    traits_and_yields_view_private.year,
+    traits_and_yields_view_private.dateloc,
+    traits_and_yields_view_private.trait,
+    traits_and_yields_view_private.trait_description,
+    traits_and_yields_view_private.mean,
+    traits_and_yields_view_private.units,
+    traits_and_yields_view_private.n,
+    traits_and_yields_view_private.statname,
+    traits_and_yields_view_private.stat,
+    traits_and_yields_view_private.notes,
     traits_and_yields_view_private.access_level
    FROM traits_and_yields_view_private
   WHERE (traits_and_yields_view_private.checked > 0);
@@ -2696,6 +2658,13 @@ CREATE INDEX index_sessions_on_updated_at ON sessions USING btree (updated_at);
 
 
 --
+-- Name: index_sites_on_geometry; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_sites_on_geometry ON sites USING gist (geometry);
+
+
+--
 -- Name: index_sites_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2887,54 +2856,3 @@ COMMENT ON TRIGGER restrict_trait_range ON traits IS 'Trigger function to ensure
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO schema_migrations (version) VALUES ('1');
-
-INSERT INTO schema_migrations (version) VALUES ('20130104205059');
-
-INSERT INTO schema_migrations (version) VALUES ('20130104211901');
-
-INSERT INTO schema_migrations (version) VALUES ('20130104211946');
-
-INSERT INTO schema_migrations (version) VALUES ('20130109205535');
-
-INSERT INTO schema_migrations (version) VALUES ('20130222222929');
-
-INSERT INTO schema_migrations (version) VALUES ('20130425152503');
-
-INSERT INTO schema_migrations (version) VALUES ('20130624001504');
-
-INSERT INTO schema_migrations (version) VALUES ('20130629205658');
-
-INSERT INTO schema_migrations (version) VALUES ('20130707190720');
-
-INSERT INTO schema_migrations (version) VALUES ('20130717162614');
-
-INSERT INTO schema_migrations (version) VALUES ('20130813212131');
-
-INSERT INTO schema_migrations (version) VALUES ('20130829162053');
-
-INSERT INTO schema_migrations (version) VALUES ('20130830184559');
-
-INSERT INTO schema_migrations (version) VALUES ('20140418005637');
-
-INSERT INTO schema_migrations (version) VALUES ('20140422155957');
-
-INSERT INTO schema_migrations (version) VALUES ('20140423220457');
-
-INSERT INTO schema_migrations (version) VALUES ('20140506210037');
-
-INSERT INTO schema_migrations (version) VALUES ('20140515205254');
-
-INSERT INTO schema_migrations (version) VALUES ('20140521180349');
-
-INSERT INTO schema_migrations (version) VALUES ('20140604192901');
-
-INSERT INTO schema_migrations (version) VALUES ('20140617163304');
-
-INSERT INTO schema_migrations (version) VALUES ('20140610210928');
-
-INSERT INTO schema_migrations (version) VALUES ('20140621060009');
-
-INSERT INTO schema_migrations (version) VALUES ('20140623004229');
-
-INSERT INTO schema_migrations (version) VALUES ('20140624185610');

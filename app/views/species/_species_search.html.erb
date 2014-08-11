@@ -1,20 +1,20 @@
 <div class="row">
   
-  <div class="sixteen alpha">
-    <div id="species_search_area">
-      <label for="trait_species">Species</label>
+  <fieldset>
+    <legend>Species</legend>
+    <div class="eight columns alpha" id="species_search_area">
       <%= text_field_tag :species_query, @query, :placeholder => 'Search by Symbol or Scientific Name',:class => "input-full" %>
       <span id="spinner" style="display: none;width: 16px"></span>
-      <br>
-      <div id="results"></div>
-      <select id="<%= controller.controller_name.singularize %>_specie_id" name="<%= controller.controller_name.singularize %>[specie_id]">
-        <% if !@species.nil? %>  
-          <%= options_from_collection_for_select(@species, :id, :select_default) %>
-        <% else -%>	
-          <option value=''>No species associated with this record.</option>
-        <% end %>
-      </select>
     </div>
+
+    <div class="eight columns omega" id="results"></div>
+    <select class="input-full" id="<%= controller.controller_name.singularize %>_specie_id" name="<%= controller.controller_name.singularize %>[specie_id]">
+      <% if !@species.nil? %>  
+        <%= options_from_collection_for_select(@species, :id, :select_default) %>
+      <% else -%>
+        <option value=''>No species associated with this record.</option>
+      <% end %>
+    </select>
 
     <%= observe_field(:species_query,
                   :frequency => 1,
@@ -22,7 +22,8 @@
                   :complete => "Element.hide('spinner')",
                   :with => "'symbol=' + Form.Element.getValue('species_query') + '&cont=' + '#{controller.controller_name.singularize}'",
                   :url => { :controller => :species, :action => :species_search }) %>
-  </div>
+  </fieldset>
+
 
 </div>
 
