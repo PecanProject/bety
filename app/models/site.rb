@@ -12,6 +12,78 @@ class Site < ActiveRecord::Base
     super(options)
   end
 
+  def lat
+    if self[:geometry]
+      if self[:geometry].geometry_type.type_name == 'Point'
+        return self[:geometry].y
+      else
+        return self[:geometry].centroid.y
+      end
+    else
+      return nil
+    end
+  end
+
+  def lat=(val)
+    if not self[:geometry] then
+      self[:geometry] = "SRID=4326;Point(0 #{val} 0)"
+    else
+      self[:geometry] = "SRID=#{espg};Point(#{lon} #{val} #{masl})"
+    end;
+  end
+
+  def lon
+    if self[:geometry]
+      if self[:geometry].geometry_type.type_name == 'Point'
+        return self[:geometry].x
+      else
+        return self[:geometry].centroid.x
+      end
+    else
+      return nil
+    end
+  end
+
+  def lon=(val)
+    if not self[:geometry] then
+      self[:geometry] = "SRID=4326;Point(#{val} 0 0)"
+    else
+      self[:geometry] = "SRID=#{espg};Point(#{val} #{lat} #{masl})"
+    end
+  end
+
+  def masl
+    if self[:geometry]
+      if self[:geometry].geometry_type.type_name == 'Point'
+        return self[:geometry].z
+      else
+        return self[:geometry].centroid.z
+      end
+    else
+      return nil
+    end
+  end
+
+  def masl=(val)
+    if not self[:geometry] then
+      self[:geometry] = "SRID=4326;Point(0 0 #{val})"
+    else
+      self[:geometry] = "SRID=#{espg};Point(#{lon} #{lat} #{val})"
+    end
+  end
+
+  def espg
+    return self[:geometry] ? self[:geometry].srid : nil
+  end
+
+  def espg=(val)
+    if not self[:geometry] then
+      self[:geometry] = "SRID=#{val};Point(0 0 0)"
+    else
+      self[:geometry] = "SRID=#{val};Point(#{lon} #{lat} #{masl})"
+    end;
+  end
+
   extend CoordinateSearch # provides coordinate_search
 
   extend SimpleSearch

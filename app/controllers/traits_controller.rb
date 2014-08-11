@@ -114,7 +114,7 @@ class TraitsController < ApplicationController
     end
 
     @citation = Citation.find_by_id(session["citation"])
-
+    @new_covariates = [Covariate.new]
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @trait }
@@ -127,6 +127,7 @@ class TraitsController < ApplicationController
     @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.specie.nil? ? @species = nil : @species = [@trait.specie]
     @citation = @trait.citation
+    @new_covariates = [Covariate.new]
   end
 
   # POST /traits
@@ -136,58 +137,89 @@ class TraitsController < ApplicationController
 
     @trait.user_id = current_user.id
 
+    @new_covariates = []
     respond_to do |format|
-      if @trait.save
-        params[:covariate].each do |covariate|
-          unless covariate[:variable_id].blank?
-            @covariate = Covariate.new(covariate)
-            @trait.covariates << @covariate
+      Trait.transaction do
+        saved_covariates = []
+        @trait.save
+        params[:covariate].each do |c|
+          unless c[:variable_id].blank?
+            @covariate = Covariate.new(c)
+            @new_covariates << @covariate
+            if @covariate.save
+              # these "saved" covariates are rolled back if any save errors occur
+              saved_covariates << @covariate
+            else
+              @trait.errors.add(:covariates, (@covariate.errors.get(:level))[0])
+            end
           end
         end
-        flash[:notice] = "Trait was successfully created. #{@trait.covariates.length} covariate(s) added"
-        format.html { redirect_to :action => "new", :id => @trait }
-        format.xml  { render :xml => @trait, :status => :created, :location => @trait }
-        format.csv  { render :csv => @trait, :status => :created, :location => @trait }
-      else
-        @citation = Citation.find(session["citation"])
-        @treatments = @citation.treatments rescue nil
-        @sites = @citation.sites rescue nil
-
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
-        format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
+        if @trait.errors.size > 0
+          raise StandardError, "Trait could not be created. Please see error messages"
+        else
+          @trait.covariates += saved_covariates
+        end
       end
+      flash[:notice] = "Trait was successfully created. #{@trait.covariates.length} covariate(s) added"
+      format.html { redirect_to(@trait) }
+      format.xml  { head :ok }
+      format.csv  { head :ok }
     end
-  rescue ActiveRecord::StatementInvalid => e
-    # Constraint violations not handled by Rails in the else clause
-    # are handled here.
-    handle_constraint_violations(e)
+  rescue StandardError, ActiveRecord::StatementInvalid => e
+    logger.info(e)
+    flash[:error] = e.message
+    @citation = @trait.citation
+    respond_to do |format|
+      format.html { render :action => "new" }
+      format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
+      format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
+    end
   end
+
 
   # PUT /traits/1
   # PUT /traits/1.xml
   def update
     @trait = Trait.all_limited(current_user).find(params[:id])
     @trait.current_user = current_user #Used to validate that they are allowed to change checked
-
+    @new_covariates = []
     respond_to do |format|
-      if @trait.update_attributes(params[:trait])
-        flash[:notice] = 'Trait was successfully updated.'
-        format.html { redirect_to(@trait) }
-        format.xml  { head :ok }
-        format.csv  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
-        format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
+      Trait.transaction do
+        saved_covariates = []
+        @trait.update_attributes(params[:trait])
+        params[:covariate].each do |c|
+          unless c[:variable_id].blank?
+            @covariate = Covariate.new(c)
+            @new_covariates << @covariate
+            if @covariate.save
+              # these "saved" covariates are rolled back if any save errors occur
+              saved_covariates << @covariate
+            else
+              @trait.errors.add(:covariates, (@covariate.errors.get(:level))[0])
+            end
+          end
+        end
+        if @trait.errors.size > 0
+          raise StandardError, "Trait could not be saved. Please see error messages"
+        else
+          @trait.covariates += saved_covariates
+        end
       end
+      flash[:notice] = 'Trait was successfully updated.'
+      format.html { redirect_to(@trait) }
+      format.xml  { head :ok }
+      format.csv  { head :ok }
     end
-  rescue ActiveRecord::StatementInvalid => e
-    # Constraint violations not handled by Rails in the else clause
-    # are handled here.
-    handle_constraint_violations(e)
+  rescue StandardError, ActiveRecord::StatementInvalid => e
+    logger.info(e)
+    flash[:error] = e.message
+    @citation = @trait.citation
+    respond_to do |format|
+      format.html { render :action =>"edit" }
+      format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
+      format.csv  { render :csv => @trait.errors, :status => :unprocessable_entity }
+    end
   end
-
   # DELETE /traits/1
   # DELETE /traits/1.xml
   def destroy
@@ -199,6 +231,21 @@ class TraitsController < ApplicationController
       format.xml  { head :ok }
       format.csv  { head :ok }
     end
+  end
+
+  def unlink_covariate
+    @trait = Trait.all_limited(current_user).find(params[:id])
+    Covariate.find(params[:covariate]).destroy
+    respond_to do |format|
+      format.html {
+        render :action =>"edit" do |page|
+          page.replace_html "edit_covariates_traits", :partial =>"edit_covariates_traits"
+        end
+      }
+      format.xml  { head :ok }
+      format.csv  { head :ok }
+    end
+
   end
 
 end
