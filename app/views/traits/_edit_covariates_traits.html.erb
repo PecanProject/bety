@@ -1,20 +1,13 @@
+<% if @trait.covariates.size>0 %>
 <table width="100%">
-  <tr>
-    <td width="100%"><h3>Existing Covariates <%= link_to "[new]", new_covariate_path(:trait_id => @trait.id) %></h3></td>
-  </tr>
-  <tr>
-    <td>
-      <table>
-        <tr> <th></th><th></th><th>Variable</th><th>Level</th><th></th> </tr>
+        <tr align="left"> <th>Variable</th><th>Level</th><th align="center" colspan="2">Actions</th> </tr>
           <% @trait.covariates.each do |c| %>
             <tr>
-              <td><%= link_to 'unlink',{:action =>:unlink_covariate, :id =>@trait.id, :covariate =>c }, :confirm => 'Are you sure?', :remote=>true %></td>
-              <td><%= link_to "edit", edit_covariate_path(c.id) %></td>
               <td><%= link_to_if c.variable, c.variable, c.variable %></td>
               <td><%= c.level %></td>
+              <td><%= link_to 'unlink',{:action =>:unlink_covariate, :id =>@trait.id, :covariate =>c }, :confirm => 'Are you sure?', :remote=>true %></td>
+              <td><%= link_to "edit", edit_covariate_path(c.id) %></td>
              </tr>
           <% end %>
-      </table>
-    </td>
-  </tr>
 </table>
+<% end %>
