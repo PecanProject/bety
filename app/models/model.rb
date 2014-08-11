@@ -4,7 +4,7 @@ class Model < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ modeltype }
-  SEARCH_FIELDS = %w{ models.model_name models.revision }
+  SEARCH_FIELDS = %w{ models.model_name models.revision modeltypes.name }
 
   has_many :files, :as => :container, :class_name => 'DBFile'
   has_many :runs

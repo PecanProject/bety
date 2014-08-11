@@ -4,7 +4,7 @@ class Pft < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ modeltype }
-  SEARCH_FIELDS = %w{ pfts.name pfts.definition modeltype.name }
+  SEARCH_FIELDS = %w{ pfts.name pfts.definition modeltypes.name }
 
   has_many :pfts_priors, :class_name => "PftsPriors"
   has_many :priors, :through => :pfts_priors
