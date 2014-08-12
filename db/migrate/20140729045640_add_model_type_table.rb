@@ -1,6 +1,4 @@
 class AddModelTypeTable < ActiveRecord::Migration
-  class Model < ActiveRecord::Base; end
-
   def self.up
     create_table :modeltypes do |t|
       t.string :name, :unique => true, :null => false
@@ -10,22 +8,23 @@ class AddModelTypeTable < ActiveRecord::Migration
     end
     add_index :modeltypes, [:name], :unique => true
 
-    Model.update_all("model_type = 'UNKNOWN'", "model_type IS NULL or model_type=''")
-    execute("insert into modeltypes(name) (select distinct model_type from models);")
+    execute("insert into modeltypes(name) (select distinct coalesce(model_type, model_name) from models);")
 
     add_column :models, :modeltype_id, :integer, :limit => 8
-    execute("update models set modeltype_id=(select id from modeltypes where modeltypes.name=models.model_type);")
+    execute("update models set modeltype_id=(select id from modeltypes where modeltypes.name=coalesce(model_type, model_name));")
+    change_column :models, :modeltype_id, :integer, :limit => 8, :null => false
 
     add_column :pfts, :modeltype_id, :integer, :limit => 8
     execute("update pfts set modeltype_id=(select id from modeltypes where modeltypes.name=pfts.model_type);")
+    change_column :pfts, :modeltype_id, :integer, :limit => 8, :null => false
 
     remove_column :models, :model_type
     remove_column :pfts, :model_type
 
     create_table :modeltypes_formats do |t|
-      t.integer :modeltype_id, :limit => 8
-      t.string :tag
-      t.integer :format_id, :limit => 8
+      t.integer :modeltype_id, :limit => 8, :null => false
+      t.string :tag, :null => false
+      t.integer :format_id, :limit => 8, :null => false
       t.boolean :required, :default => false
       t.boolean :input, :default => true # true=input, false=output
       t.integer :user_id
