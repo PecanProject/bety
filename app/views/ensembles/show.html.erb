@@ -5,7 +5,14 @@
 				<h1>Viewing Ensemble</h1>
 			</header>
 
-			<!-- InstanceBeginEditable name="Full Width Content" --> 
+      <a style="text-decoration: none" href="#" onclick="showHide('show_runs')" id="show_show_runs">[+] View Related Runs</a>
+      <br/>
+      <div id="show_runs" class="hidden notvisible">
+        <%= render 'show_runs' %>
+      </div>
+
+      <br>
+
 			<dl class="dl-horizontal">
 				<dt>Runtype</dt>
 				<dd><%= @ensemble.runtype %></dd>
@@ -24,8 +31,7 @@
 					
 				</div>
 			</div>
-			<!-- InstanceEndEditable --> </div>
+		</div>
 	</div>
-	<!-- container --> 
 </div>
 
