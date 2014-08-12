@@ -5,18 +5,12 @@
           <thead>
           <tr role="row">
 <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px;" aria-sort="ascending"><%= sortable "models.model_name", "Model" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "sites.sitename", "Site" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.start_time", "Start time" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.finish_time", "Finish time" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.started_at", "Started at" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.finished_at", "Finished at" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.start_date", "Start date" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.end_date", "End date" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.outdir", "Output Directory" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.outprefix", "Output Prefix" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.setting", "Setting" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "runs.paramter_list", "Parameter List" %></th>
-<th role="columnheader" aria-controls="DataTables_Table_0" style="width: 162px">Actions</th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "sites.sitename", "Site" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "runs.start_time", "Start time" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "runs.finish_time", "Finish time" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "runs.started_at", "Started at" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "runs.finished_at", "Finished at" %></th>
+<th role="columnheader" aria-controls="DataTables_Table_0" style="width: 80px">Actions</th>
       </tr>
     </thead>
 
@@ -32,20 +26,10 @@
     <td class="center"><%= run.finish_time %></td>
     <td class="center"><%= run.started_at %></td>
     <td class="center"><%= run.finished_at %></td>
-    <td class="center"><%= run.start_date %></td>
-    <td class="center"><%= run.end_date %></td>
-    <td class="center"><%= run.outdir %></td>
-    <td class="center"><%= run.outprefix %></td>
-    <td class="center"><%= run.setting %></td>
-    <td class="center"><%= run.parameter_list %></td>
     <td class="center ">
       <!-- SHOW -->
       <%= link_to run, :class => "button button-small", :alt => "show" do %>
       <i class="icon-zoom-in"></i>
-      <% end %>
-      <!-- EDIT -->
-      <%= link_to edit_run_path(run), :class => "button button-small", :alt => "edit" do %>
-      <i class="icon-edit"></i>
       <% end %>
       <!-- DELETE -->
       <% if current_user.page_access_level == 1 %>
