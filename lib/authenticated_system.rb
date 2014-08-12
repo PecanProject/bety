@@ -76,6 +76,7 @@ module AuthenticatedSystem
                                 "RunsController.ALL",
                                 "LikelihoodsController.ALL",
                                 "ModelsController.ALL",
+                                "ModeltypesController.ALL",
                                 "InputsRunsController.ALL",
                                 "YieldsviewsController.ALL",
                                 "InputsVariablesController.ALL",
