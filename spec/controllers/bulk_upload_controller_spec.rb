@@ -1,8 +1,5 @@
 require 'spec_helper'
 describe BulkUploadController, :type => :controller do
-  before(:each) do
-    session[:user_id] = 1
-  end
 
   describe "display csv file" do
 
@@ -154,6 +151,7 @@ describe BulkUploadController, :type => :controller do
       @values ={ "global_values" => {}, "rounding" => { "yields" => "2" } }
       request.env["HTTP_REFERER"] = 'choose_global_data_values'
       post 'confirm_data', @values
+      session[:user_id] = 1 # needed for the insertion step
       post 'insert_data'
     end
 
