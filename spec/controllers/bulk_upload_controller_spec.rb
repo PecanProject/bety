@@ -16,7 +16,7 @@ describe BulkUploadController, :type => :controller do
         assert_redirected_to '/bulk_upload/start_upload', "Failed to redirect when no file chosen"
       end
 
-      it "should create a data set if a well-formed CSV file has been uploaded" do
+      it "should create a data set when a well-formed CSV file is uploaded" do
         @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
         post 'display_csv_file', { 'new upload' => true, "CSV file" => @file }
         assert_not_nil assigns(:data_set)
@@ -77,30 +77,34 @@ describe BulkUploadController, :type => :controller do
           @file = fixture_file_upload("/files/bulk_upload/sample_yields_with_treatment_but_no_citation.csv", "text/csv")
           @form = { 'new upload' => true, "CSV file" => @file }
         end
-=begin
+
         ## These two tests failed because the controller doesn't prevent the user
         ## from entering the url to the next step (though the button isn't shown)
         ## This might not be a real problem, because they are still going to get
         ## some error at the data insertion step if they have a null or wrong citation...
-        it "should not proceed without choosing citation" do
-          post 'display_csv_file', @form
-          session[:citation] = nil
-          get 'choose_global_data_values'
-          assert_not_equal(response.status, 200 ,"Failed to stop when no citation present")
+        it "should not allow visiting the 'choose_global_data_values' page without having choosen a citation" do
+          pending "tightening up navigation control" do
+            post 'display_csv_file', @form
+            session[:citation] = nil
+            get 'choose_global_data_values'
+            assert_not_equal(response.status, 200 ,"Failed to stop when no citation present")
+          end
         end
 
-        it "should not proceed with wrong citation" do
-          post 'display_csv_file', @form
-          session[:citaion] = 757
-          get 'choose_global_data_values'
-          assert_not_equal(response.status, 200 ,"Failed to stop when citation is wrong")
+        it "should not allow visiting the 'choose_global_data_values' page when a citation inconsistent with the data set has been chosen" do
+          pending "tightening up navigation control" do
+            post 'display_csv_file', @form
+            session[:citation] = 1
+            get 'choose_global_data_values'
+            assert_not_equal(response.status, 200 ,"Failed to stop when citation is wrong")
+          end
         end
-=end
+
       end
 
       # TODO: possibly test various kinds of invalid files and what messages result
-      context "upload invalid csv file" do
-        it "should throw error and redirect" do
+      context "uploading an invalid csv file" do
+        it "should throw an error and redirect to the start_upload page" do
           @file = fixture_file_upload("/files/bulk_upload/invalid_file.csv", "text/csv")
           @form = { 'new upload' => true, "CSV file" => @file }
           post 'display_csv_file', @form
