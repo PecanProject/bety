@@ -9,14 +9,14 @@ describe BulkUploadController, :type => :controller do
 
     context "test general" do
 
-      it "should give an error when no file is uploaded" do
+      it "should display an error when no file has been uploaded" do
         post 'display_csv_file', { 'new upload' => true }
         assert_equal(session[:flash][:error] , "No file chosen")
-        assert_not_equal(response.status, 200)
+        assert_not_equal(response.status, 200) # Since this is a redirect, we should get 302; this test is somewhat redundant in view of the next.
         assert_redirected_to '/bulk_upload/start_upload', "Failed to redirect when no file chosen"
       end
 
-      it "should create a data set when a file is uploaded" do
+      it "should create a data set if a well-formed CSV file has been uploaded" do
         @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
         post 'display_csv_file', { 'new upload' => true, "CSV file" => @file }
         assert_not_nil assigns(:data_set)
@@ -47,7 +47,7 @@ describe BulkUploadController, :type => :controller do
 
     context "validate data" do
 
-      context "validate file with citation" do
+      context "validation of a file with citation data" do
 
         before(:each) do
           @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
@@ -58,7 +58,7 @@ describe BulkUploadController, :type => :controller do
           session[:citation] = 1
           post 'display_csv_file', @form
           assert_nil session[:citation], "Failed to remove citation from session"
-          session[:flash][:warning].should =~ /^[Rmoving]/i
+          session[:flash][:warning].should =~ /^Removing/i
         end
 
         it "should validate the file data" do
@@ -68,9 +68,9 @@ describe BulkUploadController, :type => :controller do
           assert_not_nil(@validated_data, "Failed to validate rows")
         end
 
-      end # "validate file with citation"
+      end # "validation of a file with citation data"
 
-      context "validate file without citation" do
+      context "validation of a file without citation data" do
 
         before(:each) do
 
@@ -98,6 +98,7 @@ describe BulkUploadController, :type => :controller do
 =end
       end
 
+      # TODO: possibly test various kinds of invalid files and what messages result
       context "upload invalid csv file" do
         it "should throw error and redirect" do
           @file = fixture_file_upload("/files/bulk_upload/invalid_file.csv", "text/csv")
@@ -113,7 +114,7 @@ describe BulkUploadController, :type => :controller do
   end # "display_csv_file"
 
   describe "choose global data values" do
-    # actuall rounding and data processing not tested here
+    # actual rounding and data processing not tested here
     before(:each) do
       get 'start_upload'
       @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
@@ -122,7 +123,7 @@ describe BulkUploadController, :type => :controller do
       get 'choose_global_data_values'
     end
 
-    it "should return new dataset" do
+    it "should return a new dataset" do
       assert_not_nil assigns(:data_set)
       assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset"
     end
@@ -141,12 +142,12 @@ describe BulkUploadController, :type => :controller do
       post 'confirm_data', @values
     end
 
-    it "should return new dataset" do
+    it "should return a new dataset" do
       assert_not_nil assigns(:data_set)
       assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset"
     end
 
-    it "should extract data from dataset" do
+    it "should extract summary confirmation data from the dataset" do
       @upload_sites = assigns(:upload_sites)
       assert_equal(@upload_sites.size, 1, "Failed to get sites")
       @upload_species = assigns(:upload_species)
@@ -175,7 +176,7 @@ describe BulkUploadController, :type => :controller do
       post 'insert_data'
     end
 
-    it "should return new dataset" do
+    it "should return a new dataset" do
       assert_not_nil assigns(:data_set)
       assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset"
     end
