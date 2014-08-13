@@ -20,7 +20,7 @@ test_site:
   geometry: #<RGeo::Geos::CAPIPointImpl:0x3fcccda246d8 "POINT (23.17 38.37 114.0)">
 
 test_trait_site:
-  id: 2
+  id: 4
   city: ""
   state: ""
   country: "USA"
@@ -45,10 +45,7 @@ test_site_2:
   city: "Reno"
   state: "Nevada"
   country: US
-  geometry: "POINT (
-   39.538264
-   -119.812071
-   0)"
+  geometry: #<RGeo::Geos::CAPIPointImpl:0x3fcccda246d8 "Point(39.538264, -119.812071, 0)">
    
 test_site_3:
   id: 3
@@ -56,4 +53,4 @@ test_site_3:
   city: "xxx"
   state: "xxx"
   country: xxx
-  geometry: "POINT ( 39.538264 -119.812071 0)"
+  geometry: #<RGeo::Geos::CAPIPointImpl:0x3fcccda246d8 "Point(39.538264, -119.812071, 0)">
