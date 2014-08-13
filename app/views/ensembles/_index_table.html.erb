@@ -24,10 +24,6 @@
 						  <%= link_to ensemble, :class => "button button-small", :alt => "show" do %>
 						    <i class="icon-zoom-in"></i>
 						  <% end %>
-						  <!-- EDIT -->
-						  <%= link_to edit_ensemble_path(ensemble), :class => "button button-small", :alt => "edit" do %>
-						    <i class="icon-edit"></i>
-						  <% end %>
 						  <!-- DELETE -->
 						  <% if current_user.page_access_level == 1 %>
                 <%= link_to ensemble, :method => :delete, :type => 'ensemble', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>

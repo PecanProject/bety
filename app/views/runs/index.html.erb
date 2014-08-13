@@ -5,9 +5,9 @@
 				<h1>Listing Runs</h1>
 			</header>
       <div id="process_container">
-        <div id="back"><br /></div>
-        <div id="new"><%= link_to 'New Run', new_run_path, :class => "button button-primary" %></div>
-        <div id="forward"><%= link_to "Likelihoods >>", likelihoods_path %></div>
+        <div id="back"><%= link_to "<< Posteriors", posteriors_path %></div>
+        <div id="new">Create new runs through PEcAn</div>
+        <div id="forward"><%= link_to "Workflows >>", workflows_path %></div>
       </div>
       <br />
       <div id="simple_search_table" class="simple_search_table_1"><%= render 'index_table' %></div>
