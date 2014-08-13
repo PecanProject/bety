@@ -9,19 +9,39 @@ describe BulkUploadController, :type => :controller do
 
     context "test general" do
 
-      it "should give error with no file uploaded" do
+      it "should give an error when no file is uploaded" do
         post 'display_csv_file', { 'new upload' => true }
         assert_equal(session[:flash][:error] , "No file chosen")
         assert_not_equal(response.status, 200)
         assert_redirected_to '/bulk_upload/start_upload', "Failed to redirect when no file chosen"
       end
 
-      it "should create data set with file uploaded" do
+      it "should create a data set when a file is uploaded" do
         @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
         post 'display_csv_file', { 'new upload' => true, "CSV file" => @file }
         assert_not_nil assigns(:data_set)
         assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset instance"
       end
+
+
+      it "should create a data set when returning to the page if a file was previously uploaded" do
+        @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
+        session[:csvpath] = @file.path
+        post 'display_csv_file', { 'new upload' => false }
+        assert_not_nil assigns(:data_set)
+        assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset instance"
+      end
+
+     it "should give an error when returning to the page if the start upload page was visited after a file was uploaded" do
+        @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
+        session[:csvpath] = @file.path
+        get 'start_upload'
+        post 'display_csv_file', { 'new upload' => false }
+        assert_equal(session[:flash][:error] , "csvpath is missing from the session")
+        assert_not_equal(response.status, 200)
+        assert_redirected_to '/bulk_upload/start_upload', "Failed to redirect when no file chosen"
+      end
+
 
     end # "test general"
 
@@ -34,18 +54,18 @@ describe BulkUploadController, :type => :controller do
           @form = { 'new upload' => true, "CSV file" => @file }
         end
 
-        it "should remove citation" do
+        it "should remove a linked citation when a file is uploaded that includes citation information" do
           session[:citation] = 1
           post 'display_csv_file', @form
           assert_nil session[:citation], "Failed to remove citation from session"
           session[:flash][:warning].should =~ /^[Rmoving]/i
         end
 
-        it "should validate rows" do
+        it "should validate the file data" do
           post 'display_csv_file', @form
           @dataset = assigns(:data_set)
           @validated_data = @dataset.validated_data
-          assert_equal(@validated_data.size, 1, "Failed to validate rows")
+          assert_not_nil(@validated_data, "Failed to validate rows")
         end
 
       end # "validate file with citation"
