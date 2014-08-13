@@ -93,8 +93,13 @@ describe BulkUploadController, :type => :controller do
 
         it "should not allow visiting the 'choose_global_data_values' page when a citation inconsistent with the data set has been chosen" do
           pending "tightening up navigation control" do
+            session[:citation] = 4
             post 'display_csv_file', @form
-            session[:citation] = 1
+            @dataset = assigns(:data_set)
+            # Ensure the citation we set actually *is* inconsistent:
+            assert(@dataset.validation_summary.has_key?(:inconsistent_site_reference) && 
+                   @dataset.validation_summary[:inconsistent_site_reference].size > 0,
+                   "This citation is actually consistent with the sites given")
             get 'choose_global_data_values'
             assert_not_equal(response.status, 200 ,"Failed to stop when citation is wrong")
           end
