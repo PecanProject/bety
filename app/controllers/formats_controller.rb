@@ -29,9 +29,9 @@ class FormatsController < ApplicationController
   end
 
   def edit_formats_variables
-    @formats_variable = FormatsVariable.find(params[:id])
-    @format = @formats_variable.format
-    @formats_variable.update_attributes(params[:formats_variable])
+    formats_variable = FormatsVariable.find(params[:id])
+    @format = formats_variable.format
+    formats_variable.update_attributes(params[:formats_variable])
 
     render :update do |page|
       page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
