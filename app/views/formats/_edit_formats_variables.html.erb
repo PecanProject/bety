@@ -1,48 +1,64 @@
-<table width="100%">
-  <tr>
-    <td width="50%"><h3>Existing Variable Relationships</h3></td>
-    <td width="50%"><h3>Add Variable Relationship(s)</h3></td>
-  </tr>
-  <tr>
-    <td>
-      <table>
-        <tr>
-          <th></th>
-          <th></th>
-          <th>Variable Name</th>
-          <th>Variable Description</th>
-          <th>Variale Units</th>
-          <th>Name</th>
-          <th>Unit</th>
-          <th>Storage Number</th>
-          <th>Column Number</th>
-        </tr>
-        <% @format.formats_variables.each do |formats_variable| %>
-        <tr>
-          <td><%= link_to "X", { :controller => :formats, :action => :rem_formats_variables, :id => formats_variable.id }, :confirm => 'Are you sure?', :remote => true %></td>
-          <td><%= link_to "edit", edit_variable_path(formats_variable.variable_id) %></td>
-          <td><%= formats_variable.variable.name %></td>
-          <td><%= formats_variable.variable.description %></td>
-          <td><%= formats_variable.variable.units %></td>
-          <td><%= formats_variable.name %></td>
-          <td><%= formats_variable.unit %></td>
-          <td><%= formats_variable.storage_type %></td>
-          <td><%= formats_variable.column_number %></td>
-        </tr>
-        <% end %>
-      </table>
-    </td>
-    <td>
-      <%= form_tag url_for(:controller => :formats, :action => :edit_formats_variables), :remote => true do %>
-      <%= select_tag :variable_id, options_for_select(Variable.all.collect { |x| [x.select_default,x.id] }) %><br />
-      <%= label_tag :name, "Name" %><%= text_field_tag 'formats_variable[name]' %><br />
-      <%= label_tag :unit, "Unit" %><%= text_field_tag 'formats_variable[unit]' %><br />
-      <%= label_tag :storage_type, "Storage Type" %><%= text_field_tag 'formats_variable[storage_type]' %><br />
-      <%= label_tag :column_header, "Column Number" %><%= text_field_tag 'formats_variable[column_number]' %><br />
+<div class="row" style="margin-bottom: 0px">
+  <div class="one columns alpha">&nbsp;</div>
+  <div class="one columns">&nbsp;</div>
+  <div class="four columns">Variable</div>
+  <div class="three columns">Name</div>
+  <div class="three columns">Unit</div>
+  <div class="two columns">Storage Type</div>
+  <div class="two columns omega">Column Number</div>
+</div>
+
+<% @format.formats_variables.each do |formats_variable| %>
+  <%= form_tag url_for(:controller => :formats, :action => :edit_formats_variables), :remote => true, :style => "margin: 0px" do %>
+    <div class="row" style="margin-bottom: 0px">
+      <div class="one columns alpha">
+        <%= hidden_field_tag 'id', formats_variable.id %>
+        <%= link_to "X", { :controller => :formats, :action => :rem_formats_variables, :id => formats_variable.id }, :confirm => 'Are you sure?', :remote => true %>
+      </div>
+      <div class="one columns">
+        <%= submit_tag "save" %>
+      </div>
+      <div class="four columns">
+        <%= link_to formats_variable.variable.name, edit_variable_path(formats_variable.variable_id), html_options={ :title => "[#{formats_variable.variable.description} #{formats_variable.variable.units}]"} %>
+      </div>
+      <div class="three columns">
+        <%= text_field_tag 'formats_variable[name]', formats_variable.name %>
+      </div>
+      <div class="three columns">
+        <%= text_field_tag 'formats_variable[unit]', formats_variable.unit %>
+      </div>
+      <div class="two columns">
+        <%= text_field_tag 'formats_variable[storage_type]', formats_variable.storage_type %>
+      </div>
+      <div class="two columns omega">
+        <%= text_field_tag 'formats_variable[column_number]', formats_variable.column_number %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<%= form_tag url_for(:controller => :formats, :action => :add_formats_variables), :remote => true, :style  => "margin: 0px" do %>
+  <div class="row" style="margin-bottom: 0px">
+    <div class="one columns alpha">
       <%= hidden_field_tag 'id', @format.id %>
-      <br /><br />
-      <%= submit_tag "Select" %>
-      <% end %>
-    </td>
-  </tr>
-</table>
+    </div>
+    <div class="one columns">
+      <%= submit_tag "add" %>
+    </div>
+    <div class="four columns">
+      <%= select_tag :variable_id, options_for_select(Variable.all.collect { |x| [x.select_default,x.id] }) %>
+    </div>
+    <div class="three columns">
+      <%= text_field_tag 'formats_variable[name]' %>
+    </div>
+    <div class="three columns">
+      <%= text_field_tag 'formats_variable[unit]' %>
+    </div>
+    <div class="two columns">
+      <%= text_field_tag 'formats_variable[storage_type]' %>
+    </div>
+    <div class="two columns omega">
+      <%= text_field_tag 'formats_variable[column_number]' %>
+    </div>
+  </div>
+<% end %>
