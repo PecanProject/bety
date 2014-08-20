@@ -5,9 +5,10 @@ class SearchController < ApplicationController
   helper_method :sort_column, :sort_direction
 
   CREDITS = <<CREDITS
-David LeBauer, Dan Wang, and Michael Dietze, 2010.  \
-Biofuel Ecophysiological Traits and Yields Database Version 1.0.  \
-Energy Biosciences Institute, Urbana, IL
+David LeBauer, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney, Gareth Scott Rohde, Dan Wang 2010.\ 
+Biofuel Ecophysiological Traits and Yields Database (BETYdb)\
+Energy Biosciences Institute, University of Illinois at Urbana-Champaign.\
+doi:10.13012/J8H41PB9\
 CREDITS
   CREDITS.chomp!
 
