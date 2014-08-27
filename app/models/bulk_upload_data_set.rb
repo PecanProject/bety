@@ -1,10 +1,36 @@
 class BulkUploadDataSet
   include ActionView::Helpers::NumberHelper # for rounding
 
-  attr_reader :headers, :validated_data
-  attr_reader :validation_summary, :csv_warnings
-  attr_reader :file_has_fatal_errors, :total_error_count, :field_list_error_count, :data_value_error_count
-  attr_reader :missing_interactively_specified_fields
+  # An Array consisting of the headers of the uploaded CSV file.  This is set upon instantiation.
+  attr :headers
+  attr :validated_data
+  attr :validation_summary
+  attr :csv_warnings
+  attr :file_has_fatal_errors
+  attr :total_error_count
+  attr :field_list_error_count
+  attr :data_value_error_count
+  attr :missing_interactively_specified_fields
+
+  # Instantiates an object representing the data in the file +uploaded_io+ (if
+  # provided) or in the file at <tt>session[:csvpath]</tt> (if uploaded_io was
+  # not given).
+  #
+  # If provided, the temporary file +uploaded_io+ is read and the contents are
+  # then written out to a file at
+  # <tt>public/uploads/<uploaded_io.original_filename></tt>.  The location of
+  # this file is then stored in the session under the key +:csvpath+.
+  #
+  # Prior to instantiation, the file is checked to ensure it is parseable as CSV
+  # and contains no blank lines.  If a blank line is found, a +RunError+ is
+  # raised and if the file is not parsable as CSV, a
+  # <tt>CSV::MalformedCSVError</tt> is raised.  Otherwise, the +headers+
+  # attribute is set and the file's data is stored internally.
+  # 
+  # [session] The Hash object representing the current session, and instance of
+  #           ActionDispatch::Session::AbstractStore::SessionHash.
+  # [uploaded_io] An instance of <tt>ActionDispatch::Http::UploadedFile</tt>
+  #               (default: nil).
 
   def initialize(session, uploaded_io = nil)
 
