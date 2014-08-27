@@ -1,0 +1,17 @@
+<h2>Related Ensembles</h2>
+
+<table>
+  <tr>
+    <th>Runtype</th>
+    <th>Notes</th>
+    <th>Created at</th>
+  </tr>
+  <% @workflow.ensembles.limit(100).each do |c| %>
+    <tr>
+      <td><%= c.runtype %></td>
+      <td><%= c.notes %></td>
+      <td><%= c.created_at %></td>
+      <td><%= link_to "Show", c %></td>
+    </tr>
+  <% end %>
+</table>

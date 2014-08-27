@@ -845,8 +845,76 @@ CREATE TABLE models (
     parent_id bigint,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
-    model_type character varying(255)
+    modeltype_id bigint NOT NULL
 );
+
+
+--
+-- Name: modeltypes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE modeltypes (
+    id bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    user_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: modeltypes_formats; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE modeltypes_formats (
+    id bigint NOT NULL,
+    modeltype_id bigint NOT NULL,
+    tag character varying(255) NOT NULL,
+    format_id bigint NOT NULL,
+    required boolean DEFAULT false,
+    input boolean DEFAULT true,
+    user_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: modeltypes_formats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE modeltypes_formats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: modeltypes_formats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE modeltypes_formats_id_seq OWNED BY modeltypes_formats.id;
+
+
+--
+-- Name: modeltypes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE modeltypes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: modeltypes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE modeltypes_id_seq OWNED BY modeltypes.id;
 
 
 --
@@ -873,7 +941,7 @@ CREATE TABLE pfts (
     name character varying(255),
     parent_id bigint,
     pft_type character varying(255) DEFAULT 'plant'::character varying,
-    model_type character varying(255)
+    modeltype_id bigint NOT NULL
 );
 
 
@@ -2096,6 +2164,20 @@ ALTER TABLE ONLY current_posteriors ALTER COLUMN id SET DEFAULT nextval('current
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY modeltypes ALTER COLUMN id SET DEFAULT nextval('modeltypes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY modeltypes_formats ALTER COLUMN id SET DEFAULT nextval('modeltypes_formats_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY posterior_samples ALTER COLUMN id SET DEFAULT nextval('posterior_samples_id_seq'::regclass);
 
 
@@ -2248,6 +2330,22 @@ ALTER TABLE ONLY mimetypes
 
 ALTER TABLE ONLY models
     ADD CONSTRAINT models_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: modeltypes_formats_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY modeltypes_formats
+    ADD CONSTRAINT modeltypes_formats_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: modeltypes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY modeltypes
+    ADD CONSTRAINT modeltypes_pkey PRIMARY KEY (id);
 
 
 --
@@ -2585,6 +2683,27 @@ CREATE INDEX index_methods_on_citation_id ON methods USING btree (citation_id);
 --
 
 CREATE INDEX index_models_on_parent_id ON models USING btree (parent_id);
+
+
+--
+-- Name: index_modeltypes_formats_on_modeltype_id_and_tag; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_modeltypes_formats_on_modeltype_id_and_tag ON modeltypes_formats USING btree (modeltype_id, tag);
+
+
+--
+-- Name: index_modeltypes_formats_on_modeltype_id_format_id_input; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_modeltypes_formats_on_modeltype_id_format_id_input ON modeltypes_formats USING btree (modeltype_id, format_id, input);
+
+
+--
+-- Name: index_modeltypes_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_modeltypes_on_name ON modeltypes USING btree (name);
 
 
 --

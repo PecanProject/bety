@@ -5,8 +5,8 @@
 		  <thead>
 	      <tr role="row">
 <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 200px"><%= sortable "pfts.name", "Name" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px"><%= sortable "pfts.model_type", "Model Type" %></th>
-<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "pfts.defintion", "Defintion" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px"><%= sortable "modeltypes.name", "Model Type" %></th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "pfts.definition", "Definition" %></th>
 <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 150px">Actions</th>
       </tr>
     </thead>    
@@ -14,7 +14,7 @@
 	    <% @pfts.each do |pft| %>
         <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and pft.id == @search.to_i%>>
           <td class="center"><%= pft.name %></td>
-          <td class="center"><%= pft.model_type %></td>
+          <td class="center"><%= pft.modeltype.name %></td>
           <td class="center"><%= pft.definition %></td>
 					<td class="center ">
 					  <!-- SHOW -->

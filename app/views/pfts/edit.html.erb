@@ -30,8 +30,8 @@
           </div>
           <div class="row">
             <div class="sixteen columns alpha">
-              <%= f.label :model_type %>
-              <%= f.collection_select(:model_type, Model.find(:all, :select => "DISTINCT model_type"), :model_type, :model_type, {:selected => @pft.model_type}) %>
+              <%= f.label :modeltype_id %>
+              <%= f.collection_select(:modeltype_id, Modeltype.order('name'), :id, :name) %>
             </div>
           </div>                    
           <div class="sixteen columns alpha">

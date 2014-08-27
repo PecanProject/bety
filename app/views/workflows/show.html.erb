@@ -1,48 +1,45 @@
-<p>
-  <b>Site ID:</b>
-  <%= @workflow.site_id %>
-</p>
+<div class="content">
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
+        <h1>Viewing Workflow</h1>
+      </header>
 
-<p>
-  <b>Model ID:</b>
-  <%= @workflow.model_id %>
-</p>
+      <a style="text-decoration: none" href="#" onclick="showHide('show_ensembles')" id="show_show_ensembles">[+] View Related Ensembles</a>
+      <br/>
+      <div id="show_ensembles" class="hidden notvisible">
+        <%= render 'show_ensembles' %>
+      </div>
 
-<p>
-  <b>Folder:</b>
-  <%=h @workflow.folder %>
-</p>
+      <br>
+      <hr>
 
-<p>
-  <b>Started at:</b>
-  <%= @workflow.started_at %>
-</p>
+      <dl class="dl-horizontal">
+        <dt>Model</dt>
+        <dd><%= link_to @workflow.model, @workflow.model %></dd>
+        <dt>Site</dt>
+        <dd><%= link_to @workflow.site, @workflow.site %></dd>
+        <dt>Folder:</dt>
+        <dd><%= @workflow.folder %></dd>
+        <dt>Started at:</dt>
+        <dd><%= @workflow.started_at %></dd>
+        <dt>Finshed at:</dt>
+        <dd><%= @workflow.finished_at %></dd>
+        <dt>Created at:</dt>
+        <dd><%= @workflow.created_at %></dd>
+        <dt>Updated at:</dt>
+        <dd><%= @workflow.updated_at %></dd>
+        <dt>Parameters:</dt>
+        <dd><%= @workflow.params %></dd>
+      </dl>
 
-<p>
-  <b>Finished at:</b>
-  <%= @workflow.finished_at %>
-</p>
-
-<p>
-  <b>Created at:</b>
-  <%= @workflow.created_at %>
-</p>
-
-<p>
-  <b>Updated at:</b>
-  <%= @workflow.updated_at %>
-</p>
-
-<p>
-  <b>Advanced Edit:</b>
-  <%= @workflow.advanced_edit %>
-</p>
-
-<p>
-  <b>Params:</b>
-  <%= @workflow.params %>
-</p>
-
-<%= link_to 'Results', "/pecan/finished.php?workflowid=" + @workflow.id.to_s %> |
-<%= link_to 'Edit', edit_workflow_path(@workflow) %> |
-<%= link_to 'Back', workflows_path %>
+      <div class="form-actions">
+        <div class="button-group">
+          <%= link_to( workflows_path ) do %>
+            <button class="button"><i class="icon-arrow-left"></i> All Records</button>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
