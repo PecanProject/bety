@@ -3,14 +3,45 @@ class BulkUploadDataSet
 
   # An Array consisting of the headers of the uploaded CSV file.  This is set upon instantiation.
   attr :headers
+  # A list of Hashes, one hash for each row of the input file (excluding the
+  # heading row).  Each hash has these keys:
+  # fieldname::
+  #
+  #   The field name for the corresponding value (as given by the heading)
+  #
+  # data::
+  #   The value itself, except with nil values normalized to the empty string
+  #
+  # If validation on a particular value fails, these keys are added:
+  #
+  # validation_result::
+  #
+  #   This will always be :valid, :ignored, or :fatal_error.
+  #
+  # validation_message::
+  #
+  # This gives information about the nature of the validation error.
   attr :validated_data
   attr :validation_summary
+  # A list of warnings.  Set by +check_header_list+ and used by the
+  # +display_csv_file+ template.  This list is either empty or is a string
+  # listing all columns specified in the upload file's header line that are not
+  # recognized as significant.
   attr :csv_warnings
+  # Set by +check_header_list+ and used by the +dispaly_csv_file+ template, both
+  # directly (to determine if forward wizard links should be shown) and via the
+  # +make_validation_summary+ helper (to determine if an error summary should be
+  # displayed).
   attr :file_has_fatal_errors
+  # Set by +validate_csv_data+ and used by the +dispaly_csv_file+ template (via
+  # the +make_validation_summary+ helper) to display the number of errors found.
   attr :total_error_count
+  # Set by +validate_csv_data+ and used by the +make_validation_summary+ helper
+  # to determine if a section detailing field list errors should be displayed.
   attr :field_list_error_count
+  # Set by +validate_csv_data+ and used by the +make_validation_summary+ helper
+  # to determine if a section detailing data value errors should be displayed.
   attr :data_value_error_count
-  attr :missing_interactively_specified_fields
 
   # Instantiates an object representing the data in the file +uploaded_io+ (if
   # provided) or in the file at <tt>session[:csvpath]</tt> (if uploaded_io was
@@ -27,11 +58,10 @@ class BulkUploadDataSet
   # <tt>CSV::MalformedCSVError</tt> is raised.  Otherwise, the +headers+
   # attribute is set and the file's data is stored internally.
   # 
-  # [session] The Hash object representing the current session, and instance of
+  # [session] The Hash object representing the current session, an instance of
   #           ActionDispatch::Session::AbstractStore::SessionHash.
-  # [uploaded_io] An instance of <tt>ActionDispatch::Http::UploadedFile</tt>
-  #               (default: nil).
-
+  # [uploaded_io] An object representing the uploaded file, an instance of
+  #               <tt>ActionDispatch::Http::UploadedFile</tt> (default: nil).
   def initialize(session, uploaded_io = nil)
 
     @session = session
@@ -108,9 +138,10 @@ class BulkUploadDataSet
     
   end
 
-
+  # A list of recognized column heading strings.
   RECOGNIZED_COLUMNS =  %w{yield citation_doi citation_author citation_year citation_title site species treatment access_level cultivar date n SE notes}
 
+  # A regular expression that must be matched by dates specified in the upload file.
   REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)(-(?<month>\d\d)(-(?<day>\d\d))?)?$/
 
   # Given a CSV object (vis. "@data") with lineno = 0, convert it to
@@ -519,6 +550,8 @@ class BulkUploadDataSet
 
   end # def validate_csv_data
 
+  # A list of values that may be specified interactively for the data set as a
+  # whole.
   INTERACTIVE_COLUMNS = %w{site species treatment access_level cultivar date}
 
   def need_interactively_specified_data
