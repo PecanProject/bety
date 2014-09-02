@@ -31,6 +31,7 @@ module BulkUploadHelper
     unresolvable_cultivar_reference: { link_url: :cultivars, link_text: "Search for or add cultivar" }
   }
 
+  # Used by the +display_csv_file+ template.
   def make_validation_summary
     summary = "" # default to empty string if no errors
     if @data_set.file_has_fatal_errors
