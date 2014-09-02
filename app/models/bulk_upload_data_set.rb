@@ -3,8 +3,10 @@ class BulkUploadDataSet
 
   # An Array consisting of the headers of the uploaded CSV file.  This is set upon instantiation.
   attr :headers
-  # A list of Hashes, one hash for each row of the input file (excluding the
-  # heading row).  Each hash has these keys:
+
+  # A list containing one item for each row of the input file (excluding the
+  # heading row).  Each item is itself a list of hashes, one hash for each
+  # column of the row.Each hash has these keys:
   # fieldname::
   #
   #   The field name for the corresponding value (as given by the heading)
@@ -20,28 +22,84 @@ class BulkUploadDataSet
   #
   # validation_message::
   #
-  # This gives information about the nature of the validation error.
+  #   This gives information about the nature of the validation error.
+  #
+  #   This attribute is set by +validate_csv_data+ and used by the
+  #   +display_csv_data+ template.
+  #
+  # ==== Example
+  #   [
+  #      [
+  #        {:fieldname=>"date",
+  #         :data=>"bogus date",
+  #         :validation_result=>:fatal_error,
+  #         :validation_message=>"dates must be in the form 1999-01-01, 1999-01, or 1999"},
+  #        {:fieldname=>"mean",
+  #         :data=>" 0.1",
+  #         :validation_result=>:ignored,
+  #         :validation_message=>"This column will be ignored."}
+  #      ],
+  #      [
+  #        {:fieldname=>"date",
+  #         :data=>"666        ",
+  #         :validation_result=>:fatal_error,
+  #         :validation_message=>"dates must be in the form 1999-01-01, 1999-01, or 1999"},
+  #       {:fieldname=>"mean",
+  #        :data=>" 0.1",
+  #        :validation_result=>:ignored,
+  #        :validation_message=>"This column will be ignored."}
+  #     ],
+  #     [
+  #       {:fieldname=>"date",
+  #        :data=>"1066-13-5",
+  #        :validation_result=>:fatal_error,
+  #        :validation_message=>"dates must be in the form 1999-01-01, 1999-01, or 1999"},
+  #       {:fieldname=>"mean",
+  #        :data=>"   0.1",
+  #        :validation_result=>:ignored,
+  #        :validation_message=>"This column will be ignored."}
+  #     ]
+  #   ]
+  # 
   attr :validated_data
+
+  # Once initialized by +check_header_list+, this is Hash object containing a
+  # summary of validation results.  One key, +:field_list_errors+, contains
+  # information about all the errors having to do with the header list.  This
+  # key is added and its value is set in +check_header_list+.  In addition, the
+  # data validation process of method +validate_csv_data+ adds a key for each
+  # type of error found, and the value of each such key consists of a list of
+  # row numbers where the corresponding error was found.
+  # ==== Example
+  #   {:field_list_errors=>["You must have a yield column in your CSV file."],
+  #    :unacceptable_date_format=>[1, 2, 3]}
   attr :validation_summary
+
   # A list of warnings.  Set by +check_header_list+ and used by the
   # +display_csv_file+ template.  This list is either empty or is a string
   # listing all columns specified in the upload file's header line that are not
   # recognized as significant.
   attr :csv_warnings
-  # Set by +check_header_list+ and used by the +dispaly_csv_file+ template, both
+
+  # Set by +validate_csv_data+ and used by the +display_csv_file+ template, both
   # directly (to determine if forward wizard links should be shown) and via the
   # +make_validation_summary+ helper (to determine if an error summary should be
   # displayed).
   attr :file_has_fatal_errors
-  # Set by +validate_csv_data+ and used by the +dispaly_csv_file+ template (via
+
+  # Set by +validate_csv_data+ and used by the +display_csv_file+ template (via
   # the +make_validation_summary+ helper) to display the number of errors found.
   attr :total_error_count
+
   # Set by +validate_csv_data+ and used by the +make_validation_summary+ helper
   # to determine if a section detailing field list errors should be displayed.
   attr :field_list_error_count
+
   # Set by +validate_csv_data+ and used by the +make_validation_summary+ helper
   # to determine if a section detailing data value errors should be displayed.
   attr :data_value_error_count
+
+
 
   # Instantiates an object representing the data in the file +uploaded_io+ (if
   # provided) or in the file at <tt>session[:csvpath]</tt> (if uploaded_io was
@@ -83,11 +141,10 @@ class BulkUploadDataSet
 
   end
 
-  # sets:
-  #     @csv_warnings: a List of warning messages
-  #     @validation_summary: a Hash containing the validation results;
-  #         this method sets only the portion related to field list
-  #         errors.
+  # Checks the heading of the uploaded file and sets the attributes
+  # +csv_warnings+ and +validation_summary+.  (This method sets only the portion
+  # of +validation_summary+ related to field list errors.)  Used by the
+  # +display_csv_file+ action.
   def check_header_list
 
     @validation_summary = {}
@@ -554,20 +611,35 @@ class BulkUploadDataSet
   # whole.
   INTERACTIVE_COLUMNS = %w{site species treatment access_level cultivar date}
 
+  # Returns true if there are column values missing from the upload file that
+  # must therefor be specified interactively.  Used by the +display_csv_file+
+  # and +confirm_data+ templates to determine whether the
+  # +choose_global_data_values+ step should be included in the Wizard sequence.
+  # the +choose_global_data_values+ template.
   def need_interactively_specified_data
     !missing_interactively_specified_fields.empty?
   end
 
+  # Return a list of column values that need to be specified globally for the
+  # dataset as a whole because they are missing from the upload file.
   def missing_interactively_specified_fields
     missing_columns = INTERACTIVE_COLUMNS - @headers
   end
 
+  # Returns true if the upload file contains no citation information and no
+  # citation has be selected for the session.  Used by the +display_csv_file+
+  # template to determine whether to display a link to the citation selection
+  # page.
   def need_citation_selection
     !@headers.include?("citation_author") && # only need to check one of citation_author, citation_year, and citation_title
       !@headers.include?("citation_doi") &&
       @session['citation'].nil?
   end
 
+  # Returns the list of Sites used by the data set, or the Site specified
+  # globally if site information was not included in the upload file.  Raises a
+  # RuntimeError no match is found for some site in the data set.  Used by the
+  # +confirm_data+ action.
   def get_upload_sites
     @data.rewind
 
@@ -595,6 +667,10 @@ class BulkUploadDataSet
     upload_sites
   end
 
+  # Returns the list of Species used by the data set, or the Species specified
+  # globally if site information was not included in the upload file.  Raises a
+  # RuntimeError no match is found for some site in the data set.  Used by the
+  # +confirm_data+ action and as a helper method for +get_upload_cultivars+.
   def get_upload_species
     @data.rewind
 
@@ -622,6 +698,10 @@ class BulkUploadDataSet
     upload_species
   end
 
+  # Returns the list of Cultivars used by the data set, or the Cultivar
+  # specified globally if site information was not included in the upload file.
+  # Raises a RuntimeError no match is found for some site in the data set.  Used
+  # by the +confirm_data+ action.
   def get_upload_cultivars
     @data.rewind
 
@@ -658,6 +738,10 @@ class BulkUploadDataSet
     upload_cultivars
   end
 
+  # Returns the list of Citations used by the data set, or the Citation specified
+  # globally if site information was not included in the upload file.  Raises a
+  # RuntimeError no match is found for some site in the data set.  Used by the
+  # +confirm_data+ action.
   def get_upload_citations
     @data.rewind
 
@@ -671,6 +755,10 @@ class BulkUploadDataSet
     upload_citations
   end
 
+  # Returns the list of Treatments used by the data set, or the Treatment
+  # specified globally if site information was not included in the upload file.
+  # Raises a RuntimeError no match is found for some site in the data set.  Used
+  # by the +confirm_data+ action.
   def get_upload_treatments
     @data.rewind
 
@@ -700,7 +788,7 @@ class BulkUploadDataSet
 
   # Uses the global data values specified interactively by the user to
   # convert @data to an Array of Hashes suitable for inserting into
-  # the traits table.
+  # the traits table.  Used by the +insert_data+ action.
   def get_insertion_data
     # Get interactively-specified values, or set to empty hash if nil:
     interactively_specified_values = @session["global_values"] || {}
