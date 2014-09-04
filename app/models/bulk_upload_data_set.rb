@@ -152,27 +152,50 @@ class BulkUploadDataSet
     @csv_warnings = []
 
     # Check for required yields field
-    if !@headers.include?('yield')
-      @validation_summary[:field_list_errors] << "You must have a yield column in your CSV file."
-      # instead of the line above, mark this as a yield upload
-    #else
-      # mark this as a trait upload
+    if @headers.include?('yield')
+      # mark this as a yield upload
+      @is_yield_data = true
+    else
+      @is_yield_data = false
     end
 
     #get list of acceptable trait variable names
+    acceptable_traits = TraitCovariateAssociation.all.collect { |a| a.trait_variable.name }
     #find set intersection with list of column headers
-    #if this is a yield upload
-      #if intersection is non-empty
-        #issue an error about traits not being allowed for yield uploads
-    #else (trait upload)
-      #if intersection is empty
-        #issue an error that there is no trait value column
-      #else (ok: check for required covariates)
-        #get a list of required covariates
-        #find the set difference of [required covariates list - column heading list]
-        #if this is non-empty
-          #issue an error about some required covariates being missing
+    traits_in_heading = @headers & acceptable_traits
 
+    relevant_associations = TraitCovariateAssociation.all.keep_if { |a| @headers.include?(a.trait_variable.name) }
+
+    traits_in_heading = relevant_associations.collect { |a| a.trait_variable.name }.uniq
+    required_covariates = relevant_associations.select { |a| a.required }.collect { |a| a.covariate_variable }.uniq
+    allowed_covariates = relevant_associations.collect { |a| a.covariate_variable.name }.uniq
+
+    #if this is a yield upload
+    if @is_yield_data
+      #if intersection is non-empty
+      if !traits_in_heading.empty?
+        #issue an error about traits not being allowed for yield uploads
+        @validation_summary[:field_list_errors] << 'If you have a "yield" column, you can not also have column names matching recognized trait variable names.'
+      end
+    #else (consider it a trait upload)
+    else
+      #if intersection is empty
+      if traits_in_heading.empty?
+        #issue an error that there is no trait value column
+        @validation_summary[:field_list_errors] << 'In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'
+      #else (ok: check for required covariates)
+      else
+        #get a list of required covariates
+        required_covariate_names = required_covariates.collect { |c| c.name }
+        #find the set difference of [required covariates list - column heading list]
+        covariate_names_not_in_heading = required_covariate_names - @headers
+        #if this is non-empty
+        if !covariate_names_not_in_heading.empty?
+          #issue an error about some required covariates being missing
+          @validation_summary[:field_list_errors] << "These required covariate variable names are not in your heading: #{covariate_names_not_in_heading.join(', ')}"
+        end
+      end
+    end
 
     # Check for consistent stat information
     if @headers.include?('SE') && !@headers.include?('n')
@@ -202,7 +225,7 @@ class BulkUploadDataSet
 
     ignored_columns = []
     @headers.each do |field_name|
-      if !RECOGNIZED_COLUMNS.include? field_name
+      if !(RECOGNIZED_COLUMNS + traits_in_heading + allowed_covariates).include? field_name
         ignored_columns << field_name
       end
     end
