@@ -22,19 +22,191 @@ describe BulkUploadDataSet do
                                                          'fixtures',
                                                          'files',
                                                          'bulk_upload',
-                                                         'empty_heading.csv') })
+                                                         'bogus_heading.csv') })
       }
       
-      it "should complain there is no yield column" do
+      it "we should get a complaint that there is no yield column" do
         dataset.check_header_list
         assert(dataset.validation_summary[:field_list_errors].include?("You must have a yield column in your CSV file."))
       end
       
-      it "should warn that it will ignore column 'bogus'" do
+      it "we should get a warning that it will ignore column 'bogus'" do
         dataset.check_header_list
         assert_equal(dataset.csv_warnings, ["These columns will be ignored:<br>bogus"])
       end
 
+    end
+
+    context "Given a file with an 'n' column but no 'SE' column" do
+     let (:dataset) {
+        BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                         'fixtures',
+                                                         'files',
+                                                         'bulk_upload',
+                                                         'n_without_SE.csv') })
+      }
+      specify "we should get an error message" do
+        dataset.check_header_list
+        expect(dataset.validation_summary[:field_list_errors]).to eq(['If you have an "n" column, you must have an "SE" column as well.'])
+      end
+    end
+
+    context "Given a file with an 'SE' column but no 'n' column" do
+     let (:dataset) {
+        BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                         'fixtures',
+                                                         'files',
+                                                         'bulk_upload',
+                                                         'SE_without_n.csv') })
+      }
+      specify "we should get an error message" do
+        dataset.check_header_list
+        expect(dataset.validation_summary[:field_list_errors]).to eq(['If you have an "SE" column, you must have an "n" column as well.'])
+      end
+    end
+
+    context "Given a file with a 'citation_doi' column" do
+
+      let (:error_array) {
+        ['If you include a "citation_doi" column, then you must not include columns for "citation_author", "citation_title", or "citation_year."']
+      }
+
+      specify "we should get an error if there is also a 'citation_author' column" do
+        dataset =
+          BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                           'fixtures',
+                                                           'files',
+                                                           'bulk_upload',
+                                                           'citation_doi_and_author.csv') })
+        
+        dataset.check_header_list
+        expect(dataset.validation_summary[:field_list_errors]).to eq(error_array)
+      end
+
+      specify "we should get an error if there is also a 'citation_year' column" do
+        dataset =
+          BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                           'fixtures',
+                                                           'files',
+                                                           'bulk_upload',
+                                                           'citation_doi_and_year.csv') })
+        
+        dataset.check_header_list
+        expect(dataset.validation_summary[:field_list_errors]).to eq(error_array)
+      end
+
+      specify "we should get an error if there is also a 'citation_title' column" do
+        dataset =
+          BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                           'fixtures',
+                                                           'files',
+                                                           'bulk_upload',
+                                                           'citation_doi_and_title.csv') })
+        
+        dataset.check_header_list
+        expect(dataset.validation_summary[:field_list_errors]).to eq(error_array)
+      end
+
+    end
+
+    context "Given a file with a 'citation_author' column" do
+      let (:error_array) {
+        ['If you include a "citation_author" column, then you must also include columns for "citation_title" and "citation_year."']
+      }
+      specify "we should get an error if there is no 'citation_year' column" do
+        dataset =
+          BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                           'fixtures',
+                                                           'files',
+                                                           'bulk_upload',
+                                                           'citation_author_without_year.csv') })
+        dataset.check_header_list
+        expect(dataset.validation_summary[:field_list_errors]).to eq(error_array)
+      end
+
+      specify "we should get an error if there is no 'citation_title' column" do
+        dataset =
+          BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                           'fixtures',
+                                                           'files',
+                                                           'bulk_upload',
+                                                           'citation_author_without_title.csv') })
+        dataset.check_header_list
+        expect(dataset.validation_summary[:field_list_errors]).to eq(error_array)
+      end
+
+    end
+    
+    context "Given a file with a 'citation_title' column" do
+      specify "we should get an error if there is no 'citation_author' column" do
+        dataset =
+          BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                           'fixtures',
+                                                           'files',
+                                                           'bulk_upload',
+                                                           'citation_title_without_author.csv') })
+        dataset.check_header_list
+        expect(dataset.validation_summary[:field_list_errors]).to eq(['If you include a "citation_title" column, then you must also include columns for "citation_author" and "citation_year."'])
+      end
+    end
+    
+    context "Given a file with a 'citation_year' column" do
+      specify "we should get an error if there is no 'citation_author' or 'citation_title' column" do
+        dataset =
+          BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                           'fixtures',
+                                                           'files',
+                                                           'bulk_upload',
+                                                           'citation_year_only.csv') })
+        dataset.check_header_list
+        expect(dataset.validation_summary[:field_list_errors]).to eq(['If you include a "citation_year" column, then you must also include columns for "citation_title" and "citation_author."'])
+      end
+    end
+
+    context "Given a file with a 'citation_doi' column and no other citation columns" do
+      dataset =
+        BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                         'fixtures',
+                                                         'files',
+                                                         'bulk_upload',
+                                                         'citation_doi_only.csv') })
+      specify "the session should have no 'citation_id_list' key set before checking the heading" do
+        expect(dataset.instance_variable_get(:@session)[:citation_id_list]).to be_nil
+      end
+      
+      specify "the session should have a 'citation_id_list' key set after checking the heading" do
+        dataset.check_header_list
+        expect(dataset.instance_variable_get(:@session)[:citation_id_list]).to eq([])
+      end
+    end
+        
+
+    context "Given a file with a citation author, year, and title columns but no 'citation_doi' column" do
+      specify "the session should have a 'citation_id_list' key set after checking the heading" do
+        dataset =
+          BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                           'fixtures',
+                                                           'files',
+                                                           'bulk_upload',
+                                                           'citation_author_year_and_title_only.csv') })
+        dataset.check_header_list
+        expect(dataset.instance_variable_get(:@session)[:citation_id_list]).to eq([])
+      end
+    end
+        
+
+    
+    context "Given a file with a 'cultivar' column" do
+      specify "we should get an error if there is no 'species' column" do
+        dataset =
+          BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                           'fixtures',
+                                                           'files',
+                                                           'bulk_upload',
+                                                           'cultivar_without_species.csv') })
+        dataset.check_header_list
+        expect(dataset.validation_summary[:field_list_errors]).to eq(['If you have a "cultivar" column, you must have a "species" column as well.'])
+      end
     end
 
   end
@@ -42,7 +214,7 @@ describe BulkUploadDataSet do
 
 
   context "Given a valid yields data file" do
-
+    
     let (:dataset) {
       BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
                                                        'fixtures',
