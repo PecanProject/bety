@@ -1,0 +1,4 @@
+SLA_requirements:
+  trait_variable_id: '15'
+  covariate_variable_id: '80'
+  required: t

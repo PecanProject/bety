@@ -30,3 +30,36 @@ test_variable3:
   name: "Test Var 2"
   max: "20"
   min: "0"
+
+SLA:
+  id: '15'
+  description: Specific Leaf Area
+  units: m2 kg-1
+  notes: 
+  created_at: 
+  updated_at: '2014-09-03 19:13:59.938174'
+  name: SLA
+  max: '130'
+  min: '0.1'
+  standard_name: 
+  standard_units: 
+  label: 
+  type:
+
+canopy_layer:  
+  id: '80'
+  description: "location in canopy as a percentage of the distance from the lowest
+    leaf to the highest leaf; 0 is the bottom of the canopy, 1 is the top, canopy_layer
+    = height of observation / (max leaf height - min leaf height)"
+  units: percent
+  notes: 
+  created_at: 
+  updated_at: '2011-06-06 14:40:42'
+  name: canopy_layer
+  max: '100'
+  min: '0'
+  standard_name: 
+  standard_units: 
+  label: 
+  type: 
+

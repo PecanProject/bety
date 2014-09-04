@@ -26,10 +26,8 @@ describe BulkUploadDataSet do
       }
       
       it "we should get a complaint that there is no yield column and no acceptable trait variable column" do
-        pending "Writing code to check header lists for trait upload files" do
-          dataset.check_header_list
-          assert(dataset.validation_summary[:field_list_errors].include?('In you CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'))
-        end
+        dataset.check_header_list
+        assert(dataset.validation_summary[:field_list_errors].include?('In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'))
       end
       
       it "we should get a warning that it will ignore column 'bogus'" do
@@ -50,18 +48,14 @@ describe BulkUploadDataSet do
       }
       
       it "should be marked as a yield upload file" do
-        pending "Writing code to check header lists for trait upload files" do
-          dataset.check_header_list
-          expect(dataset.yield_data?).to be_true
-        end
+        dataset.check_header_list
+        expect(dataset.yield_data?).to be_true
       end
 
     end
 
     context "Checks of trait-related heading requirements" do
       
-      before { pending "Writing code to check header lists for trait upload files" }
-
       context "A file having a recognized trait variable name as a header but no 'yield' heading" do
 
         let (:dataset) {
@@ -71,6 +65,11 @@ describe BulkUploadDataSet do
                                                            'bulk_upload',
                                                            'sample_traits.csv') })
         }
+
+        it "should not produce any errors" do
+          dataset.check_header_list
+          expect(dataset.validation_summary[:field_list_errors]).to eq([])
+        end
 
         it "should be marked as a trait upload file" do
           dataset.check_header_list
@@ -103,12 +102,12 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
-                                                           'missing_required_covariate_heading.csv') })
+                                                           'missing_required_covariate.csv') })
         }
 
         it "should produce an error message" do
           dataset.check_header_list
-          expect(dataset.validation_summary[:field_list_errors]).to eq(['You are missing a required covariate for one of the trait variables contained in you data'])
+          expect(dataset.validation_summary[:field_list_errors][0]).to match(/These required covariate variable names are not in your heading: .*/)
         end
 
       end

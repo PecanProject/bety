@@ -141,6 +141,14 @@ class BulkUploadDataSet
 
   end
 
+  def yield_data?
+    @is_yield_data
+  end
+
+  def trait_data?
+    @is_trait_data
+  end
+
   # Checks the heading of the uploaded file and sets the attributes
   # +csv_warnings+ and +validation_summary+.  (This method sets only the portion
   # of +validation_summary+ related to field list errors.)  Used by the
@@ -164,7 +172,7 @@ class BulkUploadDataSet
     #find set intersection with list of column headers
     traits_in_heading = @headers & acceptable_traits
 
-    relevant_associations = TraitCovariateAssociation.all.keep_if { |a| @headers.include?(a.trait_variable.name) }
+    relevant_associations = TraitCovariateAssociation.all.select { |a| @headers.include?(a.trait_variable.name) }
 
     traits_in_heading = relevant_associations.collect { |a| a.trait_variable.name }.uniq
     required_covariates = relevant_associations.select { |a| a.required }.collect { |a| a.covariate_variable }.uniq
@@ -193,6 +201,8 @@ class BulkUploadDataSet
         if !covariate_names_not_in_heading.empty?
           #issue an error about some required covariates being missing
           @validation_summary[:field_list_errors] << "These required covariate variable names are not in your heading: #{covariate_names_not_in_heading.join(', ')}"
+        else
+          @is_trait_data = true
         end
       end
     end
