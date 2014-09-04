@@ -25,9 +25,11 @@ describe BulkUploadDataSet do
                                                          'bogus_heading.csv') })
       }
       
-      it "we should get a complaint that there is no yield column" do
-        dataset.check_header_list
-        assert(dataset.validation_summary[:field_list_errors].include?("You must have a yield column in your CSV file."))
+      it "we should get a complaint that there is no yield column and no acceptable trait variable column" do
+        pending "Writing code to check header lists for trait upload files" do
+          dataset.check_header_list
+          assert(dataset.validation_summary[:field_list_errors].include?('In you CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'))
+        end
       end
       
       it "we should get a warning that it will ignore column 'bogus'" do
@@ -36,6 +38,82 @@ describe BulkUploadDataSet do
       end
 
     end
+    
+    context "A file with a 'yield' heading" do
+
+      let (:dataset) {
+        BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                         'fixtures',
+                                                         'files',
+                                                         'bulk_upload',
+                                                         'sample_yields.csv') })
+      }
+      
+      it "should be marked as a yield upload file" do
+        pending "Writing code to check header lists for trait upload files" do
+          dataset.check_header_list
+          expect(dataset.yield_data?).to be_true
+        end
+      end
+
+    end
+
+    context "Checks of trait-related heading requirements" do
+      
+      before { pending "Writing code to check header lists for trait upload files" }
+
+      context "A file having a recognized trait variable name as a header but no 'yield' heading" do
+
+        let (:dataset) {
+          BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                           'fixtures',
+                                                           'files',
+                                                           'bulk_upload',
+                                                           'sample_traits.csv') })
+        }
+
+        it "should be marked as a trait upload file" do
+          dataset.check_header_list
+          expect(dataset.trait_data?).to be_true
+        end
+
+      end
+
+      context "A file with both a recognized trait variable name as a header and a 'yield' heading" do
+
+        let (:dataset) {
+          BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                           'fixtures',
+                                                           'files',
+                                                           'bulk_upload',
+                                                           'ambiguous_data_file.csv') })
+        }
+
+        it "should produce an error message" do
+          dataset.check_header_list
+          expect(dataset.validation_summary[:field_list_errors]).to eq(['If you have a "yield" column, you can not also have column names matching recognized trait variable names.'])
+        end
+
+      end
+
+      context "A file with a recognized trait variable name as a heading that has no heading for one of its required covariates" do
+
+        let (:dataset) {
+          BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                           'fixtures',
+                                                           'files',
+                                                           'bulk_upload',
+                                                           'missing_required_covariate_heading.csv') })
+        }
+
+        it "should produce an error message" do
+          dataset.check_header_list
+          expect(dataset.validation_summary[:field_list_errors]).to eq(['You are missing a required covariate for one of the trait variables contained in you data'])
+        end
+
+      end
+
+    end      
 
     context "Given a file with an 'n' column but no 'SE' column" do
      let (:dataset) {
