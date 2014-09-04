@@ -154,7 +154,25 @@ class BulkUploadDataSet
     # Check for required yields field
     if !@headers.include?('yield')
       @validation_summary[:field_list_errors] << "You must have a yield column in your CSV file."
+      # instead of the line above, mark this as a yield upload
+    #else
+      # mark this as a trait upload
     end
+
+    #get list of acceptable trait variable names
+    #find set intersection with list of column headers
+    #if this is a yield upload
+      #if intersection is non-empty
+        #issue an error about traits not being allowed for yield uploads
+    #else (trait upload)
+      #if intersection is empty
+        #issue an error that there is no trait value column
+      #else (ok: check for required covariates)
+        #get a list of required covariates
+        #find the set difference of [required covariates list - column heading list]
+        #if this is non-empty
+          #issue an error about some required covariates being missing
+
 
     # Check for consistent stat information
     if @headers.include?('SE') && !@headers.include?('n')
