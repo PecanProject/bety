@@ -21,7 +21,7 @@ class UseCenterPointForLatLon < ActiveRecord::Migration
                           species.commonname,
                           species.genus,
                           species.id AS species_id,
-                          traits.cultivar_id, 
+                          traits.cultivar_id,
                           citations.author AS author,
                           citations.year AS citation_year,
                           treatments.name AS treatment,
@@ -37,10 +37,10 @@ class UseCenterPointForLatLon < ActiveRecord::Migration
                           traits.statname,
                           traits.stat,
                           traits.notes,
-                          traits.access_level, 
-                          traits.checked, 
-                          users.login, 
-                          users.name, 
+                          traits.access_level,
+                          traits.checked,
+                          users.login,
+                          users.name,
                           users.email
                   FROM
                                     traits
@@ -168,7 +168,7 @@ class UseCenterPointForLatLon < ActiveRecord::Migration
                           species.commonname,
                           species.genus,
                           species.id AS species_id,
-                          traits.cultivar_id, 
+                          traits.cultivar_id,
                           citations.author AS author,
                           citations.year AS citation_year,
                           treatments.name AS treatment,
@@ -184,10 +184,10 @@ class UseCenterPointForLatLon < ActiveRecord::Migration
                           traits.statname,
                           traits.stat,
                           traits.notes,
-                          traits.access_level, 
-                          traits.checked, 
-                          users.login, 
-                          users.name, 
+                          traits.access_level,
+                          traits.checked,
+                          users.login,
+                          users.name,
                           users.email
                   FROM
                                     traits
@@ -246,7 +246,7 @@ class UseCenterPointForLatLon < ActiveRecord::Migration
                           LEFT JOIN variables ON variables.name = 'Ayield'
                           LEFT JOIN users ON yields.user_id = users.id
       }
-      
+
       execute %{
           CREATE VIEW traits_and_yields_view_private AS
                   SELECT * FROM traitsview_private
