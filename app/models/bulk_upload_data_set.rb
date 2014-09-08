@@ -542,10 +542,51 @@ class BulkUploadDataSet
 
           # accept anything for now
 
-        else
+        else # either a trait or covariate variable name or will be ignored
 
-          column[:validation_result] = :ignored
-          column[:validation_message] = "This column will be ignored."
+          get_trait_and_covariate_info
+
+          if (@traits_in_heading + @allowed_covariates).include? column[:fieldname]
+            column[:validation_result] = :valid # reset below if we find otherwise
+
+            begin
+              value = Float(column[:data])
+
+              v = Variable.find_by_name(column[:fieldname])
+
+              if !v.min.nil? and value < v.min.to_f
+                column[:validation_result] = :fatal_error
+                column[:validation_message] = "The value of the #{v.name} trait must be at least #{v.min}."
+                if @validation_summary.has_key? :out_of_range_value
+                  @validation_summary[:out_of_range_value] << row_number
+                else
+                  @validation_summary[:out_of_range_value] = [ row_number ]
+                end
+              end
+
+              if !v.max.nil? and value > v.max.to_f
+                column[:validation_result] = :fatal_error
+                column[:validation_message] = "The value of the #{v.name} trait must be at most #{v.max}."
+                if @validation_summary.has_key? :out_of_range_value
+                  @validation_summary[:out_of_range_value] << row_number
+                else
+                  @validation_summary[:out_of_range_value] = [ row_number ]
+                end
+              end
+
+            rescue ArgumentError => e
+              column[:validation_result] = :fatal_error
+              column[:validation_message] = e.message
+              if @validation_summary.has_key? :unparsable_number
+                @validation_summary[:unparsable_number] << row_number
+              else
+                @validation_summary[:unparsable_number] = [ row_number ]
+              end
+            end
+          else
+            column[:validation_result] = :ignored
+            column[:validation_message] = "This column will be ignored."
+          end
 
         end # case
 
