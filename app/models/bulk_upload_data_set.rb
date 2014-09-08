@@ -544,9 +544,10 @@ class BulkUploadDataSet
 
         else # either a trait or covariate variable name or will be ignored
 
-          get_trait_and_covariate_info
-
-          if (@traits_in_heading + @allowed_covariates).include? column[:fieldname]
+          if trait_data?
+            get_trait_and_covariate_info
+          end
+          if trait_data? && (@traits_in_heading + @allowed_covariates).include?(column[:fieldname])
             column[:validation_result] = :valid # reset below if we find otherwise
 
             begin
