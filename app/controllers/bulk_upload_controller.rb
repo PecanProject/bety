@@ -208,43 +208,22 @@ class BulkUploadController < ApplicationController
   def insert_data
     @data_set = BulkUploadDataSet.new(session)
 
-    begin
-      insertion_data = @data_set.get_insertion_data
-    rescue => e
-      flash[:error] = e.message
-      logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
-      redirect_to(:back)
-      return
-    end
-    
-    errors = nil
-    begin
-      Yield.transaction do
-        insertion_data.each do |row|
-          Yield.create!(row)
-        end
-      end
-    rescue => e
-      errors = e.message
-      logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
-    end
+    @data_set.insert_data
 
     respond_to do |format|
       format.html {
-        if errors
-          flash[:error] = errors
-          redirect_to(:back)
-        else
-          flash[:success] = "Data was successfully uploaded."
-          redirect_to(action: "start_upload")
-        end
+        flash[:success] = "Data was successfully uploaded."
+        redirect_to(action: "start_upload")
       }
     end
-  end
     
-
-
-
+  rescue => e
+    flash[:error] = e.message
+    logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
+    redirect_to(:back)
+    return
+  end
+  
 ################################################################################
   private
 

@@ -860,96 +860,14 @@ class BulkUploadDataSet
     upload_treatments
   end
 
-  # Uses the global data values specified interactively by the user to
-  # convert @data to an Array of Hashes suitable for inserting into
-  # the traits table.  Used by the +insert_data+ action.
-  def get_insertion_data
-    # Get interactively-specified values, or set to empty hash if nil:
-    interactively_specified_values = @session["global_values"] || {}
+  def insert_data
+    insertion_data = get_insertion_data
 
-    # Double-check that all form fields are were non-empty:
-    interactively_specified_values.keep_if do |key, value|
-      !(value.empty? || value.nil?)
+    Yield.transaction do
+      insertion_data.each do |row|
+        Yield.create!(row)
+      end
     end
-
-    # For each foreign-key column, look up the value to use and add
-    # it to the hash:
-    validation_errors = []
-    
-    # error_list is an "out" parameter
-    global_values = lookup_and_add_ids({ input_hash: interactively_specified_values, error_list: validation_errors })
-
-    if validation_errors.size > 0
-      raise validation_errors.join("<br>").html_safe
-    end
-
-    # For bulk uploads, "checked" should always be set to zero:
-    global_values.merge!({
-        "checked" => 0,
-        "user_id" => @session[:user_id]
-    })
-
-    if !@headers.include?("citation_author") && !@headers.include?("citation_doi")
-      # if we get here, the citation id must be in the session
-      global_values["citation_id"] = @session["citation"]
-    end
-                  
-    @mapped_data = Array.new
-    @data.each do |csv_row|
-      csv_row_as_hash = csv_row.to_hash
-
-      # Don't allow id values to be specified in CSV file:
-      csv_row_as_hash.keep_if do |key, value|
-        !(key =~ /_id/)
-      end
-
-      # error_list is anonymous here since we don't need to use it: we've already validated the per-row data
-      id_values = lookup_and_add_ids({ input_hash: csv_row_as_hash, error_list: [] })
-
-      csv_row_as_hash.merge!(id_values)
-
-      # Merge the global interactively-specified values into this row:
-      csv_row_as_hash.merge!(global_values)
-
-      Rails.logger.debug("csv_row_as_hash = #{csv_row_as_hash.inspect}")
-      # apply rounding to the yield
-      rounded_yield = number_with_precision(csv_row_as_hash["yield"].to_f, precision: @session["rounding"]["yields"].to_i, significant: true)
-
-      # In the yields table, the yield is stored in the "mean" column:
-      csv_row_as_hash["mean"] = rounded_yield
-
-      if csv_row_as_hash.has_key?("SE")
-        # apply rounding to the standard error
-        rounded_se = number_with_precision(csv_row_as_hash["SE"].to_f, precision: @session["rounding"]["SE"].to_i, significant: true)
-
-        # In the yields table, the standard error is stored in the "stat" column:
-        csv_row_as_hash["stat"] = rounded_se
-        # The statname should be set to "SE":
-        csv_row_as_hash["statname"] = "SE"
-      end
-
-=begin
-      if csv_row_as_hash["mean"]
-        precision = mapping["rounding"]["mean"].to_i
-        csv_row_as_hash["mean"] = sprintf("%.#{precision}f", csv_row_as_hash["mean"].to_f.round(precision))
-      end
-      if csv_row_as_hash["stat"]
-        precision = mapping["rounding"]["stat"].to_i
-        csv_row_as_hash["stat"] = sprintf("%.#{precision}f", csv_row_as_hash["stat"].to_f.round(precision))
-      end
-=end
-
-      # eliminate extraneous data from CSV row
-      yield_columns = Yield.columns.collect { |column| column.name }
-      csv_row_as_hash.keep_if do |key, value|
-        yield_columns.include?(key)
-      end
-
-      @mapped_data << csv_row_as_hash
-
-    end
-
-    @mapped_data
   end
 
 ####################################################################################################################################
@@ -1135,6 +1053,98 @@ class BulkUploadDataSet
 
     specified_values.merge!(id_values)
 
+  end
+
+  # Uses the global data values specified interactively by the user to
+  # convert @data to an Array of Hashes suitable for inserting into
+  # the traits table.  Used by the +insert_data+ action.
+  def get_insertion_data
+    # Get interactively-specified values, or set to empty hash if nil:
+    interactively_specified_values = @session["global_values"] || {}
+
+    # Double-check that all form fields are were non-empty:
+    interactively_specified_values.keep_if do |key, value|
+      !(value.empty? || value.nil?)
+    end
+
+    # For each foreign-key column, look up the value to use and add
+    # it to the hash:
+    validation_errors = []
+    
+    # error_list is an "out" parameter
+    global_values = lookup_and_add_ids({ input_hash: interactively_specified_values, error_list: validation_errors })
+
+    if validation_errors.size > 0
+      raise validation_errors.join("<br>").html_safe
+    end
+
+    # For bulk uploads, "checked" should always be set to zero:
+    global_values.merge!({
+        "checked" => 0,
+        "user_id" => @session[:user_id]
+    })
+
+    if !@headers.include?("citation_author") && !@headers.include?("citation_doi")
+      # if we get here, the citation id must be in the session
+      global_values["citation_id"] = @session["citation"]
+    end
+                  
+    @mapped_data = Array.new
+    @data.each do |csv_row|
+      csv_row_as_hash = csv_row.to_hash
+
+      # Don't allow id values to be specified in CSV file:
+      csv_row_as_hash.keep_if do |key, value|
+        !(key =~ /_id/)
+      end
+
+      # error_list is anonymous here since we don't need to use it: we've already validated the per-row data
+      id_values = lookup_and_add_ids({ input_hash: csv_row_as_hash, error_list: [] })
+
+      csv_row_as_hash.merge!(id_values)
+
+      # Merge the global interactively-specified values into this row:
+      csv_row_as_hash.merge!(global_values)
+
+      Rails.logger.debug("csv_row_as_hash = #{csv_row_as_hash.inspect}")
+      # apply rounding to the yield
+      rounded_yield = number_with_precision(csv_row_as_hash["yield"].to_f, precision: @session["rounding"]["yields"].to_i, significant: true)
+
+      # In the yields table, the yield is stored in the "mean" column:
+      csv_row_as_hash["mean"] = rounded_yield
+
+      if csv_row_as_hash.has_key?("SE")
+        # apply rounding to the standard error
+        rounded_se = number_with_precision(csv_row_as_hash["SE"].to_f, precision: @session["rounding"]["SE"].to_i, significant: true)
+
+        # In the yields table, the standard error is stored in the "stat" column:
+        csv_row_as_hash["stat"] = rounded_se
+        # The statname should be set to "SE":
+        csv_row_as_hash["statname"] = "SE"
+      end
+
+=begin
+      if csv_row_as_hash["mean"]
+        precision = mapping["rounding"]["mean"].to_i
+        csv_row_as_hash["mean"] = sprintf("%.#{precision}f", csv_row_as_hash["mean"].to_f.round(precision))
+      end
+      if csv_row_as_hash["stat"]
+        precision = mapping["rounding"]["stat"].to_i
+        csv_row_as_hash["stat"] = sprintf("%.#{precision}f", csv_row_as_hash["stat"].to_f.round(precision))
+      end
+=end
+
+      # eliminate extraneous data from CSV row
+      yield_columns = Yield.columns.collect { |column| column.name }
+      csv_row_as_hash.keep_if do |key, value|
+        yield_columns.include?(key)
+      end
+
+      @mapped_data << csv_row_as_hash
+
+    end
+
+    @mapped_data
   end
 
 end
