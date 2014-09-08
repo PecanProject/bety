@@ -1,5 +1,7 @@
 module BulkUploadHelper
   ERROR_MESSAGE_MAP = {
+    out_of_range_value: "Out-of-range variable value",
+    unparsable_number: "Variable value can't be parsed as a number",
     negative_yield: "Negative value for yield",
     unparsable_yield: "Yield value can't be parsed as a number",
     unresolvable_citation_reference: "Unresolvable citation reference",
