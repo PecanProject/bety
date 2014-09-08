@@ -60,7 +60,7 @@ class BulkUploadDataSet
   #        :validation_message=>"This column will be ignored."}
   #     ]
   #   ]
-  # 
+  #
   attr :validated_data
 
   # Once initialized by +check_header_list+, this is Hash object containing a
@@ -115,7 +115,7 @@ class BulkUploadDataSet
   # raised and if the file is not parsable as CSV, a
   # <tt>CSV::MalformedCSVError</tt> is raised.  Otherwise, the +headers+
   # attribute is set and the file's data is stored internally.
-  # 
+  #
   # [session] The Hash object representing the current session, an instance of
   #           ActionDispatch::Session::AbstractStore::SessionHash.
   # [uploaded_io] An object representing the uploaded file, an instance of
@@ -139,6 +139,14 @@ class BulkUploadDataSet
     # Get data out of the file and store in @headers and @data:
     read_data
 
+    # Mark whether this is yield data:
+    if @headers.include?('yield')
+      # mark this as a yield upload
+      @is_yield_data = true
+    else
+      @is_yield_data = false
+    end
+
   end
 
   def yield_data?
@@ -146,7 +154,7 @@ class BulkUploadDataSet
   end
 
   def trait_data?
-    @is_trait_data
+    !@is_yield_data
   end
 
   # Checks the heading of the uploaded file and sets the attributes
@@ -159,18 +167,10 @@ class BulkUploadDataSet
     @validation_summary[:field_list_errors] = []
     @csv_warnings = []
 
-    # Check for required yields field
-    if @headers.include?('yield')
-      # mark this as a yield upload
-      @is_yield_data = true
-    else
-      @is_yield_data = false
-    end
-
     # This sets @traits_in_heading, @required_covariates, and @allowed_covariates.
     get_trait_and_covariate_info
 
-    if @is_yield_data
+    if yield_data?
       if !@traits_in_heading.empty?
         @validation_summary[:field_list_errors] << 'If you have a "yield" column, you can not also have column names matching recognized trait variable names.'
       end
@@ -182,8 +182,6 @@ class BulkUploadDataSet
         covariate_names_not_in_heading = required_covariate_names - @headers
         if !covariate_names_not_in_heading.empty?
           @validation_summary[:field_list_errors] << "These required covariate variable names are not in your heading: #{covariate_names_not_in_heading.join(', ')}"
-        else
-          @is_trait_data = true
         end
       end
     end
@@ -224,7 +222,7 @@ class BulkUploadDataSet
     if ignored_columns.size > 0
       @csv_warnings << "These columns will be ignored:<br>#{ignored_columns.join('<br>')}"
     end
-    
+
   end
 
   # A list of recognized column heading strings.
@@ -367,7 +365,7 @@ class BulkUploadDataSet
         when "citation_title"
 
           # accept anything for now
-          
+
         when "site"
 
           if site_id = existing_site?(column[:data])
@@ -428,7 +426,7 @@ class BulkUploadDataSet
           if species_index.nil?
             column[:validation_result] = :fatal_error
             column[:validation_message] = "Cultivar can't be looked up when species is not in the field list."
-          else            
+          else
             species_id = existing_species?(row[species_index][:data])
             if species_id.nil?
               column[:validation_result] = :fatal_error
@@ -473,7 +471,7 @@ class BulkUploadDataSet
               date = Date.new(year.to_i, month.to_i, day.to_i)
 
               # Date is valid; but make sure the range is reasonable
-              
+
               if date > Date.today
                 # Don't allow date to be in the future
                 column[:validation_result] = :fatal_error
@@ -596,7 +594,7 @@ class BulkUploadDataSet
       # validation of citation information by author, year, and date
       # happens outside the case statement since it involves
       # multiple columns
-      
+
       if @headers.include?('citation_author') && @headers.include?('citation_year') && @headers.include?('citation_title')
 
         author_index = row.index { |h| h[:fieldname] == "citation_author" }
@@ -668,7 +666,7 @@ class BulkUploadDataSet
               @validation_summary[:inconsistent_treatment_reference] = [ row_number ]
             end
           end
-        end  
+        end
 
       end
     end # @validated_data.each
@@ -863,13 +861,32 @@ class BulkUploadDataSet
   def insert_data
     insertion_data = get_insertion_data
 
-    Yield.transaction do
-      insertion_data.each do |row|
-        Yield.create!(row)
+    if yield_data?
+      Yield.transaction do
+        insertion_data.each do |row|
+          Yield.create!(row)
+        end
       end
-    end
+    else
+      result = Trait.transaction do
+        current_entity_id = nil
+        insertion_data.each do |row|
+          if row[:new_entity]
+            e = Entity.create!
+            current_entity_id = e.id
+            row.delete(:new_entity)
+          end
+          row[:entity_id] = current_entity_id
+          covariate_info = row.delete("covariate_info")
+          t = Trait.create!(row)
+          covariate_info.each do |covariate_attributes|
+            covariate_attributes[:trait_id] = t.id
+            Covariate.create!(covariate_attributes)
+          end # covariate_info.each
+        end # insertion_data.each
+      end # Trait.transaction
+    end # if-else
   end
-
 ####################################################################################################################################
   private
 
@@ -884,16 +901,16 @@ class BulkUploadDataSet
   end
 
 
-  # Uses: 
+  # Uses:
   #     @session[:csvpath], the path to the uploaded CSV file
   # Sets:
   #     @headers, the CSV file's header info
   #     @data, a CSV object corresponding to the uploaded file,
   #         positioned to read the first line after the header line
   def read_data
-    
+
     csvpath = @session[:csvpath]
-    
+
     csv = CSV.open(csvpath, { headers: true })
 
     if @unvalidated
@@ -924,12 +941,68 @@ class BulkUploadDataSet
   # upload file, find relevant information about the trait and covariate
   # variables for this upload.
   def get_trait_and_covariate_info
+
+    # A list of TraitCovariateAssociation objects corresponding to trait
+    # variable names occurring in the heading.
     relevant_associations = TraitCovariateAssociation.all.select { |a| @headers.include?(a.trait_variable.name) }
 
+    # A list of recognized trait variable names in the heading; a trait variable
+    # is recognized only if it is in the trait_covariate_associations table
     @traits_in_heading = relevant_associations.collect { |a| a.trait_variable.name }.uniq
+
+    # A list of Variable objects corresponding to all the covariates required by
+    # the set of trait variables in the data set.
     @required_covariates = relevant_associations.select { |a| a.required }.collect { |a| a.covariate_variable }.uniq
+
+    # A list of variable names corresponding to all the covariates associated
+    # with some member of the set of trait variables in the data set--in other
+    # words, these are names of variables that will be recognized should they
+    # occur in the heading.
     @allowed_covariates = relevant_associations.collect { |a| a.covariate_variable.name }.uniq
   end
+
+  # Using the trait_covariate_associations table and the column headings in the
+  # upload file, construct a hash whose keys are the the ids of the trait
+  # variables occurring in the data set and whose values give the variable name
+  # and the associated covariates that occur in the data set.
+  #
+  # ===Example
+  # {
+  #   15: {
+  #         name: "SLA",
+  #         covariates: {
+  #                       "canopy_layer" => 80
+  #                     }
+  #       },
+  #    4: {
+  #         name: "Vcmax",
+  #         covariates: {
+  #                       "canopy_layer" => 80,
+  #                       "leafT" => 81
+  #                     }
+  #       }
+  # }
+  def get_variables_in_heading
+
+    # A list of TraitCovariateAssociation objects corresponding to trait
+    # variable names occurring in the heading.
+    relevant_associations = TraitCovariateAssociation.all.select { |a| @headers.include?(a.trait_variable.name) }
+    trait_variables = relevant_associations.collect { |a| a.trait_variable }.uniq
+
+    @heading_variable_info = {}
+
+    trait_variables.each do |tv|
+      covariates = relevant_associations.select { |a| a.trait_variable_id = tv.id && @headers.include?(a.covariate_variable.name) }.collect { |a| a.covariate_variable }
+      covariate_hash = {}
+      covariates.each do |c|
+        covariate_hash[c.name] = c.id
+      end
+      @heading_variable_info[tv.id] = { name: tv.name, covariates: covariate_hash }
+    end
+
+  end
+
+
 
   # TO-DO: Decide if these methods should fail if we don't find a
   # *unique* referent in the database (at least until we add
@@ -973,7 +1046,7 @@ class BulkUploadDataSet
   def lookup_and_add_ids(args)
     specified_values = args[:input_hash]
     validation_errors = args[:error_list]
-    
+
     id_values = {}
 
     # Put cultivar after species because we need the specie_id to look
@@ -987,7 +1060,7 @@ class BulkUploadDataSet
         next
       end
       value = specified_values[key]
-      
+
       case key
       when "site"
         site = existing_site?(value)
@@ -1070,7 +1143,7 @@ class BulkUploadDataSet
     # For each foreign-key column, look up the value to use and add
     # it to the hash:
     validation_errors = []
-    
+
     # error_list is an "out" parameter
     global_values = lookup_and_add_ids({ input_hash: interactively_specified_values, error_list: validation_errors })
 
@@ -1088,8 +1161,11 @@ class BulkUploadDataSet
       # if we get here, the citation id must be in the session
       global_values["citation_id"] = @session["citation"]
     end
-                  
+
     @mapped_data = Array.new
+    if trait_data?
+      get_variables_in_heading # sets @heading_variable_info
+    end
     @data.each do |csv_row|
       csv_row_as_hash = csv_row.to_hash
 
@@ -1106,13 +1182,6 @@ class BulkUploadDataSet
       # Merge the global interactively-specified values into this row:
       csv_row_as_hash.merge!(global_values)
 
-      Rails.logger.debug("csv_row_as_hash = #{csv_row_as_hash.inspect}")
-      # apply rounding to the yield
-      rounded_yield = number_with_precision(csv_row_as_hash["yield"].to_f, precision: @session["rounding"]["yields"].to_i, significant: true)
-
-      # In the yields table, the yield is stored in the "mean" column:
-      csv_row_as_hash["mean"] = rounded_yield
-
       if csv_row_as_hash.has_key?("SE")
         # apply rounding to the standard error
         rounded_se = number_with_precision(csv_row_as_hash["SE"].to_f, precision: @session["rounding"]["SE"].to_i, significant: true)
@@ -1123,28 +1192,72 @@ class BulkUploadDataSet
         csv_row_as_hash["statname"] = "SE"
       end
 
-=begin
-      if csv_row_as_hash["mean"]
-        precision = mapping["rounding"]["mean"].to_i
-        csv_row_as_hash["mean"] = sprintf("%.#{precision}f", csv_row_as_hash["mean"].to_f.round(precision))
-      end
-      if csv_row_as_hash["stat"]
-        precision = mapping["rounding"]["stat"].to_i
-        csv_row_as_hash["stat"] = sprintf("%.#{precision}f", csv_row_as_hash["stat"].to_f.round(precision))
-      end
-=end
-
-      # eliminate extraneous data from CSV row
       yield_columns = Yield.columns.collect { |column| column.name }
-      csv_row_as_hash.keep_if do |key, value|
-        yield_columns.include?(key)
-      end
+      trait_columns = Trait.columns.collect { |column| column.name }
 
-      @mapped_data << csv_row_as_hash
+      if yield_data?
+        add_yield_specific_attributes(csv_row_as_hash)
+        # eliminate extraneous data from CSV row
+        csv_row_as_hash.keep_if do |key, value|
+          yield_columns.include?(key)
+        end
+        @mapped_data << csv_row_as_hash
+      elsif trait_data?
+        new_entity = true
+        @heading_variable_info.each_key do |trait_variable_id|
+
+          # we have to be more careful than for yields since we may use the row for multiple trait rows
+          row_data = csv_row_as_hash.clone
+
+          if new_entity
+            row_data[:new_entity] = true
+            new_entity = false
+          end
+
+          add_trait_specific_attributes(row_data, trait_variable_id)
+
+          row_data.keep_if do |key, value|
+            trait_columns.include?(key) || key == "covariate_info" || key == :new_entity
+          end
+
+          @mapped_data << row_data
+        end
+      end
 
     end
 
     @mapped_data
   end
+
+  def add_yield_specific_attributes(csv_row_as_hash)
+
+    # apply rounding to the yield
+    rounded_yield = number_with_precision(csv_row_as_hash["yield"].to_f, precision: @session["rounding"]["yields"].to_i, significant: true)
+
+    # In the yields table, the yield is stored in the "mean" column:
+    csv_row_as_hash["mean"] = rounded_yield
+
+  end
+
+  def add_trait_specific_attributes(row_data, trait_variable_id)
+
+    associated_trait_info = @heading_variable_info[trait_variable_id]
+
+    row_data["variable_id"] = trait_variable_id
+
+    # store covariate information in a temporary key:
+    row_data["covariate_info"] = []
+    # for each covariate belonging to this trait variable
+    associated_trait_info[:covariates].each do |name, id|
+      row_data["covariate_info"] << { variable_id: id, level: row_data[name].to_f }
+    end
+    # apply rounding to the trait variable value
+    rounded_mean = number_with_precision(row_data[associated_trait_info[:name]].to_f, precision: @session["rounding"]["yields"].to_i, significant: true)
+
+    # In the yields table, the yield is stored in the "mean" column:
+    row_data["mean"] = rounded_mean
+
+  end
+
 
 end
