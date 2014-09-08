@@ -178,28 +178,17 @@ class BulkUploadDataSet
     required_covariates = relevant_associations.select { |a| a.required }.collect { |a| a.covariate_variable }.uniq
     allowed_covariates = relevant_associations.collect { |a| a.covariate_variable.name }.uniq
 
-    #if this is a yield upload
     if @is_yield_data
-      #if intersection is non-empty
       if !traits_in_heading.empty?
-        #issue an error about traits not being allowed for yield uploads
         @validation_summary[:field_list_errors] << 'If you have a "yield" column, you can not also have column names matching recognized trait variable names.'
       end
-    #else (consider it a trait upload)
     else
-      #if intersection is empty
       if traits_in_heading.empty?
-        #issue an error that there is no trait value column
         @validation_summary[:field_list_errors] << 'In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'
-      #else (ok: check for required covariates)
       else
-        #get a list of required covariates
         required_covariate_names = required_covariates.collect { |c| c.name }
-        #find the set difference of [required covariates list - column heading list]
         covariate_names_not_in_heading = required_covariate_names - @headers
-        #if this is non-empty
         if !covariate_names_not_in_heading.empty?
-          #issue an error about some required covariates being missing
           @validation_summary[:field_list_errors] << "These required covariate variable names are not in your heading: #{covariate_names_not_in_heading.join(', ')}"
         else
           @is_trait_data = true
