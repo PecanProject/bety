@@ -167,26 +167,18 @@ class BulkUploadDataSet
       @is_yield_data = false
     end
 
-    #get list of acceptable trait variable names
-    acceptable_traits = TraitCovariateAssociation.all.collect { |a| a.trait_variable.name }
-    #find set intersection with list of column headers
-    traits_in_heading = @headers & acceptable_traits
-
-    relevant_associations = TraitCovariateAssociation.all.select { |a| @headers.include?(a.trait_variable.name) }
-
-    traits_in_heading = relevant_associations.collect { |a| a.trait_variable.name }.uniq
-    required_covariates = relevant_associations.select { |a| a.required }.collect { |a| a.covariate_variable }.uniq
-    allowed_covariates = relevant_associations.collect { |a| a.covariate_variable.name }.uniq
+    # This sets @traits_in_heading, @required_covariates, and @allowed_covariates.
+    get_trait_and_covariate_info
 
     if @is_yield_data
-      if !traits_in_heading.empty?
+      if !@traits_in_heading.empty?
         @validation_summary[:field_list_errors] << 'If you have a "yield" column, you can not also have column names matching recognized trait variable names.'
       end
     else
-      if traits_in_heading.empty?
+      if @traits_in_heading.empty?
         @validation_summary[:field_list_errors] << 'In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'
       else
-        required_covariate_names = required_covariates.collect { |c| c.name }
+        required_covariate_names = @required_covariates.collect { |c| c.name }
         covariate_names_not_in_heading = required_covariate_names - @headers
         if !covariate_names_not_in_heading.empty?
           @validation_summary[:field_list_errors] << "These required covariate variable names are not in your heading: #{covariate_names_not_in_heading.join(', ')}"
@@ -224,7 +216,7 @@ class BulkUploadDataSet
 
     ignored_columns = []
     @headers.each do |field_name|
-      if !(RECOGNIZED_COLUMNS + traits_in_heading + allowed_covariates).include? field_name
+      if !(RECOGNIZED_COLUMNS + @traits_in_heading + @allowed_covariates).include? field_name
         ignored_columns << field_name
       end
     end
@@ -968,6 +960,16 @@ class BulkUploadDataSet
 
   end
 
+  # Using the trait_covariate_associations table and the column headings in the
+  # upload file, find relevant information about the trait and covariate
+  # variables for this upload.
+  def get_trait_and_covariate_info
+    relevant_associations = TraitCovariateAssociation.all.select { |a| @headers.include?(a.trait_variable.name) }
+
+    @traits_in_heading = relevant_associations.collect { |a| a.trait_variable.name }.uniq
+    @required_covariates = relevant_associations.select { |a| a.required }.collect { |a| a.covariate_variable }.uniq
+    @allowed_covariates = relevant_associations.collect { |a| a.covariate_variable.name }.uniq
+  end
 
   # TO-DO: Decide if these methods should fail if we don't find a
   # *unique* referent in the database (at least until we add
