@@ -856,7 +856,7 @@ CREATE TABLE models (
 CREATE TABLE modeltypes (
     id bigint NOT NULL,
     name character varying(255) NOT NULL,
-    user_id integer,
+    user_id bigint,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
@@ -873,7 +873,7 @@ CREATE TABLE modeltypes_formats (
     format_id bigint NOT NULL,
     required boolean DEFAULT false,
     input boolean DEFAULT true,
-    user_id integer,
+    user_id bigint,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
@@ -1782,8 +1782,8 @@ CREATE VIEW traitsview_private AS
     traits.treatment_id,
     sites.sitename,
     sites.city,
-    st_y(sites.geometry) AS lat,
-    st_x(sites.geometry) AS lon,
+    st_y(st_centroid(sites.geometry)) AS lat,
+    st_x(st_centroid(sites.geometry)) AS lon,
     species.scientificname,
     species.commonname,
     species.genus,
@@ -1967,8 +1967,8 @@ CREATE VIEW yieldsview_private AS
     yields.treatment_id,
     sites.sitename,
     sites.city,
-    st_y(sites.geometry) AS lat,
-    st_x(sites.geometry) AS lon,
+    st_y(st_centroid(sites.geometry)) AS lat,
+    st_x(st_centroid(sites.geometry)) AS lon,
     species.scientificname,
     species.commonname,
     species.genus,
