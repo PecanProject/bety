@@ -1429,6 +1429,17 @@ CREATE TABLE species (
 
 
 --
+-- Name: trait_covariate_associations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE trait_covariate_associations (
+    trait_variable_id bigint NOT NULL,
+    covariate_variable_id bigint NOT NULL,
+    required boolean
+);
+
+
+--
 -- Name: traits_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2914,6 +2925,13 @@ CREATE INDEX index_yields_on_treatment_id ON yields USING btree (treatment_id);
 --
 
 CREATE INDEX index_yields_on_user_id ON yields USING btree (user_id);
+
+
+--
+-- Name: trait_covariate_associations_uniqueness; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX trait_covariate_associations_uniqueness ON trait_covariate_associations USING btree (trait_variable_id, covariate_variable_id);
 
 
 --
