@@ -1232,7 +1232,7 @@ class BulkUploadDataSet
   def add_yield_specific_attributes(csv_row_as_hash)
 
     # apply rounding to the yield
-    rounded_yield = number_with_precision(csv_row_as_hash["yield"].to_f, precision: @session["rounding"]["yields"].to_i, significant: true)
+    rounded_yield = number_with_precision(csv_row_as_hash["yield"].to_f, precision: @session["rounding"]["vars"].to_i, significant: true)
 
     # In the yields table, the yield is stored in the "mean" column:
     csv_row_as_hash["mean"] = rounded_yield
@@ -1252,7 +1252,7 @@ class BulkUploadDataSet
       row_data["covariate_info"] << { variable_id: id, level: row_data[name].to_f }
     end
     # apply rounding to the trait variable value
-    rounded_mean = number_with_precision(row_data[associated_trait_info[:name]].to_f, precision: @session["rounding"]["yields"].to_i, significant: true)
+    rounded_mean = number_with_precision(row_data[associated_trait_info[:name]].to_f, precision: @session["rounding"]["vars"].to_i, significant: true)
 
     # In the yields table, the yield is stored in the "mean" column:
     row_data["mean"] = rounded_mean

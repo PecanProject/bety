@@ -22,9 +22,9 @@
       <ul>
         <li>
           <%= label_tag "rounding_yields" do %>
-          Round yields to
-          <%= select_tag("rounding[yields]",
-              options_for_select([['1', 1], ['2', 2], ['3', 3], ['4', 4]], '2')
+          Round all variable values to
+          <%= select_tag("rounding[vars]",
+              options_for_select([['1', 1], ['2', 2], ['3', 3], ['4', 4]], '3')
               ) %> significant digits
           <% end %>
         </li>
