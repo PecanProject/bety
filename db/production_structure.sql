@@ -845,8 +845,76 @@ CREATE TABLE models (
     parent_id bigint,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
-    model_type character varying(255)
+    modeltype_id bigint NOT NULL
 );
+
+
+--
+-- Name: modeltypes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE modeltypes (
+    id bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    user_id bigint,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: modeltypes_formats; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE modeltypes_formats (
+    id bigint NOT NULL,
+    modeltype_id bigint NOT NULL,
+    tag character varying(255) NOT NULL,
+    format_id bigint NOT NULL,
+    required boolean DEFAULT false,
+    input boolean DEFAULT true,
+    user_id bigint,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: modeltypes_formats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE modeltypes_formats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: modeltypes_formats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE modeltypes_formats_id_seq OWNED BY modeltypes_formats.id;
+
+
+--
+-- Name: modeltypes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE modeltypes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: modeltypes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE modeltypes_id_seq OWNED BY modeltypes.id;
 
 
 --
@@ -873,7 +941,7 @@ CREATE TABLE pfts (
     name character varying(255),
     parent_id bigint,
     pft_type character varying(255) DEFAULT 'plant'::character varying,
-    model_type character varying(255)
+    modeltype_id bigint NOT NULL
 );
 
 
@@ -1361,6 +1429,17 @@ CREATE TABLE species (
 
 
 --
+-- Name: trait_covariate_associations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE trait_covariate_associations (
+    trait_variable_id bigint NOT NULL,
+    covariate_variable_id bigint NOT NULL,
+    required boolean
+);
+
+
+--
 -- Name: traits_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1714,8 +1793,8 @@ CREATE VIEW traitsview_private AS
     traits.treatment_id,
     sites.sitename,
     sites.city,
-    st_y(sites.geometry) AS lat,
-    st_x(sites.geometry) AS lon,
+    st_y(st_centroid(sites.geometry)) AS lat,
+    st_x(st_centroid(sites.geometry)) AS lon,
     species.scientificname,
     species.commonname,
     species.genus,
@@ -1899,8 +1978,8 @@ CREATE VIEW yieldsview_private AS
     yields.treatment_id,
     sites.sitename,
     sites.city,
-    st_y(sites.geometry) AS lat,
-    st_x(sites.geometry) AS lon,
+    st_y(st_centroid(sites.geometry)) AS lat,
+    st_x(st_centroid(sites.geometry)) AS lon,
     species.scientificname,
     species.commonname,
     species.genus,
@@ -2096,6 +2175,20 @@ ALTER TABLE ONLY current_posteriors ALTER COLUMN id SET DEFAULT nextval('current
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY modeltypes ALTER COLUMN id SET DEFAULT nextval('modeltypes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY modeltypes_formats ALTER COLUMN id SET DEFAULT nextval('modeltypes_formats_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY posterior_samples ALTER COLUMN id SET DEFAULT nextval('posterior_samples_id_seq'::regclass);
 
 
@@ -2248,6 +2341,22 @@ ALTER TABLE ONLY mimetypes
 
 ALTER TABLE ONLY models
     ADD CONSTRAINT models_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: modeltypes_formats_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY modeltypes_formats
+    ADD CONSTRAINT modeltypes_formats_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: modeltypes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY modeltypes
+    ADD CONSTRAINT modeltypes_pkey PRIMARY KEY (id);
 
 
 --
@@ -2588,6 +2697,27 @@ CREATE INDEX index_models_on_parent_id ON models USING btree (parent_id);
 
 
 --
+-- Name: index_modeltypes_formats_on_modeltype_id_and_tag; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_modeltypes_formats_on_modeltype_id_and_tag ON modeltypes_formats USING btree (modeltype_id, tag);
+
+
+--
+-- Name: index_modeltypes_formats_on_modeltype_id_format_id_input; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_modeltypes_formats_on_modeltype_id_format_id_input ON modeltypes_formats USING btree (modeltype_id, format_id, input);
+
+
+--
+-- Name: index_modeltypes_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_modeltypes_on_name ON modeltypes USING btree (name);
+
+
+--
 -- Name: index_pfts_priors_on_pft_id_and_prior_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2795,6 +2925,13 @@ CREATE INDEX index_yields_on_treatment_id ON yields USING btree (treatment_id);
 --
 
 CREATE INDEX index_yields_on_user_id ON yields USING btree (user_id);
+
+
+--
+-- Name: trait_covariate_associations_uniqueness; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX trait_covariate_associations_uniqueness ON trait_covariate_associations USING btree (trait_variable_id, covariate_variable_id);
 
 
 --

@@ -1,6 +1,9 @@
 BetyRails3::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  # These lines are a temporary hack to allow running Rails 3.0.18 under Ruby 2.0:
+  ActionController::Base.config.relative_url_root = ''
+
   # The test environment is used exclusively to run your application's
   # test suite. You never need to work with it otherwise. Remember that
   # your test database is "scratch space" for the test suite and is wiped

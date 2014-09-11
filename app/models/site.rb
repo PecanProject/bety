@@ -88,7 +88,7 @@ class Site < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
-  SEARCH_FIELDS = %w{ sites.sitename sites.city sites.state sites.country sites.lat sites.lon sites.espg }
+  SEARCH_FIELDS = %w{ sites.sitename sites.city sites.state sites.country }
 
   has_many :citation_sites, :class_name => "CitationsSites"
   has_many :citations, :through =>  :citation_sites
