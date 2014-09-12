@@ -29,6 +29,7 @@
 # of the session variable.
 class BulkUploadController < ApplicationController
 
+  before_filter :login_required 
   before_filter :record_stage
   before_filter :clear_session_data, only: :start_upload
 

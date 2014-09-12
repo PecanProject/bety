@@ -82,6 +82,7 @@ module AuthenticatedSystem
                                 "InputsVariablesController.ALL",
                                 "InputsController.ALL" ]
       create_requirement = ["ApplicationsController.ALL",
+                                "BulkUploadController.ALL",
                                 "CitationsController.new",
                                 "CitationsController.create",
                                 "CitationsController.edit",
