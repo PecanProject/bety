@@ -198,8 +198,10 @@
               </ul>
             </li>
 
+            <% if current_user != nil && current_user.page_access_level < 4 %>
             <li><%= link_to "Bulk Upload", controller: "bulk_upload", action: session[:bulk_upload_stage] || "start_upload" %></li>
-
+            <% end %>
+            
             <% if current_user != nil %>
               <li class="menu-login">                            
                 <%= link_to "Logout", logout_path %>
