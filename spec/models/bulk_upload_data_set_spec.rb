@@ -286,6 +286,27 @@ describe BulkUploadDataSet do
       end
     end
 
+    context "Given a file with valid headers that are not in canonical form" do
+      dataset =
+        BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                         'fixtures',
+                                                         'files',
+                                                         'bulk_upload',
+                                                         'non-canonical_headers.csv') })
+      specify "we should get no errors" do
+        pending "implementation of relaxed heading matching"
+        dataset.check_header_list
+        expect(dataset.validation_summary[:field_list_errors]).to eq([])
+      end
+
+      specify "we should not get warnings about ignored columns" do
+        pending "implementation of relaxed heading matching"
+        dataset.check_header_list
+        expect(dataset.csv_warnings.grep(/^These columns will be ignored:/)).to be_empty
+      end
+
+    end
+
   end
           
 
