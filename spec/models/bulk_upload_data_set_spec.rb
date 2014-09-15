@@ -294,13 +294,11 @@ describe BulkUploadDataSet do
                                                          'bulk_upload',
                                                          'non-canonical_headers.csv') })
       specify "we should get no errors" do
-        pending "implementation of relaxed heading matching"
         dataset.check_header_list
         expect(dataset.validation_summary[:field_list_errors]).to eq([])
       end
 
       specify "we should not get warnings about ignored columns" do
-        pending "implementation of relaxed heading matching"
         dataset.check_header_list
         expect(dataset.csv_warnings.grep(/^These columns will be ignored:/)).to be_empty
       end
