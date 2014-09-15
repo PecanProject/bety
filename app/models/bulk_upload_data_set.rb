@@ -929,12 +929,26 @@ class BulkUploadDataSet
     end
 
     csv.readline # need to read first line to get headers
-    @headers = csv.headers
+    @headers = normalize_headers(csv.headers)
     csv.rewind
 
     # store CSV object in instance variable
     @data = csv
 
+  end
+
+  def normalize_headers(headers)
+    headers.map!(&:strip)
+    headers.map! do |heading| 
+      if /SE/i.match heading
+        heading.upcase
+      elsif Regexp.new(RECOGNIZED_COLUMNS.join('|'), Regexp::IGNORECASE).match heading
+        heading.downcase
+      else
+        heading
+      end
+    end
+    headers
   end
 
   # Using the trait_covariate_associations table and the column headings in the
