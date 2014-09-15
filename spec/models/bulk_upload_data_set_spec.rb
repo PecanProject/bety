@@ -392,9 +392,9 @@ describe BulkUploadDataSet do
         @dataset = BulkUploadDataSet.new(@session)
         @dataset.check_header_list
         @dataset.validate_csv_data
-        @session.merge!({"rounding"=>{"yields"=>2}})
+        @session.merge!({"rounding"=>{"vars"=>2}})
         @dataset = BulkUploadDataSet.new(@session)
-        @insertion_data = @dataset.get_insertion_data
+        @insertion_data = @dataset.send("get_insertion_data")
         assert_not_nil @insertion_data, "Failed to get insertion data"
         @expected_data = {
           "access_level"=>"3",
@@ -417,9 +417,9 @@ describe BulkUploadDataSet do
         @dataset = BulkUploadDataSet.new(@session)
         @dataset.check_header_list
         @dataset.validate_csv_data
-        @session.merge!({"rounding"=>{"yields"=>2}})
+        @session.merge!({"rounding"=>{"vars"=>2}})
         @dataset = BulkUploadDataSet.new(@session)
-        @insertion_data = @dataset.get_insertion_data
+        @insertion_data = @dataset.send("get_insertion_data")
         @rounded_yield= @insertion_data[0]["mean"]
         assert_equal(@rounded_yield.to_f,5.9,"Rounded value does not match expected")
       end
