@@ -7,14 +7,14 @@ describe BulkUploadDataSet do
       Struct.new("Upload", :original_filename, :read)
       Struct::Upload.new("my_upload_file.csv", "yield\n5.1\n")
     }
-    
+
     it 'uploads' do
       buds = BulkUploadDataSet.new({}, upload_io)
     end
   end
 
   context "Check header validation works" do
-    
+
     context "Given a file with the heading 'bogus'" do
 
       let (:dataset) {
@@ -24,19 +24,19 @@ describe BulkUploadDataSet do
                                                          'bulk_upload',
                                                          'bogus_heading.csv') })
       }
-      
+
       it "we should get a complaint that there is no yield column and no acceptable trait variable column" do
         dataset.check_header_list
         assert(dataset.validation_summary[:field_list_errors].include?('In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'))
       end
-      
+
       it "we should get a warning that it will ignore column 'bogus'" do
         dataset.check_header_list
         assert_equal(dataset.csv_warnings, ["These columns will be ignored:<br>bogus"])
       end
 
     end
-    
+
     context "A file with a 'yield' heading" do
 
       let (:dataset) {
@@ -46,7 +46,7 @@ describe BulkUploadDataSet do
                                                          'bulk_upload',
                                                          'sample_yields.csv') })
       }
-      
+
       it "should be marked as a yield upload file" do
         dataset.check_header_list
         expect(dataset.yield_data?).to be_true
@@ -55,7 +55,7 @@ describe BulkUploadDataSet do
     end
 
     context "Checks of trait-related heading requirements" do
-      
+
       context "A file having a recognized trait variable name as a header but no 'yield' heading" do
 
         let (:dataset) {
@@ -112,7 +112,7 @@ describe BulkUploadDataSet do
 
       end
 
-    end      
+    end
 
     context "Given a file with an 'n' column but no 'SE' column" do
      let (:dataset) {
@@ -155,7 +155,7 @@ describe BulkUploadDataSet do
                                                            'files',
                                                            'bulk_upload',
                                                            'citation_doi_and_author.csv') })
-        
+
         dataset.check_header_list
         expect(dataset.validation_summary[:field_list_errors]).to eq(error_array)
       end
@@ -167,7 +167,7 @@ describe BulkUploadDataSet do
                                                            'files',
                                                            'bulk_upload',
                                                            'citation_doi_and_year.csv') })
-        
+
         dataset.check_header_list
         expect(dataset.validation_summary[:field_list_errors]).to eq(error_array)
       end
@@ -179,7 +179,7 @@ describe BulkUploadDataSet do
                                                            'files',
                                                            'bulk_upload',
                                                            'citation_doi_and_title.csv') })
-        
+
         dataset.check_header_list
         expect(dataset.validation_summary[:field_list_errors]).to eq(error_array)
       end
@@ -213,7 +213,7 @@ describe BulkUploadDataSet do
       end
 
     end
-    
+
     context "Given a file with a 'citation_title' column" do
       specify "we should get an error if there is no 'citation_author' column" do
         dataset =
@@ -226,7 +226,7 @@ describe BulkUploadDataSet do
         expect(dataset.validation_summary[:field_list_errors]).to eq(['If you include a "citation_title" column, then you must also include columns for "citation_author" and "citation_year."'])
       end
     end
-    
+
     context "Given a file with a 'citation_year' column" do
       specify "we should get an error if there is no 'citation_author' or 'citation_title' column" do
         dataset =
@@ -250,13 +250,13 @@ describe BulkUploadDataSet do
       specify "the session should have no 'citation_id_list' key set before checking the heading" do
         expect(dataset.instance_variable_get(:@session)[:citation_id_list]).to be_nil
       end
-      
+
       specify "the session should have a 'citation_id_list' key set after checking the heading" do
         dataset.check_header_list
         expect(dataset.instance_variable_get(:@session)[:citation_id_list]).to eq([])
       end
     end
-        
+
 
     context "Given a file with a citation author, year, and title columns but no 'citation_doi' column" do
       specify "the session should have a 'citation_id_list' key set after checking the heading" do
@@ -270,9 +270,9 @@ describe BulkUploadDataSet do
         expect(dataset.instance_variable_get(:@session)[:citation_id_list]).to eq([])
       end
     end
-        
 
-    
+
+
     context "Given a file with a 'cultivar' column" do
       specify "we should get an error if there is no 'species' column" do
         dataset =
@@ -306,11 +306,11 @@ describe BulkUploadDataSet do
     end
 
   end
-          
+
 
 
   context "Given a valid yields data file" do
-    
+
     let (:dataset) {
       BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
                                                        'fixtures',
@@ -444,6 +444,51 @@ describe BulkUploadDataSet do
       end
     end
 
+  end
+
+  context "Check fuzzy reference matching works" do
+    context "Given a data file where the case and whitespace of names and titles don't exactly match existing data" do
+
+      let (:dataset) {
+        BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                         'fixtures',
+                                                         'files',
+                                                         'bulk_upload',
+                                                         'fuzzily_matching_references.csv') })
+      }
+      let (:dataset_row) {
+        dataset.instance_variable_get(:@data).readlines[0]
+      }
+
+      specify "matching of species names is not overly strict" do
+        expect(dataset.send("existing_species?", dataset_row["species"])).not_to be_nil
+      end
+
+      specify "matching of site names is not overly strict" do
+        expect(dataset.send("existing_site?", dataset_row["site"])).not_to be_nil
+      end
+
+      specify "matching of treatment names is not overly strict" do
+        citation_id = dataset.send("existing_citation", dataset_row["citation_author"],
+                                   dataset_row["citation_year"], dataset_row["citation_title"]).id
+        expect(dataset.send("existing_treatment?",
+                            dataset_row["treatment"],
+                            citation_id
+                            )).not_to be_nil
+      end
+
+      specify "matching of citation titles is not overly strict" do
+        expect(dataset.send("existing_citation", dataset_row["citation_author"],
+                            dataset_row["citation_year"], dataset_row["citation_title"])).not_to be_nil
+      end
+
+      specify "matching of cultivar names is not overly strict" do
+        species_id = dataset.send("existing_species?", dataset_row["species"]).id
+        expect(dataset.send("existing_cultivar?", dataset_row["cultivar"],
+                            species_id)).not_to be_nil
+      end
+
+    end
   end
 
 end
