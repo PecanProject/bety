@@ -276,9 +276,9 @@ class BulkUploadDataSet
       row_number = i + 1
 
       # collect some data about the row as we do the validation
+      # TO-DO: rename citation_id
       citation_id = nil
-      site_id = nil
-      treatment_id = nil
+      matching_site = nil
 
       row.each do |column|
 
@@ -368,7 +368,7 @@ class BulkUploadDataSet
 
         when "site"
 
-          if site_id = existing_site?(column[:data])
+          if matching_site = existing_site?(column[:data])
             column[:validation_result] = :valid
           else
             column[:validation_result] = :fatal_error
@@ -636,8 +636,8 @@ class BulkUploadDataSet
 
         # If a valid site was specified in this row, ensure that it is
         # consistent with the citation.
-        if !site_id.nil?
-          if !citation.sites.include?(site_id)
+        if !matching_site.nil?
+          if !citation.sites.include?(matching_site)
             site_index = row.index { |h| h[:fieldname] == "site" }
 
             row[site_index][:validation_result] = :fatal_error
@@ -655,7 +655,7 @@ class BulkUploadDataSet
         treatment_index = row.index { |h| h[:fieldname] == "treatment" }
         if !treatment_index.nil?
           treatment = row[treatment_index][:data]
-          if citation.treatments.map {|t| t.name }.include?(treatment)
+          if existing_treatment?(treatment, citation.id)
             row[treatment_index][:validation_result] = :valid
           else
             row[treatment_index][:validation_result] = :fatal_error
@@ -1016,25 +1016,43 @@ class BulkUploadDataSet
 
   end
 
-
+  def normalize(str)
+    str.squish.downcase
+  end
 
   # TO-DO: Decide if these methods should fail if we don't find a
   # *unique* referent in the database (at least until we add
   # uniqueness constraints on the database).
 
+  def sql_columnref_to_normlized_columnref(col, preserve_case = false)
+    if !preserve_case
+      col = "LOWER(#{col})"
+    end
+    "REGEXP_REPLACE(TRIM(FROM #{col}), ' +', ' ')"
+  end
+
+  def existing?(model_class_or_relation, match_column_name, raw_value, table_entity_name)
+    matches = model_class_or_relation.where(["#{sql_columnref_to_normlized_columnref(match_column_name)} = :stored_value",
+                                             { stored_value: normalize(raw_value) }])
+    if matches.size > 1
+      raise "There is not a unique match for #{table_entity_name} #{normalize(raw_value)}"
+    elsif matches.size == 0
+      raise "There is no match for #{table_entity_name} #{normalize(raw_value)}"
+    end
+
+    return matches[0]
+  end
+
   def existing_species?(name)
-    s = Specie.find_by_scientificname(name)
-    return s
+    return existing?(Specie, "scientificname", name, "species")
   end
 
   def existing_site?(name)
-    s = Site.find_by_sitename(name)
-    return s
+    return existing?(Site, "sitename", name, "site")
   end
 
   def existing_treatment?(name, citation_id)
-    t = Citation.find(citation_id).treatments.find_by_name(name)
-    return t
+    existing?(Citation.find(citation_id).treatments, "name", name, "treatment")
   end
 
   def doi_of_existing_citation?(doi)
@@ -1043,15 +1061,14 @@ class BulkUploadDataSet
   end
 
   def existing_citation(author, year, title)
-    c = Citation.where("author = :author AND year = :year AND title LIKE :title_matcher",
-                       { author: author, year: year, title_matcher: "#{title}%" })
+    c = Citation.where("#{sql_columnref_to_normlized_columnref("author", true)} = :author " +
+                       "AND year = :year AND #{sql_columnref_to_normlized_columnref("title")} LIKE :title_matcher",
+                       { author: author.squish, year: year, title_matcher: "#{normalize(title)}%" })
     return c.first
   end
 
   def existing_cultivar?(name, species_id)
-    c = Cultivar.where("name = :name AND specie_id = :species_id",
-                       { name: name, species_id: species_id })
-    return c.first
+    existing?(Cultivar.where("specie_id = ?", species_id), "name", name, "cultivar")
   end
 
 
