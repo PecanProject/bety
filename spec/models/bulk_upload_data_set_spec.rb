@@ -446,8 +446,8 @@ describe BulkUploadDataSet do
 
   end
 
-  context "Check fuzzy reference matching works" do
-    context "Given a data file where the case and whitespace of names and titles don't exactly match existing data" do
+  context "Check fuzzy reference finders work" do
+    context "Given a row of a data file where the case and whitespace of names and titles don't exactly match existing data" do
 
       let (:dataset) {
         BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
@@ -486,6 +486,40 @@ describe BulkUploadDataSet do
         species_id = dataset.send("existing_species?", dataset_row["species"]).id
         expect(dataset.send("existing_cultivar?", dataset_row["cultivar"],
                             species_id)).not_to be_nil
+      end
+
+    end
+
+    context "Given validation results on a file where the case and whitespace of names and titles don't exactly match existing data" do
+      let (:validation_summary) {
+        dataset = BulkUploadDataSet.new({ csvpath: Rails.root.join('spec',
+                                                                   'fixtures',
+                                                                   'files',
+                                                                   'bulk_upload',
+                                                                   'fuzzily_matching_references.csv') })
+        dataset.check_header_list
+        dataset.validate_csv_data
+        dataset.validation_summary
+      }
+      
+      specify "should show no inconsistent species references" do
+        expect(validation_summary.keys.should_not include(:inconsistent_species_reference))
+      end
+
+      specify "should show no inconsistent site references" do
+        expect(validation_summary.keys.should_not include(:inconsistent_site_reference))
+      end
+
+      specify "should show no inconsistent treatment references" do
+        expect(validation_summary.keys.should_not include(:inconsistent_treatment_reference))
+      end
+
+      specify "should show no inconsistent citation references" do
+        expect(validation_summary.keys.should_not include(:inconsistent_citation_reference))
+      end
+
+      specify "should show no inconsistent cultivar references" do
+        expect(validation_summary.keys.should_not include(:inconsistent_cultivar_reference))
       end
 
     end
