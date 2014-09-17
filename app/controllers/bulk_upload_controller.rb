@@ -181,8 +181,11 @@ class BulkUploadController < ApplicationController
   def confirm_data
     if params["global_values"]
       session[:global_values] = params["global_values"]
+    end
+    if params["rounding"]
       session[:rounding] = params["rounding"]
     end
+
     @data_set = BulkUploadDataSet.new(session)
 
     begin
