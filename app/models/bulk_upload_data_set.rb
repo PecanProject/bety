@@ -1,3 +1,15 @@
+class UnresolvableReferenceException < StandardError
+end
+
+class NonUniquenessException < UnresolvableReferenceException
+end
+
+class MissingReferenceException < UnresolvableReferenceException
+end
+
+class InvalidCitationYearException < StandardError
+end
+
 class BulkUploadDataSet
   include ActionView::Helpers::NumberHelper # for rounding
 
@@ -314,9 +326,10 @@ class BulkUploadDataSet
 
         when "citation_doi"
 
-          if citation_id = doi_of_existing_citation?(column[:data])
+          begin
+            citation_id = doi_of_existing_citation?(column[:data])
             column[:validation_result] = :valid
-          else
+          rescue UnresolvableReferenceException
             column[:validation_result] = :fatal_error
             column[:validation_message] = "Not found in citations table"
             if @validation_summary.has_key? :unresolvable_citation_reference
@@ -368,9 +381,10 @@ class BulkUploadDataSet
 
         when "site"
 
-          if matching_site = existing_site?(column[:data])
+          begin
+            matching_site = existing_site?(column[:data])
             column[:validation_result] = :valid
-          else
+          rescue UnresolvableReferenceException
             column[:validation_result] = :fatal_error
             column[:validation_message] = "Not found in sites table"
             if @validation_summary.has_key? :unresolvable_site_reference
@@ -382,9 +396,10 @@ class BulkUploadDataSet
 
         when "species"
 
-          if existing_species?(column[:data])
+          begin
+            existing_species?(column[:data])
             column[:validation_result] = :valid
-          else
+          rescue UnresolvableReferenceException
             column[:validation_result] = :fatal_error
             column[:validation_message] = "Not found in species table"
             if @validation_summary.has_key? :unresolvable_species_reference
@@ -427,25 +442,28 @@ class BulkUploadDataSet
             column[:validation_result] = :fatal_error
             column[:validation_message] = "Cultivar can't be looked up when species is not in the field list."
           else
-            species_id = existing_species?(row[species_index][:data])
-            if species_id.nil?
+            begin
+              species_id = existing_species?(row[species_index][:data])
+            rescue UnresolvableReferenceException
               column[:validation_result] = :fatal_error
+              # TO-DO: Maybe change this message
               column[:validation_message] = "Cultivar can't be looked up when species is not in species table."
             else
-              if column[:data].strip.empty? || # cultivar is optional!
+              begin
+                column[:data].strip.empty? || # cultivar is optional!
                   existing_cultivar?(column[:data], species_id)
                 column[:validation_result] = :valid
-              else
+              rescue UnresolvableReferenceException
                 column[:validation_result] = :fatal_error
                 column[:validation_message] = "No cultivar for this species with this name found in cultivars table"
                 if @validation_summary.has_key? :unresolvable_cultivar_reference
                   @validation_summary[:unresolvable_cultivar_reference] << row_number
                 else
                   @validation_summary[:unresolvable_cultivar_reference] = [ row_number ]
-                end
-              end
-            end
-          end
+                end # if/else
+              end # begin/rescue
+            end # begin/rescue/else
+          end # if species_index.nil?/else
 
         when "date"
 
@@ -600,11 +618,12 @@ class BulkUploadDataSet
         author_index = row.index { |h| h[:fieldname] == "citation_author" }
         year_index = row.index { |h| h[:fieldname] == "citation_year" }
         title_index = row.index { |h| h[:fieldname] == "citation_title" }
-        if citation_id = existing_citation(row[author_index][:data], row[year_index][:data], row[title_index][:data])
+        begin
+          citation_id = existing_citation(row[author_index][:data], row[year_index][:data], row[title_index][:data])
           row[author_index][:validation_result] = :valid
           row[year_index][:validation_result] = :valid
           row[title_index][:validation_result] = :valid
-        else
+        rescue UnresolvableReferenceException, InvalidCitationYearException
           row[author_index][:validation_result] = :fatal_error
           row[year_index][:validation_result] = :fatal_error
           row[title_index][:validation_result] = :fatal_error
@@ -718,7 +737,7 @@ class BulkUploadDataSet
     site_names = []
     if @headers.include?("site")
       @data.each do |row|
-        site_names << row["site"]
+        site_names << normalize(row["site"])
       end
     else
       global_site = @session[:global_values][:site]
@@ -730,11 +749,7 @@ class BulkUploadDataSet
     distinct_site_names = site_names.uniq
     upload_sites = []
     distinct_site_names.each do |site_name|
-      site = Site.find_by_sitename(site_name)
-      if site.nil?
-        raise "Site #{site_name} is not in the database."
-      end
-      upload_sites << site
+      upload_sites <<  existing_site?(site_name)
     end
     upload_sites
   end
@@ -749,7 +764,7 @@ class BulkUploadDataSet
     species_names = []
     if @headers.include?("species")
       @data.each do |row|
-        species_names << row["species"]
+        species_names << normalize(row["species"])
       end
     else
       global_species = @session[:global_values][:species]
@@ -761,11 +776,7 @@ class BulkUploadDataSet
     distinct_species_names = species_names.uniq
     upload_species = []
     distinct_species_names.each do |species_name|
-      species = Specie.find_by_scientificname(species_name)
-      if species.nil?
-        raise "Species #{species_name} is not in the database."
-      end
-      upload_species << species
+      upload_species << existing_species?(species_name)
     end
     upload_species
   end
@@ -782,8 +793,8 @@ class BulkUploadDataSet
       @data.each do |row|
         cultivar_name = row["cultivar"]
         if !cultivar_name.nil? and !cultivar_name.strip.empty?
-          # We can do this since (for now at least) we require a species field if there is a cultivar field:
-          cultivars << { cultivar_name: row["cultivar"], species_name: row["species"] }
+          # We can assume there is a "species" column since (for now at least) we require a species field if there is a cultivar field.
+          cultivars << { cultivar_name: normalize(cultivar_name), species_name: normalize(row["species"]) }
         end
       end
     else
@@ -801,11 +812,9 @@ class BulkUploadDataSet
     distinct_cultivars = cultivars.uniq
     upload_cultivars = []
     distinct_cultivars.each do |cultivar_info|
-      cultivar = Cultivar.joins("JOIN species ON species.id = cultivars.specie_id").where("cultivars.name = :cultivar_name AND species.scientificname = :species_name", cultivar_info).first
-      if cultivar.nil?
-        raise "Cultivar #{cultivar_info[:cultivar_name]} associated with species #{cultivar_info[:species_name]} is not in the database."
-      end
-      upload_cultivars << { cultivar: cultivar, species_name: cultivar_info[:species_name] }
+      species = existing_species?(cultivar_info[:species_name])
+      cultivar = existing_cultivar?(cultivar_info[:cultivar_name], species.id)
+      upload_cultivars << { cultivar: cultivar, species_name: species.scientificname }
     end
     upload_cultivars
   end
@@ -834,26 +843,33 @@ class BulkUploadDataSet
   def get_upload_treatments
     @data.rewind
 
-    treatment_names = []
+    treatments = []
     if @headers.include?("treatment")
-      @data.each do |row|
-        treatment_names << row["treatment"]
+      if @headers.include?("citation_doi")
+        @data.each do |row|
+          treatments << { treatment_name: normalize(row["treatment"]), citation: doi_of_existing_citation?(row["citation_doi"]) }
+        end
+      elsif @headers.include?("citation_author")
+        @data.each do |row|
+          treatments << { treatment_name: normalize(row["treatment"]), citation: existing_citation(row["citation_author"], row["citation_year"], row["citation_title"]) }
+        end
+      else
+        @data.each do |row|
+          treatments << { treatment_name: normalize(row["treatment"]), citation: Citation.find(@session[:citation]) }
+        end
       end
     else
       global_treatment = @session[:global_values][:treatment]
       if global_treatment.empty?
         raise "Treatment name can't be blank"
       end
-      treatment_names << global_treatment
+      # TO-DO: this needs to be fixed
+      treatments << global_treatment
     end
-    distinct_treatment_names = treatment_names.uniq
+    distinct_treatments = treatments.uniq
     upload_treatments = []
-    distinct_treatment_names.each do |treatment_name|
-      treatment = Treatment.find_by_name(treatment_name)
-      if treatment.nil?
-        raise "Treatment #{treatment_name} is not in the database."
-      end
-      upload_treatments << treatment
+    distinct_treatments.each do |treatment|
+      upload_treatments << { treatment: existing_treatment?(treatment[:treatment_name], treatment[:citation].id), associated_citation: treatment[:citation] }
     end
     upload_treatments
   end
@@ -1035,9 +1051,9 @@ class BulkUploadDataSet
     matches = model_class_or_relation.where(["#{sql_columnref_to_normlized_columnref(match_column_name)} = :stored_value",
                                              { stored_value: normalize(raw_value) }])
     if matches.size > 1
-      raise "There is not a unique match for #{table_entity_name} #{normalize(raw_value)}"
+      raise NonUniquenessException
     elsif matches.size == 0
-      raise "There is no match for #{table_entity_name} #{normalize(raw_value)}"
+      raise MissingReferenceException
     end
 
     return matches[0]
@@ -1051,8 +1067,14 @@ class BulkUploadDataSet
     return existing?(Site, "sitename", name, "site")
   end
 
-  def existing_treatment?(name, citation_id)
-    existing?(Citation.find(citation_id).treatments, "name", name, "treatment")
+  def existing_treatment?(name, citation_id = nil)
+    if citation_id.nil?
+      # match against any treatment
+      existing?(Treatment, "name", name, "treatment")
+    else
+      # only match against treatments belonging to given citation
+      existing?(Citation.find(citation_id).treatments, "name", name, "treatment")
+    end
   end
 
   def doi_of_existing_citation?(doi)
@@ -1061,10 +1083,23 @@ class BulkUploadDataSet
   end
 
   def existing_citation(author, year, title)
+    begin
+      Integer(year)
+    rescue ArgumentError
+      raise InvalidCitationYearException
+    end
+
     c = Citation.where("#{sql_columnref_to_normlized_columnref("author", true)} = :author " +
                        "AND year = :year AND #{sql_columnref_to_normlized_columnref("title")} LIKE :title_matcher",
-                       { author: author.squish, year: year, title_matcher: "#{normalize(title)}%" })
-    return c.first
+                       { author: normalize(author), year: year, title_matcher: "#{normalize(title)}%" })
+
+    if c.size > 1
+      raise NonUniquenessException
+    elsif c.size == 0
+      raise MissingReferenceException
+    else
+      return c.first
+    end
   end
 
   def existing_cultivar?(name, species_id)
