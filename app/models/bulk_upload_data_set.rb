@@ -1089,7 +1089,7 @@ class BulkUploadDataSet
       raise InvalidCitationYearException
     end
 
-    c = Citation.where("#{sql_columnref_to_normlized_columnref("author", true)} = :author " +
+    c = Citation.where("#{sql_columnref_to_normlized_columnref("author")} = :author " +
                        "AND year = :year AND #{sql_columnref_to_normlized_columnref("title")} LIKE :title_matcher",
                        { author: normalize(author), year: year, title_matcher: "#{normalize(title)}%" })
 
