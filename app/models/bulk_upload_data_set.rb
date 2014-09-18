@@ -863,9 +863,14 @@ class BulkUploadDataSet
       if global_treatment.empty?
         raise "Treatment name can't be blank"
       end
-      # TO-DO: this needs to be fixed
-      treatments << global_treatment
+
+      citation_id_list = @session[:citation_id_list] || [ @session[:citation] ]
+      upload_citations = []
+      citation_id_list.each do |citation_id|
+        treatments << { treatment_name: global_treatment, citation: Citation.find_by_id(citation_id) }
+      end
     end
+
     distinct_treatments = treatments.uniq
     upload_treatments = []
     distinct_treatments.each do |treatment|
