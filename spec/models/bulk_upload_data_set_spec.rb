@@ -389,6 +389,9 @@ describe BulkUploadDataSet do
           end
           # get result returned by the function
           @get_result = dataset.send(function)
+          if function == "get_upload_treatments"
+            @get_result.map! { |item| item[:treatment] }
+          end
           assert_equal(@expected,@get_result,"Failed to #{function.gsub(/_/,' ')}")
         end
       end
