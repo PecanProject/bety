@@ -76,11 +76,11 @@
       <h2>Review these treatments and make sure they correspond to the treatments referenced by your data set:</h2>
       <table>
         <thead>
-          <tr><th>Treatment Name</th><th>Definition</th><th>Control?</th></tr>
+          <tr><th>Treatment Name</th><th>Definition</th><th>Control?</th><th>Associated Citation Author</th></tr>
         </thead>
         <tbody>
           <% @upload_treatments.each do |t| %>
-          <tr><td><%= t.name %></td><td><%= t.definition %></td><td><%= t.control %></td></tr>
+          <tr><td><%= t[:treatment].name %></td><td><%= t[:treatment].definition %></td><td><%= t[:treatment].control %></td><td><%= t[:associated_citation].author %></tr>
           <% end %>
         </tbody>
       </table>
