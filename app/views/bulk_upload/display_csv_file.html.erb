@@ -1,50 +1,55 @@
-<div id="process_container">
-  <div id="back"><%= link_to "<< Choose a different file to upload", start_upload_path %></div>
-  <div id="new">&nbsp;</div>
-  <div id="forward">
-    <% if @data_set.file_has_fatal_errors %>
-       &nbsp;
-    <% elsif @data_set.need_citation_selection %>
-       <%= link_to "Select a Citation >>", citations_path %>
-    <% elsif @data_set.need_interactively_specified_data %>
-       <%= link_to "Specify Dataset-wide values >>", choose_global_data_values_path %>
-    <% else %>
-       <%= link_to "Specify Amount of Rounding >>", choose_global_data_values_path %>
-    <% end %>
+<div class="content">
+  <div class="container unconstrained csv_display">
+
+    <div id="process_container">
+      <div id="back"><%= link_to "<< Choose a different file to upload", start_upload_path %></div>
+      <div id="new">&nbsp;</div>
+      <div id="forward">
+        <% if @data_set.file_has_fatal_errors %>
+           &nbsp;
+        <% elsif @data_set.need_citation_selection %>
+           <%= link_to "Select a Citation >>", citations_path %>
+        <% elsif @data_set.need_interactively_specified_data %>
+           <%= link_to "Specify Dataset-wide values >>", choose_global_data_values_path %>
+        <% else %>
+           <%= link_to "Specify Amount of Rounding >>", choose_global_data_values_path %>
+        <% end %>
+      </div>
+    </div>
+    <%= make_validation_summary %>
+    <%= make_warning_summary  %>
+    <table>
+      <caption>Uploaded file: <span style="font-size: larger; font-weight: bold"><%= File.basename(session[:csvpath]) %></span></caption>
+      <thead>
+        <tr>
+          <th>row number</th>
+          <% @data_set.headers.each do |header| %>
+          <th><%= header %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @data_set.validated_data.each_with_index do |row, i| %>
+        <% row_number = i + 1 %>
+        <tr>
+          <td style="background-color: lightblue"><%= row_number %><%= link_to "", {}, name: "row_#{row_number}" %></td>
+          <% row.each do |value| %>
+          <% color = nil
+             case value[:validation_result]
+             when :valid
+             color = "lightgreen"
+             when :fatal_error
+             color = "red"
+             when :ignored
+             color = "gray"
+             end %>
+          <td style="background-color: <%= color %>" title="<%= value[:validation_message] %>"><%= value[:data] %></td>
+          <% end %>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+
   </div>
 </div>
-<%= make_validation_summary %>
-<%= make_warning_summary  %>
-<table>
-  <caption>Uploaded file: <span style="font-size: larger; font-weight: bold"><%= File.basename(session[:csvpath]) %></span></caption>
-  <thead>
-    <tr>
-      <th>row number</th>
-      <% @data_set.headers.each do |header| %>
-      <th><%= header %></th>
-      <% end %>
-    </tr>
-  </thead>
-  <tbody>
-    <% @data_set.validated_data.each_with_index do |row, i| %>
-    <% row_number = i + 1 %>
-    <tr>
-      <td style="background-color: lightblue"><%= row_number %><%= link_to "", {}, name: "row_#{row_number}" %></td>
-      <% row.each do |value| %>
-      <% color = nil
-         case value[:validation_result]
-         when :valid
-         color = "lightgreen"
-         when :fatal_error
-         color = "red"
-         when :ignored
-         color = "gray"
-         end %>
-      <td style="background-color: <%= color %>" title="<%= value[:validation_message] %>"><%= value[:data] %></td>
-      <% end %>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
-
 
