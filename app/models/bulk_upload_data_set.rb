@@ -674,9 +674,10 @@ class BulkUploadDataSet
         treatment_index = row.index { |h| h[:fieldname] == "treatment" }
         if !treatment_index.nil?
           treatment = row[treatment_index][:data]
-          if existing_treatment?(treatment, citation.id)
+          begin
+            existing_treatment?(treatment, citation.id)
             row[treatment_index][:validation_result] = :valid
-          else
+          rescue UnresolvableReferenceException => e
             row[treatment_index][:validation_result] = :fatal_error
             row[treatment_index][:validation_message] = "Treatment is not consistent with citation"
             if @validation_summary.has_key? :inconsistent_treatment_reference
