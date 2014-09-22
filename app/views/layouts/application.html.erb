@@ -205,21 +205,13 @@
     
   <% end %>
   
-  <% if flash[:notice] %>
-    <div class="alert alert-success fade in centered">
-      <div style="width:850px; margin:auto">
-	      <button class="close" data-dismiss="alert">×</button>
-	      <%= flash[:notice] %>
-	    </div>
-	  </div>
-  <% end %>
-  <% if flash[:error] %>
-    <div class="alert alert-error fade in centered">
+  <% flash.each do |key, value| %>
+    <%= content_tag(:div, class: "alert alert-#{key} fade in centered") do %>
       <div style="width:850px; margin:auto">
         <button class="close" data-dismiss="alert">×</button>
-        <%= flash[:error] %>
+        <%= value %>
       </div>
-    </div>
+    <% end %>
   <% end %>
   <% if current_user != nil %>
     <%= render 'feedback/fbtab'%>
