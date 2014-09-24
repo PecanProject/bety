@@ -5,10 +5,12 @@ class SearchController < ApplicationController
   helper_method :sort_column, :sort_direction
 
   CREDITS = <<CREDITS
-David LeBauer, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney, Gareth Scott Rohde, Dan Wang 2010.\ 
-Biofuel Ecophysiological Traits and Yields Database (BETYdb)\
-Energy Biosciences Institute, University of Illinois at Urbana-Champaign.\
-doi:10.13012/J8H41PB9\
+LeBauer, David, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney, Gareth Scott Rohde, Dan Wang (2010).  \
+Biofuel Ecophysiological Traits and Yields Database (BETYdb), Energy Biosciences Institute, University of Illinois at Urbana-Champaign. \
+doi:10.13012/J8H41PB9 \
+All public data in BETYdb is made available under the Open Data Commons Attribution License (ODC-By) v1.0. \
+You are free to share, create, and adapt its contents. \
+Data with an access_level field and value <= 2 is is not covered by this license but may be available for use with consent.
 CREDITS
   CREDITS.chomp!
 
