@@ -22,6 +22,7 @@ describe BulkUploadDataSet do
                                                          'fixtures',
                                                          'files',
                                                          'bulk_upload',
+                                                         'heading_validation',
                                                          'bogus_heading.csv') })
       }
 
@@ -63,6 +64,7 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
+                                                           'heading_validation',
                                                            'sample_traits.csv') })
         }
 
@@ -85,6 +87,7 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
+                                                           'heading_validation',
                                                            'ambiguous_data_file.csv') })
         }
 
@@ -102,6 +105,7 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
+                                                           'heading_validation',
                                                            'missing_required_covariate.csv') })
         }
 
@@ -120,6 +124,7 @@ describe BulkUploadDataSet do
                                                          'fixtures',
                                                          'files',
                                                          'bulk_upload',
+                                                         'heading_validation',
                                                          'n_without_SE.csv') })
       }
       specify "we should get an error message" do
@@ -134,6 +139,7 @@ describe BulkUploadDataSet do
                                                          'fixtures',
                                                          'files',
                                                          'bulk_upload',
+                                                         'heading_validation',
                                                          'SE_without_n.csv') })
       }
       specify "we should get an error message" do
@@ -154,6 +160,7 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
+                                                           'heading_validation',
                                                            'citation_doi_and_author.csv') })
 
         dataset.check_header_list
@@ -166,6 +173,7 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
+                                                           'heading_validation',
                                                            'citation_doi_and_year.csv') })
 
         dataset.check_header_list
@@ -178,6 +186,7 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
+                                                           'heading_validation',
                                                            'citation_doi_and_title.csv') })
 
         dataset.check_header_list
@@ -196,6 +205,7 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
+                                                           'heading_validation',
                                                            'citation_author_without_year.csv') })
         dataset.check_header_list
         expect(dataset.validation_summary[:field_list_errors]).to eq(error_array)
@@ -207,6 +217,7 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
+                                                           'heading_validation',
                                                            'citation_author_without_title.csv') })
         dataset.check_header_list
         expect(dataset.validation_summary[:field_list_errors]).to eq(error_array)
@@ -221,6 +232,7 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
+                                                           'heading_validation',
                                                            'citation_title_without_author.csv') })
         dataset.check_header_list
         expect(dataset.validation_summary[:field_list_errors]).to eq(['If you include a "citation_title" column, then you must also include columns for "citation_author" and "citation_year."'])
@@ -234,6 +246,7 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
+                                                           'heading_validation',
                                                            'citation_year_only.csv') })
         dataset.check_header_list
         expect(dataset.validation_summary[:field_list_errors]).to eq(['If you include a "citation_year" column, then you must also include columns for "citation_title" and "citation_author."'])
@@ -246,6 +259,7 @@ describe BulkUploadDataSet do
                                                          'fixtures',
                                                          'files',
                                                          'bulk_upload',
+                                                         'heading_validation',
                                                          'citation_doi_only.csv') })
       specify "the session should have no 'citation_id_list' key set before checking the heading" do
         expect(dataset.instance_variable_get(:@session)[:citation_id_list]).to be_nil
@@ -265,6 +279,7 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
+                                                           'heading_validation',
                                                            'citation_author_year_and_title_only.csv') })
         dataset.check_header_list
         expect(dataset.instance_variable_get(:@session)[:citation_id_list]).to eq([])
@@ -280,6 +295,7 @@ describe BulkUploadDataSet do
                                                            'fixtures',
                                                            'files',
                                                            'bulk_upload',
+                                                           'heading_validation',
                                                            'cultivar_without_species.csv') })
         dataset.check_header_list
         expect(dataset.validation_summary[:field_list_errors]).to eq(['If you have a "cultivar" column, you must have a "species" column as well.'])
@@ -292,6 +308,7 @@ describe BulkUploadDataSet do
                                                          'fixtures',
                                                          'files',
                                                          'bulk_upload',
+                                                         'heading_validation',
                                                          'non-canonical_headers.csv') })
       specify "we should get no errors" do
         dataset.check_header_list
@@ -457,6 +474,7 @@ describe BulkUploadDataSet do
                                                          'fixtures',
                                                          'files',
                                                          'bulk_upload',
+                                                         'data_validation',
                                                          'fuzzily_matching_references.csv') })
       }
       let (:dataset_row) {
@@ -499,6 +517,7 @@ describe BulkUploadDataSet do
                                                                    'fixtures',
                                                                    'files',
                                                                    'bulk_upload',
+                                                                   'data_validation',
                                                                    'fuzzily_matching_references.csv') })
         dataset.check_header_list
         dataset.validate_csv_data
