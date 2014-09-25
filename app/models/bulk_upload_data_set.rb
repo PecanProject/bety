@@ -387,7 +387,11 @@ class BulkUploadDataSet
     elsif @headers.include?('citation_author') || @headers.include?('citation_doi')
       # the upload file has citation information, so initialize a list of citation ids in the session variable
     end
+    
+    if @headers.include?('citation_doi') || (@headers.include?('citation_author') && @headers.include?('citation_year') && @headers.include?('citation_title'))
+      # The file contains (sufficient) citation information, so make a list to keep track of referenced citations:
       @session[:citation_id_list] = []
+    end
 
     # If cultivar is in the field list, species must be as well
     if @headers.include?('cultivar') && !@headers.include?('species')
