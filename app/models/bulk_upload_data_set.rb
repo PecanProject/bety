@@ -773,6 +773,8 @@ class BulkUploadDataSet
     @total_error_count = @field_list_error_count + @data_value_error_count
     @file_has_fatal_errors = !@total_error_count.zero?
 
+    @session[:number_of_rows] = @validated_data.size
+
   end # def validate_csv_data
 
   # A list of values that may be specified interactively for the data set as a

@@ -43,7 +43,7 @@ class BulkUploadController < ApplicationController
     session.delete_if do |key|
       # delete bulk-upload-related session data (except for :citation,
       # which is "global"):
-      ["csvpath", "global_values", "rounding", "citation_id_list"].include?(key)
+      ["csvpath", "global_values", "rounding", "citation_id_list", "number_of_rows"].include?(key)
     end
   end
 
@@ -216,7 +216,7 @@ class BulkUploadController < ApplicationController
 
     respond_to do |format|
       format.html {
-        flash[:success] = "Data was successfully uploaded."
+        flash[:success] = "Data from #{File.basename(session[:csvpath])} was successfully uploaded."
         redirect_to(action: "start_upload")
       }
     end
