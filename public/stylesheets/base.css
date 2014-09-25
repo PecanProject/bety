@@ -3267,20 +3267,6 @@ input[type="submit"].button.button-mini {
 	margin-top: 9px;
 }
 
-#error_explanation {
-    color: #f00;
-}
-
-#warning_explanation {
-    color: #770;
-}
-
-#error_explanation ul,
-#warning_explanation ul {
-  list-style: none;
-  margin: 10px 0px 18px 0;
-}
-
 .nav-list {
 	padding-right: 15px;
 	padding-left: 15px;
