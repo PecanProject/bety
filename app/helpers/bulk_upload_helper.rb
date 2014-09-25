@@ -40,13 +40,15 @@ module BulkUploadHelper
   def make_validation_summary
     summary = "" # default to empty string if no errors
     if @data_set.file_has_fatal_errors
+
+      summary = content_tag :div, class: "fade in alert alert-error centered" do
+        div = "Your file contains #{pluralize(@data_set.total_error_count, "error")}."
+        div << "<br>You can not upload your data set until #{@data_set.total_error_count > 1 ? "these are" : "this is"} corrected."
+        raw div
+      end
       
-      summary = content_tag :div, id: "error_explanation", style: "width:850px; margin: auto" do
-        contents = content_tag :div, class: "fade in alert alert-error centered" do
-          div = "Your file contains #{pluralize(@data_set.total_error_count, "error")}."
-          div << "<br>You can not upload your data set until #{@data_set.total_error_count > 1 ? "these are" : "this is"} corrected."
-          raw div
-        end
+      summary += content_tag :div, id: "error_explanation" do
+        contents = raw ''
         if @data_set.field_list_error_count > 0
           contents += content_tag :h2, "Field List Errors"
 
@@ -98,7 +100,7 @@ module BulkUploadHelper
   def make_warning_summary
     summary = "" # default to empty string if no warnings
     if  @data_set.csv_warnings.any?
-      summary = content_tag :div, id: "warning_explanation", style: "width:850px; margin:auto" do
+      summary = content_tag :div, id: "warning_explanation" do
         div_content = content_tag :h2, "Warnings"
         div_content += content_tag :ul do
           list_items = "".html_safe
