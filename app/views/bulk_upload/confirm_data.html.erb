@@ -3,6 +3,7 @@
 	<div class="sixteen columns">
 	  <header>
         <h1>Please Verify Data-Set References Before Uploading</h1>
+        <h2 class="file_info"><%= render 'file_info' %></h2>
       </header>
       <%= form_tag(bulk_upload_data_insertion_path, method: "post", multipart: true) do %>
       <div id="process_container">

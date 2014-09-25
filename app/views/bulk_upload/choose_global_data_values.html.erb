@@ -3,6 +3,7 @@
 	<div class="sixteen columns">
 	  <header>
         <h1>Specify Upload Options and Global Values</h1>
+        <h2 class="file_info"><%= render 'file_info' %></h2>
       </header>
       <%= form_tag(bulk_upload_data_confirmation_path, method: "post", multipart: true) do %>
       <div id="process_container">
