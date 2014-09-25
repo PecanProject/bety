@@ -34,16 +34,7 @@
         <tr>
           <td style="background-color: lightblue"><%= row_number %><%= link_to "", {}, name: "row_#{row_number}" %></td>
           <% row.each do |value| %>
-          <% color = nil
-             case value[:validation_result]
-             when :valid
-             color = "lightgreen"
-             when :fatal_error
-             color = "red"
-             when :ignored
-             color = "gray"
-             end %>
-          <td style="background-color: <%= color %>" title="<%= value[:validation_message] %>"><%= value[:data] %></td>
+          <td class="<%= value[:validation_result].result_css_class %>" title="<%= value[:validation_result].message %>"><%= value[:data] %></td>
           <% end %>
         </tr>
         <% end %>

@@ -596,15 +596,3 @@ border-bottom-color: transparent;
 		  text-decoration: none;
 	  }
 	}
-
-
-/* bulk upload layout */
-
-.container.csv_display table {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.container.csv_display table caption {
-    height: 4em;
-}

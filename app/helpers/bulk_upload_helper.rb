@@ -1,4 +1,7 @@
 module BulkUploadHelper
+
+  MAXIMUM_ERRORS_TO_DISPLAY_PER_TYPE = 10
+
   ERROR_MESSAGE_MAP = {
     out_of_range_value: "Out-of-range variable value",
     unparsable_number: "Variable value can't be parsed as a number",
@@ -62,10 +65,16 @@ module BulkUploadHelper
           contents += content_tag :ul do
             list_items = "".html_safe
             @data_set.validation_summary.each_pair do |key, value|
-              if ERROR_MESSAGE_MAP.has_key?(key)
+              value.uniq!
+              suffix = ''
+              if value.size > MAXIMUM_ERRORS_TO_DISPLAY_PER_TYPE
+                value = value[0..10]
+                suffix = ' ...'
+              end
+              if key != :field_list_errors
                 list_items += content_tag :li do
-                  li_content = "* " + ERROR_MESSAGE_MAP[key]
-                  li_content << " in these rows: " + value.map { |row_no| link_to row_no, anchor: "row_#{row_no}" }.join(', ')
+                  li_content = "* " + @data_set.validation_summary_messages[key]
+                  li_content << " in these rows: " + value.map { |row_no| link_to row_no, anchor: "row_#{row_no}" }.join(', ') + suffix
                   if ERROR_REMEDY_MAP.has_key?(key)
                     # provide a link to page to search for or add
                     # missing referent:

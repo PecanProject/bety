@@ -1,14 +1,181 @@
-class UnresolvableReferenceException < StandardError
+module ValidationResult
+  attr :result, :message, :summary_message
+  def initialize(result = nil, message = nil, summary_message = message, remedy_link = nil, row = nil)
+    @result = result
+    @message = message
+    @summary_message = summary_message
+    @remedy_link = remedy_link
+    @row = row
+  end
+  def result_css_class
+    category.to_s
+  end
+  def category
+    case @result
+    when :valid, :ignored, :non_unique_referent, :missing_referent, \
+          :unacceptable_date_format, :invalid_date
+      @result
+    when :inconsistent_citation_and_site, :inconsistent_citation_and_treatment
+      :inconsistent_correlatives
+    when :negative_yield, :out_of_range_value, :future_citation_year, \
+          :too_old_citation_year, :out_of_bounds_access_level, :future_date, \
+          :invalid_sample_size, :out_of_range_value
+      :out_of_bounds
+    when :unparsable_yield, :unparsable_citation_year, \
+          :unparsable_access_level, :unparsable_sample_size, \
+          :unparsable_standard_error_value, :unparsable_number
+      :unparsable_number
+    else # in case we forgot anything
+      @result
+    end
+  end
+end
+
+class Valid
+  include ValidationResult
+  def initialize
+    super(:valid, "")
+  end
+end
+
+class Ignored
+  include ValidationResult
+  def initialize
+    super(:ignored, "This column will be ignored.")
+  end
+end
+
+class BulkUploadDataException < StandardError
+  include ValidationResult
+end
+
+class InconsistentCitationAndSiteException < BulkUploadDataException
+  def initialize
+    super(:inconsistent_citation_and_site, "Site is inconsistent with citation")
+  end
+end
+
+class InconsistentCitationAndTreatmentException < BulkUploadDataException
+  def initialize
+    super(:inconsistent_citation_and_treatment, "Treatment is inconsistent with citation")
+  end
+end
+
+
+class UnresolvableReferenceException < BulkUploadDataException
 end
 
 class NonUniquenessException < UnresolvableReferenceException
+  def initialize(model_class_or_relation = nil, match_column_name = '', raw_value = '', table_entity_name = '')
+    super(:non_unique_referent, "More than one row in the #{table_entity_name.pluralize} table matches this string", "Multiple matching referents")
+  end
 end
 
 class MissingReferenceException < UnresolvableReferenceException
+  def initialize(model_class_or_relation = nil, match_column_name = '', raw_value = '', table_entity_name = '')
+    super(:missing_referent, "Not found in #{table_entity_name.pluralize} table", "Unresolvable #{@table_entity_name} reference")
+  end
 end
 
-class InvalidCitationYearException < StandardError
+class MissingCorrelativeException < UnresolvableReferenceException
+  def initialize(model_class_or_relation = nil, match_column_name = '', raw_value = '', table_entity_name = '')
+    super(:missing_correlative, "Can't resolve reference because of missing correlative #{table_entity_name.pluralize}")
+  end
 end
+
+class InvalidCitationYearException < BulkUploadDataException
+end
+
+class UnparsableYieldException < BulkUploadDataException
+  def initialize
+    super(:unparsable_yield, "Not a valid number", "Unparsable yield value")
+  end
+end
+
+class NegativeYieldException < BulkUploadDataException
+  def initialize
+    super(:negative_yield, "Yield can't be less than zero", "Negative value for yield")
+  end
+end
+
+class UnparsableCitationYearException < BulkUploadDataException
+  def initialize
+    super(:unparsable_citation_year, "Not a valid integer", "Citation year can't be parsed as a number")
+  end
+end
+
+class FutureCitationYearException < BulkUploadDataException
+  def initialize
+    super(:future_citation_year, "Citation year is in the future")
+  end
+end
+
+class TooOldCitationYearException < BulkUploadDataException
+  def initialize
+    super(:too_old_citation_year, "Citation year is too far in the past")
+  end
+end
+
+class UnparsableAccessLevelException < BulkUploadDataException
+  def initialize
+    super(:unparsable_access_level, "Not a valid integer", "Access level can't be parsed as an integer")
+  end
+end
+
+class InvalidAccessLevelException < BulkUploadDataException
+  def initialize
+    super(:out_of_bounds_access_level, "access_level must be 1, 2, 3, or 4", "Out of bounds access level")
+  end
+end
+
+class UnacceptableDateFormatException < BulkUploadDataException
+  def initialize
+    super(:unacceptable_date_format, "Dates must be in the form 1999-01-01, 1999-01, or 1999", "Unacceptable date format")
+  end
+end
+
+class InvalidDateException < BulkUploadDataException
+  def initialize
+    super(:invalid_date, "Invalid date", "Date is invalid")
+  end
+end
+
+class FutureDateException < BulkUploadDataException
+  def initialize
+    super(:future_date, "Date is in the future")
+  end
+end
+
+class UnparsableSampleSizeException < BulkUploadDataException
+  def initialize
+    super(:unparsable_sample_size, "Invalid integer", "Sample size can't be parsed as an integer")
+  end
+end
+
+class InvalidSampleSizeException < BulkUploadDataException
+  def initialize
+    super(:invalid_sample_size, "n must be at least 2", "Invalid sample size (n)")
+  end
+end
+
+class UnparsableStandardErrorValueException < BulkUploadDataException
+  def initialize
+    super(:unparsable_standard_error_value, "Not a valid number", "Standard error value (SE) can't be parsed as a number")
+  end
+end
+
+class UnparseableVariableValueException < BulkUploadDataException
+  def initialize
+    super(:unparsable_number, "Not a valid number", "Variable value can't be parsed as a number")
+  end
+end
+
+class OutOfRangeVariableException < BulkUploadDataException
+  def initialize(message = '')
+    super(:out_of_range_value, "Variable out of range.  #{message}", "Out-of-range variable value")
+  end
+end
+
 
 class BulkUploadDataSet
   include ActionView::Helpers::NumberHelper # for rounding
@@ -86,6 +253,8 @@ class BulkUploadDataSet
   #   {:field_list_errors=>["You must have a yield column in your CSV file."],
   #    :unacceptable_date_format=>[1, 2, 3]}
   attr :validation_summary
+
+  attr :validation_summary_messages
 
   # A list of warnings.  Set by +check_header_list+ and used by the
   # +display_csv_file+ template.  This list is either empty or is a string
@@ -176,6 +345,7 @@ class BulkUploadDataSet
   def check_header_list
 
     @validation_summary = {}
+    @validation_summary_messages = {}
     @validation_summary[:field_list_errors] = []
     @csv_warnings = []
 
@@ -216,8 +386,8 @@ class BulkUploadDataSet
       @validation_summary[:field_list_errors] << 'If you include a "citation_year" column, then you must also include columns for "citation_title" and "citation_author."'
     elsif @headers.include?('citation_author') || @headers.include?('citation_doi')
       # the upload file has citation information, so initialize a list of citation ids in the session variable
-      @session[:citation_id_list] = []
     end
+      @session[:citation_id_list] = []
 
     # If cultivar is in the field list, species must be as well
     if @headers.include?('cultivar') && !@headers.include?('species')
@@ -280,7 +450,7 @@ class BulkUploadDataSet
   def validate_csv_data
     @validated_data = []
     @data.each do |row|
-      validated_row = row.collect { |value| { fieldname: value[0], data: value[1] } }
+      validated_row = row.collect { |value| { fieldname: normalize_heading(value[0]), data: value[1], validation_result: Valid.new } }
       @validated_data << validated_row
     end
 
@@ -294,318 +464,192 @@ class BulkUploadDataSet
 
       row.each do |column|
 
-        column[:data] ||= ""
+        begin
 
-        case column[:fieldname]
+          column[:data] ||= ""
 
-        when "yield"
+          case column[:fieldname]
 
-          begin
-            # yield is a keyword; hence "amount_of_yield"
-            amount_of_yield = Float(column[:data])
-            if amount_of_yield < 0
-              column[:validation_result] = :fatal_error
-              column[:validation_message] = "yield can't be less than zero"
-              if @validation_summary.has_key? :negative_yield
-                @validation_summary[:negative_yield] << row_number
-              else
-                @validation_summary[:negative_yield] = [ row_number ]
+          when "yield"
+
+            begin
+              # yield is a keyword; hence "amount_of_yield"
+              amount_of_yield = Float(column[:data])
+            rescue ArgumentError => e
+              raise UnparsableYieldException
+            else
+              if amount_of_yield < 0
+                raise NegativeYieldException
               end
-            else
-              column[:validation_result] = :valid
             end
-          rescue ArgumentError => e
-            column[:validation_result] = :fatal_error
-            column[:validation_message] = e.message
-            if @validation_summary.has_key? :unparsable_yield
-              @validation_summary[:unparsable_yield] << row_number
-            else
-              @validation_summary[:unparsable_yield] = [ row_number ]
-            end
-          end
 
-        when "citation_doi"
+          when "citation_doi"
 
-          begin
             citation_id = doi_of_existing_citation?(column[:data])
-            column[:validation_result] = :valid
-          rescue UnresolvableReferenceException
-            column[:validation_result] = :fatal_error
-            column[:validation_message] = "Not found in citations table"
-            if @validation_summary.has_key? :unresolvable_citation_reference
-              @validation_summary[:unresolvable_citation_reference] << row_number
+
+          when "citation_author"
+
+            # accept anything for now
+
+          when "citation_year"
+
+            begin
+              year = Integer(column[:data])
+            rescue ArgumentError => e
+              raise UnparsableCitationYearException
             else
-              @validation_summary[:unresolvable_citation_reference] = [ row_number ]
-            end
-          end
-
-        when "citation_author"
-
-          # accept anything for now
-
-        when "citation_year"
-
-          begin
-            year = Integer(column[:data])
-            if year > Date.today.next_year.year
-              # Don't allow citation year to be more than one year in the future
-              column[:validation_result] = :fatal_error
-              column[:validation_message] = "Citation year is in the future."
-              if @validation_summary.has_key? :future_citation_year
-                @validation_summary[:future_citation_year] << row_number
-              else
-                @validation_summary[:future_citation_year] = [ row_number ]
-              end
-            elsif year < 1436
-              column[:validation_result] = :fatal_error
-              column[:validation_message] = "Citation year is before Gutenberg invented his press!"
-              if @validation_summary.has_key? :too_old_citation_year
-                @validation_summary[:too_old_citation_year] << row_number
-              else
-                @validation_summary[:too_old_citation_year] = [ row_number ]
+              if year > Date.today.next_year.year
+                raise FutureCitationYearException
+              elsif year < 1436
+                raise TooOldCitationYearException
               end
             end
-          rescue ArgumentError => e
-            column[:validation_result] = :fatal_error
-            column[:validation_message] = e.message
-            if @validation_summary.has_key? :unparsable_citation_year
-              @validation_summary[:unparsable_citation_year] << row_number
-            else
-              @validation_summary[:unparsable_citation_year] = [ row_number ]
-            end
-          end
 
-        when "citation_title"
+          when "citation_title"
 
-          # accept anything for now
+            # accept anything for now
 
-        when "site"
+          when "site"
 
-          begin
             matching_site = existing_site?(column[:data])
-            column[:validation_result] = :valid
-          rescue UnresolvableReferenceException
-            column[:validation_result] = :fatal_error
-            column[:validation_message] = "Not found in sites table"
-            if @validation_summary.has_key? :unresolvable_site_reference
-              @validation_summary[:unresolvable_site_reference] << row_number
-            else
-              @validation_summary[:unresolvable_site_reference] = [ row_number ]
-            end
-          end
 
-        when "species"
+          when "species"
 
-          begin
             existing_species?(column[:data])
-            column[:validation_result] = :valid
-          rescue UnresolvableReferenceException
-            column[:validation_result] = :fatal_error
-            column[:validation_message] = "Not found in species table"
-            if @validation_summary.has_key? :unresolvable_species_reference
-              @validation_summary[:unresolvable_species_reference] << row_number
-            else
-              @validation_summary[:unresolvable_species_reference] = [ row_number ]
-            end
-          end
 
-        when "access_level"
+          when "access_level"
 
-          begin
-            access_level = Integer(column[:data])
-            if !(1..4).include? access_level
-              column[:validation_result] = :fatal_error
-              column[:validation_message] = "access_level must be 1, 2, 3, or 4"
-              if @validation_summary.has_key? :out_of_bounds_access_level
-                @validation_summary[:out_of_bounds_access_level] << row_number
-              else
-                @validation_summary[:out_of_bounds_access_level] = [ row_number ]
-              end
-            else
-              column[:validation_result] = :valid
-            end
-          rescue ArgumentError => e
-            column[:validation_result] = :fatal_error
-            column[:validation_message] = e.message
-            if @validation_summary.has_key? :unparsable_access_level
-              @validation_summary[:unparsable_access_level] << row_number
-            else
-              @validation_summary[:unparsable_access_level] = [ row_number ]
-            end
-          end
-
-        when "cultivar"
-
-          # we need the species id to validation this
-          species_index = row.index { |h| h[:fieldname] == "species" }
-          if species_index.nil?
-            column[:validation_result] = :fatal_error
-            column[:validation_message] = "Cultivar can't be looked up when species is not in the field list."
-          else
             begin
-              species_id = existing_species?(row[species_index][:data])
-            rescue UnresolvableReferenceException
-              column[:validation_result] = :fatal_error
-              # TO-DO: Maybe change this message
-              column[:validation_message] = "Cultivar can't be looked up when species is not in species table."
+              access_level = Integer(column[:data])
+            rescue ArgumentError => e
+              raise UnparsableAccessLevelException
             else
+              if !(1..4).include? access_level
+                raise InvalidAccessLevelException
+              end
+            end
+
+          when "cultivar"
+
+            if !column[:data].strip.empty? # cultivar is optional!
               begin
-                column[:data].strip.empty? || # cultivar is optional!
-                  existing_cultivar?(column[:data], species_id)
-                column[:validation_result] = :valid
-              rescue UnresolvableReferenceException
-                column[:validation_result] = :fatal_error
-                column[:validation_message] = "No cultivar for this species with this name found in cultivars table"
-                if @validation_summary.has_key? :unresolvable_cultivar_reference
-                  @validation_summary[:unresolvable_cultivar_reference] << row_number
-                else
-                  @validation_summary[:unresolvable_cultivar_reference] = [ row_number ]
-                end # if/else
-              end # begin/rescue
-            end # begin/rescue/else
-          end # if species_index.nil?/else
+                existing_cultivar?(column[:data])
+              rescue NonUniquenessException
+                # We only care that cultivar names are unique per species.
+              end
 
-        when "date"
+              # If we get here, the culitvar name is valid, but we still have to check consistency.
 
-          year = month = day = nil
-          REQUIRED_DATE_FORMAT.match column[:data] do |match_data|
-            # to-do: set an appropriate dateloc value when day or month is not supplied
-            year = match_data[:year]
-            month = match_data[:month] || 1
-            day = match_data[:day] || 1
-          end
+              # We need the species id to validation this:
+              species_index = row.index { |h| h[:fieldname] == "species" }
 
-          if year.nil?
-            column[:validation_result] = :fatal_error
-            column[:validation_message] = "dates must be in the form 1999-01-01, 1999-01, or 1999"
-            if @validation_summary.has_key? :unacceptable_date_format
-              @validation_summary[:unacceptable_date_format] << row_number
-            else
-              @validation_summary[:unacceptable_date_format] = [ row_number ]
+              begin
+                species_id = existing_species?(row[species_index][:data])
+              rescue
+                raise MissingCorrelativeException
+              else
+                existing_cultivar?(column[:data], species_id)
+              end
+
             end
-          else
-            # Make sure it's a valid date
-            begin
-              date = Date.new(year.to_i, month.to_i, day.to_i)
 
-              # Date is valid; but make sure the range is reasonable
+          when "date"
 
-              if date > Date.today
-                # Don't allow date to be in the future
-                column[:validation_result] = :fatal_error
-                column[:validation_message] = "Date is in the future."
-                if @validation_summary.has_key? :future_date
-                  @validation_summary[:future_date] << row_number
-                else
-                  @validation_summary[:future_date] = [ row_number ]
+            year = month = day = nil
+            REQUIRED_DATE_FORMAT.match column[:data] do |match_data|
+              # to-do: set an appropriate dateloc value when day or month is not supplied
+              year = match_data[:year]
+              month = match_data[:month] || 1
+              day = match_data[:day] || 1
+            end
+
+            if year.nil?
+              raise UnacceptableDateFormatException
+            else
+              # Make sure it's a valid date
+              begin
+                date = Date.new(year.to_i, month.to_i, day.to_i)
+              rescue ArgumentError => e
+                raise InvalidDateException #"year: #{year}; month: #{month}; day: #{day}"
+              else
+                # Date is valid; but make sure the range is reasonable
+
+                if date > Date.today
+                  raise FutureDateException
                 end
-              else
-                column[:validation_result] = :valid
-              end
-            rescue ArgumentError => e
-              column[:validation_result] = :fatal_error
-              column[:validation_message] = e.message + "year: #{year}; month: #{month}; day: #{day}"
-              if @validation_summary.has_key? :invalid_date
-                @validation_summary[:invalid_date] << row_number
-              else
-                @validation_summary[:invalid_date] = [ row_number ]
               end
             end
-          end
 
-        when "n"
-
-          begin
-            n = Integer(column[:data])
-            if n <= 1
-              column[:validation_result] = :fatal_error
-              column[:validation_message] = "n must be at least 2"
-              if @validation_summary.has_key? :invalid_sample_size
-                @validation_summary[:invalid_sample_size] << row_number
-              else
-                @validation_summary[:invalid_sample_size] = [ row_number ]
-              end
-            else
-              column[:validation_result] = :valid
-            end
-          rescue ArgumentError => e
-            column[:validation_result] = :fatal_error
-            column[:validation_message] = e.message
-            if @validation_summary.has_key? :unparsable_sample_size
-              @validation_summary[:unparsable_sample_size] << row_number
-            else
-              @validation_summary[:unparsable_sample_size] = [ row_number ]
-            end
-          end
-
-        when "SE"
-
-          begin
-            Float(column[:data])
-            # For now, accept any valid float
-            column[:validation_result] = :valid
-          rescue ArgumentError => e
-            column[:validation_result] = :fatal_error
-            column[:validation_message] = e.message
-            if @validation_summary.has_key? :unparsable_standard_error_value
-              @validation_summary[:unparsable_standard_error_value] << row_number
-            else
-              @validation_summary[:unparsable_standard_error_value] = [ row_number ]
-            end
-          end
-
-        when "notes"
-
-          # accept anything for now
-
-        else # either a trait or covariate variable name or will be ignored
-
-          if trait_data?
-            get_trait_and_covariate_info
-          end
-          if trait_data? && (@traits_in_heading + @allowed_covariates).include?(column[:fieldname])
-            column[:validation_result] = :valid # reset below if we find otherwise
+          when "n"
 
             begin
-              value = Float(column[:data])
-
-              v = Variable.find_by_name(column[:fieldname])
-
-              if !v.min.nil? and value < v.min.to_f
-                column[:validation_result] = :fatal_error
-                column[:validation_message] = "The value of the #{v.name} trait must be at least #{v.min}."
-                if @validation_summary.has_key? :out_of_range_value
-                  @validation_summary[:out_of_range_value] << row_number
-                else
-                  @validation_summary[:out_of_range_value] = [ row_number ]
-                end
-              end
-
-              if !v.max.nil? and value > v.max.to_f
-                column[:validation_result] = :fatal_error
-                column[:validation_message] = "The value of the #{v.name} trait must be at most #{v.max}."
-                if @validation_summary.has_key? :out_of_range_value
-                  @validation_summary[:out_of_range_value] << row_number
-                else
-                  @validation_summary[:out_of_range_value] = [ row_number ]
-                end
-              end
-
+              n = Integer(column[:data])
             rescue ArgumentError => e
-              column[:validation_result] = :fatal_error
-              column[:validation_message] = e.message
-              if @validation_summary.has_key? :unparsable_number
-                @validation_summary[:unparsable_number] << row_number
-              else
-                @validation_summary[:unparsable_number] = [ row_number ]
+              raise UnparsableSampleSizeException
+            else
+              if n <= 1
+                raise InvalidSampleSizeException
               end
             end
-          else
-            column[:validation_result] = :ignored
-            column[:validation_message] = "This column will be ignored."
-          end
 
-        end # case
+          when "SE"
+
+            begin
+              Float(column[:data])
+            rescue ArgumentError => e
+              raise UnparsableStandardErrorValueException
+            end
+
+          when "notes"
+
+            # accept anything for now
+
+          when "treatment"
+
+            # This is ignored for now until we have the citation information.
+
+          else # either a trait or covariate variable name or will be ignored
+
+            if trait_data?
+              get_trait_and_covariate_info
+            end
+            if trait_data? && (@traits_in_heading + @allowed_covariates).include?(column[:fieldname])
+              column[:validation_result] = Valid.new # reset below if we find otherwise
+
+              begin
+                value = Float(column[:data])
+              rescue ArgumentError => e
+                raise UnparsableVariableValueException
+              else
+
+                v = Variable.find_by_name(column[:fieldname])
+
+                if !v.min.nil? and value < v.min.to_f
+                  raise OutOfRangeVariableException, "The value of the #{v.name} trait must be at least #{v.min}."
+                end
+
+                if !v.max.nil? and value > v.max.to_f
+                  raise OutOfRangeVariableException, "The value of the #{v.name} trait must be at most #{v.max}."
+                end
+              end
+
+            else
+              column[:validation_result] = Ignored.new
+              column[:validation_message] = "This column will be ignored."
+            end
+
+          end # case
+
+        rescue BulkUploadDataException => e
+          column[:validation_result] = e
+          key = e.result
+          if @validation_summary.has_key? key
+            @validation_summary[key] << row_number
+          else
+            @validation_summary[key] = [ row_number ]
+            @validation_summary_messages[key] = e.summary_message
+          end
+        end
 
       end # row.each
 
@@ -620,21 +664,26 @@ class BulkUploadDataSet
         title_index = row.index { |h| h[:fieldname] == "citation_title" }
         begin
           citation_id = existing_citation(row[author_index][:data], row[year_index][:data], row[title_index][:data])
-          row[author_index][:validation_result] = :valid
-          row[year_index][:validation_result] = :valid
-          row[title_index][:validation_result] = :valid
-        rescue UnresolvableReferenceException, InvalidCitationYearException
-          row[author_index][:validation_result] = :fatal_error
-          row[year_index][:validation_result] = :fatal_error
-          row[title_index][:validation_result] = :fatal_error
-          row[author_index][:validation_message] = "Couldn't find a unique matching citation for this row."
-          row[year_index][:validation_message] = "Couldn't find a unique matching citation for this row."
-          row[title_index][:validation_message] = "Couldn't find a unique matching citation for this row."
-          if @validation_summary.has_key? :unresolvable_citation_reference
-            @validation_summary[:unresolvable_citation_reference] << row_number
-          else
-            @validation_summary[:unresolvable_citation_reference] = [ row_number ]
+        rescue InvalidCitationYearException, UnresolvableReferenceException => e
+          row[year_index][:validation_result] = e
+
+          if e.is_a? InvalidCitationYearException
+            e = UnresolvableReferenceException.new
           end
+
+          row[author_index][:validation_result] = e
+          row[title_index][:validation_result] = e
+
+          # For purposes of the summary, count the citation error as an
+          # unresolved reference, even if the year was invalid:
+          key = e.result
+          if @validation_summary.has_key? key
+            @validation_summary[key] << row_number
+          else
+            @validation_summary[key] = [ row_number ]
+            @validation_summary_messages[key] = e.summary_message
+          end
+
         end
 
       end
@@ -659,12 +708,15 @@ class BulkUploadDataSet
           if !citation.sites.include?(matching_site)
             site_index = row.index { |h| h[:fieldname] == "site" }
 
-            row[site_index][:validation_result] = :fatal_error
-            row[site_index][:validation_message] = "Site is not consistent with citation"
-            if @validation_summary.has_key? :inconsistent_site_reference
-              @validation_summary[:inconsistent_site_reference] << row_number
+            e = InconsistentCitationAndSiteException.new
+
+            row[site_index][:validation_result] = e
+            key = e.result
+            if @validation_summary.has_key? key
+              @validation_summary[key] << row_number
             else
-              @validation_summary[:inconsistent_site_reference] = [ row_number ]
+              @validation_summary[key] = [ row_number ]
+              @validation_summary_messages[key] = e.summary_message
             end
           end
         end
@@ -674,16 +726,36 @@ class BulkUploadDataSet
         treatment_index = row.index { |h| h[:fieldname] == "treatment" }
         if !treatment_index.nil?
           treatment = row[treatment_index][:data]
+
+          begin
+            existing_treatment?(treatment)
+          rescue NonUniquenessException
+            # We only care that treatment names are unique per citation.
+          rescue UnresolvableReferenceException => e
+            row[treatment_index][:validation_result] = e
+            key = e.result
+            if @validation_summary.has_key? key
+              @validation_summary[key] << row_number
+            else
+              @validation_summary[key] = [ row_number ]
+              @validation_summary_messages[key] = e.summary_message
+            end
+          end
+
+          # If we get here, the treatment name is valid, but we still have to check consistency.
+
           begin
             existing_treatment?(treatment, citation.id)
-            row[treatment_index][:validation_result] = :valid
-          rescue UnresolvableReferenceException => e
-            row[treatment_index][:validation_result] = :fatal_error
-            row[treatment_index][:validation_message] = "Treatment is not consistent with citation"
-            if @validation_summary.has_key? :inconsistent_treatment_reference
-              @validation_summary[:inconsistent_treatment_reference] << row_number
+          rescue UnresolvableReferenceException
+            e = InconsistentCitationAndTreatmentException.new
+
+            row[treatment_index][:validation_result] = e
+            key = e.result
+            if @validation_summary.has_key? key
+              @validation_summary[key] << row_number
             else
-              @validation_summary[:inconsistent_treatment_reference] = [ row_number ]
+              @validation_summary[key] = [ row_number ]
+              @validation_summary_messages[key] = e.summary_message
             end
           end
         end
@@ -959,16 +1031,21 @@ class BulkUploadDataSet
 
   end
 
+  def normalize_heading(heading)
+    heading = heading.to_s.strip
+
+    if /SE/i.match heading
+      heading.upcase
+    elsif Regexp.new(RECOGNIZED_COLUMNS.join('|'), Regexp::IGNORECASE).match heading
+      heading.downcase
+    else
+      heading
+    end
+  end
+
   def normalize_headers(headers)
-    headers.map!(&:strip)
-    headers.map! do |heading| 
-      if /SE/i.match heading
-        heading.upcase
-      elsif Regexp.new(RECOGNIZED_COLUMNS.join('|'), Regexp::IGNORECASE).match heading
-        heading.downcase
-      else
-        heading
-      end
+    headers.map! do |heading|
+      heading = normalize_heading(heading)
     end
     headers
   end
@@ -1057,9 +1134,9 @@ class BulkUploadDataSet
     matches = model_class_or_relation.where(["#{sql_columnref_to_normlized_columnref(match_column_name)} = :stored_value",
                                              { stored_value: normalize(raw_value) }])
     if matches.size > 1
-      raise NonUniquenessException
+      raise NonUniquenessException.new(model_class_or_relation, match_column_name, raw_value, table_entity_name)
     elsif matches.size == 0
-      raise MissingReferenceException
+      raise MissingReferenceException.new(model_class_or_relation, match_column_name, raw_value, table_entity_name)
     end
 
     return matches[0]
@@ -1084,8 +1161,7 @@ class BulkUploadDataSet
   end
 
   def doi_of_existing_citation?(doi)
-    c = Citation.find_by_doi(doi)
-    return c
+    return existing?(Citation, "doi", doi, "citation")
   end
 
   def existing_citation(author, year, title)
@@ -1108,8 +1184,12 @@ class BulkUploadDataSet
     end
   end
 
-  def existing_cultivar?(name, species_id)
-    existing?(Cultivar.where("specie_id = ?", species_id), "name", name, "cultivar")
+  def existing_cultivar?(name, species_id = nil)
+    if species_id.nil?
+      existing?(Cultivar, "name", name, "cultivar")
+    else
+      existing?(Cultivar.where("specie_id = ?", species_id), "name", name, "cultivar")
+    end
   end
 
 

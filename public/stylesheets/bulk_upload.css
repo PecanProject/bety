@@ -1,0 +1,35 @@
+
+
+/* bulk upload layout */
+
+.container.csv_display table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.container.csv_display table caption {
+    height: 4em;
+}
+
+
+/* validation */
+
+td.valid { background-color: lightgreen }
+
+td.ignored { background-color: grey }
+
+td.non_unique_referent { background-color: orange }
+
+td.missing_referent { background-color: red }
+
+td.missing_correlative { background-color: tomato }
+
+td.unacceptable_date_format { background-color: pink }
+
+td.invalid_date { background-color: purple }
+
+td.inconsistent_correlatives { background-color: yellow }
+
+td.out_of_bounds { background-color: #aa88aa }
+
+td.unparsable_number { background-color: blue }

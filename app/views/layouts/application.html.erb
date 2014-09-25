@@ -94,6 +94,10 @@
   <%= yield :schemaCSS %>
   <%= stylesheet_link_tag "base", "grid", "layout", "dropdown", "tables", "demo" %>
 
+  <% if params[:controller] == 'bulk_upload' %>
+    <%= stylesheet_link_tag "bulk_upload" %>
+  <% end %>
+
   <%= stylesheet_link_tag "jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" %>
 
 </head>
