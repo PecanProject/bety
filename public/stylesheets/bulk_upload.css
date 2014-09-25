@@ -17,23 +17,18 @@
     margin-bottom: 1em;
 }
 
-.container.csv_display div#process_container div#back {
-  width: 25%;
-  float: left;
-  text-align: left;
+.container.csv_display header {
+    width: 850px;
+    margin: auto;
 }
 
-.container.csv_display div#process_container div.file_info {
-  width: 50%;
-  float: left;
+h2.file_info {
+    padding: 0 0 10px
+}
+
+.file_info {
   text-align: center;
   font-weight: bold;
-}
-
-.container.csv_display div#process_container div#forward {
-  width: 25%;
-  float: left;
-  text-align: right;
 }
 
 

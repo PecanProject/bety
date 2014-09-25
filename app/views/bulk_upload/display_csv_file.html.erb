@@ -1,9 +1,12 @@
 <div class="content">
   <div class="container unconstrained csv_display">
+    <header>
+      <h1 class="file_info"><%= render 'file_info' %></h1>
+    </header>
 
     <div id="process_container">
       <div id="back"><%= link_to "<< Choose a different file to upload", start_upload_path %></div>
-      <div class="file_info">Uploaded file: <%= File.basename(session[:csvpath]) %> (<%= @data_set.validated_data.size %> rows)</div>
+      <div id="new">&nbsp;</div>
       <div id="forward">
         <% if @data_set.file_has_fatal_errors %>
            &nbsp;
@@ -19,7 +22,6 @@
     <%= make_validation_summary %>
     <%= make_warning_summary  %>
     <table>
-      <caption>Validation Results</caption>
       <thead>
         <tr>
           <th>row number</th>
@@ -32,7 +34,7 @@
         <% @data_set.validated_data.each_with_index do |row, i| %>
         <% row_number = i + 1 %>
         <tr>
-          <td><%= row_number %><%= link_to "", {}, name: "row_#{row_number}" %></td>
+          <th><%= row_number %><%= link_to "", {}, name: "row_#{row_number}" %></th>
           <% row.each do |value| %>
           <td class="<%= value[:validation_result].result_css_class %>" title="<%= value[:validation_result].message %>"><%= value[:data] %></td>
           <% end %>
