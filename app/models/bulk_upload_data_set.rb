@@ -646,13 +646,7 @@ class BulkUploadDataSet
 
         rescue BulkUploadDataException => e
           column[:validation_result] = e
-          key = e.result
-          if @validation_summary.has_key? key
-            @validation_summary[key] << row_number
-          else
-            @validation_summary[key] = [ row_number ]
-            @validation_summary_messages[key] = e.summary_message
-          end
+          add_to_validation_summary(e, row_number)
         end
 
       end # row.each
@@ -680,13 +674,7 @@ class BulkUploadDataSet
 
           # For purposes of the summary, count the citation error as an
           # unresolved reference, even if the year was invalid:
-          key = e.result
-          if @validation_summary.has_key? key
-            @validation_summary[key] << row_number
-          else
-            @validation_summary[key] = [ row_number ]
-            @validation_summary_messages[key] = e.summary_message
-          end
+          add_to_validation_summary(e, row_number)
 
         end
 
@@ -715,13 +703,7 @@ class BulkUploadDataSet
             e = InconsistentCitationAndSiteException.new
 
             row[site_index][:validation_result] = e
-            key = e.result
-            if @validation_summary.has_key? key
-              @validation_summary[key] << row_number
-            else
-              @validation_summary[key] = [ row_number ]
-              @validation_summary_messages[key] = e.summary_message
-            end
+            add_to_validation_summary(e, row_number)
           end
         end
 
@@ -737,13 +719,7 @@ class BulkUploadDataSet
             # We only care that treatment names are unique per citation.
           rescue UnresolvableReferenceException => e
             row[treatment_index][:validation_result] = e
-            key = e.result
-            if @validation_summary.has_key? key
-              @validation_summary[key] << row_number
-            else
-              @validation_summary[key] = [ row_number ]
-              @validation_summary_messages[key] = e.summary_message
-            end
+            add_to_validation_summary(e, row_number)
           end
 
           # If we get here, the treatment name is valid, but we still have to check consistency.
@@ -754,13 +730,7 @@ class BulkUploadDataSet
             e = InconsistentCitationAndTreatmentException.new
 
             row[treatment_index][:validation_result] = e
-            key = e.result
-            if @validation_summary.has_key? key
-              @validation_summary[key] << row_number
-            else
-              @validation_summary[key] = [ row_number ]
-              @validation_summary_messages[key] = e.summary_message
-            end
+            add_to_validation_summary(e, row_number)
           end
         end
 
@@ -1417,5 +1387,14 @@ class BulkUploadDataSet
 
   end
 
+  def add_to_validation_summary(e, row_number)
+    key = e.result
+    if @validation_summary.has_key? key
+      @validation_summary[key] << row_number
+    else
+      @validation_summary[key] = [ row_number ]
+      @validation_summary_messages[key] = e.summary_message
+    end
+  end
 
 end
