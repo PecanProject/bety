@@ -4,6 +4,7 @@ module ValidationResult
     @result = result
     @message = message
     @summary_message = summary_message
+    # to do: eliminate or start to utilize these instance variables:
     @remedy_link = remedy_link
     @row = row
   end
@@ -200,9 +201,9 @@ class BulkUploadDataSet
   #
   # validation_result::
   #
-  #   This will always be some class that +include+s the ValidationResult
-  #   module--that is, Valid, Ignored, or some subclass of
-  #   BulkUploadDataException.
+  #   This will always be an object of some class that includes the
+  #   ValidationResult module--that is, an instance of Valid, Ignored, or some
+  #   subclass of BulkUploadDataException.
   #
   #   Set by +validate_csv_data+ and used by the
   #   +display_csv_data+ template.
@@ -266,20 +267,24 @@ class BulkUploadDataSet
   # information about all the errors having to do with the header list.  This
   # key is added and its value is set in +check_header_list+.  In addition, the
   # data validation process of method +validate_csv_data+ adds a key for each
-  # type of error found, and the value of each such key consists of a list of
-  # row numbers where the corresponding error was found.
+  # type of error found (classified by the summary error message), and the value
+  # of each such key consists of a hash with two keys: +:row_numbers+, whose
+  # value is a list of row numbers where the corresponding error was found; and
+  # +:css_class+, whose value is a CSS stylesheet class to assign to the HTML
+  # element containing the summary message.
+  #
   # ==== Example
   #  {
   #    :field_list_errors=>['In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'],
-  #    :invalid_date=>{
+  #    ""Date is invalid"=>{
   #      :row_numbers=>[1],
   #      :css_class=>"invalid_date"
   #    },
-  #    :unacceptable_date_format=>{
+  #    "Unacceptable date format"=>{
   #      :row_numbers=>[2],
   #      :css_class=>"unacceptable_date_format"
   #    },
-  #    :future_date=>{
+  #    "Date is in the future"=>{
   #      :row_numbers=>[3],
   #      :css_class=>"out_of_bounds"
   #    }
@@ -360,14 +365,6 @@ class BulkUploadDataSet
 
   end
 
-  def yield_data?
-    @is_yield_data
-  end
-
-  def trait_data?
-    !@is_yield_data
-  end
-
   # Checks the heading of the uploaded file and sets the attributes
   # +csv_warnings+ and +validation_summary+.  (This method sets only the portion
   # of +validation_summary+ related to field list errors.)  Used by the
@@ -446,32 +443,24 @@ class BulkUploadDataSet
   # A regular expression that must be matched by dates specified in the upload file.
   REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)(-(?<month>\d\d)(-(?<day>\d\d))?)?$/
 
-  # Given a CSV object (vis. "@data") with lineno = 0, convert it to
-  # an array of arrays of hashes where each hash has at least two
-  # keys: :data for the data value copied from the CSV object, and
-  # :validation_result, the result of performing validation on that
-  # value.  For invalid data, a third key, :validation_message, gives
-  # details about the validation error.
-  #
-  # This method sets or alters the following instance variables:
+  # Given a CSV object (vis. "@data") whose lineno attribute equals 0, validate
+  # the data it contains and store the results by setting the following
+  # attributes:
   #     @validation_summary:
-  #         A key is added for each type of error found; the
-  #         corresponding value is a list of rows (by number) where
-  #         that type of error was found
+  #         Contains information about what types of data errors were found and
+  #         the rows in which each type of error was found.
   #     @validated_data:
-  #         This is a list of Hashes, one hash for each row of the
-  #         input file (excluding the heading row).  Each hash has
+  #         An array of arrays of hashes, one hash for each data item of the
+  #         input file.  Each hash has
   #         these keys:
   #             fieldname: The field name for the corresponding value
-  #                 (as given by the heading)
+  #                 (as given by the heading, but normalized)
   #             data: The value itself, except with nil values
   #                 normalized to the empty string
-  #         If validation on a particular value fails, these keys are
-  #         added:
-  #             validation_result: This will always be :valid,
-  #                 :ignored, or :fatal_error
-  #             validation_message: This gives information about the
-  #                 nature of the validation error.
+  #             validation_result: This will always be an object of some class
+  #                 that includes the ValidationResult module--that is, an
+  #                 instance of Valid, Ignored, or some subclass of
+  #                 BulkUploadDataException.
   #     @field_list_error_count:
   #         The number of errors pertaining to the field list of the uploaded file.
   #     @data_value_error_count:
@@ -956,6 +945,9 @@ class BulkUploadDataSet
     upload_treatments
   end
 
+  # Attempt to insert the data contained in the upload file into the appropriate
+  # tables of the database in accordance with any interactively-specified values
+  # and options the user may have chosen.
   def insert_data
     insertion_data = get_insertion_data
 
@@ -1425,6 +1417,14 @@ class BulkUploadDataSet
       # to-do: If different values of e have the same summary_message but different values for result_css_class, the class for the summary message may not match some of the classes for the cells the message refers to.  Resolve this.
       @validation_summary[key][:css_class] = e.result_css_class
     end
+  end
+
+  def yield_data?
+    @is_yield_data
+  end
+
+  def trait_data?
+    !@is_yield_data
   end
 
 end
