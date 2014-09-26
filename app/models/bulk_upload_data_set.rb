@@ -1390,9 +1390,12 @@ class BulkUploadDataSet
   def add_to_validation_summary(e, row_number)
     key = e.result
     if @validation_summary.has_key? key
-      @validation_summary[key] << row_number
+      @validation_summary[key][:row_numbers] << row_number
+      @validation_summary[key][:css_class] = e.result_css_class
     else
-      @validation_summary[key] = [ row_number ]
+      @validation_summary[key] = {}
+      @validation_summary[key][:row_numbers] = [ row_number ]
+      @validation_summary[key][:css_class] = e.result_css_class
       @validation_summary_messages[key] = e.summary_message
     end
   end

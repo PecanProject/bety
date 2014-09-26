@@ -67,24 +67,27 @@ module BulkUploadHelper
           contents += content_tag :ul do
             list_items = "".html_safe
             @data_set.validation_summary.each_pair do |key, value|
-              value.uniq!
+              if key == :field_list_errors
+                next
+              end
+              row_list = value[:row_numbers]
+              row_list.uniq!
               suffix = ''
-              if value.size > MAXIMUM_ERRORS_TO_DISPLAY_PER_TYPE
-                value = value[0..10]
+              if row_list.size > MAXIMUM_ERRORS_TO_DISPLAY_PER_TYPE
+                row_list = row_list[0..10]
                 suffix = ' ...'
               end
-              if key != :field_list_errors
-                list_items += content_tag :li do
-                  li_content = "* " + @data_set.validation_summary_messages[key]
-                  li_content << " in these rows: " + value.map { |row_no| link_to row_no, anchor: "row_#{row_no}" }.join(', ') + suffix
-                  if ERROR_REMEDY_MAP.has_key?(key)
-                    # provide a link to page to search for or add
-                    # missing referent:
-                    li_content << (link_to ERROR_REMEDY_MAP[key][:link_text], ERROR_REMEDY_MAP[key][:link_url])
-                  end
-                  raw li_content
+
+              list_items += content_tag :li, class: value[:css_class] do
+                li_content = "* " + @data_set.validation_summary_messages[key]
+                li_content << " in these rows: " + row_list.map { |row_no| link_to row_no, anchor: "row_#{row_no}" }.join(', ') + suffix
+                if ERROR_REMEDY_MAP.has_key?(key)
+                  # provide a link to page to search for or add
+                  # missing referent:
+                  li_content << (link_to ERROR_REMEDY_MAP[key][:link_text], ERROR_REMEDY_MAP[key][:link_url])
                 end
-              end # if .. has_key?
+                raw li_content
+              end
             end # each_pair do
             list_items
           end # content_tag :ul

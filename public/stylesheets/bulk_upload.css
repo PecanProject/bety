@@ -61,18 +61,26 @@ td.valid { background-color: lightgreen }
 
 td.ignored { background-color: grey }
 
+#error_explanation li.non_unique_referent { color: orange }
 td.non_unique_referent { background-color: orange }
 
-td.missing_referent { background-color: red }
+#error_explanation li.missing_referent { color: deeppink }
+td.missing_referent { background-color: deeppink }
 
+#error_explanation li.missing_correlative { color: tomato }
 td.missing_correlative { background-color: tomato }
 
+#error_explanation li.unacceptable_date_format { color: pink }
 td.unacceptable_date_format { background-color: pink }
 
+#error_explanation li.invalid_date { color: purple }
 td.invalid_date { background-color: purple }
 
+#error_explanation li.inconsistent_correlatives { color: yellow }
 td.inconsistent_correlatives { background-color: yellow }
 
+#error_explanation li.out_of_bounds { color: #a8a }
 td.out_of_bounds { background-color: #aa88aa }
 
+#error_explanation li.unparsable_number { color: blue }
 td.unparsable_number { background-color: blue }
