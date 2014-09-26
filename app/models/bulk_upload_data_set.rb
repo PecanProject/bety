@@ -629,11 +629,11 @@ class BulkUploadDataSet
                 v = Variable.find_by_name(column[:fieldname])
 
                 if !v.min.nil? and value < v.min.to_f
-                  raise OutOfRangeVariableException, "The value of the #{v.name} trait must be at least #{v.min}."
+                  raise OutOfRangeVariableException, "The value of the #{v.name} trait must be at least #{v.min} #{v.units}."
                 end
 
                 if !v.max.nil? and value > v.max.to_f
-                  raise OutOfRangeVariableException, "The value of the #{v.name} trait must be at most #{v.max}."
+                  raise OutOfRangeVariableException, "The value of the #{v.name} trait must be at most #{v.max} #{v.units}."
                 end
               end
 
