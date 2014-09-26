@@ -739,7 +739,7 @@ class BulkUploadDataSet
 
     @field_list_error_count = @validation_summary[:field_list_errors].size
     @data_value_error_count = (@validation_summary.keys - [ :field_list_errors ]).
-      collect{|key| @validation_summary[key].size}.reduce(:+) || 0 # || 0 "fixes" the case where there are no data value errors
+      collect{|key| @validation_summary[key][:row_numbers].size}.reduce(:+) || 0 # || 0 "fixes" the case where there are no data value errors
     @total_error_count = @field_list_error_count + @data_value_error_count
     @file_has_fatal_errors = !@total_error_count.zero?
 
