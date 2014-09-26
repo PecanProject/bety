@@ -76,8 +76,8 @@ td.unacceptable_date_format { background-color: pink }
 #error_explanation li.invalid_date { color: purple }
 td.invalid_date { background-color: purple }
 
-#error_explanation li.inconsistent_correlatives { color: yellow }
-td.inconsistent_correlatives { background-color: yellow }
+#error_explanation li.inconsistent_correlatives { color: #B2B200 }
+td.inconsistent_correlatives { background-color: #B2B200 }
 
 #error_explanation li.out_of_bounds { color: #a8a }
 td.out_of_bounds { background-color: #aa88aa }
