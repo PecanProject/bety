@@ -79,7 +79,7 @@ module BulkUploadHelper
               end
 
               list_items += content_tag :li, class: value[:css_class] do
-                li_content = "* " + @data_set.validation_summary_messages[key]
+                li_content = "* " + key
                 li_content << " in these rows: " + row_list.map { |row_no| link_to row_no, anchor: "row_#{row_no}" }.join(', ') + suffix
                 if ERROR_REMEDY_MAP.has_key?(key)
                   # provide a link to page to search for or add

@@ -73,7 +73,7 @@ end
 
 class MissingReferenceException < UnresolvableReferenceException
   def initialize(model_class_or_relation = nil, match_column_name = '', raw_value = '', table_entity_name = '')
-    super(:missing_referent, "Not found in #{table_entity_name.pluralize} table", "Unresolvable #{@table_entity_name} reference")
+    super(:missing_referent, "Not found in #{table_entity_name.pluralize} table", "Unresolvable #{table_entity_name} reference")
   end
 end
 
@@ -180,12 +180,15 @@ end
 class BulkUploadDataSet
   include ActionView::Helpers::NumberHelper # for rounding
 
-  # An Array consisting of the headers of the uploaded CSV file.  This is set upon instantiation.
+  # An Array consisting of the (normalized) headers of the uploaded CSV file.
+  # Normalization strips leading and trailing whitespace and for headings
+  # matching one of the RECOGNIZED_COLUMNS, the heading is folded to the
+  # canonical case. This is set upon instantiation.
   attr :headers
 
   # A list containing one item for each row of the input file (excluding the
   # heading row).  Each item is itself a list of hashes, one hash for each
-  # column of the row.Each hash has these keys:
+  # column of the row.  Each hash has these keys:
   # fieldname::
   #
   #   The field name for the corresponding value (as given by the heading)
@@ -193,52 +196,68 @@ class BulkUploadDataSet
   # data::
   #   The value itself, except with nil values normalized to the empty string
   #
-  # If validation on a particular value fails, these keys are added:
+  # During validation, this key is added:
   #
   # validation_result::
   #
-  #   This will always be :valid, :ignored, or :fatal_error.
+  #   This will always be some class that +include+s the ValidationResult
+  #   module--that is, Valid, Ignored, or some subclass of
+  #   BulkUploadDataException.
   #
-  # validation_message::
-  #
-  #   This gives information about the nature of the validation error.
-  #
-  #   This attribute is set by +validate_csv_data+ and used by the
+  #   Set by +validate_csv_data+ and used by the
   #   +display_csv_data+ template.
   #
   # ==== Example
+  #  [
   #   [
-  #      [
-  #        {:fieldname=>"date",
-  #         :data=>"bogus date",
-  #         :validation_result=>:fatal_error,
-  #         :validation_message=>"dates must be in the form 1999-01-01, 1999-01, or 1999"},
-  #        {:fieldname=>"mean",
-  #         :data=>" 0.1",
-  #         :validation_result=>:ignored,
-  #         :validation_message=>"This column will be ignored."}
-  #      ],
-  #      [
-  #        {:fieldname=>"date",
-  #         :data=>"666        ",
-  #         :validation_result=>:fatal_error,
-  #         :validation_message=>"dates must be in the form 1999-01-01, 1999-01, or 1999"},
-  #       {:fieldname=>"mean",
-  #        :data=>" 0.1",
-  #        :validation_result=>:ignored,
-  #        :validation_message=>"This column will be ignored."}
-  #     ],
-  #     [
-  #       {:fieldname=>"date",
-  #        :data=>"1066-13-5",
-  #        :validation_result=>:fatal_error,
-  #        :validation_message=>"dates must be in the form 1999-01-01, 1999-01, or 1999"},
-  #       {:fieldname=>"mean",
-  #        :data=>"   0.1",
-  #        :validation_result=>:ignored,
-  #        :validation_message=>"This column will be ignored."}
-  #     ]
+  #    {
+  #      :fieldname=>"yield",
+  #      :data=>"1",
+  #      :validation_result=>#<Valid:0x007fd7db54c940
+  #                                  @result=:valid,
+  #                                  @message="",
+  #                                  @summary_message="",
+  #                                  ...>
+  #    },
+  #    {
+  #      :fieldname=>"date",
+  #      :data=>"2001-13-11",
+  #      :validation_result=>#<InvalidDateException: InvalidDateException>
+  #    }
+  #   ],
+  #   [
+  #    {
+  #      :fieldname=>"yield",
+  #      :data=>"2",
+  #      :validation_result=>#<Valid:0x007fd7db54bfb8
+  #                                  @result=:valid,
+  #                                  @message="",
+  #                                  @summary_message="",
+  #                                  ...>
+  #    },
+  #    {
+  #      :fieldname=>"date",
+  #      :data=>"11/6/2000",
+  #      :validation_result=>#<UnacceptableDateFormatException: UnacceptableDateFormatException>
+  #    }
+  #   ],
+  #   [
+  #    {
+  #      :fieldname=>"yield",
+  #      :data=>"3",
+  #      :validation_result=>#<Valid:0x007fd7db54b608
+  #                                  @result=:valid,
+  #                                  @message="",
+  #                                  @summary_message="",
+  #                                  ...>
+  #    },
+  #    {
+  #      :fieldname=>"date",
+  #      :data=>"2050-10-11",
+  #      :validation_result=>#<FutureDateException: FutureDateException>
+  #    }
   #   ]
+  #  ]
   #
   attr :validated_data
 
@@ -250,11 +269,22 @@ class BulkUploadDataSet
   # type of error found, and the value of each such key consists of a list of
   # row numbers where the corresponding error was found.
   # ==== Example
-  #   {:field_list_errors=>["You must have a yield column in your CSV file."],
-  #    :unacceptable_date_format=>[1, 2, 3]}
+  #  {
+  #    :field_list_errors=>['In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'],
+  #    :invalid_date=>{
+  #      :row_numbers=>[1],
+  #      :css_class=>"invalid_date"
+  #    },
+  #    :unacceptable_date_format=>{
+  #      :row_numbers=>[2],
+  #      :css_class=>"unacceptable_date_format"
+  #    },
+  #    :future_date=>{
+  #      :row_numbers=>[3],
+  #      :css_class=>"out_of_bounds"
+  #    }
+  #  }
   attr :validation_summary
-
-  attr :validation_summary_messages
 
   # A list of warnings.  Set by +check_header_list+ and used by the
   # +display_csv_file+ template.  This list is either empty or is a string
@@ -345,7 +375,6 @@ class BulkUploadDataSet
   def check_header_list
 
     @validation_summary = {}
-    @validation_summary_messages = {}
     @validation_summary[:field_list_errors] = []
     @csv_warnings = []
 
@@ -639,7 +668,6 @@ class BulkUploadDataSet
 
             else
               column[:validation_result] = Ignored.new
-              column[:validation_message] = "This column will be ignored."
             end
 
           end # case
@@ -1388,15 +1416,14 @@ class BulkUploadDataSet
   end
 
   def add_to_validation_summary(e, row_number)
-    key = e.result
+    key = e.summary_message
     if @validation_summary.has_key? key
       @validation_summary[key][:row_numbers] << row_number
-      @validation_summary[key][:css_class] = e.result_css_class
     else
       @validation_summary[key] = {}
       @validation_summary[key][:row_numbers] = [ row_number ]
+      # to-do: If different values of e have the same summary_message but different values for result_css_class, the class for the summary message may not match some of the classes for the cells the message refers to.  Resolve this.
       @validation_summary[key][:css_class] = e.result_css_class
-      @validation_summary_messages[key] = e.summary_message
     end
   end
 
