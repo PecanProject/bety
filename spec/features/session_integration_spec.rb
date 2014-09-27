@@ -26,7 +26,7 @@ feature 'Login works' do
       fill_in 'Login', :with => 'carlcrott'
       fill_in 'Password', :with => 'wrong'
       click_button 'Log in'
-      page.should have_content("The login credentials you provided are incorrect")
+      page.should have_content("Couldn't log you in as ")
     end    
   end
 end
