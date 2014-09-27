@@ -34,7 +34,7 @@ feature 'CSV file upload works' do
       first(:xpath, ".//td[text() = 'Adams']/ancestor::tr/td[8]/a[1]").click
       click_link 'Bulk Upload'
       page.should_not have_content 'Select a Citation'
-      page.should have_content 'Specify Dataset-wide values'
+      page.should have_content 'Specify '
       click_link 'Specify'
       click_button 'Confirm'
       page.should have_content 'Please Verify Data-Set References Before Uploading'

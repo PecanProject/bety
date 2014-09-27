@@ -50,7 +50,7 @@ describe BulkUploadDataSet do
 
       it "should be marked as a yield upload file" do
         dataset.check_header_list
-        expect(dataset.yield_data?).to be_true
+        expect(dataset.send(:yield_data?)).to be_true
       end
 
     end
@@ -75,7 +75,7 @@ describe BulkUploadDataSet do
 
         it "should be marked as a trait upload file" do
           dataset.check_header_list
-          expect(dataset.trait_data?).to be_true
+          expect(dataset.send(:trait_data?)).to be_true
         end
 
       end
