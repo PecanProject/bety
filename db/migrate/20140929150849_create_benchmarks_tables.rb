@@ -19,6 +19,9 @@ class CreateBenchmarksTables < ActiveRecord::Migration
       t.string :name
       t.text :description 
       t.integer :citation_id, :limit => 8
+      t.integer :user_id, :limit => 8
+      t.datetime :created_at
+      t.datetime :updated_at
     end
     change_column :metrics, :id, :integer, :limit => 8
 
@@ -26,8 +29,10 @@ class CreateBenchmarksTables < ActiveRecord::Migration
       t.integer :ref_id, :limit => 8, :null => false
       t.integer :ensemble_id, :limit => 8, :null => false
       t.integer :model_id, :limit => 8, :null => false
-      t.datetime :datetime
       t.integer :citation_id, :limit => 8, :null => false
+      t.integer :user_id, :limit => 8
+      t.datetime :created_at
+      t.datetime :updated_at
     end
     change_column :benchmarks_ensembles, :id, :integer, :limit => 8
 
@@ -35,11 +40,17 @@ class CreateBenchmarksTables < ActiveRecord::Migration
       t.integer :benchmarks_ensembles_id, :limit => 8, :null => false
       t.integer :benchmark_id, :limit => 8, :null => false
       t.integer :metric_id, :limit => 8, :null => false
+      t.integer :user_id, :limit => 8
+      t.datetime :created_at
+      t.datetime :updated_at
     end
 
     create_table :benchmarks_ref_runs do |t|
       t.integer :model_id, :limit => 8 
       t.text :settings 
+      t.integer :user_id, :limit => 8
+      t.datetime :created_at
+      t.datetime :updated_at
     end
     change_column :benchmarks_ref_runs, :id, :integer, :limit => 8
 
