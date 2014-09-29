@@ -61,26 +61,26 @@ td.valid { background-color: lightgreen }
 
 td.ignored { background-color: grey }
 
-#error_explanation li.non_unique_referent { color: orange }
+#error_explanation li.non_unique_referent, #error_explanation li.non_unique_referent a { color: orange }
 td.non_unique_referent { background-color: orange }
 
-#error_explanation li.missing_referent { color: deeppink }
+#error_explanation li.missing_referent, #error_explanation li.missing_referent a { color: deeppink }
 td.missing_referent { background-color: deeppink }
 
-#error_explanation li.missing_correlative { color: tomato }
+#error_explanation li.missing_correlative, #error_explanation li.missing_correlative a { color: tomato }
 td.missing_correlative { background-color: tomato }
 
-#error_explanation li.unacceptable_date_format { color: pink }
+#error_explanation li.unacceptable_date_format, #error_explanation li.unacceptable_date_format a { color: pink }
 td.unacceptable_date_format { background-color: pink }
 
-#error_explanation li.invalid_date { color: purple }
+#error_explanation li.invalid_date, #error_explanation li.invalid_date a { color: purple }
 td.invalid_date { background-color: purple }
 
-#error_explanation li.inconsistent_correlatives { color: #B2B200 }
+#error_explanation li.inconsistent_correlatives, #error_explanation li.inconsistent_correlatives a { color: #B2B200 }
 td.inconsistent_correlatives { background-color: #B2B200 }
 
-#error_explanation li.out_of_bounds { color: #a8a }
+#error_explanation li.out_of_bounds, #error_explanation li.out_of_bounds a { color: #a8a }
 td.out_of_bounds { background-color: #aa88aa }
 
-#error_explanation li.unparsable_number { color: blue }
+#error_explanation li.unparsable_number, #error_explanation li.unparsable_number a { color: blue }
 td.unparsable_number { background-color: blue }
