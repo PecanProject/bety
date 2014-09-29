@@ -33,7 +33,7 @@ describe BulkUploadDataSet do
 
       it "we should get a warning that it will ignore column 'bogus'" do
         dataset.check_header_list
-        assert_equal(dataset.csv_warnings, ["These columns will be ignored:<br>bogus"])
+        assert_equal(["These columns will be ignored:<br>bogus"], dataset.csv_warnings)
       end
 
     end
@@ -355,26 +355,28 @@ describe BulkUploadDataSet do
 =end
       expect {
         dataset.validate_csv_data
-      }.to change { dataset.validated_data }.from(nil).
-        to (
-            [
+      }.to change { dataset.validated_data.map do |row|
+          row.map do |column|
+            column[:validation_result] = column[:validation_result].class; column
+          end
+        end rescue nil }.from(nil).
+        to ([
              [
-              {:fieldname=>"yield", :data=>"5.5", :validation_result=>:valid},
-              {:fieldname=>"citation_author", :data=>"Adams", :validation_result=>:valid},
-              {:fieldname=>"citation_year", :data=>"1986", :validation_result=>:valid},
-              {:fieldname=>"citation_title", :data=>"Quantum Yields", :validation_result=>:valid},
-              {:fieldname=>"site", :data=>"University of Nevada Biological Sciences Center", :validation_result=>:valid},
-              {:fieldname=>"species", :data=>"Lolium perenne", :validation_result=>:valid},
-              {:fieldname=>"treatment", :data=>"observational", :validation_result=>:valid, :validation_message=>"This column will be ignored."},
-              {:fieldname=>"access_level", :data=>"3", :validation_result=>:valid},
-              {:fieldname=>"date", :data=>"1984-07-14", :validation_result=>:valid},
-              {:fieldname=>"n", :data=>"5000", :validation_result=>:valid},
-              {:fieldname=>"SE", :data=>"1.98", :validation_result=>:valid},
-              {:fieldname=>"notes", :data=>"This is bogus yield data."},
-              {:fieldname=>"cultivars", :data=>"Gremie", :validation_result=>:ignored, :validation_message=>"This column will be ignored."}
+              {:fieldname=>"yield", :data=>"5.5", :validation_result=>Valid},
+              {:fieldname=>"citation_author", :data=>"Adams", :validation_result=>Valid},
+              {:fieldname=>"citation_year", :data=>"1986", :validation_result=>Valid},
+              {:fieldname=>"citation_title", :data=>"Quantum Yields", :validation_result=>Valid},
+              {:fieldname=>"site", :data=>"University of Nevada Biological Sciences Center", :validation_result=>Valid},
+              {:fieldname=>"species", :data=>"Lolium perenne", :validation_result=>Valid},
+              {:fieldname=>"treatment", :data=>"observational", :validation_result=>Valid},
+              {:fieldname=>"access_level", :data=>"3", :validation_result=>Valid},
+              {:fieldname=>"date", :data=>"1984-07-14", :validation_result=>Valid},
+              {:fieldname=>"n", :data=>"5000", :validation_result=>Valid},
+              {:fieldname=>"SE", :data=>"1.98", :validation_result=>Valid},
+              {:fieldname=>"notes", :data=>"This is bogus yield data.", :validation_result=>Valid},
+              {:fieldname=>"cultivar", :data=>"Gremie", :validation_result=>Valid}
              ]
-            ]
-            )
+            ])
 
     end
 
@@ -437,16 +439,21 @@ describe BulkUploadDataSet do
         assert_not_nil @insertion_data, "Failed to get insertion data"
         @expected_data = {
           "access_level"=>"3",
-          "date"=>"1984-07-14", "n"=>"5000",
+          "date"=>"1984-07-14",
+          "n"=>"5000",
           "notes"=>"This is bogus yield data.",
-          "citation_id"=>3, "site_id"=>2, "specie_id"=>18,
-          "treatment_id"=>1, "checked"=>0,
+          "citation_id"=>3,
+          "site_id"=>2,
+          "specie_id"=>18,
+          "treatment_id"=>1,
+          "cultivar_id"=>417,
+          "checked"=>0,
           "user_id"=>1,
-          "mean"=>"5.5",
           "stat"=>"2",
-          "statname"=>"SE"
+          "statname"=>"SE",
+          "mean"=>"5.5"
         }
-        assert_equal(@insertion_data[0],@expected_data,"Insertion data does not match expected")
+        assert_equal(@expected_data,@insertion_data[0],"Insertion data does not match expected")
       end
     end
 
@@ -460,7 +467,7 @@ describe BulkUploadDataSet do
         @dataset = BulkUploadDataSet.new(@session)
         @insertion_data = @dataset.send("get_insertion_data")
         @rounded_yield= @insertion_data[0]["mean"]
-        assert_equal(@rounded_yield.to_f,5.9,"Rounded value does not match expected")
+        assert_equal(5.9,@rounded_yield.to_f,"Rounded value does not match expected")
       end
     end
 
