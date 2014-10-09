@@ -1475,7 +1475,7 @@ CREATE TABLE traits (
     updated_at timestamp(6) without time zone,
     variable_id bigint,
     user_id bigint,
-    checked integer,
+    checked integer DEFAULT 0,
     access_level integer,
     entity_id bigint,
     method_id bigint,
@@ -1673,7 +1673,7 @@ CREATE SEQUENCE users_id_seq
 CREATE TABLE users (
     id bigint DEFAULT nextval('users_id_seq'::regclass) NOT NULL,
     login character varying(40),
-    name character varying(100),
+    name character varying(100) DEFAULT ''::character varying,
     email character varying(100),
     city character varying(255),
     country character varying(255),
@@ -1862,7 +1862,7 @@ CREATE TABLE yields (
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
     user_id bigint,
-    checked integer,
+    checked integer DEFAULT 0,
     access_level integer,
     method_id bigint
 );

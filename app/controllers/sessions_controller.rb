@@ -24,12 +24,11 @@ class SessionsController < ApplicationController
 #      session[:page_access_requirement] = user.page_access_level
 #      session[:access_level] = user.access_level
       redirect_to root_path
-      flash[:notice] = "Logged in successfully"
+      flash[:success] = "Logged in successfully"
     else
       note_failed_signin
       @login       = params[:login]
       @remember_me = params[:remember_me]
-      flash[:notice] = "The login credentials you provided are incorrect."
       render :action => 'new'
     end
   end
