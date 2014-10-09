@@ -14,10 +14,6 @@ DATABASE=${DATABASE:-"bety"}
 # also used to connect to the database for most operations
 OWNER=${OWNER:-"bety"}
 
-# psql options
-# this allows you to add any other options
-PG_OPT=${PG_OPT:-""}
-
 # Keep the dump file even if the update failed?
 # Set this to YES to keep the update file; this is helpful for debugging the
 # script. The default value is NO and the update file will be removed.
@@ -47,16 +43,17 @@ curl -o betydump.gz https://ebi-forecast.igb.illinois.edu/pecan/dump/betydump.ps
 ${POSTGRES} dropdb ${DATABASE}
 ${POSTGRES} createdb -O ${OWNER} ${DATABASE}
 
-gunzip -c betydump.gz | ${CMD} ${DATABASE}
+gunzip -c betydump.gz | ${CMD} -d ${DATABASE}
+rm betydump.gz
 
 if [ "${USERS:-YES}" == "YES" ]; then
   ID=2
 
-  RESULT=$( psql ${PG_OPT} -U ${OWNER} -t -d "${DATABASE}" -c "SELECT count(id) FROM users WHERE login='carya';" )
+  RESULT=$( ${POSTGRES} psql -t -d "${DATABASE}" -c "SELECT count(id) FROM users WHERE login='carya';" )
   if [ ${RESULT} -eq 0 ]; then
     RESULT='UPDATE 0'
     while [ "${RESULT}" = "UPDATE 0" ]; do
-      RESULT=$( psql ${PG_OPT} -U ${OWNER} -t -d "${DATABASE}" -c "UPDATE users SET login='carya', name='carya', crypted_password='df8428063fb28d75841d719e3447c3f416860bb7', salt='carya', access_level=1, page_access_level=1 WHERE id=${ID};" )
+      RESULT=$( ${POSTGRES} psql -t -d "${DATABASE}" -c "UPDATE users SET login='carya', name='carya', crypted_password='df8428063fb28d75841d719e3447c3f416860bb7', salt='carya', access_level=1, page_access_level=1 WHERE id=${ID};" )
       ((ID++))
     done
   fi
@@ -65,11 +62,11 @@ if [ "${USERS:-YES}" == "YES" ]; then
   # set all users
   for f in 1 2 3 4; do
     for g in 1 2 3 4; do
-      RESULT=$( psql ${PG_OPT} -U ${OWNER} -t -d "${DATABASE}" -c "SELECT count(id) FROM users WHERE login='carya${f}${g}';" )
+      RESULT=$( ${POSTGRES} psql -t -d "${DATABASE}" -c "SELECT count(id) FROM users WHERE login='carya${f}${g}';" )
       if [ ${RESULT} -eq 0 ]; then
         RESULT='UPDATE 0'
         while [ "${RESULT}" = "UPDATE 0" ]; do
-          RESULT=$( psql ${PG_OPT} -U ${OWNER} -t -d "${DATABASE}" -c "UPDATE users SET login='carya${f}${g}', name='carya a-${f} p-${g}', crypted_password='df8428063fb28d75841d719e3447c3f416860bb7', salt='carya', access_level=${f}, page_access_level=${g} WHERE id=${ID};" )
+          RESULT=$( ${POSTGRES} psql -t -d "${DATABASE}" -c "UPDATE users SET login='carya${f}${g}', name='carya a-${f} p-${g}', crypted_password='df8428063fb28d75841d719e3447c3f416860bb7', salt='carya', access_level=${f}, page_access_level=${g} WHERE id=${ID};" )
           ((ID++))
         done
       fi
@@ -79,16 +76,13 @@ if [ "${USERS:-YES}" == "YES" ]; then
   echo "  (X=access_level, Y=page_access_level)."
 
   # add guest user
-  RESULT=$( psql ${PG_OPT} -U ${OWNER} -t -d "${DATABASE}" -c "SELECT count(id) FROM users WHERE login='guestuser';" )
+  RESULT=$( ${POSTGRES} psql -t -d "${DATABASE}" -c "SELECT count(id) FROM users WHERE login='guestuser';" )
   if [ ${RESULT} -eq 0 ]; then
     RESULT='UPDATE 0'
     while [ "${RESULT}" = "UPDATE 0" ]; do
-      RESULT=$( psql ${PG_OPT} -U ${OWNER} -t -d "${DATABASE}" -c "UPDATE users SET login='guestuser', name='guestuser', crypted_password='994363a949b6486fc7ea54bf40335127f5413318', salt='bety', access_level=4, page_access_level=4 WHERE id=${ID};" )
+      RESULT=$( ${POSTGRES} psql -t -d "${DATABASE}" -c "UPDATE users SET login='guestuser', name='guestuser', crypted_password='994363a949b6486fc7ea54bf40335127f5413318', salt='bety', access_level=4, page_access_level=4 WHERE id=${ID};" )
       ((ID++))
     done
   fi
   echo "Added guestuser with access_level=4 and page_access_level=4"
 fi
-
-
-rm betydump.gz
