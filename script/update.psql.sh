@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 # ----------------------------------------------------------------------
 # START CONFIGURATION SECTION
 # ----------------------------------------------------------------------
@@ -40,7 +38,16 @@ export CMD="${POSTGRES} psql -U ${OWNER}"
 # load latest dump of the database
 curl -o betydump.gz https://ebi-forecast.igb.illinois.edu/pecan/dump/betydump.psql.gz
 
-${POSTGRES} dropdb ${DATABASE}
+
+# TODO: trap other errors as well
+# try to drop the database if it exists
+if ${POSTGRES} psql ${DATABASE} -c '\q'; then
+    if ! ${POSTGRES} dropdb ${DATABASE}; then
+        ${POSTGRES} dropdb ${DATABASE}
+        exit 1
+    fi
+fi
+
 ${POSTGRES} createdb -O ${OWNER} ${DATABASE}
 
 gunzip -c betydump.gz | ${CMD} -d ${DATABASE}
