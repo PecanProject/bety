@@ -131,7 +131,7 @@ end
 
 class UnacceptableDateFormatException < BulkUploadDataException
   def initialize
-    super(:unacceptable_date_format, "Dates must be in the form 1999-01-01, 1999-01, or 1999", "Unacceptable date format")
+    super(:unacceptable_date_format, "Dates must be in the form 1999-01-01", "Unacceptable date format")
   end
 end
 
@@ -441,7 +441,8 @@ class BulkUploadDataSet
   RECOGNIZED_COLUMNS =  %w{yield citation_doi citation_author citation_year citation_title site species treatment access_level cultivar date n SE notes}
 
   # A regular expression that must be matched by dates specified in the upload file.
-  REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)(-(?<month>\d\d)(-(?<day>\d\d))?)?$/
+  #REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)(-(?<month>\d\d)(-(?<day>\d\d))?)?$/
+  REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)(?<month>\d\d)(?<day>\d\d)$/
 
   # Given a CSV object (vis. "@data") whose lineno attribute equals 0, validate
   # the data it contains and store the results by setting the following
