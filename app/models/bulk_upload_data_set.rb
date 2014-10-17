@@ -1280,9 +1280,13 @@ class BulkUploadDataSet
   # convert @data to an Array of Hashes suitable for inserting into
   # the traits table.  Used by the +insert_data+ action.
   def get_insertion_data
-    # Get interactively-specified values, or set to empty hash if nil:
-    interactively_specified_values = @session["global_values"] || {}
 
+    # Get interactively-specified values, or set to empty hash if nil; since we
+    # are going to alter interactively_specified_values, we use clone to make a
+    # copy so that the session value remains as is.
+    interactively_specified_values = @session["global_values"].clone || {}
+
+    # TO DO: decide if this code serves any useful purpose:
     # Double-check that all form fields are were non-empty:
     interactively_specified_values.keep_if do |key, value|
       !(value.empty? || value.nil?)
