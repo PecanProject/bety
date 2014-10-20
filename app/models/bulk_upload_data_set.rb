@@ -442,7 +442,7 @@ class BulkUploadDataSet
 
   # A regular expression that must be matched by dates specified in the upload file.
   #REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)(-(?<month>\d\d)(-(?<day>\d\d))?)?$/
-  REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)(?<month>\d\d)(?<day>\d\d)$/
+  REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)-(?<month>\d\d)-(?<day>\d\d)$/
 
   # Given a CSV object (vis. "@data") whose lineno attribute equals 0, validate
   # the data it contains and store the results by setting the following
@@ -1285,7 +1285,7 @@ class BulkUploadDataSet
     # Get interactively-specified values, or set to empty hash if nil; since we
     # are going to alter interactively_specified_values, we use clone to make a
     # copy so that the session value remains as is.
-    interactively_specified_values = @session["global_values"].clone || {}
+    interactively_specified_values = @session["global_values"].clone rescue {}
 
     # TO DO: decide if this code serves any useful purpose:
     # Double-check that all form fields are were non-empty:
