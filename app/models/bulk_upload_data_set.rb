@@ -473,7 +473,7 @@ class BulkUploadDataSet
   def validate_csv_data
     @validated_data = []
     @data.each do |row|
-      validated_row = row.collect { |value| { fieldname: normalize_heading(value[0]), data: value[1], validation_result: Valid.new } }
+      validated_row = row.collect { |value| { fieldname: value[0], data: value[1], validation_result: Valid.new } }
       @validated_data << validated_row
     end
 
@@ -804,7 +804,7 @@ class BulkUploadDataSet
     site_names = []
     if @headers.include?("site")
       @data.each do |row|
-        site_names << normalize(row["site"])
+        site_names << row["site"].downcase
       end
     else
       global_site = @session[:global_values][:site]
@@ -831,7 +831,7 @@ class BulkUploadDataSet
     species_names = []
     if @headers.include?("species")
       @data.each do |row|
-        species_names << normalize(row["species"])
+        species_names << row["species"].downcase
       end
     else
       global_species = @session[:global_values][:species]
@@ -861,7 +861,7 @@ class BulkUploadDataSet
         cultivar_name = row["cultivar"]
         if !cultivar_name.nil? and !cultivar_name.strip.empty?
           # We can assume there is a "species" column since (for now at least) we require a species field if there is a cultivar field.
-          cultivars << { cultivar_name: normalize(cultivar_name), species_name: normalize(row["species"]) }
+          cultivars << { cultivar_name: cultivar_name.downcase, species_name: row["species"].downcase }
         end
       end
     else
@@ -914,15 +914,15 @@ class BulkUploadDataSet
     if @headers.include?("treatment")
       if @headers.include?("citation_doi")
         @data.each do |row|
-          treatments << { treatment_name: normalize(row["treatment"]), citation: doi_of_existing_citation?(row["citation_doi"]) }
+          treatments << { treatment_name: row["treatment"].downcase, citation: doi_of_existing_citation?(row["citation_doi"]) }
         end
       elsif @headers.include?("citation_author")
         @data.each do |row|
-          treatments << { treatment_name: normalize(row["treatment"]), citation: existing_citation(row["citation_author"], row["citation_year"], row["citation_title"]) }
+          treatments << { treatment_name: row["treatment"].downcase, citation: existing_citation(row["citation_author"], row["citation_year"], row["citation_title"]) }
         end
       else
         @data.each do |row|
-          treatments << { treatment_name: normalize(row["treatment"]), citation: Citation.find(@session[:citation]) }
+          treatments << { treatment_name: row["treatment"].downcase, citation: Citation.find(@session[:citation]) }
         end
       end
     else
@@ -1004,6 +1004,16 @@ class BulkUploadDataSet
 
     csv = CSV.open(csvpath, { headers: true })
 
+    # convert all headings to canonical form (strip whitespace and correct
+    # capitalization)
+    csv.header_convert { |h| normalize_heading(h) }
+
+    # normalize whitespace in all data fields where whitespace is not
+    # significant; keep case for display purposes--delay folding to lowercase
+    csv.convert do |value, field_info|
+      field_info[:header] == 'notes' ? value : value.squish
+    end
+
     if @unvalidated
       # Checks that the file referenced by the CSV object @data is
       # well formed and triggers a CSV::MalformedCSVError exception if
@@ -1020,7 +1030,7 @@ class BulkUploadDataSet
     end
 
     csv.readline # need to read first line to get headers
-    @headers = normalize_headers(csv.headers)
+    @headers = csv.headers
     csv.rewind
 
     # store CSV object in instance variable
@@ -1038,13 +1048,6 @@ class BulkUploadDataSet
     else
       heading
     end
-  end
-
-  def normalize_headers(headers)
-    headers.map! do |heading|
-      heading = normalize_heading(heading)
-    end
-    headers
   end
 
   # Using the trait_covariate_associations table and the column headings in the
@@ -1112,10 +1115,6 @@ class BulkUploadDataSet
 
   end
 
-  def normalize(str)
-    str.squish.downcase
-  end
-
   # TO-DO: Decide if these methods should fail if we don't find a
   # *unique* referent in the database (at least until we add
   # uniqueness constraints on the database).
@@ -1129,7 +1128,7 @@ class BulkUploadDataSet
 
   def existing?(model_class_or_relation, match_column_name, raw_value, table_entity_name)
     matches = model_class_or_relation.where(["#{sql_columnref_to_normlized_columnref(match_column_name)} = :stored_value",
-                                             { stored_value: normalize(raw_value) }])
+                                             { stored_value: raw_value.downcase }])
     if matches.size > 1
       raise NonUniquenessException.new(model_class_or_relation, match_column_name, raw_value, table_entity_name)
     elsif matches.size == 0
@@ -1170,7 +1169,7 @@ class BulkUploadDataSet
 
     c = Citation.where("#{sql_columnref_to_normlized_columnref("author")} = :author " +
                        "AND year = :year AND #{sql_columnref_to_normlized_columnref("title")} LIKE :title_matcher",
-                       { author: normalize(author), year: year, title_matcher: "#{normalize(title)}%" })
+                       { author: author.downcase, year: year, title_matcher: "#{title.downcase}%" })
 
     if c.size > 1
       raise NonUniquenessException
