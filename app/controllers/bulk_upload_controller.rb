@@ -131,6 +131,7 @@ class BulkUploadController < ApplicationController
       return
     rescue Exception => e # catches invalid UTF-8 byte sequence errors and empty lines
       flash[:error] = e.message
+      logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
       redirect_to(action: "start_upload")
       return
     end
@@ -180,6 +181,7 @@ class BulkUploadController < ApplicationController
   # verifying the data.
   def confirm_data
     if params["global_values"]
+      # TO-DO: validate date if given in form
       session[:global_values] = params["global_values"]
     end
     if params["rounding"]
