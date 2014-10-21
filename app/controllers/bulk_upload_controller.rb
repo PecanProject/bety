@@ -200,7 +200,7 @@ class BulkUploadController < ApplicationController
     rescue => e
       flash[:error] = e.message
       logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
-      redirect_to(:back)
+      redirect_to(action: "choose_global_data_values")
       return
     end
 
@@ -226,7 +226,7 @@ class BulkUploadController < ApplicationController
   rescue => e
     flash[:error] = e.message
     logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
-    redirect_to(:back)
+    redirect_to(action: "choose_global_data_values")
     return
   end
   
