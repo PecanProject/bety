@@ -18,6 +18,7 @@
 
       <% end %>
 
+      <%= link_to "View List of Recognized Traits", url_for( controller: "trait_covariate_associations", action: "index" ) %>
 
       <% if @file_contents %>
       <%= content_tag :div, raw(@file_contents.gsub("\n", "<br>")) %>
