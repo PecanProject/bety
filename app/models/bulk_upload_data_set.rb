@@ -165,7 +165,7 @@ class UnparsableStandardErrorValueException < BulkUploadDataException
   end
 end
 
-class UnparseableVariableValueException < BulkUploadDataException
+class UnparsableVariableValueException < BulkUploadDataException
   def initialize
     super(:unparsable_number, "Not a valid number", "Variable value can't be parsed as a number")
   end
