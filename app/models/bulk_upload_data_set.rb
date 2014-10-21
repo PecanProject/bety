@@ -1035,6 +1035,7 @@ class BulkUploadDataSet
     # normalize whitespace in all data fields where whitespace is not
     # significant; keep case for display purposes--delay folding to lowercase
     csv.convert do |value, field_info|
+      next if value.nil?
       field_info[:header] == 'notes' ? value : value.squish
     end
 
