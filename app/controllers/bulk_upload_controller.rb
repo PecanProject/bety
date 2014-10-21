@@ -181,6 +181,9 @@ class BulkUploadController < ApplicationController
   # verifying the data.
   def confirm_data
     if params["global_values"]
+      if params["global_values"]["date"]
+        BulkUploadDataSet.validate_date(params["global_values"]["date"])
+      end
       # TO-DO: validate date if given in form
       session[:global_values] = params["global_values"]
     end
@@ -190,20 +193,16 @@ class BulkUploadController < ApplicationController
 
     @data_set = BulkUploadDataSet.new(session)
 
-    begin
-      @upload_sites = @data_set.get_upload_sites
-      @upload_species = @data_set.get_upload_species
-      @upload_citations = @data_set.get_upload_citations
-      @upload_treatments = @data_set.get_upload_treatments
-      @upload_cultivars = @data_set.get_upload_cultivars
-      logger.debug("cultivars = #{@upload_cultivars}")
-    rescue => e
-      flash[:error] = e.message
-      logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
-      redirect_to(action: "choose_global_data_values")
-      return
-    end
-
+    @upload_sites = @data_set.get_upload_sites
+    @upload_species = @data_set.get_upload_species
+    @upload_citations = @data_set.get_upload_citations
+    @upload_treatments = @data_set.get_upload_treatments
+    @upload_cultivars = @data_set.get_upload_cultivars
+    logger.debug("cultivars = #{@upload_cultivars}")
+  rescue => e
+    flash[:error] = e.message
+    logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
+    redirect_to(action: "choose_global_data_values")
   end
 
   # Step 5: Insert the data from the data file in accordance with any

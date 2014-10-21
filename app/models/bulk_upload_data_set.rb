@@ -315,7 +315,31 @@ class BulkUploadDataSet
   # to determine if a section detailing data value errors should be displayed.
   attr :data_value_error_count
 
+  def self.validate_date(date_string)
+    year = month = day = nil
+    REQUIRED_DATE_FORMAT.match date_string do |match_data|
+      year = match_data[:year]
+      month = match_data[:month] || 1 # the alternative 1 is for if and when we allow dates with year or year-month only
+      day = match_data[:day] || 1
+    end
 
+    if year.nil?
+      raise UnacceptableDateFormatException
+    else
+      # Make sure it's a valid date
+      begin
+        date = Date.new(year.to_i, month.to_i, day.to_i)
+      rescue ArgumentError => e
+        raise InvalidDateException #"year: #{year}; month: #{month}; day: #{day}"
+      else
+        # Date is valid; but make sure the range is reasonable
+
+        if date > Date.today
+          raise FutureDateException
+        end
+      end
+    end
+  end
 
   # Instantiates an object representing the data in the file +uploaded_io+ (if
   # provided) or in the file at <tt>session[:csvpath]</tt> (if uploaded_io was
