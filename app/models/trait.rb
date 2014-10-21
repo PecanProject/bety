@@ -24,6 +24,7 @@ class Trait < ActiveRecord::Base
   belongs_to :ebi_method, :class_name => 'Methods', :foreign_key => 'method_id'
 
   validates_presence_of     :mean, :access_level
+  validates_inclusion_of :access_level, in: 1..4, message: "You must select an access level"
   validates_presence_of     :statname, :if => Proc.new { |trait| !trait.stat.blank? }
   validates_format_of       :date_year, :with => /^(\d{2}|\d{4})$/, :allow_blank => true
   validates_format_of       :date_month, :with => /^\d{1,2}$/, :allow_blank => true
