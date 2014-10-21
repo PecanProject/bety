@@ -181,11 +181,15 @@ class BulkUploadController < ApplicationController
   # verifying the data.
   def confirm_data
     if params["global_values"]
+      session[:global_values] = params["global_values"]
       if params["global_values"]["date"]
         BulkUploadDataSet.validate_date(params["global_values"]["date"])
       end
-      # TO-DO: validate date if given in form
-      session[:global_values] = params["global_values"]
+      if params["global_values"]["access_level"]
+        if !(1..4).include? params["global_values"]["access_level"].to_i
+          raise "You must select an access level"
+        end
+      end
     end
     if params["rounding"]
       session[:rounding] = params["rounding"]
