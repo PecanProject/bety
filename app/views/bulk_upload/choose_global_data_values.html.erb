@@ -22,7 +22,7 @@
       <h2>Specify Rounding</h2>
       <ul>
         <li>
-          <%= label_tag "rounding_yields" do %>
+          <%= label_tag "rounding_vars" do %>
           Round all variable values to
           <%= select_tag("rounding[vars]",
               options_for_select([['1', 1], ['2', 2], ['3', 3], ['4', 4]], '3')
@@ -46,8 +46,8 @@
       <ul>
         <% @data_set.missing_interactively_specified_fields.each do |field| %>
         <li>
-          <%= label_tag field, field + (field == "cultivar" ? " (optional)" : "") %>
           <% if field == "access_level" %>
+          <%= label_tag "global_values_" + field, field %>
           <%= select_tag "global_values[access_level]",
               options_for_select([['', 0], ['Restricted', 1], ['Internal EBI & Collaborators', 2], ['External Researcher', 3], ['Public', 4]],
               @session[:global_values] &&
@@ -55,6 +55,7 @@
               size: "1"
           %>
           <% else %>
+          <%= label_tag "autocomplete_" + field, field + (field == "cultivar" ? " (optional)" : "") %>
           <%= text_field_tag "global_values[#{field.to_sym}]",
               "#{@session[:global_values] && @session[:global_values][field.to_sym] || ''}",
               id: "autocomplete_#{field}",
