@@ -29,7 +29,7 @@
 # of the session variable.
 class BulkUploadController < ApplicationController
 
-  before_filter :login_required 
+  before_filter :login_required
   before_filter :record_stage
   before_filter :clear_session_data, only: :start_upload
 
@@ -81,7 +81,7 @@ class BulkUploadController < ApplicationController
   # +#check_header_list+ method is run to initialize its +validation_summary+
   # attribute and set the value of the +:field_list_errors+ key.  Then its
   # +#validate_csv_data+ method is run, which sets or alters the following
-  # attributes: 
+  # attributes:
   # * +validation_summary+::
   #
   #    (keys and a corresponding value list for each type of error found are
@@ -98,53 +98,54 @@ class BulkUploadController < ApplicationController
   # * +file_has_fatal_errors+.::
   def display_csv_file
 
-    begin
-      # Store the selected CSV file if we got here via the "upload file" button:
-      if params["new upload"]
-        uploaded_io = params["CSV file"]
-        if uploaded_io
-          @data_set = BulkUploadDataSet.new(session, uploaded_io)
-        else
-          # blank submission; no file was chosen
-          flash[:error] = "No file chosen"
-          redirect_to(action: "start_upload")
-          return # we're done here
-        end
+
+    # Store the selected CSV file if we got here via the "upload file" button:
+    if params["new upload"]
+      uploaded_io = params["CSV file"]
+      if uploaded_io
+        @data_set = BulkUploadDataSet.new(session, uploaded_io)
       else
-        @data_set = BulkUploadDataSet.new(session)
+        # blank submission; no file was chosen
+        flash[:error] = "No file chosen"
+        redirect_to(action: "start_upload")
+        return # we're done here
       end
+    else
+      @data_set = BulkUploadDataSet.new(session)
+    end
 
-      # Remove the linked citation if the file includes citation data:
-      if !session[:citation].nil? &&
-          (@data_set.headers.include?("citation_author") || 
-           @data_set.headers.include?("citation_doi"))
+    # Remove the linked citation if the file includes citation data:
+    if !session[:citation].nil? &&
+        (@data_set.headers.include?("citation_author") ||
+         @data_set.headers.include?("citation_doi"))
 
-        flash.now[:warning] = "Removing linked citation since you have citation information in your data set"
-        session[:citation] = nil
+      flash.now[:warning] = "Removing linked citation since you have citation information in your data set"
+      session[:citation] = nil
 
-      end
-
-    rescue CSV::MalformedCSVError => e
-      flash[:error] = "Couldn't parse #{File.basename(session[:csvpath])}: #{e.message}"
-      # flash[:display_csv_file] = true
-      redirect_to(action: "start_upload")
-      return
-    rescue Exception => e # catches invalid UTF-8 byte sequence errors and empty lines
-      flash[:error] = e.message
-      logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
-      redirect_to(action: "start_upload")
-      return
     end
 
     @data_set.check_header_list # initializes @validation_summary and @validation_summary[:field_list_errors]
 
     if @data_set.validation_summary[:field_list_errors].any?
       # to do: decide whether to go on to validate data even when there are errors in the heading field list
-#      return
+      #      return
     end
 
     # No heading errors; go on to validate data
     @data_set.validate_csv_data
+
+  rescue CSV::MalformedCSVError => e
+    flash[:error] = "Couldn't parse #{File.basename(session[:csvpath])}: #{e.message}"
+    # flash[:display_csv_file] = true
+    redirect_to(action: "start_upload")
+    return
+  rescue NoDataError => e
+    flash[:error] = e.message
+  rescue Exception => e # catches invalid UTF-8 byte sequence errors and empty lines
+    flash[:error] = e.message
+    logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
+    redirect_to(action: "start_upload")
+    return
   end
 
 
@@ -152,7 +153,7 @@ class BulkUploadController < ApplicationController
   #
   # The user is presented with a form to choose:
   # 1. The amount of rounding to use for yield values
-  # 1. Dataset-wide values for attributes of the data not specified in the  
+  # 1. Dataset-wide values for attributes of the data not specified in the
   #    upload file, which may be any of:
   #    a. The site.
   #    a. The species.
@@ -225,14 +226,14 @@ class BulkUploadController < ApplicationController
         redirect_to(action: "start_upload")
       }
     end
-    
+
   rescue => e
     flash[:error] = e.message
     logger.debug { "#{e.message}\n#{e.backtrace.join("\n")}" }
     redirect_to(action: "choose_global_data_values")
     return
   end
-  
+
 ################################################################################
   private
 

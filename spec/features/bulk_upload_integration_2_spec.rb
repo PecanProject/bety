@@ -30,7 +30,7 @@ CSV
 
 
   context 'Invalid interactively-specified dates will result in a clearly-specified error' do
-    
+
     before :all do
       f = File.new("spec/tmp/yield_without_date.csv", "w")
       f.write <<CSV
@@ -52,8 +52,40 @@ CSV
       page.should have_content "Date is in the future"
     end
 
+    specify "A date with only the year and month should result in a clear error message" do
+      fill_in 'date', with: '2014-05'
+      click_button "Confirm Data"
+      page.should have_content "Dates must be in the form 1999-01-01"
+    end
+
+    specify "An impossible date should result in a clear error message" do
+      fill_in 'date', with: '2014-02-29'
+      click_button "Confirm Data"
+      page.should have_content "Invalid date"
+    end
+
   end
 
-  
+
+  context "Given a file with no data" do
+
+    before :all do
+      f = File.new("spec/tmp/header_without_data.csv", "w")
+      f.write <<CSV
+yield
+CSV
+    end
+
+    # Test for RM issue #2527
+    specify 'Files with a header but no data will go to the validation page but result in a clear error message' do
+      visit '/bulk_upload/start_upload'
+      attach_file 'CSV file', 'spec/tmp/header_without_data.csv'
+      click_button 'Upload'
+
+      first("header").should have_content "Uploaded file: header_without_data.csv"
+      first("div.alert").should have_content "No data in file"
+    end
+
+  end
 
 end

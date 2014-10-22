@@ -32,6 +32,9 @@ module ValidationResult
   end
 end
 
+class NoDataError < StandardError
+end
+
 class Valid
   include ValidationResult
   def initialize
@@ -437,7 +440,7 @@ class BulkUploadDataSet
     elsif @headers.include?('citation_author') || @headers.include?('citation_doi')
       # the upload file has citation information, so initialize a list of citation ids in the session variable
     end
-    
+
     if @headers.include?('citation_doi') || (@headers.include?('citation_author') && @headers.include?('citation_year') && @headers.include?('citation_title'))
       # The file contains (sufficient) citation information, so make a list to keep track of referenced citations:
       @session[:citation_id_list] = []
@@ -499,6 +502,10 @@ class BulkUploadDataSet
     @data.each do |row|
       validated_row = row.collect { |value| { fieldname: value[0], data: value[1], validation_result: Valid.new } }
       @validated_data << validated_row
+    end
+
+    if @validated_data.size == 0
+      raise NoDataError, "No data in file"
     end
 
     @validated_data.each_with_index do |row, i|
