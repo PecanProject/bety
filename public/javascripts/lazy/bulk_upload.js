@@ -34,4 +34,23 @@ jQuery(function() {
         source: optionList
     });
 
+
+    // for choose_global_citation page:
+    jQuery('#autocomplete_citation').autocomplete({
+        source: ROOT_URL + "/citations/autocomplete.json"
+    });
+
+    jQuery('#autocomplete_citation').on("autocompleteselect", function(e, ui) {
+
+        // Prevent the value of the item selected from displaying after a
+        // selection has been made ...
+        e.preventDefault();
+
+        // ... and display the *value* of the item selected instead ...
+        this.value = ui.item.label;
+
+        // ... but store the value of the item selected in a hidden field.
+        jQuery('#global_values_citation_id').val(ui.item.value);
+    });
+
 });

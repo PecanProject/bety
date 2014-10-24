@@ -61,7 +61,14 @@ class BulkUploadController < ApplicationController
 #    end
   end
 
-  # Step 2: Display the CSV file as a table.
+  # Step 2: Choose a citation.
+  #
+  # This step is skipped if the file contains citation information.
+  def choose_global_citation
+    @session = session # needed for sticky form fields
+  end
+
+  # Step 3: Display the CSV file as a table.
   #
   # If the +params+ key "new upload" is set (i.e., we got to this action by
   # posting the form on the +start_upload+ page), the "CSV file" parameter is
@@ -114,15 +121,48 @@ class BulkUploadController < ApplicationController
       @data_set = BulkUploadDataSet.new(session)
     end
 
+
+
+    ### Ensure we have a citation -- either in the file or stored in the
+    ### session, but not both.  Remove the session citaion and/or go to the
+    ### citation selection page if needed.
+
+    # Case 1: We got here from the "choose_global_citation" page:
+    if params[:global_values]
+      # We got here from the "choose_global_citation" page ...
+      if params[:global_values][:citation_id].empty?
+        flash[:error] = "No citation selected"
+        redirect_to(:back)
+      end
+      if  !session[:citation].nil?
+        flash.now[:warning] = "Replacing citation #{Citation.find(session[:citation]).to_s} with #{params["global_values"][":citation"].inspect}."
+      end
+      session[:citation] = params[:global_values][:citation_id]
+    end
+
     # Remove the linked citation if the file includes citation data:
     if !session[:citation].nil? &&
         (@data_set.headers.include?("citation_author") ||
          @data_set.headers.include?("citation_doi"))
 
+      # Case 2: The citation information both in the session and in the file; remove the session citation:
+
       flash.now[:warning] = "Removing linked citation since you have citation information in your data set"
       session[:citation] = nil
 
+    elsif session[:citation].nil? &&
+        !(@data_set.headers.include?("citation_author") ||
+          @data_set.headers.include?("citation_doi"))
+
+      # Case 3: There is no citation information in either the session or the file; present a form to select one:
+      redirect_to(action: "choose_global_citation")
     end
+
+    # If we get here, there is citation information either in the session or the file, but not both.
+
+
+
+
 
     @data_set.check_header_list # initializes @validation_summary and @validation_summary[:field_list_errors]
 
@@ -149,7 +189,7 @@ class BulkUploadController < ApplicationController
   end
 
 
-  # Step 3: Choose global (dataset-wide) values and options.
+  # Step 4: Choose global (dataset-wide) values and options.
   #
   # The user is presented with a form to choose:
   # 1. The amount of rounding to use for yield values
@@ -173,7 +213,7 @@ class BulkUploadController < ApplicationController
     }
   end
 
-  # Step 4: Confirm data.
+  # Step 5: Confirm data.
   #
   # This page displays the the citations, sites, species, and cultivars referred
   # to by the data set or selected interactively.  The helps assure the proper
@@ -210,7 +250,7 @@ class BulkUploadController < ApplicationController
     redirect_to(action: "choose_global_data_values")
   end
 
-  # Step 5: Insert the data from the data file in accordance with any
+  # Step 6: Insert the data from the data file in accordance with any
   # interactively-specified options.
   #
   # Data is inserted within a database transaction so that any failure rolls

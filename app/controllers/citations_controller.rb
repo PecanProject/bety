@@ -34,6 +34,32 @@ class CitationsController < ApplicationController
     end
   end
 
+  def autocomplete
+    search_term = params[:term]
+
+    # match against any portion of the author, year, title, or doi
+    match_string = '%' + search_term + '%'
+
+    filtered_citations = Citation.where("LOWER(author) LIKE LOWER(:match_string) OR year::text LIKE :match_string OR LOWER(title) LIKE LOWER(:match_string) OR LOWER(doi) LIKE LOWER(:match_string)",
+                                        match_string: match_string)
+
+    if filtered_citations.size > 0 || search_term.size > 1
+      citations = filtered_citations
+      # else if there are no matches and the user has only typed one letter, just return everything
+    end
+
+    citations = citations.to_a.map do |item|
+      {
+        label: "#{item.to_s} #{item.doi.blank? ? "" : "(doi: #{item.doi})"}",
+        value: item.id
+      }
+    end
+
+    respond_to do |format|
+      format.json { render :json => citations }
+    end
+  end
+
   # GET /citations
   # GET /citations.xml
   def index

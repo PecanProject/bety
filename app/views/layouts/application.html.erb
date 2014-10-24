@@ -36,7 +36,9 @@
   <![endif]-->
   <%= javascript_include_tag 'libs/respond.min.js', 'libs/modernizr-2.0.6.min.js' %>
 
-  <% if params[:controller] == 'bulk_upload' && params[:action] == 'choose_global_data_values' %>
+  <% if params[:controller] == 'bulk_upload' &&
+     (params[:action] == 'choose_global_data_values' ||
+     params[:action] == 'choose_global_citation') %>
   <!-- bulk_upload.js needs to know the root -->
   <script type="text/javascript" charset="utf-8">var ROOT_URL = '<%= root_url %>';</script>
   <%= javascript_include_tag 'lazy/bulk_upload.js' %>
