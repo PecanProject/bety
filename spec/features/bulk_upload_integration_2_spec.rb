@@ -99,11 +99,43 @@ yield,species,site,treatment,date
 CSV
     end
 
-    specify 'Attempting to visit the choose_global_citation page without having uploaded a valid file will cause a redirect to the start_upload page' do
-      visit '/bulk_upload/choose_global_citation'
+    context "Various scenarios involving attempts to go to pages of the wizard without having uploaded a file" do
 
-      first("header").should have_content "New Bulk Upload"
-      first("div.alert").should have_content "No file chosen"
+      specify 'Attempting to visit the choose_global_citation page without having uploaded a valid file will cause a redirect to the start_upload page' do
+        visit '/bulk_upload/choose_global_citation'
+
+        first("header").should have_content "New Bulk Upload"
+        first("div.alert").should have_content "No file chosen"
+      end
+
+      specify 'Attempting to visit the display_csv_file page without having uploaded a valid file will cause a redirect to the start_upload page' do
+        visit '/bulk_upload/display_csv_file'
+
+        first("header").should have_content "New Bulk Upload"
+        first("div.alert").should have_content "No file chosen"
+      end
+
+      specify 'Attempting to visit the choose_global_data page without having uploaded a valid file will cause a redirect to the start_upload page' do
+        visit '/bulk_upload/choose_global_data'
+
+        first("header").should have_content "New Bulk Upload"
+        first("div.alert").should have_content "No file chosen"
+      end
+
+      specify 'Attempting to visit the confirm_data page without having uploaded a valid file will cause a redirect to the start_upload page' do
+        visit '/bulk_upload/confirm_data'
+
+        first("header").should have_content "New Bulk Upload"
+        first("div.alert").should have_content "No file chosen"
+      end
+
+      specify 'Attempting to run the insert_data action without having uploaded a valid file will cause a redirect to the start_upload page' do
+        visit '/bulk_upload/insert_data'
+
+        first("header").should have_content "New Bulk Upload"
+        first("div.alert").should have_content "No file chosen"
+      end
+
     end
 
     context "Various scenarios after uploading the file" do
@@ -142,11 +174,16 @@ CSV
 
     context "Various scenarios after uploading the file and choosing a citation", js: true do
 
+      ### Uncomment this and add 'binding.pry' statements to help in debugging these tests:
+      # Capybara.javascript_driver = :selenium
+
       before :each do
         visit '/bulk_upload/start_upload'
-        attach_file 'CSV file', Rails.root + 'spec/tmp/file_with_incomplete_data.csv'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_incomplete_data.csv') # full path is required if using selenium
         click_button 'Upload'
+      end
 
+      specify 'After submitting the citation-choice form, we should see the validation page' do
         ### If we were *only* going to use the Selenium driver, we could do
         ### this.  But capybara-webkit doesn't have a send_keys method.
         # control = page.driver.browser.find_element(:id, 'autocomplete_citation')
@@ -166,9 +203,7 @@ CSV
         first("#ui-id-1").click
 
         click_button "View Validation Results"
-      end
 
-      specify 'After submitting the citation-choice form, we should see the validation page' do
         first("header").should have_content "Uploaded file:"
       end
 
