@@ -88,4 +88,111 @@ CSV
 
   end
 
+
+    context "Given a file with incomplete data" do
+
+    before :all do
+      f = File.new("spec/tmp/file_with_incomplete_data.csv", "w")
+      f.write <<CSV
+yield,species,site,treatment,date
+1.1,Abarema jupunba,University of Nevada Biological Sciences Center,University of Nevada Biological Sciences Center,2002-10-31
+CSV
+    end
+
+    specify 'Attempting to visit the choose_global_citation page without having uploaded a valid file will cause a redirect to the start_upload page' do
+      visit '/bulk_upload/choose_global_citation'
+
+      first("header").should have_content "New Bulk Upload"
+      first("div.alert").should have_content "No file chosen"
+    end
+
+    context "Various scenarios after uploading the file" do
+
+      before :each do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', 'spec/tmp/file_with_incomplete_data.csv'
+        click_button 'Upload'
+      end
+
+      specify 'Attempting to visit the display_csv_file page without having choosen a citation will cause a redirect to the choose_global_citation page' do
+        visit '/bulk_upload/display_csv_file'
+        
+        first("header").should have_content "Choose a Citation"
+      end
+
+      specify 'Attempting to visit the choose_global_data_values page without having choosen a citation will cause a redirect to the choose_global_citation page' do
+        visit '/bulk_upload/choose_global_data_values'
+        
+        first("header").should have_content "Choose a Citation"
+      end
+
+      specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the choose_global_citation page' do
+        visit '/bulk_upload/confirm_data'
+        
+        first("header").should have_content "Choose a Citation"
+      end
+
+      specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the choose_global_citation page' do
+        visit '/bulk_upload/insert_data'
+        
+        first("header").should have_content "Choose a Citation"
+      end
+
+    end
+
+    context "Various scenarios after uploading the file and choosing a citation", js: true do
+
+      before :each do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', Rails.root + 'spec/tmp/file_with_incomplete_data.csv'
+        click_button 'Upload'
+
+        ### If we were *only* going to use the Selenium driver, we could do
+        ### this.  But capybara-webkit doesn't have a send_keys method.
+        # control = page.driver.browser.find_element(:id, 'autocomplete_citation')
+        # control.send_keys 'Adler'
+        # sleep 1
+        # control.send_keys :arrow_down
+        # control.send_keys :return
+
+        ### This should work with either Selenium or Capybara-Webkit:
+        page.execute_script("jQuery('#autocomplete_citation').val('Adler')")
+        sleep 1 # maybe not needed
+        page.execute_script("jQuery('#autocomplete_citation').trigger('keydown', {keyCode: 40})")
+        sleep 1 # necessary!
+        # This doesn't work ...
+        #page.execute_script("jQuery('#autocomplete_citation').trigger('keydown', {keyCode: 13})")
+        # ... so we have to do this instead:
+        first("#ui-id-1").click
+
+        click_button "View Validation Results"
+      end
+
+      specify 'After submitting the citation-choice form, we should see the validation page' do
+        first("header").should have_content "Uploaded file:"
+      end
+
+      specify 'Attempting to visit the choose_global_data_values page without having choosen a citation will cause a redirect to the choose_global_citation page' do
+        visit '/bulk_upload/choose_global_data_values'
+        
+        first("header").should have_content "Choose a Citation"
+      end
+
+      specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the choose_global_citation page' do
+        visit '/bulk_upload/confirm_data'
+        
+        first("header").should have_content "Choose a Citation"
+      end
+
+      specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the choose_global_citation page' do
+        visit '/bulk_upload/insert_data'
+        
+        first("header").should have_content "Choose a Citation"
+      end
+
+    end
+
+  end
+
+
 end
