@@ -15,3 +15,27 @@ module LoginHelper
     click_button 'Log in'
   end
 end
+
+module BulkUploadHelper
+  def choose_citation_from_dropdown(author = 'Adler')
+    ### If we were *only* going to use the Selenium driver, we could do
+    ### this.  But capybara-webkit doesn't have a send_keys method.
+    # control = page.driver.browser.find_element(:id, 'autocomplete_citation')
+    # control.send_keys 'Adler'
+    # sleep 1
+    # control.send_keys :arrow_down
+    # control.send_keys :return
+
+    ### This should work with either Selenium or Capybara-Webkit:
+    page.execute_script("jQuery('#autocomplete_citation').val('#{author}')")
+    sleep 1 # maybe not needed
+    page.execute_script("jQuery('#autocomplete_citation').trigger('keydown', {keyCode: 40})")
+    sleep 1 # necessary!
+    # This doesn't work ...
+    #page.execute_script("jQuery('#autocomplete_citation').trigger('keydown', {keyCode: 13})")
+    # ... so we have to do this instead:
+    first("#ui-id-1").click
+    click_button "View Validation Results"
+  end
+end
+
