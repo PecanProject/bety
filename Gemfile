@@ -34,6 +34,23 @@ group :development, :test do
   gem "sqlite3", "1.3.3"
 end
 
+
+
+group :test do
+  gem "webrat", "0.7.1"
+  gem "capybara"
+  gem "database_cleaner"
+end
+
+# If you have difficulty installing or don't wish to install capybara-webkit,
+# run bundle install with the "--without javascript_testing" option:
+#
+#     bundle install --without javascript_testing
+#
+group :javascript_testing do
+  gem "capybara-webkit"
+end
+
 # This group is used by RSpec if the environment variable RAILS_DEBUG is set to
 # "true":
 group :debug do
@@ -41,14 +58,7 @@ group :debug do
   gem "pry"
 end
 
-
-group :test do
-  gem "webrat", "0.7.1"
-  gem "capybara"
-  gem "database_cleaner"
-  # Comment this out if you can't or don't wish to install capybara-webkit:
-  gem "capybara-webkit"
-end
+# Comment this out if you can't or don't wish to install capybara-webkit:
 
 group :production do
 #  gem "rmagick", "2.13.1"

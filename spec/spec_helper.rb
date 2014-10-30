@@ -38,6 +38,7 @@ RSpec.configure do |config|
     Bundler.require('debug')
     Capybara.javascript_driver = :selenium
   else
+    Bundler.require('javascript_testing')
     Capybara.javascript_driver = :webkit
   end
 
