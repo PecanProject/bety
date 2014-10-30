@@ -1,5 +1,6 @@
 require 'spec_helper'
 include LoginHelper
+include BulkUploadHelper
 
 feature 'Bulk Data Upload' do
   before :each do
@@ -77,10 +78,12 @@ CSV
     end
 
     # Test for RM issue #2527
-    specify 'Files with a header but no data will go to the validation page but result in a clear error message' do
+    specify 'Files with a header but no data will go to the validation page but result in a clear error message', js: true do
       visit '/bulk_upload/start_upload'
-      attach_file 'CSV file', 'spec/tmp/header_without_data.csv'
+      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/header_without_data.csv')
       click_button 'Upload'
+
+      choose_citation_from_dropdown
 
       first("header").should have_content "Uploaded file: header_without_data.csv"
       first("div.alert").should have_content "No data in file"
@@ -115,8 +118,8 @@ CSV
         first("div.alert").should have_content "No file chosen"
       end
 
-      specify 'Attempting to visit the choose_global_data page without having uploaded a valid file will cause a redirect to the start_upload page' do
-        visit '/bulk_upload/choose_global_data'
+      specify 'Attempting to visit the choose_global_data_values page without having uploaded a valid file will cause a redirect to the start_upload page' do
+        visit '/bulk_upload/choose_global_data_values'
 
         first("header").should have_content "New Bulk Upload"
         first("div.alert").should have_content "No file chosen"
@@ -174,9 +177,6 @@ CSV
 
     context "Various scenarios after uploading the file and choosing a citation", js: true do
 
-      ### Uncomment this and add 'binding.pry' statements to help in debugging these tests:
-      # Capybara.javascript_driver = :selenium
-
       before :each do
         visit '/bulk_upload/start_upload'
         attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_incomplete_data.csv') # full path is required if using selenium
@@ -184,25 +184,7 @@ CSV
       end
 
       specify 'After submitting the citation-choice form, we should see the validation page' do
-        ### If we were *only* going to use the Selenium driver, we could do
-        ### this.  But capybara-webkit doesn't have a send_keys method.
-        # control = page.driver.browser.find_element(:id, 'autocomplete_citation')
-        # control.send_keys 'Adler'
-        # sleep 1
-        # control.send_keys :arrow_down
-        # control.send_keys :return
-
-        ### This should work with either Selenium or Capybara-Webkit:
-        page.execute_script("jQuery('#autocomplete_citation').val('Adler')")
-        sleep 1 # maybe not needed
-        page.execute_script("jQuery('#autocomplete_citation').trigger('keydown', {keyCode: 40})")
-        sleep 1 # necessary!
-        # This doesn't work ...
-        #page.execute_script("jQuery('#autocomplete_citation').trigger('keydown', {keyCode: 13})")
-        # ... so we have to do this instead:
-        first("#ui-id-1").click
-
-        click_button "View Validation Results"
+        choose_citation_from_dropdown
 
         first("header").should have_content "Uploaded file:"
       end

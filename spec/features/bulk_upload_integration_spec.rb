@@ -1,5 +1,6 @@
 require 'spec_helper'
 include LoginHelper
+include BulkUploadHelper
 
 feature 'CSV file upload works' do
   before :each do
@@ -22,7 +23,7 @@ feature 'CSV file upload works' do
     end
 
 
-    it 'should not give an error when the citation chosen interactively but treatment is not' do
+    it 'should not give an error when the citation chosen interactively but treatment is not', js: true do
       visit '/bulk_upload/start_upload'
       attach_file 'CSV file', Rails.root.join('spec',
                                               'fixtures',
@@ -30,9 +31,9 @@ feature 'CSV file upload works' do
                                               'bulk_upload',
                                               'sample_yields_with_treatment_but_no_citation.csv')
       click_button 'Upload'
-      click_link 'Select a Citation'
-      first(:xpath, ".//td[text() = 'Adams']/ancestor::tr/td[8]/a[1]").click
-      click_link 'Bulk Upload'
+
+      choose_citation_from_dropdown('Adams')
+
       page.should_not have_content 'Select a Citation'
       page.should have_content 'Specify '
       click_link 'Specify'
