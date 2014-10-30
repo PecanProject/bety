@@ -31,10 +31,7 @@ module BulkUploadHelper
     sleep 1 # maybe not needed
     page.execute_script("jQuery('#autocomplete_citation').trigger('keydown', {keyCode: 40})")
     sleep 1 # necessary!
-    # This doesn't work ...
-    #page.execute_script("jQuery('#autocomplete_citation').trigger('keydown', {keyCode: 13})")
-    # ... so we have to do this instead:
-    first("#ui-id-1").click
+    first("#ui-id-1 li.ui-menu-item a").click
     click_button "View Validation Results"
   end
 end

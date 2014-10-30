@@ -34,6 +34,14 @@ group :development, :test do
   gem "sqlite3", "1.3.3"
 end
 
+# This group is used by RSpec if the environment variable RAILS_DEBUG is set to
+# "true":
+group :debug do
+  gem "selenium-webdriver"
+  gem "pry"
+end
+
+
 group :test do
   gem "webrat", "0.7.1"
   gem "capybara"

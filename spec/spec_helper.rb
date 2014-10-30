@@ -34,6 +34,11 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
-  Capybara.javascript_driver = :webkit
+  if ENV["RAILS_DEBUG"] == "true"
+    Bundler.require('debug')
+    Capybara.javascript_driver = :selenium
+  else
+    Capybara.javascript_driver = :webkit
+  end
 
 end
