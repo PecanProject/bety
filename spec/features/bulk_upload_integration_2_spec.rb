@@ -95,125 +95,87 @@ CSV
   end
 
 
-    context "Given a file with incomplete data" do
+  context "Various scenarios involving attempts to go to pages of the wizard without having uploaded a file" do
 
-    before :all do
-      f = File.new("spec/tmp/file_with_incomplete_data.csv", "w")
-      f.write <<CSV
-yield,species,site,treatment,date
-1.1,Abarema jupunba,University of Nevada Biological Sciences Center,University of Nevada Biological Sciences Center,2002-10-31
-CSV
-      f.close
+    specify 'Attempting to visit the choose_global_citation page without having uploaded a valid file will cause a redirect to the start_upload page' do
+      visit '/bulk_upload/choose_global_citation'
+
+      first("header").should have_content "New Bulk Upload"
+      first("div.alert").should have_content "No file chosen"
     end
 
-    context "Various scenarios involving attempts to go to pages of the wizard without having uploaded a file" do
+    specify 'Attempting to visit the display_csv_file page without having uploaded a valid file will cause a redirect to the start_upload page' do
+      visit '/bulk_upload/display_csv_file'
 
-      specify 'Attempting to visit the choose_global_citation page without having uploaded a valid file will cause a redirect to the start_upload page' do
-        visit '/bulk_upload/choose_global_citation'
-
-        first("header").should have_content "New Bulk Upload"
-        first("div.alert").should have_content "No file chosen"
-      end
-
-      specify 'Attempting to visit the display_csv_file page without having uploaded a valid file will cause a redirect to the start_upload page' do
-        visit '/bulk_upload/display_csv_file'
-
-        first("header").should have_content "New Bulk Upload"
-        first("div.alert").should have_content "No file chosen"
-      end
-
-      specify 'Attempting to visit the choose_global_data_values page without having uploaded a valid file will cause a redirect to the start_upload page' do
-        visit '/bulk_upload/choose_global_data_values'
-
-        first("header").should have_content "New Bulk Upload"
-        first("div.alert").should have_content "No file chosen"
-      end
-
-      specify 'Attempting to visit the confirm_data page without having uploaded a valid file will cause a redirect to the start_upload page' do
-        visit '/bulk_upload/confirm_data'
-
-        first("header").should have_content "New Bulk Upload"
-        first("div.alert").should have_content "No file chosen"
-      end
-
-      specify 'Attempting to run the insert_data action without having uploaded a valid file will cause a redirect to the start_upload page' do
-        visit '/bulk_upload/insert_data'
-
-        first("header").should have_content "New Bulk Upload"
-        first("div.alert").should have_content "No file chosen"
-      end
-
+      first("header").should have_content "New Bulk Upload"
+      first("div.alert").should have_content "No file chosen"
     end
 
-    context "Various scenarios after uploading the file" do
+    specify 'Attempting to visit the choose_global_data_values page without having uploaded a valid file will cause a redirect to the start_upload page' do
+      visit '/bulk_upload/choose_global_data_values'
 
-      before :each do
-        visit '/bulk_upload/start_upload'
-        attach_file 'CSV file', 'spec/tmp/file_with_incomplete_data.csv'
-        click_button 'Upload'
-      end
-
-      specify 'Attempting to visit the display_csv_file page without having choosen a citation will cause a redirect to the choose_global_citation page' do
-        visit '/bulk_upload/display_csv_file'
-        
-        first("header").should have_content "Choose a Citation"
-      end
-
-      specify 'Attempting to visit the choose_global_data_values page without having choosen a citation will cause a redirect to the choose_global_citation page' do
-        visit '/bulk_upload/choose_global_data_values'
-        
-        first("header").should have_content "Choose a Citation"
-      end
-
-      specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the choose_global_citation page' do
-        visit '/bulk_upload/confirm_data'
-        
-        first("header").should have_content "Choose a Citation"
-      end
-
-      specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the choose_global_citation page' do
-        visit '/bulk_upload/insert_data'
-        
-        first("header").should have_content "Choose a Citation"
-      end
-
+      first("header").should have_content "New Bulk Upload"
+      first("div.alert").should have_content "No file chosen"
     end
 
-    context "Various scenarios after uploading the file and choosing a citation", js: true do
+    specify 'Attempting to visit the confirm_data page without having uploaded a valid file will cause a redirect to the start_upload page' do
+      visit '/bulk_upload/confirm_data'
 
-      before :each do
-        visit '/bulk_upload/start_upload'
-        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_incomplete_data.csv') # full path is required if using selenium
-        click_button 'Upload'
-      end
+      first("header").should have_content "New Bulk Upload"
+      first("div.alert").should have_content "No file chosen"
+    end
 
-      specify 'After submitting the citation-choice form, we should see the validation page' do
-        choose_citation_from_dropdown
+    specify 'Attempting to run the insert_data action without having uploaded a valid file will cause a redirect to the start_upload page' do
+      visit '/bulk_upload/insert_data'
 
-        first("header").should have_content "Uploaded file:"
-      end
-
-      specify 'Attempting to visit the choose_global_data_values page without having choosen a citation will cause a redirect to the choose_global_citation page' do
-        visit '/bulk_upload/choose_global_data_values'
-        
-        first("header").should have_content "Choose a Citation"
-      end
-
-      specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the choose_global_citation page' do
-        visit '/bulk_upload/confirm_data'
-        
-        first("header").should have_content "Choose a Citation"
-      end
-
-      specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the choose_global_citation page' do
-        visit '/bulk_upload/insert_data'
-        
-        first("header").should have_content "Choose a Citation"
-      end
-
+      first("header").should have_content "New Bulk Upload"
+      first("div.alert").should have_content "No file chosen"
     end
 
   end
 
 
+  context "Various scenarios after uploading an invalid file that included citation information" do
+
+    before :all do
+      f = File.new("spec/tmp/file_with_invalid_data.csv", "w")
+      f.write <<CSV
+yield,citation_doi,species,site,treatment,date
+1.1,4.23,10.2134/AGRONJ2005.0351,Sweet Woodruff,University of Nevada Biological Sciences Center,University of Nevada Biological Sciences Center,2002-10-31
+CSV
+      f.close
+    end
+
+    before :each do
+      visit '/bulk_upload/start_upload'
+      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_invalid_data.csv') # full path is required if using selenium
+      click_button 'Upload'
+    end
+
+
+    specify 'After submitting the file, we should see the validation page' do
+      first("header").should have_content "Uploaded file:"
+    end
+
+    specify 'Attempting to visit the choose_global_data_values page without having a valid file will cause a redirect to the display_csv_file page' do
+      visit '/bulk_upload/choose_global_data_values'
+      
+      page.should have_content "Data Value Errors"
+    end
+
+    specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the display_csv_file page' do
+      visit '/bulk_upload/confirm_data'
+      
+      page.should have_content "Data Value Errors"
+    end
+
+    specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the display_csv_file page' do
+      visit '/bulk_upload/insert_data'
+      
+      page.should have_content "Data Value Errors"
+    end
+
+  end
+
 end
+
