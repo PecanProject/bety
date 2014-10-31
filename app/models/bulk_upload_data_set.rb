@@ -1016,10 +1016,9 @@ class BulkUploadDataSet
   # Takes the file parameter submitted by the upload form, uploads the
   # file, and store a reference to it in the session.
   def store_file(uploaded_io)
-    file = File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb')
-    file.write(uploaded_io.read)
-    @session[:csvpath] = file.path
-    file.close
+    file_storage_location = Rails.root.join('public', 'uploads', uploaded_io.original_filename)
+    FileUtils.mv(uploaded_io.path, file_storage_location)
+    @session[:csvpath] = file_storage_location
   end
 
 

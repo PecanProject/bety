@@ -4,8 +4,14 @@ describe BulkUploadDataSet do
 
   describe "Minimal requirements for instantiating BulkUploadDataSet" do
     let (:upload_io) {
-      Struct.new("Upload", :original_filename, :read)
-      Struct::Upload.new("my_upload_file.csv", "yield\n5.1\n")
+      Struct.new("Upload", :original_filename, :path)
+      path = Proc.new do
+        f = File.new("spec/tmp/my_upload_file.csv", "w")
+        f.write "yield\n5.1\n"
+        f.close
+        f.path
+      end
+      Struct::Upload.new("my_upload_file.csv", path.call)
     }
 
     it 'uploads' do

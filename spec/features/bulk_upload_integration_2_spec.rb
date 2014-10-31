@@ -18,6 +18,7 @@ feature 'Bulk Data Upload' do
 yield,citation_doi
 4.23,10.2134/AGRONJ2005.0351
 CSV
+      f.close
     end
 
     specify "doi matching shouldn't be case-sensitive" do
@@ -38,6 +39,7 @@ CSV
 yield,citation_author,citation_year,citation_title,site,species,treatment,access_level,n,SE,notes,cultivar
 5.5,Adams,1986,Quantum Yields,University of Nevada Biological Sciences Center,Lolium perenne,observational,3,5000,1.98,This is bogus yield data.,Gremie
 CSV
+      f.close
     end
 
     before :each do
@@ -75,6 +77,7 @@ CSV
       f.write <<CSV
 yield
 CSV
+      f.close
     end
 
     # Test for RM issue #2527
@@ -100,6 +103,7 @@ CSV
 yield,species,site,treatment,date
 1.1,Abarema jupunba,University of Nevada Biological Sciences Center,University of Nevada Biological Sciences Center,2002-10-31
 CSV
+      f.close
     end
 
     context "Various scenarios involving attempts to go to pages of the wizard without having uploaded a file" do
