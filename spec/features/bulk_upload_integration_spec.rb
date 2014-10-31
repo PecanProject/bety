@@ -67,6 +67,7 @@ feature 'CSV file upload works' do
       click_link 'Specify'
       click_button 'Confirm'
       click_button 'Insert Data'
+      first("div.alert-success").should have_content("Data from fuzzily_matching_headings.csv was successfully uploaded.")
     end
 
 

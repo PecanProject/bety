@@ -255,16 +255,16 @@ class BulkUploadController < ApplicationController
       end
     end
 
+    if params["rounding"]
+      session[:rounding] = params["rounding"]
+    end
+
     # This takes care of the case where the user attempts to go to this page
     # without ever having submitted the form on the "choose_global_data_values"
     # page:
-    if session[:global_values].nil?
+    if session[:rounding].nil?
       redirect_to(action: "choose_global_data_values")
       return
-    end
-
-    if params["rounding"]
-      session[:rounding] = params["rounding"]
     end
 
     @data_set = BulkUploadDataSet.new(session)
@@ -290,7 +290,7 @@ class BulkUploadController < ApplicationController
     # This takes care of the case where the user attempts to insert data
     # without ever having submitted the form on the "choose_global_data_values"
     # page:
-    if session[:global_values].nil? || session[:rounding].nil?
+    if session[:rounding].nil?
       redirect_to(action: "choose_global_data_values")
       return
     end

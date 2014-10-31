@@ -141,7 +141,7 @@ CSV
       f = File.new("spec/tmp/file_with_invalid_data.csv", "w")
       f.write <<CSV
 yield,citation_doi,species,site,treatment,date
-1.1,4.23,10.2134/AGRONJ2005.0351,Sweet Woodruff,University of Nevada Biological Sciences Center,University of Nevada Biological Sciences Center,2002-10-31
+1.1,10.2134/AGRONJ2005.0351,Sweet Woodruff,University of Nevada Biological Sciences Center,University of Nevada Biological Sciences Center,2002-10-31
 CSV
       f.close
     end
@@ -173,6 +173,37 @@ CSV
       visit '/bulk_upload/insert_data'
       
       page.should have_content "Data Value Errors"
+    end
+
+  end
+
+  context "Various scenarios involving failure to provide some data interactively" do
+
+    before :all do
+      f = File.new("spec/tmp/file_with_incomplete_data.csv", "w")
+      f.write <<CSV
+yield,citation_author,citation_year,citation_title,site,treatment,date
+1.1,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31
+CSV
+      f.close
+    end
+
+    before :each do
+      visit '/bulk_upload/start_upload'
+      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_incomplete_data.csv') # full path is required if using selenium
+      click_button 'Upload'
+    end
+
+    specify 'Attempting to visit the confirm_data page without having specified missing information will cause a redirect to the choose_global_data_values page' do
+      visit '/bulk_upload/confirm_data'
+
+      first("header").should have_content "Specify Upload Options and Global Values"
+    end
+
+    specify 'Attempting to call the insert_data action without having specified missing information will cause a redirect to the choose_global_data_values page' do
+      visit '/bulk_upload/insert_data'
+
+      first("header").should have_content "Specify Upload Options and Global Values"
     end
 
   end
