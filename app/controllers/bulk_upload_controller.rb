@@ -32,6 +32,7 @@ class BulkUploadController < ApplicationController
   before_filter :login_required
   before_filter :record_stage
   before_filter :clear_session_data, only: :start_upload
+  before_filter :valid_file_required, only: [ :choose_global_data_values, :confirm_data, :insert_data ]
 
   private
 
@@ -43,7 +44,16 @@ class BulkUploadController < ApplicationController
     session.delete_if do |key|
       # delete bulk-upload-related session data (except for :citation,
       # which is "global"):
-      ["csvpath", "global_values", "rounding", "citation_id_list", "number_of_rows"].include?(key)
+      ["csvpath", "global_values", "rounding", "citation_id_list",
+      "number_of_rows", "valid_upload_file"].include?(key)
+    end
+  end
+
+  def valid_file_required
+    # Don't allow access if we don't have a valid file:
+    if !session[:valid_upload_file]
+      redirect_to(action: "display_csv_file")
+      return
     end
   end
 
@@ -65,6 +75,14 @@ class BulkUploadController < ApplicationController
   #
   # This step is skipped if the file contains citation information.
   def choose_global_citation
+    if !session[:csvpath]
+        # Blank submission--no file was chosen.  We should never get here unless
+        # the user directly enters the URL for this action without having
+        # uploaded a file.
+        flash[:error] = "No file chosen"
+        redirect_to(action: "start_upload")
+    end
+
     @session = session # needed for sticky form fields
   end
 
@@ -105,20 +123,18 @@ class BulkUploadController < ApplicationController
   # * +file_has_fatal_errors+.::
   def display_csv_file
 
-
-    # Store the selected CSV file if we got here via the "upload file" button:
-    if params["new upload"]
-      uploaded_io = params["CSV file"]
-      if uploaded_io
-        @data_set = BulkUploadDataSet.new(session, uploaded_io)
-      else
-        # blank submission; no file was chosen
-        flash[:error] = "No file chosen"
-        redirect_to(action: "start_upload")
-        return # we're done here
-      end
-    else
+    uploaded_io = params["CSV file"]
+    if uploaded_io
+      # we got here via the "upload file" button
+      @data_set = BulkUploadDataSet.new(session, uploaded_io)
+    elsif session[:csvpath]
+      # we returned here with after previously uploading the file
       @data_set = BulkUploadDataSet.new(session)
+    else
+      # blank submission; no file was chosen
+      flash[:error] = "No file chosen"
+      redirect_to(action: "start_upload")
+      return # we're done here
     end
 
 
@@ -133,6 +149,7 @@ class BulkUploadController < ApplicationController
       if params[:global_values][:citation_id].empty?
         flash[:error] = "No citation selected"
         redirect_to(:back)
+        return
       end
       if  !session[:citation].nil?
         flash.now[:warning] = "Replacing citation #{Citation.find(session[:citation]).to_s} with #{params["global_values"][":citation"].inspect}."
@@ -156,6 +173,7 @@ class BulkUploadController < ApplicationController
 
       # Case 3: There is no citation information in either the session or the file; present a form to select one:
       redirect_to(action: "choose_global_citation")
+      return
     end
 
     # If we get here, there is citation information either in the session or the file, but not both.
@@ -173,6 +191,10 @@ class BulkUploadController < ApplicationController
 
     # No heading errors; go on to validate data
     @data_set.validate_csv_data
+
+    if !@data_set.file_has_fatal_errors
+      session[:valid_upload_file] = true
+    end
 
   rescue CSV::MalformedCSVError => e
     flash[:error] = "Couldn't parse #{File.basename(session[:csvpath])}: #{e.message}"
