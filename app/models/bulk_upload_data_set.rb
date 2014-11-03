@@ -815,14 +815,17 @@ class BulkUploadDataSet
     missing_columns = INTERACTIVE_COLUMNS - @headers
   end
 
+  def file_includes_citation_info
+    @headers.include?("citation_author") || # only need to check one of citation_author, citation_year, and citation_title
+      @headers.include?("citation_doi")
+  end
+
   # Returns true if the upload file contains no citation information and no
   # citation has be selected for the session.  Used by the +display_csv_file+
   # template to determine whether to display a link to the citation selection
   # page.
-  def need_citation_selection
-    !@headers.include?("citation_author") && # only need to check one of citation_author, citation_year, and citation_title
-      !@headers.include?("citation_doi") &&
-      @session['citation'].nil?
+  def needs_citation_selection
+    !file_includes_citation_info && @session['citation'].nil?
   end
 
   # Returns the list of Sites used by the data set, or the Site specified

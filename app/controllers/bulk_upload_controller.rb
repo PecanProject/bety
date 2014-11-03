@@ -145,7 +145,6 @@ class BulkUploadController < ApplicationController
 
     # Case 1: We got here from the "choose_global_citation" page:
     if params[:global_values]
-      # We got here from the "choose_global_citation" page ...
       if params[:global_values][:citation_id].empty?
         flash[:error] = "No citation selected"
         redirect_to(:back)
@@ -158,18 +157,14 @@ class BulkUploadController < ApplicationController
     end
 
     # Remove the linked citation if the file includes citation data:
-    if !session[:citation].nil? &&
-        (@data_set.headers.include?("citation_author") ||
-         @data_set.headers.include?("citation_doi"))
+    if !session[:citation].nil? && @data_set.file_includes_citation_info
 
       # Case 2: The citation information both in the session and in the file; remove the session citation:
 
       flash.now[:warning] = "Removing linked citation since you have citation information in your data set"
       session[:citation] = nil
 
-    elsif session[:citation].nil? &&
-        !(@data_set.headers.include?("citation_author") ||
-          @data_set.headers.include?("citation_doi"))
+    elsif @data_set.needs_citation_selection
 
       # Case 3: There is no citation information in either the session or the file; present a form to select one:
       redirect_to(action: "choose_global_citation")

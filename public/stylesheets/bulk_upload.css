@@ -5,6 +5,7 @@
 .container.csv_display table {
     margin-left: auto;
     margin-right: auto;
+    clear: left;
 }
 
 .container.csv_display table caption {
