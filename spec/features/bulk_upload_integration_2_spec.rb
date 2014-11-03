@@ -255,5 +255,69 @@ CSV
 
   end
 
+  context "Various scenarios involving a file that includes citation information" do
+
+    before :all do
+      f = File.new("spec/tmp/file_with_complete_data.csv", "w")
+      f.write <<CSV
+yield,citation_author,citation_year,citation_title,site,treatment,date,species,access_level
+1.1,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
+CSV
+      f.close
+    end
+
+    before :each do
+      visit '/bulk_upload/start_upload'
+      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_complete_data.csv') # full path is required if using selenium
+      click_button 'Upload'
+      visit '/Citations'
+      first(:xpath, '//a[@alt = "use"]').click
+    end
+
+    specify 'If you have a session citation and then visit the display_csv_file page, the session citation should be removed' do
+      visit '/bulk_upload/display_csv_file'
+      
+      first("header").should have_content "Uploaded file:"
+      first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
+    end
+
+    specify 'If you have a session citation and then visit the choose_global_data_values page, the session citation should be removed' do
+      visit '/bulk_upload/choose_global_data_values'
+      
+      first("header").should have_content "Specify Upload Options and Global Values"
+      first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
+    end
+
+    specify 'If you have a session citation and then visit the confirm_data page, the session citation should be removed' do
+      visit '/bulk_upload/confirm_data'
+      
+      first("header").should have_content "Please Verify Data-Set References Before Uploading"
+      first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
+    end
+
+    context 'If you have a session citation and then visit the insert_data action, the session citation should be removed' do
+
+      specify 'and if you have specified the amount of rounding, you should be returned to the "confirm data" page' do
+        visit 'choose_global_data_values'
+        click_button 'Confirm Data'
+        click_button 'Insert Data'
+      
+        first("header").should have_content "Please Verify Data-Set References Before Uploading"
+        first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
+      end
+
+      specify 'and if you have not specified the amount of rounding, you should be returned to the "choose global values" page' do
+        visit 'choose_global_data_values'
+        click_button 'Confirm Data'
+        click_button 'Insert Data'
+      
+        first("header").should have_content "Specify Upload Options and Global Value"
+        first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
+      end
+
+    end
+
+  end
+
 end
 
