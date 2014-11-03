@@ -95,37 +95,38 @@ CSV
   end
 
 
+  # Tests for RM issue #2525 (item 1 of update #2):
   context "Various scenarios involving attempts to go to pages of the wizard without having uploaded a file" do
 
-    specify 'Attempting to visit the choose_global_citation page without having uploaded a valid file will cause a redirect to the start_upload page' do
+    specify 'Attempting to visit the choose_global_citation page without having uploaded a CSV file will cause a redirect to the start_upload page' do
       visit '/bulk_upload/choose_global_citation'
 
       first("header").should have_content "New Bulk Upload"
       first("div.alert").should have_content "No file chosen"
     end
 
-    specify 'Attempting to visit the display_csv_file page without having uploaded a valid file will cause a redirect to the start_upload page' do
+    specify 'Attempting to visit the display_csv_file page without having uploaded a CSV file will cause a redirect to the start_upload page' do
       visit '/bulk_upload/display_csv_file'
 
       first("header").should have_content "New Bulk Upload"
       first("div.alert").should have_content "No file chosen"
     end
 
-    specify 'Attempting to visit the choose_global_data_values page without having uploaded a valid file will cause a redirect to the start_upload page' do
+    specify 'Attempting to visit the choose_global_data_values page without having uploaded a CSV file will cause a redirect to the start_upload page' do
       visit '/bulk_upload/choose_global_data_values'
 
       first("header").should have_content "New Bulk Upload"
       first("div.alert").should have_content "No file chosen"
     end
 
-    specify 'Attempting to visit the confirm_data page without having uploaded a valid file will cause a redirect to the start_upload page' do
+    specify 'Attempting to visit the confirm_data page without having uploaded a CSV file will cause a redirect to the start_upload page' do
       visit '/bulk_upload/confirm_data'
 
       first("header").should have_content "New Bulk Upload"
       first("div.alert").should have_content "No file chosen"
     end
 
-    specify 'Attempting to run the insert_data action without having uploaded a valid file will cause a redirect to the start_upload page' do
+    specify 'Attempting to run the insert_data action without having uploaded a CSV file will cause a redirect to the start_upload page' do
       visit '/bulk_upload/insert_data'
 
       first("header").should have_content "New Bulk Upload"
@@ -135,6 +136,51 @@ CSV
   end
 
 
+  # Tests for RM issue #2525 (item 2 of update #2):
+  context "Various scenarios involving attempts to go to pages of the wizard without having chosen a citation" do
+
+    before :all do
+      f = File.new("spec/tmp/file_without_citation_info.csv", "w")
+      f.write <<CSV
+yield,species,site,treatment,date
+1.1,Abarema jupunba,University of Nevada Biological Sciences Center,University of Nevada Biological Sciences Center,2002-10-31
+CSV
+      f.close
+    end
+
+    before :each do
+      visit '/bulk_upload/start_upload'
+      attach_file 'CSV file', 'spec/tmp/file_without_citation_info.csv'
+      click_button 'Upload'
+    end
+
+    specify 'Attempting to visit the display_csv_file page without having choosen a citation will cause a redirect to the choose_global_citation page' do
+      visit '/bulk_upload/display_csv_file'
+      
+      first("header").should have_content "Choose a Citation"
+    end
+
+    specify 'Attempting to visit the choose_global_data_values page without having choosen a citation will cause a redirect to the choose_global_citation page' do
+      visit '/bulk_upload/choose_global_data_values'
+      
+      first("header").should have_content "Choose a Citation"
+    end
+
+    specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the choose_global_citation page' do
+      visit '/bulk_upload/confirm_data'
+      
+      first("header").should have_content "Choose a Citation"
+    end
+
+    specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the choose_global_citation page' do
+      visit '/bulk_upload/insert_data'
+      
+      first("header").should have_content "Choose a Citation"
+    end
+
+  end
+
+  # Tests for RM issue #2525 (item 3 of update #2):
   context "Various scenarios after uploading an invalid file that included citation information" do
 
     before :all do
@@ -177,6 +223,7 @@ CSV
 
   end
 
+  # Tests for RM issue #2525 (item 4 of update #2):
   context "Various scenarios involving failure to provide some data interactively" do
 
     before :all do
