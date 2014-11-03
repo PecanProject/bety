@@ -23,6 +23,10 @@
     margin: auto;
 }
 
+.container.csv_display div.alert {
+    clear: left;
+}
+
 h2.file_info {
     padding: 0 0 10px
 }
