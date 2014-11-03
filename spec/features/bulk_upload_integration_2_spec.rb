@@ -156,25 +156,25 @@ CSV
 
     specify 'Attempting to visit the display_csv_file page without having choosen a citation will cause a redirect to the choose_global_citation page' do
       visit '/bulk_upload/display_csv_file'
-      
+
       first("header").should have_content "Choose a Citation"
     end
 
     specify 'Attempting to visit the choose_global_data_values page without having choosen a citation will cause a redirect to the choose_global_citation page' do
       visit '/bulk_upload/choose_global_data_values'
-      
+
       first("header").should have_content "Choose a Citation"
     end
 
     specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the choose_global_citation page' do
       visit '/bulk_upload/confirm_data'
-      
+
       first("header").should have_content "Choose a Citation"
     end
 
     specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the choose_global_citation page' do
       visit '/bulk_upload/insert_data'
-      
+
       first("header").should have_content "Choose a Citation"
     end
 
@@ -205,19 +205,19 @@ CSV
 
     specify 'Attempting to visit the choose_global_data_values page without having a valid file will cause a redirect to the display_csv_file page' do
       visit '/bulk_upload/choose_global_data_values'
-      
+
       page.should have_content "Data Value Errors"
     end
 
     specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the display_csv_file page' do
       visit '/bulk_upload/confirm_data'
-      
+
       page.should have_content "Data Value Errors"
     end
 
     specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the display_csv_file page' do
       visit '/bulk_upload/insert_data'
-      
+
       page.should have_content "Data Value Errors"
     end
 
@@ -266,52 +266,84 @@ CSV
       f.close
     end
 
-    before :each do
-      visit '/bulk_upload/start_upload'
-      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_complete_data.csv') # full path is required if using selenium
-      click_button 'Upload'
-      visit '/Citations'
-      first(:xpath, '//a[@alt = "use"]').click
-    end
+    context "A citation has been selected but rounding has not been specified" do
 
-    specify 'If you have a session citation and then visit the display_csv_file page, the session citation should be removed' do
-      visit '/bulk_upload/display_csv_file'
-      
-      first("header").should have_content "Uploaded file:"
-      first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
-    end
+      before :each do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_complete_data.csv') # full path is required if using selenium
+        click_button 'Upload'
+        visit '/Citations'
+        first(:xpath, '//a[@alt = "use"]').click
 
-    specify 'If you have a session citation and then visit the choose_global_data_values page, the session citation should be removed' do
-      visit '/bulk_upload/choose_global_data_values'
-      
-      first("header").should have_content "Specify Upload Options and Global Values"
-      first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
-    end
+        page.should have_content "Citation: "
+      end
 
-    specify 'If you have a session citation and then visit the confirm_data page, the session citation should be removed' do
-      visit '/bulk_upload/confirm_data'
-      
-      first("header").should have_content "Please Verify Data-Set References Before Uploading"
-      first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
-    end
+      specify 'If you have a session citation and then visit the display_csv_file page, the session citation should be removed.' do
+        visit '/bulk_upload/display_csv_file'
 
-    context 'If you have a session citation and then visit the insert_data action, the session citation should be removed' do
-
-      specify 'and if you have specified the amount of rounding, you should be returned to the "confirm data" page' do
-        visit 'choose_global_data_values'
-        click_button 'Confirm Data'
-        click_button 'Insert Data'
-      
-        first("header").should have_content "Please Verify Data-Set References Before Uploading"
+        first("header").should have_content "Uploaded file:"
         first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
       end
 
-      specify 'and if you have not specified the amount of rounding, you should be returned to the "choose global values" page' do
-        visit 'choose_global_data_values'
-        click_button 'Confirm Data'
-        click_button 'Insert Data'
-      
+      specify 'If you have a session citation and then visit the choose_global_data_values page, the session citation should be removed.' do
+        visit '/bulk_upload/choose_global_data_values'
+
+        first("header").should have_content "Specify Upload Options and Global Values"
+        first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
+      end
+
+      specify 'If you have a session citation and then visit the confirm_data page, the session citation should be removed' +
+        "\n        and if you have not specified the amount of rounding, you should be returned to the \"choose global values\" page." do
+
+        visit '/bulk_upload/confirm_data'
+        page.should_not have_content "Citation: "
+        first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
         first("header").should have_content "Specify Upload Options and Global Value"
+
+      end
+
+      specify 'If you have a session citation and then visit the insert_data action, the session citation should be removed' +
+        "\n        and if you have not specified the amount of rounding, you should be returned to the \"choose global values\" page." do
+        visit '/bulk_upload/insert_data'
+
+        first("header").should have_content "Specify Upload Options and Global Value"
+        page.should_not have_content "Citation: "
+        first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
+      end
+
+    end
+
+
+    context "A citation has been selected and rounding has been specified" do
+
+      before :each do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_complete_data.csv') # full path is required if using selenium
+        click_button 'Upload'
+        click_link 'Specify'
+        click_button 'Confirm'
+
+        visit '/Citations'
+        first(:xpath, '//a[@alt = "use"]').click
+
+        page.should have_content "Citation: "
+      end
+
+      specify 'If you have a session citation and then visit the confirm_data page, the session citation should be removed' +
+        "\n        and if you have specified the amount of rounding, you should be returned to the \"confirm data\" page." do
+        visit '/bulk_upload/confirm_data'
+
+        first("header").should have_content "Please Verify Data-Set References Before Uploading"
+        page.should_not have_content "Citation: "
+        first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
+      end
+
+      specify 'If you have a session citation and then visit the insert_data action, the session citation should be removed' +
+        "\n        and if you have specified the amount of rounding, you should be returned to the \"confirm data\" page" do
+        visit '/bulk_upload/confirm_data'
+
+        first("header").should have_content "Please Verify Data-Set References Before Uploading"
+        page.should_not have_content "Citation: "
         first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
       end
 
@@ -320,4 +352,3 @@ CSV
   end
 
 end
-

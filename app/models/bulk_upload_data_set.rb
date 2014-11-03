@@ -820,14 +820,6 @@ class BulkUploadDataSet
       @headers.include?("citation_doi")
   end
 
-  # Returns true if the upload file contains no citation information and no
-  # citation has be selected for the session.  Used by the +display_csv_file+
-  # template to determine whether to display a link to the citation selection
-  # page.
-  def needs_citation_selection
-    !file_includes_citation_info && @session['citation'].nil?
-  end
-
   # Returns the list of Sites used by the data set, or the Site specified
   # globally if site information was not included in the upload file.  Raises a
   # RuntimeError no match is found for some site in the data set.  Used by the

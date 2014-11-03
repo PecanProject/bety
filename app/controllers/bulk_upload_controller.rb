@@ -45,7 +45,8 @@ class BulkUploadController < ApplicationController
       # delete bulk-upload-related session data (except for :citation,
       # which is "global"):
       ["csvpath", "global_values", "rounding", "citation_id_list",
-      "number_of_rows", "valid_upload_file"].include?(key)
+      "number_of_rows", "valid_upload_file",
+      "file_includes_citation_info"].include?(key)
     end
   end
 
@@ -156,17 +157,11 @@ class BulkUploadController < ApplicationController
       session[:citation] = params[:global_values][:citation_id]
     end
 
-    # Remove the linked citation if the file includes citation data:
-    if !session[:citation].nil? && @data_set.file_includes_citation_info
+    session[:file_includes_citation_info] = @data_set.file_includes_citation_info
 
-      # Case 2: The citation information both in the session and in the file; remove the session citation:
-
-      flash.now[:warning] = "Removing linked citation since you have citation information in your data set"
-      session[:citation] = nil
-
-    elsif @data_set.needs_citation_selection
-
-      # Case 3: There is no citation information in either the session or the file; present a form to select one:
+    begin
+      ensure_citation
+    rescue
       redirect_to(action: "choose_global_citation")
       return
     end
@@ -221,6 +216,15 @@ class BulkUploadController < ApplicationController
   # Any values specified are saved as session data upon form submission.
   def choose_global_data_values
     @data_set = BulkUploadDataSet.new(session)
+
+    begin
+      ensure_citation
+    rescue => e
+      flash[:error] = e.message
+      redirect_to(action: "choose_global_citation")
+      return
+    end
+
     @session = session # needed for sticky form fields
     @placeholders = {
       site: "Enter any portion of the site name, city, state, or country",
@@ -238,6 +242,15 @@ class BulkUploadController < ApplicationController
   # button is displayed for the user to trigger the final step after visually
   # verifying the data.
   def confirm_data
+
+    begin
+      ensure_citation
+    rescue => e
+      flash[:error] = e.message
+      redirect_to(action: "choose_global_citation")
+      return
+    end
+
     if params["global_values"]
       session[:global_values] = params["global_values"]
       if params["global_values"]["date"]
@@ -258,6 +271,7 @@ class BulkUploadController < ApplicationController
     # without ever having submitted the form on the "choose_global_data_values"
     # page:
     if session[:rounding].nil?
+      flash.keep # mainly for 'removing citation' message
       redirect_to(action: "choose_global_data_values")
       return
     end
@@ -282,10 +296,20 @@ class BulkUploadController < ApplicationController
   # Data is inserted within a database transaction so that any failure rolls
   # back the entire transaction.
   def insert_data
+
+    begin
+      ensure_citation
+    rescue => e
+      flash[:error] = e.message
+      redirect_to(action: "choose_global_citation")
+      return
+    end
+
     # This takes care of the case where the user attempts to insert data
     # without ever having submitted the form on the "choose_global_data_values"
     # page:
     if session[:rounding].nil?
+    flash.keep # mainly for 'removing citation' message
       redirect_to(action: "choose_global_data_values")
       return
     end
@@ -317,5 +341,22 @@ class BulkUploadController < ApplicationController
     @file_contents = csv.read
     csv.close
   end
+
+  def ensure_citation
+
+    # Remove the linked citation if the file includes citation data:
+    if !session[:citation].nil? && session[:file_includes_citation_info]
+
+      flash.now[:warning] = "Removing linked citation since you have citation information in your data set"
+      session[:citation] = nil
+
+    elsif session[:citation].nil? && !session[:file_includes_citation_info]
+
+      raise "Please Choose a Citation"
+
+    end
+
+  end
+
 
 end
