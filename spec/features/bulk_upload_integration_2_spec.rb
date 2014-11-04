@@ -21,6 +21,10 @@ CSV
       f.close
     end
 
+    after :all do
+      File::delete("spec/tmp/yield_by_doi.csv")
+    end
+
     specify "doi matching shouldn't be case-sensitive" do
       visit '/bulk_upload/start_upload'
       attach_file 'CSV file', 'spec/tmp/yield_by_doi.csv'
@@ -40,6 +44,10 @@ yield,citation_author,citation_year,citation_title,site,species,treatment,access
 5.5,Adams,1986,Quantum Yields,University of Nevada Biological Sciences Center,Lolium perenne,observational,3,5000,1.98,This is bogus yield data.,Gremie
 CSV
       f.close
+    end
+
+    after :all do
+      File::delete("spec/tmp/yield_without_date.csv")
     end
 
     before :each do
@@ -78,6 +86,10 @@ CSV
 yield
 CSV
       f.close
+    end
+
+    after :all do
+      File::delete("spec/tmp/header_without_data.csv")
     end
 
     # Test for RM issue #2527
@@ -148,6 +160,10 @@ CSV
       f.close
     end
 
+    after :all do
+      File::delete("spec/tmp/file_without_citation_info.csv")
+    end
+
     before :each do
       visit '/bulk_upload/start_upload'
       attach_file 'CSV file', 'spec/tmp/file_without_citation_info.csv'
@@ -190,6 +206,10 @@ yield,citation_doi,species,site,treatment,date
 1.1,10.2134/AGRONJ2005.0351,Sweet Woodruff,University of Nevada Biological Sciences Center,University of Nevada Biological Sciences Center,2002-10-31
 CSV
       f.close
+    end
+
+    after :all do
+      File::delete("spec/tmp/file_with_invalid_data.csv")
     end
 
     before :each do
@@ -235,6 +255,10 @@ CSV
       f.close
     end
 
+    after :all do
+      File::delete("spec/tmp/file_with_incomplete_data.csv")
+    end
+
     before :each do
       visit '/bulk_upload/start_upload'
       attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_incomplete_data.csv') # full path is required if using selenium
@@ -264,6 +288,10 @@ yield,citation_author,citation_year,citation_title,site,treatment,date,species,a
 1.1,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
 CSV
       f.close
+    end
+
+    after :all do
+      File::delete("spec/tmp/file_with_complete_data.csv")
     end
 
     context "A citation has been selected but rounding has not been specified" do

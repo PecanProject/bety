@@ -41,9 +41,19 @@ feature 'Yields index works' do
       click_button 'Create'
       
       page.should have_content 'Yield was successfully created.'
+
+      # now do clean-up:
+      visit '/yields'
+      fill_in 'Search:', with: "sacc"
+      first(:xpath, "//a[@alt = 'delete']").click
+      # If we're using Selenium, we have to deal with the modal dialogue:
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
     end
     
-    it 'should now allow creation of new yields without a numeric mean', :js => true do
+    it 'should not allow creation of new yields without a numeric mean', :js => true do
       visit '/citations'
       first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
 

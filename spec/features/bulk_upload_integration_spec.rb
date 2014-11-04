@@ -41,6 +41,16 @@ feature 'CSV file upload works' do
       page.should have_content 'Please Verify Data-Set References Before Uploading'
       click_button 'Insert Data'
       page.should_not have_selector('.alert-error')
+
+      # do clean-up
+      visit '/yields'
+      fill_in 'Search', with: 'Adams'
+      first(:xpath, "//a[@alt = 'delete']").click
+      # If we're using Selenium, we have to deal with the modal dialogue:
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
     end
 
     it 'should successfully validate a file even when headings are not in canonical form' do
