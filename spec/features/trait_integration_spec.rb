@@ -32,42 +32,41 @@ feature 'Traits index works' do
       end
     end
 
-    ## pending
     it 'should allow creation of new traits' do
-#      # Create Citation association
-#      visit '/citations'
-#      first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
-#      page.should have_content 'Sites already associated with this citation'
+     # Create Citation association
+     visit '/citations'
+     first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
+     page.should have_content 'Sites already associated with this citation'
 
-#      # Create Treatment association
-#      visit '/treatments'
-#      click_link 'New Treatment'
-#      fill_in 'Name', :with => 'Erduah'
-#      fill_in 'Definition', :with => 'Hot Earth'
-#      click_button 'Create'
+     # Create Treatment association
+     visit '/treatments'
+     click_link 'New Treatment'
+     fill_in 'Name', :with => 'Erduah'
+     fill_in 'Definition', :with => 'Hot Earth'
+     click_button 'Create'
 
-#      # Create Site association
-#      visit '/sites'
-#      click_link 'New Site'
-#      fill_in 'Site name', :with => 'Erduah'
-#      fill_in 'site_notes', :with => 'Hot Earth'
-#      click_button 'Create'
+     # Create Site association
+     visit '/sites'
+     click_link 'New Site'
+     fill_in 'Site name', :with => 'Erduah'
+     fill_in 'site_notes', :with => 'Hot Earth'
+     click_button 'Create'
 
-#      # Verify the trait creation
-#      visit '/traits/new'
-#      
-#      page.should have_content 'New Trait'
-#      
-#      fill_in 'trait_mean', :with => '238.12'
-#      fill_in 'trait_stat', :with => '7.76'
-#      fill_in 'trait_n', :with => '3'
-#      fill_in 'trait_notes', :with => 'Research Interwebs Papers Research Interwebs PapersResearch Interwebs PapersResearch Interwebs Papers' 
 
-#      print page.body
+     # Verify the trait creation
+     visit '/traits/new'
+     
+     page.should have_content 'New Trait'
+     
+     fill_in 'trait_mean', :with => '238.12'
+     select 'SE', :from => 'trait_statname'
+     fill_in 'trait_stat', :with => '7.76'
+     fill_in 'trait_n', :with => '3'
+     fill_in 'trait_notes', :with => 'Research Interwebs Papers Research Interwebs PapersResearch Interwebs PapersResearch Interwebs Papers' 
 
-#      click_button 'Create'
-#      
-#      page.should have_content 'Trait was successfully created'
+     click_button 'Create'
+     
+     page.should have_content 'Trait was successfully created'
     end
 
 

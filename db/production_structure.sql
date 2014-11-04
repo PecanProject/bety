@@ -1267,7 +1267,8 @@ CREATE TABLE sites (
     local_time integer,
     sand_pct numeric(9,5),
     clay_pct numeric(9,5),
-    geometry geometry(GeometryZ,4326)
+    geometry geometry(GeometryZ,4326),
+    CONSTRAINT enforce_valid_geom CHECK (st_isvalid(geometry))
 );
 
 
