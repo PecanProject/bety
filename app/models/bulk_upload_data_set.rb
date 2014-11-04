@@ -796,6 +796,7 @@ class BulkUploadDataSet
     if @headers.include?('species')
       missing_columns -= [ 'cultivar' ]
     end
+    missing_columns
   end
 
   def file_includes_citation_info
@@ -873,6 +874,10 @@ class BulkUploadDataSet
           cultivars << { cultivar_name: cultivar_name.downcase, species_name: row["species"].downcase }
         end
       end
+    elsif @headers.include?("species")
+      # If a file contains species information, we can't specify cultivar
+      # information interactively, so just return an empty array.
+      return []
     else
       upload_species = get_upload_species
       globally_specified_cultivar = @session[:global_values][:cultivar]
