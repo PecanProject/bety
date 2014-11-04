@@ -792,6 +792,10 @@ class BulkUploadDataSet
   # dataset as a whole because they are missing from the upload file.
   def missing_interactively_specified_fields
     missing_columns = INTERACTIVE_COLUMNS - @headers
+    # If species is in the file, don't allow cultivar to be specified interactively:
+    if @headers.include?('species')
+      missing_columns -= [ 'cultivar' ]
+    end
   end
 
   def file_includes_citation_info
