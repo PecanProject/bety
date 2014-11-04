@@ -49,6 +49,13 @@ class Ignored
   end
 end
 
+class NotValidated
+  include ValidationResult
+  def initialize
+    super(:not_validated, "")
+  end
+end
+
 class BulkUploadDataException < StandardError
   include ValidationResult
 end
@@ -300,24 +307,6 @@ class BulkUploadDataSet
   # recognized as significant.
   attr :csv_warnings
 
-  # Set by +validate_csv_data+ and used by the +display_csv_file+ template, both
-  # directly (to determine if forward wizard links should be shown) and via the
-  # +make_validation_summary+ helper (to determine if an error summary should be
-  # displayed).
-  attr :file_has_fatal_errors
-
-  # Set by +validate_csv_data+ and used by the +display_csv_file+ template (via
-  # the +make_validation_summary+ helper) to display the number of errors found.
-  attr :total_error_count
-
-  # Set by +validate_csv_data+ and used by the +make_validation_summary+ helper
-  # to determine if a section detailing field list errors should be displayed.
-  attr :field_list_error_count
-
-  # Set by +validate_csv_data+ and used by the +make_validation_summary+ helper
-  # to determine if a section detailing data value errors should be displayed.
-  attr :data_value_error_count
-
   def self.validate_date(date_string)
     year = month = day = nil
     REQUIRED_DATE_FORMAT.match date_string do |match_data|
@@ -489,23 +478,21 @@ class BulkUploadDataSet
   #                 that includes the ValidationResult module--that is, an
   #                 instance of Valid, Ignored, or some subclass of
   #                 BulkUploadDataException.
-  #     @field_list_error_count:
-  #         The number of errors pertaining to the field list of the uploaded file.
-  #     @data_value_error_count:
-  #         The number of data values that failed validation
-  #     @total_error_count:
-  #         The total number of errors, both heading-related and data-related.
-  #     @file_has_fatal_errors:
-  #         A boolean telling whether there were any fatal errors found.
   def validate_csv_data
+    default_result = field_list_error_count > 0 ? NotValidated.new : Valid.new
     @validated_data = []
     @data.each do |row|
-      validated_row = row.collect { |value| { fieldname: value[0], data: value[1], validation_result: Valid.new } }
+      validated_row = row.collect { |value| { fieldname: value[0], data: value[1], validation_result: default_result } }
       @validated_data << validated_row
     end
 
     if @validated_data.size == 0
       raise NoDataError, "No data in file"
+    end
+
+    if field_list_error_count > 0
+      # just show the file without attempting to validate it
+      return @validated_data
     end
 
     @validated_data.each_with_index do |row, i|
@@ -786,14 +773,6 @@ class BulkUploadDataSet
       end
     end # @validated_data.each
 
-    @field_list_error_count = @validation_summary[:field_list_errors].size
-    @data_value_error_count = (@validation_summary.keys - [ :field_list_errors ]).
-      collect{|key| @validation_summary[key][:row_numbers].size}.reduce(:+) || 0 # || 0 "fixes" the case where there are no data value errors
-    @total_error_count = @field_list_error_count + @data_value_error_count
-    @file_has_fatal_errors = !@total_error_count.zero?
-
-    @session[:number_of_rows] = @validated_data.size
-
   end # def validate_csv_data
 
   # A list of values that may be specified interactively for the data set as a
@@ -1004,6 +983,37 @@ class BulkUploadDataSet
       end # Trait.transaction
     end # if-else
   end
+
+  # The number of errors pertaining to the field list of the uploaded file.
+  # Used by the +make_validation_summary+ helper to determine if a section
+  # detailing field list errors should be displayed.
+  def field_list_error_count
+    return @validation_summary[:field_list_errors].size
+  end
+
+  # The number of data values that failed validation.  Used by the
+  # +make_validation_summary+ helper to determine if a section detailing data
+  # value errors should be displayed.
+  def data_value_error_count
+    return (@validation_summary.keys - [ :field_list_errors ]).
+    collect{|key| @validation_summary[key][:row_numbers].size}.reduce(:+) || 0 # || 0 "fixes" the case where there are no data value errors
+  end
+
+  # The total number of errors, both heading-related and data-related.  Used by
+  # the +display_csv_file+ template (via the +make_validation_summary+ helper)
+  # to display the number of errors found.
+  def total_error_count
+    return field_list_error_count + data_value_error_count
+  end
+
+  # A boolean telling whether there were any fatal errors found.  Used by the
+  # +display_csv_file+ template, both directly (to determine if forward wizard
+  # links should be shown) and via the +make_validation_summary+ helper (to
+  # determine if an error summary should be displayed).
+  def file_has_fatal_errors
+    return !total_error_count.zero?
+  end
+
 ####################################################################################################################################
   private
 
@@ -1044,13 +1054,16 @@ class BulkUploadDataSet
       # Checks that the file referenced by the CSV object @data is
       # well formed and triggers a CSV::MalformedCSVError exception if
       # it is not.
+      row_count = 0
       csv.each do |row| # force exception if not well formed
         if row.size == 0
           raise "Blank lines are not allowed."
         end
+        row_count += 1
         row.each do |c|
         end
       end
+      @session[:number_of_rows] = row_count
 
       csv.rewind # rewinds to the first line
     end
