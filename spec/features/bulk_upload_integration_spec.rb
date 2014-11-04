@@ -43,8 +43,8 @@ feature 'CSV file upload works' do
       page.should_not have_selector('.alert-error')
 
       # do clean-up
-      visit '/yields'
-      first(:xpath, "//a[@alt = 'delete' and contains(ancestor::tr[td/a], 'Adams')]").click
+      visit '/yields?search=Adams'
+      first(:xpath, "//a[@alt = 'delete']").click
       # If we're using Selenium, we have to deal with the modal dialogue:
       if page.driver.is_a? Capybara::Selenium::Driver
         a = page.driver.browser.switch_to.alert

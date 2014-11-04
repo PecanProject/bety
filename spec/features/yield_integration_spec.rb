@@ -43,8 +43,8 @@ feature 'Yields index works' do
       page.should have_content 'Yield was successfully created.'
 
       # now do clean-up:
-      visit '/yields'
-      first(:xpath, "//a[@alt = 'delete' and contains(ancestor::tr[td/a], 'Sacc')]").click
+      visit '/yields?search=sacc'
+      first(:xpath, "//a[@alt = 'delete']").click
       # If we're using Selenium, we have to deal with the modal dialogue:
       if page.driver.is_a? Capybara::Selenium::Driver
         a = page.driver.browser.switch_to.alert
