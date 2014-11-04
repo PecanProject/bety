@@ -279,7 +279,7 @@ CSV
 
   end
 
-  context "Various scenarios involving a file that includes citation information" do
+  context "Various scenarios involving a file that requires no interactively-specified additional data" do
 
     before :all do
       f = File.new("spec/tmp/file_with_complete_data.csv", "w")
@@ -292,6 +292,15 @@ CSV
 
     after :all do
       File::delete("spec/tmp/file_with_complete_data.csv")
+    end
+
+    # Test for RM issue #2526
+    specify "A cultivar entry box should not appear on the choose_global_data_values page" do
+      visit '/bulk_upload/start_upload'
+      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_complete_data.csv') # full path is required if using selenium
+      click_button 'Upload'
+      click_link 'Specify'
+      page.should_not have_content("cultivar")
     end
 
     context "A citation has been selected but rounding has not been specified" do
