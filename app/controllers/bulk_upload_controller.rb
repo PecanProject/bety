@@ -174,10 +174,6 @@ class BulkUploadController < ApplicationController
 
     @data_set.check_header_list # initializes @validation_summary and @validation_summary[:field_list_errors]
 
-    if @data_set.validation_summary[:field_list_errors].any?
-      # to do: decide whether to go on to validate data even when there are errors in the heading field list
-      #      return
-    end
 
     # No heading errors; go on to validate data
     @data_set.validate_csv_data
