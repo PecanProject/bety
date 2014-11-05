@@ -3,27 +3,36 @@
 #
 #    The user is presented with a form for choosing a file to upload.
 #
+# 1. choose_global_citation::
+#
+#    The user is presented with a form for choosing a global (dataset-wide)
+#    citation.  This page is skipped if there is citation data in the uploaded
+#    file.  This and subsequent pages are displayed only if the upload succeeds
+#    and the uploaded file is well-formed.
+#
 # 1. display_csv_file::
 #
 #    The results of validating the header list and data in the file are
-#    displayed.  The page for this stage is displayed only if the upload
-#    succeeds and the uploaded file is well-formed.
+#    displayed.  This and subsequent pages are displayed only if the file
+#    includes citation information or one was choosen interactively.
 #
 # 1. choose_global_data_values::
 #
 #    The user is presented with a form for choosing global (dataset-wide) values
-#    and options.  The page for this stage is displayed only if the headers and
-#    data in the uploaded file validate.
+#    and options.  This and subsequent pages are displayed only if the headers
+#    and data in the uploaded file validate.
 #
 # 1. confirm_data::
 #
 #    A summary of existing data referred to by the data set.  This allows the
 #    user to verify the citations, sites, species, and cultivars referred to by
-#    the data set or selected interactively are correct.
+#    the data set or selected interactively are correct.  This page is displayed
+#    only if all required information has been specified.
 #
 # 1. insert_data::
 #
-#    No page corresponds to this action.
+#    No page corresponds to this action.  This action may be performed only if
+#    all required information has been specified.
 #
 # At each stage, the current stage is recorded in the +:bulk_upload_stage+ key
 # of the session variable.
@@ -36,10 +45,13 @@ class BulkUploadController < ApplicationController
 
   private
 
+  # Records the current bulk upload action in the session so that if we step
+  # outside the wizard, we can return to where we were.
   def record_stage
     session[:bulk_upload_stage] = params[:action]
   end
 
+  # Clears all bulk-upload-related session data except the bulk_upload_stage.
   def clear_session_data
     session.delete_if do |key|
       # delete bulk-upload-related session data (except for :citation,
@@ -50,6 +62,7 @@ class BulkUploadController < ApplicationController
     end
   end
 
+  # Redirects to the "display_csv_file" page if the data file doesn't validate.
   def valid_file_required
     # Don't allow access if we don't have a valid file:
     if !session[:valid_upload_file]
@@ -63,8 +76,9 @@ class BulkUploadController < ApplicationController
   # Step 1: Choose a file to upload.
   #
   # The bulk-upload-related session keys--namely "csvpath", "global_values",
-  # "rounding", and "citation_id_list"--are cleared at the start of this action,
-  # and the +:bulk_upload_stage+ session key is set to this action.
+  # "rounding", "citation_id_list", "number_of_rows", "valid_upload_file", and
+  # "file_includes_citation_info"--are cleared at the start of this action, and
+  # the +:bulk_upload_stage+ session key is set to this action.
   def start_upload
     # To-do: decide whether to display raw content of CSV file when we can't parse it.
 #    if flash[:display_csv_file]
@@ -84,44 +98,59 @@ class BulkUploadController < ApplicationController
         redirect_to(action: "start_upload")
     end
 
+    if session[:file_includes_citation_info]
+      # We shouldn't be here; go on to (or back to) the validation stage.
+      redirect_to(action: "display_csv_file")
+    end
+
     @session = session # needed for sticky form fields
   end
 
   # Step 3: Display the CSV file as a table.
   #
-  # If the +params+ key "new upload" is set (i.e., we got to this action by
-  # posting the form on the +start_upload+ page), the "CSV file" parameter is
-  # used to instantiate a new +BulkUploadDataSet+, the file contents are copied
-  # to a new file stored in the +public/uploads+ directory, and the location of
-  # this file is stored in the +:csvpath+ key of the session.  If no file was
-  # provided or if the uploaded file is malformed, instantiation fails and the
-  # user is redirected back to the +start_upload+ page.
+  # If the +params+ key "CSV file" is set (i.e., we got to this action by
+  # posting the form on the +start_upload+ page), this parameter is used to
+  # instantiate a new +BulkUploadDataSet+, the uploaded file is copied to the
+  # +public/uploads+ directory, and the location of this file is stored in the
+  # +:csvpath+ key of the session.  If no file was provided or if the uploaded
+  # file is malformed, instantiation fails and the user is redirected back to
+  # the +start_upload+ page.
   #
-  # If the +params+ key "new upload" is _not_ set (i.e., we are returning to
-  # this page without having completed the wizard and without having returned to
-  # the +start_upload+ page), the location of the uploaded file is looked up in
-  # the +:csvpath+ key of the session and used to instantiate a new
-  # +BulkUplaodDataSet+.  The file is not re-checked for well-formedness.
+  # If the +params+ key "CSV file" is _not_ set but the session key +:csvpath+
+  # exists (i.e., we are returning to this page without having completed the
+  # wizard and without having returned to the +start_upload+ page; note that
+  # this includes the case where we were sent back to the
+  # +choose_global_citation+ page after an earlier visit to this page), the
+  # location of the uploaded file is looked up in the +:csvpath+ key of the
+  # session and used to instantiate a new +BulkUplaodDataSet+.  The file is not
+  # re-checked for well-formedness.
+  #
+  # If neither the +params+ key "CSV file" nor the session key +:csvpath+ exist
+  # (i.e., the user submitted a blank upload form or we didn't reach this page
+  # through the normal flow of the wizard), the user is directed back to the
+  # +start_upload+ page and receives a "No file chosen" error message.
+  #
+  # Once the file-related business is complete, the file is checked for citation
+  # information.  If it includes none, and if there is no citation information
+  # in the session, the user is sent back to the +choose_global_citation+ page.
   #
   # After successful instantiation of +BulkUploadDataSet+, its
   # +#check_header_list+ method is run to initialize its +validation_summary+
-  # attribute and set the value of the +:field_list_errors+ key.  Then its
-  # +#validate_csv_data+ method is run, which sets or alters the following
-  # attributes:
+  # attribute and set the value of +validation_summary+[:field_list_errors].
+  # Then its +#validate_csv_data+ method is run, which sets or alters the
+  # following attributes:
   # * +validation_summary+::
   #
-  #    (keys and a corresponding value list for each type of error found are
-  #    added)
+  #    This includes a key for each type of error found.  Under this key is
+  #    stored a CSS class to associate with this type of error and a list of
+  #    numbers of rows in which the error occurs.
   #
   # * +validated_data+::
   #
-  #    (essentially, the data in the file with validation-related meta-data
-  #    added)
+  #    This is essentially the data in the file but with validation-related
+  #    meta-data added (provided there were no errors in the field list;
+  #    otherwise, data validation is not done).
   #
-  # * +field_list_error_count+::
-  # * +data_value_error_count+::
-  # * +total_error_count+::
-  # * +file_has_fatal_errors+.::
   def display_csv_file
 
     uploaded_io = params["CSV file"]
@@ -141,10 +170,9 @@ class BulkUploadController < ApplicationController
 
 
     ### Ensure we have a citation -- either in the file or stored in the
-    ### session, but not both.  Remove the session citaion and/or go to the
+    ### session, but not both.  Remove the session citation and/or go to the
     ### citation selection page if needed.
 
-    # Case 1: We got here from the "choose_global_citation" page:
     if params[:global_values]
       if params[:global_values][:citation_id].empty?
         flash[:error] = "No citation selected"
@@ -162,6 +190,8 @@ class BulkUploadController < ApplicationController
     begin
       ensure_citation
     rescue
+      # This is considered "normal flow": this user got here by uploading a file
+      # without citation info; don't display the exception error.
       redirect_to(action: "choose_global_citation")
       return
     end
@@ -200,7 +230,8 @@ class BulkUploadController < ApplicationController
   # Step 4: Choose global (dataset-wide) values and options.
   #
   # The user is presented with a form to choose:
-  # 1. The amount of rounding to use for yield values
+  # 1. The amount of rounding to use for yield or trait variable values
+  # 1. The amount of rounding to use for the standard error (if included)
   # 1. Dataset-wide values for attributes of the data not specified in the
   #    upload file, which may be any of:
   #    a. The site.
@@ -234,7 +265,7 @@ class BulkUploadController < ApplicationController
   #
   # This page displays the the citations, sites, species, and cultivars referred
   # to by the data set or selected interactively.  The helps assure the proper
-  # associations will be made when the data is inserted.  An +Insesrt Data+
+  # associations will be made when the data is inserted.  An +Insesrt+ +Data+
   # button is displayed for the user to trigger the final step after visually
   # verifying the data.
   def confirm_data
@@ -331,6 +362,7 @@ class BulkUploadController < ApplicationController
 ################################################################################
   private
 
+  # not used
   def read_raw_contents
     csvpath = session[:csvpath]
     csv = File.open(csvpath)
@@ -338,6 +370,7 @@ class BulkUploadController < ApplicationController
     csv.close
   end
 
+  # Ensures there is citation data in the session or in the file but not both.
   def ensure_citation
 
     # Remove the linked citation if the file includes citation data:
