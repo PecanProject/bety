@@ -48,12 +48,12 @@ class Citation < ActiveRecord::Base
     self.to_s
   end
   
-  # over ride the default of when you call a citation in a string
+  # override the default of when you call a citation in a string
   # Better ways to do this, but this one works for me. 
   def to_s(format = nil)
     case format
     when :author_year
-      "#{(author || "NA")[/^[\w-]*/]} #{year} "
+      "#{(author || "NA")[/[\w-][^,]*/]} #{year}"
     else
       "#{author_year} #{(title || "NA")[0..19]}..."
     end
