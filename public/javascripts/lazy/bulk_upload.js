@@ -11,7 +11,9 @@ jQuery(function() {
 
         // update source for the cultivars fields: cultivar suggestions depend on what species was chosen
         change: function(event, ui) {
-            jQuery('#autocomplete_cultivar').autocomplete("option", "source", ROOT_URL + "/cultivars/autocomplete.json?species=" + jQuery('#autocomplete_species').val())
+            jQuery('#autocomplete_cultivar').autocomplete("option", "source", ROOT_URL +
+                                                          "/cultivars/autocomplete.json?species=" +
+                                                          encodeURIComponent(jQuery('#autocomplete_species').val()))
         }
     });
 
@@ -27,7 +29,8 @@ jQuery(function() {
     }
     else {
         // We only get here in the case the species value was prepopulated at the time the page was loaded.
-        optionList = ROOT_URL + "/cultivars/autocomplete.json?species=" + jQuery('#autocomplete_species').val()
+        optionList = (ROOT_URL + "/cultivars/autocomplete.json?species=" +
+                      encodeURIComponent(jQuery('#autocomplete_species').val()))
     }
     jQuery('#autocomplete_cultivar').autocomplete({
         // set source to this until it gets updated by the species field change method
