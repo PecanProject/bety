@@ -100,6 +100,24 @@ class Site < ActiveRecord::Base
 
   belongs_to :user
 
+  # Returns an +ActiverRecord::Relation containing all Site objects that are
+  # associated with every Citation whose id is in +citation_id_list+.
+  # +citation_id_list+ may be given as a single Array, as multiple integer
+  # arguments, or as some combination of the two.
+  def self.in_all_citations(*citation_id_list)
+    where_condition = <<"CONDITION"
+EXISTS (
+    SELECT 1 FROM citations_sites cs
+        WHERE cs.site_id = sites.id
+            AND cs.citation_id = ?)
+CONDITION
+    sites = self.where({})
+    citation_id_list.flatten.each do |citation_id|
+      sites = sites.where(where_condition, citation_id)
+    end
+    return sites
+  end
+
   scope :all_order, :order => 'country, state, city'
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
