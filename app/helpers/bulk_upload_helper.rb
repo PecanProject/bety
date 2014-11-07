@@ -2,30 +2,6 @@ module BulkUploadHelper
 
   MAXIMUM_ERRORS_TO_DISPLAY_PER_TYPE = 10
 
-  ERROR_MESSAGE_MAP = {
-    out_of_range_value: "Out-of-range variable value",
-    unparsable_number: "Variable value can't be parsed as a number",
-    negative_yield: "Negative value for yield",
-    unparsable_yield: "Yield value can't be parsed as a number",
-    unresolvable_citation_reference: "Unresolvable citation reference",
-    future_citation_year: "Citation year is in the future",
-    too_old_citation_year: "Citation year is too far in the past",
-    unparsable_citation_year: "Citation year can't be parsed as an integer",
-    unresolvable_site_reference: "Unresolvable site reference",
-    inconsistent_site_reference: "Inconsistent site reference",
-    unresolvable_species_reference: "Unresolvable species reference",
-    unresolvable_treatment_reference: "Unresolvable treatment reference",
-    inconsistent_treatment_reference: "Inconsistent treatment reference",
-    unparsable_access_level: "Access level can't be parsed as an integer",
-    unresolvable_cultivar_reference: "Unresolvable cultivar reference",
-    unacceptable_date_format: "Unacceptable date format",
-    future_date: "Date is in the future",
-    invalid_date: "Date is invalid",
-    invalid_sample_size: "Invalid sample size (n)",
-    unparsable_sample_size: "Sample size (n) can't be parsed as an integer",
-    unparsable_standard_error_value: "Standard error value (SE) can't be parsed as a number"
-  }
-
   # maps data reference errors to appropriate page for finding or
   # adding referents
   ERROR_REMEDY_MAP = {
@@ -70,22 +46,26 @@ module BulkUploadHelper
               if key == :field_list_errors
                 next
               end
-              row_list = value[:row_numbers]
-              row_list.uniq!
-              suffix = ''
-              if row_list.size > MAXIMUM_ERRORS_TO_DISPLAY_PER_TYPE
-                row_list = row_list[0..10]
-                suffix = ' ...'
-              end
 
-              list_items += content_tag :li, class: value[:css_class] do
-                li_content = "* " + key
-                li_content << " in these rows: " + row_list.map { |row_no| link_to row_no, anchor: "row_#{row_no}" }.join(', ') + suffix
+              row_info = ''
+              if value.has_key?(:row_numbers)
+                row_list = value[:row_numbers]
+                row_list.uniq!
+                suffix = ''
+                if row_list.size > MAXIMUM_ERRORS_TO_DISPLAY_PER_TYPE
+                  row_list = row_list[0..10]
+                  suffix = ' ...'
+                end
+                row_info += " in these rows: " + row_list.map { |row_no| link_to row_no, anchor: "row_#{row_no}" }.join(', ') + suffix
                 if ERROR_REMEDY_MAP.has_key?(key)
                   # provide a link to page to search for or add
                   # missing referent:
-                  li_content << (link_to ERROR_REMEDY_MAP[key][:link_text], ERROR_REMEDY_MAP[key][:link_url])
+                  row_info << (link_to ERROR_REMEDY_MAP[key][:link_text], ERROR_REMEDY_MAP[key][:link_url])
                 end
+              end
+
+              list_items += content_tag :li, class: value[:css_class] do
+                li_content = "* " + key + row_info
                 raw li_content
               end
             end # each_pair do

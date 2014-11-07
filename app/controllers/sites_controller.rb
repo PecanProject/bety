@@ -67,15 +67,7 @@ class SitesController < ApplicationController
 
     if session[:citation_id_list]
 
-      where_condition = <<"CONDITION"
-EXISTS (
-    SELECT 1 FROM citations_sites cs
-        WHERE cs.site_id = sites.id
-            AND cs.citation_id IN (?))
-CONDITION
-
-      sites = Site.where(where_condition,
-                         session[:citation_id_list])
+      sites = Site.in_all_citations(session[:citation_id_list])
 
     elsif session[:citation]
       @citation = Citation.find_by_id(session["citation"])
@@ -96,8 +88,8 @@ CONDITION
     sites = sites.to_a.map do |item|
       {
         # show city, state, and country information in site suggestions, but only show sitename after selection
-        label: "#{item.sitename} (#{item.city}, #{!(item.state.nil? || item.state.empty?) ? " #{item.state}," : ""} #{item.country})",
-        value: item.sitename
+        label: "#{item.sitename.squish} (#{item.city.squish}, #{!(item.state.nil? || item.state.empty?) ? " #{item.state.squish}," : ""} #{item.country.squish})",
+        value: item.sitename.squish
       }
     end
 
@@ -105,6 +97,10 @@ CONDITION
     # don't show rows where name is null or empty
     # TO-DO: eliminate these from the database and prevent them with a constraint
     sites.delete_if { |item| item.nil? || item.empty? }
+
+    if sites.empty?
+      sites = [ { label: "No matches", value: "" }]
+    end
 
     respond_to do |format|
       format.json { render :json => sites }

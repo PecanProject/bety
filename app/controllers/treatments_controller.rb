@@ -11,41 +11,25 @@ class TreatmentsController < ApplicationController
     # filter treatment list by citation(s)
 
     if session[:citation_id_list]
-
-      where_condition = <<"CONDITION"
-EXISTS (
-    SELECT 1 FROM citations_treatments ct
-        WHERE ct.treatment_id = treatments.id
-            AND ct.citation_id IN (?))
-CONDITION
-
-      treatments = Treatment.where(where_condition,
-                                   session[:citation_id_list])
-
+      treatment_names = Treatment.in_all_citations(session[:citation_id_list]).map{|n| n.squish}
     elsif session[:citation] 
-      @citation = Citation.find_by_id(session["citation"])
-      treatments = @citation.treatments
+      treatment_names = Treatment.in_all_citations([session[:citation]]).map{|n| n.squish}
     end
 
-    # match agains the beginning of the treatment name only
-    filtered_treatments = treatments.where("LOWER(name) LIKE LOWER(?)", search_term + '%')
+    treatment_names.uniq!
 
-    if filtered_treatments.size > 0 || search_term.size > 1
-      treatments = filtered_treatments
+    filtered_treatment_names = treatment_names.select {|name| name =~ Regexp.new('^' + search_term, Regexp::IGNORECASE)}
+
+    if filtered_treatment_names.size > 0 || search_term.size > 1
+      treatment_names = filtered_treatment_names
     end
 
-    treatments = treatments.to_a.map do |item|
-      item.name
+    if treatment_names.empty?
+      treatment_namess = [ { label: "No matches", value: "" }]
     end
-
-    # don't show rows where name is null or empty
-    # TO-DO: eliminate these from the database and prevent them with a
-    # constraint, OR: if the definition field should be part of the
-    # key, figure out how to include it in the match
-     treatments.delete_if { |item| item.nil? || item.empty? }
 
     respond_to do |format|
-      format.json { render :json => treatments }
+      format.json { render :json => treatment_names }
     end
   end
 

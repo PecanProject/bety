@@ -55,6 +55,10 @@ class CitationsController < ApplicationController
       }
     end
 
+    if citations.empty?
+      citations = [ { label: "No matches", value: "" }]
+    end
+
     respond_to do |format|
       format.json { render :json => citations }
     end

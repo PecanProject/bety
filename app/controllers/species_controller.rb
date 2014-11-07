@@ -10,13 +10,17 @@ class SpeciesController < ApplicationController
   def autocomplete
     # match against the initial portion of the scientificname only
     species = Specie.where("LOWER(scientificname) LIKE LOWER(?)", params[:term] + '%' ).to_a.map do |item|
-       item.scientificname
+       item.scientificname.squish
     end
 
     # don't show rows where scientificname is null or empty
     # TO-DO: eliminate these from the database and prevent them with a
     # constraint (or change to allow matching on other fields?)
     species.delete_if { |item| item.nil? || item.empty? }
+
+    if species.empty?
+      species = [ { label: "No matches", value: "" }]
+    end
 
     respond_to do |format|
       format.json { render :json => species }

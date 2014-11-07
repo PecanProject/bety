@@ -21,12 +21,16 @@ class CultivarsController < ApplicationController
     end
 
     cultivars = cultivars.to_a.map do |item|
-      item.name
+      item.name.squish
     end
 
     # don't show rows where name is null or empty
     # TO-DO: eliminate these from the database and prevent them with a constraint
     cultivars.delete_if { |item| item.nil? || item.empty? }
+
+    if cultivars.empty?
+      cultivars = [ { label: "No matches", value: "" }]
+    end
 
     respond_to do |format|
       format.json { render :json => cultivars }
