@@ -429,6 +429,11 @@ class BulkUploadDataSet
       @validation_summary[:field_list_errors] << 'If you have an "n" column, you must have an "SE" column as well.'
     end
 
+    # Don't allow stat information in trait uploads having more than one trait variable
+    if @headers.include?('SE') && @traits_in_heading.size > 1
+      @validation_summary[:field_list_errors] << 'Standard Error statistics are not supported with uploads containing multiple trait variable columns.'
+    end
+
     # Check citation information
     if @headers.include?('citation_doi') && (@headers.include?('citation_author') || @headers.include?('citation_year') || @headers.include?('citation_title'))
       @validation_summary[:field_list_errors] << 'If you include a "citation_doi" column, then you must not include columns for "citation_author", "citation_title", or "citation_year."'
@@ -478,21 +483,25 @@ class BulkUploadDataSet
   # Given a CSV object (vis. "@data") whose lineno attribute equals 0, validate
   # the data it contains and store the results by setting the following
   # attributes:
-  #     @validation_summary:
+  # ::
+  #     @validation_summary::
   #         Contains information about what types of data errors were found and
   #         the rows in which each type of error was found.
-  #     @validated_data:
+  #     @validated_data::
   #         An array of arrays of hashes, one hash for each data item of the
   #         input file.  Each hash has
   #         these keys:
-  #             fieldname: The field name for the corresponding value
-  #                 (as given by the heading, but normalized)
-  #             data: The value itself, except with nil values
-  #                 normalized to the empty string
-  #             validation_result: This will always be an object of some class
-  #                 that includes the ValidationResult module--that is, an
-  #                 instance of Valid, Ignored, or some subclass of
-  #                 BulkUploadDataException.
+  #         ::
+  #             fieldname::
+  #                 The field name for the corresponding value (as given by the
+  #                 heading, but normalized)
+  #             data::
+  #                 The value itself, except with nil values normalized to the
+  #                 empty string
+  #             validation_result::
+  #                 This will always be an object of some class that includes
+  #                 the ValidationResult module--that is, an instance of Valid,
+  #                 Ignored, or some subclass of BulkUploadDataException.
   def validate_csv_data
     if field_list_error_count.nil?
       raise "check_header_list must be run before before calling validate_csv_data"
@@ -792,6 +801,19 @@ class BulkUploadDataSet
       end
     end # @validated_data.each
 
+    if file_includes_citation_info
+      if !@headers.include?('site')
+        if Site.in_all_citations(@session[:citation_id_list]).empty?
+          @validation_summary["There are no sites common to all the citations in the file."] = { }
+        end
+      end
+      if !@headers.include?('treatment')
+        if Treatment.in_all_citations(@session[:citation_id_list]).empty?
+          @validation_summary["There are no treatments common to all the citations in the file."] = { }
+        end
+      end
+    end
+
   end # def validate_csv_data
 
   # A list of values that may be specified interactively for the data set as a
@@ -905,7 +927,7 @@ class BulkUploadDataSet
       globally_specified_cultivar = @session[:global_values][:cultivar]
       if !globally_specified_cultivar.empty?
         if upload_species.size == 1
-          global_cultivar = { cultivar_name: globally_specified_cultivar, species_name: upload_species[0].scientificname }
+          global_cultivar = { cultivar_name: globally_specified_cultivar, species_name: upload_species[0].scientificname.squish }
           cultivars << global_cultivar
         else
           # We shouldn't ever get here: If the file contains neither a cultivar
@@ -989,7 +1011,9 @@ class BulkUploadDataSet
 
   # Attempt to insert the data contained in the upload file into the appropriate
   # tables of the database using any interactively-specified values and options
-  # the user may have chosen.
+  # the user may have chosen.  For yields, the only table added to is the yields
+  # table.  For traits, rows will be added to the traits table, the entities
+  # table, and if there are covariates, to the covariates table.
   def insert_data
     insertion_data = get_insertion_data
 
@@ -1003,7 +1027,12 @@ class BulkUploadDataSet
       result = Trait.transaction do
         current_entity_id = nil
         insertion_data.each do |row|
+          # Each row may contain some meta-data, which we have to process and
+          # delete before we create a new trait row from it.
           if row[:new_entity]
+            # The :new_entity key marks the first of a group of rows that should
+            # belong to the same entity.  Each of these rows should get the same
+            # entity_id value.
             e = Entity.create!
             current_entity_id = e.id
             row.delete(:new_entity)
@@ -1039,7 +1068,7 @@ class BulkUploadDataSet
     return nil if @validation_summary.nil?
       
     (@validation_summary.keys - [ :field_list_errors ]).
-      collect{|key| @validation_summary[key][:row_numbers].size}.reduce(:+) || 0 # || 0 "fixes" the case where there are no data value errors
+      collect{|key| @validation_summary[key].has_key?(:row_numbers) ? @validation_summary[key][:row_numbers].size : 1}.reduce(:+) || 0 # || 0 "fixes" the case where there are no data value errors
   end
 
   # Returns the total number of errors, both heading-related and data-related,
@@ -1080,9 +1109,12 @@ class BulkUploadDataSet
   # Uses:
   #     @session[:csvpath], the path to the uploaded CSV file
   # Sets:
-  #     @headers, the CSV file's header info
-  #     @data, a CSV object corresponding to the uploaded file,
-  #         positioned to read the first line after the header line
+  #     @headers, the CSV file's header info.  All headings are normalized by
+  #         removing extraneous space and changing to the canonical case.
+  #     @data, a CSV object corresponding to the uploaded file, positioned to
+  #         read the first line after the header line.  The +convert+ attribute
+  #         of this object is set so that extraneous space is removed from all
+  #         data values except those in the +notes+ column.
   def read_data
 
     csvpath = @session[:csvpath]
@@ -1127,6 +1159,9 @@ class BulkUploadDataSet
 
   end
 
+  # Change +heading+ to the canonical case and return it.  For "SE" this is
+  # upper case; for all other values in +RECOGNIZED_COLUMNS+ it is lower case.
+  # Any other value of +heading+ is left unchanged.
   def normalize_heading(heading)
     heading = heading.to_s.strip
 
@@ -1164,9 +1199,10 @@ class BulkUploadDataSet
   end
 
   # Using the trait_covariate_associations table and the column headings in the
-  # upload file, construct a hash whose keys are the the ids of the trait
-  # variables occurring in the data set and whose values give the variable name
-  # and the associated covariates that occur in the data set.
+  # upload file, construct a hash <tt>@heading_variable_info</tt> whose keys are
+  # the ids of the trait variables occurring in the data set and whose values
+  # give the variable name and the associated covariates that occur in the data
+  # set.
   #
   # ===Example
   # {
@@ -1187,7 +1223,8 @@ class BulkUploadDataSet
   def get_variables_in_heading
 
     # A list of TraitCovariateAssociation objects corresponding to trait
-    # variable names occurring in the heading.
+    # variable names occurring in the heading.  Used by +get_insertion_data+
+    # when the upload file has trait data.
     relevant_associations = TraitCovariateAssociation.all.select { |a| @headers.include?(a.trait_variable.name) }
     trait_variables = relevant_associations.collect { |a| a.trait_variable }.uniq
 
@@ -1204,19 +1241,27 @@ class BulkUploadDataSet
 
   end
 
-  # TO-DO: Decide if these methods should fail if we don't find a
-  # *unique* referent in the database (at least until we add
-  # uniqueness constraints on the database).
-
-  def sql_columnref_to_normlized_columnref(col, preserve_case = false)
+  # Given a string +col+ matching the name of a database column, return a string
+  # for the SQL expression that give the normalized value of that column.  Here,
+  # "normalized" means leading and trailing space is trimmed, internal sequences
+  # of spaces are converted to a single space, and, if +preserve_case+ is
+  # +false+ (the default), the value is converted to lower case.
+  def sql_columnref_to_normalized_columnref(col, preserve_case = false)
     if !preserve_case
       col = "LOWER(#{col})"
     end
     "REGEXP_REPLACE(TRIM(FROM #{col}), ' +', ' ')"
   end
 
+  # Looks in the +match_column_name+ column of the relation
+  # +model_class_or_relation+ for a value that matches +raw_value+ and returns
+  # the model instance corresponding to the row in which the match was found.
+  # Matching is case-insensitive, and extraneous space is removed from the
+  # database value before a match is attempted.  If no match was found, a
+  # +MissingReferenceException+ is raised.  If multiple matches were found, a
+  # +NonUniquenessException+ is raised.
   def existing?(model_class_or_relation, match_column_name, raw_value, table_entity_name)
-    matches = model_class_or_relation.where(["#{sql_columnref_to_normlized_columnref(match_column_name)} = :stored_value",
+    matches = model_class_or_relation.where(["#{sql_columnref_to_normalized_columnref(match_column_name)} = :stored_value",
                                              { stored_value: raw_value.downcase }])
     if matches.size > 1
       raise NonUniquenessException.new(model_class_or_relation, match_column_name, raw_value, table_entity_name)
@@ -1227,14 +1272,25 @@ class BulkUploadDataSet
     return matches[0]
   end
 
+  # Returns a +Species+ object whose +scientificname+ attribute matches +name+.
+  # If multiple matches are found, a +NonUniquenessException+ is raised, and if
+  # no match is found, a +MissingReferenceException+ is raised.
   def existing_species?(name)
     return existing?(Specie, "scientificname", name, "species")
   end
 
+  # Returns a +Site+ object whose +sitename+ attribute matches +name+.  If
+  # multiple matches are found, a +NonUniquenessException+ is raised, and if no
+  # match is found, a +MissingReferenceException+ is raised.
   def existing_site?(name)
     return existing?(Site, "sitename", name, "site")
   end
 
+  # Returns a +Treatment+ object whose +name+ attribute matches +name+.  If
+  # +citation_id+ is provided, matching is limited to treatments associated with
+  # the citation having that id.  If multiple matches are found, a
+  # +NonUniquenessException+ is raised, and if no match is found, a
+  # +MissingReferenceException+ is raised.
   def existing_treatment?(name, citation_id = nil)
     if citation_id.nil?
       # match against any treatment
@@ -1245,10 +1301,22 @@ class BulkUploadDataSet
     end
   end
 
+  # Returns a +Citation+ object whose +doi+ attribute matches +doi+.  If
+  # multiple matches are found, a +NonUniquenessException+ is raised, and if no
+  # match is found, a +MissingReferenceException+ is raised.
   def doi_of_existing_citation?(doi)
     return existing?(Citation, "doi", doi, "citation")
   end
 
+  # Returns a +Citation+ object whose +author+, +year+, and +title+ attributes
+  # match the supplied argument values.  If +year+ can't be parsed as an
+  # integer, an +InvalidCitationYearException+ is raised.  Matching is
+  # case-insensitive, and extraneous space is removed from the database values
+  # of +author+ and +title+ before a match is attempted.  Also, the supplied
+  # +title+ argument need only match an initial substring of the corresponding
+  # database value.  If multiple matches are found, a +NonUniquenessException+
+  # is raised, and if no match is found, a +MissingReferenceException+ is
+  # raised.
   def existing_citation(author, year, title)
     begin
       Integer(year)
@@ -1256,8 +1324,8 @@ class BulkUploadDataSet
       raise InvalidCitationYearException
     end
 
-    c = Citation.where("#{sql_columnref_to_normlized_columnref("author")} = :author " +
-                       "AND year = :year AND #{sql_columnref_to_normlized_columnref("title")} LIKE :title_matcher",
+    c = Citation.where("#{sql_columnref_to_normalized_columnref("author")} = :author " +
+                       "AND year = :year AND #{sql_columnref_to_normalized_columnref("title")} LIKE :title_matcher",
                        { author: author.downcase, year: year, title_matcher: "#{title.downcase}%" })
 
     if c.size > 1
@@ -1269,6 +1337,11 @@ class BulkUploadDataSet
     end
   end
 
+  # Returns a +Cultivar+ object whose +name+ attribute matches +name+.  If
+  # +species_id+ is provided, matching is limited to cultivars of the
+  # corresponding species.  If multiple matches are found, a
+  # +NonUniquenessException+ is raised, and if no match is found, a
+  # +MissingReferenceException+ is raised.
   def existing_cultivar?(name, species_id = nil)
     if species_id.nil?
       existing?(Cultivar, "name", name, "cultivar")
@@ -1278,8 +1351,17 @@ class BulkUploadDataSet
   end
 
 
-  # This is called in two contexts: Once for the interactively
-  # specified data, and once for each data row of the CSV file.
+  # Given the Hash <tt>args[:input_hash]</tt> containing possible keys
+  # "citation_doi", "citation_author", "citation_year", "citation_title",
+  # "site", "species", "treatment", and "cultivar", look up the corresponding
+  # value in the relevant table and column of the database, find the id of the
+  # matching row, and add it to the hash under the keys "citation_id",
+  # "site_id", "species_id", "treatment_id", and "cultivar_id"
+  # (respectively). Any lookup errors are stored in the Array
+  # <tt>args[:error_list].</tt>
+  #
+  # This is called in two contexts: Once for the interactively specified data,
+  # and once for each data row of the CSV file.
   def lookup_and_add_ids(args)
     specified_values = args[:input_hash]
     validation_errors = args[:error_list]
@@ -1294,7 +1376,16 @@ class BulkUploadDataSet
 
     id_lookups.each do |key|
       if !specified_values.keys.include?(key)
-        next
+        if key != "treatment" || !id_values.has_key?("citation_id")
+          next
+        else
+          # Else citation was in the file and the treatment name was specified
+          # interactively and key = "treatment": We have to add the treatment_id
+          # on a per-row basis since treatment names are only unique per
+          # citation.  This is the same as if a uniform treatment name had been
+          # specified in the file, so pretend it was:
+          specified_values["treatment"] = @session[:global_values][:treatment]
+        end
       end
       value = specified_values[key]
 
@@ -1324,10 +1415,11 @@ class BulkUploadDataSet
           # The citation was specified globally.
           citation_id = @session[:citation]
         else
-          # We are looking up the treatment id for a
-          # globally-specified treatment name, but the citation
-          # information is in the CSV file.
-          citation_id = @session[:citation_id_list][0]
+          # We are looking up the treatment id for a globally-specified
+          # treatment name, but the citation information is in the CSV file.
+          # Since the same treatment names are only guarantied to be unique per
+          # citation, we must add the treatment_id on a per-row basis.
+          next
         end
 
         treatment = existing_treatment?(value, citation_id)
@@ -1365,9 +1457,11 @@ class BulkUploadDataSet
 
   end
 
-  # Uses the global data values specified interactively by the user to
-  # convert @data to an Array of Hashes suitable for inserting into
-  # the traits table.  Used by the +insert_data+ action.
+  # Uses the global data values specified interactively by the user to convert
+  # @data to an Array of Hashes suitable for inserting into the traits or yields
+  # table.  Used by the +insert_data+ action.  In the case of trait uploads, the
+  # Hashes in the Array will also contain some meta-data used to handle
+  # insertions into and references to the entities and covariates tables.
   def get_insertion_data
 
     # Get interactively-specified values, or set to empty hash if nil; since we
@@ -1381,6 +1475,7 @@ class BulkUploadDataSet
       !(value.empty? || value.nil?)
     end
 
+
     # For each foreign-key column, look up the value to use and add
     # it to the hash:
     validation_errors = []
@@ -1392,20 +1487,26 @@ class BulkUploadDataSet
       raise validation_errors.join("<br>").html_safe
     end
 
+
     # For bulk uploads, "checked" should always be set to zero:
     global_values.merge!({
         "checked" => 0,
         "user_id" => @session[:user_id]
     })
 
+
     if !@headers.include?("citation_author") && !@headers.include?("citation_doi")
       # if we get here, the citation id must be in the session
       global_values["citation_id"] = @session["citation"]
     end
 
+
     @mapped_data = Array.new
     if trait_data?
       get_variables_in_heading # sets @heading_variable_info
+      trait_columns = Trait.columns.collect { |column| column.name }
+    else # yield data
+      yield_columns = Yield.columns.collect { |column| column.name }
     end
     @data.each do |csv_row|
       csv_row_as_hash = csv_row.to_hash
@@ -1427,14 +1528,12 @@ class BulkUploadDataSet
         # apply rounding to the standard error
         rounded_se = number_with_precision(csv_row_as_hash["SE"].to_f, precision: @session["rounding"]["SE"].to_i, significant: true)
 
-        # In the yields table, the standard error is stored in the "stat" column:
+        # In the traits table and the yields table, the standard error is stored
+        # in the "stat" column:
         csv_row_as_hash["stat"] = rounded_se
         # The statname should be set to "SE":
         csv_row_as_hash["statname"] = "SE"
       end
-
-      yield_columns = Yield.columns.collect { |column| column.name }
-      trait_columns = Trait.columns.collect { |column| column.name }
 
       if yield_data?
         add_yield_specific_attributes(csv_row_as_hash)
@@ -1444,12 +1543,18 @@ class BulkUploadDataSet
         end
         @mapped_data << csv_row_as_hash
       elsif trait_data?
+
         new_entity = true
         @heading_variable_info.each_key do |trait_variable_id|
+          # For each row of @data, that is, for each row of the input file, there will be a row added to the traits table--hence one item added to @mapped_data--for each trait variable occurring in the heading.
+          
 
-          # we have to be more careful than for yields since we may use the row for multiple trait rows
+          # clone: we have to be more careful than for yields since we may use
+          # the row for multiple trait rows
           row_data = csv_row_as_hash.clone
 
+          # If this is the first item being added to @mapped_data for the
+          # current item of @data, mark it with the key +:new_entity+:
           if new_entity
             row_data[:new_entity] = true
             new_entity = false
@@ -1457,19 +1562,30 @@ class BulkUploadDataSet
 
           add_trait_specific_attributes(row_data, trait_variable_id)
 
+          # Filter everything out of row_data that does not directly correspond
+          # to a column of the traits table except for some meta-data which we
+          # are storing under the keys "covariate_info" and :new_entity:
           row_data.keep_if do |key, value|
             trait_columns.include?(key) || key == "covariate_info" || key == :new_entity
           end
 
           @mapped_data << row_data
-        end
-      end
 
-    end
+        end # @heading_variable_info.each_key
+
+
+      end # if yield_data? / elsif trait_data?
+
+
+    end # @data.each
 
     @mapped_data
   end
 
+  # Reads the value stored in the "yield" key of +csv_row_as_hash+, rounds it to
+  # the number of significant digits stored in
+  # <tt>@session["rounding"]["vars"]</tt>, and stores the result in the "mean"
+  # key.
   def add_yield_specific_attributes(csv_row_as_hash)
 
     # apply rounding to the yield
@@ -1480,6 +1596,23 @@ class BulkUploadDataSet
 
   end
 
+  
+  # Given the Hash +row_data+ which contains part of the information for a row
+  # to be added to the +traits+ table, and given +trait_variable_id+, the id of
+  # a trait variable in the upload file, add the following key-value pairs:
+  # ::
+  #    :+variable_id+ => +trait_variable_id+
+  #
+  #    :+covariate_info+ => an Array of Hashes, one Hash for each covariate in
+  #    the upload file that is associated with this trait variable
+  #
+  #    :+mean+ => the rounded value of the trait variable whose id is
+  #    +trait_variable_id+
+  #
+  # The Hashes corresponding to each covariate have two keys: +:variable_id+,
+  # giving the database id of the covariate variable, and +:level+, giving the
+  # value of that covariate, rounded to the number of significant digits
+  # specified by the user and stored in <tt>@session["rounding"]["vars"]</tt>.
   def add_trait_specific_attributes(row_data, trait_variable_id)
 
     associated_trait_info = @heading_variable_info[trait_variable_id]
@@ -1490,16 +1623,26 @@ class BulkUploadDataSet
     row_data["covariate_info"] = []
     # for each covariate belonging to this trait variable
     associated_trait_info[:covariates].each do |name, id|
-      row_data["covariate_info"] << { variable_id: id, level: row_data[name].to_f }
+      rounded_covariate_value = number_with_precision(row_data[name].to_f,
+                                                      precision: @session["rounding"]["vars"].to_i,
+                                                      significant: true)
+      row_data["covariate_info"] << { variable_id: id, level: rounded_covariate_value }
     end
     # apply rounding to the trait variable value
     rounded_mean = number_with_precision(row_data[associated_trait_info[:name]].to_f, precision: @session["rounding"]["vars"].to_i, significant: true)
 
-    # In the yields table, the yield is stored in the "mean" column:
+    # In the traits table, the value of the trait variable is stored in the
+    # "mean" column:
     row_data["mean"] = rounded_mean
 
   end
 
+  # If +@validation_summary+ already has a key named +e.summary_message+, append
+  # +row_number+ to the Array
+  # <tt>@validation_summary[e.summary_message][:row_numbers]</tt>.  Otherwise,
+  # add the key along with the subkey +:css_class+ with value
+  # +e.result_css_class+ and subkey +:row_number+ initialized to a one-item
+  # Array containing +row_number+.
   def add_to_validation_summary(e, row_number)
     key = e.summary_message
     if @validation_summary.has_key? key
@@ -1512,10 +1655,12 @@ class BulkUploadDataSet
     end
   end
 
+  # Returns +true+ if the uploaded file contains yield data.
   def yield_data?
     @is_yield_data
   end
 
+  # Returns +true+ if the uploaded file contains trait data.
   def trait_data?
     !@is_yield_data
   end
