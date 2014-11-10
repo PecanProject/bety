@@ -1,4 +1,5 @@
 require 'spec_helper'
+
 describe BulkUploadController, :type => :controller do
 
   describe "display csv file" do
@@ -14,8 +15,8 @@ describe BulkUploadController, :type => :controller do
         pending "adaptation of tests to new access controlss"
 
         post 'display_csv_file', { 'new upload' => true }
-        assert_equal(session[:flash][:error] , "No file chosen")
-        assert_not_equal(response.status, 200) # Since this is a redirect, we should get 302; this test is somewhat redundant in view of the next.
+        assert_equal("No file chosen", session[:flash][:error] )
+        assert_not_equal(200, response.status) # Since this is a redirect, we should get 302; this test is somewhat redundant in view of the next.
         assert_redirected_to '/bulk_upload/start_upload', "Failed to redirect when no file chosen"
       end
 
@@ -48,9 +49,9 @@ describe BulkUploadController, :type => :controller do
         @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
         session[:csvpath] = @file.path
         get 'start_upload'
-        post 'display_csv_file', { 'new upload' => false }
-        assert_equal(session[:flash][:error] , "csvpath is missing from the session")
-        assert_not_equal(response.status, 200)
+        post 'display_csv_file', { 'CSV file' => nil }
+        assert_equal("No file chosen", session[:flash][:error])
+        assert_not_equal(200, response.status)
         assert_redirected_to '/bulk_upload/start_upload', "Failed to redirect when no file chosen"
       end
 
@@ -104,29 +105,26 @@ describe BulkUploadController, :type => :controller do
 
           pending "adaptation of tests to new access controlss"
 
-          pending "tightening up navigation control" do
-            post 'display_csv_file', @form
-            session[:citation] = nil
-            get 'choose_global_data_values'
-            assert_not_equal(response.status, 200 ,"Failed to stop when no citation present")
-          end
+          post 'display_csv_file', @form
+          session[:citation] = nil
+          get 'choose_global_data_values'
+          assert_not_equal(200, response.status, "Failed to stop when no citation present")
+
         end
 
         it "should not allow visiting the 'choose_global_data_values' page when a citation inconsistent with the data set has been chosen" do
 
           pending "adaptation of tests to new access controlss"
 
-          pending "tightening up navigation control" do
-            session[:citation] = 4
-            post 'display_csv_file', @form
-            @dataset = assigns(:data_set)
-            # Ensure the citation we set actually *is* inconsistent:
-            assert(@dataset.validation_summary.has_key?(:inconsistent_site_reference) && 
-                   @dataset.validation_summary[:inconsistent_site_reference].size > 0,
-                   "This citation is actually consistent with the sites given")
-            get 'choose_global_data_values'
-            assert_not_equal(response.status, 200 ,"Failed to stop when citation is wrong")
-          end
+          session[:citation] = 4
+          post 'display_csv_file', @form
+          @dataset = assigns(:data_set)
+          # Ensure the citation we set actually *is* inconsistent:
+          assert(@dataset.validation_summary.has_key?("Site is inconsistent with citation") && 
+                 @dataset.validation_summary["Site is inconsistent with citation"].size > 0,
+                 "This citation is actually consistent with the sites given")
+          get 'choose_global_data_values'
+          assert_not_equal(200, response.status, "Failed to stop when citation is wrong")
         end
 
       end
@@ -194,15 +192,15 @@ describe BulkUploadController, :type => :controller do
       pending "adaptation of tests to new access controlss"
 
       @upload_sites = assigns(:upload_sites)
-      assert_equal(@upload_sites.size, 1, "Failed to get sites")
+      assert_equal(1, @upload_sites.size, "Failed to get sites")
       @upload_species = assigns(:upload_species)
-      assert_equal(@upload_species.size, 1, "Failed to get species")
+      assert_equal(1, @upload_species.size, "Failed to get species")
       @upload_citations = assigns(:upload_citations)
-      assert_equal(@upload_citations.size, 1, "Failed to get citations")
+      assert_equal(1, @upload_citations.size, "Failed to get citations")
       @upload_treatments = assigns(:upload_treatments)
-      assert_equal(@upload_treatments.size, 1, "Failed to get treatments")
+      assert_equal(1, @upload_treatments.size, "Failed to get treatments")
       @upload_cultivars = assigns(:upload_cultivars)
-      assert_equal(@upload_cultivars.size, 1, "Failed to get cultivars")
+      assert_equal(1, @upload_cultivars.size, "Failed to get cultivars")
     end
 
   end
@@ -234,7 +232,7 @@ describe BulkUploadController, :type => :controller do
       pending "adaptation of tests to new access controlss"
 
       @new_count = Yield.count
-      assert_equal(@new_count - @count, 1, "Failed to insert data")
+      assert_equal(1, @new_count - @count, "Failed to insert data")
       assert_not_nil session[:flash][:success]
       assert_redirected_to '/bulk_upload/start_upload'
     end
