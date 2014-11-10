@@ -1,65 +1,180 @@
-test_variable1:
-  id: 1
-  description: "Photosynthetic Water Use Efficiency"
-  units: "umol CO2 mmol -1 H2O"
-  notes: NULL
-  created_at: "2011-06-01 14:40:42"
-  updated_at: "2011-06-06 14:40:42"
-  name: "PWUE"
-  max: NULL
-  min: "0"
-
-test_variable2:
-  id: 2
-  description: "Test 1"
-  units: "umol CO2 mmol -1 H2O"
-  notes: NULL
-  created_at: "2011-06-01 14:40:42"
-  updated_at: "2011-06-06 14:40:42"
-  name: "Test Var 1"
-  max: "20"
-  min: "0"
-
-test_variable3:
-  id: 3
-  description: "Test 2"
-  units: "umol CO2 mmol -1 H2O"
-  notes: NULL
-  created_at: "2011-06-01 14:40:42"
-  updated_at: "2011-06-06 14:40:42"
-  name: "Test Var 2"
-  max: "20"
-  min: "0"
-
-SLA:
-  id: '15'
-  description: Specific Leaf Area
-  units: m2 kg-1
-  notes: 
-  created_at: 
-  updated_at: '2014-09-03 19:13:59.938174'
-  name: SLA
-  max: '130'
-  min: '0.1'
-  standard_name: 
-  standard_units: 
-  label: 
+---
+variables_003:
+  id: '5'
+  description: maximum rate of electron transport
+  units: umol photons m-2 s-1
+  notes: Maximum rate of RuBP regeneration.
+  created_at:
+  updated_at: '2012-07-10 23:55:16'
+  name: Jmax
+  max: '500'
+  min: '0'
+  standard_name:
+  standard_units:
+  label:
   type:
-
-canopy_layer:  
-  id: '80'
-  description: "location in canopy as a percentage of the distance from the lowest
-    leaf to the highest leaf; 0 is the bottom of the canopy, 1 is the top, canopy_layer
-    = height of observation / (max leaf height - min leaf height)"
-  units: percent
+variables_007:
+  id: '1'
+  description: Photosynthetic Water Use Efficiency
+  units: umol CO2 mmol -1 H2O
   notes: 
   created_at: 
   updated_at: '2011-06-06 14:40:42'
-  name: canopy_layer
-  max: '100'
+  name: PWUE
+  max: 
   min: '0'
   standard_name: 
   standard_units: 
   label: 
   type: 
-
+variables_055:
+  id: '9'
+  description: Stomatal Conductance
+  units: mol H2O m-2 s-1
+  notes: the flux of H2O out of the leaf, assumed to be the same as the flux of CO2
+    out of the leaf
+  created_at:
+  updated_at: '2014-09-16 21:45:44.332371'
+  name: GS
+  max: '5000'
+  min: '0'
+  standard_name: ''
+  standard_units: ''
+  label: ''
+  type:
+variables_065:
+  id: '80'
+  description: location in canopy as a percentage of the distance from the lowest
+    leaf to the highest leaf; 0 is the bottom of the canopy, 1 is the top, canopy_layer
+    = height of observation / (max leaf height - min leaf height)
+  units: percent
+  notes:
+  created_at:
+  updated_at: '2011-06-06 14:40:42'
+  name: canopy_layer
+  max: '100'
+  min: '0'
+  standard_name:
+  standard_units:
+  label:
+  type:
+variables_066:
+  id: '81'
+  description: temperature of leaf
+  units: degrees C
+  notes: ''
+  created_at:
+  updated_at: '2012-01-17 19:24:57'
+  name: leafT
+  max:
+  min:
+  standard_name:
+  standard_units:
+  label:
+  type:
+variables_451:
+  id: '546'
+  description: ! ' Initial slope of the light response curve'
+  units: Fraction
+  notes: ! "Chemical Reaction Per Photon\r\nThe values must be less the 1.0. The closer
+    to 1, the higher the efficiency of low light photosynthesis.\r\n"
+  created_at: '2013-12-03 16:17:31'
+  updated_at: '2013-12-03 16:28:03'
+  name: quantum_yield
+  max:
+  min:
+  standard_name:
+  standard_units:
+  label:
+  type:
+variables_456:
+  id: '4'
+  description: maximum rubisco carboxylation capacity
+  units: umol CO2 m-2 s-1
+  notes: ''
+  created_at:
+  updated_at: '2014-04-01 12:02:45.33564'
+  name: Vcmax
+  max: '500'
+  min: '0'
+  standard_name:
+  standard_units:
+  label:
+  type:
+variables_460:
+  id: '7'
+  description: Rd; leaf dark respiration
+  units: umol CO2 m-2 s-1
+  notes: Not really "dark respiration" Often this is respiration that occurs in the
+    light. Date and time fields "should" identify pre-dawn (nightime/dark)  leaf resp
+    vs the Rd that comes from a A-Ci or A-PPFD curve
+  created_at:
+  updated_at: '2014-04-11 15:03:01.858657'
+  name: leaf_respiration_rate_m2
+  max: '50'
+  min: '0'
+  standard_name:
+  standard_units:
+  label:
+  type:
+variables_461:
+  id: '6'
+  description: light and CO2 saturated maximum photosynthetic rate
+  units: umol CO2 m-2 s-1
+  notes: ! "Asat is saturated by light, with ambient CO2; see Amax for light + CO2
+    saturated photosynthesis (https://www.betydb.org/variables/158/).  \r\n\r\nThere
+    isn't a clear convention on this: Asat and Amax definitions are sometimes reversed
+    in the literature. But Asat and Amax are very different. "
+  created_at:
+  updated_at: '2014-04-11 15:08:46.833332'
+  name: Amax
+  max:
+  min: '0'
+  standard_name:
+  standard_units:
+  label:
+  type:
+variables_481:
+  id: '404'
+  description: ! 'Ball-Berry Model '
+  units: ratio
+  notes: links the stomatal conductance to leaf photosynthesis, humidity deficits,
+    and CO2 concentration at the leaf's surface.
+  created_at: '2012-06-01 18:15:08'
+  updated_at: '2012-07-18 12:41:25'
+  name: stomatal_slope.BB
+  max: '22'
+  min: '2'
+  standard_name:
+  standard_units:
+  label:
+  type:
+variables_485:
+  id: '38'
+  description: leaf (cuticular) conductance when stomata fully closed
+  units: umol H2O m-2 s-1
+  notes: ! 'Intercept for Ball-Berry model. Note units are umol: divide value by 10^3
+    to convert to mmol; divide by 10^6 to convert to mol '
+  created_at:
+  updated_at: '2014-09-26 17:31:08.548681'
+  name: cuticular_cond
+  max: '1000000'
+  min: '1000'
+  standard_name: ''
+  standard_units: ''
+  label: ''
+  type:
+variables_486:
+  id: '15'
+  description: Specific Leaf Area
+  units: m2 kg-1
+  notes:
+  created_at:
+  updated_at: '2011-06-06 14:40:42'
+  name: SLA
+  max: '1000'
+  min: '0.1'
+  standard_name:
+  standard_units:
+  label:
+  type:

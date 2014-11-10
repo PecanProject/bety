@@ -1,4 +1,65 @@
-SLA_requirements:
+---
+trait_covariate_associations_001:
+  trait_variable_id: '9'
+  covariate_variable_id: '6'
+  required: t
+trait_covariate_associations_002:
   trait_variable_id: '15'
   covariate_variable_id: '80'
+  required: f
+trait_covariate_associations_003:
+  trait_variable_id: '4'
+  covariate_variable_id: '80'
+  required: f
+trait_covariate_associations_004:
+  trait_variable_id: '9'
+  covariate_variable_id: '80'
+  required: f
+trait_covariate_associations_005:
+  trait_variable_id: '546'
+  covariate_variable_id: '80'
+  required: f
+trait_covariate_associations_006:
+  trait_variable_id: '404'
+  covariate_variable_id: '80'
+  required: f
+trait_covariate_associations_007:
+  trait_variable_id: '38'
+  covariate_variable_id: '80'
+  required: f
+trait_covariate_associations_008:
+  trait_variable_id: '5'
+  covariate_variable_id: '80'
+  required: f
+trait_covariate_associations_009:
+  trait_variable_id: '7'
+  covariate_variable_id: '80'
+  required: f
+trait_covariate_associations_010:
+  trait_variable_id: '9'
+  covariate_variable_id: '81'
+  required: t
+trait_covariate_associations_011:
+  trait_variable_id: '546'
+  covariate_variable_id: '81'
+  required: t
+trait_covariate_associations_012:
+  trait_variable_id: '404'
+  covariate_variable_id: '81'
+  required: t
+trait_covariate_associations_013:
+  trait_variable_id: '38'
+  covariate_variable_id: '81'
+  required: t
+trait_covariate_associations_014:
+  trait_variable_id: '4'
+  covariate_variable_id: '81'
+  required: t
+trait_covariate_associations_015:
+  trait_variable_id: '5'
+  covariate_variable_id: '81'
+  required: t
+trait_covariate_associations_016:
+  trait_variable_id: '7'
+  covariate_variable_id: '81'
   required: t
