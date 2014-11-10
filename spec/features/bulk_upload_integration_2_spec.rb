@@ -101,6 +101,7 @@ CSV
       choose_citation_from_dropdown
 
       first("header").should have_content "Uploaded file: header_without_data.csv"
+      expect(current_path).to match(/display_csv_file/)
       first("div.alert").should have_content "No data in file"
     end
 
@@ -209,7 +210,7 @@ CSV
         visit '/citations'
         first(:xpath, ".//tr[contains(td, 'Adler')]/td/a[@alt = 'use']").click
         click_link 'Bulk Upload'
-        expect(current_path).to eq('/display_csv_file')
+        expect(current_path).to match(/display_csv_file/)
       end
 
     end
@@ -241,6 +242,7 @@ CSV
 
     specify 'After submitting the file, we should see the validation page' do
       first("header").should have_content "Uploaded file:"
+      expect(current_path).to match(/display_csv_file/)
     end
 
     specify 'Attempting to visit the choose_global_data_values page without having a valid file will cause a redirect to the display_csv_file page' do
@@ -339,6 +341,7 @@ CSV
         visit '/bulk_upload/display_csv_file'
 
         first("header").should have_content "Uploaded file:"
+        expect(current_path).to match(/display_csv_file/)
         first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
       end
 
