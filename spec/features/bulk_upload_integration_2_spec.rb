@@ -148,14 +148,13 @@ CSV
   end
 
 
-  # Tests for RM issue #2525 (item 2 of update #2):
-  context "Various scenarios involving attempts to go to pages of the wizard without having chosen a citation" do
+  context "Various scenarios involving the case where the citation is not specified in the upload file" do
 
     before :all do
       f = File.new("spec/tmp/file_without_citation_info.csv", "w")
       f.write <<CSV
 yield,species,site,treatment,date
-1.1,Abarema jupunba,University of Nevada Biological Sciences Center,University of Nevada Biological Sciences Center,2002-10-31
+1.1,Abarema jupunba,University of Nevada Biological Sciences Center,observational,2002-10-31
 CSV
       f.close
     end
@@ -166,32 +165,53 @@ CSV
 
     before :each do
       visit '/bulk_upload/start_upload'
-      attach_file 'CSV file', 'spec/tmp/file_without_citation_info.csv'
+      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_without_citation_info.csv')
       click_button 'Upload'
     end
 
-    specify 'Attempting to visit the display_csv_file page without having choosen a citation will cause a redirect to the choose_global_citation page' do
-      visit '/bulk_upload/display_csv_file'
+    # Tests for RM issue #2525 (item 2 of update #2):
+    context "Various scenarios involving attempts to go to pages of the wizard without having chosen a citation" do
 
-      first("header").should have_content "Choose a Citation"
+      specify 'Attempting to visit the display_csv_file page without having choosen a citation will cause a redirect to the choose_global_citation page' do
+        visit '/bulk_upload/display_csv_file'
+
+        first("header").should have_content "Choose a Citation"
+      end
+
+      specify 'Attempting to visit the choose_global_data_values page without having choosen a citation will cause a redirect to the choose_global_citation page' do
+        visit '/bulk_upload/choose_global_data_values'
+
+        first("header").should have_content "Choose a Citation"
+      end
+
+      specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the choose_global_citation page' do
+        visit '/bulk_upload/confirm_data'
+
+        first("header").should have_content "Choose a Citation"
+      end
+
+      specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the choose_global_citation page' do
+        visit '/bulk_upload/insert_data'
+
+        first("header").should have_content "Choose a Citation"
+      end
+
     end
 
-    specify 'Attempting to visit the choose_global_data_values page without having choosen a citation will cause a redirect to the choose_global_citation page' do
-      visit '/bulk_upload/choose_global_data_values'
+    # Tests related to RM issue #2602
+    context "Scenario involving changing the interactively-chosen citation" do
 
-      first("header").should have_content "Choose a Citation"
-    end
+      specify "Changing the citation outside of the bulk-upload wizard should require re-validation of the data file", js: true do
+        choose_citation_from_dropdown 'Adams'
+        click_link 'Specify Dataset-wide values'
+        select 'Public', from: 'access_level'
+        click_button 'Confirm Data'
+        visit '/citations'
+        first(:xpath, ".//tr[contains(td, 'Adler')]/td/a[@alt = 'use']").click
+        click_link 'Bulk Upload'
+        expect(current_path).to eq('/display_csv_file')
+      end
 
-    specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the choose_global_citation page' do
-      visit '/bulk_upload/confirm_data'
-
-      first("header").should have_content "Choose a Citation"
-    end
-
-    specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the choose_global_citation page' do
-      visit '/bulk_upload/insert_data'
-
-      first("header").should have_content "Choose a Citation"
     end
 
   end
