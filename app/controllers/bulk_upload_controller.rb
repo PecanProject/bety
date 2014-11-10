@@ -43,6 +43,8 @@ class BulkUploadController < ApplicationController
   before_filter :clear_session_data, only: :start_upload
   before_filter :valid_file_required, only: [ :choose_global_data_values, :confirm_data, :insert_data ]
 
+  after_filter :record_bulk_upload_citation
+
   private
 
   # Records the current bulk upload action in the session so that if we step
@@ -51,23 +53,40 @@ class BulkUploadController < ApplicationController
     session[:bulk_upload_stage] = params[:action]
   end
 
+  # keep track of the last value session[:citation] was changed to within the
+  # wizard; this way, we can catch it if it changes outside the wizard
+  def record_bulk_upload_citation
+    if !session[:file_includes_citation_info]
+      session[:bulk_upload_citation] = session[:citation]
+    end
+  end
+
   # Clears all bulk-upload-related session data except the bulk_upload_stage.
   def clear_session_data
     session.delete_if do |key|
       # delete bulk-upload-related session data (except for :citation,
       # which is "global"):
       ["csvpath", "global_values", "rounding", "citation_id_list",
-      "number_of_rows", "valid_upload_file",
-      "file_includes_citation_info"].include?(key)
+      "number_of_rows", "valid_upload_file", "file_includes_citation_info",
+      "bulk_upload_citation"].include?(key)
     end
   end
 
   # Redirects to the "display_csv_file" page if the data file doesn't validate.
   def valid_file_required
+    check_if_citation_changed
     # Don't allow access if we don't have a valid file:
     if !session[:valid_upload_file]
       redirect_to(action: "display_csv_file")
       return
+    end
+  end
+
+  # Unmark the current upload file as valid if we changed the citation:
+  def check_if_citation_changed
+    if (!session[:file_includes_citation_info] && 
+        session[:bulk_upload_citation] != session[:citation])
+      session[:valid_upload_file] = nil
     end
   end
 
