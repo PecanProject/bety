@@ -6,4 +6,6 @@ test_citation_site_for_bulk_upload:
     citation_id: 3
     site_id: 2
 
-        
+second_test_citation_site_for_bulk_upload:
+    citation_id: 4
+    site_id: 3

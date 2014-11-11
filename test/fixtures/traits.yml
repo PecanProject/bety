@@ -17,7 +17,7 @@ test_trait:
   updated_at: NULL
   variable_id: 1
   user_id: 1
-  checked: 0
+  checked: 1
   access_level: 4
   entity_id: 1
   method_id: 1
@@ -47,7 +47,7 @@ test_edit_trait:
   updated_at: NULL
   variable_id: 1
   user_id: 1
-  checked: 0
+  checked: 1
   access_level: 4
   entity_id: 1
   method_id: 1

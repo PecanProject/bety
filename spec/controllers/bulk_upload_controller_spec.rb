@@ -2,6 +2,11 @@ require 'spec_helper'
 
 describe BulkUploadController, :type => :controller do
 
+  class BulkUploadController
+    # override the login requirement for testing:
+    before_filter :login_required, only: []
+  end
+
   describe "display csv file" do
 
     before(:each) do
@@ -12,8 +17,6 @@ describe BulkUploadController, :type => :controller do
 
       it "should display an error when no file has been uploaded" do
 
-        pending "adaptation of tests to new access controlss"
-
         post 'display_csv_file', { 'new upload' => true }
         assert_equal("No file chosen", session[:flash][:error] )
         assert_not_equal(200, response.status) # Since this is a redirect, we should get 302; this test is somewhat redundant in view of the next.
@@ -21,8 +24,6 @@ describe BulkUploadController, :type => :controller do
       end
 
       it "should create a data set when a well-formed CSV file is uploaded" do
-
-        pending "adaptation of tests to new access controlss"
 
         @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
         post 'display_csv_file', { 'new upload' => true, "CSV file" => @file }
@@ -33,8 +34,6 @@ describe BulkUploadController, :type => :controller do
 
       it "should create a data set when returning to the page if a file was previously uploaded" do
 
-        pending "adaptation of tests to new access controlss"
-
         @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
         session[:csvpath] = @file.path
         post 'display_csv_file', { 'new upload' => false }
@@ -43,8 +42,6 @@ describe BulkUploadController, :type => :controller do
       end
 
      it "should give an error when returning to the page if the start upload page was visited after a file was uploaded" do
-
-        pending "adaptation of tests to new access controlss"
 
         @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
         session[:csvpath] = @file.path
@@ -69,8 +66,6 @@ describe BulkUploadController, :type => :controller do
 
         it "should remove a linked citation when a file is uploaded that includes citation information" do
 
-          pending "adaptation of tests to new access controlss"
-
           session[:citation] = 1
           post 'display_csv_file', @form
           assert_nil session[:citation], "Failed to remove citation from session"
@@ -78,8 +73,6 @@ describe BulkUploadController, :type => :controller do
         end
 
         it "should validate the file data" do
-
-          pending "adaptation of tests to new access controlss"
 
           post 'display_csv_file', @form
           @dataset = assigns(:data_set)
@@ -103,8 +96,6 @@ describe BulkUploadController, :type => :controller do
         ## some error at the data insertion step if they have a null or wrong citation...
         it "should not allow visiting the 'choose_global_data_values' page without having choosen a citation" do
 
-          pending "adaptation of tests to new access controlss"
-
           post 'display_csv_file', @form
           session[:citation] = nil
           get 'choose_global_data_values'
@@ -113,8 +104,6 @@ describe BulkUploadController, :type => :controller do
         end
 
         it "should not allow visiting the 'choose_global_data_values' page when a citation inconsistent with the data set has been chosen" do
-
-          pending "adaptation of tests to new access controlss"
 
           session[:citation] = 4
           post 'display_csv_file', @form
@@ -132,8 +121,6 @@ describe BulkUploadController, :type => :controller do
       # TODO: possibly test various kinds of invalid files and what messages result
       context "uploading an invalid csv file" do
         it "should throw an error and redirect to the start_upload page" do
-
-          pending "adaptation of tests to new access controlss"
 
           @file = fixture_file_upload("/files/bulk_upload/invalid_file.csv", "text/csv")
           @form = { 'new upload' => true, "CSV file" => @file }
@@ -159,8 +146,6 @@ describe BulkUploadController, :type => :controller do
 
     it "should return a new dataset" do
 
-      pending "adaptation of tests to new access controlss"
-
       assert_not_nil assigns(:data_set)
       assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset"
     end
@@ -181,15 +166,11 @@ describe BulkUploadController, :type => :controller do
 
     it "should return a new dataset" do
 
-      pending "adaptation of tests to new access controlss"
-
       assert_not_nil assigns(:data_set)
       assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset"
     end
 
     it "should extract summary confirmation data from the dataset" do
-
-      pending "adaptation of tests to new access controlss"
 
       @upload_sites = assigns(:upload_sites)
       assert_equal(1, @upload_sites.size, "Failed to get sites")
@@ -221,15 +202,11 @@ describe BulkUploadController, :type => :controller do
 
     it "should return a new dataset" do
 
-      pending "adaptation of tests to new access controlss"
-
       assert_not_nil assigns(:data_set)
       assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset"
     end
 
     it "should insert data" do
-
-      pending "adaptation of tests to new access controlss"
 
       @new_count = Yield.count
       assert_equal(1, @new_count - @count, "Failed to insert data")
