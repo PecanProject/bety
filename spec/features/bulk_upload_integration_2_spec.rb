@@ -412,16 +412,16 @@ CSV
   end # context "Various scenarios involving a file that requires no interactively-specified additional data"
 
   # Tests related to Redmine task #2556
-  context "A file with some missing covariate values has been uploaded" do
+  context "A file with some missing optional covariate values has been uploaded" do
 
     before :all do
       f = File.new("spec/tmp/file_with_missing_covariate_values.csv", "w")
       f.write <<CSV
-SLA,canopy_layer
-550,3
-540,
-460,2
-440,
+SLA,canopy_layer,citation_author,citation_year,citation_title,site,treatment,date,species,access_level
+550,3,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
+540,,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
+460,2,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
+440,,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
 CSV
       f.close
     end
@@ -430,16 +430,45 @@ CSV
       File::delete("spec/tmp/file_with_missing_covariate_values.csv")
     end
 
-    it "Should pass validation", js: true do
+    it "should pass validation", js: true do
       visit '/bulk_upload/start_upload'
       attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
       click_button 'Upload'
 
-      choose_citation_from_dropdown
-
       first("header").should have_content "Uploaded file: file_with_missing_covariate_values.csv"
       expect(current_path).to match(/display_csv_file/)
       expect(page.body).not_to have_selector '#error_explanation'
+    end
+
+    it "should only insert two new covariate rows", js: true do
+
+      start_size = Covariate.all.size
+
+      visit '/bulk_upload/start_upload'
+      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+      click_button 'Upload'
+      click_link 'Specify'
+      click_button "Confirm"
+      click_button "Insert"
+
+      sleep 1 # give time for insertion to complete
+      end_size = Covariate.all.size
+
+      # clean up:
+      visit '/covariates'
+      while all(:xpath, "//tbody/tr").size > start_size
+        # delete all covariates except the first
+        first(:xpath, "//tbody/tr[count(preceding-sibling::tr) >= #{start_size}]//a[@alt = 'delete']").click
+        # If we're using Selenium, we have to deal with the modal dialogue:
+        if page.driver.is_a? Capybara::Selenium::Driver
+          a = page.driver.browser.switch_to.alert
+          a.accept
+        end
+        sleep 1
+      end
+
+      expect(end_size - start_size).to eq(2)
+
     end
 
   end # context "A file with some missing covariate values has been uploaded"
