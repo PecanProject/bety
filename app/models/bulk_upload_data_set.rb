@@ -686,6 +686,11 @@ class BulkUploadDataSet
               column[:validation_result] = Valid.new # reset below if we find otherwise
 
               begin
+                if column[:data].empty? && @optional_covariates.include?(column[:fieldname])
+                  # It's OK for an optional covariate value to be blank.  Just
+                  # consider it valid and go on.
+                  next
+                end
                 value = Float(column[:data])
               rescue ArgumentError => e
                 raise UnparsableVariableValueException
@@ -1188,7 +1193,7 @@ class BulkUploadDataSet
     @traits_in_heading = relevant_associations.collect { |a| a.trait_variable.name }.uniq
 
     # A list of Variable objects corresponding to all the covariates required by
-    # the set of trait variables in the data set.
+    # the some member of the set of trait variables in the data set.
     @required_covariates = relevant_associations.select { |a| a.required }.collect { |a| a.covariate_variable }.uniq
 
     # A list of variable names corresponding to all the covariates associated
@@ -1196,6 +1201,11 @@ class BulkUploadDataSet
     # words, these are names of variables that will be recognized should they
     # occur in the heading.
     @allowed_covariates = relevant_associations.collect { |a| a.covariate_variable.name }.uniq
+
+    # A list of variable names corresponding to all the covariates associated
+    # with some member of the set of trait variables in the data set and that
+    # are optional for each such variable.
+    @optional_covariates = @allowed_covariates - @required_covariates.map { |cov_ob| cov_ob.name }
   end
 
   # Using the trait_covariate_associations table and the column headings in the
