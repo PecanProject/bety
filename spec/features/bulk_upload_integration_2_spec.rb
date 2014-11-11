@@ -371,7 +371,7 @@ CSV
         first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
       end
 
-    end
+    end # context "A citation has been selected but rounding has not been specified"
 
 
     context "A citation has been selected and rounding has been specified" do
@@ -407,8 +407,41 @@ CSV
         first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
       end
 
+    end # context "A citation has been selected and rounding has been specified"
+
+  end # context "Various scenarios involving a file that requires no interactively-specified additional data"
+
+  # Tests related to Redmine task #2556
+  context "A file with some missing covariate values has been uploaded" do
+
+    before :all do
+      f = File.new("spec/tmp/file_with_missing_covariate_values.csv", "w")
+      f.write <<CSV
+SLA,canopy_layer
+550,3
+540,
+460,2
+440,
+CSV
+      f.close
     end
 
-  end
+    after :all do
+      File::delete("spec/tmp/file_with_missing_covariate_values.csv")
+    end
+
+    it "Should pass validation", js: true do
+      visit '/bulk_upload/start_upload'
+      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+      click_button 'Upload'
+
+      choose_citation_from_dropdown
+
+      first("header").should have_content "Uploaded file: file_with_missing_covariate_values.csv"
+      expect(current_path).to match(/display_csv_file/)
+      expect(page.body).not_to have_selector '#error_explanation'
+    end
+
+  end # context "A file with some missing covariate values has been uploaded"
 
 end
