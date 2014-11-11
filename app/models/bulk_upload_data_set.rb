@@ -1633,6 +1633,12 @@ class BulkUploadDataSet
     row_data["covariate_info"] = []
     # for each covariate belonging to this trait variable
     associated_trait_info[:covariates].each do |name, id|
+
+      # Make sure value is not empty:
+      if row_data[name].nil? || row_data[name].empty?
+        next
+      end
+
       rounded_covariate_value = number_with_precision(row_data[name].to_f,
                                                       precision: @session["rounding"]["vars"].to_i,
                                                       significant: true)
