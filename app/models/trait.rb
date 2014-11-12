@@ -24,6 +24,7 @@ class Trait < ActiveRecord::Base
   belongs_to :ebi_method, :class_name => 'Methods', :foreign_key => 'method_id'
 
   validates_presence_of     :mean, :access_level
+  validates_numericality_of :mean
   validates_inclusion_of :access_level, in: 1..4, message: "You must select an access level"
   validates_presence_of     :statname, :if => Proc.new { |trait| !trait.stat.blank? }
   validates_format_of       :date_year, :with => /^(\d{2}|\d{4})$/, :allow_blank => true
@@ -43,6 +44,7 @@ class Trait < ActiveRecord::Base
   # To do: change the database type of min and max and constrain to be
   # non-null so that these tests can be simplified.
   def mean_in_range
+    return if mean.blank? # validates_presence_of should handle this error
     v = Variable.find(variable_id)
     if !v.min.nil? and mean < v.min.to_f
       errors.add(:mean, "The value of mean for the #{v.name} trait must be at least #{v.min}.")
