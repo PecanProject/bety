@@ -89,3 +89,25 @@ td.out_of_bounds { background-color: #aa88aa }
 
 #error_explanation li.unparsable_number, #error_explanation li.unparsable_number a { color: blue }
 td.unparsable_number { background-color: blue }
+
+
+/* confirmation page */
+
+div.content {
+    color: #007eac;
+}
+h2.directive, table caption {
+    font-style: italic;
+}
+
+
+div.content table, div.content ul {
+    color: #333;
+}
+
+caption {
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #003f56;
+}

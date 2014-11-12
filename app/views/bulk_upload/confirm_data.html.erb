@@ -2,7 +2,7 @@
   <div class="container">
 	<div class="sixteen columns">
 	  <header>
-        <h1>Please Verify Data-Set References Before Uploading</h1>
+        <h1>Verify Upload Specifications and Data-Set References</h1>
         <h2 class="file_info"><%= render 'file_info' %></h2>
       </header>
       <%= form_tag(bulk_upload_data_insertion_path, method: "post", multipart: true) do %>
@@ -24,8 +24,20 @@
         </div>
       </div>
       <% end %>
-      <h2>Review these citations and make sure they correspond to the citations referenced by your data set:</h2>
+      <h2 class="directive">Review the following upload specifications to ensure they are correct:</h2>
+      <ul>
+        <% if session[:global_values] && session[:global_values][:access_level] %>
+        <li>Data Access Level: <%= get_access_level(session) %></li>
+        <% end %>
+        <li>Variable values will be rounded to <%= session[:rounding][:vars] %> significant digits.</li>
+        <% if session[:rounding][:SE] %>
+        <li>Standard Error values will be rounded to <%= session[:rounding][:SE] %> significant digits.</li>
+        <% end %>
+      </ul>
+      <hr>
+      <h2 class="directive">Review the following items referenced by your data set to ensure they are correct:</h2>
       <table>
+        <caption>Citations:</caption>
         <thead>
           <tr><th>Title</th><th>Author</th><th>Year</th><th>Journal</th><th>DOI</th></tr>
         </thead>
@@ -36,8 +48,8 @@
         </tbody>
       </table>
       <hr>
-      <h2>Review these sites and make sure they correspond to the sites referenced by your data set:</h2>
       <table>
+        <caption>Sites:</caption>
         <thead>
           <tr><th>Site Name</th><th>City</th><th>State</th><th>Country</th><th>Latitude</th><th>Longitude</th><th>Soil Type</th><th>Soil Notes</th></tr>
         </thead>
@@ -48,8 +60,8 @@
         </tbody>
       </table>
       <hr>
-      <h2>Review these species and make sure they correspond to the species referenced by your data set:</h2>
       <table>
+        <caption>Species:</caption>
         <thead>
           <tr><th>Species Name</th><th>Genus</th><th>Common Name</th><th>Accepted Symbol</th></tr>
         </thead>
@@ -61,8 +73,8 @@
       </table>
       <hr>
       <% if !@upload_cultivars.empty? %>
-      <h2>Review these cultivars and make sure they correspond to the cultivars referenced by your data set:</h2>
       <table>
+        <caption>Cultivars:</caption>
         <thead>
           <tr><th>Cultivar Name</th><th>Ecotype</th><th>Associated Species</th></tr>
         </thead>
@@ -74,8 +86,8 @@
       </table>
       <hr>
       <% end %>
-      <h2>Review these treatments and make sure they correspond to the treatments referenced by your data set:</h2>
       <table>
+        <caption>Treatments:</caption>
         <thead>
           <tr><th>Treatment Name</th><th>Definition</th><th>Control?</th><th>Associated Citation Author</th></tr>
         </thead>
