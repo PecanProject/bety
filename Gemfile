@@ -37,7 +37,8 @@ end
 
 
 group :test do
-  gem "webrat", "0.7.1"
+  # phasing out webrat:    
+  # gem "webrat", "0.7.1"
   gem "capybara"
   gem "database_cleaner"
 end
