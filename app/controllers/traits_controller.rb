@@ -217,6 +217,9 @@ class TraitsController < ApplicationController
     logger.info(e)
     flash[:error] = e.message
     @citation = @trait.citation
+    if @new_covariates.empty?
+      @new_covariates = [Covariate.new]
+    end
     respond_to do |format|
       format.html { render :action =>"edit" }
       format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
