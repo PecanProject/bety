@@ -110,3 +110,32 @@ feature "Trait creation works" do
   end
 
 end
+
+feature "Editing traits works" do
+
+  before :each do
+    login_test_user
+    visit '/traits/2/edit'
+  end
+
+  it "should complain that the mean wasn't specified if it is erased" do
+    fill_in "trait_mean", with: ""
+    click_button "Update"
+    expect(page).to have_content "Mean can't be blank"
+  end
+
+  it "should not give a message about \"undefined method '<' for nil:NilClass\"" do
+    fill_in "trait_mean", with: ""
+    click_button "Update"
+    expect(page).to_not have_content "undefined method `<' for nil:NilClass"
+  end
+
+  # Test for Redmine bug #2486:
+  it "should not complain \"You have a nil object when you didn't expect it!\" if the update button is pressed twice" do
+    fill_in "trait_mean", with: ""
+    click_button "Update"
+    click_button "Update"
+    expect(page).to_not have_content "You have a nil object when you didn't expect it!"
+  end
+
+end
