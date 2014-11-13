@@ -25,7 +25,8 @@ class Trait < ActiveRecord::Base
 
   validates_presence_of     :mean, :access_level
   validates_numericality_of :mean
-  validates_inclusion_of :access_level, in: 1..4, message: "You must select an access level"
+  validates_presence_of     :variable
+  validates_inclusion_of    :access_level, in: 1..4, message: "You must select an access level"
   validates_presence_of     :statname, :if => Proc.new { |trait| !trait.stat.blank? }
   validates_format_of       :date_year, :with => /^(\d{2}|\d{4})$/, :allow_blank => true
   validates_format_of       :date_month, :with => /^\d{1,2}$/, :allow_blank => true
@@ -44,13 +45,12 @@ class Trait < ActiveRecord::Base
   # To do: change the database type of min and max and constrain to be
   # non-null so that these tests can be simplified.
   def mean_in_range
-    return if mean.blank? # validates_presence_of should handle this error
-    v = Variable.find(variable_id)
-    if !v.min.nil? and mean < v.min.to_f
-      errors.add(:mean, "The value of mean for the #{v.name} trait must be at least #{v.min}.")
+    return if mean.blank? || variable.blank? # validates_presence_of should handle this error
+    if !variable.min.nil? and mean < variable.min.to_f
+      errors.add(:mean, "The value of mean for the #{variable.name} trait must be at least #{variable.min}.")
     end
-    if !v.max.nil? and mean > v.max.to_f
-      errors.add(:mean, "The value of mean for the #{v.name} trait must be at most #{v.max}.")
+    if !variable.max.nil? and mean > variable.max.to_f
+      errors.add(:mean, "The value of mean for the #{variable.name} trait must be at most #{variable.max}.")
     end
   end
 
