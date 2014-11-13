@@ -23,7 +23,7 @@
         <li>
           <%= label_tag "autocomplete_citation", "citation" %>
           <%= text_field_tag "global_values[:citation]",
-              "#{@session[:global_values] && @session[:global_values][:citation] || ''}",
+              "",
               id: "autocomplete_citation",
               placeholder: "Enter citation",
               style: "width: 400px" %>
