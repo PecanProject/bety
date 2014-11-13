@@ -224,7 +224,7 @@ CSV
         click_button "View Validation Results"
       end
 
-      specify "should not result in an error message" do
+      specify "should not result in a warning message" do
         expect(page).to_not have_selector('div.alert-warning')
       end
 
