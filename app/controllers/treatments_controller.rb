@@ -25,7 +25,7 @@ class TreatmentsController < ApplicationController
     end
 
     if treatment_names.empty?
-      treatment_namess = [ { label: "No matches", value: "" }]
+      treatment_names = [ { label: "No matches", value: "" }]
     end
 
     respond_to do |format|
