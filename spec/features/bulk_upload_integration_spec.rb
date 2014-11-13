@@ -38,7 +38,7 @@ feature 'CSV file upload works' do
       page.should have_content 'Specify '
       click_link 'Specify'
       click_button 'Confirm'
-      page.should have_content 'Please Verify Data-Set References Before Uploading'
+      page.should have_content 'Verify Upload Specifications and Data-Set References'
       click_button 'Insert Data'
       page.should_not have_selector('.alert-error')
 

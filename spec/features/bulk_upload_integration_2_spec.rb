@@ -412,7 +412,7 @@ CSV
         "\n        and if you have specified the amount of rounding, you should be returned to the \"confirm data\" page." do
         visit '/bulk_upload/confirm_data'
 
-        first("header").should have_content "Please Verify Data-Set References Before Uploading"
+        first("header").should have_content "Verify Upload Specifications and Data-Set References"
         page.should_not have_content "Citation: "
         first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
       end
@@ -421,7 +421,7 @@ CSV
         "\n        and if you have specified the amount of rounding, you should be returned to the \"confirm data\" page" do
         visit '/bulk_upload/confirm_data'
 
-        first("header").should have_content "Please Verify Data-Set References Before Uploading"
+        first("header").should have_content "Verify Upload Specifications and Data-Set References"
         page.should_not have_content "Citation: "
         first("div.alert").should have_content "Removing linked citation since you have citation information in your data set"
       end
