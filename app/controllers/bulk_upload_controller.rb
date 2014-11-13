@@ -193,12 +193,19 @@ class BulkUploadController < ApplicationController
     ### citation selection page if needed.
 
     if params[:global_values]
+      # we got here by submitting the form on the "Choose a Citation" page
+
       if params[:global_values][:citation_id].empty?
+        # Since the form pre-populates the citation_id parameter with the
+        # session citation (if there is one), we only get here if both (1) the
+        # user submitted a blank form, and (2) there was no previously-selected
+        # session citation.
         flash[:error] = "No citation selected"
         redirect_to(:back)
         return
       end
-      if  !session[:citation].nil?
+
+      if !session[:citation].nil? && session[:citation] != params[:global_values][:citation_id]
         flash.now[:warning] = "Replacing citation #{Citation.find(session[:citation]).to_s} with #{params["global_values"][":citation"].inspect}."
       end
       session[:citation] = params[:global_values][:citation_id]
