@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Energy Biosciences Institute</title>
+  <title><%= if @title then @title else "BETYdb: #{request.env['PATH_INFO']}" end %></title>
   <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />
   <meta name="keywords" content="biofuel, biofuels, bioenergy, bioscience, biosciences, miscanthus, switchgrass, ethanol, alternative energy"> 
   <meta name="description" content="The Energy Biosciences Institute (EBI) is a new research and development organization that harnesses advanced knowledge in biology, the physical sciences, engineering, and environmental and social sciences to devise viable solutions to global energy challenges and reduce the impact of fossil fuels to global warming.  The worlds first research institution solely dedicated to the new field of energy bioscience, is initially focusing on the development of next-generation biofuels, but will also look into various applications of biology to the energy sector." />
