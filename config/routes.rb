@@ -170,6 +170,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   # add named routes for bulk_upload controller:
   match '/bulk_upload/start_upload' => 'sessions#new', :as => :start_upload
   match '/bulk_upload/display_csv_file', :as => :show_upload_file_contents
+  match '/bulk_upload/choose_global_citation', as: :choose_global_citation
   match '/bulk_upload/choose_global_data_values', :as => :choose_global_data_values
   match '/bulk_upload/confirm_data', :as => :bulk_upload_data_confirmation
   match '/bulk_upload/insert_data', :as => :bulk_upload_data_insertion
