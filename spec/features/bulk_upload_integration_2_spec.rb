@@ -215,6 +215,25 @@ CSV
 
     end
 
+    # Test for RM issue #2603
+    context "Submitting a blank global citation form", js: true do
+
+      before :each do
+        choose_citation_from_dropdown
+        click_link "Choose a different citation"
+        click_button "View Validation Results"
+      end
+
+      specify "should not result in an error message" do
+        expect(page).to_not have_selector('div.alert-warning')
+      end
+
+      specify "should keep the previously-chosen citation" do
+        expect(page.find('h5')).to have_content("Citation: Adler")
+      end
+
+    end
+
   end
 
   # Tests for RM issue #2525 (item 3 of update #2):
