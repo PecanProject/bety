@@ -87,6 +87,19 @@ feature 'Yields index works' do
       end
     end
 
+    context 'editing a yield without having chosen a citation' do
+      before :each do
+        visit '/yields/'
+        first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
+      end
+
+      # test for Redmine issue #2604
+      it "should not throw a ActionView::Template::Error when edits are submitted with an invalid field" do
+        fill_in 'yield_mean', with: ""
+        expect { click_button "Update" }.not_to raise_error(ActionView::Template::Error)
+      end
+
+    end
 
   end
 end
