@@ -17,7 +17,7 @@ class Yield < ActiveRecord::Base
   belongs_to :ebi_method, :class_name => 'Methods', :foreign_key => 'method_id'
 
   validates_presence_of     :mean
-  validates_numericality_of :mean
+  validates_numericality_of :mean, :greater_than_or_equal_to => 0.0
   validates_presence_of     :statname, :if => Proc.new { |y| !y.stat.blank? }
 
   validates_presence_of     :citation_id

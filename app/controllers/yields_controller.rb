@@ -158,8 +158,9 @@ class YieldsController < ApplicationController
         format.xml  { head :ok }
         format.csv  { head :ok }
       else
-        @treatments = Citation.find_by_id(session["citation"]).treatments rescue nil
-        @sites = Citation.find_by_id(session["citation"]).sites rescue nil
+        citation = @yield.citation
+        @treatments = citation.treatments
+        @sites = citation.sites
         format.html { render :action => "edit" }
         format.xml  { render :xml => @yield.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @yield.errors, :status => :unprocessable_entity }
