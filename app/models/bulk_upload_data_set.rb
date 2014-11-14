@@ -1,4 +1,6 @@
 module ValidationResult
+  extend ActiveSupport::Memoizable
+
   # A symbol representing the result of data validation.
   attr :result
   # The message to use as the title attribute of the table cell containing the
@@ -18,6 +20,8 @@ module ValidationResult
   def result_css_class
     category.to_s
   end
+  memoize :result_css_class
+
   def category
     case @result
     when :valid, :ignored, :non_unique_referent, :missing_referent, \
@@ -37,6 +41,7 @@ module ValidationResult
       @result
     end
   end
+  memoize :category
 end
 
 class NoDataError < StandardError
@@ -197,6 +202,7 @@ end
 
 class BulkUploadDataSet
   include ActionView::Helpers::NumberHelper # for rounding
+  extend ActiveSupport::Memoizable
 
   # An Array consisting of the (normalized) headers of the uploaded CSV file.
   # Normalization strips leading and trailing whitespace; additionally for
@@ -962,7 +968,7 @@ class BulkUploadDataSet
     @data.rewind
 
     # all validation has been done already at this point
-    citation_id_list = @session[:citation_id_list] || (@session[:citation].nil? ? [] : [ @session[:citation] ]) 
+    citation_id_list = @session[:citation_id_list] || (@session[:citation].nil? ? [] : [ @session[:citation] ])
     upload_citations = []
     citation_id_list.each do |citation_id|
       citation = Citation.find_by_id(citation_id)
@@ -1071,7 +1077,7 @@ class BulkUploadDataSet
   # value errors should be displayed.
   def data_value_error_count
     return nil if @validation_summary.nil?
-      
+
     (@validation_summary.keys - [ :field_list_errors ]).
       collect{|key| @validation_summary[key].has_key?(:row_numbers) ? @validation_summary[key][:row_numbers].size : 1}.reduce(:+) || 0 # || 0 "fixes" the case where there are no data value errors
   end
@@ -1281,6 +1287,7 @@ class BulkUploadDataSet
 
     return matches[0]
   end
+  memoize :existing?
 
   # Returns a +Species+ object whose +scientificname+ attribute matches +name+.
   # If multiple matches are found, a +NonUniquenessException+ is raised, and if
@@ -1288,6 +1295,7 @@ class BulkUploadDataSet
   def existing_species?(name)
     return existing?(Specie, "scientificname", name, "species")
   end
+  memoize :existing_species?
 
   # Returns a +Site+ object whose +sitename+ attribute matches +name+.  If
   # multiple matches are found, a +NonUniquenessException+ is raised, and if no
@@ -1295,6 +1303,7 @@ class BulkUploadDataSet
   def existing_site?(name)
     return existing?(Site, "sitename", name, "site")
   end
+  memoize :existing_site?
 
   # Returns a +Treatment+ object whose +name+ attribute matches +name+.  If
   # +citation_id+ is provided, matching is limited to treatments associated with
@@ -1310,6 +1319,7 @@ class BulkUploadDataSet
       existing?(Citation.find(citation_id).treatments, "name", name, "treatment")
     end
   end
+  memoize :existing_treatment?
 
   # Returns a +Citation+ object whose +doi+ attribute matches +doi+.  If
   # multiple matches are found, a +NonUniquenessException+ is raised, and if no
@@ -1317,6 +1327,7 @@ class BulkUploadDataSet
   def doi_of_existing_citation?(doi)
     return existing?(Citation, "doi", doi, "citation")
   end
+  memoize :doi_of_existing_citation?
 
   # Returns a +Citation+ object whose +author+, +year+, and +title+ attributes
   # match the supplied argument values.  If +year+ can't be parsed as an
@@ -1346,6 +1357,7 @@ class BulkUploadDataSet
       return c.first
     end
   end
+  memoize :existing_citation
 
   # Returns a +Cultivar+ object whose +name+ attribute matches +name+.  If
   # +species_id+ is provided, matching is limited to cultivars of the
@@ -1359,7 +1371,7 @@ class BulkUploadDataSet
       existing?(Cultivar.where("specie_id = ?", species_id), "name", name, "cultivar")
     end
   end
-
+  memoize :existing_cultivar?
 
   # Given the Hash <tt>args[:input_hash]</tt> containing possible keys
   # "citation_doi", "citation_author", "citation_year", "citation_title",
@@ -1557,7 +1569,7 @@ class BulkUploadDataSet
         new_entity = true
         @heading_variable_info.each_key do |trait_variable_id|
           # For each row of @data, that is, for each row of the input file, there will be a row added to the traits table--hence one item added to @mapped_data--for each trait variable occurring in the heading.
-          
+
 
           # clone: we have to be more careful than for yields since we may use
           # the row for multiple trait rows
@@ -1606,7 +1618,7 @@ class BulkUploadDataSet
 
   end
 
-  
+
   # Given the Hash +row_data+ which contains part of the information for a row
   # to be added to the +traits+ table, and given +trait_variable_id+, the id of
   # a trait variable in the upload file, add the following key-value pairs:
