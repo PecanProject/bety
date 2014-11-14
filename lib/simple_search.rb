@@ -132,6 +132,11 @@ module SimpleSearch
       search[/[\.\d]*/] == search ? "#{column} = :search" : nil
     when :string, :text
       "LOWER(#{column}) LIKE LOWER(:wildcard_search)"
+    when :timestamp
+      # taking substring prevents, for example, a search on year "2002" from
+      # matching a timestamp like "2014-09-03 21:38:16.012002"; for now,
+      # restrict matching to the date portion of the timestamp
+      "SUBSTRING(#{column}::text, 1, 10) LIKE :wildcard_search"
     else
       "#{column} like :wildcard_search"
     end
