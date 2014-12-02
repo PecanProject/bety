@@ -39,6 +39,13 @@ RSpec.configure do |config|
   else
     Bundler.require('javascript_testing')
     Capybara.javascript_driver = :webkit
+
+
+    class Binding
+      def pry
+        puts "!!! binding.pry is for use with the Selenium JavaScript driver."
+      end
+    end
   end
 
 end
