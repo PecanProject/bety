@@ -10,7 +10,6 @@ rescue => e
   puts "Go to https://github.com/PecanProject/bety/wiki/Testing for instructions on setting up the testing environment."
   exit
 end
-include Rails.application.routes.url_helpers
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
