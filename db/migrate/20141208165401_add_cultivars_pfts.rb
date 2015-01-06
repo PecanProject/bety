@@ -1,3 +1,5 @@
+# Adds cultivars_pfts table, adds constraints and comments on it and on
+# pfts_species, and adds uniqueness constraints to pfts table.
 class AddCultivarsPfts < ActiveRecord::Migration
 
   def self.up
@@ -70,6 +72,16 @@ COMMENT ON CONSTRAINT pft_exists ON pfts_species IS 'Ensure the referred-to pft 
 COMMENT ON CONSTRAINT species_exists ON pfts_species IS 'Ensure the referred-to species exists, block its deletion if it is used in a pft, and update the reference if the species id number changes.';
 COMMENT ON CONSTRAINT no_conflicting_member ON pfts_species IS 'Ensure the pft_id does not refer to a pft having one or more cultivars as members; pfts referred to by this table con only contain other species.';
 
+
+
+-- Finally, declare (name, modeltype_id) to be a key for pfts:
+
+ALTER TABLE pfts
+  ALTER COLUMN name SET NOT NULL,
+  ADD CONSTRAINT unique_names_per_modeltype UNIQUE(name, modeltype_id);
+
+COMMENT ON COLUMN pfts.name IS 'pft names are unique within a given model type.';
+
 }
 
   end
@@ -85,6 +97,14 @@ COMMENT ON CONSTRAINT no_conflicting_member ON pfts_species IS 'Ensure the pft_i
   def self.down
 
     execute %{
+
+COMMENT ON COLUMN pfts.name IS 'unique identifier used by PEcAn.';
+
+ALTER TABLE pfts
+  ALTER COLUMN name DROP NOT NULL,
+  DROP CONSTRAINT unique_names_per_modeltype;
+
+
 
 ALTER TABLE pfts_species
   DROP CONSTRAINT no_conflicting_member,
