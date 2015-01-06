@@ -134,8 +134,6 @@ ALTER TABLE "pfts" DROP CONSTRAINT "fk_pfts_modeltypes_1";
 ALTER TABLE "pfts" DROP CONSTRAINT "fk_pfts_pfts_1";
 ALTER TABLE "pfts_priors" DROP CONSTRAINT "fk_pfts_priors_pfts_1";
 ALTER TABLE "pfts_priors" DROP CONSTRAINT "fk_pfts_priors_priors_1";
-ALTER TABLE "pfts_species" DROP CONSTRAINT "fk_pfts_species_pfts_1";
-ALTER TABLE "pfts_species" DROP CONSTRAINT "fk_pfts_species_species_1";
 ALTER TABLE "posteriors" DROP CONSTRAINT "fk_posteriors_formats_1";
 ALTER TABLE "posteriors" DROP CONSTRAINT "fk_posteriors_pfts_1";
 ALTER TABLE "posterior_samples" DROP CONSTRAINT "fk_posterior_samples_posterior_samples_1";
