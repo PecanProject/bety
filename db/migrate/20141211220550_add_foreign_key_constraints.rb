@@ -1,6 +1,9 @@
 class AddForeignKeyConstraints < ActiveRecord::Migration
   def self.up
 	execute %{
+
+-- Commented-out constraints are ones being put off for future migrations pending database cleanup.
+
 ALTER TABLE "citations" ADD CONSTRAINT "fk_citations_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "citations_sites" ADD CONSTRAINT "fk_citations_sites_citations_1" FOREIGN KEY ("citation_id") REFERENCES "citations" ("id") ON DELETE CASCADE;
 ALTER TABLE "citations_sites" ADD CONSTRAINT "fk_citations_sites_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") ON DELETE RESTRICT;
