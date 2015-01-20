@@ -3107,6 +3107,550 @@ COMMENT ON CONSTRAINT cultivar_exists ON cultivars_pfts IS 'Ensure the referred-
 
 
 --
+-- Name: fk_citations_sites_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY citations_sites
+    ADD CONSTRAINT fk_citations_sites_citations_1 FOREIGN KEY (citation_id) REFERENCES citations(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_citations_sites_sites_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY citations_sites
+    ADD CONSTRAINT fk_citations_sites_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id) ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_citations_treatments_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY citations_treatments
+    ADD CONSTRAINT fk_citations_treatments_citations_1 FOREIGN KEY (citation_id) REFERENCES citations(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_citations_treatments_treatments_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY citations_treatments
+    ADD CONSTRAINT fk_citations_treatments_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_citations_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY citations
+    ADD CONSTRAINT fk_citations_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_covariates_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY covariates
+    ADD CONSTRAINT fk_covariates_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_cultivars_species_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cultivars
+    ADD CONSTRAINT fk_cultivars_species_1 FOREIGN KEY (specie_id) REFERENCES species(id);
+
+
+--
+-- Name: fk_current_posteriors_pfts_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY current_posteriors
+    ADD CONSTRAINT fk_current_posteriors_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id);
+
+
+--
+-- Name: fk_current_posteriors_posterior_samples_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY current_posteriors
+    ADD CONSTRAINT fk_current_posteriors_posterior_samples_1 FOREIGN KEY (posteriors_samples_id) REFERENCES posterior_samples(id);
+
+
+--
+-- Name: fk_current_posteriors_projects_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY current_posteriors
+    ADD CONSTRAINT fk_current_posteriors_projects_1 FOREIGN KEY (project_id) REFERENCES projects(id);
+
+
+--
+-- Name: fk_current_posteriors_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY current_posteriors
+    ADD CONSTRAINT fk_current_posteriors_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_dbfiles_machines_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY dbfiles
+    ADD CONSTRAINT fk_dbfiles_machines_1 FOREIGN KEY (machine_id) REFERENCES machines(id);
+
+
+--
+-- Name: fk_dbfiles_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY dbfiles
+    ADD CONSTRAINT fk_dbfiles_users_1 FOREIGN KEY (created_user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_dbfiles_users_2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY dbfiles
+    ADD CONSTRAINT fk_dbfiles_users_2 FOREIGN KEY (updated_user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_ensembles_workflows_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY ensembles
+    ADD CONSTRAINT fk_ensembles_workflows_1 FOREIGN KEY (workflow_id) REFERENCES workflows(id);
+
+
+--
+-- Name: fk_entities_entities_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY entities
+    ADD CONSTRAINT fk_entities_entities_1 FOREIGN KEY (parent_id) REFERENCES entities(id);
+
+
+--
+-- Name: fk_formats_variables_formats_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY formats_variables
+    ADD CONSTRAINT fk_formats_variables_formats_1 FOREIGN KEY (format_id) REFERENCES formats(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_formats_variables_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY formats_variables
+    ADD CONSTRAINT fk_formats_variables_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_inputs_formats_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs
+    ADD CONSTRAINT fk_inputs_formats_1 FOREIGN KEY (format_id) REFERENCES formats(id);
+
+
+--
+-- Name: fk_inputs_inputs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs
+    ADD CONSTRAINT fk_inputs_inputs_1 FOREIGN KEY (parent_id) REFERENCES inputs(id);
+
+
+--
+-- Name: fk_inputs_runs_inputs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs_runs
+    ADD CONSTRAINT fk_inputs_runs_inputs_1 FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_inputs_runs_runs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs_runs
+    ADD CONSTRAINT fk_inputs_runs_runs_1 FOREIGN KEY (run_id) REFERENCES runs(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_inputs_sites_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs
+    ADD CONSTRAINT fk_inputs_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id);
+
+
+--
+-- Name: fk_inputs_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs
+    ADD CONSTRAINT fk_inputs_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_inputs_variables_inputs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs_variables
+    ADD CONSTRAINT fk_inputs_variables_inputs_1 FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_inputs_variables_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs_variables
+    ADD CONSTRAINT fk_inputs_variables_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_likelihoods_inputs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY likelihoods
+    ADD CONSTRAINT fk_likelihoods_inputs_1 FOREIGN KEY (input_id) REFERENCES inputs(id);
+
+
+--
+-- Name: fk_likelihoods_runs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY likelihoods
+    ADD CONSTRAINT fk_likelihoods_runs_1 FOREIGN KEY (run_id) REFERENCES runs(id);
+
+
+--
+-- Name: fk_likelihoods_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY likelihoods
+    ADD CONSTRAINT fk_likelihoods_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_location_yields_counties_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY location_yields
+    ADD CONSTRAINT fk_location_yields_counties_1 FOREIGN KEY (county_id) REFERENCES counties(id);
+
+
+--
+-- Name: fk_managements_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managements
+    ADD CONSTRAINT fk_managements_citations_1 FOREIGN KEY (citation_id) REFERENCES citations(id);
+
+
+--
+-- Name: fk_managements_treatments_managements_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managements_treatments
+    ADD CONSTRAINT fk_managements_treatments_managements_1 FOREIGN KEY (management_id) REFERENCES managements(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_managements_treatments_treatments_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managements_treatments
+    ADD CONSTRAINT fk_managements_treatments_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_managements_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managements
+    ADD CONSTRAINT fk_managements_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_methods_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY methods
+    ADD CONSTRAINT fk_methods_citations_1 FOREIGN KEY (citation_id) REFERENCES citations(id);
+
+
+--
+-- Name: fk_models_models_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY models
+    ADD CONSTRAINT fk_models_models_1 FOREIGN KEY (parent_id) REFERENCES models(id);
+
+
+--
+-- Name: fk_models_modeltypes_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY models
+    ADD CONSTRAINT fk_models_modeltypes_1 FOREIGN KEY (modeltype_id) REFERENCES modeltypes(id);
+
+
+--
+-- Name: fk_modeltypes_formats_formats_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY modeltypes_formats
+    ADD CONSTRAINT fk_modeltypes_formats_formats_1 FOREIGN KEY (format_id) REFERENCES formats(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_modeltypes_formats_modeltypes_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY modeltypes_formats
+    ADD CONSTRAINT fk_modeltypes_formats_modeltypes_1 FOREIGN KEY (modeltype_id) REFERENCES modeltypes(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_modeltypes_formats_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY modeltypes_formats
+    ADD CONSTRAINT fk_modeltypes_formats_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_modeltypes_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY modeltypes
+    ADD CONSTRAINT fk_modeltypes_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_pfts_modeltypes_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pfts
+    ADD CONSTRAINT fk_pfts_modeltypes_1 FOREIGN KEY (modeltype_id) REFERENCES modeltypes(id);
+
+
+--
+-- Name: fk_pfts_pfts_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pfts
+    ADD CONSTRAINT fk_pfts_pfts_1 FOREIGN KEY (parent_id) REFERENCES pfts(id);
+
+
+--
+-- Name: fk_posterior_samples_pfts_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posterior_samples
+    ADD CONSTRAINT fk_posterior_samples_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id);
+
+
+--
+-- Name: fk_posterior_samples_posterior_samples_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posterior_samples
+    ADD CONSTRAINT fk_posterior_samples_posterior_samples_1 FOREIGN KEY (parent_id) REFERENCES posterior_samples(id);
+
+
+--
+-- Name: fk_posterior_samples_posteriors_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posterior_samples
+    ADD CONSTRAINT fk_posterior_samples_posteriors_1 FOREIGN KEY (posterior_id) REFERENCES posteriors(id);
+
+
+--
+-- Name: fk_posterior_samples_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posterior_samples
+    ADD CONSTRAINT fk_posterior_samples_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_posteriors_ensembles_ensembles_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posteriors_ensembles
+    ADD CONSTRAINT fk_posteriors_ensembles_ensembles_1 FOREIGN KEY (ensemble_id) REFERENCES ensembles(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_posteriors_ensembles_posteriors_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posteriors_ensembles
+    ADD CONSTRAINT fk_posteriors_ensembles_posteriors_1 FOREIGN KEY (posterior_id) REFERENCES posteriors(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_posteriors_formats_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posteriors
+    ADD CONSTRAINT fk_posteriors_formats_1 FOREIGN KEY (format_id) REFERENCES formats(id);
+
+
+--
+-- Name: fk_posteriors_pfts_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posteriors
+    ADD CONSTRAINT fk_posteriors_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id);
+
+
+--
+-- Name: fk_priors_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY priors
+    ADD CONSTRAINT fk_priors_citations_1 FOREIGN KEY (citation_id) REFERENCES citations(id);
+
+
+--
+-- Name: fk_priors_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY priors
+    ADD CONSTRAINT fk_priors_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_projects_machines_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT fk_projects_machines_1 FOREIGN KEY (machine_id) REFERENCES machines(id);
+
+
+--
+-- Name: fk_runs_ensembles_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY runs
+    ADD CONSTRAINT fk_runs_ensembles_1 FOREIGN KEY (ensemble_id) REFERENCES ensembles(id);
+
+
+--
+-- Name: fk_runs_models_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY runs
+    ADD CONSTRAINT fk_runs_models_1 FOREIGN KEY (model_id) REFERENCES models(id);
+
+
+--
+-- Name: fk_runs_sites_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY runs
+    ADD CONSTRAINT fk_runs_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id);
+
+
+--
+-- Name: fk_sites_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sites
+    ADD CONSTRAINT fk_sites_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_trait_covariate_associations_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY trait_covariate_associations
+    ADD CONSTRAINT fk_trait_covariate_associations_variables_1 FOREIGN KEY (covariate_variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_trait_covariate_associations_variables_2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY trait_covariate_associations
+    ADD CONSTRAINT fk_trait_covariate_associations_variables_2 FOREIGN KEY (trait_variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_workflows_models_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY workflows
+    ADD CONSTRAINT fk_workflows_models_1 FOREIGN KEY (model_id) REFERENCES models(id);
+
+
+--
+-- Name: fk_workflows_sites_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY workflows
+    ADD CONSTRAINT fk_workflows_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id);
+
+
+--
+-- Name: fk_yields_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_citations_1 FOREIGN KEY (citation_id) REFERENCES citations(id);
+
+
+--
+-- Name: fk_yields_cultivars_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_cultivars_1 FOREIGN KEY (cultivar_id) REFERENCES cultivars(id);
+
+
+--
+-- Name: fk_yields_methods_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_methods_1 FOREIGN KEY (method_id) REFERENCES methods(id);
+
+
+--
+-- Name: fk_yields_species_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_species_1 FOREIGN KEY (specie_id) REFERENCES species(id);
+
+
+--
+-- Name: fk_yields_treatments_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id);
+
+
+--
+-- Name: fk_yields_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
 -- Name: pft_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
