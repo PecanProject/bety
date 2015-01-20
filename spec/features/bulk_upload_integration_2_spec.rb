@@ -460,6 +460,7 @@ CSV
     end
 
     it "should only insert two new covariate rows", js: true do
+      pending("Reconcilation with new foreign-key constraints")
 
       start_size = Covariate.all.size
 
