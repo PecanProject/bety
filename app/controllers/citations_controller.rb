@@ -168,7 +168,6 @@ class CitationsController < ApplicationController
   # DELETE /citations/1.xml
   def destroy
     @citation = Citation.find(params[:id])
-    @citation.sites.destroy
     @citation.destroy
 
     # Someone might erase a citation they (or someone else) is 'linked' to so remove it for them

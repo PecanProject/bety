@@ -165,7 +165,6 @@ class PriorsController < ApplicationController
   # DELETE /priors/1.xml
   def destroy
     @prior = Prior.find(params[:id])
-    @prior.pfts.destroy
     @prior.destroy
 
     respond_to do |format|

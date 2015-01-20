@@ -162,7 +162,6 @@ class ManagementsController < ApplicationController
   # DELETE /managements/1.xml
   def destroy
     @management = Management.find(params[:id])
-    @management.treatments.destroy
     @management.destroy
 
     respond_to do |format|

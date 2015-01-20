@@ -105,7 +105,6 @@ class VariablesController < ApplicationController
   # DELETE /variables/1.xml
   def destroy
     @variable = Variable.find(params[:id])
-    @variable.traits.destroy
     @variable.destroy
 
     respond_to do |format|

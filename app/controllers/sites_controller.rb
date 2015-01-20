@@ -218,7 +218,6 @@ class SitesController < ApplicationController
   # DELETE /sites/1.xml
   def destroy
     @site = Site.find(params[:id])
-    @site.citations.destroy
     @site.destroy
 
     respond_to do |format|
