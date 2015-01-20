@@ -3,6 +3,29 @@
 
 class ApplicationController < ActionController::Base
 
+  rescue_from ActiveRecord::InvalidForeignKey do |e|
+
+    case e.message
+
+      # deletion of sites
+    when /fk_citations_sites_sites_1/
+      flash[:error] = 'There are still citations referring to this site.'
+    when /fk_traits_sites_1/
+      flash[:error] = 'There are still traits that refer to this site.'
+    when /fk_sites_yields_1/
+      flash[:error] = 'There are still yields that refer to this site.'
+
+      # TO DO: Add to this list of 'when' clauses.
+
+      # catch-all until we write specific messages for all cases:
+    else
+      flash[:error] = e.message
+    end
+
+
+    redirect_to :back
+  end
+
   # Be sure to include AuthenticationSystem in Application Controller instead
   include AuthenticatedSystem
   require 'csv'
