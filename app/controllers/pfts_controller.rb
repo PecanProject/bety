@@ -205,7 +205,6 @@ class PftsController < ApplicationController
   # DELETE /pfts/1.xml
   def destroy
     @pft = Pft.find(params[:id])
-    @pft.priors.destroy
     @pft.destroy
 
     respond_to do |format|

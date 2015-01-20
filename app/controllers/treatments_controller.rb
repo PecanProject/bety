@@ -290,7 +290,6 @@ class TreatmentsController < ApplicationController
   # DELETE /treatments/1.xml
   def destroy
     @treatment = Treatment.find(params[:id])
-    @treatment.managements.destroy
     @treatment.destroy
 
     respond_to do |format|
