@@ -69,10 +69,10 @@ ALTER TABLE "trait_covariate_associations" ADD CONSTRAINT "fk_trait_covariate_as
 ALTER TABLE "trait_covariate_associations" ADD CONSTRAINT "fk_trait_covariate_associations_variables_2" FOREIGN KEY ("trait_variable_id") REFERENCES "variables" ("id");
 -- ALTER TABLE "traits" ADD CONSTRAINT "fk_traits_citations_1" FOREIGN KEY ("citation_id") REFERENCES "citations" ("id");
 -- ALTER TABLE "traits" ADD CONSTRAINT "fk_traits_cultivars_1" FOREIGN KEY ("cultivar_id") REFERENCES "cultivars" ("id");
-ALTER TABLE "traits" ADD CONSTRAINT "fk_traits_entities_1" FOREIGN KEY ("entity_id") REFERENCES "entities" ("id");
+-- ALTER TABLE "traits" ADD CONSTRAINT "fk_traits_entities_1" FOREIGN KEY ("entity_id") REFERENCES "entities" ("id");
 -- ALTER TABLE "traits" ADD CONSTRAINT "fk_traits_methods_1" FOREIGN KEY ("method_id") REFERENCES "methods" ("id");
 -- ALTER TABLE "traits" ADD CONSTRAINT "fk_traits_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id");
-ALTER TABLE "traits" ADD CONSTRAINT "fk_traits_species_1" FOREIGN KEY ("specie_id") REFERENCES "species" ("id");
+-- ALTER TABLE "traits" ADD CONSTRAINT "fk_traits_species_1" FOREIGN KEY ("specie_id") REFERENCES "species" ("id");
 -- ALTER TABLE "traits" ADD CONSTRAINT "fk_traits_treatments_1" FOREIGN KEY ("treatment_id") REFERENCES "treatments" ("id");
 -- ALTER TABLE "traits" ADD CONSTRAINT "fk_traits_users_1" FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 -- ALTER TABLE "traits" ADD CONSTRAINT "fk_traits_variables_1" FOREIGN KEY ("variable_id") REFERENCES "variables" ("id");
@@ -156,10 +156,10 @@ ALTER TABLE "trait_covariate_associations" DROP CONSTRAINT "fk_trait_covariate_a
 ALTER TABLE "trait_covariate_associations" DROP CONSTRAINT "fk_trait_covariate_associations_variables_2";
 -- ALTER TABLE "traits" DROP CONSTRAINT "fk_traits_citations_1";
 -- ALTER TABLE "traits" DROP CONSTRAINT "fk_traits_cultivars_1";
-ALTER TABLE "traits" DROP CONSTRAINT "fk_traits_entities_1";
+-- ALTER TABLE "traits" DROP CONSTRAINT "fk_traits_entities_1";
 -- ALTER TABLE "traits" DROP CONSTRAINT "fk_traits_methods_1";
 -- ALTER TABLE "traits" DROP CONSTRAINT "fk_traits_sites_1";
-ALTER TABLE "traits" DROP CONSTRAINT "fk_traits_species_1";
+-- ALTER TABLE "traits" DROP CONSTRAINT "fk_traits_species_1";
 -- ALTER TABLE "traits" DROP CONSTRAINT "fk_traits_treatments_1";
 -- ALTER TABLE "traits" DROP CONSTRAINT "fk_traits_users_1";
 -- ALTER TABLE "traits" DROP CONSTRAINT "fk_traits_variables_1";
