@@ -460,7 +460,6 @@ CSV
     end
 
     it "should only insert two new covariate rows", js: true do
-      pending("Reconcilation with new foreign-key constraints")
 
       start_size = Covariate.all.size
 
@@ -475,6 +474,8 @@ CSV
       end_size = Covariate.all.size
 
       # clean up:
+
+      # Remove covariates before traits because they refer to traits:
       visit '/covariates'
       # This relies on the covariates being sorted by id and the fact that the
       # added covariates are assigned higher ids than the fixture covariates:
@@ -488,11 +489,13 @@ CSV
         end
         sleep 1
       end
-      visit '/entities'
-      # This relies on the fixures setting the "notes" attribute to "keepme" as a marker not to delete them:
-      while all(:xpath, "//tbody/tr[not(td/text() = 'keepme')]").size > 0
+
+      # Removed traits before entities because they refer to entities:
+      visit '/traits'
+      # This relies on the fixtures setting the "checked" attribute to "passed" for them not to be deleted:
+      while all(:xpath, "//tbody/tr[not(td/select/option[@selected = 'selected']/text() = 'passed')]").size > 0
         # delete all covariates except the first
-        first(:xpath, "//tbody/tr[not(td/text() = 'keepme')]//a[@alt = 'delete']").click
+        first(:xpath, "//tbody/tr[not(td/select/option[@selected = 'selected']/text() = 'passed')]//a[@alt = 'delete']").click
         # If we're using Selenium, we have to deal with the modal dialogue:
         if page.driver.is_a? Capybara::Selenium::Driver
           a = page.driver.browser.switch_to.alert
@@ -500,11 +503,12 @@ CSV
         end
         sleep 1
       end
-      visit '/traits'
-      # This relies on the fixtures setting the "checked" attribute to "passed" for them not to be deleted:
-      while all(:xpath, "//tbody/tr[not(td/select/option[@selected = 'selected']/text() = 'passed')]").size > 0
+
+      visit '/entities'
+      # This relies on the fixures setting the "notes" attribute to "keepme" as a marker not to delete them:
+      while all(:xpath, "//tbody/tr[not(td/text() = 'keepme')]").size > 0
         # delete all covariates except the first
-        first(:xpath, "//tbody/tr[not(td/select/option[@selected = 'selected']/text() = 'passed')]//a[@alt = 'delete']").click
+        first(:xpath, "//tbody/tr[not(td/text() = 'keepme')]//a[@alt = 'delete']").click
         # If we're using Selenium, we have to deal with the modal dialogue:
         if page.driver.is_a? Capybara::Selenium::Driver
           a = page.driver.browser.switch_to.alert
