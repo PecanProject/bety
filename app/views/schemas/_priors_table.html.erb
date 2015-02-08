@@ -2,7 +2,7 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>priors</span></span></td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>priors</span></span></td>
  </tr>
 </table>
 <div>
@@ -36,8 +36,8 @@
 <tbody valign='top'>
 <tr>
  <td class='primaryKey' title='Primary Key'>id</td>
- <td class='detail'>serial</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>bigserial</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='right'>nextval('priors_id_seq'::regclass)</td>
@@ -46,8 +46,8 @@
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>citation_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
@@ -57,12 +57,13 @@ citations_table')%> </td>
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>variable_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
+ <td class='detail fkey'><%=link_to 'variables.id',schemas_path(:partial => '
+variables_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 <tr>
@@ -193,15 +194,28 @@ citations_table')%> </td>
 <label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
 <table width='100%' border='0'><tr><td class='container'>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="schemas?partial=priors_table" title="priors" alt="" coords="159,5,391,317">
-<area shape="rect" id="node3" href="schemas?partial=citations_table" title="citations" alt="" coords="7,30,113,359">
+<area shape="rect" id="node1" href="schemas?partial=priors_table" title="priors" alt="" coords="183,149,417,478">
+<area shape="rect" id="node2" href="schemas?partial=citations_table" title="citations" alt="" coords="19,5,125,353">
+<area shape="rect" id="node3" href="schemas?partial=variables_table" title="variables" alt="" coords="5,370,139,718">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='images/priors.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="123,30,229,359">
-<area shape="rect" id="node3" href="schemas?partial=users_table" title="users" alt="" coords="5,323,77,381">
-<area shape="rect" id="node4" href="schemas?partial=priors_table" title="priors" alt="" coords="275,5,507,317">
-<area shape="rect" id="node6" href="schemas?partial=yields_table" title="yields" alt="" coords="355,339,427,397">
+<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="135,172,241,520">
+<area shape="rect" id="node2" href="schemas?partial=users_table" title="users" alt="" coords="5,51,77,111">
+<area shape="rect" id="node3" href="schemas?partial=citations_sites_table" title="citations_sites" alt="" coords="354,243,478,303">
+<area shape="rect" id="node4" href="schemas?partial=citations_treatments_table" title="citations_treatments" alt="" coords="335,320,497,380">
+<area shape="rect" id="node5" href="schemas?partial=covariates_table" title="covariates" alt="" coords="367,744,465,804">
+<area shape="rect" id="node6" href="schemas?partial=variables_table" title="variables" alt="" coords="121,936,255,1284">
+<area shape="rect" id="node7" href="schemas?partial=current_posteriors_table" title="current_posteriors" alt="" coords="577,823,727,883">
+<area shape="rect" id="node8" href="schemas?partial=posterior_samples_table" title="posterior_samples" alt="" coords="341,859,491,919">
+<area shape="rect" id="node9" href="schemas?partial=formats_variables_table" title="formats_variables" alt="" coords="343,936,489,996">
+<area shape="rect" id="node10" href="schemas?partial=inputs_variables_table" title="inputs_variables" alt="" coords="347,1013,485,1073">
+<area shape="rect" id="node11" href="schemas?partial=likelihoods_table" title="likelihoods" alt="" coords="366,1091,466,1151">
+<area shape="rect" id="node12" href="schemas?partial=managements_table" title="managements" alt="" coords="354,51,478,111">
+<area shape="rect" id="node13" href="schemas?partial=methods_table" title="methods" alt="" coords="372,128,460,188">
+<area shape="rect" id="node14" href="schemas?partial=priors_table" title="priors" alt="" coords="299,397,533,727">
+<area shape="rect" id="node15" href="schemas?partial=trait_covariate_associations_table" title="trait_covariate_associations" alt="" coords="310,1168,522,1228">
+<area shape="rect" id="node16" href="schemas?partial=yields_table" title="yields" alt="" coords="616,128,688,188">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='images/priors.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>

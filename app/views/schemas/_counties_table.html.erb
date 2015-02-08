@@ -2,7 +2,7 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>counties</span></span></td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>counties</span></span></td>
  </tr>
 </table>
 <div>
@@ -36,8 +36,8 @@
 <tbody valign='top'>
 <tr>
  <td class='primaryKey' title='Primary Key'>id</td>
- <td class='detail'>serial</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>bigserial</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='right'>nextval('counties_id_seq'::regclass)</td>
@@ -128,4 +128,13 @@
  </tr>
 </table>
 </div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=location_yields_table" title="location_yields" alt="" coords="273,5,401,185">
+<area shape="rect" id="node2" href="schemas?partial=counties_table" title="counties" alt="" coords="5,122,229,331">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/counties.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
 </div>

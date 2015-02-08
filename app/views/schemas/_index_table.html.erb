@@ -5,19 +5,19 @@
 <colgroup class='comment'>
 <thead align='left'>
 <tr>
-  <th valign='bottom'>Table / View</th>
+  <th valign='bottom'>Table</th>
   <th align='right' valign='bottom'>Columns</th>
   <th class='comment' align='left' valign='bottom'>Comments</th>
 </tr>
 </thead>
 <tbody>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'citations',schemas_path(:partial => 'citations_table')%></td>  <td class='detail' align='right'>13</td>
-  <td class='comment detail'>comment</td>
-  </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'citations_sites',schemas_path(:partial => 'citations_sites_table')%></td>  <td class='detail' align='right'>4</td>
   <td class='comment detail'></td>
   </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'citations_treatments',schemas_path(:partial => 'citations_treatments_table')%></td>  <td class='detail' align='right'>4</td>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'citations_sites',schemas_path(:partial => 'citations_sites_table')%></td>  <td class='detail' align='right'>5</td>
+  <td class='comment detail'></td>
+  </tr>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'citations_treatments',schemas_path(:partial => 'citations_treatments_table')%></td>  <td class='detail' align='right'>5</td>
   <td class='comment detail'></td>
   </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'counties',schemas_path(:partial => 'counties_table')%></td>  <td class='detail' align='right'>7</td>
@@ -27,7 +27,13 @@
   <td class='comment detail'></td>
   </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'cultivars',schemas_path(:partial => 'cultivars_table')%></td>  <td class='detail' align='right'>8</td>
-  <td class='comment detail'>comment</td>
+  <td class='comment detail'></td>
+  </tr>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'cultivars_pfts',schemas_path(:partial => 'cultivars_pfts_table')%></td>  <td class='detail' align='right'>4</td>
+  <td class='comment detail'>This table tells which cultivars are members of which pfts.  For each row, the cultivar with id "cultivar_id" is a member of the pft with id "pft_id".</td>
+  </tr>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'current_posteriors',schemas_path(:partial => 'current_posteriors_table')%></td>  <td class='detail' align='right'>7</td>
+  <td class='comment detail'></td>
   </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'dbfiles',schemas_path(:partial => 'dbfiles_table')%></td>  <td class='detail' align='right'>11</td>
   <td class='comment detail'></td>
@@ -44,13 +50,13 @@
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'formats_variables',schemas_path(:partial => 'formats_variables_table')%></td>  <td class='detail' align='right'>9</td>
   <td class='comment detail'></td>
   </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'inputs',schemas_path(:partial => 'inputs_table')%></td>  <td class='detail' align='right'>14</td>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'inputs',schemas_path(:partial => 'inputs_table')%></td>  <td class='detail' align='right'>13</td>
   <td class='comment detail'></td>
   </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'inputs_runs',schemas_path(:partial => 'inputs_runs_table')%></td>  <td class='detail' align='right'>4</td>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'inputs_runs',schemas_path(:partial => 'inputs_runs_table')%></td>  <td class='detail' align='right'>5</td>
   <td class='comment detail'></td>
   </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'inputs_variables',schemas_path(:partial => 'inputs_variables_table')%></td>  <td class='detail' align='right'>4</td>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'inputs_variables',schemas_path(:partial => 'inputs_variables_table')%></td>  <td class='detail' align='right'>5</td>
   <td class='comment detail'></td>
   </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'likelihoods',schemas_path(:partial => 'likelihoods_table')%></td>  <td class='detail' align='right'>10</td>
@@ -65,7 +71,7 @@
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'managements',schemas_path(:partial => 'managements_table')%></td>  <td class='detail' align='right'>11</td>
   <td class='comment detail'></td>
   </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'managements_treatments',schemas_path(:partial => 'managements_treatments_table')%></td>  <td class='detail' align='right'>4</td>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'managements_treatments',schemas_path(:partial => 'managements_treatments_table')%></td>  <td class='detail' align='right'>5</td>
   <td class='comment detail'></td>
   </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'methods',schemas_path(:partial => 'methods_table')%></td>  <td class='detail' align='right'>6</td>
@@ -74,25 +80,37 @@
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'mimetypes',schemas_path(:partial => 'mimetypes_table')%></td>  <td class='detail' align='right'>2</td>
   <td class='comment detail'></td>
   </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'models',schemas_path(:partial => 'models_table')%></td>  <td class='detail' align='right'>8</td>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'models',schemas_path(:partial => 'models_table')%></td>  <td class='detail' align='right'>7</td>
   <td class='comment detail'></td>
   </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'pfts',schemas_path(:partial => 'pfts_table')%></td>  <td class='detail' align='right'>5</td>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'modeltypes',schemas_path(:partial => 'modeltypes_table')%></td>  <td class='detail' align='right'>5</td>
   <td class='comment detail'></td>
   </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'pfts_priors',schemas_path(:partial => 'pfts_priors_table')%></td>  <td class='detail' align='right'>4</td>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'modeltypes_formats',schemas_path(:partial => 'modeltypes_formats_table')%></td>  <td class='detail' align='right'>9</td>
   <td class='comment detail'></td>
   </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'pfts_species',schemas_path(:partial => 'pfts_species_table')%></td>  <td class='detail' align='right'>4</td>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'pfts',schemas_path(:partial => 'pfts_table')%></td>  <td class='detail' align='right'>8</td>
+  <td class='comment detail'></td>
+  </tr>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'pfts_priors',schemas_path(:partial => 'pfts_priors_table')%></td>  <td class='detail' align='right'>5</td>
+  <td class='comment detail'></td>
+  </tr>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'pfts_species',schemas_path(:partial => 'pfts_species_table')%></td>  <td class='detail' align='right'>5</td>
+  <td class='comment detail'>This table tells which species are members of which pfts.  For each row, the species with id "specie_id" is a member of the pft with id "pft_id".</td>
+  </tr>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'posterior_samples',schemas_path(:partial => 'posterior_samples_table')%></td>  <td class='detail' align='right'>7</td>
   <td class='comment detail'></td>
   </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'posteriors',schemas_path(:partial => 'posteriors_table')%></td>  <td class='detail' align='right'>5</td>
   <td class='comment detail'></td>
   </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'posteriors_runs',schemas_path(:partial => 'posteriors_runs_table')%></td>  <td class='detail' align='right'>4</td>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'posteriors_ensembles',schemas_path(:partial => 'posteriors_ensembles_table')%></td>  <td class='detail' align='right'>5</td>
   <td class='comment detail'></td>
   </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'priors',schemas_path(:partial => 'priors_table')%></td>  <td class='detail' align='right'>12</td>
+  <td class='comment detail'></td>
+  </tr>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'projects',schemas_path(:partial => 'projects_table')%></td>  <td class='detail' align='right'>7</td>
   <td class='comment detail'></td>
   </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'runs',schemas_path(:partial => 'runs_table')%></td>  <td class='detail' align='right'>16</td>
@@ -104,19 +122,13 @@
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'sessions',schemas_path(:partial => 'sessions_table')%></td>  <td class='detail' align='right'>5</td>
   <td class='comment detail'></td>
   </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'sites',schemas_path(:partial => 'sites_table')%></td>  <td class='detail' align='right'>22</td>
-  <td class='comment detail'></td>
-  </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'species',schemas_path(:partial => 'species_table')%></td>  <td class='detail' align='right'>88</td>
   <td class='comment detail'></td>
   </tr>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'trait_covariate_associations',schemas_path(:partial => 'trait_covariate_associations_table')%></td>  <td class='detail' align='right'>3</td>
+  <td class='comment detail'></td>
+  </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'traits',schemas_path(:partial => 'traits_table')%></td>  <td class='detail' align='right'>28</td>
-  <td class='comment detail'></td>
-  </tr>
- <tr class='view' valign='top'>  <td class='detail'><%=link_to 'traits_and_yields_view',schemas_path(:partial => 'traits_and_yields_view_table')%></td>  <td class='detail' align='right'>29</td>
-  <td class='comment detail'></td>
-  </tr>
- <tr class='view' valign='top'>  <td class='detail'><%=link_to 'traitsview',schemas_path(:partial => 'traitsview_table')%></td>  <td class='detail' align='right'>29</td>
   <td class='comment detail'></td>
   </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'treatments',schemas_path(:partial => 'treatments_table')%></td>  <td class='detail' align='right'>7</td>
@@ -125,16 +137,13 @@
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'users',schemas_path(:partial => 'users_table')%></td>  <td class='detail' align='right'>18</td>
   <td class='comment detail'></td>
   </tr>
- <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'variables',schemas_path(:partial => 'variables_table')%></td>  <td class='detail' align='right'>9</td>
+ <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'variables',schemas_path(:partial => 'variables_table')%></td>  <td class='detail' align='right'>13</td>
   <td class='comment detail'></td>
   </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'workflows',schemas_path(:partial => 'workflows_table')%></td>  <td class='detail' align='right'>13</td>
   <td class='comment detail'></td>
   </tr>
  <tr class='tbl' valign='top'>  <td class='detail'><%=link_to 'yields',schemas_path(:partial => 'yields_table')%></td>  <td class='detail' align='right'>19</td>
-  <td class='comment detail'></td>
-  </tr>
- <tr class='view' valign='top'>  <td class='detail'><%=link_to 'yieldsview',schemas_path(:partial => 'yieldsview_table')%></td>  <td class='detail' align='right'>29</td>
   <td class='comment detail'></td>
   </tr>
 </table>

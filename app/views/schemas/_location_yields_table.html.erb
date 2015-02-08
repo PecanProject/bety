@@ -2,7 +2,7 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>location_yields</span></span></td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>location_yields</span></span></td>
  </tr>
 </table>
 <div>
@@ -36,8 +36,8 @@
 <tbody valign='top'>
 <tr>
  <td class='primaryKey' title='Primary Key'>id</td>
- <td class='detail'>serial</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>bigserial</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='right'>nextval('location_yields_id_seq'::regclass)</td>
@@ -86,18 +86,18 @@
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>county_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
+ <td class='detail fkey'><%=link_to 'counties.id',schemas_path(:partial => '
+counties_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 </table>
 </div>
 <script>jQuery('.comment').hide()</script>
-<script>jQuery('.fkey').hide()</script>
 <div class='indent'>
 <b>Indexes:</b>
 <table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
@@ -142,4 +142,13 @@
  </tr>
 </table>
 </div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=location_yields_table" title="location_yields" alt="" coords="156,5,380,190">
+<area shape="rect" id="node2" href="schemas?partial=counties_table" title="counties" alt="" coords="6,127,111,331">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/location_yields.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
 </div>

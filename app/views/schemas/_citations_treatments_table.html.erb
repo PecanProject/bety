@@ -2,7 +2,7 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>citations_treatments</span></span></td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>citations_treatments</span></span></td>
  </tr>
 </table>
 <div>
@@ -36,22 +36,24 @@
 <tbody valign='top'>
 <tr>
  <td class='indexedColumn' title='Indexed'>citation_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
+ <td class='detail fkey'><%=link_to 'citations.id',schemas_path(:partial => '
+citations_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>treatment_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
+ <td class='detail fkey'><%=link_to 'treatments.id',schemas_path(:partial => '
+treatments_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 <tr>
@@ -74,10 +76,19 @@
  <td class='detail fkey'> </td>
  <td class='comment detail'></td>
 </tr>
+<tr>
+ <td class='detail'>id</td>
+ <td class='detail'>serial</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='right'>nextval('citations_treatments_id_seq'::regclass)</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
 </table>
 </div>
 <script>jQuery('.comment').hide()</script>
-<script>jQuery('.fkey').hide()</script>
 <div class='indent'>
 <b>Indexes:</b>
 <table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
@@ -98,4 +109,28 @@
  </tr>
 </table>
 </div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=citations_treatments_table" title="citations_treatments" alt="" coords="156,173,388,334">
+<area shape="rect" id="node2" href="schemas?partial=citations_table" title="citations" alt="" coords="6,5,111,353">
+<area shape="rect" id="node3" href="schemas?partial=treatments_table" title="treatments" alt="" coords="6,370,111,574">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/citations_treatments.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="122,293,227,641">
+<area shape="rect" id="node2" href="schemas?partial=users_table" title="users" alt="" coords="5,581,77,641">
+<area shape="rect" id="node3" href="schemas?partial=citations_sites_table" title="citations_sites" alt="" coords="273,455,397,515">
+<area shape="rect" id="node4" href="schemas?partial=citations_treatments_table" title="citations_treatments" alt="" coords="441,90,673,251">
+<area shape="rect" id="node5" href="schemas?partial=treatments_table" title="treatments" alt="" coords="282,119,387,323">
+<area shape="rect" id="node6" href="schemas?partial=managements_table" title="managements" alt="" coords="273,5,397,65">
+<area shape="rect" id="node7" href="schemas?partial=managements_treatments_table" title="managements_treatments" alt="" coords="457,7,658,67">
+<area shape="rect" id="node8" href="schemas?partial=methods_table" title="methods" alt="" coords="291,533,379,593">
+<area shape="rect" id="node9" href="schemas?partial=priors_table" title="priors" alt="" coords="299,341,371,401">
+<area shape="rect" id="node10" href="schemas?partial=yields_table" title="yields" alt="" coords="521,458,593,518">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/citations_treatments.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
 </div>

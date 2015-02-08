@@ -4,6 +4,14 @@
 <script type="text/javascript">jQuery(function(){jQuery(".dataTable").removeClass("dataTable").addClass("table table-striped table-bordered table-hover datatable dataTable");jQuery(".even").removeClass("even");jQuery(".odd").removeClass("odd")});</script>
 <div class='content' style='clear:both;'>
 <div class='container'>
+<div id="forward">
+  <%if (@partial!=nil && @partial!='index_table')%>
+    <%= link_to "<< Index", "schemas?partial=index_table"%>
+  <%end%>
+  <%if @partial!='relationships'%>
+    <%= link_to "Full Relationship >>", "schemas?partial=relationships",{:style=>'float:right'} %>
+  <%end%>
+</div>
 <%= render @partial %>
 </div>
 </div>
@@ -15,6 +23,16 @@
     jQuery('#realLargeImg').show();
   else 
     jQuery('#realCompactImg').show();       
+});
+jQuery(function($){
+  if($('#twoDegreesImg').size() > 0){
+    $('#showtwo').attr('checked','checked');
+    $('#twoDegreesImg').show();
+  }
+  else{
+    $('#showone').attr('checked','checked');
+    $('#oneDegreeImg').show();
+  }
 });
 jQuery(".showdiagram").click(function () {
   var showone = jQuery('#showone').attr('checked');

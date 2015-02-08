@@ -2,7 +2,7 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>citations_sites</span></span></td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>citations_sites</span></span></td>
  </tr>
 </table>
 <div>
@@ -36,18 +36,19 @@
 <tbody valign='top'>
 <tr>
  <td class='indexedColumn' title='Indexed'>citation_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
+ <td class='detail fkey'><%=link_to 'citations.id',schemas_path(:partial => '
+citations_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>site_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
@@ -74,10 +75,19 @@
  <td class='detail fkey'> </td>
  <td class='comment detail'></td>
 </tr>
+<tr>
+ <td class='detail'>id</td>
+ <td class='detail'>serial</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='right'>nextval('citations_sites_id_seq'::regclass)</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
 </table>
 </div>
 <script>jQuery('.comment').hide()</script>
-<script>jQuery('.fkey').hide()</script>
 <div class='indent'>
 <b>Indexes:</b>
 <table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
@@ -98,4 +108,25 @@
  </tr>
 </table>
 </div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=citations_sites_table" title="citations_sites" alt="" coords="156,5,380,166">
+<area shape="rect" id="node2" href="schemas?partial=citations_table" title="citations" alt="" coords="6,7,111,355">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/citations_sites.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="122,142,227,490">
+<area shape="rect" id="node2" href="schemas?partial=users_table" title="users" alt="" coords="5,430,77,490">
+<area shape="rect" id="node3" href="schemas?partial=citations_sites_table" title="citations_sites" alt="" coords="272,197,496,358">
+<area shape="rect" id="node4" href="schemas?partial=citations_treatments_table" title="citations_treatments" alt="" coords="303,375,465,435">
+<area shape="rect" id="node5" href="schemas?partial=managements_table" title="managements" alt="" coords="322,5,446,65">
+<area shape="rect" id="node6" href="schemas?partial=methods_table" title="methods" alt="" coords="340,119,428,179">
+<area shape="rect" id="node7" href="schemas?partial=priors_table" title="priors" alt="" coords="348,453,420,513">
+<area shape="rect" id="node8" href="schemas?partial=yields_table" title="yields" alt="" coords="540,119,612,179">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/citations_sites.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
 </div>

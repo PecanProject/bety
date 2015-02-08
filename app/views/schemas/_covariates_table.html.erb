@@ -2,7 +2,7 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>covariates</span></span></td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>covariates</span></span></td>
  </tr>
 </table>
 <div>
@@ -36,8 +36,8 @@
 <tbody valign='top'>
 <tr>
  <td class='primaryKey' title='Primary Key'>id</td>
- <td class='detail'>serial</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>bigserial</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='right'>nextval('covariates_id_seq'::regclass)</td>
@@ -46,8 +46,8 @@
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>trait_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
@@ -56,12 +56,13 @@
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>variable_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
+ <td class='detail fkey'><%=link_to 'variables.id',schemas_path(:partial => '
+variables_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 <tr>
@@ -126,7 +127,6 @@
 </tr>
 </table>
 </div>
-<script>jQuery('.fkey').hide()</script>
 <div class='indent'>
 <b>Indexes:</b>
 <table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
@@ -153,4 +153,26 @@
  </tr>
 </table>
 </div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=covariates_table" title="covariates" alt="" coords="183,5,407,262">
+<area shape="rect" id="node2" href="schemas?partial=variables_table" title="variables" alt="" coords="5,55,139,403">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/covariates.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=covariates_table" title="covariates" alt="" coords="183,5,407,262">
+<area shape="rect" id="node2" href="schemas?partial=variables_table" title="variables" alt="" coords="5,471,139,819">
+<area shape="rect" id="node3" href="schemas?partial=current_posteriors_table" title="current_posteriors" alt="" coords="451,282,600,342">
+<area shape="rect" id="node4" href="schemas?partial=posterior_samples_table" title="posterior_samples" alt="" coords="219,317,370,377">
+<area shape="rect" id="node5" href="schemas?partial=formats_variables_table" title="formats_variables" alt="" coords="221,394,368,454">
+<area shape="rect" id="node6" href="schemas?partial=inputs_variables_table" title="inputs_variables" alt="" coords="226,471,363,531">
+<area shape="rect" id="node7" href="schemas?partial=likelihoods_table" title="likelihoods" alt="" coords="245,549,345,609">
+<area shape="rect" id="node8" href="schemas?partial=priors_table" title="priors" alt="" coords="259,626,331,686">
+<area shape="rect" id="node9" href="schemas?partial=trait_covariate_associations_table" title="trait_covariate_associations" alt="" coords="189,703,401,763">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/covariates.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
 </div>

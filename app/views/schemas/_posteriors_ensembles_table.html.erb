@@ -1,0 +1,114 @@
+<div class='content' style='clear:both;'>
+<div class='container'>
+<table width='100%' border='0' cellpadding='0'>
+ <tr>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>posteriors_ensembles</span></span></td>
+ </tr>
+</table>
+<div>
+<span class='legend'>Legend:</span>
+<span class='legend primaryKey'>Primary key columns</span>
+<span class='legend indexedColumn'>Indexed columns</span>
+</div>
+<div class='sixteen colums'>
+<a name='columns'></a>
+<table id='columns' class='dataTable' border='1' rules='groups'>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup class='fkey'>
+<colgroup class='comment'>
+<thead align='left'>
+<tr>
+  <th>Column</th>
+  <th>Type</th>
+  <th>Size</th>
+  <th title='Are nulls allowed?'>Nulls</th>
+  <th title='Is column automatically updated?'>Auto</th>
+  <th title='Default value'>Default</th>
+  <th class='fkey' title='Columns in tables that are referenced by this column'><span class='notSortedByColumn fkey'>References</span></th>
+  <th title='Comments' class='comment'><span class='notSortedByColumn'>Comments</span></th>
+</tr>
+</thead>
+<tbody valign='top'>
+<tr>
+ <td class='detail'>posterior_id</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'posteriors.id',schemas_path(:partial => '
+posteriors_table')%> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>ensemble_id</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'ensembles.id',schemas_path(:partial => '
+ensembles_table')%> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>created_at</td>
+ <td class='detail'>timestamp</td>
+ <td class='detail' align='right'>29,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>updated_at</td>
+ <td class='detail'>timestamp</td>
+ <td class='detail' align='right'>29,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>id</td>
+ <td class='detail'>serial</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='right'>nextval('posteriors_ensembles_id_seq'::regclass)</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+</table>
+</div>
+<script>jQuery('.comment').hide()</script>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=posteriors_ensembles_table" title="posteriors_ensembles" alt="" coords="159,77,393,238">
+<area shape="rect" id="node2" href="schemas?partial=ensembles_table" title="ensembles" alt="" coords="6,178,114,358">
+<area shape="rect" id="node3" href="schemas?partial=posteriors_table" title="posteriors" alt="" coords="7,5,113,161">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/posteriors_ensembles.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=ensembles_table" title="ensembles" alt="" coords="146,5,254,185">
+<area shape="rect" id="node2" href="schemas?partial=workflows_table" title="workflows" alt="" coords="5,125,101,185">
+<area shape="rect" id="node3" href="schemas?partial=posterior_samples_table" title="posterior_samples" alt="" coords="341,322,491,382">
+<area shape="rect" id="node4" href="schemas?partial=pfts_table" title="pfts" alt="" coords="17,342,89,402">
+<area shape="rect" id="node5" href="schemas?partial=posteriors_table" title="posteriors" alt="" coords="147,202,253,358">
+<area shape="rect" id="node6" href="schemas?partial=formats_table" title="formats" alt="" coords="13,265,93,325">
+<area shape="rect" id="node7" href="schemas?partial=posteriors_ensembles_table" title="posteriors_ensembles" alt="" coords="299,103,533,265">
+<area shape="rect" id="node8" href="schemas?partial=runs_table" title="runs" alt="" coords="380,5,452,65">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/posteriors_ensembles.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
+</div>
