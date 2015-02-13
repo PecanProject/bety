@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION normalize_whitespace(
 DECLARE
   result text;
 BEGIN
-  SELECT REGEXP_REPLACE(TRIM(string), '\s+', ' ') INTO result;
+  SELECT TRIM(REGEXP_REPLACE(string, '\s+', ' ', 'g')) INTO result;
   RETURN result;
 END;
 $$ LANGUAGE plpgsql;
