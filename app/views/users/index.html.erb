@@ -11,8 +11,9 @@
       </div>
       <br />
       <div id="simple_search_table" class="simple_search_table_1"><%= render 'index_table' %></div>
-
+      <% if current_user.page_access_level ==1 %>
+            <div><%= link_to 'Create Apikeys','users/create_apikeys' , :class => "button button-primary"%></div>
+      <% end %>
 		</div> <!-- class="sixteen columns" -->
 	</div> <!-- container --> 
 </div>
-
