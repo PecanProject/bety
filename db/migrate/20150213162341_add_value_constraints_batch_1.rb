@@ -64,6 +64,8 @@ END;
 $body$ LANGUAGE plpgsql;
 
 
+/* CITATIONS */
+
 ALTER TABLE citations ALTER COLUMN author SET NOT NULL;
 ALTER TABLE citations ADD CHECK (is_whitespace_normalized(author));
 ALTER TABLE citations ALTER COLUMN year SET NOT NULL;
@@ -98,14 +100,72 @@ ALTER TABLE citations ALTER COLUMN pg SET NOT NULL;
 -- fix most values:
 -- UPDATE citations SET pg = regexp_replace(normalize_whitespace(pg), '-+', E'\u2013') WHERE pg !~ '^([1-9]\d*(\u2013[1-9]\d*)?)?$';
 ALTER TABLE citations ADD CHECK (pg ~ '^([1-9]\d*(\u2013[1-9]\d*)?)?$');
-ALTER TABLE citations ADD CHECK (url ~ '^(|(ht|f)tp(s?)\:\/\/(([a-zA-Z0-9\-\._]+(\.[a-zA-Z0-9\-\._]+)+)|localhost)'
-                                       '(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#_]*)?'
-                                       '([\d\w\.\/\%\+\-\=\&amp;\?\:\\\&quot;\'\,\|\~\;]*))$');
-ALTER TABLE citations ADD CHECK (pdf ~ '^(|(ht|f)tp(s?)\:\/\/(([a-zA-Z0-9\-\._]+(\.[a-zA-Z0-9\-\._]+)+)|localhost)'
-                                       '(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#_]*)?'
-                                       '([\d\w\.\/\%\+\-\=\&amp;\?\:\\\&quot;\'\,\|\~\;]*))$');
+ALTER TABLE citations ADD CHECK (is_url_or_empty(url));
+ALTER TABLE citations ADD CHECK (is_url_or_empty(pdf));
 ALTER TABLE citations ADD CHECK (doi ~ '^(|10\.\d+(\.\d+)?/.+)$');
 */
+
+
+
+/* COVARIATES */
+
+-- decide whether to use >= 1 or >= 2
+/* ALTER TABLE covariates ADD CHECK (n >= 2); */
+
+-- can do this even if we don't use it right away:
+CREATE DOMAIN statnames AS TEXT CHECK (VALUE IN ('SD', 'SE', 'MSE', '95%CI', 'LSD', 'MSD', '')) NOT NULL;
+-- see violations of NOT NULL part:
+-- SELECT * FROM covariates WHERE statname IS NULL;
+-- clean up NULLs in statname:
+-- UPDATE covariates SET statname = '' WHERE statname IS NULL;
+/* ALTER TABLE covariates ALTER COLUMN statname SET DATA TYPE statnames; */
+-- see stat-statname consistency violations:
+-- SELECT * FROM  covariates WHERE NOT (statname = '' AND stat IS NULL OR statname != '' AND stat IS NOT NULL);
+-- possible consistency constraint:
+/* ALTER TABLE covariates ADD CHECK (statname = '' AND stat IS NULL OR statname != '' AND stat IS NOT NULL); */
+-- other consistency constraints to be decided
+
+
+/* CULTIVARS */
+
+ALTER TABLE cultivars ADD CHECK (is_whitespace_normalized(name));
+-- decide about ecotype constraint
+ALTER TABLE cultivars ALTER COLUMN notes SET NOT NULL;
+
+
+/* DBFILES */
+
+ALTER TABLE dbfiles ADD CHECK (container_type IN ('Model','Posterior','Input'));
+ALTER TABLE dbfiles ADD CHECK (md5 ~ '^([\da-z]{32})?$');
+-- decide on other constraints
+
+
+/* ENSEMBLES */
+
+ALTER TABLE ensembles ALTER COLUMN notes SET NOT NULL;
+ALTER TABLE ensembles ALTER COLUMN runtype SET NOT NULL;
+
+/* ENTITIES */
+
+ALTER TABLE entities ADD CHECK (is_whitespace_normalized(name));
+ALTER TABLE entities ALTER COLUMN notes SET NOT NULL;
+
+
+/* FORMATS */
+
+ALTER TABLE formats ALTER COLUMN notes SET NOT NULL;
+ALTER TABLE formats ALTER COLUMN name SET NOT NULL;
+ALTER TABLE formats ADD CHECK (is_whitespace_normalized(name));
+-- decide on constraints for dataformat, header, and skip
+
+/* FORMATS_VARIABLES */
+
+-- decide on constraints
+
+/* INPUTS */
+
+
+
 
 
 
