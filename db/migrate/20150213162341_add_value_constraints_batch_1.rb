@@ -129,7 +129,8 @@ CREATE DOMAIN statnames AS TEXT CHECK (VALUE IN ('SD', 'SE', 'MSE', '95%CI', 'LS
 /* CULTIVARS */
 
 ALTER TABLE cultivars ADD CHECK (is_whitespace_normalized(name));
--- decide about ecotype constraint
+ALTER TABLE cultivars ALTER COLUMN ecotype SET NOT NULL;
+-- decide about other ecotype constraints
 ALTER TABLE cultivars ALTER COLUMN notes SET NOT NULL;
 
 
@@ -147,6 +148,7 @@ ALTER TABLE ensembles ALTER COLUMN runtype SET NOT NULL;
 
 /* ENTITIES */
 
+ALTER TABLE entities ALTER COLUMN name SET NOT NULL;
 ALTER TABLE entities ADD CHECK (is_whitespace_normalized(name));
 ALTER TABLE entities ALTER COLUMN notes SET NOT NULL;
 
@@ -164,6 +166,28 @@ ALTER TABLE formats ADD CHECK (is_whitespace_normalized(name));
 
 /* INPUTS */
 
+ALTER TABLE inputs ALTER COLUMN notes SET NOT NULL;
+ALTER TABLE inputs ALTER COLUMN name SET NOT NULL;
+ALTER TABLE inputs ADD CONSTRAINT CHECK (is_whitespace_normalized(name));
+-- decide on start_time constraints
+-- decide on end_time constraints
+-- see violators of potential not null constraints:
+-- SELECT start_date, end_date FROM inputs WHERE start_date IS NULL OR end_date IS NULL;
+/* ALTER TABLE inputs ALTER COLUMN start_date SET NOT NULL; */
+/* ALTER TABLE inputs ALTER COLUMN end_date SET NOT NULL; */
+-- see violators of CHECK (start_date < end_date):
+-- SELECT start_date, end_date FROM inputs WHERE start_date >= end_date;
+/* ALTER TABLE inputs ADD CHECK (start_date < end_date);
+-- see future dates:
+-- SELECT start_date, end_date FROM inputs WHERE start_date > NOW() OR end_date > NOW();
+/* ALTER TABLE inputs CHECK (end_date < NOW()); */
+-- see access_level values currently used:
+-- SELECT COUNT(*), access_level FROM inputs GROUP BY access_level ORDER BY access_level;
+-- can do this even if we don't use it right away:
+CREATE DOMAIN level_of_access AS INTEGER CHECK (VALUE BETWEEN 1 AND 4) NOT NULL;
+/* ALTER TABLE inputs ALTER COLUMN access_level SET DATA TYPE level_of_access; */
+-- see null raw values:
+-- SELECT id, name FROM inputs WHERE raw IS NULL;
 
 
 
