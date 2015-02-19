@@ -2,8 +2,7 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>cultivars</span></span><div style='padding: 0px 4px;'>comment</div><p>
-</td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>cultivars</span></span></td>
  </tr>
 </table>
 <div>
@@ -37,8 +36,8 @@
 <tbody valign='top'>
 <tr>
  <td class='primaryKey' title='Primary Key'>id</td>
- <td class='detail'>serial</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>bigserial</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='right'>nextval('cultivars_id_seq'::regclass)</td>
@@ -47,12 +46,13 @@
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>specie_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
+ <td class='detail fkey'><%=link_to 'species.id',schemas_path(:partial => '
+species_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 <tr>
@@ -117,7 +117,6 @@
 </tr>
 </table>
 </div>
-<script>jQuery('.fkey').hide()</script>
 <div class='indent'>
 <b>Indexes:</b>
 <table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
@@ -144,4 +143,29 @@
  </tr>
 </table>
 </div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=cultivars_table" title="cultivars" alt="" coords="292,147,527,381">
+<area shape="rect" id="node2" href="schemas?partial=species_table" title="species" alt="" coords="6,126,247,2274">
+<area shape="rect" id="node3" href="schemas?partial=cultivars_pfts_table" title="cultivars_pfts" alt="" coords="571,514,688,646">
+<area shape="rect" id="node4" href="schemas?partial=yields_table" title="yields" alt="" coords="572,5,687,497">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/cultivars.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="200,293,285,353">
+<area shape="rect" id="node2" href="schemas?partial=users_table" title="users" alt="" coords="5,258,77,318">
+<area shape="rect" id="node3" href="schemas?partial=cultivars_table" title="cultivars" alt="" coords="408,370,643,603">
+<area shape="rect" id="node4" href="schemas?partial=species_table" title="species" alt="" coords="122,397,363,2545">
+<area shape="rect" id="node5" href="schemas?partial=cultivars_pfts_table" title="cultivars_pfts" alt="" coords="687,515,804,647">
+<area shape="rect" id="node6" href="schemas?partial=pfts_table" title="pfts" alt="" coords="489,621,561,681">
+<area shape="rect" id="node7" href="schemas?partial=methods_table" title="methods" alt="" coords="481,293,569,353">
+<area shape="rect" id="node8" href="schemas?partial=pfts_species_table" title="pfts_species" alt="" coords="689,665,802,725">
+<area shape="rect" id="node9" href="schemas?partial=yields_table" title="yields" alt="" coords="688,6,803,498">
+<area shape="rect" id="node10" href="schemas?partial=treatments_table" title="treatments" alt="" coords="475,149,575,209">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/cultivars.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
 </div>

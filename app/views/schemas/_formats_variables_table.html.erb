@@ -2,7 +2,7 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>formats_variables</span></span></td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>formats_variables</span></span></td>
  </tr>
 </table>
 <div>
@@ -36,8 +36,8 @@
 <tbody valign='top'>
 <tr>
  <td class='primaryKey' title='Primary Key'>id</td>
- <td class='detail'>serial</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>bigserial</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='right'>nextval('formats_variables_id_seq'::regclass)</td>
@@ -46,8 +46,8 @@
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>format_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
@@ -57,8 +57,8 @@ formats_table')%> </td>
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>variable_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
@@ -159,19 +159,25 @@ variables_table')%> </td>
 <label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
 <table width='100%' border='0'><tr><td class='container'>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="schemas?partial=formats_variables_table" title="formats_variables" alt="" coords="159,95,409,339">
-<area shape="rect" id="node3" href="schemas?partial=formats_table" title="formats" alt="" coords="7,5,113,243">
-<area shape="rect" id="node5" href="schemas?partial=variables_table" title="variables" alt="" coords="7,259,113,498">
+<area shape="rect" id="node1" href="schemas?partial=formats_variables_table" title="formats_variables" alt="" coords="183,101,438,358">
+<area shape="rect" id="node2" href="schemas?partial=formats_table" title="formats" alt="" coords="19,5,125,257">
+<area shape="rect" id="node3" href="schemas?partial=variables_table" title="variables" alt="" coords="5,274,139,622">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='images/formats_variables.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="schemas?partial=formats_variables_table" title="formats_variables" alt="" coords="312,5,563,249">
-<area shape="rect" id="node3" href="schemas?partial=formats_table" title="formats" alt="" coords="7,330,113,569">
-<area shape="rect" id="node5" href="schemas?partial=variables_table" title="variables" alt="" coords="160,74,267,313">
-<area shape="rect" id="node6" href="schemas?partial=inputs_table" title="inputs" alt="" coords="177,402,249,459">
-<area shape="rect" id="node8" href="schemas?partial=inputs_variables_table" title="inputs_variables" alt="" coords="371,275,504,333">
-<area shape="rect" id="node11" href="schemas?partial=likelihoods_table" title="likelihoods" alt="" coords="389,370,485,427">
-<area shape="rect" id="node14" href="schemas?partial=posteriors_table" title="posteriors" alt="" coords="165,329,261,386">
+<area shape="rect" id="node1" href="schemas?partial=covariates_table" title="covariates" alt="" coords="444,279,543,339">
+<area shape="rect" id="node2" href="schemas?partial=variables_table" title="variables" alt="" coords="172,323,305,671">
+<area shape="rect" id="node3" href="schemas?partial=current_posteriors_table" title="current_posteriors" alt="" coords="665,514,815,574">
+<area shape="rect" id="node4" href="schemas?partial=posterior_samples_table" title="posterior_samples" alt="" coords="418,703,569,763">
+<area shape="rect" id="node11" href="schemas?partial=posteriors_table" title="posteriors" alt="" coords="191,843,287,903">
+<area shape="rect" id="node5" href="schemas?partial=formats_variables_table" title="formats_variables" alt="" coords="366,5,621,262">
+<area shape="rect" id="node6" href="schemas?partial=formats_table" title="formats" alt="" coords="6,727,111,979">
+<area shape="rect" id="node7" href="schemas?partial=inputs_table" title="inputs" alt="" coords="203,689,275,749">
+<area shape="rect" id="node8" href="schemas?partial=inputs_variables_table" title="inputs_variables" alt="" coords="425,549,562,609">
+<area shape="rect" id="node9" href="schemas?partial=likelihoods_table" title="likelihoods" alt="" coords="443,626,543,686">
+<area shape="rect" id="node10" href="schemas?partial=modeltypes_formats_table" title="modeltypes_formats" alt="" coords="157,766,321,826">
+<area shape="rect" id="node12" href="schemas?partial=priors_table" title="priors" alt="" coords="457,394,529,454">
+<area shape="rect" id="node13" href="schemas?partial=trait_covariate_associations_table" title="trait_covariate_associations" alt="" coords="387,471,599,531">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='images/formats_variables.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>

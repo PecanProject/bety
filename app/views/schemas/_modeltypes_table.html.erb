@@ -1,0 +1,151 @@
+<div class='content' style='clear:both;'>
+<div class='container'>
+<table width='100%' border='0' cellpadding='0'>
+ <tr>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>modeltypes</span></span></td>
+ </tr>
+</table>
+<div>
+<span class='legend'>Legend:</span>
+<span class='legend primaryKey'>Primary key columns</span>
+<span class='legend indexedColumn'>Indexed columns</span>
+</div>
+<div class='sixteen colums'>
+<a name='columns'></a>
+<table id='columns' class='dataTable' border='1' rules='groups'>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup class='fkey'>
+<colgroup class='comment'>
+<thead align='left'>
+<tr>
+  <th>Column</th>
+  <th>Type</th>
+  <th>Size</th>
+  <th title='Are nulls allowed?'>Nulls</th>
+  <th title='Is column automatically updated?'>Auto</th>
+  <th title='Default value'>Default</th>
+  <th class='fkey' title='Columns in tables that are referenced by this column'><span class='notSortedByColumn fkey'>References</span></th>
+  <th title='Comments' class='comment'><span class='notSortedByColumn'>Comments</span></th>
+</tr>
+</thead>
+<tbody valign='top'>
+<tr>
+ <td class='primaryKey' title='Primary Key'>id</td>
+ <td class='detail'>bigserial</td>
+ <td class='detail' align='right'>19</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='right'>nextval('modeltypes_id_seq'::regclass)</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='indexedColumn' title='Indexed'>name</td>
+ <td class='detail'>varchar</td>
+ <td class='detail' align='right'>255</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail'></td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>user_id</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'users.id',schemas_path(:partial => '
+users_table')%> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>created_at</td>
+ <td class='detail'>timestamp</td>
+ <td class='detail' align='right'>29,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>updated_at</td>
+ <td class='detail'>timestamp</td>
+ <td class='detail' align='right'>29,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+</table>
+</div>
+<script>jQuery('.comment').hide()</script>
+<div class='indent'>
+<b>Indexes:</b>
+<table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
+<thead>
+ <tr>
+  <th>Column(s)</th>
+  <th>Type</th>
+  <th>Sort</th>
+  <th class='constraint' style='text-align:left;'>Constraint Name</th>
+ </tr>
+</thead>
+<tbody>
+ <tr>
+  <td class='primaryKey'>id</td>
+  <td class='detail'>Primary key</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>modeltypes_pkey</td>
+ </tr>
+ <tr>
+  <td class='indexedColumn'>name</td>
+  <td class='detail'>Must be unique</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>index_modeltypes_on_name</td>
+ </tr>
+</table>
+</div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=models_table" title="models" alt="" coords="559,5,678,209">
+<area shape="rect" id="node2" href="schemas?partial=modeltypes_table" title="modeltypes" alt="" coords="268,430,492,591">
+<area shape="rect" id="node3" href="schemas?partial=users_table" title="users" alt="" coords="5,538,224,1006">
+<area shape="rect" id="node4" href="schemas?partial=modeltypes_formats_table" title="modeltypes_formats" alt="" coords="537,471,701,723">
+<area shape="rect" id="node5" href="schemas?partial=pfts_table" title="pfts" alt="" coords="559,226,678,454">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/modeltypes.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="337,79,423,139">
+<area shape="rect" id="node2" href="schemas?partial=users_table" title="users" alt="" coords="5,195,224,663">
+<area shape="rect" id="node3" href="schemas?partial=cultivars_pfts_table" title="cultivars_pfts" alt="" coords="745,523,863,583">
+<area shape="rect" id="node4" href="schemas?partial=pfts_table" title="pfts" alt="" coords="559,545,678,773">
+<area shape="rect" id="node12" href="schemas?partial=modeltypes_table" title="modeltypes" alt="" coords="268,582,492,743">
+<area shape="rect" id="node5" href="schemas?partial=current_posteriors_table" title="current_posteriors" alt="" coords="1103,582,1252,642">
+<area shape="rect" id="node6" href="schemas?partial=posterior_samples_table" title="posterior_samples" alt="" coords="907,559,1058,619">
+<area shape="rect" id="node15" href="schemas?partial=posteriors_table" title="posteriors" alt="" coords="756,369,852,429">
+<area shape="rect" id="node7" href="schemas?partial=dbfiles_table" title="dbfiles" alt="" coords="343,230,417,290">
+<area shape="rect" id="node8" href="schemas?partial=inputs_table" title="inputs" alt="" coords="583,161,655,221">
+<area shape="rect" id="node9" href="schemas?partial=formats_table" title="formats" alt="" coords="340,307,420,367">
+<area shape="rect" id="node10" href="schemas?partial=managements_table" title="managements" alt="" coords="557,6,681,66">
+<area shape="rect" id="node11" href="schemas?partial=models_table" title="models" alt="" coords="559,790,678,994">
+<area shape="rect" id="node13" href="schemas?partial=modeltypes_formats_table" title="modeltypes_formats" alt="" coords="537,275,701,527">
+<area shape="rect" id="node14" href="schemas?partial=pfts_species_table" title="pfts_species" alt="" coords="747,446,861,506">
+<area shape="rect" id="node16" href="schemas?partial=runs_table" title="runs" alt="" coords="768,751,840,811">
+<area shape="rect" id="node17" href="schemas?partial=workflows_table" title="workflows" alt="" coords="756,829,852,889">
+<area shape="rect" id="node18" href="schemas?partial=yields_table" title="yields" alt="" coords="583,83,655,143">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/modeltypes.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
+</div>

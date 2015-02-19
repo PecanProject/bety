@@ -2,7 +2,7 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>inputs_runs</span></span></td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>inputs_runs</span></span></td>
  </tr>
 </table>
 <div>
@@ -36,8 +36,8 @@
 <tbody valign='top'>
 <tr>
  <td class='indexedColumn' title='Indexed'>input_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
@@ -47,8 +47,8 @@ inputs_table')%> </td>
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>run_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
@@ -73,6 +73,16 @@ runs_table')%> </td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>id</td>
+ <td class='detail'>serial</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='right'>nextval('inputs_runs_id_seq'::regclass)</td>
  <td class='detail fkey'> </td>
  <td class='comment detail'></td>
 </tr>
@@ -103,22 +113,21 @@ runs_table')%> </td>
 <label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
 <table width='100%' border='0'><tr><td class='container'>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="schemas?partial=inputs_runs_table" title="inputs_runs" alt="" coords="176,176,397,307">
-<area shape="rect" id="node3" href="schemas?partial=inputs_table" title="inputs" alt="" coords="12,5,124,357">
-<area shape="rect" id="node5" href="schemas?partial=runs_table" title="runs" alt="" coords="7,375,129,772">
+<area shape="rect" id="node1" href="schemas?partial=inputs_runs_table" title="inputs_runs" alt="" coords="175,173,399,334">
+<area shape="rect" id="node2" href="schemas?partial=inputs_table" title="inputs" alt="" coords="11,5,125,353">
+<area shape="rect" id="node3" href="schemas?partial=runs_table" title="runs" alt="" coords="6,370,130,790">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='images/inputs_runs.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="schemas?partial=inputs_table" title="inputs" alt="" coords="160,7,272,359">
-<area shape="rect" id="node3" href="schemas?partial=formats_table" title="formats" alt="" coords="17,278,97,335">
-<area shape="rect" id="node5" href="schemas?partial=sites_table" title="sites" alt="" coords="21,117,93,174">
-<area shape="rect" id="node6" href="schemas?partial=inputs_runs_table" title="inputs_runs" alt="" coords="324,97,545,228">
-<area shape="rect" id="node9" href="schemas?partial=runs_table" title="runs" alt="" coords="155,376,277,773">
-<area shape="rect" id="node18" href="schemas?partial=ensembles_table" title="ensembles" alt="" coords="7,670,108,727">
-<area shape="rect" id="node20" href="schemas?partial=models_table" title="models" alt="" coords="17,397,97,454">
-<area shape="rect" id="node10" href="schemas?partial=inputs_variables_table" title="inputs_variables" alt="" coords="368,5,501,62">
-<area shape="rect" id="node12" href="schemas?partial=likelihoods_table" title="likelihoods" alt="" coords="387,282,483,339">
-<area shape="rect" id="node15" href="schemas?partial=posteriors_runs_table" title="posteriors_runs" alt="" coords="368,374,501,431">
+<area shape="rect" id="node1" href="schemas?partial=inputs_table" title="inputs" alt="" coords="159,5,273,353">
+<area shape="rect" id="node2" href="schemas?partial=formats_table" title="formats" alt="" coords="17,295,97,355">
+<area shape="rect" id="node3" href="schemas?partial=users_table" title="users" alt="" coords="21,218,93,278">
+<area shape="rect" id="node4" href="schemas?partial=inputs_runs_table" title="inputs_runs" alt="" coords="323,298,547,459">
+<area shape="rect" id="node5" href="schemas?partial=runs_table" title="runs" alt="" coords="154,370,278,790">
+<area shape="rect" id="node8" href="schemas?partial=ensembles_table" title="ensembles" alt="" coords="6,682,109,742">
+<area shape="rect" id="node9" href="schemas?partial=models_table" title="models" alt="" coords="18,394,97,454">
+<area shape="rect" id="node6" href="schemas?partial=inputs_variables_table" title="inputs_variables" alt="" coords="366,5,503,65">
+<area shape="rect" id="node7" href="schemas?partial=likelihoods_table" title="likelihoods" alt="" coords="385,129,485,189">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='images/inputs_runs.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>

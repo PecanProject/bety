@@ -2,7 +2,7 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>managements</span></span></td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>managements</span></span></td>
  </tr>
 </table>
 <div>
@@ -36,8 +36,8 @@
 <tbody valign='top'>
 <tr>
  <td class='primaryKey' title='Primary Key'>id</td>
- <td class='detail'>serial</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>bigserial</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='right'>nextval('managements_id_seq'::regclass)</td>
@@ -46,12 +46,13 @@
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>citation_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
+ <td class='detail fkey'><%=link_to 'citations.id',schemas_path(:partial => '
+citations_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 <tr>
@@ -136,17 +137,17 @@
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>user_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
+ <td class='detail fkey'><%=link_to 'users.id',schemas_path(:partial => '
+users_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 </table>
 </div>
-<script>jQuery('.fkey').hide()</script>
 <div class='indent'>
 <b>Indexes:</b>
 <table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
@@ -179,4 +180,33 @@
  </tr>
 </table>
 </div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="269,5,374,353">
+<area shape="rect" id="node2" href="schemas?partial=users_table" title="users" alt="" coords="5,315,224,783">
+<area shape="rect" id="node3" href="schemas?partial=managements_table" title="managements" alt="" coords="419,37,653,342">
+<area shape="rect" id="node4" href="schemas?partial=managements_treatments_table" title="managements_treatments" alt="" coords="698,15,899,171">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/managements.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="269,377,374,725">
+<area shape="rect" id="node2" href="schemas?partial=users_table" title="users" alt="" coords="5,486,224,954">
+<area shape="rect" id="node3" href="schemas?partial=citations_sites_table" title="citations_sites" alt="" coords="474,479,598,539">
+<area shape="rect" id="node4" href="schemas?partial=citations_treatments_table" title="citations_treatments" alt="" coords="717,330,880,390">
+<area shape="rect" id="node5" href="schemas?partial=treatments_table" title="treatments" alt="" coords="486,365,586,425">
+<area shape="rect" id="node6" href="schemas?partial=dbfiles_table" title="dbfiles" alt="" coords="285,185,358,245">
+<area shape="rect" id="node7" href="schemas?partial=inputs_table" title="inputs" alt="" coords="285,262,357,322">
+<area shape="rect" id="node8" href="schemas?partial=managements_table" title="managements" alt="" coords="419,5,653,310">
+<area shape="rect" id="node9" href="schemas?partial=managements_treatments_table" title="managements_treatments" alt="" coords="698,53,899,209">
+<area shape="rect" id="node10" href="schemas?partial=methods_table" title="methods" alt="" coords="492,634,580,694">
+<area shape="rect" id="node11" href="schemas?partial=modeltypes_table" title="modeltypes" alt="" coords="268,779,375,839">
+<area shape="rect" id="node12" href="schemas?partial=modeltypes_formats_table" title="modeltypes_formats" alt="" coords="454,802,618,862">
+<area shape="rect" id="node13" href="schemas?partial=priors_table" title="priors" alt="" coords="500,557,572,617">
+<area shape="rect" id="node14" href="schemas?partial=yields_table" title="yields" alt="" coords="763,522,835,582">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/managements.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
 </div>

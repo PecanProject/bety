@@ -2,7 +2,7 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>models</span></span></td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>models</span></span></td>
  </tr>
 </table>
 <div>
@@ -36,8 +36,8 @@
 <tbody valign='top'>
 <tr>
  <td class='primaryKey' title='Primary Key'>id</td>
- <td class='detail'>serial</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>bigserial</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='right'>nextval('models_id_seq'::regclass)</td>
@@ -46,16 +46,6 @@
 </tr>
 <tr>
  <td class='detail'>model_name</td>
- <td class='detail'>varchar</td>
- <td class='detail' align='right'>255</td>
- <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
- <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
- <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
- <td class='comment detail'></td>
-</tr>
-<tr>
- <td class='detail'>model_path</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>255</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
@@ -76,8 +66,8 @@
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>parent_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
@@ -106,13 +96,14 @@ models_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 <tr>
- <td class='detail'>model_type</td>
- <td class='detail'>varchar</td>
- <td class='detail' align='right'>255</td>
- <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail'>modeltype_id</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
- <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail'></td>
+ <td class='detail fkey'><%=link_to 'modeltypes.id',schemas_path(:partial => '
+modeltypes_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 </table>
@@ -148,20 +139,23 @@ models_table')%> </td>
 <label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
 <table width='100%' border='0'><tr><td class='container'>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="schemas?partial=models_table" title="models" alt="" coords="26,301,255,523">
-<area shape="rect" id="node3" href="schemas?partial=runs_table" title="runs" alt="" coords="302,5,425,403">
-<area shape="rect" id="node5" href="schemas?partial=workflows_table" title="workflows" alt="" coords="302,419,425,749">
+<area shape="rect" id="node1" href="schemas?partial=models_table" title="models" alt="" coords="156,317,393,526">
+<area shape="rect" id="node2" href="schemas?partial=modeltypes_table" title="modeltypes" alt="" coords="5,463,112,619">
+<area shape="rect" id="node3" href="schemas?partial=runs_table" title="runs" alt="" coords="439,5,563,425">
+<area shape="rect" id="node4" href="schemas?partial=workflows_table" title="workflows" alt="" coords="438,442,565,790">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='images/models.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="schemas?partial=ensembles_table" title="ensembles" alt="" coords="471,289,573,346">
-<area shape="rect" id="node3" href="schemas?partial=workflows_table" title="workflows" alt="" coords="302,205,425,534">
-<area shape="rect" id="node9" href="schemas?partial=models_table" title="models" alt="" coords="26,331,255,552">
-<area shape="rect" id="node16" href="schemas?partial=sites_table" title="sites" alt="" coords="105,201,177,258">
-<area shape="rect" id="node4" href="schemas?partial=inputs_runs_table" title="inputs_runs" alt="" coords="802,5,909,62">
-<area shape="rect" id="node6" href="schemas?partial=runs_table" title="runs" alt="" coords="619,80,742,477">
-<area shape="rect" id="node7" href="schemas?partial=likelihoods_table" title="likelihoods" alt="" coords="807,78,903,135">
-<area shape="rect" id="node11" href="schemas?partial=posteriors_runs_table" title="posteriors_runs" alt="" coords="789,151,922,209">
+<area shape="rect" id="node1" href="schemas?partial=ensembles_table" title="ensembles" alt="" coords="726,301,829,361">
+<area shape="rect" id="node2" href="schemas?partial=workflows_table" title="workflows" alt="" coords="554,273,681,621">
+<area shape="rect" id="node6" href="schemas?partial=models_table" title="models" alt="" coords="272,306,509,515">
+<area shape="rect" id="node3" href="schemas?partial=inputs_runs_table" title="inputs_runs" alt="" coords="1043,5,1149,65">
+<area shape="rect" id="node4" href="schemas?partial=runs_table" title="runs" alt="" coords="874,43,998,463">
+<area shape="rect" id="node5" href="schemas?partial=likelihoods_table" title="likelihoods" alt="" coords="1046,82,1146,142">
+<area shape="rect" id="node7" href="schemas?partial=modeltypes_table" title="modeltypes" alt="" coords="121,437,228,593">
+<area shape="rect" id="node8" href="schemas?partial=users_table" title="users" alt="" coords="5,531,77,591">
+<area shape="rect" id="node9" href="schemas?partial=modeltypes_formats_table" title="modeltypes_formats" alt="" coords="309,562,473,622">
+<area shape="rect" id="node10" href="schemas?partial=pfts_table" title="pfts" alt="" coords="355,205,427,265">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='images/models.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>

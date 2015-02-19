@@ -2,8 +2,7 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>citations</span></span><div style='padding: 0px 4px;'>comment</div><p>
-</td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>citations</span></span></td>
  </tr>
 </table>
 <div>
@@ -37,13 +36,13 @@
 <tbody valign='top'>
 <tr>
  <td class='primaryKey' title='Primary Key'>id</td>
- <td class='detail'>serial</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>bigserial</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='right'>nextval('citations_id_seq'::regclass)</td>
  <td class='detail fkey'> </td>
- <td class='comment detail'>id</td>
+ <td class='comment detail'></td>
 </tr>
 <tr>
  <td class='detail'>author</td>
@@ -157,8 +156,8 @@
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>user_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
  <td class='detail' align='right'>null</td>
@@ -198,21 +197,34 @@ users_table')%> </td>
 <label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
 <table width='100%' border='0'><tr><td class='container'>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="267,349,488,683">
-<area shape="rect" id="node3" href="schemas?partial=users_table" title="users" alt="" coords="7,647,220,1089">
-<area shape="rect" id="node4" href="schemas?partial=priors_table" title="priors" alt="" coords="537,5,644,312">
-<area shape="rect" id="node6" href="schemas?partial=yields_table" title="yields" alt="" coords="535,329,647,794">
+<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="268,554,492,907">
+<area shape="rect" id="node2" href="schemas?partial=users_table" title="users" alt="" coords="5,1167,224,1635">
+<area shape="rect" id="node3" href="schemas?partial=citations_sites_table" title="citations_sites" alt="" coords="555,383,679,539">
+<area shape="rect" id="node4" href="schemas?partial=citations_treatments_table" title="citations_treatments" alt="" coords="536,557,699,713">
+<area shape="rect" id="node5" href="schemas?partial=managements_table" title="managements" alt="" coords="555,927,679,1227">
+<area shape="rect" id="node6" href="schemas?partial=methods_table" title="methods" alt="" coords="565,730,670,910">
+<area shape="rect" id="node7" href="schemas?partial=priors_table" title="priors" alt="" coords="565,5,670,329">
+<area shape="rect" id="node8" href="schemas?partial=yields_table" title="yields" alt="" coords="743,298,857,790">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='images/citations.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="267,78,488,413">
-<area shape="rect" id="node3" href="schemas?partial=users_table" title="users" alt="" coords="7,181,220,624">
-<area shape="rect" id="node4" href="schemas?partial=dbfiles_table" title="dbfiles" alt="" coords="340,5,415,62">
-<area shape="rect" id="node7" href="schemas?partial=priors_table" title="priors" alt="" coords="537,39,644,345">
-<area shape="rect" id="node9" href="schemas?partial=yields_table" title="yields" alt="" coords="535,362,647,827">
-<area shape="rect" id="node12" href="schemas?partial=methods_table" title="methods" alt="" coords="335,770,420,827">
-<area shape="rect" id="node14" href="schemas?partial=species_table" title="species" alt="" coords="337,429,417,486">
-<area shape="rect" id="node16" href="schemas?partial=treatments_table" title="treatments" alt="" coords="327,502,428,559">
+<area shape="rect" id="node1" href="schemas?partial=citations_table" title="citations" alt="" coords="268,650,492,1003">
+<area shape="rect" id="node2" href="schemas?partial=users_table" title="users" alt="" coords="5,222,224,690">
+<area shape="rect" id="node3" href="schemas?partial=citations_sites_table" title="citations_sites" alt="" coords="557,653,681,809">
+<area shape="rect" id="node4" href="schemas?partial=citations_treatments_table" title="citations_treatments" alt="" coords="765,977,928,1133">
+<area shape="rect" id="node5" href="schemas?partial=treatments_table" title="treatments" alt="" coords="569,1061,669,1121">
+<area shape="rect" id="node6" href="schemas?partial=cultivars_table" title="cultivars" alt="" coords="576,79,661,139">
+<area shape="rect" id="node7" href="schemas?partial=species_table" title="species" alt="" coords="339,5,421,65">
+<area shape="rect" id="node8" href="schemas?partial=dbfiles_table" title="dbfiles" alt="" coords="343,82,417,142">
+<area shape="rect" id="node9" href="schemas?partial=inputs_table" title="inputs" alt="" coords="344,393,416,453">
+<area shape="rect" id="node10" href="schemas?partial=managements_table" title="managements" alt="" coords="557,1138,681,1438">
+<area shape="rect" id="node11" href="schemas?partial=managements_treatments_table" title="managements_treatments" alt="" coords="746,1150,947,1210">
+<area shape="rect" id="node12" href="schemas?partial=methods_table" title="methods" alt="" coords="566,826,671,1006">
+<area shape="rect" id="node13" href="schemas?partial=modeltypes_table" title="modeltypes" alt="" coords="327,159,433,219">
+<area shape="rect" id="node14" href="schemas?partial=modeltypes_formats_table" title="modeltypes_formats" alt="" coords="537,159,701,219">
+<area shape="rect" id="node15" href="schemas?partial=priors_table" title="priors" alt="" coords="566,274,671,598">
+<area shape="rect" id="node16" href="schemas?partial=variables_table" title="variables" alt="" coords="335,315,425,375">
+<area shape="rect" id="node17" href="schemas?partial=yields_table" title="yields" alt="" coords="789,177,904,669">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='images/citations.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>

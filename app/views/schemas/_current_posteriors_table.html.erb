@@ -1,0 +1,166 @@
+<div class='content' style='clear:both;'>
+<div class='container'>
+<table width='100%' border='0' cellpadding='0'>
+ <tr>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>current_posteriors</span></span></td>
+ </tr>
+</table>
+<div>
+<span class='legend'>Legend:</span>
+<span class='legend primaryKey'>Primary key columns</span>
+<span class='legend indexedColumn'>Indexed columns</span>
+</div>
+<div class='sixteen colums'>
+<a name='columns'></a>
+<table id='columns' class='dataTable' border='1' rules='groups'>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup>
+<colgroup class='fkey'>
+<colgroup class='comment'>
+<thead align='left'>
+<tr>
+  <th>Column</th>
+  <th>Type</th>
+  <th>Size</th>
+  <th title='Are nulls allowed?'>Nulls</th>
+  <th title='Is column automatically updated?'>Auto</th>
+  <th title='Default value'>Default</th>
+  <th class='fkey' title='Columns in tables that are referenced by this column'><span class='notSortedByColumn fkey'>References</span></th>
+  <th title='Comments' class='comment'><span class='notSortedByColumn'>Comments</span></th>
+</tr>
+</thead>
+<tbody valign='top'>
+<tr>
+ <td class='primaryKey' title='Primary Key'>id</td>
+ <td class='detail'>bigserial</td>
+ <td class='detail' align='right'>19</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='right'>nextval('current_posteriors_id_seq'::regclass)</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>pft_id</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'pfts.id',schemas_path(:partial => '
+pfts_table')%> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>variable_id</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'variables.id',schemas_path(:partial => '
+variables_table')%> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>posteriors_samples_id</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'posterior_samples.id',schemas_path(:partial => '
+posterior_samples_table')%> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>project_id</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'><%=link_to 'projects.id',schemas_path(:partial => '
+projects_table')%> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>created_at</td>
+ <td class='detail'>timestamp</td>
+ <td class='detail' align='right'>29,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr>
+ <td class='detail'>updated_at</td>
+ <td class='detail'>timestamp</td>
+ <td class='detail' align='right'>29,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
+</table>
+</div>
+<script>jQuery('.comment').hide()</script>
+<div class='indent'>
+<b>Indexes:</b>
+<table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
+<thead>
+ <tr>
+  <th>Column(s)</th>
+  <th>Type</th>
+  <th>Sort</th>
+  <th class='constraint' style='text-align:left;'>Constraint Name</th>
+ </tr>
+</thead>
+<tbody>
+ <tr>
+  <td class='primaryKey'>id</td>
+  <td class='detail'>Primary key</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>current_posteriors_pkey</td>
+ </tr>
+</table>
+</div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=current_posteriors_table" title="current_posteriors" alt="" coords="379,90,677,299">
+<area shape="rect" id="node2" href="schemas?partial=pfts_table" title="pfts" alt="" coords="13,370,131,598">
+<area shape="rect" id="node3" href="schemas?partial=posterior_samples_table" title="posterior_samples" alt="" coords="183,187,334,391">
+<area shape="rect" id="node4" href="schemas?partial=projects_table" title="projects" alt="" coords="205,409,312,613">
+<area shape="rect" id="node5" href="schemas?partial=variables_table" title="variables" alt="" coords="5,5,139,353">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/current_posteriors.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=covariates_table" title="covariates" alt="" coords="555,320,653,380">
+<area shape="rect" id="node2" href="schemas?partial=variables_table" title="variables" alt="" coords="320,208,453,556">
+<area shape="rect" id="node3" href="schemas?partial=cultivars_pfts_table" title="cultivars_pfts" alt="" coords="328,651,445,711">
+<area shape="rect" id="node4" href="schemas?partial=pfts_table" title="pfts" alt="" coords="157,651,275,879">
+<area shape="rect" id="node11" href="schemas?partial=modeltypes_table" title="modeltypes" alt="" coords="5,819,112,879">
+<area shape="rect" id="node5" href="schemas?partial=current_posteriors_table" title="current_posteriors" alt="" coords="755,339,1053,548">
+<area shape="rect" id="node6" href="schemas?partial=posterior_samples_table" title="posterior_samples" alt="" coords="529,552,679,756">
+<area shape="rect" id="node7" href="schemas?partial=projects_table" title="projects" alt="" coords="551,773,657,977">
+<area shape="rect" id="node13" href="schemas?partial=posteriors_table" title="posteriors" alt="" coords="339,573,435,633">
+<area shape="rect" id="node15" href="schemas?partial=machines_table" title="machines" alt="" coords="339,845,434,905">
+<area shape="rect" id="node8" href="schemas?partial=formats_variables_table" title="formats_variables" alt="" coords="531,397,677,457">
+<area shape="rect" id="node9" href="schemas?partial=inputs_variables_table" title="inputs_variables" alt="" coords="535,475,673,535">
+<area shape="rect" id="node10" href="schemas?partial=likelihoods_table" title="likelihoods" alt="" coords="554,51,654,111">
+<area shape="rect" id="node12" href="schemas?partial=pfts_species_table" title="pfts_species" alt="" coords="330,765,443,825">
+<area shape="rect" id="node14" href="schemas?partial=priors_table" title="priors" alt="" coords="568,128,640,188">
+<area shape="rect" id="node16" href="schemas?partial=trait_covariate_associations_table" title="trait_covariate_associations" alt="" coords="498,205,710,265">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/current_posteriors.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
+</div>

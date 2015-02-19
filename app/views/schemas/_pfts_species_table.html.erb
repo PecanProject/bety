@@ -2,7 +2,8 @@
 <div class='container'>
 <table width='100%' border='0' cellpadding='0'>
  <tr>
-  <td class='heading' valign='middle'><span class='header'>Table <span title='Database'>bety</span>.<span title='Schema'>public</span>.<span title='Table'>pfts_species</span></span></td>
+  <td class='heading' valign='middle'><span class='header'>Table: <span title='Table'>pfts_species</span></span><div style='padding: 0px 4px;'>This table tells which species are members of which pfts.  For each row, the species with id "specie_id" is a member of the pft with id "pft_id".</div><p>
+</td>
  </tr>
 </table>
 <div>
@@ -36,22 +37,24 @@
 <tbody valign='top'>
 <tr>
  <td class='indexedColumn' title='Indexed'>pft_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
- <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
- <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail'></td>
+ <td class='detail fkey'><%=link_to 'pfts.id',schemas_path(:partial => '
+pfts_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 <tr>
  <td class='indexedColumn' title='Indexed'>specie_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
- <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
- <td class='detail' align='right'>null</td>
- <td class='detail fkey'> </td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail'></td>
+ <td class='detail fkey'><%=link_to 'species.id',schemas_path(:partial => '
+species_table')%> </td>
  <td class='comment detail'></td>
 </tr>
 <tr>
@@ -74,10 +77,19 @@
  <td class='detail fkey'> </td>
  <td class='comment detail'></td>
 </tr>
+<tr>
+ <td class='detail'>id</td>
+ <td class='detail'>serial</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center'>&nbsp;&chi;&nbsp;</td>
+ <td class='detail' align='center' title='Automatically updated by the database'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='right'>nextval('pfts_species_id_seq'::regclass)</td>
+ <td class='detail fkey'> </td>
+ <td class='comment detail'></td>
+</tr>
 </table>
 </div>
 <script>jQuery('.comment').hide()</script>
-<script>jQuery('.fkey').hide()</script>
 <div class='indent'>
 <b>Indexes:</b>
 <table class='dataTable' border='1' rules='groups'><colgroup><colgroup><colgroup><colgroup>
@@ -98,4 +110,28 @@
  </tr>
 </table>
 </div>
+<label for='showone'><input type='checkbox' id='showone' class='showdiagram'>Show One Degree &nbsp;</label>
+<label for='showtow'><input type='checkbox' id='showtwo' class='showdiagram'>Show Two Degrees</label>
+<table width='100%' border='0'><tr><td class='container'>
+<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=pfts_species_table" title="pfts_species" alt="" coords="292,113,516,274">
+<area shape="rect" id="node2" href="schemas?partial=pfts_table" title="pfts" alt="" coords="67,5,186,233">
+<area shape="rect" id="node3" href="schemas?partial=species_table" title="species" alt="" coords="6,250,247,2398">
+</map>
+  <a name='diagram'><img id='oneDegreeImg' src='images/pfts_species.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
+<area shape="rect" id="node1" href="schemas?partial=cultivars_table" title="cultivars" alt="" coords="512,380,597,440">
+<area shape="rect" id="node2" href="schemas?partial=species_table" title="species" alt="" coords="157,380,398,2528">
+<area shape="rect" id="node3" href="schemas?partial=cultivars_pfts_table" title="cultivars_pfts" alt="" coords="728,226,845,286">
+<area shape="rect" id="node4" href="schemas?partial=pfts_table" title="pfts" alt="" coords="218,94,337,322">
+<area shape="rect" id="node7" href="schemas?partial=modeltypes_table" title="modeltypes" alt="" coords="5,262,112,322">
+<area shape="rect" id="node5" href="schemas?partial=current_posteriors_table" title="current_posteriors" alt="" coords="907,16,1056,76">
+<area shape="rect" id="node6" href="schemas?partial=posterior_samples_table" title="posterior_samples" alt="" coords="711,50,862,110">
+<area shape="rect" id="node9" href="schemas?partial=posteriors_table" title="posteriors" alt="" coords="507,50,603,110">
+<area shape="rect" id="node8" href="schemas?partial=pfts_species_table" title="pfts_species" alt="" coords="443,201,667,362">
+<area shape="rect" id="node10" href="schemas?partial=yields_table" title="yields" alt="" coords="751,401,823,461">
+</map>
+
+  <a name='diagram'><img id='twoDegreesImg' src='images/pfts_species.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
+</td></tr></table>
 </div>
