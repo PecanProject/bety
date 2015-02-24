@@ -64,8 +64,8 @@ ALTER TABLE "inputs_variables" ADD CONSTRAINT "fk_inputs_variables_variables_1" 
 
 
 
-    add_column :runs, :end_date, :string
     add_column :runs, :start_date, :string
+    add_column :runs, :end_date, :string
 
 
     remove_column :yields, :date_day
