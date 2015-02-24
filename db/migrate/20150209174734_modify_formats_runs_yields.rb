@@ -1,4 +1,4 @@
-class AddDropTablesAndColumns < ActiveRecord::Migration
+class ModifyFormatsRunsYields < ActiveRecord::Migration
   def self.up
     add_column :formats, :mimetype_id, :integer, :limit => 8
     execute('UPDATE formats SET mimetype_id = (SELECT id FROM mimetypes WHERE type_string = mime_type);')
@@ -15,21 +15,9 @@ class AddDropTablesAndColumns < ActiveRecord::Migration
     drop_table :inputs_variables
     drop_table :location_yields
     drop_table :counties
-    drop_table :sessions
   end
 
   def self.down
-
-    create_table "sessions", :force => true do |t|
-  	  t.string   "session_id", :null => false
-  	  t.text     "data"
-  	  t.datetime "created_at"
-  	  t.datetime "updated_at"
-  	end
-
-  	add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
-  	add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
-
 
   	create_table "location_yields", :force => true do |t|
   	  t.decimal  "yield",      :precision => 20, :scale => 15
