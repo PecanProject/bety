@@ -106,14 +106,15 @@ class UsersController < ApplicationController
     end
   end
 
-  def create_apikeys
-    @users = User.where("apikey is NULL")
-    @users.each do |user|
-      apikey = (0...40).collect { ((48..57).to_a + (65..90).to_a + (97..122).to_a)[Kernel.rand(62)].chr }.join
-      user.apikey = apikey
-      if user.save
-        ContactMailer::apikey_email(user).deliver
-      end
+  def create_apikey
+    user = User.find(params[:user])
+    apikey = (0...40).collect { ((48..57).to_a + (65..90).to_a + (97..122).to_a)[Kernel.rand(62)].chr }.join
+    user.apikey = apikey
+    if user.save
+      ContactMailer::apikey_email(user).deliver
+      flash[:notice] = "A new api key has been created."
+    else
+      flash[:error] = "Error creating new api key, please try again."
     end
     redirect_to users_path
   end

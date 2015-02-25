@@ -9,7 +9,7 @@
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Name</th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 200px" aria-label="Role: activate to sort column ascending">Email</th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 200px" aria-label="Role: activate to sort column ascending">Apikey</th>
-<th role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Actions</th>
+<th role="columnheader" aria-controls="DataTables_Table_0" style="width: 99px">Actions</th>
       </tr>
     </thead>
 
@@ -29,6 +29,7 @@
             <%= link_to edit_user_path(user), :class => "button button-small", :alt => "edit" do %>
               <i class="icon-edit"></i>
             <% end %>
+            <%= link_to 'key',{:action => :create_apikey, :user => user}, :class => "button button-small"%>
           </td>
 
         </tr>
