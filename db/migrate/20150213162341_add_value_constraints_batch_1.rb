@@ -79,7 +79,20 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-
+/* This is based on http://www.w3.org/Addressing/URL/5_BNF.html */
+CREATE OR REPLACE FUNCTION is_host_address(
+  string text
+) RETURNS boolean AS $body$
+DECLARE
+  xalphas text := $$([-\w$@.&+!*"'(),]|%[0-9a-f]{2})+$$;
+  ialpha text := '[a-z]' || xalphas;
+  hostname text := ialpha || '(\.' || ialpha || ')*';
+  hostnumber text := '\d+\.\d+\.\d+\.\d+';
+  host text := '(' || hostname || '|' || hostnumber || ')';
+BEGIN
+  RETURN (string ~ ('^' || host || '$'));
+END;
+$body$ LANGUAGE plpgsql;
 
 
 /* This is loosely based on http://www.w3.org/Addressing/URL/5_BNF.html and should suffice for our purposes. */
@@ -248,7 +261,8 @@ CREATE DOMAIN level_of_access AS INTEGER CHECK (VALUE BETWEEN 1 AND 4) NOT NULL;
 
 /* MACHINES */
 
--- decide on constraints
+ALTER TABLE machines ADD CHECK (is_host_address(hostname));
+-- decide on additional constraints (if any)
 
 /* MANAGEMENTS */
 
@@ -316,8 +330,7 @@ ALTER TABLE modeltypes ALTER COLUMN input SET NOT NULL;
 /* PFTS */
 
 ALTER TABLE pfts ALTER COLUMN definition SET NOT NULL;
--- decide on value constraint for name; to see currently-used names:
---   SELECT DISTINCT name FROM pfts;
+ALTER TABLE pfts ADD CHECK (name ~ '^[-\w]+(\.[-\w]+)*$');
 ALTER TABLE pfts ALTER COLUMN pft_type SET NOT NULL;
 ALTER TABLE pfts ADD CHECK (pft_type IN ('plant', 'cultivar', ''));
 
@@ -358,22 +371,25 @@ ALTER TABLE sites ALTER COLUMN country SET NOT NULL;
 ALTER TABLE sites ADD CHECK (mat BETWEEN -25 AND 40);
 ALTER TABLE sites ADD CHECK (map BETWEEN 0 AND 12000);
 ALTER TABLE sites ALTER COLUMN soil SET NOT NULL;
--- decide on soil restriction; at least:
-/* ALTER TABLE sites CHECK (is_whitespace_normalized(soil)); */
+ALTER TABLE sites ADD CHECK (soil IN ('clay', 'sandy clay', 'sandy clay loam', 'sandy loam', 'loamy sand', 'sand', 'clay loam', 'loam', 'silty clay', 'silty clay loam', 'silt loam', 'silt', ''));
+ALTER TABLE sites ADD CHECK (som BETWEEN 0 AND 100);
 ALTER TABLE sites ALTER COLUMN notes SET NOT NULL;
 ALTER TABLE sites ALTER COLUMN soilnotes SET NOT NULL;
 ALTER TABLE sites ALTER COLUMN sitename SET NOT NULL;
 ALTER TABLE sites ADD CHECK (is_whitespace_normalized(sitename));
 ALTER TABLE sites ADD CHECK (sand_pct >= 0 AND clay_pct >= 0 AND sand_pct <= 100 AND clay_pct <= 100 AND sand_pct + clay_pct <= 100);
+ALTER TABLE sites ADD CHECK ( (ST_X(ST_CENTROID(geometry)) BETWEEN -180 AND 180) AND (ST_Y(ST_CENTROID(geometry)) BETWEEN -90 AND 90) AND (ST_Z(ST_CENTROID(geometry)) BETWEEN -100 AND 10000) );
 
 
 /* SPECIES */
 
+ALTER TABLE species ADD CHECK (spcd IS BETWEEN 0 AND 10000);
 ALTER TABLE species ALTER COLUMN genus SET NOT NULL;
--- view aberrant genus values:
--- SELECT genus, species, scientificname FROM species WHERE NOT genus ~ '^([A-Z][a-z]*)?$';
+ALTER TABLE species ADD CHECK (genus ~ '^([A-Z][-a-z]*)?$');
 ALTER TABLE species ALTER COLUMN species SET NOT NULL;
-ALTER TABLE species ADD CHECK (is_whitespace_normalized(species));
+-- see bad species names:
+--   SELECT genus, scientificname, species FROM species WHERE species !~ '^([a-z-]*| var. | ssp. | \u00d7 | L.($| ))*$';
+/* ALTER TABLE species ADD CHECK (species ~ '^([a-z-]*| var. | ssp. | \u00d7 | L.($| ))*$'); */
 ALTER TABLE species ALTER COLUMN scientificname SET NOT NULL;
 ALTER TABLE species ADD CHECK (is_whitespace_normalized(scientificname));
 ALTER TABLE species ALTER COLUMN commonname SET NOT NULL;
@@ -381,6 +397,24 @@ ALTER TABLE species ADD CHECK (is_whitespace_normalized(commonnmae));
 ALTER TABLE species ALTER COLUMN notes SET NOT NULL;
 -- see rows that violate proposed consistency constraint:
 -- SELECT scientificname, genus, species FROM species WHERE scientificname !~ FORMAT('^%s %s', genus, species) AND species != '';
+
+-- normalize cross in hybrids:
+CREATE OR REPLACE FUNCTION replace_x() 
+  RETURNS TRIGGER AS $$ 
+BEGIN
+    NEW.species = REPLACE(NEW.species, ' x ', E' \u00d7 ');
+    NEW.scientificname = REPLACE(NEW.scientificname, ' x ', E' \u00d7 ');
+    RETURN NEW; 
+END; 
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER normalize_cross
+  BEFORE INSERT OR UPDATE OF species, scientificname ON species
+  FOR EACH ROW
+  WHEN (NEW.species ~ ' x ' OR NEW.scientificname ~ ' x ') 
+EXECUTE PROCEDURE replace_x(); 
+
+
 
 
 /* TRAIT_COVARIATE_ASSOCIATIONS */
