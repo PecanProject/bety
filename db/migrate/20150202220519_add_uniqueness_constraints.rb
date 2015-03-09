@@ -1,6 +1,8 @@
 class AddUniquenessConstraints < ActiveRecord::Migration
   def self.up
 
+    remove_column :posteriors, :format_id
+
     # Use "%q" so that backspashes are taken literally (except when doubled).
     execute %q{
 
@@ -58,8 +60,8 @@ ALTER TABLE dbfiles ADD CONSTRAINT unique_filename_and_path_per_machine UNIQUE (
 ALTER TABLE dbfiles ALTER COLUMN file_name SET NOT NULL;
 ALTER TABLE dbfiles ALTER COLUMN file_path SET NOT NULL;
 ALTER TABLE dbfiles ALTER COLUMN machine_id SET NOT NULL;
-ALTER TABLE dbfiles ADD CONSTRAINT no_space_in_file_name CHECK (file_name !~ '\s');
-ALTER TABLE dbfiles ADD CONSTRAINT file_path_sanity_check CHECK (file_path ~ '^(([a-z.-]+:)?//?([.a-z0-9]+/)+[.A-Za-z0-9_-]*/?)?$');
+-- ALTER TABLE dbfiles ADD CONSTRAINT no_space_in_file_name CHECK (file_name !~ '\s');
+ALTER TABLE dbfiles ADD CONSTRAINT file_path_sanity_check CHECK (file_path ~ '^/');
 
 -- GH #187
 ALTER TABLE inputs_runs ALTER COLUMN input_id SET NOT NULL;
@@ -96,12 +98,10 @@ ALTER TABLE pfts_priors ALTER COLUMN prior_id SET NOT NULL;
 
 -- GH #197
 ALTER TABLE pfts ADD CONSTRAINT unique_name_per_model UNIQUE (name, modeltype_id);
-ALTER TABLE pfts ADD CONSTRAINT no_whitespace_in_name CHECK(name !~ '\s');
+-- ALTER TABLE pfts ADD CONSTRAINT no_whitespace_in_name CHECK(name !~ '\s');
 
 -- GH #198
 ALTER TABLE posteriors ALTER COLUMN pft_id SET NOT NULL;
-ALTER TABLE posteriors ALTER COLUMN format_id SET NOT NULL;
-ALTER TABLE posteriors ADD CONSTRAINT unique_format_per_pft UNIQUE (pft_id, format_id);
 
 -- GH #213
 ALTER TABLE citations_sites ALTER COLUMN citation_id SET NOT NULL;
@@ -132,7 +132,7 @@ ALTER TABLE dbfiles DROP CONSTRAINT unique_filename_and_path_per_machine;
 ALTER TABLE dbfiles ALTER COLUMN file_name DROP NOT NULL;
 ALTER TABLE dbfiles ALTER COLUMN file_path DROP NOT NULL;
 ALTER TABLE dbfiles ALTER COLUMN machine_id DROP NOT NULL;
-ALTER TABLE dbfiles DROP CONSTRAINT no_space_in_file_name;
+-- ALTER TABLE dbfiles DROP CONSTRAINT no_space_in_file_name;
 ALTER TABLE dbfiles DROP CONSTRAINT file_path_sanity_check;
 
 -- GH #187
@@ -170,12 +170,10 @@ ALTER TABLE pfts_priors ALTER COLUMN prior_id DROP NOT NULL;
 
 -- GH #197
 ALTER TABLE pfts DROP CONSTRAINT unique_name_per_model;
-ALTER TABLE pfts DROP CONSTRAINT no_whitespace_in_name;
+-- ALTER TABLE pfts DROP CONSTRAINT no_whitespace_in_name;
 
 -- GH #198
 ALTER TABLE posteriors ALTER COLUMN pft_id DROP NOT NULL;
-ALTER TABLE posteriors ALTER COLUMN format_id DROP NOT NULL;
-ALTER TABLE posteriors DROP CONSTRAINT unique_format_per_pft;
 
 -- GH #213
 ALTER TABLE citations_sites ALTER COLUMN citation_id DROP NOT NULL;
@@ -196,5 +194,7 @@ DROP FUNCTION is_whitespace_normalized(text);
 DROP FUNCTION normalize_whitespace(text);
 
     }
+
+    add_column :posteriors, :format_id, :integer, :limit => 8
   end
 end
