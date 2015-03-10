@@ -60,8 +60,10 @@ ALTER TABLE dbfiles ADD CONSTRAINT unique_filename_and_path_per_machine UNIQUE (
 ALTER TABLE dbfiles ALTER COLUMN file_name SET NOT NULL;
 ALTER TABLE dbfiles ALTER COLUMN file_path SET NOT NULL;
 ALTER TABLE dbfiles ALTER COLUMN machine_id SET NOT NULL;
--- ALTER TABLE dbfiles ADD CONSTRAINT no_space_in_file_name CHECK (file_name !~ '\s');
+ALTER TABLE dbfiles ADD CONSTRAINT no_slash_in_file_name CHECK (file_name !~ '/');
 ALTER TABLE dbfiles ADD CONSTRAINT file_path_sanity_check CHECK (file_path ~ '^/');
+-- Also add a comment on this table's container_type column:
+COMMENT ON COLUMN dbfiles.container_type IS 'this and container_id are part of a polymorphic relationship, specifies table and primary key of that table';
 
 -- GH #187
 ALTER TABLE inputs_runs ALTER COLUMN input_id SET NOT NULL;
@@ -98,10 +100,23 @@ ALTER TABLE pfts_priors ALTER COLUMN prior_id SET NOT NULL;
 
 -- GH #197
 ALTER TABLE pfts ADD CONSTRAINT unique_name_per_model UNIQUE (name, modeltype_id);
--- ALTER TABLE pfts ADD CONSTRAINT no_whitespace_in_name CHECK(name !~ '\s');
 
 -- GH #198
 ALTER TABLE posteriors ALTER COLUMN pft_id SET NOT NULL;
+
+-- GH #200
+ALTER TABLE runs ALTER COLUMN model_id SET NOT NULL;
+ALTER TABLE runs ALTER COLUMN site_id SET NOT NULL;
+ALTER TABLE runs ALTER COLUMN start_time SET NOT NULL;
+ALTER TABLE runs ALTER COLUMN finish_time SET NOT NULL;
+ALTER TABLE runs ALTER COLUMN parameter_list SET NOT NULL;
+ALTER TABLE runs ALTER COLUMN ensemble_id SET NOT NULL;
+ALTER TABLE runs ADD CONSTRAINT unique_time_interval_per_model_site_parameter_list_and_ensemble_combination UNIQUE (model_id, site_id, start_time, finish_time, parameter_list, ensemble_id);
+COMMENT ON COLUMN runs.start_time IS 'beginning of time period being simulated';
+COMMENT ON COLUMN runs.finish_time IS 'end of time period being simulated';
+COMMENT ON COLUMN runs.started_at IS 'system time when run begins';
+COMMENT ON COLUMN runs.finished_at IS 'system time when run ends; can be null when record is created';
+
 
 -- GH #213
 ALTER TABLE citations_sites ALTER COLUMN citation_id SET NOT NULL;
@@ -116,7 +131,13 @@ ALTER TABLE citations_treatments ALTER COLUMN treatment_id SET NOT NULL;
   end
 
   def self.down
+
+    add_column :posteriors, :format_id, :integer, :limit => 8
+
     execute %q{
+
+-- Restore constraint on dropped column:
+ALTER TABLE "posteriors" ADD CONSTRAINT "fk_posteriors_formats_1" FOREIGN KEY ("format_id") REFERENCES "formats" ("id");
 
 -- GH #182
 ALTER TABLE cultivars ALTER COLUMN name DROP NOT NULL;
@@ -132,8 +153,10 @@ ALTER TABLE dbfiles DROP CONSTRAINT unique_filename_and_path_per_machine;
 ALTER TABLE dbfiles ALTER COLUMN file_name DROP NOT NULL;
 ALTER TABLE dbfiles ALTER COLUMN file_path DROP NOT NULL;
 ALTER TABLE dbfiles ALTER COLUMN machine_id DROP NOT NULL;
--- ALTER TABLE dbfiles DROP CONSTRAINT no_space_in_file_name;
+ALTER TABLE dbfiles DROP CONSTRAINT no_slash_in_file_name;
 ALTER TABLE dbfiles DROP CONSTRAINT file_path_sanity_check;
+-- Also drop the comment on this table's container_type column:
+COMMENT ON COLUMN dbfiles.container_type IS NULL;
 
 -- GH #187
 ALTER TABLE inputs_runs ALTER COLUMN input_id DROP NOT NULL;
@@ -170,10 +193,21 @@ ALTER TABLE pfts_priors ALTER COLUMN prior_id DROP NOT NULL;
 
 -- GH #197
 ALTER TABLE pfts DROP CONSTRAINT unique_name_per_model;
--- ALTER TABLE pfts DROP CONSTRAINT no_whitespace_in_name;
 
 -- GH #198
 ALTER TABLE posteriors ALTER COLUMN pft_id DROP NOT NULL;
+-- GH #200
+ALTER TABLE runs ALTER COLUMN model_id DROP NOT NULL;
+ALTER TABLE runs ALTER COLUMN site_id DROP NOT NULL;
+ALTER TABLE runs ALTER COLUMN start_time DROP NOT NULL;
+ALTER TABLE runs ALTER COLUMN finish_time DROP NOT NULL;
+ALTER TABLE runs ALTER COLUMN parameter_list DROP NOT NULL;
+ALTER TABLE runs ALTER COLUMN ensemble_id DROP NOT NULL;
+ALTER TABLE runs DROP CONSTRAINT unique_time_interval_per_model_site_parameter_list_and_ensemble_combination;
+COMMENT ON COLUMN runs.start_time IS NULL;
+COMMENT ON COLUMN runs.finish_time IS NULL;
+COMMENT ON COLUMN runs.started_at IS NULL;
+COMMENT ON COLUMN runs.finished_at IS NULL;
 
 -- GH #213
 ALTER TABLE citations_sites ALTER COLUMN citation_id DROP NOT NULL;
@@ -195,6 +229,5 @@ DROP FUNCTION normalize_whitespace(text);
 
     }
 
-    add_column :posteriors, :format_id, :integer, :limit => 8
   end
 end
