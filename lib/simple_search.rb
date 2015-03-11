@@ -91,8 +91,17 @@ module SimpleSearch
   def api_search(params)
     conditions = {}
     select = []
+    join_model = ''
+    join_table = ''
+    join = params[:join]
     params.each do |k, v|
-      next if !self.column_names.include?(k)
+      if !self.column_names.include?(k)
+        next if !join
+        join_model = join.to_s.classify.constantize
+        join_table = join_model.table_name
+        next if !join_model.column_names.include?(k)
+        k = "#{join_table}.#{k}"
+      end
       conditions[k] = v
     end
     if params["filters"]
@@ -103,7 +112,7 @@ module SimpleSearch
     end
     params[:include] = [] unless params[:include]
     select = ["*"] if select.empty?
-    where(conditions).select(select.join(",")).includes(params[:include])
+    joins(join ? join.to_sym : '').select(select.join(",")).includes(params[:include]).where(conditions)
   end
 
   private
