@@ -4,6 +4,14 @@ class AddValueConstraintsBatch1 < ActiveRecord::Migration
     # Use "%q" so that backspashes are taken literally (except when doubled).
     execute %q{
 
+/* Need to drop and later re-create views that depend on columns whose type we are changing. */
+DROP VIEW IF EXISTS traits_and_yields_view;
+DROP VIEW IF EXISTS traits_and_yields_view_private;
+DROP VIEW IF EXISTS yieldsview_private;
+DROP VIEW IF EXISTS traitsview_private;
+
+
+
 /* THIS SECTION IS ONLY HERE TEMPORARILY! DELETE AFTER AddUniquenessConstraints MIGRATION IS ADDED! */
 -- Some convenience functions
 CREATE OR REPLACE FUNCTION normalize_whitespace(
@@ -45,38 +53,9 @@ $$ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION set_updated_at(
-  string text
-) RETURNS text AS $$
-DECLARE
-  result text;
-BEGIN
-  SELECT TRIM(REGEXP_REPLACE(string, '\s+', ' ', 'g')) INTO result;
-  RETURN result;
-END;
-$$ LANGUAGE plpgsql;
 
-COMMENT ON FUNCTION set_updated_at(text) IS 'Removes leading and trailing whitespace from string '
-  'and replaces internal sequences of whitespace with a single space character.';
 
-CREATE OR REPLACE FUNCTION is_whitespace_normalized(
-  string text
-) RETURNS boolean AS $$
-BEGIN
-  RETURN string = set_updated_at(string);
-END;
-$$ LANGUAGE plpgsql;
 
-COMMENT ON FUNCTION is_whitespace_normalized(text) IS 'Returns true if text contains no leading or trailing spaces, '
-  'no whitespace other than spaces, and no consecutive spaces.';
-
-CREATE OR REPLACE FUNCTION normalize_name_whitespace()
-  RETURNS TRIGGER AS $$
-BEGIN
-  NEW.name = set_updated_at(NEW.name);
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
 
 
 /* This is based on http://www.w3.org/Addressing/URL/5_BNF.html */
@@ -149,7 +128,7 @@ ALTER TABLE citations ALTER COLUMN journal SET NOT NULL;
 -- view non-normalized journal values:
 -- SELECT * FROM citations WHERE NOT is_whitespace_normalized(journal);
 ---- OR
-__ SELECT '"'||journal||'"' FROM citations WHERE NOT is_whitespace_normalized(journal);
+-- SELECT '"'||journal||'"' FROM citations WHERE NOT is_whitespace_normalized(journal);
 -- normalized whitespace in journal:
 -- UPDATE citations SET journal = normalize_whitespace(journal) WHERE NOT is_whitespace_normalized(journal);
 ALTER TABLE citations ADD CHECK (is_whitespace_normalized(journal));
@@ -242,7 +221,7 @@ ALTER TABLE inputs ADD CHECK (is_whitespace_normalized(name));
 /* ALTER TABLE inputs ALTER COLUMN end_date SET NOT NULL; */
 -- see violators of CHECK (start_date < end_date):
 -- SELECT start_date, end_date FROM inputs WHERE start_date >= end_date;
-/* ALTER TABLE inputs ADD CHECK (start_date < end_date);
+/* ALTER TABLE inputs ADD CHECK (start_date < end_date); */
 -- see future dates:
 -- SELECT start_date, end_date FROM inputs WHERE start_date > NOW() OR end_date > NOW();
 /* ALTER TABLE inputs CHECK (end_date < NOW()); */
@@ -319,12 +298,12 @@ ALTER TABLE modeltypes ADD CHECK (name !~ '\s');
 
 /* MODELTYPES_FORMATS */
 
-ALTER TABLE modeltypes ALTER COLUMN tag SET NOT NULL;
+ALTER TABLE modeltypes_formats ALTER COLUMN tag SET NOT NULL;
 -- use one of these constraints:
-/* ALTER TABLE modeltypes ADD CHECK (tag !~ '\w'); */
-/* ALTER TABLE modeltypes ADD CHECK (tag ~ '^[a-z]+$'); */
-ALTER TABLE modeltypes ALTER COLUMN required SET NOT NULL;
-ALTER TABLE modeltypes ALTER COLUMN input SET NOT NULL;
+/* ALTER TABLE modeltypes_formats ADD CHECK (tag !~ '\w'); */
+/* ALTER TABLE modeltypes_formats ADD CHECK (tag ~ '^[a-z]+$'); */
+ALTER TABLE modeltypes_formats ALTER COLUMN required SET NOT NULL;
+ALTER TABLE modeltypes_formats ALTER COLUMN input SET NOT NULL;
 
 
 /* PFTS */
@@ -371,7 +350,9 @@ ALTER TABLE sites ALTER COLUMN country SET NOT NULL;
 ALTER TABLE sites ADD CHECK (mat BETWEEN -25 AND 40);
 ALTER TABLE sites ADD CHECK (map BETWEEN 0 AND 12000);
 ALTER TABLE sites ALTER COLUMN soil SET NOT NULL;
-ALTER TABLE sites ADD CHECK (soil IN ('clay', 'sandy clay', 'sandy clay loam', 'sandy loam', 'loamy sand', 'sand', 'clay loam', 'loam', 'silty clay', 'silty clay loam', 'silt loam', 'silt', ''));
+-- see bad soil values:
+--   SELECT id, soil FROM sites WHERE NOT soil IN ('clay', 'sandy clay', 'sandy clay loam', 'sandy loam', 'loamy sand', 'sand', 'clay loam', 'loam', 'silty clay', 'silty clay loam', 'silt loam', 'silt', '') ORDER BY id;
+/* ALTER TABLE sites ADD CHECK (soil IN ('clay', 'sandy clay', 'sandy clay loam', 'sandy loam', 'loamy sand', 'sand', 'clay loam', 'loam', 'silty clay', 'silty clay loam', 'silt loam', 'silt', '')); */
 ALTER TABLE sites ADD CHECK (som BETWEEN 0 AND 100);
 ALTER TABLE sites ALTER COLUMN notes SET NOT NULL;
 ALTER TABLE sites ALTER COLUMN soilnotes SET NOT NULL;
@@ -383,7 +364,7 @@ ALTER TABLE sites ADD CHECK ( (ST_X(ST_CENTROID(geometry)) BETWEEN -180 AND 180)
 
 /* SPECIES */
 
-ALTER TABLE species ADD CHECK (spcd IS BETWEEN 0 AND 10000);
+ALTER TABLE species ADD CHECK (spcd BETWEEN 0 AND 10000);
 ALTER TABLE species ALTER COLUMN genus SET NOT NULL;
 ALTER TABLE species ADD CHECK (genus ~ '^([A-Z][-a-z]*)?$');
 ALTER TABLE species ALTER COLUMN species SET NOT NULL;
@@ -393,7 +374,7 @@ ALTER TABLE species ALTER COLUMN species SET NOT NULL;
 ALTER TABLE species ALTER COLUMN scientificname SET NOT NULL;
 ALTER TABLE species ADD CHECK (is_whitespace_normalized(scientificname));
 ALTER TABLE species ALTER COLUMN commonname SET NOT NULL;
-ALTER TABLE species ADD CHECK (is_whitespace_normalized(commonnmae));
+ALTER TABLE species ADD CHECK (is_whitespace_normalized(commonname));
 ALTER TABLE species ALTER COLUMN notes SET NOT NULL;
 -- see rows that violate proposed consistency constraint:
 -- SELECT scientificname, genus, species FROM species WHERE scientificname !~ FORMAT('^%s %s', genus, species) AND species != '';
@@ -503,10 +484,154 @@ ALTER TABLE yields ALTER COLUMN statname SET NOT NULL;
 ALTER TABLE yields ALTER COLUMN statname SET DATA TYPE statnames;
 ALTER TABLE yields ALTER COLUMN notes SET NOT NULL;
 /* ALTER TABLE yields ALTER COLUMN checked SET NOT NULL; */
-ALTER TABLE traits ADD CHECK (checked BETWEEN -1 AND 1);
-ALTER TABLE traits ALTER COLUMN access_level SET DATA TYPE level_of_access;
+ALTER TABLE yields ADD CHECK (checked BETWEEN -1 AND 1);
+ALTER TABLE yields ALTER COLUMN access_level SET DATA TYPE level_of_access;
 -- see species-cultivar inconsistencies:
 --   SELECT y_sp.scientificname AS "species referred to by yields table", c_sp.scientificname AS "species matching cultivar", c.name FROM yields y JOIN cultivars c ON y.cultivar_id = c.id JOIN species y_sp ON y_sp.id = y.specie_id JOIN species c_sp ON c.specie_id = c_sp.id WHERE y.specie_id != c.specie_id;
+
+
+
+
+
+CREATE VIEW traitsview_private AS
+        SELECT
+                CAST('traits' AS VARCHAR(10)) AS result_type,
+                traits.id AS id,
+                traits.citation_id,
+                traits.site_id,
+                traits.treatment_id,
+                sites.sitename,
+                sites.city,
+                ST_Y(ST_CENTROID(sites.geometry)) AS lat,
+                ST_X(ST_CENTROID(sites.geometry)) AS lon,
+                species.scientificname,
+                species.commonname,
+                species.genus,
+                species.id AS species_id,
+                traits.cultivar_id, 
+                citations.author AS author,
+                citations.year AS citation_year,
+                treatments.name AS treatment,
+                traits.date,
+                extract(month from traits.date) AS month,
+                extract(year from traits.date) AS year,
+                traits.dateloc,
+                variables.name AS trait,
+                variables.description AS trait_description,
+                traits.mean,
+                variables.units,
+                traits.n,
+                traits.statname,
+                traits.stat,
+                traits.notes,
+                traits.access_level, 
+                traits.checked, 
+                users.login, 
+                users.name, 
+                users.email
+        FROM
+                          traits
+                LEFT JOIN sites ON traits.site_id = sites.id
+                LEFT JOIN species ON traits.specie_id = species.id
+                LEFT JOIN citations ON traits.citation_id = citations.id
+                LEFT JOIN treatments ON traits.treatment_id = treatments.id
+                LEFT JOIN variables ON traits.variable_id = variables.id
+                LEFT JOIN users ON traits.user_id = users.id;
+
+
+
+
+CREATE VIEW yieldsview_private AS
+        SELECT
+                CAST('yields' AS VARCHAR(10)) AS result_type,
+                yields.id AS id,
+                yields.citation_id,
+                yields.site_id,
+                yields.treatment_id,
+                sites.sitename,
+                sites.city,
+                ST_Y(ST_CENTROID(sites.geometry)) AS lat,
+                ST_X(ST_CENTROID(sites.geometry)) AS lon,
+                species.scientificname,
+                species.commonname,
+                species.genus,
+                species.id AS species_id,
+                yields.cultivar_id,
+                citations.author AS author,
+                citations.year AS citation_year,
+                treatments.name AS treatment,
+                yields.date,
+                extract(month from yields.date) AS month,
+                extract(year from yields.date) AS year,
+                yields.dateloc,
+                variables.name AS trait,
+                variables.description AS trait_description,
+                yields.mean,
+                variables.units,
+                yields.n,
+                yields.statname,
+                yields.stat,
+                yields.notes,
+                yields.access_level,
+                yields.checked,
+                users.login,
+                users.name,
+                users.email
+       FROM
+                          yields
+                LEFT JOIN sites ON yields.site_id = sites.id
+                LEFT JOIN species ON yields.specie_id = species.id
+                LEFT JOIN citations ON yields.citation_id = citations.id
+                LEFT JOIN treatments ON yields.treatment_id = treatments.id
+                LEFT JOIN variables ON variables.name = 'Ayield'
+                LEFT JOIN users ON yields.user_id = users.id;
+
+
+
+CREATE VIEW traits_and_yields_view_private AS
+        SELECT * FROM traitsview_private
+            UNION ALL              /* UNION ALL is more efficient and (here) it is equal to UNION */
+        SELECT * FROM yieldsview_private
+
+
+CREATE VIEW traits_and_yields_view AS
+        SELECT
+                result_type,
+                id,
+                citation_id,
+                site_id,
+                treatment_id,
+                sitename,
+                city,
+                lat,
+                lon,
+                scientificname,
+                commonname,
+                genus,
+                species_id,
+                cultivar_id,
+                author,
+                citation_year,
+                treatment,
+                date,
+                month,
+                year,
+                dateloc,
+                trait,
+                trait_description,
+                mean,
+                units,
+                n,
+                statname,
+                stat,
+                notes,
+                access_level
+       FROM
+                traits_and_yields_view_private
+       WHERE
+                checked > 0;
+    }
+
 
 
   end
