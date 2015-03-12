@@ -20,7 +20,8 @@ CREATE OR REPLACE FUNCTION normalize_whitespace(
 DECLARE
   result text;
 BEGIN
-  SELECT TRIM(REGEXP_REPLACE(string, '\s+', ' ', 'g')) INTO result;
+  /* non-breaking space (\u00A0) is not included in the \s class in some installations */
+  SELECT TRIM(REGEXP_REPLACE(string, '[\u00a0\s]+', ' ', 'g')) INTO result;
   RETURN result;
 END;
 $$ LANGUAGE plpgsql;
@@ -115,44 +116,41 @@ $body$ LANGUAGE plpgsql;
 
 /* CITATIONS */
 
-ALTER TABLE citations ALTER COLUMN author SET NOT NULL;
-ALTER TABLE citations ADD CHECK (is_whitespace_normalized(author));
-ALTER TABLE citations ALTER COLUMN year SET NOT NULL;
-ALTER TABLE citations ALTER COLUMN title SET NOT NULL;
-ALTER TABLE citations ADD CHECK (is_whitespace_normalized(title));
--- view NULLs in journal:
--- SELECT * FROM citations WHERE journal IS NULL;
--- clean up NULLs in journal:
--- UPDATE citations SET journal = '' WHERE journal IS NULL;
-ALTER TABLE citations ALTER COLUMN journal SET NOT NULL;
--- view non-normalized journal values:
--- SELECT * FROM citations WHERE NOT is_whitespace_normalized(journal);
----- OR
--- SELECT '"'||journal||'"' FROM citations WHERE NOT is_whitespace_normalized(journal);
--- normalized whitespace in journal:
--- UPDATE citations SET journal = normalize_whitespace(journal) WHERE NOT is_whitespace_normalized(journal);
-ALTER TABLE citations ADD CHECK (is_whitespace_normalized(journal));
+ALTER TABLE citations ALTER COLUMN author SET NOT NULL,
+                      ADD CHECK (is_whitespace_normalized(author));
+
+ALTER TABLE citations ALTER COLUMN year SET NOT NULL,
+                      ADD CHECK (year <= EXTRACT(year FROM NOW()) + 1);
+/* ALTER TABLE citations ADD CHECK (year > 1800); ??? */
+
+/* FIX */ UPDATE citations SET title = normalize_whitespace(title) WHERE NOT is_whitespace_normalized(title);
+ALTER TABLE citations ALTER COLUMN title SET NOT NULL,
+                      ADD CHECK (is_whitespace_normalized(title));
+
+ALTER TABLE citations ALTER COLUMN journal SET NOT NULL,
+                      ALTER COLUMN journal SET DEFAULT '',
+                      ADD CHECK (is_whitespace_normalized(journal));
 
 -- decide if vol = 0 is allowed before adding this:
 /* ALTER TABLE citations ADD CHECK (vol > 0); */
 
--- view NULLs in pg:
--- SELECT * FROM citations WHERE pg IS NULL;
--- clean up NULLs in pg:
--- UPDATE citations SET pg = '' WHERE pg IS NULL;
-ALTER TABLE citations ALTER COLUMN pg SET NOT NULL;
+ALTER TABLE citations ALTER COLUMN pg SET NOT NULL,
+                      ALTER COLUMN pg SET DEFAULT '';
 
--- decide if these constraints are ok:
-/*
--- view problem pg values:
--- SELECT pg FROM citations WHERE pg !~ '^([1-9]\d*(\u2013[1-9]\d*)?)?$';
--- fix most values:
--- UPDATE citations SET pg = regexp_replace(normalize_whitespace(pg), '-+', E'\u2013') WHERE pg !~ '^([1-9]\d*(\u2013[1-9]\d*)?)?$';
+-- Check that pg is either empty or is positive integer possibly followed by and
+-- n-dash and another positive integer:
 ALTER TABLE citations ADD CHECK (pg ~ '^([1-9]\d*(\u2013[1-9]\d*)?)?$');
-ALTER TABLE citations ADD CHECK (is_url_or_empty(url));
-ALTER TABLE citations ADD CHECK (is_url_or_empty(pdf));
+
+ALTER TABLE citations ALTER COLUMN url SET NOT NULL,
+                      ALTER COLUMN url SET DEFAULT '',
+                      ADD CHECK (is_url_or_empty(url) OR url ~ '^\(.+\)$');
+
+ALTER TABLE citations ALTER COLUMN pdf SET NOT NULL,
+                      ALTER COLUMN pdf SET DEFAULT '',
+                      ADD CHECK (is_url_or_empty(pdf) OR pdf ~ '^\(.+\)$');
+
 ALTER TABLE citations ADD CHECK (doi ~ '^(|10\.\d+(\.\d+)?/.+)$');
-*/
+
 
 
 
@@ -161,7 +159,7 @@ ALTER TABLE citations ADD CHECK (doi ~ '^(|10\.\d+(\.\d+)?/.+)$');
 -- decide whether to use >= 1 or >= 2
 /* ALTER TABLE covariates ADD CHECK (n >= 2); */
 
-CREATE DOMAIN statnames AS TEXT CHECK (VALUE IN ('SD', 'SE', 'MSE', '95%CI', 'LSD', 'MSD', 'HSD', '')) NOT NULL;
+CREATE DOMAIN statnames AS TEXT CHECK (VALUE IN ('SD', 'SE', 'MSE', '95%CI', 'LSD', 'MSD', 'HSD', '')) DEFAULT '' NOT NULL;
 ALTER TABLE covariates ALTER COLUMN statname SET DATA TYPE statnames;
 -- see stat-statname consistency violations:
 -- SELECT * FROM  covariates WHERE NOT (statname = '' AND stat IS NULL OR statname != '' AND stat IS NOT NULL);
@@ -173,9 +171,11 @@ ALTER TABLE covariates ALTER COLUMN statname SET DATA TYPE statnames;
 /* CULTIVARS */
 
 ALTER TABLE cultivars ADD CHECK (is_whitespace_normalized(name));
-ALTER TABLE cultivars ALTER COLUMN ecotype SET NOT NULL;
+ALTER TABLE cultivars ALTER COLUMN ecotype SET NOT NULL,
+                      ALTER COLUMN ecotype SET DEFAULT '';
 -- decide about other ecotype constraints
-ALTER TABLE cultivars ALTER COLUMN notes SET NOT NULL;
+ALTER TABLE cultivars ALTER COLUMN notes SET NOT NULL
+                      ALTER COLUMN notes SET DEFAULT '';
 
 
 /* DBFILES */
@@ -187,19 +187,24 @@ ALTER TABLE dbfiles ADD CHECK (md5 ~ '^([\da-z]{32})?$');
 
 /* ENSEMBLES */
 
-ALTER TABLE ensembles ALTER COLUMN notes SET NOT NULL;
-ALTER TABLE ensembles ALTER COLUMN runtype SET NOT NULL;
+ALTER TABLE ensembles ALTER COLUMN notes SET NOT NULL,
+                      ALTER COLUMN notes SET DEFAULT '';
+ALTER TABLE ensembles ALTER COLUMN runtype SET NOT NULL,
+                      ALTER COLUMN runtype SET DEFAULT '';
 
 /* ENTITIES */
 
-ALTER TABLE entities ALTER COLUMN name SET NOT NULL;
+ALTER TABLE entities ALTER COLUMN name SET NOT NULL,
+                     ALTER COLUMN name SET DEFAULT '';
 ALTER TABLE entities ADD CHECK (is_whitespace_normalized(name));
-ALTER TABLE entities ALTER COLUMN notes SET NOT NULL;
+ALTER TABLE entities ALTER COLUMN notes SET NOT NULL,
+                     ALTER COLUMN notes SET DEFAULT '';
 
 
 /* FORMATS */
 
-ALTER TABLE formats ALTER COLUMN notes SET NOT NULL;
+ALTER TABLE formats ALTER COLUMN notes SET NOT NULL,
+                    ALTER COLUMN notes SET DEFAULT '';
 ALTER TABLE formats ALTER COLUMN name SET NOT NULL;
 ALTER TABLE formats ADD CHECK (is_whitespace_normalized(name));
 -- decide on constraints for dataformat, header, and skip
@@ -426,6 +431,7 @@ ALTER TABLE traits ADD CHECK (checked BETWEEN -1 AND 1);
 /* TREATMENTS */
 
 ALTER TABLE treatments ALTER COLUMN name SET NOT NULL;
+/* FIX */ UPDATE treatments SET name = normalize_whitespace(name) WHERE NOT is_whitespace_normalized(name);
 ALTER TABLE treatments ADD CHECK (is_whitespace_normalized(name));
 ALTER TABLE treatments ALTER COLUMN definition SET NOT NULL;
 ALTER TABLE treatments ADD CHECK (is_whitespace_normalized(definition));
@@ -440,6 +446,7 @@ ALTER TABLE users ADD CHECK (is_whitespace_normalized(name));
 ALTER TABLE users ALTER COLUMN email SET NOT NULL;
 ALTER TABLE users ADD CHECK (is_wellformed_email(email));
 ALTER TABLE users ALTER COLUMN city SET NOT NULL;
+/* FIX */ UPDATE users SET city = normalize_whitespace(city) WHERE NOT is_whitespace_normalized(city);
 ALTER TABLE users ADD CHECK (is_whitespace_normalized(city));
 ALTER TABLE users ALTER COLUMN country SET NOT NULL;
 ALTER TABLE users ADD CHECK (is_whitespace_normalized(country));
@@ -449,6 +456,7 @@ ALTER TABLE users ADD CHECK (crypted_password ~ '^[0-9a-f]{40}$');
 ALTER TABLE users ADD CHECK (salt ~ '^[0-9a-f]{40}$');
 ALTER TABLE users ALTER COLUMN access_level SET DATA TYPE level_of_access;
 ALTER TABLE users ALTER COLUMN page_access_level SET DATA TYPE level_of_access;
+/* FIX */ UPDATE users SET apikey = '' WHERE apikey IS NULL;
 ALTER TABLE users ALTER COLUMN apikey SET NOT NULL;
 ALTER TABLE users ADD CHECK (apikey ~ '^[0-9a-zA-Z+/]{40}$' OR apikey = '');
 ALTER TABLE users ALTER COLUMN state_prov SET NOT NULL;
@@ -480,8 +488,10 @@ ALTER TABLE workflows ALTER COLUMN advanced_edit SET NOT NULL;
 /* YIELDS */
 
 ALTER TABLE yields ALTER COLUMN mean SET NOT NULL;
+/* FIX */ UPDATE yields SET statname = '' WHERE statname IS NULL;
 ALTER TABLE yields ALTER COLUMN statname SET NOT NULL;
 ALTER TABLE yields ALTER COLUMN statname SET DATA TYPE statnames;
+/* FIX */ UPDATE yields SET notes = '' WHERE notes IS NULL;
 ALTER TABLE yields ALTER COLUMN notes SET NOT NULL;
 /* ALTER TABLE yields ALTER COLUMN checked SET NOT NULL; */
 ALTER TABLE yields ADD CHECK (checked BETWEEN -1 AND 1);
@@ -591,7 +601,7 @@ CREATE VIEW yieldsview_private AS
 CREATE VIEW traits_and_yields_view_private AS
         SELECT * FROM traitsview_private
             UNION ALL              /* UNION ALL is more efficient and (here) it is equal to UNION */
-        SELECT * FROM yieldsview_private
+        SELECT * FROM yieldsview_private;
 
 
 CREATE VIEW traits_and_yields_view AS
