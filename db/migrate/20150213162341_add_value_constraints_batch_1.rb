@@ -114,6 +114,16 @@ $body$ LANGUAGE plpgsql;
 
 
 
+/* New Domains */
+
+-- This is used by covariates, traits, and yields:
+CREATE DOMAIN statnames AS TEXT CHECK (VALUE IN ('SD', 'SE', 'MSE', '95%CI', 'LSD', 'MSD', 'HSD', '')) DEFAULT '' NOT NULL;
+
+-- This is used by inputs, traits, users, and yields:
+CREATE DOMAIN level_of_access AS INTEGER CHECK (VALUE BETWEEN 1 AND 4) NOT NULL;
+
+
+
 /* CITATIONS */
 
 ALTER TABLE citations ALTER COLUMN author SET NOT NULL,
@@ -156,10 +166,16 @@ ALTER TABLE citations ADD CHECK (doi ~ '^(|10\.\d+(\.\d+)?/.+)$');
 
 /* COVARIATES */
 
+-- See GH #216:
+/* ALTER TABLE covariates ALTER COLUMN trait_id SET NOT NULL; */
+/* ALTER TABLE covariates ALTER COLUMN variable_id SET NOT NULL; */
+
+-- pending cleanup:
+/* ALTER TABLE covariates ALTER COLUMN level SET NOT NULL; */
+
 -- decide whether to use >= 1 or >= 2
 /* ALTER TABLE covariates ADD CHECK (n >= 2); */
 
-CREATE DOMAIN statnames AS TEXT CHECK (VALUE IN ('SD', 'SE', 'MSE', '95%CI', 'LSD', 'MSD', 'HSD', '')) DEFAULT '' NOT NULL;
 ALTER TABLE covariates ALTER COLUMN statname SET DATA TYPE statnames;
 -- see stat-statname consistency violations:
 -- SELECT * FROM  covariates WHERE NOT (statname = '' AND stat IS NULL OR statname != '' AND stat IS NOT NULL);
@@ -170,19 +186,17 @@ ALTER TABLE covariates ALTER COLUMN statname SET DATA TYPE statnames;
 
 /* CULTIVARS */
 
-ALTER TABLE cultivars ADD CHECK (is_whitespace_normalized(name));
 ALTER TABLE cultivars ALTER COLUMN ecotype SET NOT NULL,
                       ALTER COLUMN ecotype SET DEFAULT '';
--- decide about other ecotype constraints
-ALTER TABLE cultivars ALTER COLUMN notes SET NOT NULL
+ALTER TABLE cultivars ALTER COLUMN notes SET NOT NULL,
                       ALTER COLUMN notes SET DEFAULT '';
 
 
 /* DBFILES */
 
-ALTER TABLE dbfiles ADD CHECK (container_type IN ('Model','Posterior','Input'));
 ALTER TABLE dbfiles ADD CHECK (md5 ~ '^([\da-z]{32})?$');
--- decide on other constraints
+ALTER TABLE dbfiles ADD CHECK (container_type IN ('Model','Posterior','Input'));
+-- consistency checks between this table and inputs, models, and posteriors tables are part of a separate migration
 
 
 /* ENSEMBLES */
@@ -190,7 +204,7 @@ ALTER TABLE dbfiles ADD CHECK (md5 ~ '^([\da-z]{32})?$');
 ALTER TABLE ensembles ALTER COLUMN notes SET NOT NULL,
                       ALTER COLUMN notes SET DEFAULT '';
 ALTER TABLE ensembles ALTER COLUMN runtype SET NOT NULL,
-                      ALTER COLUMN runtype SET DEFAULT '';
+                      CHECK (runtype IN ('ensemble', 'sensitivity analysis'));
 
 /* ENTITIES */
 
@@ -203,23 +217,36 @@ ALTER TABLE entities ALTER COLUMN notes SET NOT NULL,
 
 /* FORMATS */
 
+ALTER TABLE formats ALTER COLUMN dataformat SET NOT NULL,
+                    ALTER COLUMN dataformat SET DEFAULT '';
 ALTER TABLE formats ALTER COLUMN notes SET NOT NULL,
                     ALTER COLUMN notes SET DEFAULT '';
-ALTER TABLE formats ALTER COLUMN name SET NOT NULL;
-ALTER TABLE formats ADD CHECK (is_whitespace_normalized(name));
--- decide on constraints for dataformat, header, and skip
+ALTER TABLE formats ALTER COLUMN name SET NOT NULL,
+                    ADD CHECK (is_whitespace_normalized(name));
+ALTER TABLE formats ALTER COLUMN header SET NOT NULL,
+                    ALTER COLUMN header SET DEFAULT '';
+ALTER TABLE formats ALTER COLUMN skip SET NOT NULL,
+                    ALTER COLUMN skip SET DEFAULT '';
+
 
 /* FORMATS_VARIABLES */
+
+ALTER TABLE formats_variables ALTER COLUMN format_id SET NOT NULL;
+ALTER TABLE formats_variables ALTER COLUMN variable_id SET NOT NULL;
+ALTER TABLE formats_variables ALTER COLUMN name SET NOT NULL,
+                              ALTER COLUMN name SET DEFAULT '';
+ALTER TABLE formats_variables ALTER COLUMN unit SET NOT NULL,
+                              ALTER COLUMN unit SET DEFAULT '';
+ALTER TABLE formats_variables ALTER COLUMN storage_type SET NOT NULL,
+                              ALTER COLUMN storage_type SET DEFAULT '';
 
 -- decide on constraints
 
 /* INPUTS */
 
-ALTER TABLE inputs ALTER COLUMN notes SET NOT NULL;
-ALTER TABLE inputs ALTER COLUMN name SET NOT NULL;
-ALTER TABLE inputs ADD CHECK (is_whitespace_normalized(name));
--- decide on start_time constraints
--- decide on end_time constraints
+ALTER TABLE inputs ALTER COLUMN notes SET NOT NULL,
+                   ALTER COLUMN SET DEFAULT '';
+
 -- see violators of potential not null constraints:
 -- SELECT start_date, end_date FROM inputs WHERE start_date IS NULL OR end_date IS NULL;
 /* ALTER TABLE inputs ALTER COLUMN start_date SET NOT NULL; */
@@ -230,17 +257,17 @@ ALTER TABLE inputs ADD CHECK (is_whitespace_normalized(name));
 -- see future dates:
 -- SELECT start_date, end_date FROM inputs WHERE start_date > NOW() OR end_date > NOW();
 /* ALTER TABLE inputs CHECK (end_date < NOW()); */
--- see access_level values currently used:
--- SELECT COUNT(*), access_level FROM inputs GROUP BY access_level ORDER BY access_level;
--- can do this even if we don't use it right away:
-CREATE DOMAIN level_of_access AS INTEGER CHECK (VALUE BETWEEN 1 AND 4) NOT NULL;
-/* ALTER TABLE inputs ALTER COLUMN access_level SET DATA TYPE level_of_access; */
--- see null raw values:
--- SELECT id, name FROM inputs WHERE raw IS NULL;
+
+ALTER TABLE inputs ALTER COLUMN name SET NOT NULL,
+                   ADD CHECK (is_whitespace_normalized(name));
+ALTER TABLE inputs ALTER COLUMN access_level SET DATA TYPE level_of_access;
+ALTER TABLE inputs ALTER COLUMN raw SET NOT NULL;
+-- add after cleanup:
+/* ALTER TABLE inputs ALTER COLUMN format_id SET NOT NULL; */
 
 /* LIKELIHOODS */
 
--- decide on constraints
+-- no current constraints other than those in AddUniquenessConstraints migration
 
 
 /* MACHINES */
@@ -250,13 +277,8 @@ ALTER TABLE machines ADD CHECK (is_host_address(hostname));
 
 /* MANAGEMENTS */
 
--- show possibly inconsistent citation_id values:
---   SELECT COUNT(*) FROM managements m WHERE citation_id NOT IN (SELECT citation_id FROM citations_treatments ct JOIN managements_treatments mt USING (treatment_id) WHERE mt.management_id = m.id);
--- for a better picture:
---   SELECT m.citation_id, ARRAY_AGG(ct.citation_id ORDER BY ct.citation_id) AS
---     citation_list FROM managements m JOIN managements_treatments mt ON
---     mt.management_id = m.id JOIN citations_treatments ct USING (treatment_id)
---     GROUP BY m.id, m.citation_id ORDER BY m.citation_id;
+-- possibly:
+-- ALTER TABLE managements ALTER COLUMN citation_id SET NOT NULL;
 
 -- show null dateloc counts:
 --   SELECT COUNT(*), date FROM managements WHERE dateloc IS NULL GROUP BY date;
@@ -271,7 +293,8 @@ ALTER TABLE managements ALTER COLUMN mgmttype SET NOT NULL;
 
 -- decide on level and units constraints
 
-ALTER TABLE managements ALTER COLUMN notes SET NOT NULL;
+ALTER TABLE managements ALTER COLUMN notes SET NOT NULL,
+                        ALTER COLUMN notes SET DEFAULT '';
 
 
 /* METHODS */
@@ -279,6 +302,7 @@ ALTER TABLE managements ALTER COLUMN notes SET NOT NULL;
 ALTER TABLE methods ALTER COLUMN name SET NOT NULL;
 ALTER TABLE methods ADD CHECK (is_whitespace_normalized(name));
 ALTER TABLE methods ALTER COLUMN description SET NOT NULL;
+-- Additional constraints will be added when candidate key is implemented.
 
 
 /* MIMETYPES */
@@ -289,10 +313,10 @@ ALTER TABLE methods ALTER COLUMN description SET NOT NULL;
 
 /* MODELS */
 
-ALTER TABLE models ALTER COLUMN model_name SET NOT NULL;
-ALTER TABLE models ADD CHECK (model_name !~ '\s');
-ALTER TABLE models ALTER COLUMN revision SET NOT NULL;
-ALTER TABLE models ADD CHECK (revision !~ '\s');
+ALTER TABLE models ALTER COLUMN model_name SET NOT NULL,
+                   ADD CHECK (model_name !~ '\s');
+ALTER TABLE models ALTER COLUMN revision SET NOT NULL,
+                   ADD CHECK (revision !~ '\s');
 
 
 /* MODELTYPES */
