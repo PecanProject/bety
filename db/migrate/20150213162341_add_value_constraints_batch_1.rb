@@ -330,10 +330,8 @@ ALTER TABLE modeltypes ADD CHECK (is_whitespace_free(name));
 
 /* MODELTYPES_FORMATS */
 
-ALTER TABLE modeltypes_formats ALTER COLUMN tag SET NOT NULL;
--- use one of these constraints:
-/* ALTER TABLE modeltypes_formats ADD CHECK (tag !~ '\w'); */
-/* ALTER TABLE modeltypes_formats ADD CHECK (tag ~ '^[a-z]+$'); */
+ALTER TABLE modeltypes_formats ALTER COLUMN tag SET NOT NULL,
+                               ADD CHECK (tag ~ '^[a-z]+$');
 ALTER TABLE modeltypes_formats ALTER COLUMN required SET NOT NULL;
 ALTER TABLE modeltypes_formats ALTER COLUMN input SET NOT NULL;
 
@@ -341,37 +339,39 @@ ALTER TABLE modeltypes_formats ALTER COLUMN input SET NOT NULL;
 /* PFTS */
 
 ALTER TABLE pfts ALTER COLUMN definition SET NOT NULL;
-ALTER TABLE pfts ADD CHECK (name ~ '^[-\w]+(\.[-\w]+)*$');
-ALTER TABLE pfts ALTER COLUMN pft_type SET NOT NULL;
-ALTER TABLE pfts ADD CHECK (pft_type IN ('plant', 'cultivar', ''));
+ALTER TABLE pfts ADD CHECK (is_whitespace_normalized(name));
+ALTER TABLE pfts ALTER COLUMN pft_type SET NOT NULL,
+                 ADD CHECK (pft_type IN ('plant', 'cultivar', ''));
 
 /* PRIORS */
 
-ALTER TABLE priors ALTER COLUMN phylogeny SET NOT NULL;
-ALTER TABLE priors ADD CHECK (is_whitespace_normalized(phylogeny));
-ALTER TABLE priors ALTER COLUMN distn SET NOT NULL;
-ALTER TABLE priors ADD CHECK (distn IN ('beta', 'binom', 'cauchy', 'chisq', 'exp', 'f', 'gamma', 'geom', 'hyper', 'lnorm', 'logis', 'nbinom', 'norm', 'pois', 't', 'unif', 'weibull', 'wilcox'));
+ALTER TABLE priors ALTER COLUMN variable_id SET NOT NULL;
+ALTER TABLE priors ALTER COLUMN phylogeny SET NOT NULL,
+                   ADD CHECK (is_whitespace_normalized(phylogeny));
+ALTER TABLE priors ALTER COLUMN distn SET NOT NULL,
+                   ADD CHECK (distn IN ('beta', 'binom', 'cauchy', 'chisq', 'exp', 'f', 'gamma', 'geom', 'hyper', 'lnorm', 'logis', 'nbinom', 'norm', 'pois', 't', 'unif', 'weibull', 'wilcox'));
 ALTER TABLE priors ALTER COLUMN parama SET NOT NULL;
 ALTER TABLE priors ADD CHECK (n >= 0);
 
 /* PROJECTS */
 
-ALTER TABLE projects ALTER COLUMN name SET NOT NULL;
+ALTER TABLE projects ALTER COLUMN name SET NOT NULL,
+                     ADD CHECK (is_whitespace_normalized(name));
 ALTER TABLE projects ALTER COLUMN outdir SET NOT NULL;
--- decide on other constraints for outdir
 ALTER TABLE projects ALTER COLUMN description SET NOT NULL;
 
 
 /* RUNS */
 
-ALTER TABLE runs ALTER COLUMN outdir SET NOT NULL;
-ALTER TABLE runs ALTER COLUMN outprefix SET NOT NULL;
-ALTER TABLE runs ALTER COLUMN setting SET NOT NULL;
+ALTER TABLE runs ALTER COLUMN outdir SET NOT NULL,
+                 ALTER COLUMN outdir SET DEFAULT '';
+ALTER TABLE runs ALTER COLUMN outprefix SET NOT NULL,
+                 ALTER COLUMN outprefix SET DEFAULT '';
+ALTER TABLE runs ALTER COLUMN setting SET NOT NULL,
+                 ALTER COLUMN setting SET DEFAULT '';
 ALTER TABLE runs ALTER COLUMN started_at SET NOT NULL;
 ALTER TABLE runs ADD CHECK (started_at <= NOW());
--- we are probably removing these columns:
--- ALTER TABLE runs ALTER COLUMN start_date SET NOT NULL;
--- ALTER TABLE runs ALTER COLUMN end_date SET NOT NULL;
+
 
 
 /* SITES */
