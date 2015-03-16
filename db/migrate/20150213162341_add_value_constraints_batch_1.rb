@@ -11,6 +11,14 @@ DROP VIEW IF EXISTS yieldsview_private;
 DROP VIEW IF EXISTS traitsview_private;
 
 
+CREATE OR REPLACE FUNCTION is_whitespace_free(
+  string text
+) RETURNS bollean AS $$
+BEGIN
+  RETURN string !~ '[\s\u00a0]';
+END;
+$$ LANGUAGE plpgsql;
+
 
 /* THIS SECTION IS ONLY HERE TEMPORARILY! DELETE AFTER AddUniquenessConstraints MIGRATION IS ADDED! */
 -- Some convenience functions
@@ -170,11 +178,7 @@ ALTER TABLE citations ADD CHECK (doi ~ '^(|10\.\d+(\.\d+)?/.+)$');
 /* ALTER TABLE covariates ALTER COLUMN trait_id SET NOT NULL; */
 /* ALTER TABLE covariates ALTER COLUMN variable_id SET NOT NULL; */
 
--- pending cleanup:
-/* ALTER TABLE covariates ALTER COLUMN level SET NOT NULL; */
-
--- decide whether to use >= 1 or >= 2
-/* ALTER TABLE covariates ADD CHECK (n >= 2); */
+ALTER TABLE covariates ADD CHECK (n >= 1);
 
 ALTER TABLE covariates ALTER COLUMN statname SET DATA TYPE statnames;
 -- see stat-statname consistency violations:
@@ -307,22 +311,21 @@ ALTER TABLE methods ALTER COLUMN description SET NOT NULL;
 
 /* MIMETYPES */
 
--- to decide:
-/* ALTER TABLE mimetypes ADD CHECK(type_string ~ '^(application|audio|chemical|drawing|image|i-world|message|model|multipart|music|paleovu|text|video|windows|www|x-conference|xgl|x-music|x-world)/[a-z.0-9_-]+( \((old|compiled elisp)\))?$'); */
+-- Constraints are in AddUniquenessConstraints migration.
 
 
 /* MODELS */
 
 ALTER TABLE models ALTER COLUMN model_name SET NOT NULL,
-                   ADD CHECK (model_name !~ '\s');
+                   ADD CHECK (is_whitespace_free(model_name));
 ALTER TABLE models ALTER COLUMN revision SET NOT NULL,
-                   ADD CHECK (revision !~ '\s');
+                   ADD CHECK (is_whitespace_free(revision));
 
 
 /* MODELTYPES */
 
 ALTER TABLE modeltypes ALTER COLUMN name SET NOT NULL;
-ALTER TABLE modeltypes ADD CHECK (name !~ '\s');
+ALTER TABLE modeltypes ADD CHECK (is_whitespace_free(name));
 
 
 /* MODELTYPES_FORMATS */
