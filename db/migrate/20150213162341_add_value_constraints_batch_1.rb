@@ -11,6 +11,13 @@ DROP VIEW IF EXISTS yieldsview_private;
 DROP VIEW IF EXISTS traitsview_private;
 
 
+CREATE OR REPLACE FUNCTION utc_now()
+    RETURNS timestamp AS $$
+BEGIN
+    RETURN CURRENT_TIMESTAMP AT TIME ZONE 'UTC';
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION is_whitespace_free(
   string text
 ) RETURNS bollean AS $$
@@ -259,8 +266,8 @@ ALTER TABLE inputs ALTER COLUMN notes SET NOT NULL,
 -- SELECT start_date, end_date FROM inputs WHERE start_date >= end_date;
 /* ALTER TABLE inputs ADD CHECK (start_date < end_date); */
 -- see future dates:
--- SELECT start_date, end_date FROM inputs WHERE start_date > NOW() OR end_date > NOW();
-/* ALTER TABLE inputs CHECK (end_date < NOW()); */
+-- SELECT start_date, end_date FROM inputs WHERE start_date > utc_now() OR end_date > utc_now();
+/* ALTER TABLE inputs CHECK (end_date < utc_now()); */
 
 ALTER TABLE inputs ALTER COLUMN name SET NOT NULL,
                    ADD CHECK (is_whitespace_normalized(name));
@@ -370,9 +377,9 @@ ALTER TABLE runs ALTER COLUMN outprefix SET NOT NULL,
 ALTER TABLE runs ALTER COLUMN setting SET NOT NULL,
                  ALTER COLUMN setting SET DEFAULT '';
 ALTER TABLE runs ALTER COLUMN started_at SET NOT NULL;
-ALTER TABLE runs ADD CHECK (started_at <= NOW());
-
-
+ALTER TABLE runs ADD CHECK (started_at <= NOW()::timestamp); -- NOW()::timestamp makes clear we are using local machine time
+ALTER TABLE runs ADD CHECK (started_at <= finished_at AND finished_at <= NOW()::timestamp);
+COMMENT ON COLUMN runs.started_at IS 'system time when run was started';
 
 /* SITES */
 
@@ -397,19 +404,27 @@ ALTER TABLE sites ADD CHECK ( (ST_X(ST_CENTROID(geometry)) BETWEEN -180 AND 180)
 /* SPECIES */
 
 ALTER TABLE species ADD CHECK (spcd BETWEEN 0 AND 10000);
-ALTER TABLE species ALTER COLUMN genus SET NOT NULL;
-ALTER TABLE species ADD CHECK (genus ~ '^([A-Z][-a-z]*)?$');
-ALTER TABLE species ALTER COLUMN species SET NOT NULL;
--- see bad species names:
---   SELECT genus, scientificname, species FROM species WHERE species !~ '^([a-z-]*| var. | ssp. | \u00d7 | L.($| ))*$';
-/* ALTER TABLE species ADD CHECK (species ~ '^([a-z-]*| var. | ssp. | \u00d7 | L.($| ))*$'); */
-ALTER TABLE species ALTER COLUMN scientificname SET NOT NULL;
-ALTER TABLE species ADD CHECK (is_whitespace_normalized(scientificname));
-ALTER TABLE species ALTER COLUMN commonname SET NOT NULL;
-ALTER TABLE species ADD CHECK (is_whitespace_normalized(commonname));
-ALTER TABLE species ALTER COLUMN notes SET NOT NULL;
+
+-- genus should consist of a capital letter followed by zero or more lower case letters or hyphens or be empty.
+ALTER TABLE species ALTER COLUMN genus SET NOT NULL,
+                    ADD CHECK (genus ~ '^([A-Z][-a-z]*)?$');
+
+-- species should be zero or more space-or-hyphen-separated groups of capital
+-- letters followed by a period, sequences of two or more letters possibly
+-- followed by a period, ampersands, and times symbols.
+ALTER TABLE species ALTER COLUMN species SET NOT NULL,
+                    ADD CHECK (species ~ '^(([A-Z]\.|[a-zA-Z]{2,}\.?|&|\u00d7)( |-|$))*$');
+
 -- see rows that violate proposed consistency constraint:
--- SELECT scientificname, genus, species FROM species WHERE scientificname !~ FORMAT('^%s %s', genus, species) AND species != '';
+--   SELECT scientificname, genus, species FROM species WHERE scientificname !~ FORMAT('^%s.*%s', genus, species);
+-- scientificname should contain the genus followed by the species, possibly with one or more intervening characters.
+ALTER TABLE species ALTER COLUMN scientificname SET NOT NULL,
+                    ADD CHECK (is_whitespace_normalized(scientificname))/*,
+                    ADD CHECK (scientificname ~ FORMAT('%s.*%s', genus, species))*/;
+
+ALTER TABLE species ALTER COLUMN commonname SET NOT NULL,
+                    ADD CHECK (is_whitespace_normalized(commonname));
+ALTER TABLE species ALTER COLUMN notes SET NOT NULL;
 
 -- normalize cross in hybrids:
 CREATE OR REPLACE FUNCTION replace_x() 
