@@ -92,7 +92,7 @@ module SimpleSearch
     conditions = {}
     select = []
     params.each do |k, v|
-      next if !self.column_names.include?(k)
+      next if !self.column_names.include?(k) && k !~ /\./
       conditions[k] = v
     end
     if params["filters"]
@@ -103,6 +103,8 @@ module SimpleSearch
     end
     params[:include] = [] unless params[:include]
     select = ["*"] if select.empty?
+    # keep this debug line for now:
+    Rails.logger.debug("where(#{conditions.inspect}).select(#{select.join(",").inspect}).includes(#{params[:include].inspect})")
     where(conditions).select(select.join(",")).includes(params[:include])
   end
 
