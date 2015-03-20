@@ -2,13 +2,13 @@ class Specie < ActiveRecord::Base
   require "comma"
   include Overrides
 
-  def to_json(options = {})
-    options[:only] = [:genus, :species, :scientificname, :yields]
+  def as_json(options = {})
+    options[:except] = self.class.column_names.select { |nam| nam =~ /[A-Z]/ && nam != "AcceptedSymbol" }
     super(options)
   end
 
   def to_xml(options = {})
-    options[:only] = [:genus, :species, :scientificname, :yields]
+    options[:except] = self.class.column_names.select { |nam| nam =~ /[A-Z]/ && nam != "AcceptedSymbol" }
     super(options)
   end
 
