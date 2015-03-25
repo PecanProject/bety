@@ -28,11 +28,11 @@ class Trait < ActiveRecord::Base
   validates_presence_of     :variable
   validates_inclusion_of    :access_level, in: 1..4, message: "You must select an access level"
   validates_presence_of     :statname, :if => Proc.new { |trait| !trait.stat.blank? }
-  validates_format_of       :date_year, :with => /^(\d{2}|\d{4})$/, :allow_blank => true
-  validates_format_of       :date_month, :with => /^\d{1,2}$/, :allow_blank => true
-  validates_format_of       :date_day, :with => /^\d{1,2}$/, :allow_blank => true
-  validates_format_of       :time_hour, :with => /^\d{1,2}$/, :allow_blank => true
-  validates_format_of       :time_minute, :with => /^\d{1,2}$/, :allow_blank => true
+  validates_format_of       :date_year, :with => /\A(\d{2}|\d{4})\z/, :allow_blank => true
+  validates_format_of       :date_month, :with => /\A\d{1,2}\z/, :allow_blank => true
+  validates_format_of       :date_day, :with => /\A\d{1,2}\z/, :allow_blank => true
+  validates_format_of       :time_hour, :with => /\A\d{1,2}\z/, :allow_blank => true
+  validates_format_of       :time_minute, :with => /\A\d{1,2}\z/, :allow_blank => true
   validate :can_change_checked
   validate :mean_in_range
 
