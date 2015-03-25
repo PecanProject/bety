@@ -12,6 +12,50 @@ SET client_min_messages = warning;
 SET search_path = public, pg_catalog;
 
 --
+-- Name: no_cultivar_member(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION no_cultivar_member(this_pft_id bigint) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $$
+  DECLARE cultivar_member_exists boolean;
+BEGIN
+  SELECT EXISTS(SELECT 1 FROM cultivars_pfts WHERE pft_id = this_pft_id) INTO cultivar_member_exists;
+  RETURN NOT cultivar_member_exists;
+END
+$$;
+
+
+--
+-- Name: FUNCTION no_cultivar_member(this_pft_id bigint); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION no_cultivar_member(this_pft_id bigint) IS 'Returns TRUE if the pft with id "this_pft_id" contains no members which are cultivars (as opposed to species).';
+
+
+--
+-- Name: no_species_member(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION no_species_member(this_pft_id bigint) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $$
+  DECLARE species_member_exists boolean;
+BEGIN
+  SELECT EXISTS(SELECT 1 FROM pfts_species WHERE pft_id = this_pft_id) INTO species_member_exists;
+  RETURN NOT species_member_exists;
+END
+$$;
+
+
+--
+-- Name: FUNCTION no_species_member(this_pft_id bigint); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION no_species_member(this_pft_id bigint) IS 'Returns TRUE if the pft with id "this_pft_id" contains no members which are species (as opposed to cultivars).';
+
+
+--
 -- Name: prevent_conflicting_range_changes(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -382,6 +426,33 @@ COMMENT ON COLUMN cultivars.name IS 'Cultivar name given by breeder or reported 
 --
 
 COMMENT ON COLUMN cultivars.ecotype IS 'Does not apply for all species, used in the case of switchgrass to differentiate lowland and upland genotypes.';
+
+
+--
+-- Name: cultivars_pfts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cultivars_pfts (
+    pft_id bigint NOT NULL,
+    cultivar_id bigint NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    CONSTRAINT no_conflicting_member CHECK (no_species_member(pft_id))
+);
+
+
+--
+-- Name: TABLE cultivars_pfts; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE cultivars_pfts IS 'This table tells which cultivars are members of which pfts.  For each row, the cultivar with id "cultivar_id" is a member of the pft with id "pft_id".';
+
+
+--
+-- Name: CONSTRAINT no_conflicting_member ON cultivars_pfts; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT no_conflicting_member ON cultivars_pfts IS 'Ensure the pft_id does not refer to a pft having one or more species as members; pfts referred to by this table can only contain other cultivars.';
 
 
 --
@@ -938,7 +1009,7 @@ CREATE TABLE pfts (
     definition text,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
-    name character varying(255),
+    name character varying(255) NOT NULL,
     parent_id bigint,
     pft_type character varying(255) DEFAULT 'plant'::character varying,
     modeltype_id bigint NOT NULL
@@ -956,7 +1027,7 @@ COMMENT ON COLUMN pfts.definition IS 'Defines the creator and context under whic
 -- Name: COLUMN pfts.name; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN pfts.name IS 'unique identifier used by PEcAn.';
+COMMENT ON COLUMN pfts.name IS 'pft names are unique within a given model type.';
 
 
 --
@@ -976,11 +1047,26 @@ CREATE TABLE pfts_priors (
 --
 
 CREATE TABLE pfts_species (
-    pft_id bigint,
-    specie_id bigint,
+    pft_id bigint NOT NULL,
+    specie_id bigint NOT NULL,
     created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone
+    updated_at timestamp(6) without time zone,
+    CONSTRAINT no_conflicting_member CHECK (no_cultivar_member(pft_id))
 );
+
+
+--
+-- Name: TABLE pfts_species; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE pfts_species IS 'This table tells which species are members of which pfts.  For each row, the species with id "specie_id" is a member of the pft with id "pft_id".';
+
+
+--
+-- Name: CONSTRAINT no_conflicting_member ON pfts_species; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT no_conflicting_member ON pfts_species IS 'Ensure the pft_id does not refer to a pft having one or more cultivars as members; pfts referred to by this table con only contain other species.';
 
 
 --
@@ -2449,6 +2535,14 @@ ALTER TABLE ONLY treatments
 
 
 --
+-- Name: unique_names_per_modeltype; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pfts
+    ADD CONSTRAINT unique_names_per_modeltype UNIQUE (name, modeltype_id);
+
+
+--
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2478,6 +2572,13 @@ ALTER TABLE ONLY workflows
 
 ALTER TABLE ONLY yields
     ADD CONSTRAINT yields_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cultivar_pft_uniqueness; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX cultivar_pft_uniqueness ON cultivars_pfts USING btree (pft_id, cultivar_id);
 
 
 --
@@ -2988,6 +3089,610 @@ CREATE TRIGGER restrict_trait_range BEFORE INSERT OR UPDATE ON traits FOR EACH R
 COMMENT ON TRIGGER restrict_trait_range ON traits IS 'Trigger function to ensure values of mean in the traits table are
    within the range specified by min and max in the variables table.
    A NULL in the min or max column means "no limit".';
+
+
+--
+-- Name: cultivar_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cultivars_pfts
+    ADD CONSTRAINT cultivar_exists FOREIGN KEY (cultivar_id) REFERENCES cultivars(id) ON UPDATE CASCADE;
+
+
+--
+-- Name: CONSTRAINT cultivar_exists ON cultivars_pfts; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT cultivar_exists ON cultivars_pfts IS 'Ensure the referred-to cultivar exists, block its deletion if it is being used in a pft, and update the reference if the cultivar id number changes.';
+
+
+--
+-- Name: fk_citations_sites_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY citations_sites
+    ADD CONSTRAINT fk_citations_sites_citations_1 FOREIGN KEY (citation_id) REFERENCES citations(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_citations_sites_sites_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY citations_sites
+    ADD CONSTRAINT fk_citations_sites_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id) ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_citations_treatments_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY citations_treatments
+    ADD CONSTRAINT fk_citations_treatments_citations_1 FOREIGN KEY (citation_id) REFERENCES citations(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_citations_treatments_treatments_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY citations_treatments
+    ADD CONSTRAINT fk_citations_treatments_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_citations_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY citations
+    ADD CONSTRAINT fk_citations_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_covariates_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY covariates
+    ADD CONSTRAINT fk_covariates_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_cultivars_species_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cultivars
+    ADD CONSTRAINT fk_cultivars_species_1 FOREIGN KEY (specie_id) REFERENCES species(id);
+
+
+--
+-- Name: fk_current_posteriors_pfts_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY current_posteriors
+    ADD CONSTRAINT fk_current_posteriors_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id);
+
+
+--
+-- Name: fk_current_posteriors_posterior_samples_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY current_posteriors
+    ADD CONSTRAINT fk_current_posteriors_posterior_samples_1 FOREIGN KEY (posteriors_samples_id) REFERENCES posterior_samples(id);
+
+
+--
+-- Name: fk_current_posteriors_projects_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY current_posteriors
+    ADD CONSTRAINT fk_current_posteriors_projects_1 FOREIGN KEY (project_id) REFERENCES projects(id);
+
+
+--
+-- Name: fk_current_posteriors_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY current_posteriors
+    ADD CONSTRAINT fk_current_posteriors_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_dbfiles_machines_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY dbfiles
+    ADD CONSTRAINT fk_dbfiles_machines_1 FOREIGN KEY (machine_id) REFERENCES machines(id);
+
+
+--
+-- Name: fk_dbfiles_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY dbfiles
+    ADD CONSTRAINT fk_dbfiles_users_1 FOREIGN KEY (created_user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_dbfiles_users_2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY dbfiles
+    ADD CONSTRAINT fk_dbfiles_users_2 FOREIGN KEY (updated_user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_ensembles_workflows_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY ensembles
+    ADD CONSTRAINT fk_ensembles_workflows_1 FOREIGN KEY (workflow_id) REFERENCES workflows(id);
+
+
+--
+-- Name: fk_entities_entities_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY entities
+    ADD CONSTRAINT fk_entities_entities_1 FOREIGN KEY (parent_id) REFERENCES entities(id);
+
+
+--
+-- Name: fk_formats_variables_formats_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY formats_variables
+    ADD CONSTRAINT fk_formats_variables_formats_1 FOREIGN KEY (format_id) REFERENCES formats(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_formats_variables_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY formats_variables
+    ADD CONSTRAINT fk_formats_variables_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_inputs_formats_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs
+    ADD CONSTRAINT fk_inputs_formats_1 FOREIGN KEY (format_id) REFERENCES formats(id);
+
+
+--
+-- Name: fk_inputs_inputs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs
+    ADD CONSTRAINT fk_inputs_inputs_1 FOREIGN KEY (parent_id) REFERENCES inputs(id);
+
+
+--
+-- Name: fk_inputs_runs_inputs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs_runs
+    ADD CONSTRAINT fk_inputs_runs_inputs_1 FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_inputs_runs_runs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs_runs
+    ADD CONSTRAINT fk_inputs_runs_runs_1 FOREIGN KEY (run_id) REFERENCES runs(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_inputs_sites_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs
+    ADD CONSTRAINT fk_inputs_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id);
+
+
+--
+-- Name: fk_inputs_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs
+    ADD CONSTRAINT fk_inputs_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_inputs_variables_inputs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs_variables
+    ADD CONSTRAINT fk_inputs_variables_inputs_1 FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_inputs_variables_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs_variables
+    ADD CONSTRAINT fk_inputs_variables_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_likelihoods_inputs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY likelihoods
+    ADD CONSTRAINT fk_likelihoods_inputs_1 FOREIGN KEY (input_id) REFERENCES inputs(id);
+
+
+--
+-- Name: fk_likelihoods_runs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY likelihoods
+    ADD CONSTRAINT fk_likelihoods_runs_1 FOREIGN KEY (run_id) REFERENCES runs(id);
+
+
+--
+-- Name: fk_likelihoods_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY likelihoods
+    ADD CONSTRAINT fk_likelihoods_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_location_yields_counties_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY location_yields
+    ADD CONSTRAINT fk_location_yields_counties_1 FOREIGN KEY (county_id) REFERENCES counties(id);
+
+
+--
+-- Name: fk_managements_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managements
+    ADD CONSTRAINT fk_managements_citations_1 FOREIGN KEY (citation_id) REFERENCES citations(id);
+
+
+--
+-- Name: fk_managements_treatments_managements_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managements_treatments
+    ADD CONSTRAINT fk_managements_treatments_managements_1 FOREIGN KEY (management_id) REFERENCES managements(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_managements_treatments_treatments_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managements_treatments
+    ADD CONSTRAINT fk_managements_treatments_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_managements_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managements
+    ADD CONSTRAINT fk_managements_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_methods_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY methods
+    ADD CONSTRAINT fk_methods_citations_1 FOREIGN KEY (citation_id) REFERENCES citations(id);
+
+
+--
+-- Name: fk_models_models_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY models
+    ADD CONSTRAINT fk_models_models_1 FOREIGN KEY (parent_id) REFERENCES models(id);
+
+
+--
+-- Name: fk_models_modeltypes_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY models
+    ADD CONSTRAINT fk_models_modeltypes_1 FOREIGN KEY (modeltype_id) REFERENCES modeltypes(id);
+
+
+--
+-- Name: fk_modeltypes_formats_formats_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY modeltypes_formats
+    ADD CONSTRAINT fk_modeltypes_formats_formats_1 FOREIGN KEY (format_id) REFERENCES formats(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_modeltypes_formats_modeltypes_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY modeltypes_formats
+    ADD CONSTRAINT fk_modeltypes_formats_modeltypes_1 FOREIGN KEY (modeltype_id) REFERENCES modeltypes(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_modeltypes_formats_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY modeltypes_formats
+    ADD CONSTRAINT fk_modeltypes_formats_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_modeltypes_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY modeltypes
+    ADD CONSTRAINT fk_modeltypes_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_pfts_modeltypes_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pfts
+    ADD CONSTRAINT fk_pfts_modeltypes_1 FOREIGN KEY (modeltype_id) REFERENCES modeltypes(id);
+
+
+--
+-- Name: fk_pfts_pfts_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pfts
+    ADD CONSTRAINT fk_pfts_pfts_1 FOREIGN KEY (parent_id) REFERENCES pfts(id);
+
+
+--
+-- Name: fk_posterior_samples_pfts_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posterior_samples
+    ADD CONSTRAINT fk_posterior_samples_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id);
+
+
+--
+-- Name: fk_posterior_samples_posterior_samples_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posterior_samples
+    ADD CONSTRAINT fk_posterior_samples_posterior_samples_1 FOREIGN KEY (parent_id) REFERENCES posterior_samples(id);
+
+
+--
+-- Name: fk_posterior_samples_posteriors_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posterior_samples
+    ADD CONSTRAINT fk_posterior_samples_posteriors_1 FOREIGN KEY (posterior_id) REFERENCES posteriors(id);
+
+
+--
+-- Name: fk_posterior_samples_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posterior_samples
+    ADD CONSTRAINT fk_posterior_samples_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_posteriors_ensembles_ensembles_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posteriors_ensembles
+    ADD CONSTRAINT fk_posteriors_ensembles_ensembles_1 FOREIGN KEY (ensemble_id) REFERENCES ensembles(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_posteriors_ensembles_posteriors_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posteriors_ensembles
+    ADD CONSTRAINT fk_posteriors_ensembles_posteriors_1 FOREIGN KEY (posterior_id) REFERENCES posteriors(id) ON DELETE CASCADE;
+
+
+--
+-- Name: fk_posteriors_formats_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posteriors
+    ADD CONSTRAINT fk_posteriors_formats_1 FOREIGN KEY (format_id) REFERENCES formats(id);
+
+
+--
+-- Name: fk_posteriors_pfts_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posteriors
+    ADD CONSTRAINT fk_posteriors_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id);
+
+
+--
+-- Name: fk_priors_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY priors
+    ADD CONSTRAINT fk_priors_citations_1 FOREIGN KEY (citation_id) REFERENCES citations(id);
+
+
+--
+-- Name: fk_priors_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY priors
+    ADD CONSTRAINT fk_priors_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_projects_machines_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT fk_projects_machines_1 FOREIGN KEY (machine_id) REFERENCES machines(id);
+
+
+--
+-- Name: fk_runs_ensembles_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY runs
+    ADD CONSTRAINT fk_runs_ensembles_1 FOREIGN KEY (ensemble_id) REFERENCES ensembles(id);
+
+
+--
+-- Name: fk_runs_models_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY runs
+    ADD CONSTRAINT fk_runs_models_1 FOREIGN KEY (model_id) REFERENCES models(id);
+
+
+--
+-- Name: fk_runs_sites_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY runs
+    ADD CONSTRAINT fk_runs_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id);
+
+
+--
+-- Name: fk_sites_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sites
+    ADD CONSTRAINT fk_sites_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_trait_covariate_associations_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY trait_covariate_associations
+    ADD CONSTRAINT fk_trait_covariate_associations_variables_1 FOREIGN KEY (covariate_variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_trait_covariate_associations_variables_2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY trait_covariate_associations
+    ADD CONSTRAINT fk_trait_covariate_associations_variables_2 FOREIGN KEY (trait_variable_id) REFERENCES variables(id);
+
+
+--
+-- Name: fk_workflows_models_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY workflows
+    ADD CONSTRAINT fk_workflows_models_1 FOREIGN KEY (model_id) REFERENCES models(id);
+
+
+--
+-- Name: fk_workflows_sites_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY workflows
+    ADD CONSTRAINT fk_workflows_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id);
+
+
+--
+-- Name: fk_yields_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_citations_1 FOREIGN KEY (citation_id) REFERENCES citations(id);
+
+
+--
+-- Name: fk_yields_cultivars_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_cultivars_1 FOREIGN KEY (cultivar_id) REFERENCES cultivars(id);
+
+
+--
+-- Name: fk_yields_methods_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_methods_1 FOREIGN KEY (method_id) REFERENCES methods(id);
+
+
+--
+-- Name: fk_yields_species_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_species_1 FOREIGN KEY (specie_id) REFERENCES species(id);
+
+
+--
+-- Name: fk_yields_treatments_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id);
+
+
+--
+-- Name: fk_yields_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: pft_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cultivars_pfts
+    ADD CONSTRAINT pft_exists FOREIGN KEY (pft_id) REFERENCES pfts(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CONSTRAINT pft_exists ON cultivars_pfts; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT pft_exists ON cultivars_pfts IS 'Ensure the referred-to pft exists, and clean up any references to it if it is deleted or updated.';
+
+
+--
+-- Name: pft_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pfts_species
+    ADD CONSTRAINT pft_exists FOREIGN KEY (pft_id) REFERENCES pfts(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
+-- Name: CONSTRAINT pft_exists ON pfts_species; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT pft_exists ON pfts_species IS 'Ensure the referred-to pft exists, and clean up any references to it if it is deleted or updated.';
+
+
+--
+-- Name: species_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pfts_species
+    ADD CONSTRAINT species_exists FOREIGN KEY (specie_id) REFERENCES species(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: CONSTRAINT species_exists ON pfts_species; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON CONSTRAINT species_exists ON pfts_species IS 'Ensure the referred-to species exists, block its deletion if it is used in a pft, and update the reference if the species id number changes.';
 
 
 --

@@ -160,13 +160,6 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   # match '*path' => 'static#index'
   match ':action' => 'static#:action'
 
-  # This seems a somewhat kludgy way to get 'link_to "User Guide",
-  # user_guide_path' to create a robust link to
-  # /public/dbdocumentation_users.pdf, but it works.
-  get '/dbdocumentation_users.pdf' => redirect('/dbdocumentation_users.pdf'), :as => :user_guide
-  # Similarly, data entry guide:
-  get '/dbdocumentation_data_entry.pdf' => redirect('/dbdocumentation_data_entry.pdf'), :as => :data_entry_guide
-
   # add named routes for bulk_upload controller:
   match '/bulk_upload/start_upload' => 'sessions#new', :as => :start_upload
   match '/bulk_upload/display_csv_file', :as => :show_upload_file_contents

@@ -1178,7 +1178,7 @@ class BulkUploadDataSet
 
     if /SE/i.match heading
       heading.upcase
-    elsif Regexp.new(RECOGNIZED_COLUMNS.join('|'), Regexp::IGNORECASE).match heading
+    elsif Regexp.new("^(#{RECOGNIZED_COLUMNS.join('|')})$", Regexp::IGNORECASE).match heading
       heading.downcase
     else
       heading

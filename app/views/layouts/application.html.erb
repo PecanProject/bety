@@ -204,7 +204,7 @@
               </ul>
             </li>
 
-            <% if current_user != nil && current_user.page_access_level < 4 %>
+            <% if current_user != nil && current_user.page_access_level == 1 %>
             <li><%= link_to "Bulk Upload", controller: "bulk_upload", action: session[:bulk_upload_stage] || "start_upload" %></li>
             <% end %>
             
@@ -260,7 +260,7 @@
 				  <h3><strong>BETY</strong>db</h3>
 				  <ul class="unstyled">
 					  <li><%= link_to "Homepage", root_path %></li>
-					  <li><%= link_to 'Documentation', user_guide_path %></li>
+                                          <li><%= link_to "Documentation","https://github.com/PecanProject/bety/wiki/The-Biofuel-Ecophysiological-Traits-and-Yields-Database", :target =>"_blank" %></li>
 					  <li><%= link_to "Maps & Data", maps_path %></li>
 				  </ul>
 			  </div>
