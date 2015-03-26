@@ -29,7 +29,7 @@
           </div>
           <div class="five columns">
             <%= f.label :distribution %>
-            <%= f.select :distn, %w(beta binom cauchy chisq exp f gamma geom hyper lnorm logis nbinom norm pois t unif weibull wilcox), :class => "input-full" %><br />
+            <%= f.select :distn, Prior.distn_types, :class => "input-full" %><br />
             <em><%= link_to "More information about distributions", "http://cran.r-project.org/doc/manuals/R-intro.html#R-as-a-set-of-statistical-tables", :target =>"_blank" %></em>
           </div>
           <div class="three columns">
