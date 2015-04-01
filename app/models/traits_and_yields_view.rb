@@ -12,7 +12,7 @@ end
 class TraitsAndYieldsView < ActiveRecord::Base
   # Passed from controller for validation of ability
 #  attr_accessor :current_user
-  set_table_name 'traits_and_yields_view'
+  self.table_name = 'traits_and_yields_view'
 
   include ActiveModel::Serialization
 

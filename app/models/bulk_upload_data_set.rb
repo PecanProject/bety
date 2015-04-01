@@ -1,5 +1,6 @@
+require 'memoist'
 module ValidationResult
-  extend ActiveSupport::Memoizable
+  extend Memoist
 
   # A symbol representing the result of data validation.
   attr :result
@@ -202,7 +203,7 @@ end
 
 class BulkUploadDataSet
   include ActionView::Helpers::NumberHelper # for rounding
-  extend ActiveSupport::Memoizable
+  extend Memoist
 
   # An Array consisting of the (normalized) headers of the uploaded CSV file.
   # Normalization strips leading and trailing whitespace; additionally for
