@@ -18,6 +18,11 @@ gem "tzinfo", "0.3.35"
 gem "will_paginate", "3.0.4"
 gem "bootstrap-will_paginate"
 gem 'rails3-restful-authentication', '~> 3.0.1'
+gem 'dynamic_form'
+
+# to-do: remove prototype dependencies so we no longer need this gem
+gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
+
 gem 'memoist'
 
 # MySQL, comment out PostgreSQL section
