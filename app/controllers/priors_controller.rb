@@ -3,7 +3,7 @@ class PriorsController < ApplicationController
   helper_method :sort_column, :sort_direction
 
   require 'csv'
-  require 'Open3'
+  require 'open3'
 
   def rem_pfts_priors
     @pft = Pft.find(params[:id])
