@@ -17,6 +17,7 @@ gem "seer", "0.10.0"
 gem "tzinfo", "0.3.35"
 gem "will_paginate", "3.0.4"
 gem "bootstrap-will_paginate"
+gem 'memoist'
 
 # MySQL, comment out PostgreSQL section
 #gem "mysql2"
