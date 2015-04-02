@@ -25,6 +25,13 @@ class Input < ActiveRecord::Base
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
+  # Now that the access_level column of "inputs" has user-defined (domain) type
+  # "level_of_access", we have to ensure it maps to a Ruby Fixnum because Rails
+  # seems to map unknown SQL types to strings by default:
+  def access_level
+    super.to_i
+  end
+
   def to_s
     "#{name} #{site}"
   end

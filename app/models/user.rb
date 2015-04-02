@@ -42,6 +42,16 @@ class User < ActiveRecord::Base
   # anything else you want your user to change should be added here.  
   attr_accessible :login, :email, :name, :password, :password_confirmation, :city, :area, :country, :access_level, :page_access_level, :apikey, :postal_code, :state_prov
 
+  # Now that the access_level and page_access_level columns of "users" have
+  # user-defined (domain) type "level_of_access", we have to ensure they map to
+  # Ruby Fixnums because Rails seems to map unknown SQL types to strings by
+  # default:
+  def access_level
+    super.to_i
+  end
+  def page_access_level
+    super.to_i
+  end
 
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
