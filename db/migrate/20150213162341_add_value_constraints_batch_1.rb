@@ -20,7 +20,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION is_whitespace_free(
   string text
-) RETURNS bollean AS $$
+) RETURNS boolean AS $$
 BEGIN
   RETURN string !~ '[\s\u00a0]';
 END;
@@ -215,7 +215,7 @@ ALTER TABLE dbfiles ADD CHECK (container_type IN ('Model','Posterior','Input'));
 ALTER TABLE ensembles ALTER COLUMN notes SET NOT NULL,
                       ALTER COLUMN notes SET DEFAULT '';
 ALTER TABLE ensembles ALTER COLUMN runtype SET NOT NULL,
-                      CHECK (runtype IN ('ensemble', 'sensitivity analysis'));
+                      ADD CHECK (runtype IN ('ensemble', 'sensitivity analysis'));
 
 /* ENTITIES */
 
@@ -256,7 +256,7 @@ ALTER TABLE formats_variables ALTER COLUMN storage_type SET NOT NULL,
 /* INPUTS */
 
 ALTER TABLE inputs ALTER COLUMN notes SET NOT NULL,
-                   ALTER COLUMN SET DEFAULT '';
+                   ALTER COLUMN notes SET DEFAULT '';
 
 -- see violators of potential not null constraints:
 -- SELECT start_date, end_date FROM inputs WHERE start_date IS NULL OR end_date IS NULL;
