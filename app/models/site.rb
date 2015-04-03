@@ -25,6 +25,7 @@ class Site < ActiveRecord::Base
   end
 
   def lat=(val)
+    val = val.blank? ? 0.0 : val
     if not self[:geometry] then
       self[:geometry] = "SRID=4326;Point(0 #{val} 0)"
     else
@@ -45,6 +46,7 @@ class Site < ActiveRecord::Base
   end
 
   def lon=(val)
+    val = val.blank? ? 0.0 : val
     if not self[:geometry] then
       self[:geometry] = "SRID=4326;Point(#{val} 0 0)"
     else
@@ -65,6 +67,7 @@ class Site < ActiveRecord::Base
   end
 
   def masl=(val)
+    val = val.blank? ? 0.0 : val
     if not self[:geometry] then
       self[:geometry] = "SRID=4326;Point(0 0 #{val})"
     else
