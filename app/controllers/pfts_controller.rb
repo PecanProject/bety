@@ -92,10 +92,16 @@ class PftsController < ApplicationController
 
   def make_clone
     orig_pft = Pft.find(params[:id])
-    pft = orig_pft.clone()
+    pft = orig_pft.dup() # not .clone()!
+
+    # tweak the attributes of the clone:
+    pft.name += '-copy'
+    pft.parent_id = orig_pft.id
+
+    # copy some of the associations:
     pft.specie = orig_pft.specie
     pft.priors = orig_pft.priors
-    pft.parent_id = orig_pft.id
+
     pft.save
 
     respond_to do |format|
