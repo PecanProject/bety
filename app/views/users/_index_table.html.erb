@@ -3,44 +3,46 @@
 <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
   <%= render 'shared/search_form' %>
   <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
-		  <thead>
-	      <tr role="row">
+      <thead>
+        <tr role="row">
 <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px;" aria-sort="ascending" >Login</th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Name</th>
 <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 200px" aria-label="Role: activate to sort column ascending">Email</th>
-<th role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Actions</th>
+<th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 200px" aria-label="Role: activate to sort column ascending">Apikey</th>
+<th role="columnheader" aria-controls="DataTables_Table_0" style="width: 99px">Actions</th>
       </tr>
     </thead>
 
-	  <tbody role="alert" aria-live="polite" aria-relevant="all">
-	    <% @users.each do |user| %>
+    <tbody role="alert" aria-live="polite" aria-relevant="all">
+      <% @users.each do |user| %>
         <tr>
           <td class="center"><%= user.login %></td>
           <td class="center"><%= user.name %></td>
           <td class="center"><%= user.email %></td>
-          
-					<td class="center ">
-					  <!-- SHOW -->
-					  <%= link_to user, :class => "button button-small", :alt => "show" do %>
-					    <i class="icon-zoom-in"></i>
-					  <% end %>
-					  <!-- EDIT -->
-					  <%= link_to edit_user_path(user), :class => "button button-small", :alt => "edit" do %>
-					    <i class="icon-edit"></i>
-					  <% end %>
-				  </td>
+          <td class="center"><%= user.apikey %></td>
+          <td class="center ">
+            <!-- SHOW -->
+            <%= link_to user, :class => "button button-small", :alt => "show" do %>
+              <i class="icon-zoom-in"></i>
+            <% end %>
+            <!-- EDIT -->
+            <%= link_to edit_user_path(user), :class => "button button-small", :alt => "edit" do %>
+              <i class="icon-edit"></i>
+            <% end %>
+            <%= link_to 'key',{:action => :create_apikey, :user => user}, :class => "button button-small"%>
+          </td>
 
         </tr>
       <% end %>
 
-	  </tbody>
-	</table>
+    </tbody>
+  </table>
   
   <div class="row final_paginagte_row">
     <div class="span6">
       <div class="dataTables_info" id="DataTables_Table_0_info">
         <%= page_entries_info @users %>
-	    </div>
+      </div>
     </div>
     <div class="span6">
       <div class="dataTables_paginate paging_bootstrap pagination alternate">
@@ -49,7 +51,6 @@
     </div>
   </div>
 </div>
-
 
 
 

@@ -42,6 +42,7 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.access_level = 3
     @user.page_access_level = 4
+    @user.apikey = (0...40).collect { ((48..57).to_a + (65..90).to_a + (97..122).to_a)[Kernel.rand(62)].chr }.join
     if Rails.env == "test"
       success = @user && @user.save
     else
@@ -103,6 +104,19 @@ class UsersController < ApplicationController
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end
+  end
+
+  def create_apikey
+    user = User.find(params[:user])
+    apikey = (0...40).collect { ((48..57).to_a + (65..90).to_a + (97..122).to_a)[Kernel.rand(62)].chr }.join
+    user.apikey = apikey
+    if user.save
+      ContactMailer::apikey_email(user).deliver
+      flash[:notice] = "A new api key has been created."
+    else
+      flash[:error] = "Error creating new api key, please try again."
+    end
+    redirect_to users_path
   end
 
 end
