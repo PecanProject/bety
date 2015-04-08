@@ -1294,6 +1294,7 @@ class BulkUploadDataSet
   # If multiple matches are found, a +NonUniquenessException+ is raised, and if
   # no match is found, a +MissingReferenceException+ is raised.
   def existing_species?(name)
+    name.sub!(' x ', " \u00d7 ") # normalize ' x ' to hybrid symbol
     return existing?(Specie, "scientificname", name, "species")
   end
   memoize :existing_species?
