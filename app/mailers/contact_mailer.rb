@@ -46,7 +46,7 @@ class ContactMailer < ActionMailer::Base
 
     mail(:to => email_to,
          :from => email_from,
-         :subject => "[BETY] apikey created",
+         :subject => "[BETYdb] API key created",
          :date => Time.now)
   end
 
