@@ -1,18 +1,20 @@
 <div class="content">
-	<div class="container">
-		<div class="sixteen columns">
-			<header>
-				<h1>Viewing User</h1>
-			</header>
+    <div class="container">
+        <div class="sixteen columns">
+            <header>
+                <h1>Viewing User</h1>
+            </header>
       
-			<!-- InstanceBeginEditable name="Full Width Content" --> 
-			<dl class="dl-horizontal">
+            <!-- InstanceBeginEditable name="Full Width Content" --> 
+            <dl class="dl-horizontal">
         <dt>Login</dt>
         <dd><%= @user.login %></dd>
         <dt>Name</dt>
         <dd><%= @user.name %></dd>
         <dt>Email</dt>
         <dd><%= @user.email %></dd>
+        <dt>Apikey</dt>
+        <dd><%= @user.apikey %></dd>
         <dt>City</dt>
         <dd><%= @user.city %></dd>
         <dt>State/Province</dt>
@@ -25,23 +27,22 @@
         <dd><%= @user.area %></dd>
         <dt>User since</dt>
         <dd><%= @user.created_at %></dd>
-			</dl>
-			<div class="form-actions">
-				<div class="button-group">
+            </dl>
+            <div class="form-actions">
+                <div class="button-group">
           <%= link_to( users_path ) do %>
-					  <button class="button"><i class="icon-arrow-left"></i> All Records</button>
-					<% end %>
-					<%= link_to( edit_user_path(@user) ) do %>
-    			  <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>	
-  				<% end %>
-					
-				</div>
-			</div>
-			<!-- InstanceEndEditable --> </div>
-	</div>
-	<!-- container --> 
+                      <button class="button"><i class="icon-arrow-left"></i> All Records</button>
+                    <% end %>
+                    <%= link_to( edit_user_path(@user) ) do %>
+                  <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>    
+                <% end %>
+                    
+                </div>
+            </div>
+            <!-- InstanceEndEditable --> </div>
+    </div>
+    <!-- container --> 
 </div>
-
 
 
 
