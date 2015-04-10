@@ -108,8 +108,7 @@ class UsersController < ApplicationController
 
   def create_apikey
     user = User.find(params[:user])
-    apikey = (0...40).collect { ((48..57).to_a + (65..90).to_a + (97..122).to_a)[Kernel.rand(62)].chr }.join
-    user.apikey = apikey
+    user.create_apikey
     if user.save
       ContactMailer::apikey_email(user).deliver
       flash[:notice] = "A new api key has been created."
