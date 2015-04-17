@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title><%= if @title then @title else "BETYdb: #{request.env['PATH_INFO']}" end %></title>
   <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />
-  <meta name="keywords" content="biofuel, biofuels, bioenergy, bioscience, biosciences, miscanthus, switchgrass, ethanol, alternative energy"> 
+  <meta name="keywords" content="biofuel, biofuels, bioenergy, bioscience, biosciences, miscanthus, switchgrass, ethanol, alternative energy" /> 
   <meta name="description" content="The Energy Biosciences Institute (EBI) is a new research and development organization that harnesses advanced knowledge in biology, the physical sciences, engineering, and environmental and social sciences to devise viable solutions to global energy challenges and reduce the impact of fossil fuels to global warming.  The worlds first research institution solely dedicated to the new field of energy bioscience, is initially focusing on the development of next-generation biofuels, but will also look into various applications of biology to the energy sector." />
   <meta name="robots" content="index, follow" />
 
@@ -45,15 +45,15 @@
   <% end %>
 
   <!-- For iPhone 4 -->
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/h/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/h/apple-touch-icon.png" />
   <!-- For iPad 1-->
-  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/m/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/m/apple-touch-icon.png" />
   <!-- For iPhone 3G, iPod Touch and Android -->
-  <link rel="apple-touch-icon-precomposed" href="images/l/apple-touch-icon-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="images/l/apple-touch-icon-precomposed.png" />
   <!-- For Nokia -->
-  <link rel="shortcut icon" href="/images/l/apple-touch-icon.png">
+  <link rel="shortcut icon" href="/images/l/apple-touch-icon.png" />
   <!-- For everything else -->
-  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="shortcut icon" href="/favicon.ico" />
   
   <!-- ############## ENDED verifying all JS imports from here ############## -->
   
@@ -229,7 +229,7 @@
   <% elsif !session['citation'].nil? and !Citation.exists?(session['citation'])
        session['citation'] = nil
   %>
-    <hr>
+    <hr />
     
   <% end %>
   
@@ -279,11 +279,11 @@
                   <p>All public data in BETYdb is made available under the
                      <a href="http://opendatacommons.org/licenses/by/1-0/">Open Data Commons Attribution License (ODC-By) v1.0.</a>
                      You are free to share, create, and adapt its contents.
-                     Data with an access_level field and value <= 2 is is not covered by this license but may be available for use with consent.</p>
+                     Data with an access_level field and value &lt;= 2 is is not covered by this license but may be available for use with consent.</p>
 				  <p>Copyright © 2010-2014 Energy Biosciences Institute</p>
 			  </div>
 		  </div>
-		  <hr>
+		  <hr />
 		  <div class="row">
 			  <div class="footnotes">
 				  <div class="four columns alpha"><a href="http://illinois.edu" title="University of Illinois at Urbana-Champaign" class="illinois">University of Illinois at Urbana-Champaign</a></div>
