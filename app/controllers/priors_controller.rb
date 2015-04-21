@@ -22,6 +22,7 @@ class PriorsController < ApplicationController
     render :update do |page|
       if !params[:pft].nil?
         params[:pft][:id].each do |c|
+          next if c.empty?
           @prior.pfts << Pft.find(c)
         end
       end

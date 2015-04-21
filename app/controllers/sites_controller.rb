@@ -42,6 +42,7 @@ class SitesController < ApplicationController
     render :update do |page|
       if !params["citation"].nil?
         params["citation"][:id].each do |c|
+          next if c.empty?
           @site.citations << Citation.find(c)
         end
       end

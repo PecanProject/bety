@@ -25,6 +25,7 @@ class CitationsController < ApplicationController
     render :update do |page|
       if !params[:site].nil?
         params[:site][:id].each do |c|
+          next if c.empty?
           @citation.sites << Site.find(c)
         end
         page.replace_html 'edit_citations_sites', :partial => 'edit_citations_sites'

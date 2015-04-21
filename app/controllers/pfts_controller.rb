@@ -29,6 +29,7 @@ class PftsController < ApplicationController
     render :update do |page|
       if !params[:prior].nil?
         params[:prior][:id].each do |c|
+          next if c.empty?
           @pft.priors << Prior.find(c)
         end
         page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
