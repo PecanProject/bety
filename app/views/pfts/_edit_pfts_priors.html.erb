@@ -23,7 +23,7 @@
           <td><%= link_to_if prior.variable, prior.variable, prior.variable %></td>
           <td><%= prior.distn %></td>
           <td><%= sprintf("%#1.2f", prior.parama) %></td>
-          <td><%= sprintf("%#1.2f", prior.paramb) %></td>
+          <td><%= sprintf("%#1.2f", prior.paramb) rescue '' %></td>
           <td><%= prior.phylogeny %></td>
           <td><%= link_to_if prior.citation, prior.citation, prior.citation %></td>
         </tr>
