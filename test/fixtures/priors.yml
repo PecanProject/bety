@@ -3,8 +3,8 @@ test_prior:
   variable_id: "36"
   phylogeny: "plants"
   distn: "gamma"
-  parama: #<BigDecimal:2aaaac2a2e58,'0.147E1',18(18)>
-  paramb: #<BigDecimal:2aaaac2a2d68,'0.578E-1',9(18)>
+  parama: 0.147E1
+  paramb: 0.578E-1
   paramc: NULL
   n: 0
   notes: "optimized to gamma with 95% CI = [5,80]; median = 2..."

@@ -350,7 +350,7 @@ CSV
         visit '/bulk_upload/start_upload'
         attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_complete_data.csv') # full path is required if using selenium
         click_button 'Upload'
-        visit '/Citations'
+        visit '/citations'
         first(:xpath, '//a[@alt = "use"]').click
 
         page.should have_content "Citation: "
@@ -402,7 +402,7 @@ CSV
         click_link 'Specify'
         click_button 'Confirm'
 
-        visit '/Citations'
+        visit '/citations'
         first(:xpath, '//a[@alt = "use"]').click
 
         page.should have_content "Citation: "
