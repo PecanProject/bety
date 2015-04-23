@@ -39,7 +39,8 @@ group :development, :test do
   # include it in development in case we want to have access to
   # RSpec-specific generators.
   gem "rspec-rails"
-  gem "sqlite3", "1.3.3"
+  # Don't think we need this:
+  # gem "sqlite3", "1.3.3"
 end
 
 
