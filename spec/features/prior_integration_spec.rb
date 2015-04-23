@@ -47,8 +47,11 @@ feature 'Priors index works' do
 
       it 'should allow adding related pfts', js: true do
         click_link 'View Related PFTs'
+        page.select 'temperate.Northern_Pine', from: 'pft_id'
+        click_button 'Select'
+        page.should have_content 'temperate.Northern_Pine'
 
-        # The select box is empty, so first we have to unlink a pft so we have something to select:
+        # now do clean-up
         page.find(:xpath, ".//table/tbody/tr[preceding-sibling::tr/th/text() = 'Name'][contains(td[3], 'temperate.Northern_Pine')]/td/a[text() = 'X']").click
         # If we're using Selenium, we have to deal with the modal dialogue:
         if page.driver.is_a? Capybara::Selenium::Driver
@@ -56,9 +59,6 @@ feature 'Priors index works' do
           a.accept
         end
 
-        page.select 'temperate.Northern_Pine', from: 'pft_id'
-        click_button 'Select'
-        page.should have_content 'temperate.Northern_Pine'
         
       end
 
