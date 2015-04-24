@@ -21,6 +21,8 @@ class TraitsAndYieldsView < ActiveRecord::Base
   extend DataAccess # provides all_limited
 
   extend AdvancedSearch
+
+  extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ scientificname commonname trait
                       trait_description city sitename author
