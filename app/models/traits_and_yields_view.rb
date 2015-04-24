@@ -20,6 +20,8 @@ class TraitsAndYieldsView < ActiveRecord::Base
 
   extend DataAccess # provides all_limited
 
+  extend SimpleSearch
+
   extend AdvancedSearch
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ scientificname commonname trait
