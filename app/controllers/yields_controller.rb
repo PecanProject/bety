@@ -116,13 +116,23 @@ class YieldsController < ApplicationController
   # POST /yields
   # POST /yields.xml
   def create
-    params[:yield]['date(1i)'] = "9999" if params[:yield]['date(1i)'].blank? and !params[:yield]['date(2i)'].blank?
+    # If at least on of the date fields is non-blank, assign defaults to the others if they are blank:
+    if !(params[:yield]['date(1i)'].blank? and params[:yield]['date(2i)'].blank? and params[:yield]['date(3i)'].blank?)
+
+      # Default the empty fields.  In Rails 3.2, it seems we must do this explicitly.
+      params[:yield]['date(1i)'] = "9999" if params[:yield]['date(1i)'].blank? # year default
+      params[:yield]['date(2i)'] = "1"if params[:yield]['date(2i)'].blank? # month default
+      params[:yield]['date(3i)'] = "1"if params[:yield]['date(3i)'].blank? # day default
+
+    end
 
     @yield = Yield.new(params[:yield])
 
-    # they can also enter the date in julian format, so if they do overwrite the
-    # other date field
-    if !params[:juliandate].nil? and !params[:juliandate].empty?
+    # They can also enter the date in julian format, so if they do, overwrite
+    # the other date field:
+    if  !(params[:julianyear].blank? and params[:julianday].blank?)
+      params[:julianyear] = "9999" if params[:julianyear].blank? # year default
+      params[:julianday] = "1" if params[:julianday].blank? # day default
       @yield.date = Date.ordinal(params[:julianyear].to_f, params[:julianday].to_f)
     end
 
