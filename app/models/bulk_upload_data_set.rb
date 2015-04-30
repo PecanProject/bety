@@ -122,19 +122,19 @@ class NegativeYieldException < BulkUploadDataException
   end
 end
 
-class UnparsableCitationYearException < BulkUploadDataException
+class UnparsableCitationYearException < InvalidCitationYearException
   def initialize
     super(:unparsable_citation_year, "Not a valid integer", "Citation year can't be parsed as a number")
   end
 end
 
-class FutureCitationYearException < BulkUploadDataException
+class FutureCitationYearException < InvalidCitationYearException
   def initialize
     super(:future_citation_year, "Citation year is in the future")
   end
 end
 
-class TooOldCitationYearException < BulkUploadDataException
+class TooOldCitationYearException < InvalidCitationYearException
   def initialize
     super(:too_old_citation_year, "Citation year is too far in the past")
   end
@@ -736,22 +736,19 @@ class BulkUploadDataSet
         author_index = row.index { |h| h[:fieldname] == "citation_author" }
         year_index = row.index { |h| h[:fieldname] == "citation_year" }
         title_index = row.index { |h| h[:fieldname] == "citation_title" }
-        begin
-          citation_id = existing_citation(row[author_index][:data], row[year_index][:data], row[title_index][:data])
-        rescue InvalidCitationYearException, UnresolvableReferenceException => e
-          row[year_index][:validation_result] = e
 
-          if e.is_a? InvalidCitationYearException
-            e = UnresolvableReferenceException.new
+        # Look up the citation only if the year is valid:
+        if row[year_index][:validation_result].is_a? Valid
+          begin
+            citation_id = existing_citation(row[author_index][:data], row[year_index][:data], row[title_index][:data])
+          rescue UnresolvableReferenceException => e
+            row[year_index][:validation_result] = e
+            row[author_index][:validation_result] = e
+            row[title_index][:validation_result] = e
+            add_to_validation_summary(e, row_number)
           end
-
-          row[author_index][:validation_result] = e
-          row[title_index][:validation_result] = e
-
-          # For purposes of the summary, count the citation error as an
-          # unresolved reference, even if the year was invalid:
-          add_to_validation_summary(e, row_number)
-
+        else
+          add_to_validation_summary(row[year_index][:validation_result], row_number)
         end
 
       end
@@ -1333,7 +1330,7 @@ class BulkUploadDataSet
 
   # Returns a +Citation+ object whose +author+, +year+, and +title+ attributes
   # match the supplied argument values.  If +year+ can't be parsed as an
-  # integer, an +InvalidCitationYearException+ is raised.  Matching is
+  # integer, an +UnparsableCitationYearException+ is raised.  Matching is
   # case-insensitive, and extraneous space is removed from the database values
   # of +author+ and +title+ before a match is attempted.  Also, the supplied
   # +title+ argument need only match an initial substring of the corresponding
@@ -1344,7 +1341,7 @@ class BulkUploadDataSet
     begin
       Integer(year)
     rescue ArgumentError
-      raise InvalidCitationYearException
+      raise UnparsableCitationYearException
     end
 
     c = Citation.where("#{sql_columnref_to_normalized_columnref("author")} = :author " +
