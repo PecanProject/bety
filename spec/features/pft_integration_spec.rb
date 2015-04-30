@@ -61,7 +61,6 @@ feature 'Pfts features work works' do
       page.select 'plants', from: 'prior_id'
       click_button 'Select'
       page.should have_content 'plants'
-binding.pry
 
       # now do clean-up:
       page.find(:xpath, ".//table/tbody/tr[preceding-sibling::tr/th/text() = 'Phylogeny'][td/text() = 'plants']/td/a[text() = 'X']").click
