@@ -109,7 +109,7 @@ class TraitsController < ApplicationController
       @trait = Trait.new
     else
       @trait_old = params[:id]
-      @trait = Trait.all_limited(current_user).find(@trait_old).clone
+      @trait = Trait.all_limited(current_user).find(@trait_old).dup
       @trait.specie.nil? ? @species = nil :  @species = [@trait.specie]
     end
 

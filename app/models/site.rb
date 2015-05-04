@@ -2,13 +2,15 @@ class Site < ActiveRecord::Base
 
   include Overrides
 
-  def to_json(options = {})
-    options[:only] = [city, :state, :country, :lat, :lon, :sitename, :greenhouse, :notes]
+  def as_json(options = {})
+    options[:except] = [:clay_pct, :created_at, :id, :local_time, :map, :mat,
+                        :sand_pct, :soil, :soilnotes, :som, :updated_at, :user_id]
     super(options)
   end
 
   def to_xml(options = {})
-    options[:only] = [city, :state, :country, :lat, :lon, :sitename, :greenhouse, :notes]
+    options[:except] = [:clay_pct, :created_at, :id, :local_time, :map, :mat,
+                        :sand_pct, :soil, :soilnotes, :som, :updated_at, :user_id]
     super(options)
   end
 

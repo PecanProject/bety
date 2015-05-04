@@ -108,32 +108,6 @@ class MapsController < ApplicationController
     end
   end
 
-  def traits
-    @traits = Trait.all_limited(current_user || nil)
-    if !params[:site].nil?
-      site = Site.find(params[:site])
-      @traits = @traits.find_all_by_site_id(site.id)
-      @title = site.sitename_state_country
-    elsif !params[:species].nil?
-
-      puts params[:species]
-      species = Specie.find(params[:species])
-      @traits = @traits.find_all_by_specie_id(species.id)
-      @title = species.scientificname
-    end 
-    if params[:format].nil? or params[:format] == 'html'
-      @traits = @traits.paginate :page => params[:page]
-    end
-
-    respond_to do |format|
-      format.html
-      format.xml  { render :xml => @traits }
-      format.csv  { render :csv => @traits, :style => :maps_traits }
-      format.json { render :json => @traits }
-    end
-  end
-
-
   # Provides a map populated with sites, then returns yield information if they click on a site
   def yields_from_sites
     @sites = Yield.all.collect {|x| x.site}.compact.uniq
@@ -160,29 +134,6 @@ class MapsController < ApplicationController
       page.replace_html 'show_yields', :partial => 'show_yields'
     end
 
-  end
-
-  def yields
-    @yields = Yield.all_limited(current_user ||= nil)
-    if !params[:site].nil?
-      site = Site.find(params[:site])
-      @yields = site.yields.all_limited(current_user || nil)
-      @title = site.sitename_state_country
-    elsif !params[:species].nil?
-      species = Specie.find(params[:species])
-      @yields = species.yields.all_limited(current_user || nil)
-      @title = species.scientificname
-    end
-    if params[:format].nil? or params[:format] == 'html'
-      @yields = @yields.paginate :page => params[:page]
-    end
-
-    respond_to do |format|
-      format.html
-      format.xml  { render :xml => @yields }
-      format.csv  { render :csv => @yields }
-      format.json { render :json => @yields }
-    end
   end
  
   #partial for sites_by_species  

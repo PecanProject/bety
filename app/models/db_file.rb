@@ -1,6 +1,6 @@
 class DBFile < ActiveRecord::Base
 
-  set_table_name 'dbfiles'
+  self.table_name = 'dbfiles'
   
   include Overrides
 

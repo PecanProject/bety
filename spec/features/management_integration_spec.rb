@@ -1,14 +1,14 @@
 require 'spec_helper'
 include LoginHelper
 
-feature 'Managements index works' do
+feature 'Management features work' do
   before :each do
     login_test_user
+    visit '/managements/'
   end
 
   context 'GET /managements' do
     it 'should have "Listing Managements" ' do
-      visit '/managements'
       page.should have_content 'Listing Managements'
     end
 
@@ -18,18 +18,38 @@ feature 'Managements index works' do
 
     context 'clicking view managment button' do
       it 'should return "Viewing Management" ' do
-        visit '/managements/'
         first(:xpath,".//a[@alt='show' and contains(@href,'/managements/')]").click
         page.should have_content 'Viewing Management'
       end
     end
     
     context 'clicking edit managment button' do
-      it 'should return "Editing Management" ' do
-        visit '/managements/'
+
+      before :each do
         first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
+      end
+
+      it 'should return "Editing Management" ' do
         page.should have_content 'Editing Management'
       end
+
+      it 'should allow adding new related treatments', js: true do
+        click_link 'View Related Treatments'
+        page.select 'observational', from: 'treatment_id'
+        click_button 'Select'
+        page.should have_content 'observational'
+
+      # now do clean-up:
+      page.find(:xpath, ".//table/tbody/tr[preceding-sibling::tr/th/text() = 'Name'][td/text() = 'observational']/td/a[text() = 'X']").click
+      # If we're using Selenium, we have to deal with the modal dialogue:
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
+  
+    end
+
+
     end
 
   end

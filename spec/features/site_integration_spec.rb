@@ -41,11 +41,34 @@ feature 'Sites index works' do
     end
     
     context 'clicking edit site button' do
-      it 'should return "Editing Site" ' do
+      
+      before :each do
         visit '/sites/'
-         first(:xpath,".//a[ contains(@alt,'edit')]").click
+        first(:xpath,".//a[ contains(@alt,'edit')]").click
+      end
+
+      it 'should return "Editing Site" ' do
         page.should have_content 'Editing Site'
       end
+
+      it 'show allow adding new related citations', js: true do
+        click_link 'View Related Citations'
+        page.select 'Wood', from: 'citation_id'
+        click_button 'Select'
+        page.should have_content 'Wood'
+
+      # now do clean-up:
+      page.find(:xpath, ".//table/tbody/tr[preceding-sibling::tr/th/text() = 'Auth'][contains(td[3], 'Wood')]/td/a[text() = 'X']").click
+      # If we're using Selenium, we have to deal with the modal dialogue:
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
+  
+    end      
+
+        
+
     end
 
     context 'clicking use site button' do

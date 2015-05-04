@@ -24,6 +24,7 @@ class ManagementsController < ApplicationController
     render :update do |page|
       if !params[:treatment].nil?
         params[:treatment][:id].each do |c|
+          next if c.empty?
           @management.treatments << Treatment.find(c)
         end
         page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'

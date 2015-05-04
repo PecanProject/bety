@@ -30,6 +30,10 @@ class Prior < ActiveRecord::Base
     updated_at
   end
 
+  def self.distn_types
+    %w(beta binom cauchy chisq exp f gamma geom hyper lnorm logis nbinom norm pois t unif weibull wilcox)
+  end
+
   def var_cit
     "#{variable.try(:description)} - #{citation} - #{phylogeny}"
   end
