@@ -89,7 +89,14 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   get '/formats/rem_formats_variables(/:id)' => 'formats#rem_formats_variables'
 
   resources :likelihoods
-  resources :inputs
+  resources :inputs do
+    collection do
+      get :edit_inputs_variables # for linking and unlinking variables
+      post :edit_inputs_variables # for searching variables
+      get :edit_inputs_files # for linking and unlinking files
+      post :edit_inputs_files # for searching files
+    end
+  end
   resources :models
   resources :modeltypes
   resources :runs
@@ -98,14 +105,16 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :pfts do
     member do
       get :make_clone
+      get :edit2_pfts_species # for adding a species to the pft
+      post :edit2_pfts_species # for species search
     end
     collection do
       post :edit_pfts_priors
-      match :rem_pfts_priors
+      get :rem_pfts_priors
    end
   end
-  get 'pfts/edit2_pfts_species(/:id)' => 'pfts#edit2_pfts_species'
-
+  # TO-DO: eliminate this route after modifying the tests that use it:
+  get 'pfts/edit2_pfts_species(/:id)' => 'pfts#edit2_pfts_species' # for searching
 
   resources :managements do
     collection do
@@ -142,7 +151,13 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   end
   resources :variables
   resources :species do
-    post :species_search, on: :collection
+    member do
+      get :rem_pfts_species
+    end
+    collection do
+      post :edit_pfts_species # for adding a pft relationship
+      post :species_search # for help making new yields
+    end
   end
   resources :cultivars
   resources :priors do
@@ -162,10 +177,14 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
     end
   end
   resources :traits do
+    member do
+      get :unlink_covariate
+    end
     collection do
       get :linked
       post :access_level
       post :checked
+      get :trait_search
     end
   end
 

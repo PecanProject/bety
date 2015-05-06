@@ -14,3 +14,4 @@ test_run:
   ensemble_id: NULL
   start_date: "1971-01-01 00:00:00 -0600"
   end_date: "2002-12-31 23:59:00 -0600"
+  ensemble_id: 1

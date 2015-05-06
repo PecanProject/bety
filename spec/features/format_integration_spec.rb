@@ -14,7 +14,7 @@ feature 'Formats index works' do
 
     it 'should allow creation of new formats' do
       visit '/formats/new'
-      fill_in 'mime_type_other', :with =>'DATA'
+      fill_in 'mime_type_other', :with =>'text/plain'
       fill_in 'Name', :with =>'PAPER'
       fill_in 'Header', :with => 'Research'
       fill_in 'Skip', :with =>'DEAR'

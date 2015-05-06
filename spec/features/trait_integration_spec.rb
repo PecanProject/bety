@@ -138,4 +138,29 @@ feature "Editing traits works" do
     expect(page).to_not have_content "You have a nil object when you didn't expect it!"
   end
 
+  it "should allow adding and removing a covariate", js: true do
+    # add:
+    select('Amax - umol CO2 m-2 s-1', from: 'covariate[][variable_id]')
+    fill_in "covariate[][level]", with: '1.0'
+    click_button 'Update'
+    page.should have_content 'Amax - umol CO2 m-2 s-1'
+
+    # remove
+    click_button 'Edit Record'
+    click_link "View Existing Covariates"
+    click_link "unlink"
+    # If we're using Selenium, we have to deal with the modal dialogue:
+    if page.driver.is_a? Capybara::Selenium::Driver
+      a = page.driver.browser.switch_to.alert
+      a.accept
+    end
+    if page.driver.is_a? Capybara::Selenium::Driver
+      # If display = none, Selenium doesn't see the node at all:
+      expect(not(page.has_css?('#edit_covariates_traits')))
+    else
+      # Webkit sees the element.  But the table inside should be empty.
+      expect(page.find('#edit_covariates_traits')).to_not have_xpath('./table/tbody/tr')
+    end
+  end
+
 end

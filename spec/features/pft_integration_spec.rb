@@ -48,15 +48,17 @@ feature 'Pfts features work works' do
   end
   
   context 'clicking edit pft button' do
-    it 'should return "Editing Pft" ' do
+
+    before :each do
       visit '/pfts/'
-      first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
+      first(:xpath, ".//a[@alt='edit' and contains(@href,'/edit')]").click
+    end
+
+    it 'should return "Editing Pft" ' do
       page.should have_content 'Editing PFT'
     end
 
     it 'should allow adding a related prior', js: true do
-      visit '/pfts/'
-      first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
       click_link 'View Related Priors'
       page.select 'plants', from: 'prior_id'
       click_button 'Select'
@@ -69,7 +71,37 @@ feature 'Pfts features work works' do
         a = page.driver.browser.switch_to.alert
         a.accept
       end
-  
+
+    end
+
+    it 'should allow searching for species', js: true do
+      click_link "View Related Species"
+      fill_in 'search', with: 'Lolium'
+      page.should have_link 'Lolium perenne'
+    end
+
+
+    it 'should allow adding a new species', js: true do
+      click_link "View Related Species"
+      fill_in 'search', with: 'Lolium'
+      page.should have_xpath ".//tr[contains(string(.), 'Lolium')]/td/a[text() = '+']"
+      first(:xpath, ".//tr[contains(string(.), 'Lolium')]/td/a[text() = '+']").click
+      # If we're using Selenium, we have to deal with the modal dialogue:
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
+      page.should have_xpath(".//tr[td/a[contains(text(), 'Lolium perenne')]]/td/a[text() = 'X']")
+
+
+      # now do clean-up:
+      page.find(:xpath, ".//tr[td/a[contains(text(), 'Lolium perenne')]]/td/a[text() = 'X']").click
+      # If we're using Selenium, we have to deal with the modal dialogue:
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
+
     end
 
 
@@ -77,6 +109,9 @@ feature 'Pfts features work works' do
 
   # test for redmine bug #1935
   context 'searching for species' do
+
+    # TO-DO: Implement these tests the 'right' way, and then eliminate the route they depend upon.
+
     it 'should find a searched-for existing species' do
 
       # Couldn't get AJAX-triggered search to work here, so have to
