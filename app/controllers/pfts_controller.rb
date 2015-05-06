@@ -200,7 +200,10 @@ class PftsController < ApplicationController
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html {
+          @species = @pft.specie.paginate :page => params[:page]
+          render :action => "edit"
+        }
         format.xml  { render :xml => @pft.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @pft.errors, :status => :unprocessable_entity }
         format.json  { render :json => @pft.errors, :status => :unprocessable_entity }
