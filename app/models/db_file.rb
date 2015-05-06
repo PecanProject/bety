@@ -8,6 +8,15 @@ class DBFile < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ machine }
   SEARCH_FIELDS = %w{ dbfiles.file_name dbfiles.file_path dbfiles.md5 machines.hostname }
 
+  validates :file_name,
+      format: /\A[^\/]*\z/,
+      uniqueness: { scope: [ :file_path, :machine_id ],
+                    message: ": You can't use the same file name and path more than once for the same machine." }
+  validates :file_path,
+      format: { with: /\A\//,
+                message: "must begin with '/'." }
+
+
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
