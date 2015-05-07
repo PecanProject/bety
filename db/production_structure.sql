@@ -12,6 +12,26 @@ SET client_min_messages = warning;
 SET search_path = public, pg_catalog;
 
 --
+-- Name: is_whitespace_normalized(text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION is_whitespace_normalized(string text) RETURNS boolean
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  RETURN string = normalize_whitespace(string);
+END;
+$$;
+
+
+--
+-- Name: FUNCTION is_whitespace_normalized(string text); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION is_whitespace_normalized(string text) IS 'Returns true if text contains no leading or trailing spaces, no whitespace other than spaces, and no consecutive spaces.';
+
+
+--
 -- Name: no_cultivar_member(bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -53,6 +73,43 @@ $$;
 --
 
 COMMENT ON FUNCTION no_species_member(this_pft_id bigint) IS 'Returns TRUE if the pft with id "this_pft_id" contains no members which are species (as opposed to cultivars).';
+
+
+--
+-- Name: normalize_name_whitespace(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION normalize_name_whitespace() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  NEW.name = normalize_whitespace(NEW.name);
+  RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: normalize_whitespace(text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION normalize_whitespace(string text) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  result text;
+BEGIN
+  SELECT TRIM(REGEXP_REPLACE(string, '\s+', ' ', 'g')) INTO result;
+  RETURN result;
+END;
+$$;
+
+
+--
+-- Name: FUNCTION normalize_whitespace(string text); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION normalize_whitespace(string text) IS 'Removes leading and trailing whitespace from string and replaces internal sequences of whitespace with a single space character.';
 
 
 --
@@ -304,8 +361,8 @@ COMMENT ON COLUMN citations.doi IS 'Digital Object Identifier';
 --
 
 CREATE TABLE citations_sites (
-    citation_id bigint,
-    site_id bigint,
+    citation_id bigint NOT NULL,
+    site_id bigint NOT NULL,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
     id bigint NOT NULL
@@ -336,8 +393,8 @@ ALTER SEQUENCE citations_sites_id_seq OWNED BY citations_sites.id;
 --
 
 CREATE TABLE citations_treatments (
-    citation_id bigint,
-    treatment_id bigint,
+    citation_id bigint NOT NULL,
+    treatment_id bigint NOT NULL,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
     id bigint NOT NULL
@@ -444,13 +501,14 @@ CREATE SEQUENCE cultivars_id_seq
 
 CREATE TABLE cultivars (
     id bigint DEFAULT nextval('cultivars_id_seq'::regclass) NOT NULL,
-    specie_id bigint,
-    name character varying(255),
+    specie_id bigint NOT NULL,
+    name character varying(255) NOT NULL,
     ecotype character varying(255),
     notes text,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
-    previous_id character varying(255)
+    previous_id character varying(255),
+    CONSTRAINT normalized_names CHECK (is_whitespace_normalized((name)::text))
 );
 
 
@@ -547,16 +605,18 @@ CREATE SEQUENCE dbfiles_id_seq
 
 CREATE TABLE dbfiles (
     id bigint DEFAULT nextval('dbfiles_id_seq'::regclass) NOT NULL,
-    file_name character varying(255),
-    file_path character varying(255),
+    file_name character varying(255) NOT NULL,
+    file_path character varying(255) NOT NULL,
     md5 character varying(255),
     created_user_id bigint,
     updated_user_id bigint,
-    machine_id bigint,
+    machine_id bigint NOT NULL,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
     container_type character varying(255),
-    container_id bigint
+    container_id bigint,
+    CONSTRAINT file_path_sanity_check CHECK (((file_path)::text ~ '^/'::text)),
+    CONSTRAINT no_slash_in_file_name CHECK (((file_name)::text !~ '/'::text))
 );
 
 
@@ -715,8 +775,8 @@ CREATE TABLE inputs (
 --
 
 CREATE TABLE inputs_runs (
-    input_id bigint,
-    run_id bigint,
+    input_id bigint NOT NULL,
+    run_id bigint NOT NULL,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
     id bigint NOT NULL
@@ -747,8 +807,8 @@ ALTER SEQUENCE inputs_runs_id_seq OWNED BY inputs_runs.id;
 --
 
 CREATE TABLE inputs_variables (
-    input_id bigint,
-    variable_id bigint,
+    input_id bigint NOT NULL,
+    variable_id bigint NOT NULL,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
     id bigint NOT NULL
@@ -792,9 +852,9 @@ CREATE SEQUENCE likelihoods_id_seq
 
 CREATE TABLE likelihoods (
     id bigint DEFAULT nextval('likelihoods_id_seq'::regclass) NOT NULL,
-    run_id bigint,
-    variable_id bigint,
-    input_id bigint,
+    run_id bigint NOT NULL,
+    variable_id bigint NOT NULL,
+    input_id bigint NOT NULL,
     loglikelihood numeric(10,0),
     n_eff numeric(10,0),
     weight numeric(10,0),
@@ -848,7 +908,7 @@ CREATE SEQUENCE machines_id_seq
 
 CREATE TABLE machines (
     id bigint DEFAULT nextval('machines_id_seq'::regclass) NOT NULL,
-    hostname character varying(255),
+    hostname character varying(255) NOT NULL,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone
 );
@@ -925,8 +985,8 @@ COMMENT ON COLUMN managements.units IS 'units, standardized for each management 
 --
 
 CREATE TABLE managements_treatments (
-    treatment_id bigint,
-    management_id bigint,
+    treatment_id bigint NOT NULL,
+    management_id bigint NOT NULL,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
     id bigint NOT NULL
@@ -996,7 +1056,8 @@ CREATE SEQUENCE mimetypes_id_seq
 
 CREATE TABLE mimetypes (
     id bigint DEFAULT nextval('mimetypes_id_seq'::regclass) NOT NULL,
-    type_string character varying(255)
+    type_string character varying(255) NOT NULL,
+    CONSTRAINT valid_mime_type CHECK (((type_string)::text ~ '^(application|audio|chemical|drawing|image|i-world|message|model|multipart|music|paleovu|text|video|windows|www|x-conference|xgl|x-music|x-world)/[a-z.0-9_-]+( \((old|compiled elisp)\))?$'::text))
 );
 
 
@@ -1142,8 +1203,8 @@ COMMENT ON COLUMN pfts.name IS 'pft names are unique within a given model type.'
 --
 
 CREATE TABLE pfts_priors (
-    pft_id bigint,
-    prior_id bigint,
+    pft_id bigint NOT NULL,
+    prior_id bigint NOT NULL,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
     id bigint NOT NULL
@@ -1268,10 +1329,9 @@ CREATE SEQUENCE posteriors_id_seq
 
 CREATE TABLE posteriors (
     id bigint DEFAULT nextval('posteriors_id_seq'::regclass) NOT NULL,
-    pft_id bigint,
+    pft_id bigint NOT NULL,
     created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
-    format_id bigint
+    updated_at timestamp(6) without time zone
 );
 
 
@@ -1433,19 +1493,19 @@ CREATE SEQUENCE runs_id_seq
 
 CREATE TABLE runs (
     id bigint DEFAULT nextval('runs_id_seq'::regclass) NOT NULL,
-    model_id bigint,
-    site_id bigint,
-    start_time timestamp(6) without time zone,
-    finish_time timestamp(6) without time zone,
+    model_id bigint NOT NULL,
+    site_id bigint NOT NULL,
+    start_time timestamp(6) without time zone NOT NULL,
+    finish_time timestamp(6) without time zone NOT NULL,
     outdir character varying(255),
     outprefix character varying(255),
     setting character varying(255),
-    parameter_list text,
+    parameter_list text NOT NULL,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
     started_at timestamp(6) without time zone,
     finished_at timestamp(6) without time zone,
-    ensemble_id bigint,
+    ensemble_id bigint NOT NULL,
     start_date character varying(255),
     end_date character varying(255)
 );
@@ -1469,7 +1529,7 @@ COMMENT ON COLUMN runs.finish_time IS 'end of time period being simulated';
 -- Name: COLUMN runs.started_at; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN runs.started_at IS 'system time when run ends';
+COMMENT ON COLUMN runs.started_at IS 'system time when run begins';
 
 
 --
@@ -2786,11 +2846,83 @@ ALTER TABLE ONLY treatments
 
 
 --
+-- Name: unique_filename_and_path_per_machine; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY dbfiles
+    ADD CONSTRAINT unique_filename_and_path_per_machine UNIQUE (file_name, file_path, machine_id);
+
+
+--
+-- Name: unique_hostnames; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY machines
+    ADD CONSTRAINT unique_hostnames UNIQUE (hostname);
+
+
+--
+-- Name: unique_input_run_pair; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY inputs_runs
+    ADD CONSTRAINT unique_input_run_pair UNIQUE (input_id, run_id);
+
+
+--
+-- Name: unique_input_variable_pairs; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY inputs_variables
+    ADD CONSTRAINT unique_input_variable_pairs UNIQUE (input_id, variable_id);
+
+
+--
+-- Name: unique_name_per_model; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pfts
+    ADD CONSTRAINT unique_name_per_model UNIQUE (name, modeltype_id);
+
+
+--
+-- Name: unique_name_per_species; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY cultivars
+    ADD CONSTRAINT unique_name_per_species UNIQUE (name, specie_id);
+
+
+--
 -- Name: unique_names_per_modeltype; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY pfts
     ADD CONSTRAINT unique_names_per_modeltype UNIQUE (name, modeltype_id);
+
+
+--
+-- Name: unique_run_variable_input_combination; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY likelihoods
+    ADD CONSTRAINT unique_run_variable_input_combination UNIQUE (run_id, variable_id, input_id);
+
+
+--
+-- Name: unique_time_interval_per_model_site_parameter_list_and_ensemble; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY runs
+    ADD CONSTRAINT unique_time_interval_per_model_site_parameter_list_and_ensemble UNIQUE (model_id, site_id, start_time, finish_time, parameter_list, ensemble_id);
+
+
+--
+-- Name: unique_type_string; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY mimetypes
+    ADD CONSTRAINT unique_type_string UNIQUE (type_string);
 
 
 --
@@ -3295,6 +3427,13 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: normalize_cultivar_names; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER normalize_cultivar_names BEFORE INSERT OR UPDATE ON cultivars FOR EACH ROW EXECUTE PROCEDURE normalize_name_whitespace();
+
+
+--
 -- Name: prevent_conflicting_range_changes; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -3747,14 +3886,6 @@ ALTER TABLE ONLY posteriors_ensembles
 
 ALTER TABLE ONLY posteriors_ensembles
     ADD CONSTRAINT fk_posteriors_ensembles_posteriors_1 FOREIGN KEY (posterior_id) REFERENCES posteriors(id) ON DELETE CASCADE;
-
-
---
--- Name: fk_posteriors_formats_1; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY posteriors
-    ADD CONSTRAINT fk_posteriors_formats_1 FOREIGN KEY (format_id) REFERENCES formats(id);
 
 
 --
