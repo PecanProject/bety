@@ -83,7 +83,7 @@ feature 'Treatment features work' do
     it 'should show a value of "No" for "Control" after we update it' do
       visit '/treatments/1/edit'
       select('False', from: "treatment_control")
-      find('form.edit_treatment').find_button('Create').click
+      find('form.edit_treatment').find_button('Update').click
       visit '/treatments/1'
       first(:xpath, ".//dt[child::text() = 'Control']/following-sibling::dd[1]").text.should eq "No"
     end
