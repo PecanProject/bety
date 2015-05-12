@@ -4,7 +4,7 @@ describe TraitsController do
   describe "routing" do
 
     specify "There is a route for GET /traits/trait_search." do
-      expect(get("/traits/trait_search")).to route_to("traits#trait_search")
+      expect(post("/traits/trait_search")).to route_to("traits#trait_search")
     end
 
     it "There is a route for GET /traits/unlink_covariate." do

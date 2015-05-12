@@ -184,7 +184,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
       get :linked
       post :access_level
       post :checked
-      get :trait_search
+      post :trait_search
     end
   end
 
