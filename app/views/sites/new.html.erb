@@ -434,23 +434,6 @@
 <div id="index_table" style="display: none;">
 </div>
 
-<%= observe_field :site_sitename,
-                  :frequency => 1,
-                  :with => "'sort='+current_sort+'&current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('site_sitename')+'&current_sort='+current_sort",
-                  :url => { :action => :search } %>
-<%= observe_field :site_city,
-                  :frequency => 1,
-                  :with => "'sort='+current_sort+'&current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('site_city')+'&current_sort='+current_sort",
-                  :url => { :action => :search } %>
-<%= observe_field :site_lat,
-                  :frequency => 1,
-                  :with => "'sort='+current_sort+'&current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('site_lat')+'&current_sort='+current_sort",
-                  :url => { :action => :search } %>
-<%= observe_field :site_lon,
-                  :frequency => 1,
-                  :with => "'sort='+current_sort+'&current_sort_order='+current_sort_order+'&search='+Form.Element.getValue('site_lon')+'&current_sort='+current_sort",
-                  :url => { :action => :search } %>
-
 <script>
   current_sort = "sites.id";
   current_sort_order = "false";
