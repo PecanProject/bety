@@ -70,6 +70,41 @@ feature 'Treatment features work' do
   
     end      
 
+    # This was an attempt to test Github issue #282, but it passes even without the underlying bug being fixed.
+    it 'should allow creating new associated managements multiple times', js: true do
+      click_link 'Create New Management'
+      page.select 'tillage', from: 'management[mgmttype]'
+      click_button 'Create'
+      click_link 'Create New Management'
+
+      # make another one:
+      click_button 'Create'
+      click_link 'View Related Managements'
+
+      expect(page.find('div#edit_managements_treatments > table')).to have_xpath('.//table[count(tbody/tr[td]) = 2]')
+
+
+      # now do clean-up:
+      visit '/managements'
+
+      # delete a created management:
+      all(:xpath, './/a[@alt = "delete"]')[-1].click
+      # If we're using Selenium, we have to deal with the modal dialogue:
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
+
+      sleep 1
+
+      # delete the other one:
+      all(:xpath, './/a[@alt = "delete"]')[-1].click
+      # If we're using Selenium, we have to deal with the modal dialogue:
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
+    end
 
   end
 
