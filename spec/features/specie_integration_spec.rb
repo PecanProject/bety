@@ -52,7 +52,7 @@ feature 'Species pages work' do
     it 'should allow editing a species' do
       visit '/species'
       first(:xpath, './/a[@alt = "edit"]').click
-      page.should have_content 'Editing species'
+      page.should have_content 'Editing Species'
     end
   end
 
