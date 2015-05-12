@@ -137,7 +137,6 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
     collection do
       get :map
       get :linked
-      get :search
       get :rem_citations_sites
       post :edit_citations_sites
     end
