@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
-gem "rails", "3.0.18"
+gem "rails", "3.2.21"
+gem "prototype-rails" # needed for rails 3.1 and above until we phase out prototype
 gem "query_reviewer", "0.1.6"
 gem "nokogiri"
 gem "narray", "0.6.0.4"
@@ -16,6 +17,13 @@ gem "seer", "0.10.0"
 gem "tzinfo", "0.3.35"
 gem "will_paginate", "3.0.4"
 gem "bootstrap-will_paginate"
+gem 'rails3-restful-authentication', '~> 3.0.1'
+gem 'dynamic_form'
+
+# to-do: remove prototype dependencies so we no longer need this gem
+gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
+
+gem 'memoist'
 
 # MySQL, comment out PostgreSQL section
 #gem "mysql2"
@@ -31,7 +39,8 @@ group :development, :test do
   # include it in development in case we want to have access to
   # RSpec-specific generators.
   gem "rspec-rails"
-  gem "sqlite3", "1.3.3"
+  # Don't think we need this:
+  # gem "sqlite3", "1.3.3"
 end
 
 

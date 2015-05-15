@@ -11,6 +11,12 @@ class Cultivar < ActiveRecord::Base
 
   belongs_to :specie
 
+  validates :name,
+      presence: true,
+      uniqueness: { scope: :specie_id,
+                    message: "has already been used for this species." }
+  validates_presence_of :specie_id
+
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 

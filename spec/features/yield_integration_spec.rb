@@ -96,7 +96,9 @@ feature 'Yields index works' do
       # test for Redmine issue #2604
       it "should not throw a ActionView::Template::Error when edits are submitted with an invalid field" do
         fill_in 'yield_mean', with: ""
-        expect { click_button "Update" }.not_to raise_error(ActionView::Template::Error)
+        expect { click_button "Update" }.not_to raise_error do |error|
+          expect(error).to be_a(ActionView::Template::Error)
+        end
       end
 
     end

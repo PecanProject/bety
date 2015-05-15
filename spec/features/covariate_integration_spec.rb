@@ -1,7 +1,7 @@
 require 'spec_helper'
 include LoginHelper
 
-feature 'Covariates index works' do
+feature 'Covariate pages work' do
   before :each do
     login_test_user
   end
@@ -11,8 +11,14 @@ feature 'Covariates index works' do
       visit '/covariates'
       page.should have_content 'Listing Covariates'
     end
-
   end
+
+  specify 'Individual covariates should be editable' do
+    visit '/covariates'
+    first(:xpath, ".//a[@alt = 'edit']").click
+    page.should have_content 'Editing covariate'
+  end
+
 end
 
 

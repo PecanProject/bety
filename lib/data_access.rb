@@ -49,10 +49,10 @@ module DataAccess
     end
 
     if respond_to?("checked") and respond_to?("user_id")
-      where("(checked >= ? and access_level >= ?) or user_id = ?",
+      where("(#{table_name}.checked >= ? and #{table_name}.access_level >= ?) or #{table_name}.user_id = ?",
             checked, access_level, user)
     else
-      where("access_level >= ?", access_level)
+      where("#{table_name}.access_level >= ?", access_level)
     end
 
   end

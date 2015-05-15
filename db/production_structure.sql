@@ -307,8 +307,28 @@ CREATE TABLE citations_sites (
     citation_id bigint,
     site_id bigint,
     created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone
+    updated_at timestamp(6) without time zone,
+    id bigint NOT NULL
 );
+
+
+--
+-- Name: citations_sites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE citations_sites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: citations_sites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE citations_sites_id_seq OWNED BY citations_sites.id;
 
 
 --
@@ -319,8 +339,28 @@ CREATE TABLE citations_treatments (
     citation_id bigint,
     treatment_id bigint,
     created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone
+    updated_at timestamp(6) without time zone,
+    id bigint NOT NULL
 );
+
+
+--
+-- Name: citations_treatments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE citations_treatments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: citations_treatments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE citations_treatments_id_seq OWNED BY citations_treatments.id;
 
 
 --
@@ -425,7 +465,7 @@ COMMENT ON COLUMN cultivars.name IS 'Cultivar name given by breeder or reported 
 -- Name: COLUMN cultivars.ecotype; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN cultivars.ecotype IS 'Does not apply for all species, used in the case of switchgrass to differentiate lowland and upland genotypes.';
+COMMENT ON COLUMN cultivars.ecotype IS 'An ecotype is a distinct variety adapted to a particular environment. Implemented to distinguish ''upland'' and ''lowland'' Switchgrass cultivars.  Can also be used to distinguish, e.g. species in temperate vs. tundra';
 
 
 --
@@ -518,6 +558,13 @@ CREATE TABLE dbfiles (
     container_type character varying(255),
     container_id bigint
 );
+
+
+--
+-- Name: COLUMN dbfiles.container_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN dbfiles.container_type IS 'this and container_id are part of a polymorphic relationship, specifies table and primary key of that table';
 
 
 --
@@ -671,8 +718,28 @@ CREATE TABLE inputs_runs (
     input_id bigint,
     run_id bigint,
     created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone
+    updated_at timestamp(6) without time zone,
+    id bigint NOT NULL
 );
+
+
+--
+-- Name: inputs_runs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE inputs_runs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: inputs_runs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE inputs_runs_id_seq OWNED BY inputs_runs.id;
 
 
 --
@@ -683,8 +750,28 @@ CREATE TABLE inputs_variables (
     input_id bigint,
     variable_id bigint,
     created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone
+    updated_at timestamp(6) without time zone,
+    id bigint NOT NULL
 );
+
+
+--
+-- Name: inputs_variables_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE inputs_variables_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: inputs_variables_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE inputs_variables_id_seq OWNED BY inputs_variables.id;
 
 
 --
@@ -841,8 +928,28 @@ CREATE TABLE managements_treatments (
     treatment_id bigint,
     management_id bigint,
     created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone
+    updated_at timestamp(6) without time zone,
+    id bigint NOT NULL
 );
+
+
+--
+-- Name: managements_treatments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE managements_treatments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: managements_treatments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE managements_treatments_id_seq OWNED BY managements_treatments.id;
 
 
 --
@@ -1038,8 +1145,28 @@ CREATE TABLE pfts_priors (
     pft_id bigint,
     prior_id bigint,
     created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone
+    updated_at timestamp(6) without time zone,
+    id bigint NOT NULL
 );
+
+
+--
+-- Name: pfts_priors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE pfts_priors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pfts_priors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE pfts_priors_id_seq OWNED BY pfts_priors.id;
 
 
 --
@@ -1051,6 +1178,7 @@ CREATE TABLE pfts_species (
     specie_id bigint NOT NULL,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
+    id bigint NOT NULL,
     CONSTRAINT no_conflicting_member CHECK (no_cultivar_member(pft_id))
 );
 
@@ -1067,6 +1195,25 @@ COMMENT ON TABLE pfts_species IS 'This table tells which species are members of 
 --
 
 COMMENT ON CONSTRAINT no_conflicting_member ON pfts_species IS 'Ensure the pft_id does not refer to a pft having one or more cultivars as members; pfts referred to by this table con only contain other species.';
+
+
+--
+-- Name: pfts_species_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE pfts_species_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pfts_species_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE pfts_species_id_seq OWNED BY pfts_species.id;
 
 
 --
@@ -1136,8 +1283,28 @@ CREATE TABLE posteriors_ensembles (
     posterior_id bigint,
     ensemble_id bigint,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    id bigint NOT NULL
 );
+
+
+--
+-- Name: posteriors_ensembles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE posteriors_ensembles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: posteriors_ensembles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE posteriors_ensembles_id_seq OWNED BY posteriors_ensembles.id;
 
 
 --
@@ -1282,6 +1449,34 @@ CREATE TABLE runs (
     start_date character varying(255),
     end_date character varying(255)
 );
+
+
+--
+-- Name: COLUMN runs.start_time; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN runs.start_time IS 'beginning of time period being simulated';
+
+
+--
+-- Name: COLUMN runs.finish_time; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN runs.finish_time IS 'end of time period being simulated';
+
+
+--
+-- Name: COLUMN runs.started_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN runs.started_at IS 'system time when run ends';
+
+
+--
+-- Name: COLUMN runs.finished_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN runs.finished_at IS 'system time when run ends; can be null when record is created';
 
 
 --
@@ -2255,7 +2450,42 @@ CREATE TABLE workflows (
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY citations_sites ALTER COLUMN id SET DEFAULT nextval('citations_sites_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY citations_treatments ALTER COLUMN id SET DEFAULT nextval('citations_treatments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY current_posteriors ALTER COLUMN id SET DEFAULT nextval('current_posteriors_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs_runs ALTER COLUMN id SET DEFAULT nextval('inputs_runs_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY inputs_variables ALTER COLUMN id SET DEFAULT nextval('inputs_variables_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY managements_treatments ALTER COLUMN id SET DEFAULT nextval('managements_treatments_id_seq'::regclass);
 
 
 --
@@ -2276,7 +2506,28 @@ ALTER TABLE ONLY modeltypes_formats ALTER COLUMN id SET DEFAULT nextval('modelty
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY pfts_priors ALTER COLUMN id SET DEFAULT nextval('pfts_priors_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pfts_species ALTER COLUMN id SET DEFAULT nextval('pfts_species_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY posterior_samples ALTER COLUMN id SET DEFAULT nextval('posterior_samples_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY posteriors_ensembles ALTER COLUMN id SET DEFAULT nextval('posteriors_ensembles_id_seq'::regclass);
 
 
 --

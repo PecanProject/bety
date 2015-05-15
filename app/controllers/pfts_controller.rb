@@ -29,6 +29,7 @@ class PftsController < ApplicationController
     render :update do |page|
       if !params[:prior].nil?
         params[:prior][:id].each do |c|
+          next if c.empty?
           @pft.priors << Prior.find(c)
         end
         page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
@@ -92,10 +93,16 @@ class PftsController < ApplicationController
 
   def make_clone
     orig_pft = Pft.find(params[:id])
-    pft = orig_pft.clone()
+    pft = orig_pft.dup() # not .clone()!
+
+    # tweak the attributes of the clone:
+    pft.name += '-copy'
+    pft.parent_id = orig_pft.id
+
+    # copy some of the associations:
     pft.specie = orig_pft.specie
     pft.priors = orig_pft.priors
-    pft.parent_id = orig_pft.id
+
     pft.save
 
     respond_to do |format|
@@ -193,7 +200,10 @@ class PftsController < ApplicationController
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html {
+          @species = @pft.specie.paginate :page => params[:page]
+          render :action => "edit"
+        }
         format.xml  { render :xml => @pft.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @pft.errors, :status => :unprocessable_entity }
         format.json  { render :json => @pft.errors, :status => :unprocessable_entity }

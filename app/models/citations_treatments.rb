@@ -1,4 +1,6 @@
 class CitationsTreatments < ActiveRecord::Base
+  self.primary_key = "id"
+
   validates_presence_of     :citation_id
   validates_presence_of     :treatment_id
 

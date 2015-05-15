@@ -81,9 +81,22 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   end
 
   resources :entities
-  resources :formats
+  post '/feedback/feedback_email' => 'feedback#feedback_email'
+  resources :formats do
+    post :add_formats_variables, on: :collection
+  end
+  get 'formats/edit_formats_variables'
+  get '/formats/rem_formats_variables(/:id)' => 'formats#rem_formats_variables'
+
   resources :likelihoods
-  resources :inputs
+  resources :inputs do
+    collection do
+      get :edit_inputs_variables # for linking and unlinking variables
+      post :edit_inputs_variables # for searching variables
+      get :edit_inputs_files # for linking and unlinking files
+      post :edit_inputs_files # for searching files
+    end
+  end
   resources :models
   resources :modeltypes
   resources :runs
@@ -92,37 +105,85 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :pfts do
     member do
       get :make_clone
+      get :edit2_pfts_species # for adding a species to the pft
+      post :edit2_pfts_species # for species search
+    end
+    collection do
+      post :edit_pfts_priors
+      get :rem_pfts_priors
+   end
+  end
+  # TO-DO: eliminate this route after modifying the tests that use it:
+  get 'pfts/edit2_pfts_species(/:id)' => 'pfts#edit2_pfts_species' # for searching
+
+  resources :managements do
+    collection do
+      post :edit_managements_treatments
+      get :rem_managements_treatments
     end
   end
-
-  resources :managements
   resources :treatments do
     collection do
       get :linked
       get :new_management
+      get :flag_control
+      post :edit_managements_treatments
+      get :rem_managements_treatments
+      post :create_new_management
     end
   end
 
   resources :sites do
     collection do
       get :map
+      get :linked
+      get :rem_citations_sites
+      post :edit_citations_sites
     end
   end
 
-  resources :citations
+  resources :citations do
+    collection do
+      get :rem_citations_sites
+      post :edit_citations_sites
+    end
+  end
   resources :variables
-  resources :species
+  resources :species do
+    member do
+      get :rem_pfts_species
+    end
+    collection do
+      post :edit_pfts_species # for adding a pft relationship
+      post :species_search # for help making new yields
+    end
+  end
   resources :cultivars
   resources :priors do
     member do
       get :preview
     end
+    collection do
+      get :rem_pfts_priors
+      post :edit_pfts_priors
+    end
   end
 
-  resources :yields
+  resources :yields do
+    collection do
+      post :access_level
+      post :checked
+    end
+  end
   resources :traits do
+    member do
+      get :unlink_covariate
+    end
     collection do
       get :linked
+      post :access_level
+      post :checked
+      post :trait_search
     end
   end
 
@@ -135,8 +196,17 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
 
 
   resources :errors, :only => [:index, :create]
-  resources :users
+  resources :users do
+    collection do
+      get :create_apikey
+    end
+  end
   resources :schemas, :only => [:index]
+  resources :search, :only => :index
+  resources :trait_covariate_associations, only: :index
+
+  get '/application/use_citation/:id', controller: 'application', action: 'use_citation'
+  get '/application/remove_citation'
 
   match '/maps' => 'maps#location_yields'
 
@@ -144,11 +214,6 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
 
 
   root :to => "sessions#new"
-
-  match '/:controller(/:action(/:id))'
-  match ':controller/:action.:format' => '#index'
-
-
 
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/login' => 'sessions#new', :as => :login
@@ -161,7 +226,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   match ':action' => 'static#:action'
 
   # add named routes for bulk_upload controller:
-  match '/bulk_upload/start_upload' => 'sessions#new', :as => :start_upload
+  match '/bulk_upload/start_upload' => 'bulk_upload#start_upload', :as => :start_upload
   match '/bulk_upload/display_csv_file', :as => :show_upload_file_contents
   match '/bulk_upload/choose_global_citation', as: :choose_global_citation
   match '/bulk_upload/choose_global_data_values', :as => :choose_global_data_values

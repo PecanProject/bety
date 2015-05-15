@@ -80,6 +80,7 @@ class SpeciesController < ApplicationController
     render :update do |page|
       if !params[:pft].nil?
         params[:pft][:id].each do |c|
+          next if c.empty?
           @species.pfts << Pft.find(c)
         end
       end

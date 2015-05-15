@@ -4,7 +4,7 @@
   	  <header>
     		<h1>Editing File</h1>
   	  <hearder>
-  		<%= form_for @file, :url => dbfile_path(@path) do |f| %>
+  		<%= form_for @file, :url => dbfile_path(@file) do |f| %>
   		  <%= f.error_messages %>
         <div class="row">
     			<div class="eight columns alpha">
@@ -30,7 +30,7 @@
             <%= link_to( dbfiles_path ) do %>
               <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
             <% end%>
-            <%= link_to( dbfile_path(@dbfile) ) do %>
+            <%= link_to( dbfile_path(@file) ) do %>
               <button class="button" type="button">Show</button>
             <% end%>
           </div>

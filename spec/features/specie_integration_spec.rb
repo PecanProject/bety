@@ -1,7 +1,7 @@
 require 'spec_helper'
 include LoginHelper
 
-feature 'Species index works' do
+feature 'Species pages work' do
   before :each do
     login_test_user
   end
@@ -47,6 +47,15 @@ feature 'Species index works' do
       page.should have_content("Specie was successfully created.")
     end
   end
+
+  context 'GET /species/edit/:id' do
+    it 'should allow editing a species' do
+      visit '/species'
+      first(:xpath, './/a[@alt = "edit"]').click
+      page.should have_content 'Editing Species'
+    end
+  end
+
 
 end
 
