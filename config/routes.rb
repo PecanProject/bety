@@ -103,7 +103,13 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
       post :edit_models_files
     end
   end
-  resources :modeltypes
+  resources :modeltypes do
+    member do
+      post :add_modeltypes_format
+      post :edit_modeltypes_format
+      get :remove_modeltypes_format
+    end
+  end
   resources :runs
   resources :posteriors
   resources :covariates
