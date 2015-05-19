@@ -6,7 +6,11 @@ class Covariate < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ variable }
   SEARCH_FIELDS = %w{ variables.name covariates.level covariates.n covariates.stat covariates.statname }
 
-  validate :level_in_range
+
+
+  # Validations
+
+  ## Validation methods
 
   def level_in_range
     v = Variable.find(variable_id)
@@ -17,7 +21,23 @@ class Covariate < ActiveRecord::Base
       errors.add(:level, "The value of level for the #{v.name} trait must be at most #{v.max}.")
     end
   end
-  
+
+  ## Validation callbacks
+
+  before_validation StatnameCallbacks.new
+
+  ## Validations
+
+  validates_numericality_of :level
+  validate :level_in_range
+  validates :n,
+      numericality: { only_integer: true,
+                      greater_than_or_equal_to: 1 },
+      unless: Proc.new { |a| a.n.blank? }
+  validates_numericality_of :stat, unless: Proc.new { |a| a.stat.blank? }
+
+
+
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
