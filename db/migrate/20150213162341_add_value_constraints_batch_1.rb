@@ -273,8 +273,10 @@ ALTER TABLE inputs ALTER COLUMN notes SET NOT NULL,
 
 ALTER TABLE inputs ALTER COLUMN name SET NOT NULL,
                    ADD CHECK (is_whitespace_normalized(name));
-ALTER TABLE inputs ALTER COLUMN access_level SET DATA TYPE level_of_access;
-ALTER TABLE inputs ALTER COLUMN raw SET NOT NULL;
+ALTER TABLE inputs ALTER COLUMN access_level SET DATA TYPE level_of_access,
+                   ALTER COLUMN access_level SET DEFAULT 4;
+ALTER TABLE inputs ALTER COLUMN raw SET NOT NULL,
+                   ALTER COLUMN raw SET DEFAULT 'f';
 -- add after cleanup:
 /* ALTER TABLE inputs ALTER COLUMN format_id SET NOT NULL; */
 

@@ -20,7 +20,16 @@ class Input < ActiveRecord::Base
 
   accepts_nested_attributes_for :site
 
+  # VALIDATION
+
+  ## Validations callbacks
+
+  before_validation WhitespaceNormalizer.new([:name])
+
+  # Validations
+
   validates_presence_of     :site_id
+
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
