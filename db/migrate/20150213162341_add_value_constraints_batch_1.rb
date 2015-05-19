@@ -452,7 +452,6 @@ ALTER TABLE trait_covariate_associations ALTER COLUMN required SET NOT NULL;
 
 /* TRAITS */
 
-ALTER TABLE traits ALTER COLUMN statname SET NOT NULL;
 ALTER TABLE traits ALTER COLUMN statname SET DATA TYPE statnames;
 
 -- see species-cultivar inconsistencies:
