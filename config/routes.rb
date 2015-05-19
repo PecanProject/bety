@@ -97,7 +97,12 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
       post :edit_inputs_files # for searching files
     end
   end
-  resources :models
+  resources :models do
+    member do
+      get :edit_models_files
+      post :edit_models_files
+    end
+  end
   resources :modeltypes
   resources :runs
   resources :posteriors
