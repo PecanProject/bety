@@ -104,11 +104,15 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
     end
   end
   resources :modeltypes do
-    member do
+    # Because of the way the controller was written to deal with the associates
+    # set of formats, we have to use collection here even though the actions
+    # pertain to a particular modeltype:
+    collection do
       post :add_modeltypes_format
       post :edit_modeltypes_format
       get :remove_modeltypes_format
     end
+    # TO DO: do the routing of association editing properly.
   end
   resources :runs
   resources :posteriors
