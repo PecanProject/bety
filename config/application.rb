@@ -22,7 +22,7 @@ module BetyRails3
 
     # RAILS3 - Added to get RESTful authentication working
     # http://stackoverflow.com/questions/7547281/rails-3-restful-authentication-uninitialized-constant-applicationcontrollera
-    config.autoload_paths << "#{Rails.root}/lib"
+    config.autoload_paths << "#{Rails.root}/lib" << "#{Rails.root}/app/validators"
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
