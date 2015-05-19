@@ -156,8 +156,8 @@ ALTER TABLE citations ALTER COLUMN journal SET NOT NULL,
                       ALTER COLUMN journal SET DEFAULT '',
                       ADD CHECK (is_whitespace_normalized(journal));
 
--- decide if vol = 0 is allowed before adding this:
-/* ALTER TABLE citations ADD CHECK (vol > 0); */
+-- decide if vol = 0 is allowed
+ALTER TABLE citations ADD CHECK (vol >= 0);
 
 ALTER TABLE citations ALTER COLUMN pg SET NOT NULL,
                       ALTER COLUMN pg SET DEFAULT '';
@@ -174,7 +174,9 @@ ALTER TABLE citations ALTER COLUMN pdf SET NOT NULL,
                       ALTER COLUMN pdf SET DEFAULT '',
                       ADD CHECK (is_url_or_empty(pdf) OR pdf ~ '^\(.+\)$');
 
-ALTER TABLE citations ADD CHECK (doi ~ '^(|10\.\d+(\.\d+)?/.+)$');
+ALTER TABLE citations ALTER COLUMN doi SET NOT NULL,
+                      ALTER COLUMN doi SET DEFAULT '',
+                      ADD CHECK (doi ~ '^(|10\.\d+(\.\d+)?/.+)$');
 
 
 
