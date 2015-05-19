@@ -9,6 +9,14 @@ class Format < ActiveRecord::Base
   has_many :formats_variables
   has_many :variables, :through => :formats_variables
 
+  # VALIDATION
+
+  ## Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:name])
+
+  ## Validations
+
   validates :mime_type,
       presence: true,
       format: { with: /^(application|
@@ -40,6 +48,8 @@ class Format < ActiveRecord::Base
 
                          $/x,
                 message: "-- the type portion of this doesn't correspond to any recognized media type." }
+
+
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
