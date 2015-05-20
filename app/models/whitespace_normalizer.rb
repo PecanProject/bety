@@ -6,7 +6,7 @@ class WhitespaceNormalizer
 
   def before_validation(model)
     @attrs_to_normalize.each do |attr|
-      model[attr].squish!
+      model[attr].nil? || model[attr].squish!
     end
   end
 
