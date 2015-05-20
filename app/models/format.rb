@@ -19,35 +19,7 @@ class Format < ActiveRecord::Base
 
   validates :mime_type,
       presence: true,
-      format: { with: /^(application|
-                         audio|
-                         chemical|
-                         drawing|
-                         image|
-                         i-world|
-                         message|
-                         model|
-                         multipart|
-                         music|
-                         paleovu|
-                         text|
-                         video|
-                         windows|
-                         www|
-                         x-conference|
-                         xgl|
-                         x-music|
-                         x-world)
-
-                         \/[a-z.0-9_-]+
-
-                         (\ \(
-                              (old|compiled\ elisp)
-                             \)
-                         )?
-
-                         $/x,
-                message: "-- the type portion of this doesn't correspond to any recognized media type." }
+      mediatype: true
 
 
 
