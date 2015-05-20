@@ -13,6 +13,9 @@ class Model < ActiveRecord::Base
   belongs_to :parent, :class_name => "Model"
 
   validates_presence_of :modeltype_id
+  validates_format_of :model_name, with: /\A\S*\z/, message: "can't contain whitespace"
+  validates_format_of :revision, with: /\A\S*\z/, message: "can't contain whitespace"
+
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
