@@ -20,6 +20,14 @@ class Pft < ActiveRecord::Base
 
   belongs_to :modeltype
 
+  # VALIDATION
+
+  ## Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:name])
+
+  ## Validations
+
   validates :name,
       presence: true,
       uniqueness: { scope: :modeltype_id,
