@@ -13,6 +13,12 @@ class Treatment < ActiveRecord::Base
 
   belongs_to :user
 
+
+  ## Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:name, :definition])
+
+
   comma do
     id
     name
