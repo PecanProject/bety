@@ -141,6 +141,7 @@ CREATE DOMAIN level_of_access AS INTEGER CHECK (VALUE BETWEEN 1 AND 4) NOT NULL;
 
 /* CITATIONS */
 
+/* FIX */ --UPDATE citations SET author = normalize_whitespace(author) WHERE NOT is_whitespace_normalized(author);
 ALTER TABLE citations ALTER COLUMN author SET NOT NULL,
                       ADD CHECK (is_whitespace_normalized(author));
 
@@ -148,10 +149,11 @@ ALTER TABLE citations ALTER COLUMN year SET NOT NULL,
                       ADD CHECK (year <= EXTRACT(year FROM NOW()) + 1);
 /* ALTER TABLE citations ADD CHECK (year > 1800); ??? */
 
-/* FIX */ UPDATE citations SET title = normalize_whitespace(title) WHERE NOT is_whitespace_normalized(title);
+/* FIX */ --UPDATE citations SET title = normalize_whitespace(title) WHERE NOT is_whitespace_normalized(title);
 ALTER TABLE citations ALTER COLUMN title SET NOT NULL,
                       ADD CHECK (is_whitespace_normalized(title));
 
+/* FIX */ --UPDATE citations SET journal = normalize_whitespace(journal) WHERE NOT is_whitespace_normalized(journal);
 ALTER TABLE citations ALTER COLUMN journal SET NOT NULL,
                       ALTER COLUMN journal SET DEFAULT '',
                       ADD CHECK (is_whitespace_normalized(journal));
@@ -164,6 +166,7 @@ ALTER TABLE citations ALTER COLUMN pg SET NOT NULL,
 
 -- Check that pg is either empty or is positive integer possibly followed by and
 -- n-dash and another positive integer:
+/* FIX */ --UPDATE citations SET pg = REGEXP_REPLACE(pg, '-', E'\u2013') WHERE pg ~ '-';
 ALTER TABLE citations ADD CHECK (pg ~ '^([1-9]\d*(\u2013[1-9]\d*)?)?$');
 
 ALTER TABLE citations ALTER COLUMN url SET NOT NULL,
@@ -486,7 +489,7 @@ ALTER TABLE traits ADD CHECK (checked BETWEEN -1 AND 1);
 /* TREATMENTS */
 
 ALTER TABLE treatments ALTER COLUMN name SET NOT NULL;
-/* FIX */ UPDATE treatments SET name = normalize_whitespace(name) WHERE NOT is_whitespace_normalized(name);
+/* FIX */ --UPDATE treatments SET name = normalize_whitespace(name) WHERE NOT is_whitespace_normalized(name);
 ALTER TABLE treatments ADD CHECK (is_whitespace_normalized(name));
 ALTER TABLE treatments ALTER COLUMN definition SET NOT NULL,
                        ALTER COLUMN definition SET DEFAULT '',
@@ -502,7 +505,7 @@ ALTER TABLE users ADD CHECK (is_whitespace_normalized(name));
 ALTER TABLE users ALTER COLUMN email SET NOT NULL;
 ALTER TABLE users ADD CHECK (is_wellformed_email(email));
 ALTER TABLE users ALTER COLUMN city SET NOT NULL;
-/* FIX */ UPDATE users SET city = normalize_whitespace(city) WHERE NOT is_whitespace_normalized(city);
+/* FIX */ --UPDATE users SET city = normalize_whitespace(city) WHERE NOT is_whitespace_normalized(city);
 ALTER TABLE users ADD CHECK (is_whitespace_normalized(city));
 ALTER TABLE users ALTER COLUMN country SET NOT NULL;
 ALTER TABLE users ADD CHECK (is_whitespace_normalized(country));
@@ -512,7 +515,7 @@ ALTER TABLE users ADD CHECK (crypted_password ~ '^[0-9a-f]{40}$');
 ALTER TABLE users ADD CHECK (salt ~ '^[0-9a-f]{40}$');
 ALTER TABLE users ALTER COLUMN access_level SET DATA TYPE level_of_access;
 ALTER TABLE users ALTER COLUMN page_access_level SET DATA TYPE level_of_access;
-/* FIX */ UPDATE users SET apikey = '' WHERE apikey IS NULL;
+/* FIX */ --UPDATE users SET apikey = '' WHERE apikey IS NULL;
 ALTER TABLE users ALTER COLUMN apikey SET NOT NULL,
                   ALTER COLUMN apikey SET DEFAULT '',
                   ADD CHECK (apikey ~ '^[0-9a-zA-Z+/]{40}$' OR apikey = '');
@@ -540,17 +543,21 @@ EXCEPTION WHEN others THEN
 END;
 $$ LANGUAGE plpgsql;
 
-/* FIX */ UPDATE variables SET description = normalize_whitespace(description) WHERE NOT is_whitespace_normalized(description);
+/* FIX */ --UPDATE variables SET description = normalize_whitespace(description) WHERE NOT is_whitespace_normalized(description);
 ALTER TABLE variables ALTER COLUMN description SET NOT NULL,
                       ALTER COLUMN description SET DEFAULT '',
                       ADD CHECK (is_whitespace_normalized(description));
 ALTER TABLE variables ALTER COLUMN units SET NOT NULL,
                       ALTER COLUMN units SET DEFAULT '',
                       ADD CHECK (is_whitespace_normalized(units));
+/* FIX */ --UPDATE VARIABLES SET notes = '' WHERE notes IS NULL;
 ALTER TABLE variables ALTER COLUMN notes SET NOT NULL,
                       ALTER COLUMN notes SET DEFAULT '';
 ALTER TABLE variables ALTER COLUMN name SET NOT NULL,
                       ADD CHECK (is_whitespace_normalized(name));
+/* FIX */ --UPDATE variables SET max = 'Infinity', min = '-Infinity' WHERE (max IS NULL OR max = '') AND (min IS NULL OR min = '');
+/* FIX */ --UPDATE variables SET max = 'Infinity' WHERE max IS NULL OR max = '';
+/* FIX */ --UPDATE variables SET min = '-Infinity' WHERE min IS NULL OR min = '';
 ALTER TABLE variables ALTER COLUMN max SET NOT NULL,
                       ALTER COLUMN max SET DEFAULT 'Infinity',
                       ADD CHECK (is_numerical(max));
@@ -566,7 +573,9 @@ ALTER TABLE workflows ALTER COLUMN folder SET NOT NULL;
 ALTER TABLE workflows ADD CHECK (is_whitespace_normalized(folder));
 ALTER TABLE workflows ALTER COLUMN hostname SET NOT NULL;
 ALTER TABLE workflows ADD CHECK (is_whitespace_normalized(hostname));
-ALTER TABLE workflows ALTER COLUMN params SET NOT NULL;
+/* FIX */ --UPDATE workflows SET params = '' WHERE params IS NULL;
+ALTER TABLE workflows ALTER COLUMN params SET NOT NULL,
+                      ALTER COLUMN params SET DEFAULT '';
 ALTER TABLE workflows ADD CHECK (is_whitespace_normalized(params));
 ALTER TABLE workflows ALTER COLUMN advanced_edit SET NOT NULL;
 
@@ -574,11 +583,11 @@ ALTER TABLE workflows ALTER COLUMN advanced_edit SET NOT NULL;
 /* YIELDS */
 
 ALTER TABLE yields ALTER COLUMN mean SET NOT NULL;
-/* FIX */ UPDATE yields SET statname = '' WHERE statname IS NULL;
+/* FIX */ --UPDATE yields SET statname = '' WHERE statname IS NULL;
 ALTER TABLE yields ALTER COLUMN statname SET NOT NULL,
                    ALTER COLUMN statname SET DEFAULT '',
                    ALTER COLUMN statname SET DATA TYPE statnames;
-/* FIX */ UPDATE yields SET notes = '' WHERE notes IS NULL;
+/* FIX */ --UPDATE yields SET notes = '' WHERE notes IS NULL;
 ALTER TABLE yields ALTER COLUMN notes SET NOT NULL;
 ALTER TABLE yields ALTER COLUMN checked SET NOT NULL,
                    ADD CHECK (checked BETWEEN -1 AND 1);
