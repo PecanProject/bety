@@ -275,8 +275,7 @@ ALTER TABLE inputs ALTER COLUMN name SET NOT NULL,
                    ADD CHECK (is_whitespace_normalized(name));
 ALTER TABLE inputs ALTER COLUMN access_level SET DATA TYPE level_of_access,
                    ALTER COLUMN access_level SET DEFAULT 4;
-ALTER TABLE inputs ALTER COLUMN raw SET NOT NULL,
-                   ALTER COLUMN raw SET DEFAULT 'f';
+
 -- add after cleanup:
 /* ALTER TABLE inputs ALTER COLUMN format_id SET NOT NULL; */
 
@@ -387,18 +386,24 @@ COMMENT ON COLUMN runs.started_at IS 'system time when run was started';
 
 /* SITES */
 
-ALTER TABLE sites ALTER COLUMN city SET NOT NULL;
-ALTER TABLE sites ALTER COLUMN state SET NOT NULL;
-ALTER TABLE sites ALTER COLUMN country SET NOT NULL;
+ALTER TABLE sites ALTER COLUMN city SET NOT NULL,
+                  ALTER COLUMN city SET DEFAULT '';
+ALTER TABLE sites ALTER COLUMN state SET NOT NULL,
+                  ALTER COLUMN state SET DEFAULT '';
+ALTER TABLE sites ALTER COLUMN country SET NOT NULL,
+                  ALTER COLUMN country SET DEFAULT '';
 ALTER TABLE sites ADD CHECK (mat BETWEEN -25 AND 40);
 ALTER TABLE sites ADD CHECK (map BETWEEN 0 AND 12000);
-ALTER TABLE sites ALTER COLUMN soil SET NOT NULL;
+ALTER TABLE sites ALTER COLUMN soil SET NOT NULL,
+                  ALTER COLUMN soil SET DEFAULT '';
 -- see bad soil values:
 --   SELECT id, soil FROM sites WHERE NOT soil IN ('clay', 'sandy clay', 'sandy clay loam', 'sandy loam', 'loamy sand', 'sand', 'clay loam', 'loam', 'silty clay', 'silty clay loam', 'silt loam', 'silt', '') ORDER BY id;
 /* ALTER TABLE sites ADD CHECK (soil IN ('clay', 'sandy clay', 'sandy clay loam', 'sandy loam', 'loamy sand', 'sand', 'clay loam', 'loam', 'silty clay', 'silty clay loam', 'silt loam', 'silt', '')); */
 ALTER TABLE sites ADD CHECK (som BETWEEN 0 AND 100);
-ALTER TABLE sites ALTER COLUMN notes SET NOT NULL;
-ALTER TABLE sites ALTER COLUMN soilnotes SET NOT NULL;
+ALTER TABLE sites ALTER COLUMN notes SET NOT NULL,
+                  ALTER COLUMN notes SET DEFAULT '';
+ALTER TABLE sites ALTER COLUMN soilnotes SET NOT NULL,
+                  ALTER COLUMN soilnotes SET DEFAULT '';
 ALTER TABLE sites ALTER COLUMN sitename SET NOT NULL;
 ALTER TABLE sites ADD CHECK (is_whitespace_normalized(sitename));
 ALTER TABLE sites ADD CHECK (sand_pct >= 0 AND clay_pct >= 0 AND sand_pct <= 100 AND clay_pct <= 100 AND sand_pct + clay_pct <= 100);
@@ -411,12 +416,14 @@ ALTER TABLE species ADD CHECK (spcd BETWEEN 0 AND 10000);
 
 -- genus should consist of a capital letter followed by zero or more lower case letters or hyphens or be empty.
 ALTER TABLE species ALTER COLUMN genus SET NOT NULL,
+                    ALTER COLUMN genus SET DEFAULT '',
                     ADD CHECK (genus ~ '^([A-Z][-a-z]*)?$');
 
 -- species should be zero or more space-or-hyphen-separated groups of capital
 -- letters followed by a period, sequences of two or more letters possibly
 -- followed by a period, ampersands, and times symbols.
 ALTER TABLE species ALTER COLUMN species SET NOT NULL,
+                    ALTER COLUMN species SET DEFAULT '',
                     ADD CHECK (species ~ '^(([A-Z]\.|[a-zA-Z]{2,}\.?|&|\u00d7)( |-|$))*$');
 
 -- see rows that violate proposed consistency constraint:
@@ -427,8 +434,10 @@ ALTER TABLE species ALTER COLUMN scientificname SET NOT NULL,
                     ADD CHECK (scientificname ~ FORMAT('%s.*%s', genus, species))*/;
 
 ALTER TABLE species ALTER COLUMN commonname SET NOT NULL,
+                    ALTER COLUMN commonname SET DEFAULT '',
                     ADD CHECK (is_whitespace_normalized(commonname));
-ALTER TABLE species ALTER COLUMN notes SET NOT NULL;
+ALTER TABLE species ALTER COLUMN notes SET NOT NULL,
+                    ALTER COLUMN notes SET DEFAULT '';
 
 -- normalize cross in hybrids:
 CREATE OR REPLACE FUNCTION replace_x() 
@@ -461,7 +470,8 @@ ALTER TABLE traits ALTER COLUMN statname SET DATA TYPE statnames;
 -- see species-cultivar inconsistencies:
 --   SELECT t_sp.scientificname AS "species referred to by traits table", c_sp.scientificname AS "species matching cultivar", c.name FROM traits t JOIN cultivars c ON t.cultivar_id = c.id JOIN species t_sp ON t_sp.id = t.specie_id JOIN species c_sp ON c.specie_id = c_sp.id WHERE t.specie_id != c.specie_id;
 -- decide on consistency constraint
-ALTER TABLE traits ALTER COLUMN notes SET NOT NULL;
+ALTER TABLE traits ALTER COLUMN notes SET NOT NULL,
+                   ALTER COLUMN notes SET DEFAULT '';
 /* ALTER TABLE traits ALTER COLUMN checked SET NOT NULL; */
 ALTER TABLE traits ADD CHECK (checked BETWEEN -1 AND 1);
 -- add after cleaning up rows where access_level = 0; may need to drop and re-add dependent views before doing this:
@@ -478,8 +488,9 @@ ALTER TABLE traits ADD CHECK (checked BETWEEN -1 AND 1);
 ALTER TABLE treatments ALTER COLUMN name SET NOT NULL;
 /* FIX */ UPDATE treatments SET name = normalize_whitespace(name) WHERE NOT is_whitespace_normalized(name);
 ALTER TABLE treatments ADD CHECK (is_whitespace_normalized(name));
-ALTER TABLE treatments ALTER COLUMN definition SET NOT NULL;
-ALTER TABLE treatments ADD CHECK (is_whitespace_normalized(definition));
+ALTER TABLE treatments ALTER COLUMN definition SET NOT NULL,
+                       ALTER COLUMN definition SET DEFAULT '',
+                       ADD CHECK (is_whitespace_normalized(definition));
 
 
 /* USERS */
@@ -502,21 +513,51 @@ ALTER TABLE users ADD CHECK (salt ~ '^[0-9a-f]{40}$');
 ALTER TABLE users ALTER COLUMN access_level SET DATA TYPE level_of_access;
 ALTER TABLE users ALTER COLUMN page_access_level SET DATA TYPE level_of_access;
 /* FIX */ UPDATE users SET apikey = '' WHERE apikey IS NULL;
-ALTER TABLE users ALTER COLUMN apikey SET NOT NULL;
-ALTER TABLE users ADD CHECK (apikey ~ '^[0-9a-zA-Z+/]{40}$' OR apikey = '');
-ALTER TABLE users ALTER COLUMN state_prov SET NOT NULL;
-ALTER TABLE users ADD CHECK (is_whitespace_normalized(state_prov));
-ALTER TABLE users ALTER COLUMN postal_code SET NOT NULL;
-ALTER TABLE users ADD CHECK (is_whitespace_normalized(postal_code));
+ALTER TABLE users ALTER COLUMN apikey SET NOT NULL,
+                  ALTER COLUMN apikey SET DEFAULT '',
+                  ADD CHECK (apikey ~ '^[0-9a-zA-Z+/]{40}$' OR apikey = '');
+ALTER TABLE users ALTER COLUMN state_prov SET NOT NULL,
+                  ALTER COLUMN state_prov SET DEFAULT '',
+                  ADD CHECK (is_whitespace_normalized(state_prov));
+ALTER TABLE users ALTER COLUMN postal_code SET NOT NULL,
+                  ALTER COLUMN postal_code SET DEFAULT '',
+                  ADD CHECK (is_whitespace_normalized(postal_code));
 
 
 /* VARIABLES */
 
-ALTER TABLE variables ALTER COLUMN description SET NOT NULL;
--- can't do this until trigger function is fixed:
-/* ALTER TABLE variables ADD CHECK (is_whitespace_normalized(description)); */
-ALTER TABLE variables ALTER COLUMN units SET NOT NULL;
-ALTER TABLE variables ADD CHECK (is_whitespace_normalized(units));
+/* Use this function to check numericality of min and max until and unless those
+columns are changed to a numeric type. */
+CREATE OR REPLACE FUNCTION is_numerical(text) RETURNS BOOLEAN AS $$
+DECLARE x FLOAT;
+BEGIN
+   /* We attempt to cast to FLOAT rather than NUMERIC because we want 'INFINITY'
+      and '-INFINITY' to count as being numerical. */
+    x = $1::FLOAT;
+    RETURN TRUE;
+EXCEPTION WHEN others THEN
+    RETURN FALSE;
+END;
+$$ LANGUAGE plpgsql;
+
+/* FIX */ UPDATE variables SET description = normalize_whitespace(description) WHERE NOT is_whitespace_normalized(description);
+ALTER TABLE variables ALTER COLUMN description SET NOT NULL,
+                      ALTER COLUMN description SET DEFAULT '',
+                      ADD CHECK (is_whitespace_normalized(description));
+ALTER TABLE variables ALTER COLUMN units SET NOT NULL,
+                      ALTER COLUMN units SET DEFAULT '',
+                      ADD CHECK (is_whitespace_normalized(units));
+ALTER TABLE variables ALTER COLUMN notes SET NOT NULL,
+                      ALTER COLUMN notes SET DEFAULT '';
+ALTER TABLE variables ALTER COLUMN name SET NOT NULL,
+                      ADD CHECK (is_whitespace_normalized(name));
+ALTER TABLE variables ALTER COLUMN max SET NOT NULL,
+                      ALTER COLUMN max SET DEFAULT 'Infinity',
+                      ADD CHECK (is_numerical(max));
+ALTER TABLE variables ALTER COLUMN min SET NOT NULL,
+                      ALTER COLUMN min SET DEFAULT '-Infinity',
+                      ADD CHECK (is_numerical(min));
+ALTER TABLE variables ADD CHECK (min::float <= max::float);
 
 
 /* WORKFLOWS */
@@ -534,12 +575,13 @@ ALTER TABLE workflows ALTER COLUMN advanced_edit SET NOT NULL;
 
 ALTER TABLE yields ALTER COLUMN mean SET NOT NULL;
 /* FIX */ UPDATE yields SET statname = '' WHERE statname IS NULL;
-ALTER TABLE yields ALTER COLUMN statname SET NOT NULL;
-ALTER TABLE yields ALTER COLUMN statname SET DATA TYPE statnames;
+ALTER TABLE yields ALTER COLUMN statname SET NOT NULL,
+                   ALTER COLUMN statname SET DEFAULT '',
+                   ALTER COLUMN statname SET DATA TYPE statnames;
 /* FIX */ UPDATE yields SET notes = '' WHERE notes IS NULL;
 ALTER TABLE yields ALTER COLUMN notes SET NOT NULL;
-/* ALTER TABLE yields ALTER COLUMN checked SET NOT NULL; */
-ALTER TABLE yields ADD CHECK (checked BETWEEN -1 AND 1);
+ALTER TABLE yields ALTER COLUMN checked SET NOT NULL,
+                   ADD CHECK (checked BETWEEN -1 AND 1);
 ALTER TABLE yields ALTER COLUMN access_level SET DATA TYPE level_of_access;
 -- see species-cultivar inconsistencies:
 --   SELECT y_sp.scientificname AS "species referred to by yields table", c_sp.scientificname AS "species matching cultivar", c.name FROM yields y JOIN cultivars c ON y.cultivar_id = c.id JOIN species y_sp ON y_sp.id = y.specie_id JOIN species c_sp ON c.specie_id = c_sp.id WHERE y.specie_id != c.specie_id;
