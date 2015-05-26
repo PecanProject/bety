@@ -53,9 +53,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-ALTER TABLE dbfiles ADD CHECK (container_type != 'Input' OR container_id = ANY(get_input_ids()));
-ALTER TABLE dbfiles ADD CHECK (container_type != 'Model' OR container_id = ANY(get_model_ids()));
-ALTER TABLE dbfiles ADD CHECK (container_type != 'Posterior' OR container_id = ANY(get_posterior_ids()));
+ALTER TABLE dbfiles ADD CONSTRAINT valid_input_refs CHECK (container_type != 'Input' OR container_id = ANY(get_input_ids()));
+ALTER TABLE dbfiles ADD CONSTRAINT valid_model_refs CHECK (container_type != 'Model' OR container_id = ANY(get_model_ids()));
+ALTER TABLE dbfiles ADD CONSTRAINT valid_posterior_refs CHECK (container_type != 'Posterior' OR container_id = ANY(get_posterior_ids()));
 
 
 /* Used for truncate triggers for inputs, models, and posteriors: */
