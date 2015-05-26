@@ -146,7 +146,8 @@ ALTER TABLE citations ALTER COLUMN doi SET NOT NULL,
 
 ALTER TABLE covariates ADD CONSTRAINT positive_covariate_sample_size CHECK (n >= 1);
 
-ALTER TABLE covariates ALTER COLUMN statname SET DATA TYPE statnames;
+ALTER TABLE covariates ALTER COLUMN statname SET DATA TYPE statnames,
+                       ALTER COLUMN statname SET DEFAULT ''; -- Rails 3.2 needs this set here.  It's not enough that the statnames domain has default ''.
 -- see stat-statname consistency violations:
 -- SELECT * FROM  covariates WHERE NOT (statname = '' AND stat IS NULL OR statname != '' AND stat IS NOT NULL);
 -- possible consistency constraint:
@@ -420,7 +421,8 @@ ALTER TABLE trait_covariate_associations ALTER COLUMN required SET NOT NULL;
 
 /* TRAITS */
 
-ALTER TABLE traits ALTER COLUMN statname SET DATA TYPE statnames;
+ALTER TABLE traits ALTER COLUMN statname SET DATA TYPE statnames,
+                   ALTER COLUMN statname SET DEFAULT ''; -- Rails 3.2 needs this set here.  It's not enough that the statnames domain has default ''.
 
 -- see species-cultivar inconsistencies:
 --   SELECT t_sp.scientificname AS "species referred to by traits table", c_sp.scientificname AS "species matching cultivar", c.name FROM traits t JOIN cultivars c ON t.cultivar_id = c.id JOIN species t_sp ON t_sp.id = t.specie_id JOIN species c_sp ON c.specie_id = c_sp.id WHERE t.specie_id != c.specie_id;
@@ -452,14 +454,17 @@ ALTER TABLE treatments ALTER COLUMN definition SET NOT NULL,
 
 ALTER TABLE users ALTER COLUMN login SET NOT NULL;
 ALTER TABLE users ADD CONSTRAINT valid_user_login CHECK (login ~ '^[a-z\d_][a-z\d_.@-]{2,39}$'); -- matches Rails app requirements
-ALTER TABLE users ALTER COLUMN name SET NOT NULL;
+ALTER TABLE users ALTER COLUMN name SET NOT NULL,
+                  ALTER COLUMN name SET DEFAULT '';
 ALTER TABLE users ADD CONSTRAINT normalized_user_name CHECK (is_whitespace_normalized(name));
 ALTER TABLE users ALTER COLUMN email SET NOT NULL;
 ALTER TABLE users ADD CONSTRAINT well_formed_user_email CHECK (is_wellformed_email(email));
-ALTER TABLE users ALTER COLUMN city SET NOT NULL;
+ALTER TABLE users ALTER COLUMN city SET NOT NULL,
+                  ALTER COLUMN city SET DEFAULT '';
 /* FIX */ --UPDATE users SET city = normalize_whitespace(city) WHERE NOT is_whitespace_normalized(city);
 ALTER TABLE users ADD CONSTRAINT normalized_user_city_name CHECK (is_whitespace_normalized(city));
-ALTER TABLE users ALTER COLUMN country SET NOT NULL;
+ALTER TABLE users ALTER COLUMN country SET NOT NULL,
+                  ALTER COLUMN country SET DEFAULT '';
 ALTER TABLE users ADD CONSTRAINT normalized_user_country_name CHECK (is_whitespace_normalized(country));
 ALTER TABLE users ALTER COLUMN crypted_password SET NOT NULL;
 ALTER TABLE users ADD CONSTRAINT valid_user_crypted_password_value CHECK (crypted_password ~ '^[0-9a-f]{40}$');
@@ -536,11 +541,11 @@ ALTER TABLE workflows ALTER COLUMN advanced_edit SET NOT NULL;
 
 ALTER TABLE yields ALTER COLUMN mean SET NOT NULL;
 /* FIX */ --UPDATE yields SET statname = '' WHERE statname IS NULL;
-ALTER TABLE yields ALTER COLUMN statname SET NOT NULL,
-                   ALTER COLUMN statname SET DEFAULT '',
-                   ALTER COLUMN statname SET DATA TYPE statnames;
+ALTER TABLE yields ALTER COLUMN statname SET DATA TYPE statnames,
+                   ALTER COLUMN statname SET DEFAULT ''; -- Rails 3.2 needs this set here.  It's not enough that the statnames domain has default ''.
 /* FIX */ --UPDATE yields SET notes = '' WHERE notes IS NULL;
-ALTER TABLE yields ALTER COLUMN notes SET NOT NULL;
+ALTER TABLE yields ALTER COLUMN notes SET NOT NULL,
+                   ALTER COLUMN notes SET DEFAULT '';
 ALTER TABLE yields ALTER COLUMN checked SET NOT NULL,
                    ADD CONSTRAINT valid_yield_checked_value CHECK (checked BETWEEN -1 AND 1);
 ALTER TABLE yields ALTER COLUMN access_level SET DATA TYPE level_of_access;
