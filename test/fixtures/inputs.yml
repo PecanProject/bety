@@ -8,7 +8,6 @@ test_input:
   name: "ED_MET_DRIVER_HEADER"
   parent_id: NULL
   user_id: 1
-  access_level: NULL
   raw: false
   format_id: 1
   id: 27

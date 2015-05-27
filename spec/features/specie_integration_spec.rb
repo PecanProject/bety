@@ -24,10 +24,10 @@ feature 'Species pages work' do
     it 'should allow a specie to return success notification' do
       visit '/species/new'
       
-      fill_in 'specie[spcd]', :with =>  'winstonchurchill'
-      fill_in 'specie[genus]', :with =>  'asdfasdf'
+      fill_in 'specie[spcd]', :with =>  '555'
+      fill_in 'specie[genus]', :with =>  'Asdfasdf'
       fill_in 'specie[species]', :with =>  'asdfasdf'
-      fill_in 'specie[scientificname]', :with =>  'asdfasdf'
+      fill_in 'specie[scientificname]', :with =>  'Asdfasdf'
       fill_in 'specie[commonname]', :with =>  'winstonchurchill'
       fill_in 'specie[AcceptedSymbol]', :with =>  'asdfasdf'
       fill_in 'specie[SynonymSymbol]', :with =>  'asdfasdf'

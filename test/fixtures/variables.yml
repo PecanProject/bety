@@ -17,11 +17,10 @@ variables_007:
   id: '1'
   description: Photosynthetic Water Use Efficiency
   units: umol CO2 mmol -1 H2O
-  notes: 
+  notes: '' 
   created_at: 
   updated_at: '2011-06-06 14:40:42'
   name: PWUE
-  max: 
   min: '0'
   standard_name: 
   standard_units: 
@@ -48,7 +47,7 @@ variables_065:
     leaf to the highest leaf; 0 is the bottom of the canopy, 1 is the top, canopy_layer
     = height of observation / (max leaf height - min leaf height)
   units: percent
-  notes:
+  notes: ''
   created_at:
   updated_at: '2011-06-06 14:40:42'
   name: canopy_layer
@@ -66,23 +65,19 @@ variables_066:
   created_at:
   updated_at: '2012-01-17 19:24:57'
   name: leafT
-  max:
-  min:
   standard_name:
   standard_units:
   label:
   type:
 variables_451:
   id: '546'
-  description: ! ' Initial slope of the light response curve'
+  description: ! 'Initial slope of the light response curve'
   units: Fraction
   notes: ! "Chemical Reaction Per Photon\r\nThe values must be less the 1.0. The closer
     to 1, the higher the efficiency of low light photosynthesis.\r\n"
   created_at: '2013-12-03 16:17:31'
   updated_at: '2013-12-03 16:28:03'
   name: quantum_yield
-  max:
-  min:
   standard_name:
   standard_units:
   label:
@@ -128,7 +123,6 @@ variables_461:
   created_at:
   updated_at: '2014-04-11 15:08:46.833332'
   name: Amax
-  max:
   min: '0'
   standard_name:
   standard_units:
@@ -136,7 +130,7 @@ variables_461:
   type:
 variables_481:
   id: '404'
-  description: ! 'Ball-Berry Model '
+  description: ! 'Ball-Berry Model'
   units: ratio
   notes: links the stomatal conductance to leaf photosynthesis, humidity deficits,
     and CO2 concentration at the leaf's surface.
@@ -154,7 +148,7 @@ variables_485:
   description: leaf (cuticular) conductance when stomata fully closed
   units: umol H2O m-2 s-1
   notes: ! 'Intercept for Ball-Berry model. Note units are umol: divide value by 10^3
-    to convert to mmol; divide by 10^6 to convert to mol '
+    to convert to mmol; divide by 10^6 to convert to mol'
   created_at:
   updated_at: '2014-09-26 17:31:08.548681'
   name: cuticular_cond
@@ -168,7 +162,7 @@ variables_486:
   id: '15'
   description: Specific Leaf Area
   units: m2 kg-1
-  notes:
+  notes: ''
   created_at:
   updated_at: '2011-06-06 14:40:42'
   name: SLA

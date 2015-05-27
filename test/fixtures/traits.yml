@@ -10,9 +10,7 @@ test_trait:
   timeloc: NULL
   mean: NULL
   n: NULL
-  statname: NULL
   stat: NULL
-  notes: NULL
   created_at: NULL
   updated_at: NULL
   variable_id: 1

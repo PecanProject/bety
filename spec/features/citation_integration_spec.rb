@@ -16,12 +16,12 @@ feature 'Citation features work' do
     it 'should allow creation of new citations' do
       visit '/citations/new'
       fill_in 'Author', :with => 'tester'
-      fill_in 'Year', :with =>  '2900'
+      fill_in 'Year', :with =>  '2009'
       fill_in 'Title', :with => 'ZOMG PAPER'
       fill_in 'Journal', :with =>  'Research Interwebs Papers'
       fill_in 'Vol', :with => '9999'
       fill_in 'Pg', :with => '9999'
-      fill_in 'Url', :with =>  'www.reddit.com'
+      fill_in 'Url', :with =>  'http://www.reddit.com'
       click_button 'Create'
       
       page.should have_content 'Citation was successfully created'
