@@ -14,10 +14,10 @@ class Covariate < ActiveRecord::Base
 
   def level_in_range
     v = Variable.find(variable_id)
-    if !v.min.nil? and level < v.min.to_f
+    if v.min != "-Infinity" and level < v.min.to_f
       errors.add(:level, "The value of level for the #{v.name} trait must be at least #{v.min}.")
     end
-    if !v.max.nil? and level > v.max.to_f
+    if v.max != "Infinity" and level > v.max.to_f
       errors.add(:level, "The value of level for the #{v.name} trait must be at most #{v.max}.")
     end
   end
