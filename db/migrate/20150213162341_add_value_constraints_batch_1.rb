@@ -344,13 +344,13 @@ COMMENT ON COLUMN runs.started_at IS 'system time when run was started';
 
 ALTER TABLE sites ALTER COLUMN city SET NOT NULL,
                   ALTER COLUMN city SET DEFAULT '',
-                  ADD CONSTRAINT normalized_city_name CHECK (is_whitespace_normalized(city));
+                  ADD CONSTRAINT normalized_site_city_name CHECK (is_whitespace_normalized(city));
 ALTER TABLE sites ALTER COLUMN state SET NOT NULL,
                   ALTER COLUMN state SET DEFAULT '',
-                  ADD CONSTRAINT normalized_state_name CHECK (is_whitespace_normalized(state));
+                  ADD CONSTRAINT normalized_site_state_name CHECK (is_whitespace_normalized(state));
 ALTER TABLE sites ALTER COLUMN country SET NOT NULL,
                   ALTER COLUMN country SET DEFAULT '',
-                  ADD CONSTRAINT normalized_country_name CHECK (is_whitespace_normalized(country));
+                  ADD CONSTRAINT normalized_site_country_name CHECK (is_whitespace_normalized(country));
 ALTER TABLE sites ADD CONSTRAINT valid_site_mat_value CHECK (mat BETWEEN -25 AND 40);
 ALTER TABLE sites ADD CONSTRAINT valid_site_map_value CHECK (map BETWEEN 0 AND 12000);
 ALTER TABLE sites ALTER COLUMN soil SET NOT NULL,
@@ -763,7 +763,8 @@ ALTER TABLE citations ALTER COLUMN doi DROP NOT NULL,
 
 ALTER TABLE covariates DROP CONSTRAINT positive_covariate_sample_size;
 
-ALTER TABLE covariates ALTER COLUMN statname SET DATA TYPE VARCHAR(255);
+ALTER TABLE covariates ALTER COLUMN statname SET DATA TYPE VARCHAR(255),
+                       ALTER COLUMN statname DROP DEFAULT;
 
 /* CULTIVARS */
 
@@ -912,6 +913,9 @@ ALTER TABLE sites ALTER COLUMN notes DROP NOT NULL,
 ALTER TABLE sites ALTER COLUMN soilnotes DROP NOT NULL,
                   ALTER COLUMN soilnotes DROP DEFAULT;
 ALTER TABLE sites ALTER COLUMN sitename DROP NOT NULL;
+ALTER TABLE sites DROP CONSTRAINT normalized_site_city_name;
+ALTER TABLE sites DROP CONSTRAINT normalized_site_state_name;
+ALTER TABLE sites DROP CONSTRAINT normalized_site_country_name;
 ALTER TABLE sites DROP CONSTRAINT normalized_site_sitename;
 ALTER TABLE sites DROP CONSTRAINT valid_site_sand_and_clay_percentage_values;
 ALTER TABLE sites DROP CONSTRAINT valid_site_geometry_specification;
@@ -945,7 +949,8 @@ ALTER TABLE trait_covariate_associations ALTER COLUMN required DROP NOT NULL;
 
 /* TRAITS */
 
-ALTER TABLE traits ALTER COLUMN statname SET DATA TYPE VARCHAR(255);
+ALTER TABLE traits ALTER COLUMN statname SET DATA TYPE VARCHAR(255),
+                   ALTER COLUMN statname DROP DEFAULT;
 ALTER TABLE traits ALTER COLUMN notes DROP NOT NULL,
                    ALTER COLUMN notes DROP DEFAULT;
 ALTER TABLE traits DROP CONSTRAINT valid_trait_checked_value;
@@ -966,9 +971,11 @@ ALTER TABLE users DROP CONSTRAINT valid_user_login;
 ALTER TABLE users ALTER COLUMN name DROP NOT NULL;
 ALTER TABLE users DROP CONSTRAINT normalized_user_name;
 ALTER TABLE users ALTER COLUMN email DROP NOT NULL;
-ALTER TABLE users ALTER COLUMN city DROP NOT NULL;
+ALTER TABLE users ALTER COLUMN city DROP NOT NULL,
+                  ALTER COLUMN city DROP DEFAULT;
 ALTER TABLE users DROP CONSTRAINT normalized_user_city_name;
-ALTER TABLE users ALTER COLUMN country DROP NOT NULL;
+ALTER TABLE users ALTER COLUMN country DROP NOT NULL,
+                  ALTER COLUMN country DROP DEFAULT;
 ALTER TABLE users DROP CONSTRAINT normalized_user_country_name;
 ALTER TABLE users ALTER COLUMN crypted_password DROP NOT NULL;
 ALTER TABLE users DROP CONSTRAINT valid_user_crypted_password_value;
@@ -1026,7 +1033,8 @@ ALTER TABLE yields ALTER COLUMN mean DROP NOT NULL;
 ALTER TABLE yields ALTER COLUMN statname DROP NOT NULL,
                    ALTER COLUMN statname DROP DEFAULT,
                    ALTER COLUMN statname SET DATA TYPE VARCHAR(255);
-ALTER TABLE yields ALTER COLUMN notes DROP NOT NULL;
+ALTER TABLE yields ALTER COLUMN notes DROP NOT NULL,
+                   ALTER COLUMN notes DROP DEFAULT;
 ALTER TABLE yields ALTER COLUMN checked DROP NOT NULL,
                    DROP CONSTRAINT valid_yield_checked_value;
 ALTER TABLE yields ALTER COLUMN access_level SET DATA TYPE integer;
