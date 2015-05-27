@@ -127,7 +127,8 @@ class Site < ActiveRecord::Base
 
   ## Validation callbacks
 
-  before_validation WhitespaceNormalizer.new([:sitename, :city, :state, :country]), :warn_about_elevation_update_bug
+  before_validation WhitespaceNormalizer.new([:sitename, :city, :state, :country])
+  before_validation :warn_about_elevation_update_bug, on: :update
 
   ## Validations
 
