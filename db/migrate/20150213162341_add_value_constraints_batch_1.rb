@@ -343,11 +343,14 @@ COMMENT ON COLUMN runs.started_at IS 'system time when run was started';
 /* SITES */
 
 ALTER TABLE sites ALTER COLUMN city SET NOT NULL,
-                  ALTER COLUMN city SET DEFAULT '';
+                  ALTER COLUMN city SET DEFAULT '',
+                  ADD CONSTRAINT normalized_city_name CHECK (is_whitespace_normalized(city));
 ALTER TABLE sites ALTER COLUMN state SET NOT NULL,
-                  ALTER COLUMN state SET DEFAULT '';
+                  ALTER COLUMN state SET DEFAULT '',
+                  ADD CONSTRAINT normalized_state_name CHECK (is_whitespace_normalized(state));
 ALTER TABLE sites ALTER COLUMN country SET NOT NULL,
-                  ALTER COLUMN country SET DEFAULT '';
+                  ALTER COLUMN country SET DEFAULT '',
+                  ADD CONSTRAINT normalized_country_name CHECK (is_whitespace_normalized(country));
 ALTER TABLE sites ADD CONSTRAINT valid_site_mat_value CHECK (mat BETWEEN -25 AND 40);
 ALTER TABLE sites ADD CONSTRAINT valid_site_map_value CHECK (map BETWEEN 0 AND 12000);
 ALTER TABLE sites ALTER COLUMN soil SET NOT NULL,
@@ -360,10 +363,10 @@ ALTER TABLE sites ALTER COLUMN notes SET NOT NULL,
                   ALTER COLUMN notes SET DEFAULT '';
 ALTER TABLE sites ALTER COLUMN soilnotes SET NOT NULL,
                   ALTER COLUMN soilnotes SET DEFAULT '';
-ALTER TABLE sites ALTER COLUMN sitename SET NOT NULL;
-ALTER TABLE sites ADD CONSTRAINT normalized_site_sitename CHECK (is_whitespace_normalized(sitename));
+ALTER TABLE sites ALTER COLUMN sitename SET NOT NULL,
+                  ADD CONSTRAINT normalized_site_sitename CHECK (is_whitespace_normalized(sitename));
 ALTER TABLE sites ADD CONSTRAINT valid_site_sand_and_clay_percentage_values CHECK (sand_pct >= 0 AND clay_pct >= 0 AND sand_pct <= 100 AND clay_pct <= 100 AND sand_pct + clay_pct <= 100);
-ALTER TABLE sites ADD CONSTRAINT valid_site_geometry_specification CHECK ( (ST_X(ST_CENTROID(geometry)) BETWEEN -180 AND 180) AND (ST_Y(ST_CENTROID(geometry)) BETWEEN -90 AND 90) AND (ST_Z(ST_CENTROID(geometry)) BETWEEN -100 AND 10000) );
+ALTER TABLE sites ADD CONSTRAINT valid_site_geometry_specification CHECK ( (ST_X(ST_CENTROID(geometry)) BETWEEN -180 AND 180) AND (ST_Y(ST_CENTROID(geometry)) BETWEEN -90 AND 90) AND (ST_Z(ST_CENTROID(geometry)) BETWEEN -418 AND 8848) );
 
 
 /* SPECIES */
