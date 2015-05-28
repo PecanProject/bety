@@ -1532,9 +1532,15 @@ class BulkUploadDataSet
     @data.each do |csv_row|
       csv_row_as_hash = csv_row.to_hash
 
-      # Don't allow id values to be specified in CSV file:
+      # remove irrelevant data from row:
+      if trait_data?
+        get_trait_and_covariate_info # sets @traits_in_heading and @allowed_covariates
+        recognized_columns = RECOGNIZED_COLUMNS + @traits_in_heading + @allowed_covariates
+      else
+        recognized_columns = RECOGNIZED_COLUMNS
+      end
       csv_row_as_hash.keep_if do |key, value|
-        !(key =~ /_id/)
+        recognized_columns.include? key
       end
 
       # error_list is anonymous here since we don't need to use it: we've already validated the per-row data
