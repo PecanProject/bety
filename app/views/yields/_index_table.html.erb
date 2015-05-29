@@ -54,7 +54,7 @@
 					    <i class="icon-edit"></i>
 					  <% end %>
 					  <!-- DELETE -->
-					  <% if current_user.page_access_level == 1 %>
+					  <% if current_user.page_access_level <= 2 or y.user_id == current_user.id %>
               <%= link_to y, :method => :delete, :type => 'yield', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
                 <i class="icon-trash"></i> 
               <% end %>
