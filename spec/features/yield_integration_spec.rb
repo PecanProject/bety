@@ -1,12 +1,13 @@
 require 'spec_helper'
 include LoginHelper
 
-feature 'Yields index works' do
-  before :each do
-    login_test_user
-  end
+feature 'Yields pages work' do
 
-  context 'GET /yields' do
+  context 'Logged on as Administrator' do
+    before :each do
+      login_test_user
+    end
+
 #    it 'should have "Listing Yields" ' do
 #      visit '/yields'
 #      page.should have_content 'Listing Yields'
@@ -71,6 +72,45 @@ feature 'Yields index works' do
       page.should have_content 'Mean is not a number'
     end
 
+    specify "Managers should be allowed to delete yields, even those they didn't create", js: true do
+      visit '/citations'
+      first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
+
+      visit '/yields/new'
+
+      # Required attributes:
+      fill_in 'yield[mean]', :with => '10.0'
+      select('10', :from => 'yield[date(3i)]')
+      select('10', :from => 'yield[date(2i)]')
+      select('1800', :from => 'yield[date(1i)]')
+      fill_in 'species_query', :with => 'Abar'
+      select('2', :from => 'yield[specie_id]')
+
+      # Change from default (1) so Manager can see this record:
+      select('4', from: 'yield[access_level]')
+      click_button 'Create'
+
+      # log out and log back in as a Manager:
+      click_link 'Logout'
+      login_nonadmin_test_user # Manager
+
+      # Now try to go and delete the record just created:
+      visit '/yields'
+
+      ## Having multiple expectations in this test will help pinpoint exactly
+      ## where the error occurs (if it does occur):
+      expect(page).to have_xpath(".//tr/td/a[text() = 'Abarema jupunba']")
+      expect(page).to have_xpath(".//tr[td/a/text() = 'Abarema jupunba']/td/a[@alt = 'delete']")
+
+      first(:xpath, ".//tr[td/a/text() = 'Abarema jupunba']/td/a[@alt = 'delete']").click
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
+
+      page.should_not have_content 'Abarema jupunba'
+    end
+
     context 'clicking view yield button' do
       it 'should return "Viewing Yield" ' do
         visit '/yields/'
@@ -104,6 +144,62 @@ feature 'Yields index works' do
     end
 
   end
+
+
+  context 'Logged on as Creator' do
+    before :each do
+      login_as_creator
+    end
+
+    specify 'Creators can delete yields they themselves create', js: true do
+      visit '/citations'
+      first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
+
+      visit '/yields/new'
+
+      # Required attributes:
+      fill_in 'yield[mean]', :with => '10.0'
+      select('10', :from => 'yield[date(3i)]')
+      select('10', :from => 'yield[date(2i)]')
+      select('1800', :from => 'yield[date(1i)]')
+      fill_in 'species_query', :with => 'Abar'
+      select('2', :from => 'yield[specie_id]')
+
+      # Change from default (1) so Manager can see this record:
+      select('4', from: 'yield[access_level]')
+      click_button 'Create'
+
+      # Now try to go and delete the record just created:
+      visit '/yields'
+
+      ## Having multiple expectations in this test will help pinpoint exactly
+      ## where the error occurs (if it does occur):
+      expect(page).to have_xpath(".//tr/td/a[text() = 'Abarema jupunba']")
+      expect(page).to have_xpath(".//tr[td/a/text() = 'Abarema jupunba']/td/a[@alt = 'delete']")
+
+      first(:xpath, ".//tr[td/a/text() = 'Abarema jupunba']/td/a[@alt = 'delete']").click
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
+
+      page.should_not have_content 'Abarema jupunba'
+    end
+
+
+    specify "Creators can't delete yields they themselves didn't create" do
+      visit '/yields'
+
+      ## Having multiple expectations in this test will help pinpoint exactly
+      ## where the error occurs (if it does occur):
+      ### Make sure there is some record ...:
+      expect(page).to have_xpath(".//tr/td/a[contains(text(), 'Aliartos, Greece')]")
+      ### ... but it shouldn't have a delete button:
+      expect(page).not_to have_xpath(".//tr[td/a[contains(text(), 'Aliartos, Greece')]]/td/a[@alt = 'delete']")
+    end
+
+  end
+
 end
 
 
