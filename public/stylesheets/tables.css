@@ -1,12 +1,27 @@
 /* Tables */
 
-#treatments_container #DataTables_Table_0_length {
+#treatments_container .dataTables_wrapper {
   width: 100%;  
 }
 
 #treatments_container .padded_sides_20px {
   padding: 0 20px
 }
+
+
+
+/* Allow borders on tbodys of treatemeht listings: */
+#treatments_container .treatment_listing {
+  border-collapse: collapse
+}
+/* Each treatment--managements-listing pair of table rows is now in its own
+   tbody.  This marks them off more clearly: */
+#treatments_container .treatment_listing tbody {
+  border-top: solid 3px #999;
+  border-bottom: solid 3px #999;
+}
+
+
 
 .dataTables_wrapper {
 	position: relative;
