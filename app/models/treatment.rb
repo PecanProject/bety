@@ -13,6 +13,8 @@ class Treatment < ActiveRecord::Base
 
   belongs_to :user
 
+  scope :sorted_order, lambda { |order| order(order) }
+
   comma do
     id
     name
