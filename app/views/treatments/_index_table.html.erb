@@ -25,22 +25,22 @@
       <tbody role="alert" aria-live="polite" aria-relevant="all"><!-- Each treatment has its own tbody. -->
         <% @treatments.each do |treatment| %>
         <tr>
-          <td><%= treatment.name %></td>
-          <td><%= treatment.definition %></td>
-          <td><%= link_to treatment.control ? "Yes" : "No", :action => "flag_control", :id => treatment.id %></td>
+          <td class="center"><%= treatment.name %></td>
+          <td class="center"><%= treatment.definition %></td>
+          <td class="center"><%= link_to treatment.control ? "Yes" : "No", :action => "flag_control", :id => treatment.id %></td>
           <td class="center">
             <!-- UNLINK -->
             <% if current_user.page_access_level <=2 %>
-              <%= link_to url_for({ :controller => "treatments", :action => "linked", id: treatment.id }), :id => treatment.id, :remote => true, :class =>"button button-small" do %>
+              <%= link_to url_for({ :controller => "treatments", :action => "linked", id: treatment.id }), :id => treatment.id, :remote => true, :class =>"button button-small", :title => "unlink" do %>
                 <i class="icon-remove"></i>
               <% end %>
             <% end %>
             <!-- SHOW -->
-            <%= link_to treatment, :class => "button button-small" do %>
+            <%= link_to treatment, :class => "button button-small", :title => "show" do %>
               <i class="icon-zoom-in"></i>
             <% end %>
             <!-- EDIT -->
-            <%= link_to edit_treatment_path(treatment), :class => "button button-small" do %>
+            <%= link_to edit_treatment_path(treatment), :class => "button button-small", :title => "edit" do %>
               <i class="icon-edit"></i>
             <% end %>
             <!-- DELETE -->
@@ -53,19 +53,18 @@
         </tr>
 
         <tr>
-          <td colspan="4">
+          <td colspan="4" class="padded_sides_20px">
             <% if treatment.managements.length > 0 %>
             <div class="dataTables_length dataTables_wrapper">
               <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
                 <caption style="text-align: left"><em>Associated Managements</em></caption>
-
                 <thead>
                   <tr role="row">
-                    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Citation</th>
-                    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Date</th>
-                    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Type</th>
-                    <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Level</th>
-                    <th                 role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Actions</th>
+                    <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Citation</th>
+                    <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Date</th>
+                    <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Type</th>
+                    <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Level</th>
+                    <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Actions</th>
                   </tr>
                 </thead>
                 <tbody role="alert" aria-live="polite" aria-relevant="all">
@@ -78,11 +77,11 @@
                     <td class="center">
 
                       <!-- SHOW -->
-                      <%= link_to management, :class => "button button-small", :alt => "show" do %>
+                      <%= link_to management, :class => "button button-small", :title => "show" do %>
                         <i class="icon-zoom-in"></i>
                       <% end %>
                       <!-- EDIT -->
-                      <%= link_to  edit_management_path(management), :class => "button button-small", :alt => "edit" do %>
+                      <%= link_to  edit_management_path(management), :class => "button button-small", :title => "edit" do %>
                         <i class="icon-edit"></i>
                       <% end %>
 
@@ -113,10 +112,10 @@
     <table class="table table-striped table-bordered datatable dataTable treatment_listing" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
       <thead>
         <tr role="row">
-          <th class="sorting_asc"><%= sortable "treatments.name", "Name" %></th>
-          <th class="sorting_asc"><%= sortable "treatments.definition", "Def" %></th>
-          <th class="sorting_asc">Control</th>
-          <th class="sorting_asc">Actions</th>
+          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "treatments.name", "Name" %></th>
+          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "treatments.definition", "Def" %></th>
+          <th role="columnheader" aria-controls="DataTables_Table_0">Control</th>
+          <th role="columnheader" aria-controls="DataTables_Table_0">Actions</th>
         </tr>
       </thead>
 
@@ -128,15 +127,15 @@
           <td class="center"><%= link_to treatment.control ? "Yes" : "No", :action => "flag_control", :id => treatment.id %></td>
           <td class="center">
             <!-- LINK -->
-            <%= link_to "/treatments/linked?id=#{treatment.id}", :class => "button button-small", :alt => "show" do %>
+            <%= link_to "/treatments/linked?id=#{treatment.id}", :class => "button button-small", :title => "link" do %>
               <i class="icon-ok"></i>
             <% end %>
             <!-- SHOW -->
-            <%= link_to treatment, :class => "button button-small", :alt => "show" do %>
+            <%= link_to treatment, :class => "button button-small", :title => "show" do %>
               <i class="icon-zoom-in"></i>
             <% end %>
             <!-- EDIT -->
-            <%= link_to edit_treatment_path(treatment), :class => "button button-small", :alt => "edit" do %>
+            <%= link_to edit_treatment_path(treatment), :class => "button button-small", :title => "edit" do %>
               <i class="icon-edit"></i>
             <% end %>
             <!-- DELETE -->
@@ -171,11 +170,11 @@
                     <td class="center">
 
                       <!-- SHOW -->
-                      <%= link_to management, :class => "button button-small", :alt => "show" do %>
+                      <%= link_to management, :class => "button button-small", :title => "show" do %>
                         <i class="icon-zoom-in"></i>
                       <% end %>
                       <!-- EDIT -->
-                      <%= link_to  edit_management_path(management), :class => "button button-small", :alt => "edit" do %>
+                      <%= link_to  edit_management_path(management), :class => "button button-small", :title => "edit" do %>
                         <i class="icon-edit"></i>
                       <% end %>
 
