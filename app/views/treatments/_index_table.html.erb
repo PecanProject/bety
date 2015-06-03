@@ -70,7 +70,7 @@
                 <tbody role="alert" aria-live="polite" aria-relevant="all">
                   <% treatment.managements.each do |management| %>
                   <tr>
-                    <td class="center"><%= link_to_if management.citation, management.citation, management.citation %></td>
+                    <td><%= link_to_if management.citation, management.citation, management.citation %></td>
                     <td class="center"><%= management.date %></td>
                     <td class="center"><%= management.mgmttype %></td>
                     <td class="center"><%= management.level %></td>
