@@ -16,9 +16,11 @@
 }
 /* Each treatment--managements-listing pair of table rows is now in its own
    tbody.  This marks them off more clearly: */
-#treatments_container .treatment_listing tbody {
-  border-top: solid 3px #999;
-  border-bottom: solid 3px #999;
+#treatments_container .treatment_listing thead {
+  border-top: double 5px #999;
+}
+#treatments_containter .treatment_listing tbody {
+    border-bottom: double 5px #999;
 }
 
 
