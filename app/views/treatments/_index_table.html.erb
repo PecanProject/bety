@@ -14,18 +14,18 @@
   <h2>Treatments associated with this citation</h2>
   <div class="dataTables_length dataTables_wrapper">
     <table class="table table-striped table-bordered datatable dataTable treatment_listing" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+      <% @treatments.each do |treatment| %>
       <thead>
         <tr role="row">
-          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "treatments.name", "Name" %></th>
+          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "treatments.name", "Treatment Name" %></th>
           <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px"><%= sortable "treatments.definition", "Def" %></th>
           <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Control</th>
           <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 162px">Actions</th>
         </tr>
       </thead>
       <tbody role="alert" aria-live="polite" aria-relevant="all"><!-- Each treatment has its own tbody. -->
-        <% @treatments.each do |treatment| %>
         <tr>
-          <td class="center"><%= treatment.name %></td>
+          <th class="center"><%= treatment.name %></th>
           <td class="center"><%= treatment.definition %></td>
           <td class="center"><%= link_to treatment.control ? "Yes" : "No", :action => "flag_control", :id => treatment.id %></td>
           <td class="center">
@@ -60,20 +60,20 @@
                 <caption style="text-align: left"><em>Associated Managements</em></caption>
                 <thead>
                   <tr role="row">
-                    <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Citation</th>
-                    <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Date</th>
                     <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Type</th>
                     <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Level</th>
+                    <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Date</th>
+                    <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 50px">Citation</th>
                     <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px">Actions</th>
                   </tr>
                 </thead>
                 <tbody role="alert" aria-live="polite" aria-relevant="all">
                   <% treatment.managements.each do |management| %>
                   <tr>
-                    <td><%= link_to_if management.citation, management.citation, management.citation %></td>
-                    <td class="center"><%= management.date %></td>
                     <td class="center"><%= management.mgmttype %></td>
                     <td class="center"><%= management.level %></td>
+                    <td class="center"><%= management.date %></td>
+                    <td><%= link_to_if management.citation, management.citation, management.citation %></td>
                     <td class="center">
 
                       <!-- SHOW -->
@@ -110,19 +110,18 @@
 
   <div class="dataTables_length dataTables_wrapper">
     <table class="table table-striped table-bordered datatable dataTable treatment_listing" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+      <% @other_treatments.each do |treatment| %>
       <thead>
         <tr role="row">
-          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "treatments.name", "Name" %></th>
+          <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "treatments.name", "Treatment Name" %></th>
           <th class="sorting" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "treatments.definition", "Def" %></th>
           <th role="columnheader" aria-controls="DataTables_Table_0">Control</th>
           <th role="columnheader" aria-controls="DataTables_Table_0">Actions</th>
         </tr>
       </thead>
-
-      <% @other_treatments.each do |treatment| %>
       <tbody role="alert" aria-live="polite" aria-relevant="all">
         <tr>
-          <td class="center"><%= treatment.name %></td>
+          <th><%= treatment.name %></th>
           <td class="center"><%= treatment.definition %></td>
           <td class="center"><%= link_to treatment.control ? "Yes" : "No", :action => "flag_control", :id => treatment.id %></td>
           <td class="center">
@@ -165,8 +164,8 @@
                   <% treatment.managements.each do |management| %>
                   <tr>
                     <td class="center"><%= management.mgmttype %></td>
-                    <td class="center"><%= management.date %></td>
                     <td class="center"><%= management.level %></td>
+                    <td class="center"><%= management.date %></td>
                     <td class="center">
 
                       <!-- SHOW -->
