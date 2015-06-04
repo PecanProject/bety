@@ -89,6 +89,7 @@ end
 class UnresolvableReferenceException < BulkUploadDataException
 end
 
+# Phase-in of uniqueness database constraints should eliminate most of these exceptions.
 class NonUniquenessException < UnresolvableReferenceException
   def initialize(model_class_or_relation = nil, match_column_name = '', raw_value = '', table_entity_name = '')
     super(:non_unique_referent, "More than one row in the #{table_entity_name.pluralize} table matches this string", "Multiple matching referents")
@@ -786,28 +787,37 @@ class BulkUploadDataSet
         if !treatment_index.nil?
           treatment = row[treatment_index][:data]
 
-          begin
-            existing_treatment?(treatment)
-          rescue NonUniquenessException
-            # We only care that treatment names are unique per citation.
-          rescue UnresolvableReferenceException => e
-            row[treatment_index][:validation_result] = e
-            add_to_validation_summary(e, row_number)
-          end
-
-          # If we get here, the treatment name is valid, but we still have to check consistency.
 
           begin
             existing_treatment?(treatment, citation.id)
-          rescue UnresolvableReferenceException
-            e = InconsistentCitationAndTreatmentException.new
-
+          rescue NonUniquenessException => e
             row[treatment_index][:validation_result] = e
             add_to_validation_summary(e, row_number)
+          rescue MissingReferenceException => e
+            inconsistent = false # tentatively ...
+            begin
+              existing_treatment?(treatment)
+            rescue NonUniquenessException => e
+              inconsistent = true # none of the matching treatments are for this citation
+            rescue MissingReferenceException => e
+              # there are no matching treatments for ANY citation
+              row[treatment_index][:validation_result] = e
+              add_to_validation_summary(e, row_number)
+            else
+              inconsistent = true # the one matching treatment is not for this citation
+            ensure
+              # handle the two inconsistency cases:
+              if inconsistent
+                e = InconsistentCitationAndTreatmentException.new
+                row[treatment_index][:validation_result] = e
+                add_to_validation_summary(e, row_number)
+              end
+            end
           end
-        end
+        end # if !treatment_index.nil?
 
-      end
+      end # if citation_id
+
     end # @validated_data.each
 
     if file_includes_citation_info
