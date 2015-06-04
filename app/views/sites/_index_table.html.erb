@@ -24,7 +24,7 @@
     <td class="center"><%= site.lat %></td>
     <td class="center"><%= site.lon %></td>
     <td class="center"><%= site.espg %></td>
-    <td><%= link_to_prototype_window("map", "#{site.id}", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :title =>  "#{site.sitename}", :draggable => "true", :wiredDrag => "true", :url => "/sites/map?id=#{site.id}" }) %> <br />
+    <td><%= link_to_prototype_window("map", "#{site.id}", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :title =>  "#{site.sitename}", :draggable => "true", :wiredDrag => "true", :url => url_for( { controller: "sites", action: "map", id: site.id }) }) %> <br />
 
     </td>
     <% if !session["citation"].nil? %>
