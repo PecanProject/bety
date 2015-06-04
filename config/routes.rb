@@ -248,4 +248,9 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   match '/bulk_upload/confirm_data', :as => :bulk_upload_data_confirmation
   match '/bulk_upload/insert_data', :as => :bulk_upload_data_insertion
 
+  # This seems a somewhat kludgy way to get 'link_to "CF Guidelines",
+  # guidelines_path' to create a robust link (i.e., one that works even in
+  # subdirectory deployments) to /public/guidelines.html, but it works.
+  get '/guidelines.html' => redirect('/guidelines.html'), :as => :guidelines
+
 end
