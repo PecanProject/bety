@@ -19,64 +19,184 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION is_whitespace_free(
-  string text
+    string text
 ) RETURNS boolean AS $$
 BEGIN
-  RETURN string !~ '[\s\u00a0]';
+    RETURN string !~ '[\s\u00a0]';
 END;
 $$ LANGUAGE plpgsql;
 
 
 
-/* This is based on http://www.w3.org/Addressing/URL/5_BNF.html */
+ /* This function documents how the regular expressions names 'host', 'URI', and
+ 'EMAIL' used in the functions 'is_host_address', 'is_url_or_empty', and
+ 'is_wellformed_email' are built up from shorter expressions.  The names (except
+ with '_' replacing '-'), and except as noted, the definitions of these
+ expressions are taken from Appendix A of RFC 3986.  (See
+ http://tools.ietf.org/html/rfc3986#appendix-A.  A previous iteration of these
+ expressions used http://www.w3.org/Addressing/URL/5_BNF.html as a guide.)
+
+ The dependency structure of these definitions is roughly indicated by the
+ indentation: in general, each definition directly depends on definitions above
+ it having one level greater indentation. */
+ 
+ /*
+CREATE OR REPLACE FUNCTION generate_regexps() RETURNS void AS $body$
+ DECLARE
+     scheme text := '(https?|HTTPS?|ftp|FTP)'; -- These schemes should suffice for our purposes.
+                      dec_octet text := '(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])';
+                  IPv4address text := FORMAT('%s(\.%s){3}', dec_octet, dec_octet);
+                      unreserved text := '[\w.~-]';
+                          HEXDIG text := '[[:xdigit:]]';
+                      pct_encoded text := FORMAT('%%%s%s', HEXDIG, HEXDIG);
+                      sub_delims text := $$[!$&'()*+,;=]$$;
+                  reg_name text := FORMAT('(%s|%s|%s)+', unreserved, pct_encoded, sub_delims); -- We disallow empty hosts.
+              host text := FORMAT('(%s|%s)', IPv4address, reg_name); -- We're not allowing IPv6 for now.
+              port text := '\d*';
+          authority text := FORMAT('%s(:%s)?', host, port); -- We're not allowing authorities with a userinfo component.
+                  pchar text := FORMAT('(%s|%s|%s|[:@])', unreserved, pct_encoded, sub_delims);
+              segment text := FORMAT('%s*', pchar);
+          path_abempty text := FORMAT('(/%s)*', segment);
+      hier_part text := FORMAT('//%s%s', authority, path_abempty); -- We're only allowing URIs containing an authority.
+      query text := FORMAT('(%s|[/?])*', pchar);
+      fragment text := query;
+    URI text := FORMAT('%s:%s(\?%s)?(#%s)?', scheme, hier_part, query, fragment);
+    EMAIL text := FORMAT('%s+@%s', pchar, reg_name);
+BEGIN
+    RAISE NOTICE 'host: %', host; -- REMOVE THIS!!!!
+    RAISE NOTICE 'URI: %', URI;
+    RAISE NOTICE 'EMAIL: %', EMAIL;
+END;
+$body$ LANGUAGE plpgsql;
+*/
+
 CREATE OR REPLACE FUNCTION is_host_address(
   string text
 ) RETURNS boolean AS $body$
 DECLARE
-  xalphas text := $$([-\w$@.&+!*"'(),]|%[0-9a-f]{2})+$$;
-  ialpha text := '[a-z]' || xalphas;
-  hostname text := ialpha || '(\.' || ialpha || ')*';
-  hostnumber text := '\d+\.\d+\.\d+\.\d+';
-  host text := '(' || hostname || '|' || hostnumber || ')';
+    host text := $$(?x) # use expanded syntax
+                   (
+                       # the IPv4address form of specifying a host 
+                       (\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])        # a decimal octet
+                       (\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])){3} # three more decimal octets preceded by dots
+                   |
+                       # named hosts
+                       (
+                           [\w.~-] # unreserved characters
+                       |
+                           %[[:xdigit:]][[:xdigit:]] # percent-escaped characters
+                       |
+                           [!$&'()*+,;=] # gen-delims
+                       )+
+                   )$$;
 BEGIN
-  RETURN (string ~ ('^' || host || '$'));
+    RETURN (string ~ ('^' || host || '$'));
 END;
 $body$ LANGUAGE plpgsql;
 
 
-/* This is loosely based on http://www.w3.org/Addressing/URL/5_BNF.html and should suffice for our purposes. */
 CREATE OR REPLACE FUNCTION is_url_or_empty(
   string text
 ) RETURNS boolean AS $body$
 DECLARE
-  xalphas text := $$([-\w$@.&+!*"'(),]|%[0-9a-f]{2})+$$;
-  ialpha text := '[a-z]' || xalphas;
-  hostname text := ialpha || '(\.' || ialpha || ')*';
-  hostnumber text := '\d+\.\d+\.\d+\.\d+';
-
-  scheme text := '(https?|ftp)';
-  host text := '(' || hostname || '|' || hostnumber || ')';
-  optional_port text := '(:\d+)?';
-  path text := '(/' || xalphas || ')*';
-  optional_query_string text := '(\?' || xalphas || ')?';
-
-  url text := scheme || '://' || host || optional_port || path || optional_query_string;
+    URI text := $$(?x) # use expanded syntax
+                  (https?|HTTPS?|ftp|FTP): # scheme (restricted)
+                  //
+                  (
+                      # the IPv4address form of specifying a host 
+                      (\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])
+                      (\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])){3}
+                  |
+                      # named hosts
+                      (
+                          [\w.~-] # unreserved characters
+                      |
+                          %[[:xdigit:]][[:xdigit:]] # percent-escaped characters
+                      |
+                          [!$&'()*+,;=]
+                      )+
+                  )
+                  (:\d*)? # optional port number
+                  (
+                      # path
+                      /
+                      (
+                          [\w.~-] # unreserved characters
+                      |
+                          %[[:xdigit:]][[:xdigit:]] # percent-escaped characters
+                      |
+                          [!$&'()*+,;=] # gen-delims
+                      |
+                          [:@] # additional path characters
+                      )*
+                  )*
+                  (
+                      # optional query string
+                      \?
+                      (
+                          (
+                              [\w.~-] # unreserved characters
+                          |
+                              %[[:xdigit:]][[:xdigit:]] # percent-escaped characters
+                          |
+                              [!$&'()*+,;=] # gen-delims
+                          |
+                              [:@] # additional pchars
+                          )
+                      |
+                          [/?] # additional query string characters
+                      )*
+                  )?
+                  (
+                      # optional fragment
+                      \#
+                      (
+                          (
+                              [\w.~-] # unreserved characters
+                          |
+                              %[[:xdigit:]][[:xdigit:]] # percent-escaped characters
+                          |
+                              [!$&'()*+,;=] # gen-delims
+                          |
+                              [:@] # additional pchars
+                          )
+                      |
+                          [/?] # additional fragment characters
+                      )*
+                  )?
+                $$;
 BEGIN
-  RETURN (string ~ url OR string = '');
+    RETURN (string ~ URI OR string = '');
 END;
 $body$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION is_wellformed_email(
-  string text
+    string text
 ) RETURNS boolean AS $body$
-DECLARE 
-  xalphas text := $$([-\w$@.&+!*"'(),]|%[0-9a-f]{2})+$$;
-  ialpha text := '[a-z]' || xalphas;
-  hostname text := ialpha || '(\.' || ialpha || ')*';
-
-  email text := FORMAT('%s@%s', xalphas, hostname);
+DECLARE
+    EMAIL text := $$(?x) # use expanded syntax
+                  # local part
+                  (
+                      [\w.~-] # unreserved characters
+                  |
+                      %[[:xdigit:]][[:xdigit:]] # percent-escaped characters
+                  |
+                      [!$&'()*+,;=] # gen-delims
+                  |
+                      [:@] # other allowed characters
+                  )+
+                  @
+                  # domain
+                  (
+                      [\w.~-] # unreserved characters
+                  |
+                      %[[:xdigit:]][[:xdigit:]] # percent-escaped characters
+                  |
+                      [!$&'()*+,;=] # gen-delims
+                  )+
+$$;
 BEGIN
-  RETURN (string ~ email);
+    RETURN (string ~ EMAIL);
 END;
 $body$ LANGUAGE plpgsql;
  
