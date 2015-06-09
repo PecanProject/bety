@@ -74,7 +74,7 @@ CREATE OR REPLACE FUNCTION is_host_address(
   string text
 ) RETURNS boolean AS $body$
 DECLARE
-    host text := $$(?x) # use expanded syntax
+    host text := $$ # use expanded syntax
                    (
                        # the IPv4address form of specifying a host 
                        (\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])        # a decimal octet
@@ -90,7 +90,8 @@ DECLARE
                        )+
                    )$$;
 BEGIN
-    RETURN (string ~ ('^' || host || '$'));
+    /* The '(?x)' must go here because we are prefixing the value of "host" with a '^'. */
+    RETURN (string ~ ('(?x)^' || host || '$'));
 END;
 $body$ LANGUAGE plpgsql;
 
@@ -99,7 +100,7 @@ CREATE OR REPLACE FUNCTION is_url_or_empty(
   string text
 ) RETURNS boolean AS $body$
 DECLARE
-    URI text := $$(?x) # use expanded syntax
+    URI text := $$ # use expanded syntax
                   (https?|HTTPS?|ftp|FTP): # scheme (restricted)
                   //
                   (
@@ -166,7 +167,8 @@ DECLARE
                   )?
                 $$;
 BEGIN
-    RETURN (string ~ URI OR string = '');
+    /* The '(?x)' must go here because we are prefixing the value of "URI" with a '^'. */
+    RETURN (string ~ ('(?x)^' || URI || '$') OR string = '');
 END;
 $body$ LANGUAGE plpgsql;
 
@@ -174,7 +176,7 @@ CREATE OR REPLACE FUNCTION is_wellformed_email(
     string text
 ) RETURNS boolean AS $body$
 DECLARE
-    EMAIL text := $$(?x) # use expanded syntax
+    EMAIL text := $$ # use expanded syntax
                   # local part
                   (
                       [\w.~-] # unreserved characters
@@ -196,7 +198,8 @@ DECLARE
                   )+
 $$;
 BEGIN
-    RETURN (string ~ EMAIL);
+    /* The '(?x)' must go here because we are prefixing the value of "EMAIL" with a '^'. */
+    RETURN (string ~ ('(?x)^' || EMAIL || '$'));
 END;
 $body$ LANGUAGE plpgsql;
  
