@@ -1,5 +1,9 @@
 class Variable < ActiveRecord::Base
 
+  # rename inheritance column from "type" so we can have "type" as the name of
+  # an attribute:
+  self.inheritance_column = 'zoink'
+
   include Overrides
 
   extend SimpleSearch

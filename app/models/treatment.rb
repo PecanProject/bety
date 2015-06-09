@@ -13,10 +13,12 @@ class Treatment < ActiveRecord::Base
 
   belongs_to :user
 
-
   ## Validation callbacks
 
   before_validation WhitespaceNormalizer.new([:name, :definition])
+
+
+  scope :sorted_order, lambda { |order| order(order) }
 
 
   comma do
