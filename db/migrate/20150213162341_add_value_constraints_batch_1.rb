@@ -298,7 +298,7 @@ ALTER TABLE dbfiles ADD CONSTRAINT valid_dbfile_container_type CHECK (container_
 ALTER TABLE ensembles ALTER COLUMN notes SET NOT NULL,
                       ALTER COLUMN notes SET DEFAULT '';
 ALTER TABLE ensembles ALTER COLUMN runtype SET NOT NULL,
-                      ADD CONSTRAINT valid_ensemble_runtype CHECK (runtype IN ('ensemble', 'sensitivity analysis'));
+                      ADD CONSTRAINT valid_ensemble_runtype CHECK (runtype IN ('ensemble', 'sensitivity analysis', 'MCMC'));
 
 /* ENTITIES */
 
@@ -410,7 +410,7 @@ ALTER TABLE methods ALTER COLUMN description SET NOT NULL;
 ALTER TABLE models ALTER COLUMN model_name SET NOT NULL,
                    ADD CONSTRAINT no_spaces_in_model_name CHECK (is_whitespace_free(model_name));
 ALTER TABLE models ALTER COLUMN revision SET NOT NULL,
-                   ADD CONSTRAINT no_spaces_in_model_revision_specifier CHECK (is_whitespace_free(revision));
+                   ADD CONSTRAINT normalized_revision_specifier CHECK (is_whitespace_normalized(revision));
 
 
 /* MODELTYPES */
