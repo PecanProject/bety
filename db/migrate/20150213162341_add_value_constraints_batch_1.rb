@@ -595,13 +595,10 @@ ALTER TABLE users ADD CONSTRAINT normalized_user_country_name CHECK (is_whitespa
 ALTER TABLE users ALTER COLUMN crypted_password SET NOT NULL;
 ALTER TABLE users ADD CONSTRAINT valid_user_crypted_password_value CHECK (crypted_password ~ '^[0-9a-f]{40}$');
 /* ALTER TABLE users ALTER COLUMN salt SET NOT NULL; */
-ALTER TABLE users ADD CONSTRAINT valid_user_salt_value CHECK (salt ~ '^[0-9a-f]{40}$');
 ALTER TABLE users ALTER COLUMN access_level SET DATA TYPE level_of_access;
 ALTER TABLE users ALTER COLUMN page_access_level SET DATA TYPE level_of_access;
 /* FIX */ --UPDATE users SET apikey = '' WHERE apikey IS NULL;
-ALTER TABLE users ALTER COLUMN apikey SET NOT NULL,
-                  ALTER COLUMN apikey SET DEFAULT '',
-                  ADD CONSTRAINT valid_user_apikey_value CHECK (apikey ~ '^[0-9a-zA-Z+/]{40}$' OR apikey = '');
+ALTER TABLE users ADD CONSTRAINT valid_user_apikey_value CHECK (apikey ~ '^[0-9a-zA-Z+/]{40}$');
 ALTER TABLE users ALTER COLUMN state_prov SET NOT NULL,
                   ALTER COLUMN state_prov SET DEFAULT '',
                   ADD CONSTRAINT normalized_stat_prov_name CHECK (is_whitespace_normalized(state_prov));
@@ -1102,12 +1099,9 @@ ALTER TABLE users ALTER COLUMN country DROP NOT NULL,
 ALTER TABLE users DROP CONSTRAINT normalized_user_country_name;
 ALTER TABLE users ALTER COLUMN crypted_password DROP NOT NULL;
 ALTER TABLE users DROP CONSTRAINT valid_user_crypted_password_value;
-ALTER TABLE users DROP CONSTRAINT valid_user_salt_value;
 ALTER TABLE users ALTER COLUMN access_level SET DATA TYPE integer;
 ALTER TABLE users ALTER COLUMN page_access_level SET DATA TYPE integer;
-ALTER TABLE users ALTER COLUMN apikey DROP NOT NULL,
-                  ALTER COLUMN apikey DROP DEFAULT,
-                  DROP CONSTRAINT valid_user_apikey_value;
+ALTER TABLE users DROP CONSTRAINT valid_user_apikey_value;
 ALTER TABLE users ALTER COLUMN state_prov DROP NOT NULL,
                   ALTER COLUMN state_prov DROP DEFAULT,
                   DROP CONSTRAINT normalized_stat_prov_name;
