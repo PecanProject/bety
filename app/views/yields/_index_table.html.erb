@@ -36,7 +36,7 @@
           </td>
           
           <% else %>
-          <td class="center"><%= ["failed","unchecked","passed"][y.checked-1] %></td>
+          <td class="center"><%= ["failed","unchecked","passed"][y.checked + 1] %></td>
           <% end %>
 
           <% if ( current_user.access_level < y.access_level ) or ( current_user.access_level = y.access_level and y.checked ) or ( y.user_id == current_user.id ) or ( current_user.page_access_level <= 2 )%>
