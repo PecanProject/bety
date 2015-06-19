@@ -47,7 +47,7 @@ feature 'Treatment features work' do
 
     before :each do
       visit '/treatments/'
-      first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
+      first(:xpath,".//a[@title='edit' and contains(@href,'/edit')]").click
     end
 
     it 'following edit link should return content "Editing Treatment" ' do
