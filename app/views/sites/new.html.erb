@@ -415,11 +415,8 @@
         
         <div class="form-actions">
           <div class="button-group">
-            <%= link_to( @site ) do %>
-              <button class="button" type="button">Show</button>
-            <% end%>
             <%= link_to( sites_path ) do %>
-              <button class="button" type="button">Back</button>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
             <% end%>
           </div>
 					<div class="button-group pull-right">
@@ -429,12 +426,6 @@
           
       <% end %>
     <% end %>
-
-<span id='search_term'></span>
-<div id="index_table" style="display: none;">
-</div>
-
-<%= link_to 'Back', sites_path %>
     </div>
   </div>
 </div>
