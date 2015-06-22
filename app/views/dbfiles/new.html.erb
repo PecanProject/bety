@@ -1,21 +1,41 @@
-<h1>New File</h1>
-<%= form_for @file, :url => dbfiles_path, :html => { :multipart => true } do |f| %>
-  <%= f.error_messages %>
+<div class="content">
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
+        <h1>New File</h1>
+      </header>
+      <%= form_for @file, :url => dbfiles_path do |f| %>
+      <%= f.error_messages %>
+        <div class="row">
+          <div class="eight columns alpha">
+            <%= f.label :machine_id %><br />
+            <%= f.select :machine_id, Machine.all.collect { |p| [p.select_default, p.id] }, {}, { :class => "input-full" } %>
+          </div> 
+        </div>
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :file_path %><br />
+            <%= f.text_field :file_path, :class => "input-full" %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :file_name %><br />
+            <%= f.text_field :file_name, :class => "input-full" %>
+          </div>
+        </div>
 
-  <p>
-    <%= f.label :machine_id %><br />
-    <%= f.select :machine_id, Machine.all.collect { |p| [p.select_default, p.id] } %>
-  </p>
-  <p>
-    <%= f.label :file_path %><br />
-    <%= f.text_field :file_path %>
-  </p>
-  <p>
-    <%= f.label :file_name %><br />
-    <%= f.text_field :file_name %>
-  </p>
-
-  <p>
-    <%= f.submit 'Create' %>
-  </p>
-<% end %>
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( dbfiles_path ) do %>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
+            <% end%>
+          </div>
+          <div class="button-group pull-right">
+            <%= f.submit 'Create', :class => "button button-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

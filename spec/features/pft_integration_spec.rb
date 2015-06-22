@@ -139,7 +139,7 @@ feature 'Pfts features work works' do
   # test for redmine bug #1784
   it 'should not create a new PFT when the Back button is clicked' do
     visit '/pfts/new'
-    click_button 'Back'
+    click_button 'All Records'
     page.should_not have_content 'Pft was successfully created.'
   end
   
