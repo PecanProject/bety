@@ -298,7 +298,7 @@ ALTER TABLE dbfiles ADD CONSTRAINT valid_dbfile_container_type CHECK (container_
 ALTER TABLE ensembles ALTER COLUMN notes SET NOT NULL,
                       ALTER COLUMN notes SET DEFAULT '';
 ALTER TABLE ensembles ALTER COLUMN runtype SET NOT NULL,
-                      ADD CONSTRAINT valid_ensemble_runtype CHECK (runtype IN ('ensemble', 'sensitivity analysis', 'MCMC'));
+                      ADD CONSTRAINT valid_ensemble_runtype CHECK (runtype IN ('ensemble', 'sensitivity analysis', 'MCMC', 'pda.emulator'));
 
 /* ENTITIES */
 
@@ -458,9 +458,9 @@ ALTER TABLE runs ALTER COLUMN outprefix SET NOT NULL,
                  ALTER COLUMN outprefix SET DEFAULT '';
 ALTER TABLE runs ALTER COLUMN setting SET NOT NULL,
                  ALTER COLUMN setting SET DEFAULT '';
-ALTER TABLE runs ALTER COLUMN started_at SET NOT NULL;
-ALTER TABLE runs ADD CONSTRAINT valid_run_start_time CHECK (started_at <= NOW()::timestamp); -- NOW()::timestamp makes clear we are using local machine time
-ALTER TABLE runs ADD CONSTRAINT consistent_run_start_and_end_times CHECK (started_at <= finished_at AND finished_at <= NOW()::timestamp);
+-- ALTER TABLE runs ALTER COLUMN started_at SET NOT NULL;
+-- ALTER TABLE runs ADD CONSTRAINT valid_run_start_time CHECK (started_at <= NOW()::timestamp); -- NOW()::timestamp makes clear we are using local machine time
+-- ALTER TABLE runs ADD CONSTRAINT consistent_run_start_and_end_times CHECK (started_at <= finished_at AND finished_at <= NOW()::timestamp);
 COMMENT ON COLUMN runs.started_at IS 'system time when run was started';
 
 /* SITES */
@@ -593,7 +593,7 @@ ALTER TABLE users ALTER COLUMN country SET NOT NULL,
                   ALTER COLUMN country SET DEFAULT '';
 ALTER TABLE users ADD CONSTRAINT normalized_user_country_name CHECK (is_whitespace_normalized(country));
 ALTER TABLE users ALTER COLUMN crypted_password SET NOT NULL;
-ALTER TABLE users ADD CONSTRAINT valid_user_crypted_password_value CHECK (crypted_password ~ '^[0-9a-f]{40}$');
+ALTER TABLE users ADD CONSTRAINT valid_user_crypted_password_value CHECK (crypted_password ~ '^[0-9a-f]{1,40}$');
 /* ALTER TABLE users ALTER COLUMN salt SET NOT NULL; */
 ALTER TABLE users ALTER COLUMN access_level SET DATA TYPE level_of_access;
 ALTER TABLE users ALTER COLUMN page_access_level SET DATA TYPE level_of_access;
@@ -967,7 +967,8 @@ ALTER TABLE methods ALTER COLUMN description DROP NOT NULL;
 /* MODELS */
 
 ALTER TABLE models ALTER COLUMN model_name DROP NOT NULL;
-ALTER TABLE models ALTER COLUMN revision DROP NOT NULL;
+ALTER TABLE models ALTER COLUMN revision DROP NOT NULL,
+                   DROP CONSTRAINT normalized_revision_specifier;
 
 
 /* MODELTYPES_FORMATS */
@@ -1010,9 +1011,9 @@ ALTER TABLE runs ALTER COLUMN outprefix DROP NOT NULL,
                  ALTER COLUMN outprefix DROP DEFAULT;
 ALTER TABLE runs ALTER COLUMN setting DROP NOT NULL,
                  ALTER COLUMN setting DROP DEFAULT;
-ALTER TABLE runs ALTER COLUMN started_at DROP NOT NULL;
-ALTER TABLE runs DROP CONSTRAINT valid_run_start_time;
-ALTER TABLE runs DROP CONSTRAINT consistent_run_start_and_end_times; 
+-- ALTER TABLE runs ALTER COLUMN started_at DROP NOT NULL;
+-- ALTER TABLE runs DROP CONSTRAINT valid_run_start_time;
+-- ALTER TABLE runs DROP CONSTRAINT consistent_run_start_and_end_times; 
 COMMENT ON COLUMN runs.started_at IS 'system time when run begins';
 
 /* SITES */
