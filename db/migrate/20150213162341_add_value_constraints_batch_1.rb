@@ -1010,9 +1010,9 @@ ALTER TABLE runs ALTER COLUMN outprefix DROP NOT NULL,
                  ALTER COLUMN outprefix DROP DEFAULT;
 ALTER TABLE runs ALTER COLUMN setting DROP NOT NULL,
                  ALTER COLUMN setting DROP DEFAULT;
-ALTER TABLE runs ALTER COLUMN started_at DROP NOT NULL;
-ALTER TABLE runs DROP CONSTRAINT valid_run_start_time;
-ALTER TABLE runs DROP CONSTRAINT consistent_run_start_and_end_times; 
+-- ALTER TABLE runs ALTER COLUMN started_at DROP NOT NULL;
+-- ALTER TABLE runs DROP CONSTRAINT valid_run_start_time;
+-- ALTER TABLE runs DROP CONSTRAINT consistent_run_start_and_end_times; 
 COMMENT ON COLUMN runs.started_at IS 'system time when run begins';
 
 /* SITES */
