@@ -967,7 +967,8 @@ ALTER TABLE methods ALTER COLUMN description DROP NOT NULL;
 /* MODELS */
 
 ALTER TABLE models ALTER COLUMN model_name DROP NOT NULL;
-ALTER TABLE models ALTER COLUMN revision DROP NOT NULL;
+ALTER TABLE models ALTER COLUMN revision DROP NOT NULL,
+                   DROP CONSTRAINT normalized_revision_specifier;
 
 
 /* MODELTYPES_FORMATS */
