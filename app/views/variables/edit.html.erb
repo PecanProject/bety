@@ -40,7 +40,7 @@
             </div>
             <div class="four columns alpha">
               <%= f.label :type %>
-              <%= f.select :type, ["plant trait","ecosystem","covariate","model","model-ED2","model-BioCro","model-Sipnet"] %>
+              <%= f.select :type, ["", "plant trait","ecosystem","covariate","model","model-ED2","model-BioCro","model-Sipnet"] %>
             </div>
             <% end %>
           </div>
@@ -49,7 +49,7 @@
             <%= f.text_area :notes, :rows => 5, :class => "input-full" %>
           </div>
           <% if current_user.page_access_level==1 %>
-          <%= link_to "CF Guidelines", "/guidelines.html",:title => "guidelines for CF standard names",:target => "_blank"%>
+          <%= link_to "CF Guidelines", guidelines_path, :title => "guidelines for CF standard names",:target => "_blank" %>
           <% end %>
         </div>
 

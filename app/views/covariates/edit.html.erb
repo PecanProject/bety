@@ -1,44 +1,46 @@
-<h1>Editing covariate <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node24.html?min" }) %></h1>
+<div class="content">
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
+        <h1>Editing covariate</h1>
+      </header>
 
-<p><%= link_to_prototype_window("Extracting information from tables and graphs", "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node25.html?min" }) %><br />
-<%= link_to_prototype_window("Extracting data from a figure using R", "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node26.html?min" }) %><br />
-<%= link_to_prototype_window("Extracting data from a figure using GetData", "help_popup4", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node27.html?min" }) %></p>
+      <%= form_for(@covariate) do |f| %>
+        <%= f.error_messages %>
 
-<%= form_for(@covariate) do |f| %>
-  <%= f.error_messages %>
+        <p>
+          <%= f.label :variable_id %><br />
+          <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }, {:selected => @covariate.variable_id.to_i } %>
 
-  <p>
-    <%= f.label :variable_id %><br />
-    <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }, {:selected => @covariate.variable_id.to_i } %>
+        </p>
 
-  </p>
+        <%= render :partial => "traits/trait_search" %>
 
-  <%= render :partial => "traits/trait_search" %>
+        <p>
+        </p>
+        <p>
+          <%= f.label :level %><br />
+          <%= f.text_field :level %>
+        </p>
+        <p>
+          <%= f.label :n %><br />
+          <%= f.text_field :n %>
+        </p>
+        <p>
+          <%= f.label :stat %><br />
+          <%= f.text_field :stat %>
+        </p>
+        <p>
+          <%= f.label :statname %><br />
+          <%= f.select :statname, $statname_list %>
+        </p>
+        <p>
+          <%= f.submit 'Update' %>
+        </p>
 
-  <p>
-  </p>
-  <p>
-    <%= f.label :level %><br />
-    <%= f.text_field :level %>
-  </p>
-  <p>
-    <%= f.label :n %><br />
-    <%= f.text_field :n %>
-  </p>
-  <p>
-    <%= f.label :stat %>  <%= link_to_prototype_window(image_tag("help.gif"), "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node22.html?min" }) %><br />
-    <%= f.text_field :stat %>
-  </p>
-  <p>
-    <%= f.label :statname %><br />
-    <%= f.select :statname, ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD", "P"] %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+      <% end %>
 
-<div class="form-actions">
+      <div class="form-actions">
         <div class="button-group">
           <%= link_to( covariates_path ) do %>
             <button class="button"><i class="icon-arrow-left"></i> All Records</button>
@@ -48,3 +50,6 @@
           <% end %>
         </div>
       </div>
+    </div>
+  </div>
+</div>

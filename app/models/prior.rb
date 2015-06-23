@@ -12,6 +12,20 @@ class Prior < ActiveRecord::Base
   belongs_to :variable
   belongs_to :citation
 
+
+  # VALIDATION
+
+  ## Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:phylogeny])
+
+  ## Validations
+
+  validates_presence_of :parama, message: "(Parameter a can't be blank)"
+  validates_numericality_of [:parama, :paramb]
+  validates_numericality_of :n, only_integer: true, greater_than_or_equal_to: 0
+
+
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 

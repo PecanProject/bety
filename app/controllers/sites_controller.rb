@@ -207,7 +207,16 @@ class SitesController < ApplicationController
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        # A bug(?) in the postgis adapter or rgeo prevents updating the
+        # elevation unless the latitude or longitude is updated too.  Give
+        # special prominence to this error message by displaying it in the flash
+        # banner:
+        if @site.errors.messages[:masl] && @site.errors.messages[:masl].include?( "Elevation can be updated only if latitude or longitude is also updated")
+          flash[:error] = @site.errors.messages[:masl][0]
+        else
+          flash.delete(:error) # erase the flash if the elevation error is gone
+        end
+        format.html { render :action => "edit", :notice => 'try again' }
         format.xml  { render :xml => @site.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @site.errors, :status => :unprocessable_entity }
         format.json  { render :json => @site.errors, :status => :unprocessable_entity }

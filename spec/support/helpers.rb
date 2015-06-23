@@ -14,6 +14,14 @@ module LoginHelper
     fill_in 'Password', :with => 'paozong'
     click_button 'Log in'
   end
+
+
+  def login_as_creator
+    visit root_path
+    fill_in 'Login',    :with => 'creator'
+    fill_in 'Password', :with => 'fizzie'
+    click_button 'Log in'
+  end
 end
 
 module BulkUploadHelper

@@ -20,7 +20,7 @@ feature 'Sites index works' do
       
       fill_in 'Site name', :with =>'tester'
       fill_in 'Elevation (m)', :with => '2900'
-      fill_in 'Mean Annual Precipitation (mm/yr)', :with => '11/90'
+      fill_in 'Mean Annual Precipitation (mm/yr)', :with => '672'
       fill_in 'Mean Annual Temperature', :with => '19'
       fill_in 'City', :with => 'Taipei'
       fill_in 'State', :with => 'hungsha'

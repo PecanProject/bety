@@ -97,8 +97,23 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
       post :edit_inputs_files # for searching files
     end
   end
-  resources :models
-  resources :modeltypes
+  resources :models do
+    member do
+      get :edit_models_files
+      post :edit_models_files
+    end
+  end
+  resources :modeltypes do
+    # Because of the way the controller was written to deal with the associates
+    # set of formats, we have to use collection here even though the actions
+    # pertain to a particular modeltype:
+    collection do
+      post :add_modeltypes_format
+      post :edit_modeltypes_format
+      get :remove_modeltypes_format
+    end
+    # TO DO: do the routing of association editing properly.
+  end
   resources :runs
   resources :posteriors
   resources :covariates
@@ -137,7 +152,6 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
     collection do
       get :map
       get :linked
-      get :search
       get :rem_citations_sites
       post :edit_citations_sites
     end
@@ -184,7 +198,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
       get :linked
       post :access_level
       post :checked
-      get :trait_search
+      post :trait_search
     end
   end
 
@@ -233,5 +247,10 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   match '/bulk_upload/choose_global_data_values', :as => :choose_global_data_values
   match '/bulk_upload/confirm_data', :as => :bulk_upload_data_confirmation
   match '/bulk_upload/insert_data', :as => :bulk_upload_data_insertion
+
+  # This seems a somewhat kludgy way to get 'link_to "CF Guidelines",
+  # guidelines_path' to create a robust link (i.e., one that works even in
+  # subdirectory deployments) to /public/guidelines.html, but it works.
+  get '/guidelines.html' => redirect('/guidelines.html'), :as => :guidelines
 
 end

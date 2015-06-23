@@ -12,7 +12,18 @@ class Model < ActiveRecord::Base
   has_many :children, :class_name => "Model", :foreign_key => "parent_id"
   belongs_to :parent, :class_name => "Model"
 
+
+  # VALIDATION
+
+  ## Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:revision])
+
+  ## Validations
+
   validates_presence_of :modeltype_id
+  validates_format_of :model_name, with: /\A\S*\z/, message: "can't contain whitespace"
+
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }

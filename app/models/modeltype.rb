@@ -10,10 +10,14 @@ class Modeltype < ActiveRecord::Base
   has_many :pfts
   belongs_to :user
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
-  scope :search, lambda { |search| where(simple_search(search)) }
+  # Validations
 
   validates_uniqueness_of :name
+  validates_format_of :name, with: /\A\S*\z/, message: "can't contain whitespace"
+
+
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do
     id

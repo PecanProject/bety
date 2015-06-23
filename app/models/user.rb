@@ -22,6 +22,14 @@ class User < ActiveRecord::Base
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
+  # VALIDATION
+
+  ## Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:name, :city, :country, :state_prov, :postal_code])
+
+  ## Validations
+
   validates_presence_of     :login
   validates_length_of       :login,    :within => 3..40
   validates_uniqueness_of   :login
@@ -45,6 +53,16 @@ class User < ActiveRecord::Base
   # anything else you want your user to change should be added here.  
   attr_accessible :login, :email, :name, :password, :password_confirmation, :city, :area, :country, :access_level, :page_access_level, :apikey, :postal_code, :state_prov
 
+  # Now that the access_level and page_access_level columns of "users" have
+  # user-defined (domain) type "level_of_access", we have to ensure they map to
+  # Ruby Fixnums because Rails seems to map unknown SQL types to strings by
+  # default:
+  def access_level
+    super.to_i
+  end
+  def page_access_level
+    super.to_i
+  end
 
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.

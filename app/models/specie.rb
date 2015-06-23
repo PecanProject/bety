@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Specie < ActiveRecord::Base
   require "comma"
   include Overrides
@@ -22,6 +23,52 @@ class Specie < ActiveRecord::Base
   has_many :yields
   has_many :traits
   has_many :cultivars
+
+
+  # VALIDATION
+
+  ## Validation methods
+
+  def scientificname_includes_genus_and_species
+    if scientificname !~ /\A#{genus}.*#{species}\z/
+      errors.add(:scientificname, "must contain the genus and species")
+    end
+  end
+
+  ## Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:commonname, :scientificname, :genus, :species])
+
+  #### Note: normalization of the hybrid symbol (x -> ×) is handled by a database trigger function.
+
+  ## Validations
+
+  validates_numericality_of :spcd,
+      { only_integer: true,
+        greater_than_or_equal_to: 0,
+        less_than_or_equal_to: 10000,
+        allow_blank: true }
+  validates_format_of :genus,
+      { with: /\A([A-Z][-a-z]*)?\z/,
+       message: "must begin with a capital letter and contain only letters and hyphens" }
+  validates_format_of :species,
+      { with: /\A(([A-Z]\.|[a-zA-Z]{2,}\.?|&|\u00d7|x)( |-|\z))*\z/,
+        message: <<TEXT
+should be zero or more space-or-hyphen-separated groups of capital
+letters followed by a period, sequences of two or more letters possibly
+followed by a period, ampersands, and times symbols.
+TEXT
+      }
+  validates :scientificname,
+      presence: true,
+      format: { with: /\A[A-Z][-a-z]*( .*)?\z/,
+                message: 'must begin with a capital letter' }
+
+  # This validation may prevent updating some existing rows unless the genus,
+  # species, and scientificname are changed to be consistent.
+  validate :scientificname_includes_genus_and_species
+
+
 
   scope :all_order, order('genus, species')
   scope :by_letter, lambda { |letter| where('genus like ?', letter + "%") }

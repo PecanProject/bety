@@ -144,7 +144,6 @@ class ManagementsController < ApplicationController
 
     respond_to do |format|
       if @management.update_attributes(params[:management])
-        @management.update_attribute('citation_id', session['citation'])
         flash[:notice] = 'Management was successfully updated.'
         format.html { redirect_to( :action => :edit ) }
         format.xml  { head :ok }

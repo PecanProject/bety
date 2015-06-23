@@ -4,7 +4,6 @@ test_trait_specie:
   genus: "Abarema"
   species: "jupunba"
   scientificname: "Abarema jupunba"
-  commonname: NULL
   
 test_species_for_bulk_upload:
   id: 18

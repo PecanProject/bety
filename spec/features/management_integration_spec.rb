@@ -67,12 +67,12 @@ feature 'Creating a new management for a treatment associated with a citation wo
     end
     it 'should display the new management form' do
       visit(treatments_path)
-      first(:xpath, ".//a[text() = 'New Management for this treatment']").click
+      first(:xpath, ".//a[text() = 'Create a New Management for this Treatment']").click
       page.should_not have_content "We're sorry"
     end
     it 'should not have a citations select box' do
       visit(treatments_path)
-      first(:xpath, ".//a[text() = 'New Management for this treatment']").click
+      first(:xpath, ".//a[text() = 'Create a New Management for this Treatment']").click
       page.should_not have_selector(:xpath, '//select[@name="management[citation_id]"]')
     end      
   end

@@ -5,6 +5,10 @@ class Entity < ActiveRecord::Base
   belongs_to :parent, :class_name => "Entity"
   has_many :children, :foreign_key => "parent_id", :class_name => "Entity"
 
+  # Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:name])
+
   def to_s
     name
   end
