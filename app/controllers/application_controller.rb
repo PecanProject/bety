@@ -14,6 +14,8 @@ class ApplicationController < ActionController::Base
       flash[:error] = 'There are still traits that refer to this site.'
     when /fk_sites_yields_1/
       flash[:error] = 'There are still yields that refer to this site.'
+    when /fk_inputs_sites_1/
+      flash[:error] = 'There are still inputs that refer to this site.'
 
       # TO DO: Add to this list of 'when' clauses.
 
@@ -122,6 +124,45 @@ class ApplicationController < ActionController::Base
     return sql
   end
 
+
+  protected
+
+  # Override built-in render method so that if rendering to XML or JSON,
+  # automatically add params[:include] to list of associations to render.
+  def render *args, &block
+    logger.info "********************************************************************************"
+    logger.info("args = #{args}; block = #{block}")
+
+    if !args.empty? && args[0].is_a?(Hash) &&
+        (args[0].keys.include?(:xml) || args[0].keys.include?(:json))
+
+      # The :include key may not exist; or the corresponding value may be a
+      # scalar.  We want to add in the values in params[:include] to any given
+      # in args and have the result be an array:
+      case args[0][:include]
+      when Array
+        args[0][:include] += params[:include]
+      when nil
+        args[0][:include] = params[:include]
+      else
+        args[0][:include] = [args[0][:include]] + params[:include]
+      end
+
+      if !(args[0][:include].nil?)
+        # Normalize array members to symbols and eliminate any duplicates:
+        args[0][:include].collect! { |o| o.to_sym }.uniq!
+
+        # Be sure user information isn't inadvertently displayed:
+        args[0][:include].delete(:user)
+      end
+
+    end
+
+    super *args, &block
+
+  end
+
+
   private
   
   def handle_constraint_violations(e)
@@ -133,5 +174,4 @@ class ApplicationController < ActionController::Base
     redirect_to :back
   end
 
-  
 end

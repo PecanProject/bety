@@ -95,19 +95,40 @@ CREDITS
         .sorted_order("#{sort_column('traits_and_yields_view','scientificname')} #{sort_direction}")
         .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
 
-    else # Allow url queries of data, with scopes, only xml & csv ( & json? )
+      sql_query = log_searches(TraitsAndYieldsView
+                                 .all_limited(current_user)
+                                 .coordinate_search(params)
+                                 .search(params[:search])
+                                 .to_sql)
+
+    elsif params[:format] == 'csv' # Allow url queries of data in csv format
       @results = TraitsAndYieldsView
         .all_limited(current_user)
         .coordinate_search(params)
         .search(params[:search])
 
-    end
+      sql_query = log_searches(TraitsAndYieldsView
+                                 .all_limited(current_user)
+                                 .coordinate_search(params)
+                                 .search(params[:search])
+                                 .to_sql)
 
-    sql_query = log_searches(TraitsAndYieldsView
-                               .all_limited(current_user)
-                               .coordinate_search(params)
-                               .search(params[:search])
-                               .to_sql)
+    else # Allow url queries of data in xml & json formats
+      @results = TraitsAndYieldsView
+        .all_limited(current_user)
+        .coordinate_search(params)
+        .search(params[:search])
+        .api_search(params)
+
+
+      sql_query = log_searches(TraitsAndYieldsView
+                                 .all_limited(current_user)
+                                 .coordinate_search(params)
+                                 .search(params[:search])
+                                 .api_search(params)
+                                 .to_sql)
+
+    end
 
     respond_to do |format|
       format.html # index.html.erb

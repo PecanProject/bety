@@ -3,6 +3,7 @@ class PriorsController < ApplicationController
   helper_method :sort_column, :sort_direction
 
   require 'csv'
+  require 'open3'
 
   def rem_pfts_priors
     @pft = Pft.find(params[:id])
@@ -21,6 +22,7 @@ class PriorsController < ApplicationController
     render :update do |page|
       if !params[:pft].nil?
         params[:pft][:id].each do |c|
+          next if c.empty?
           @prior.pfts << Pft.find(c)
         end
       end
@@ -73,7 +75,7 @@ class PriorsController < ApplicationController
     bparam = @prior.paramb
     distname = @prior.distn
     n = @prior.n
-    imgfile = Rails.root.join("public/images/prev/#{id}.png");
+    imgfile = Rails.root.join("public/images/prev/#{id}.png").to_s
     updatetime = @prior.updated_at
 
     if updatetime.nil?
@@ -81,19 +83,30 @@ class PriorsController < ApplicationController
     end
 
     if !File.exist?( imgfile ) or File.atime(imgfile) < updatetime
-      # On ebi-forecast, the version of R we want to use is in
-      # /usr/local/R-3.1.0/bin, so prepend it to the path so that that
-      # version gets used if it exists:
-      error_output = `PATH=/usr/local/R-3.1.0/bin:$PATH R --vanilla --args #{imgfile} #{distname} #{aparam} #{bparam} #{n} < #{Rails.root.join('script/previewhelp.R')} 2>&1 >/dev/null`
+
+      if id =~ /\A\d+\z/ &&
+          Prior.distn_types.include?(distname) &&
+          aparam.is_a?(Numeric) &&
+          (n.nil? || bparam.is_a?(Numeric)) &&
+          (n.nil? || n.is_a?(Integer))
+
+        # On ebi-forecast, the version of R we want to use is in
+        # /usr/local/R-3.1.0/bin, so put it first in the path so that that version
+        # gets used if it exists:
+        o, error_output, s = Open3.capture3({ 'PATH' => "/usr/local/R-3.1.0/bin:/usr/bin:/usr/local/bin" },
+                                            "R", "--vanilla", "--args", imgfile, distname, aparam.to_s, bparam.to_s, n.to_s,
+                                            stdin_data: Rails.root.join('script/previewhelp.R').read)
+      else
+        error_output = sprintf("Invalid argument set:\n\timgfile = %s\n\tdistname = %s\n\taparam = %s\n\tbparam = %s\n\tn = %s\n", 
+                               imgfile, distname, aparam, bparam, n)
+      end
+
       if !error_output.empty?
         logger.error("\nR error output:")
         logger.error("========================================")
         logger.error(error_output)
         logger.error("========================================\n\n")
       end
-      # for debugging purposes only if something goes wrong
-      #r=%x[R --vanilla --args #{imgfile} #{distname} #{aparam} #{bparam} #{n} < #{Rails.root.join('script/previewhelp.R')} 2>&1]
-      #logger.error(r)
       send_file(imgfile, :type =>'image/png', :disposition => 'inline')
     else
       send_file(imgfile, :type =>'image/png', :disposition => 'inline')

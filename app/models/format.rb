@@ -9,6 +9,20 @@ class Format < ActiveRecord::Base
   has_many :formats_variables
   has_many :variables, :through => :formats_variables
 
+  # VALIDATION
+
+  ## Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:name])
+
+  ## Validations
+
+  validates :mime_type,
+      presence: true,
+      mediatype: true
+
+
+
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 

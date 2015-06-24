@@ -24,6 +24,7 @@ class ManagementsController < ApplicationController
     render :update do |page|
       if !params[:treatment].nil?
         params[:treatment][:id].each do |c|
+          next if c.empty?
           @management.treatments << Treatment.find(c)
         end
         page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
@@ -143,7 +144,6 @@ class ManagementsController < ApplicationController
 
     respond_to do |format|
       if @management.update_attributes(params[:management])
-        @management.update_attribute('citation_id', session['citation'])
         flash[:notice] = 'Management was successfully updated.'
         format.html { redirect_to( :action => :edit ) }
         format.xml  { head :ok }

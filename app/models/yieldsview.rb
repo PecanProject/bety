@@ -1,5 +1,5 @@
 class Yieldsview < ActiveRecord::Base
-  set_table_name 'yieldsview'
+  self.table_name = 'yieldsview'
 
   scope :all_limited, lambda { |current_user|
     if !current_user.nil?

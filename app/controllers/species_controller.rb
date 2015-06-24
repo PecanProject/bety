@@ -80,6 +80,7 @@ class SpeciesController < ApplicationController
     render :update do |page|
       if !params[:pft].nil?
         params[:pft][:id].each do |c|
+          next if c.empty?
           @species.pfts << Pft.find(c)
         end
       end
@@ -186,20 +187,20 @@ class SpeciesController < ApplicationController
   # PUT /species/1
   # PUT /species/1.xml
   def update
-    @specie = Specie.find(params[:id])
+    @species = Specie.find(params[:id])
 
     respond_to do |format|
-      if @specie.update_attributes(params[:specie])
+      if @species.update_attributes(params[:specie])
         flash[:notice] = 'Specie was successfully updated.'
-        format.html { redirect_to( edit_species_path(@specie) ) }
+        format.html { redirect_to( edit_species_path(@species) ) }
         format.xml  { head :ok }
         format.csv  { head :ok }
         format.json  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @specie.errors, :status => :unprocessable_entity }
-        format.csv  { render :csv => @specie.errors, :status => :unprocessable_entity }
-        format.json  { render :json => @specie.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @species.errors, :status => :unprocessable_entity }
+        format.csv  { render :csv => @species.errors, :status => :unprocessable_entity }
+        format.json  { render :json => @species.errors, :status => :unprocessable_entity }
       end
     end
   end
