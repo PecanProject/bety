@@ -2,13 +2,15 @@ class Site < ActiveRecord::Base
 
   include Overrides
 
-  def to_json(options = {})
-    options[:only] = [city, :state, :country, :lat, :lon, :sitename, :greenhouse, :notes]
+  def as_json(options = {})
+    options[:except] = [:clay_pct, :created_at, :id, :local_time, :map, :mat,
+                        :sand_pct, :soil, :soilnotes, :som, :updated_at, :user_id]
     super(options)
   end
 
   def to_xml(options = {})
-    options[:only] = [city, :state, :country, :lat, :lon, :sitename, :greenhouse, :notes]
+    options[:except] = [:clay_pct, :created_at, :id, :local_time, :map, :mat,
+                        :sand_pct, :soil, :soilnotes, :som, :updated_at, :user_id]
     super(options)
   end
 
@@ -25,6 +27,10 @@ class Site < ActiveRecord::Base
   end
 
   def lat=(val)
+    if val.to_f != lat
+      @lat_or_lon_updated = true
+    end
+    val = val.blank? ? 0.0 : val
     if not self[:geometry] then
       self[:geometry] = "SRID=4326;Point(0 #{val} 0)"
     else
@@ -45,6 +51,10 @@ class Site < ActiveRecord::Base
   end
 
   def lon=(val)
+    if val.to_f != lon
+      @lat_or_lon_updated = true
+    end
+    val = val.blank? ? 0.0 : val
     if not self[:geometry] then
       self[:geometry] = "SRID=4326;Point(#{val} 0 0)"
     else
@@ -65,6 +75,11 @@ class Site < ActiveRecord::Base
   end
 
   def masl=(val)
+    if val.to_f != masl
+      @masl_updated = true
+      @old_masl = masl
+    end
+    val = val.blank? ? 0.0 : val
     if not self[:geometry] then
       self[:geometry] = "SRID=4326;Point(0 0 #{val})"
     else
@@ -99,6 +114,43 @@ class Site < ActiveRecord::Base
   has_many :inputs
 
   belongs_to :user
+
+  # VALIDATION
+
+  ## Validation methods
+
+  def sum_of_soil_percentages_does_not_exceed_100
+    if sand_pct + clay_pct > 100
+      errors.add(:base, "Sand and Clay percentages can't add up to more than 100")
+    end
+  end
+
+  ## Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:sitename, :city, :state, :country])
+  before_validation :warn_about_elevation_update_bug, on: :update
+
+  ## Validations
+
+  validates_numericality_of :mat, greater_that_or_equal_to: -25, less_than_or_equal_to: 40,
+      unless: Proc.new { |a| a.mat.blank? }
+  validates_numericality_of :map, greater_that_or_equal_to: 0, less_than_or_equal_to: 12000,
+      unless: Proc.new { |a| a.map.blank? }
+  validates_numericality_of :som, greater_that_or_equal_to: 0, less_than_or_equal_to: 100,
+      unless: Proc.new { |a| a.som.blank? }
+  validates_numericality_of :sand_pct, greater_that_or_equal_to: 0, less_than_or_equal_to: 100,
+      unless: Proc.new { |a| a.sand_pct.blank? }
+  validates_numericality_of :clay_pct, greater_that_or_equal_to: 0, less_than_or_equal_to: 100,
+      unless: Proc.new { |a| a.clay_pct.blank? }
+  validate :sum_of_soil_percentages_does_not_exceed_100, unless: Proc.new { |a| a.sand_pct.nil? || a.clay_pct.nil? }
+  validates_presence_of :sitename
+  validates_presence_of :lat, :lon
+  validates_numericality_of :lat, greater_than_or_equal_to: -90 , less_than_or_equal_to: 90
+  validates_numericality_of :lon, greater_than_or_equal_to: -180 , less_than_or_equal_to: 180
+  validates_numericality_of :masl,
+      greater_than_or_equal_to: -418,
+      less_than_or_equal_to: 8848, # Mount Everest
+      message: "Elevation must be between -418 and 8848 meters"
 
   # Returns an +ActiverRecord::Relation containing all Site objects that are
   # associated with every Citation whose id is in +citation_id_list+.
@@ -179,6 +231,17 @@ CONDITION
   end
   def select_default
     "#{id}: #{self}"
+  end
+
+
+
+  private
+
+  def warn_about_elevation_update_bug
+    if @masl_updated && !@lat_or_lon_updated
+      self.masl = @old_masl # revert elevation in form
+      errors.add(:masl, "Elevation can be updated only if latitude or longitude is also updated")
+    end
   end
 
 

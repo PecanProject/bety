@@ -104,7 +104,12 @@ class FormatsController < ApplicationController
     # the table
     m = Mimetype.find_by_type_string(@format.mime_type)
     m.delete if !m.nil?
-    Mimetype.new(:type_string => @format.mime_type).save
+    new_m = Mimetype.new(:type_string => @format.mime_type)
+
+    # If validation of the new_m fails, so will validation of @format.
+    if new_m.valid?
+      new_m.save
+    end
 
 
     respond_to do |format|

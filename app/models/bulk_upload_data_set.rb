@@ -1,5 +1,6 @@
+require 'memoist'
 module ValidationResult
-  extend ActiveSupport::Memoizable
+  extend Memoist
 
   # A symbol representing the result of data validation.
   attr :result
@@ -88,6 +89,7 @@ end
 class UnresolvableReferenceException < BulkUploadDataException
 end
 
+# Phase-in of uniqueness database constraints should eliminate most of these exceptions.
 class NonUniquenessException < UnresolvableReferenceException
   def initialize(model_class_or_relation = nil, match_column_name = '', raw_value = '', table_entity_name = '')
     super(:non_unique_referent, "More than one row in the #{table_entity_name.pluralize} table matches this string", "Multiple matching referents")
@@ -121,19 +123,19 @@ class NegativeYieldException < BulkUploadDataException
   end
 end
 
-class UnparsableCitationYearException < BulkUploadDataException
+class UnparsableCitationYearException < InvalidCitationYearException
   def initialize
     super(:unparsable_citation_year, "Not a valid integer", "Citation year can't be parsed as a number")
   end
 end
 
-class FutureCitationYearException < BulkUploadDataException
+class FutureCitationYearException < InvalidCitationYearException
   def initialize
     super(:future_citation_year, "Citation year is in the future")
   end
 end
 
-class TooOldCitationYearException < BulkUploadDataException
+class TooOldCitationYearException < InvalidCitationYearException
   def initialize
     super(:too_old_citation_year, "Citation year is too far in the past")
   end
@@ -202,7 +204,7 @@ end
 
 class BulkUploadDataSet
   include ActionView::Helpers::NumberHelper # for rounding
-  extend ActiveSupport::Memoizable
+  extend Memoist
 
   # An Array consisting of the (normalized) headers of the uploaded CSV file.
   # Normalization strips leading and trailing whitespace; additionally for
@@ -735,22 +737,19 @@ class BulkUploadDataSet
         author_index = row.index { |h| h[:fieldname] == "citation_author" }
         year_index = row.index { |h| h[:fieldname] == "citation_year" }
         title_index = row.index { |h| h[:fieldname] == "citation_title" }
-        begin
-          citation_id = existing_citation(row[author_index][:data], row[year_index][:data], row[title_index][:data])
-        rescue InvalidCitationYearException, UnresolvableReferenceException => e
-          row[year_index][:validation_result] = e
 
-          if e.is_a? InvalidCitationYearException
-            e = UnresolvableReferenceException.new
+        # Look up the citation only if the year is valid:
+        if row[year_index][:validation_result].is_a? Valid
+          begin
+            citation_id = existing_citation(row[author_index][:data], row[year_index][:data], row[title_index][:data])
+          rescue UnresolvableReferenceException => e
+            row[year_index][:validation_result] = e
+            row[author_index][:validation_result] = e
+            row[title_index][:validation_result] = e
+            add_to_validation_summary(e, row_number)
           end
-
-          row[author_index][:validation_result] = e
-          row[title_index][:validation_result] = e
-
-          # For purposes of the summary, count the citation error as an
-          # unresolved reference, even if the year was invalid:
-          add_to_validation_summary(e, row_number)
-
+        else
+          add_to_validation_summary(row[year_index][:validation_result], row_number)
         end
 
       end
@@ -788,28 +787,37 @@ class BulkUploadDataSet
         if !treatment_index.nil?
           treatment = row[treatment_index][:data]
 
-          begin
-            existing_treatment?(treatment)
-          rescue NonUniquenessException
-            # We only care that treatment names are unique per citation.
-          rescue UnresolvableReferenceException => e
-            row[treatment_index][:validation_result] = e
-            add_to_validation_summary(e, row_number)
-          end
-
-          # If we get here, the treatment name is valid, but we still have to check consistency.
 
           begin
             existing_treatment?(treatment, citation.id)
-          rescue UnresolvableReferenceException
-            e = InconsistentCitationAndTreatmentException.new
-
+          rescue NonUniquenessException => e
             row[treatment_index][:validation_result] = e
             add_to_validation_summary(e, row_number)
+          rescue MissingReferenceException => e
+            inconsistent = false # tentatively ...
+            begin
+              existing_treatment?(treatment)
+            rescue NonUniquenessException => e
+              inconsistent = true # none of the matching treatments are for this citation
+            rescue MissingReferenceException => e
+              # there are no matching treatments for ANY citation
+              row[treatment_index][:validation_result] = e
+              add_to_validation_summary(e, row_number)
+            else
+              inconsistent = true # the one matching treatment is not for this citation
+            ensure
+              # handle the two inconsistency cases:
+              if inconsistent
+                e = InconsistentCitationAndTreatmentException.new
+                row[treatment_index][:validation_result] = e
+                add_to_validation_summary(e, row_number)
+              end
+            end
           end
-        end
+        end # if !treatment_index.nil?
 
-      end
+      end # if citation_id
+
     end # @validated_data.each
 
     if file_includes_citation_info
@@ -1293,6 +1301,7 @@ class BulkUploadDataSet
   # If multiple matches are found, a +NonUniquenessException+ is raised, and if
   # no match is found, a +MissingReferenceException+ is raised.
   def existing_species?(name)
+    name.sub!(' x ', " \u00d7 ") # normalize ' x ' to hybrid symbol
     return existing?(Specie, "scientificname", name, "species")
   end
   memoize :existing_species?
@@ -1331,7 +1340,7 @@ class BulkUploadDataSet
 
   # Returns a +Citation+ object whose +author+, +year+, and +title+ attributes
   # match the supplied argument values.  If +year+ can't be parsed as an
-  # integer, an +InvalidCitationYearException+ is raised.  Matching is
+  # integer, an +UnparsableCitationYearException+ is raised.  Matching is
   # case-insensitive, and extraneous space is removed from the database values
   # of +author+ and +title+ before a match is attempted.  Also, the supplied
   # +title+ argument need only match an initial substring of the corresponding
@@ -1342,7 +1351,7 @@ class BulkUploadDataSet
     begin
       Integer(year)
     rescue ArgumentError
-      raise InvalidCitationYearException
+      raise UnparsableCitationYearException
     end
 
     c = Citation.where("#{sql_columnref_to_normalized_columnref("author")} = :author " +
@@ -1533,9 +1542,15 @@ class BulkUploadDataSet
     @data.each do |csv_row|
       csv_row_as_hash = csv_row.to_hash
 
-      # Don't allow id values to be specified in CSV file:
+      # remove irrelevant data from row:
+      if trait_data?
+        get_trait_and_covariate_info # sets @traits_in_heading and @allowed_covariates
+        recognized_columns = RECOGNIZED_COLUMNS + @traits_in_heading + @allowed_covariates
+      else
+        recognized_columns = RECOGNIZED_COLUMNS
+      end
       csv_row_as_hash.keep_if do |key, value|
-        !(key =~ /_id/)
+        recognized_columns.include? key
       end
 
       # error_list is anonymous here since we don't need to use it: we've already validated the per-row data

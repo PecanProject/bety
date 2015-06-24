@@ -12,13 +12,15 @@ end
 class TraitsAndYieldsView < ActiveRecord::Base
   # Passed from controller for validation of ability
 #  attr_accessor :current_user
-  set_table_name 'traits_and_yields_view'
+  self.table_name = 'traits_and_yields_view'
 
   include ActiveModel::Serialization
 
   extend CoordinateSearch # provides coordinate_search
 
   extend DataAccess # provides all_limited
+
+  extend SimpleSearch
 
   extend AdvancedSearch
   SEARCH_INCLUDES = %w{ }

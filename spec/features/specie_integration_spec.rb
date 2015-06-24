@@ -1,7 +1,7 @@
 require 'spec_helper'
 include LoginHelper
 
-feature 'Species index works' do
+feature 'Species pages work' do
   before :each do
     login_test_user
   end
@@ -24,10 +24,10 @@ feature 'Species index works' do
     it 'should allow a specie to return success notification' do
       visit '/species/new'
       
-      fill_in 'specie[spcd]', :with =>  'winstonchurchill'
-      fill_in 'specie[genus]', :with =>  'asdfasdf'
+      fill_in 'specie[spcd]', :with =>  '555'
+      fill_in 'specie[genus]', :with =>  'Asdfasdf'
       fill_in 'specie[species]', :with =>  'asdfasdf'
-      fill_in 'specie[scientificname]', :with =>  'asdfasdf'
+      fill_in 'specie[scientificname]', :with =>  'Asdfasdf asdfasdf'
       fill_in 'specie[commonname]', :with =>  'winstonchurchill'
       fill_in 'specie[AcceptedSymbol]', :with =>  'asdfasdf'
       fill_in 'specie[SynonymSymbol]', :with =>  'asdfasdf'
@@ -47,6 +47,15 @@ feature 'Species index works' do
       page.should have_content("Specie was successfully created.")
     end
   end
+
+  context 'GET /species/edit/:id' do
+    it 'should allow editing a species' do
+      visit '/species'
+      first(:xpath, './/a[@alt = "edit"]').click
+      page.should have_content 'Editing Species'
+    end
+  end
+
 
 end
 
