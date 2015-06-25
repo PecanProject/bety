@@ -132,11 +132,11 @@ $$;
 -- Name: get_input_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION get_input_ids() RETURNS integer[]
+CREATE FUNCTION get_input_ids() RETURNS bigint[]
     LANGUAGE plpgsql
     AS $$
 DECLARE
-    id_array int[];
+    id_array bigint[];
 BEGIN
     SELECT
         ARRAY_AGG(id)
@@ -153,11 +153,11 @@ $$;
 -- Name: get_model_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION get_model_ids() RETURNS integer[]
+CREATE FUNCTION get_model_ids() RETURNS bigint[]
     LANGUAGE plpgsql
     AS $$
 DECLARE
-    id_array int[];
+    id_array bigint[];
 BEGIN
     SELECT
         ARRAY_AGG(id)
@@ -174,11 +174,11 @@ $$;
 -- Name: get_posterior_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION get_posterior_ids() RETURNS integer[]
+CREATE FUNCTION get_posterior_ids() RETURNS bigint[]
     LANGUAGE plpgsql
     AS $$
 DECLARE
-    id_array int[];
+    id_array bigint[];
 BEGIN
     SELECT
         ARRAY_AGG(id)
@@ -638,6 +638,24 @@ $$;
 
 
 --
+-- Name: update_timestamp(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION update_timestamp() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    IF
+        NEW.updated_at = OLD.updated_at
+    THEN
+        NEW.updated_at = utc_now();
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+
+--
 -- Name: utc_now(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -680,8 +698,8 @@ CREATE TABLE citations (
     pg character varying(255) DEFAULT ''::character varying NOT NULL,
     url character varying(512) DEFAULT ''::character varying NOT NULL,
     pdf character varying(255) DEFAULT ''::character varying NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     doi character varying(255) DEFAULT ''::character varying NOT NULL,
     user_id bigint,
     CONSTRAINT citation_year_not_in_future CHECK (((year)::double precision <= (date_part('year'::text, now()) + (1)::double precision))),
@@ -759,8 +777,8 @@ COMMENT ON COLUMN citations.doi IS 'Digital Object Identifier';
 CREATE TABLE citations_sites (
     citation_id bigint NOT NULL,
     site_id bigint NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     id bigint NOT NULL
 );
 
@@ -791,8 +809,8 @@ ALTER SEQUENCE citations_sites_id_seq OWNED BY citations_sites.id;
 CREATE TABLE citations_treatments (
     citation_id bigint NOT NULL,
     treatment_id bigint NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     id bigint NOT NULL
 );
 
@@ -835,8 +853,8 @@ CREATE SEQUENCE counties_id_seq
 CREATE TABLE counties (
     id bigint DEFAULT nextval('counties_id_seq'::regclass) NOT NULL,
     name character varying(255),
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     state character varying(255),
     state_fips integer,
     county_fips integer
@@ -864,8 +882,8 @@ CREATE TABLE covariates (
     trait_id bigint,
     variable_id bigint,
     level numeric(16,4),
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     n integer,
     statname statnames DEFAULT ''::text,
     stat numeric(16,4),
@@ -902,8 +920,8 @@ CREATE TABLE cultivars (
     name character varying(255) NOT NULL,
     ecotype character varying(255) DEFAULT ''::character varying NOT NULL,
     notes text DEFAULT ''::text NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     previous_id character varying(255),
     CONSTRAINT normalized_names CHECK (is_whitespace_normalized((name)::text))
 );
@@ -930,8 +948,8 @@ COMMENT ON COLUMN cultivars.ecotype IS 'An ecotype is a distinct variety adapted
 CREATE TABLE cultivars_pfts (
     pft_id bigint NOT NULL,
     cultivar_id bigint NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT utc_now(),
+    updated_at timestamp without time zone DEFAULT utc_now(),
     CONSTRAINT no_conflicting_member CHECK (no_species_member(pft_id))
 );
 
@@ -960,8 +978,8 @@ CREATE TABLE current_posteriors (
     variable_id bigint,
     posteriors_samples_id bigint,
     project_id bigint,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone DEFAULT utc_now(),
+    updated_at timestamp without time zone DEFAULT utc_now()
 );
 
 
@@ -1008,8 +1026,8 @@ CREATE TABLE dbfiles (
     created_user_id bigint,
     updated_user_id bigint,
     machine_id bigint NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     container_type character varying(255),
     container_id bigint,
     CONSTRAINT file_path_sanity_check CHECK (((file_path)::text ~ '^/'::text)),
@@ -1048,8 +1066,8 @@ CREATE SEQUENCE ensembles_id_seq
 CREATE TABLE ensembles (
     id bigint DEFAULT nextval('ensembles_id_seq'::regclass) NOT NULL,
     notes text DEFAULT ''::text NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     runtype character varying(255) NOT NULL,
     workflow_id bigint,
     CONSTRAINT valid_ensemble_runtype CHECK (((runtype)::text = ANY ((ARRAY['ensemble'::character varying, 'sensitivity analysis'::character varying, 'MCMC'::character varying, 'pda.emulator'::character varying])::text[])))
@@ -1077,8 +1095,8 @@ CREATE TABLE entities (
     parent_id bigint,
     name character varying(255) DEFAULT ''::character varying NOT NULL,
     notes text DEFAULT ''::text NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     CONSTRAINT normalized_entity_name CHECK (is_whitespace_normalized((name)::text))
 );
 
@@ -1104,8 +1122,8 @@ CREATE TABLE formats (
     mime_type character varying(255),
     dataformat text DEFAULT ''::text NOT NULL,
     notes text DEFAULT ''::text NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     name character varying(255) NOT NULL,
     header character varying(255) DEFAULT ''::character varying NOT NULL,
     skip character varying(255) DEFAULT ''::character varying NOT NULL,
@@ -1137,8 +1155,8 @@ CREATE TABLE formats_variables (
     unit character varying(255) DEFAULT ''::character varying NOT NULL,
     storage_type character varying(255) DEFAULT ''::character varying NOT NULL,
     column_number integer,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now()
 );
 
 
@@ -1162,8 +1180,8 @@ CREATE TABLE inputs (
     id bigint DEFAULT nextval('inputs_id_seq'::regclass) NOT NULL,
     site_id bigint,
     notes text DEFAULT ''::text NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     start_date timestamp(6) without time zone,
     end_date timestamp(6) without time zone,
     name character varying(255) NOT NULL,
@@ -1183,8 +1201,8 @@ CREATE TABLE inputs (
 CREATE TABLE inputs_runs (
     input_id bigint NOT NULL,
     run_id bigint NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     id bigint NOT NULL
 );
 
@@ -1215,8 +1233,8 @@ ALTER SEQUENCE inputs_runs_id_seq OWNED BY inputs_runs.id;
 CREATE TABLE inputs_variables (
     input_id bigint NOT NULL,
     variable_id bigint NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     id bigint NOT NULL
 );
 
@@ -1265,8 +1283,8 @@ CREATE TABLE likelihoods (
     n_eff numeric(10,0),
     weight numeric(10,0),
     residual numeric(10,0),
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now()
 );
 
 
@@ -1290,8 +1308,8 @@ CREATE TABLE location_yields (
     id bigint DEFAULT nextval('location_yields_id_seq'::regclass) NOT NULL,
     yield numeric(20,15),
     species character varying(255),
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     county_id bigint
 );
 
@@ -1315,8 +1333,13 @@ CREATE SEQUENCE machines_id_seq
 CREATE TABLE machines (
     id bigint DEFAULT nextval('machines_id_seq'::regclass) NOT NULL,
     hostname character varying(255) NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
+    sync_host_id bigint,
+    sync_url character varying(255),
+    sync_contact character varying(255),
+    sync_start bigint,
+    sync_end bigint,
     CONSTRAINT well_formed_machine_hostname CHECK (is_host_address((hostname)::text))
 );
 
@@ -1346,8 +1369,8 @@ CREATE TABLE managements (
     level numeric(16,4),
     units character varying(255),
     notes text DEFAULT ''::text NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     user_id bigint
 );
 
@@ -1394,8 +1417,8 @@ COMMENT ON COLUMN managements.units IS 'units, standardized for each management 
 CREATE TABLE managements_treatments (
     treatment_id bigint NOT NULL,
     management_id bigint NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     id bigint NOT NULL
 );
 
@@ -1440,8 +1463,8 @@ CREATE TABLE methods (
     name character varying(255) NOT NULL,
     description text NOT NULL,
     citation_id bigint,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     CONSTRAINT normalized_method_name CHECK (is_whitespace_normalized((name)::text))
 );
 
@@ -1490,8 +1513,8 @@ CREATE TABLE models (
     model_name character varying(255) NOT NULL,
     revision character varying(255) NOT NULL,
     parent_id bigint,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     modeltype_id bigint NOT NULL,
     CONSTRAINT no_spaces_in_model_name CHECK (is_whitespace_free((model_name)::text)),
     CONSTRAINT normalized_revision_specifier CHECK (is_whitespace_normalized((revision)::text))
@@ -1506,8 +1529,8 @@ CREATE TABLE modeltypes (
     id bigint NOT NULL,
     name character varying(255) NOT NULL,
     user_id bigint,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT utc_now(),
+    updated_at timestamp without time zone DEFAULT utc_now(),
     CONSTRAINT no_spaces_in_modeltype_name CHECK (is_whitespace_free((name)::text))
 );
 
@@ -1524,8 +1547,8 @@ CREATE TABLE modeltypes_formats (
     required boolean DEFAULT false NOT NULL,
     input boolean DEFAULT true NOT NULL,
     user_id bigint,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT utc_now(),
+    updated_at timestamp without time zone DEFAULT utc_now(),
     CONSTRAINT valid_modeltype_format_tag CHECK (((tag)::text ~ '^[a-z]+$'::text))
 );
 
@@ -1587,8 +1610,8 @@ CREATE SEQUENCE pfts_id_seq
 CREATE TABLE pfts (
     id bigint DEFAULT nextval('pfts_id_seq'::regclass) NOT NULL,
     definition text NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     name character varying(255) NOT NULL,
     parent_id bigint,
     pft_type character varying(255) DEFAULT 'plant'::character varying NOT NULL,
@@ -1619,8 +1642,8 @@ COMMENT ON COLUMN pfts.name IS 'pft names are unique within a given model type.'
 CREATE TABLE pfts_priors (
     pft_id bigint NOT NULL,
     prior_id bigint NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     id bigint NOT NULL
 );
 
@@ -1651,8 +1674,8 @@ ALTER SEQUENCE pfts_priors_id_seq OWNED BY pfts_priors.id;
 CREATE TABLE pfts_species (
     pft_id bigint NOT NULL,
     specie_id bigint NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     id bigint NOT NULL,
     CONSTRAINT no_conflicting_member CHECK (no_cultivar_member(pft_id))
 );
@@ -1701,8 +1724,8 @@ CREATE TABLE posterior_samples (
     variable_id bigint,
     pft_id bigint,
     parent_id bigint,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone DEFAULT utc_now(),
+    updated_at timestamp without time zone DEFAULT utc_now()
 );
 
 
@@ -1744,8 +1767,8 @@ CREATE SEQUENCE posteriors_id_seq
 CREATE TABLE posteriors (
     id bigint DEFAULT nextval('posteriors_id_seq'::regclass) NOT NULL,
     pft_id bigint NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now()
 );
 
 
@@ -1756,8 +1779,8 @@ CREATE TABLE posteriors (
 CREATE TABLE posteriors_ensembles (
     posterior_id bigint,
     ensemble_id bigint,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT utc_now(),
+    updated_at timestamp without time zone DEFAULT utc_now(),
     id bigint NOT NULL
 );
 
@@ -1808,8 +1831,8 @@ CREATE TABLE priors (
     paramc numeric(16,4),
     n integer,
     notes text,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     CONSTRAINT nonnegative_prior_sample_size CHECK ((n >= 0)),
     CONSTRAINT normalized_prior_phylogeny_specifier CHECK (is_whitespace_normalized((phylogeny)::text)),
     CONSTRAINT valid_prior_distn CHECK (((distn)::text = ANY ((ARRAY['beta'::character varying, 'binom'::character varying, 'cauchy'::character varying, 'chisq'::character varying, 'exp'::character varying, 'f'::character varying, 'gamma'::character varying, 'geom'::character varying, 'hyper'::character varying, 'lnorm'::character varying, 'logis'::character varying, 'nbinom'::character varying, 'norm'::character varying, 'pois'::character varying, 't'::character varying, 'unif'::character varying, 'weibull'::character varying, 'wilcox'::character varying])::text[])))
@@ -1868,8 +1891,8 @@ CREATE TABLE projects (
     outdir character varying(255) NOT NULL,
     machine_id bigint,
     description character varying(255) NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT utc_now(),
+    updated_at timestamp without time zone DEFAULT utc_now(),
     CONSTRAINT normalized_project_name CHECK (is_whitespace_normalized((name)::text))
 );
 
@@ -1919,8 +1942,8 @@ CREATE TABLE runs (
     outprefix character varying(255) DEFAULT ''::character varying NOT NULL,
     setting character varying(255) DEFAULT ''::character varying NOT NULL,
     parameter_list text NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     started_at timestamp(6) without time zone,
     finished_at timestamp(6) without time zone,
     ensemble_id bigint NOT NULL,
@@ -1986,8 +2009,8 @@ CREATE TABLE sessions (
     id bigint DEFAULT nextval('sessions_id_seq'::regclass) NOT NULL,
     session_id character varying(255) NOT NULL,
     data text,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now()
 );
 
 
@@ -2018,8 +2041,8 @@ CREATE TABLE sites (
     som numeric(4,2),
     notes text DEFAULT ''::text NOT NULL,
     soilnotes text DEFAULT ''::text NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     sitename character varying(255) NOT NULL,
     greenhouse boolean,
     user_id bigint,
@@ -2113,8 +2136,8 @@ CREATE TABLE species (
     scientificname character varying(255) NOT NULL,
     commonname character varying(255) DEFAULT ''::character varying NOT NULL,
     notes character varying(255) DEFAULT ''::character varying NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     "AcceptedSymbol" character varying(255),
     "SynonymSymbol" character varying(255),
     "Symbol" character varying(255),
@@ -2245,8 +2268,8 @@ CREATE TABLE traits (
     statname statnames DEFAULT ''::text,
     stat numeric(16,4),
     notes text DEFAULT ''::text NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     variable_id bigint,
     user_id bigint,
     checked integer DEFAULT 0,
@@ -2401,8 +2424,8 @@ CREATE TABLE treatments (
     id bigint DEFAULT nextval('treatments_id_seq'::regclass) NOT NULL,
     name character varying(255) NOT NULL,
     definition character varying(255) DEFAULT ''::character varying NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     control boolean,
     user_id bigint,
     CONSTRAINT normalized_treatment_definition CHECK (is_whitespace_normalized((definition)::text)),
@@ -2457,8 +2480,8 @@ CREATE TABLE users (
     area character varying(255),
     crypted_password character varying(40) NOT NULL,
     salt character varying(40),
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     remember_token character varying(40),
     remember_token_expires_at timestamp(6) without time zone,
     access_level level_of_access,
@@ -2534,8 +2557,8 @@ CREATE TABLE variables (
     description character varying(255) DEFAULT ''::character varying NOT NULL,
     units character varying(255) DEFAULT ''::character varying NOT NULL,
     notes text DEFAULT ''::text NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     name character varying(255) NOT NULL,
     max character varying(255) DEFAULT 'Infinity'::character varying NOT NULL,
     min character varying(255) DEFAULT '-Infinity'::character varying NOT NULL,
@@ -2651,8 +2674,8 @@ CREATE TABLE yields (
     mean numeric(16,4) NOT NULL,
     n integer,
     notes text DEFAULT ''::text NOT NULL,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     user_id bigint,
     checked integer DEFAULT 0 NOT NULL,
     access_level level_of_access,
@@ -2945,8 +2968,8 @@ CREATE TABLE workflows (
     folder character varying(255) NOT NULL,
     started_at timestamp(6) without time zone,
     finished_at timestamp(6) without time zone,
-    created_at timestamp(6) without time zone,
-    updated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now(),
     site_id bigint,
     model_id bigint NOT NULL,
     hostname character varying(255) NOT NULL,
@@ -3361,6 +3384,14 @@ ALTER TABLE ONLY pfts
 
 ALTER TABLE ONLY likelihoods
     ADD CONSTRAINT unique_run_variable_input_combination UNIQUE (run_id, variable_id, input_id);
+
+
+--
+-- Name: unique_sync_host_id; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY machines
+    ADD CONSTRAINT unique_sync_host_id UNIQUE (sync_host_id);
 
 
 --
@@ -3982,6 +4013,307 @@ CREATE TRIGGER restrict_trait_range BEFORE INSERT OR UPDATE ON traits FOR EACH R
 COMMENT ON TRIGGER restrict_trait_range ON traits IS 'Trigger function to ensure values of mean in the traits table are
    within the range specified by min and max in the variables table.
    A NULL in the min or max column means "no limit".';
+
+
+--
+-- Name: update_citations_sites_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_citations_sites_timestamp BEFORE UPDATE ON citations_sites FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_citations_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_citations_timestamp BEFORE UPDATE ON citations FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_citations_treatments_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_citations_treatments_timestamp BEFORE UPDATE ON citations_treatments FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_counties_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_counties_timestamp BEFORE UPDATE ON counties FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_covariates_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_covariates_timestamp BEFORE UPDATE ON covariates FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_cultivars_pfts_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_cultivars_pfts_timestamp BEFORE UPDATE ON cultivars_pfts FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_cultivars_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_cultivars_timestamp BEFORE UPDATE ON cultivars FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_current_posteriors_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_current_posteriors_timestamp BEFORE UPDATE ON current_posteriors FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_dbfiles_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_dbfiles_timestamp BEFORE UPDATE ON dbfiles FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_ensembles_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_ensembles_timestamp BEFORE UPDATE ON ensembles FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_entities_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_entities_timestamp BEFORE UPDATE ON entities FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_formats_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_formats_timestamp BEFORE UPDATE ON formats FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_formats_variables_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_formats_variables_timestamp BEFORE UPDATE ON formats_variables FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_inputs_runs_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_inputs_runs_timestamp BEFORE UPDATE ON inputs_runs FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_inputs_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_inputs_timestamp BEFORE UPDATE ON inputs FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_inputs_variables_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_inputs_variables_timestamp BEFORE UPDATE ON inputs_variables FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_likelihoods_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_likelihoods_timestamp BEFORE UPDATE ON likelihoods FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_location_yields_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_location_yields_timestamp BEFORE UPDATE ON location_yields FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_machines_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_machines_timestamp BEFORE UPDATE ON machines FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_managements_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_managements_timestamp BEFORE UPDATE ON managements FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_managements_treatments_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_managements_treatments_timestamp BEFORE UPDATE ON managements_treatments FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_methods_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_methods_timestamp BEFORE UPDATE ON methods FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_models_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_models_timestamp BEFORE UPDATE ON models FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_modeltypes_formats_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_modeltypes_formats_timestamp BEFORE UPDATE ON modeltypes_formats FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_modeltypes_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_modeltypes_timestamp BEFORE UPDATE ON modeltypes FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_pfts_priors_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_pfts_priors_timestamp BEFORE UPDATE ON pfts_priors FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_pfts_species_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_pfts_species_timestamp BEFORE UPDATE ON pfts_species FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_pfts_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_pfts_timestamp BEFORE UPDATE ON pfts FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_posterior_samples_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_posterior_samples_timestamp BEFORE UPDATE ON posterior_samples FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_posteriors_ensembles_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_posteriors_ensembles_timestamp BEFORE UPDATE ON posteriors_ensembles FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_posteriors_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_posteriors_timestamp BEFORE UPDATE ON posteriors FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_priors_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_priors_timestamp BEFORE UPDATE ON priors FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_projects_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_projects_timestamp BEFORE UPDATE ON projects FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_runs_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_runs_timestamp BEFORE UPDATE ON runs FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_sessions_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_sessions_timestamp BEFORE UPDATE ON sessions FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_sites_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_sites_timestamp BEFORE UPDATE ON sites FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_species_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_species_timestamp BEFORE UPDATE ON species FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_traits_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_traits_timestamp BEFORE UPDATE ON traits FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_treatments_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_treatments_timestamp BEFORE UPDATE ON treatments FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_users_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_users_timestamp BEFORE UPDATE ON users FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_variables_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_variables_timestamp BEFORE UPDATE ON variables FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_workflows_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_workflows_timestamp BEFORE UPDATE ON workflows FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_yields_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_yields_timestamp BEFORE UPDATE ON yields FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
 
 
 --
