@@ -95,16 +95,16 @@ ALTER TABLE workflows ALTER COLUMN updated_at SET DEFAULT utc_now();
 
 /* Also create trigger to set updated_at to the current UTC time whenever we do
 an update that doesn't set updated_at explicitly: */
-CREATE OR REPLACE FUNCTION update_timestamp() 
-  RETURNS TRIGGER AS $$ 
-BEGIN 
+CREATE OR REPLACE FUNCTION update_timestamp()
+  RETURNS TRIGGER AS $$
+BEGIN
     IF
         NEW.updated_at = OLD.updated_at
     THEN
         NEW.updated_at = utc_now();
     END IF;
-    RETURN NEW; 
-END; 
+    RETURN NEW;
+END;
 $$ LANGUAGE plpgsql;
 
 
