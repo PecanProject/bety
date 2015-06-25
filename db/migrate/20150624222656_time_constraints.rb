@@ -3,14 +3,6 @@ class TimeConstraints < ActiveRecord::Migration
 
     execute %q{
 
-/* Returns the current UTC time as a timestamp (without time zone) */
-CREATE OR REPLACE FUNCTION utc_now()
-    RETURNS timestamp AS $$
-BEGIN
-    RETURN CURRENT_TIMESTAMP AT TIME ZONE 'UTC';
-END;
-$$ LANGUAGE plpgsql;
-
 /* On insertion, if created_at or updated_at isn't set explicitly, default to
 the current UTC time: */
 ALTER TABLE citations ALTER COLUMN created_at SET DEFAULT utc_now();
@@ -513,7 +505,6 @@ DROP TRIGGER IF EXISTS update_variables_timestamp ON variables;
 DROP TRIGGER IF EXISTS update_yields_timestamp ON yields;
 DROP TRIGGER IF EXISTS update_workflows_timestamp ON workflows;
 
-DROP FUNCTION utc_now();
 DROP FUNCTION update_timestamp();
 
   }
