@@ -154,6 +154,7 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
+    trollop (2.1.2)
     tzinfo (0.3.35)
     websocket (1.2.2)
     will_paginate (3.0.4)
@@ -192,5 +193,6 @@ DEPENDENCIES
   safe_attributes
   seer (= 0.10.0)
   selenium-webdriver
+  trollop
   tzinfo (= 0.3.35)
   will_paginate (= 3.0.4)

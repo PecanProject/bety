@@ -34,6 +34,10 @@ gem 'memoist'
 gem "pg"
 gem "activerecord-postgis-adapter"
 
+
+gem "trollop" # for Rails scripts
+
+
 group :development, :test do
   # Although rspec-rails is mainly for the test environment, we
   # include it in development in case we want to have access to
