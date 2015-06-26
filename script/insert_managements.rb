@@ -62,7 +62,7 @@ def csvrow_to_input_statements(row_as_hash)
   statement = "START TRANSACTION;\n"
 
   date = row_as_hash["date"].nil? ? "DEFAULT" : "'#{row_as_hash["date"]}'"
-  dateloc = row_as_hash["dateloc"].nil? ? "DEFAULT" : "'#{row_as_hash["dateloc"]}'"
+  dateloc = row_as_hash["dateloc"].nil? ? "DEFAULT" : row_as_hash["dateloc"]
   mgmttype = "'#{row_as_hash["mgmttype"]}'"
   level = row_as_hash["level"].nil? ? "DEFAULT" : row_as_hash["level"]
   units = row_as_hash["units"].nil? ? "DEFAULT" : "'#{row_as_hash["units"]}'"
