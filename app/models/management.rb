@@ -11,6 +11,12 @@ class Management < ActiveRecord::Base
   belongs_to :citation
   belongs_to :user
 
+
+  # Validations
+
+  validates_numericality_of :level, unless: Proc.new { |a| a.level.blank? }
+
+
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 

@@ -14,6 +14,34 @@
             <%= f.text_field :hostname %>
           </div>
         </div>
+        <div class="row">
+          <div class="6 columns alpha omega">
+            <%= f.label :sync_host_id %>
+            <%= f.text_field :sync_host_id %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="sixteen columns alpha omega">
+            <%= f.label :sync_contact %>
+            <%= f.text_field :sync_contact %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="sixteen columns alpha omega">
+            <%= f.label :sync_url %>
+            <%= f.text_field :sync_url %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="5 columns">
+            <%= f.label :sync_start %>
+            <%= f.text_field :sync_start %>
+          </div>
+          <div class="5 columns">
+            <%= f.label :sync_end %>
+            <%= f.text_field :sync_end %>
+          </div>
+        </div>
 
         <div class="form-actions">
           <div class="button-group">

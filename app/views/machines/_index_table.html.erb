@@ -6,6 +6,7 @@
     <thead>
       <tr role="row">
         <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "machines.hostname", "Hostname" %></th>
+        <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 40px"><%= sortable "machines.sync_host_id", "Sync Host ID" %></th>
         <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 162px">Actions</th>
       </tr>
     </thead>
@@ -14,6 +15,7 @@
       <% @machines.each do |machine| %>
       <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and machine.id == @search.to_i%>>
       <td class="center"><%= machine.hostname %></td>
+      <td class="center"><%= machine.sync_host_id %></td>
       <td class="center ">
         <!-- SHOW -->
         <%= link_to machine, :class => "button button-small", :alt => "show" do %>

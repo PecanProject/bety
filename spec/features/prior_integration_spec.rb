@@ -16,8 +16,8 @@ feature 'Priors index works' do
       visit '/priors/new'
       
       fill_in 'Phylogen', :with => 'Bats'
-      fill_in 'prior_parama', :with =>'ZOMG A'
-      fill_in 'prior_paramb', :with => 'Beez Interwebs Papers'
+      fill_in 'prior_parama', :with =>'1.34'
+      fill_in 'prior_paramb', :with => '5.622'
       fill_in 'prior_n', :with => '9999'
       fill_in 'Notes', :with => 'for querying the page for the existence of certain elements'
 

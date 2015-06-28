@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="sixteen columns">
 			<header>
-				<h1>Viewing PFT</h1>
+				<h1>Viewing Machine</h1>
 			</header>
 			
 			<a style="text-decoration: none" href="#" onclick="showHide('show_files')" id="show_show_files">[+] View Related Files</a>
@@ -17,8 +17,18 @@
 
 			<!-- InstanceBeginEditable name="Full Width Content" --> 
 			<dl class="dl-horizontal">
-				<dt>Hostname</dt>
-				<dd><%= @machine.hostname %></dd>
+        <dt>Hostname</dt>
+        <dd><%= @machine.hostname %></dd>
+        <dt>Sync Host ID</dt>
+        <dd><%= @machine.sync_host_id %></dd>
+        <dt>Sync Contact</dt>
+        <dd><%= @machine.sync_contact %></dd>
+        <dt>Sync URL</dt>
+        <dd><%= @machine.sync_url %></dd>
+        <dt>Sync Start</dt>
+        <dd><%= @machine.sync_start %></dd>
+        <dt>Sync End</dt>
+        <dd><%= @machine.sync_end %></dd>
 			</dl>
 
 			<div class="form-actions">

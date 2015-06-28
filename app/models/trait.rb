@@ -46,10 +46,10 @@ class Trait < ActiveRecord::Base
   # non-null so that these tests can be simplified.
   def mean_in_range
     return if mean.blank? || variable.blank? # validates_presence_of should handle this error
-    if !variable.min.nil? and mean < variable.min.to_f
+    if variable.min != "-Infinity" and mean < variable.min.to_f
       errors.add(:mean, "The value of mean for the #{variable.name} trait must be at least #{variable.min}.")
     end
-    if !variable.max.nil? and mean > variable.max.to_f
+    if variable.max != "Infinity" and mean > variable.max.to_f
       errors.add(:mean, "The value of mean for the #{variable.name} trait must be at most #{variable.max}.")
     end
   end

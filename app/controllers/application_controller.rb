@@ -14,6 +14,8 @@ class ApplicationController < ActionController::Base
       flash[:error] = 'There are still traits that refer to this site.'
     when /fk_sites_yields_1/
       flash[:error] = 'There are still yields that refer to this site.'
+    when /fk_inputs_sites_1/
+      flash[:error] = 'There are still inputs that refer to this site.'
 
       # TO DO: Add to this list of 'when' clauses.
 

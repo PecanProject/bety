@@ -3,6 +3,8 @@ require 'will_paginate/array'
 class TreatmentsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
 
+  helper_method :sort_column, :sort_direction
+
   require 'csv'
 
   def autocomplete
@@ -146,14 +148,14 @@ class TreatmentsController < ApplicationController
       search_term_matcher = "%#{params[:treatment]}%"
 
       if !session["citation"].nil?
-  
+
         # If they have selected a citation we want to find all the sites
         # associated with it, then find all the citations associated with
         # those sites, and finally find all the treatments associated with
         # those citations and list them.
   
         tts = []
-        @treatments = Citation.find(session["citation"]).treatments
+        @treatments = Citation.find(session["citation"]).treatments.sorted_order("#{sort_column('citations', 'name')} #{sort_direction}")
         treatment_ids = @treatments.collect {|x| x.id}
 
 =begin # commenting out implementation of "Include all treatments in search?" checkbox
@@ -181,6 +183,7 @@ class TreatmentsController < ApplicationController
 =begin # commenting out implementation of "Include all treatments in search?" checkbox
         end
 =end
+        # TO DO: @other_treatments in this branch always seems to be empty; fix.
         @other_treatments = tts.paginate :page => params[:page]
         
       else
@@ -189,7 +192,7 @@ class TreatmentsController < ApplicationController
         else
           conditions = []
         end
-        @other_treatments = Treatment.paginate :page => params[:page], :conditions => conditions
+        @other_treatments = Treatment.sorted_order("#{sort_column('citations', 'name')} #{sort_direction}").paginate :page => params[:page], :conditions => conditions
       end
     else
       conditions = {}
