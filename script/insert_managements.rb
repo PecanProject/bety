@@ -17,97 +17,7 @@ INSERT INTO managements_treatments (treatment_id, management_id)
                             VALUES (      %i,       LASTVAL()  );
 SQL
 
-
-
-def get_citation_from_row(row_as_hash)
-
-  citations = Citation.where({ author: row_as_hash["citation_author"], year: row_as_hash["citation_year"], title: row_as_hash["citation_title"] })
-
-  if citations.size == 0
-    puts sprintf("No citation with author %s, year %s, and title %s was found.", row_as_hash["citation_author"], row_as_hash["citation_year"], row_as_hash["citation_title"])
-    raise "Citation not found"
-  elsif citations.size > 1
-    puts sprintf("Multiple citations with author %s, year %s, and title %s were found.  Quitting.", row_as_hash["citation_author"], row_as_hash["citation_year"], row_as_hash["citation_title"])
-    exit
-  else
-    c = citations[0]
-  end
-
-  puts c
-
-  return c
-
-end
-
-
-def get_treatment_for_citation_and_row(citation, row_as_hash)
-
-  treatments = citation.treatments.find_all_by_name(row_as_hash["treatment_name"])
-
-
-  if treatments.size == 0
-    puts sprintf("No treatment with name %s was found.", row_as_hash["treatment_name"])
-    raise "Treatment not found"
-  elsif treatments.size > 1
-    puts sprintf("Multiple treatments with name %s were found.", row_as_hash["treatment_name"])
-    exit
-  else
-    t = treatments[0]
-  end
-
-  puts t
-
-  return t
-
-end
-
-def csvrow_to_input_statements(row_as_hash)
-
-  c = get_citation_from_row(row_as_hash)
-
-  t = get_treatment_for_citation_and_row(c, row_as_hash)
-
-  statement = "START TRANSACTION;\n"
-
-  date = row_as_hash["date"].nil? ? "DEFAULT" : "'#{row_as_hash["date"]}'"
-  dateloc = row_as_hash["dateloc"].nil? ? "DEFAULT" : row_as_hash["dateloc"]
-  mgmttype = "'#{row_as_hash["mgmttype"]}'"
-  level = row_as_hash["level"].nil? ? "DEFAULT" : row_as_hash["level"]
-  units = row_as_hash["units"].nil? ? "DEFAULT" : "'#{row_as_hash["units"]}'"
-  notes = row_as_hash["notes"].nil? ? "DEFAULT" : "'#{row_as_hash["notes"]}'"
-
-  statement += sprintf(MANAGEMENT_INSERT_TEMPLATE,
-                       c.id,
-                       date,
-                       dateloc,
-                       mgmttype,
-                       level,
-                       units,
-                       notes,
-                       @user_id)
-  statement += sprintf(MANAGEMENTS_TREATMENTS_INSERT_TEMPLATE, t.id)
-
-  statement += "COMMIT;\n"
-
-end
-
-
-# Parse command line
-
-require 'trollop'
-opts = Trollop::options do
-  #version "..."
-  banner <<-EOS
-
-Usage:
-       insert_managements [options] <CSV input file>
-where [options] are:
-EOS
-  opt :login, "The Rails login for the user running the script (required)", type: String, short: "-u"
-  opt :output, "Output file", type: String, default: "new_managements.sql", short: "-o"
-  opt :environment, "Rails environment to run in", type: String, default: "development", short: "-e"
-
-  banner <<-EOS
+USAGE_DETAILS = <<-EOS
 
 DESCRIPTION
 
@@ -223,7 +133,135 @@ should match the name in your database.yml file.)
 5. Continue as in step 4 under option B.
  
 EOS
+
+
+
+# helper methods
+
+def get_citation_from_row(row_as_hash)
+
+  citations = Citation.where({ author: row_as_hash["citation_author"], year: row_as_hash["citation_year"], title: row_as_hash["citation_title"] })
+
+  if citations.size == 0
+    puts sprintf("No citation with author %s, year %s, and title %s was found.", row_as_hash["citation_author"], row_as_hash["citation_year"], row_as_hash["citation_title"])
+    raise "Citation not found"
+  elsif citations.size > 1
+    puts sprintf("Multiple citations with author %s, year %s, and title %s were found.  Quitting.", row_as_hash["citation_author"], row_as_hash["citation_year"], row_as_hash["citation_title"])
+    exit
+  else
+    c = citations[0]
+  end
+
+  puts c
+
+  return c
+
 end
+
+
+def get_treatment_for_citation_and_row(citation, row_as_hash)
+
+  treatments = citation.treatments.find_all_by_name(row_as_hash["treatment_name"])
+
+
+  if treatments.size == 0
+    puts sprintf("No treatment with name %s was found.", row_as_hash["treatment_name"])
+    raise "Treatment not found"
+  elsif treatments.size > 1
+    puts sprintf("Multiple treatments with name %s were found.", row_as_hash["treatment_name"])
+    exit
+  else
+    t = treatments[0]
+  end
+
+  puts t
+
+  return t
+
+end
+
+def csvrow_to_input_statements(row_as_hash)
+
+  c = get_citation_from_row(row_as_hash)
+
+  t = get_treatment_for_citation_and_row(c, row_as_hash)
+
+  statement = "START TRANSACTION;\n"
+
+  date = row_as_hash["date"].nil? ? "DEFAULT" : "'#{row_as_hash["date"]}'"
+  dateloc = row_as_hash["dateloc"].nil? ? "DEFAULT" : row_as_hash["dateloc"]
+  mgmttype = "'#{row_as_hash["mgmttype"]}'"
+  level = row_as_hash["level"].nil? ? "DEFAULT" : row_as_hash["level"]
+  units = row_as_hash["units"].nil? ? "DEFAULT" : "'#{row_as_hash["units"]}'"
+  notes = row_as_hash["notes"].nil? ? "DEFAULT" : "'#{row_as_hash["notes"]}'"
+
+  statement += sprintf(MANAGEMENT_INSERT_TEMPLATE,
+                       c.id,
+                       date,
+                       dateloc,
+                       mgmttype,
+                       level,
+                       units,
+                       notes,
+                       @user_id)
+  statement += sprintf(MANAGEMENTS_TREATMENTS_INSERT_TEMPLATE, t.id)
+
+  statement += "COMMIT;\n"
+
+end
+
+
+
+# main
+
+# Parse command line
+
+require 'trollop'
+opts = Trollop::options do
+  #version "..."
+  banner <<-EOS
+=====================
+insert_managements.rb
+=====================
+
+Usage:
+       insert_managements [options] <CSV input file>
+where [options] are:
+EOS
+  opt :login, "The Rails login for the user running the script (required)", type: String, short: "-u"
+  opt :output, "Output file", type: String, default: "new_managements.sql", short: "-o"
+  opt :environment, "Rails environment to run in", type: String, default: "development", short: "-e"
+  opt :man, "Show complete usage instuctions"
+end
+
+    
+if opts[:man]
+
+  # modify some Trollop methods:
+  module Trollop
+    def self.parser
+      @last_parser
+    end
+    
+    # allow Trollop::educate to take a stream parameter
+    def self.educate(stream)
+      @last_parser.educate(stream)
+    end
+  end
+
+  require 'stringio'
+
+  # add details to banner:
+  Trollop.parser.banner USAGE_DETAILS
+
+  # put the whole banner into a string buffer
+  sio = StringIO.new                                                                      
+  Trollop.educate sio
+
+  # use the os's "less" command to display the usage manual
+  exec "echo \"#{sio.string}\" | less"
+end
+
 
 Trollop::die :login, "must be specified" if opts[:login].nil?
 Trollop::die "You must specify an input file" if ARGV.empty?
