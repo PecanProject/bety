@@ -9,12 +9,12 @@ RECOGNIZED_HEADINGS = REQUIRED_HEADINGS + OPTIONAL_HEADINGS
 
 MANAGEMENT_INSERT_TEMPLATE = <<SQL
 INSERT INTO managements (citation_id, date, dateloc, mgmttype, level, units, notes, user_id)
-                 VALUES (     %i,      %s,    %s,      %s,       %s,    %s,    %s,     %i  );
+                 VALUES ( %i, %s, %s, %s, %s, %s, %s, %i );
 SQL
 
 MANAGEMENTS_TREATMENTS_INSERT_TEMPLATE = <<SQL
 INSERT INTO managements_treatments (treatment_id, management_id)
-                            VALUES (      %i,       LASTVAL()  );
+                            VALUES ( %i, LASTVAL() );
 SQL
 
 USAGE_DETAILS = <<-EOS
