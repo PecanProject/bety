@@ -22,33 +22,35 @@ USAGE_DETAILS = <<-EOS
 DESCRIPTION
 
 This script takes a CSV file describing managments to be added to the database
-as input and outputs a file containing SQL statements to do the required insert
-statements.
+as input and outputs a file containing SQL statements to do the required
+insertions.
 
 CSV FILE FORMAT
 
 The CSV file must contain the following column headings:
+
 \t#{REQUIRED_HEADINGS.join("\n\t")}
 
 Each row must have non-empty values in each of these columns.  Moreover, the
 citation columns must match exactly one row in the citations row of the database
-and the treatment name must match exactly one of the rows connected with the
-matched citation.
+and the treatment name must match exactly one of the treatment rows associated
+with the matched citation.
 
 Additionally, the CSV file MAY contain the following column headings:
+
 \t#{OPTIONAL_HEADINGS.join("\n\t")}
 
 Each optional column heading corresponds to a column in the database managements
 table.  Values in these columns may be left blank in any given row.  For these
 columns, if a column value is left blank, or if the column is not included in
-the table, the resulting column value in the database will be the SQL-defined
+the CSV file, the resulting column value in the database will be the SQL-defined
 default value for that column.
 
 DATABASE SPECIFICATION
 
 The database used by the script is determined by the environment specified by
-the "--environment" option (or "development" if not specified) and the contents
-of the configuration file config/database.yml.  (Run "rake dbconf" to view the
+the '--environment' option (or 'development' if not specified) and the contents
+of the configuration file 'config/database.yml'.  (Run 'rake dbconf' to view the
 contents of this file on the command line.)
 
 USING THE SCRIPT TO UPDATE THE PRODUCTION DATABASE
@@ -66,7 +68,7 @@ In detail:
 2. Log in to the production machine and cd to the root directory of production
    deployment of the BETYdb Rails app.
 
-3. Run the script using the "--environment=production" option and with "--login"
+3. Run the script using the '--environment=production' option and with '--login'
    set to your own BETYdb Rails login for the production deployment.  The
    command-line argument specifying the input CSV file path should match the
    location you uploaded it to.
@@ -75,6 +77,11 @@ In detail:
    command
 
        psql <production database name>  <  <output file name>
+
+(If your machine login doesn't match a PostgreSQL user name that has insert
+permissions on the production database, you will have to use the '-U' option to
+specify a user who does have such permission.)
+
 
 Option B: Run the script on your local machine using an up-to-date copy of the
 BETYdb database.
@@ -87,12 +94,14 @@ To do this:
    ensure that at least the citations and the treatments tables are up-to-date
    with the production copy of the BETYdb database.  (If you have different
    databases specified for your development and your production environments, be
-   sure that the enviroment you specify in the script options.)
+   sure that the enviroment you specify with the '--environment' option points
+   to the right database.)
 
 3. Run this script.
 
 4. Upload the output file to the production server and apply it to the
    production database using the psql command given above.
+
 
 Option C: Run the script on your local machine using a Rails environment
 connected to the production database.
@@ -114,7 +123,7 @@ ebi:
   host: localhost
 
 Most of these values can be copied from the production copy config/database.yml
-if you have access to it.  The port and host entries are "new".
+if you have access to it.  The port and host entries are 'new'.
 
 3. Set up an ssh tunnel to the production server using the command
 
@@ -126,8 +135,8 @@ port) on the production machine.  (The choice of 8000 for port number is
 somewhat arbitrary, but whatever value you use should match the value you
 specified for the port number in the database.yml file.)
 
-4. Run this script with the environment option "--environment=ebi".  (Again, the
-name "ebi" for the environment is somewhat arbitrary, the the option value
+4. Run this script with the environment option '--environment=ebi'.  (Again, the
+name 'ebi' for the environment is somewhat arbitrary, but the option value
 should match the name in your database.yml file.)
 
 5. Continue as in step 4 under option B.
