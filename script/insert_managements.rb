@@ -9,7 +9,7 @@ RECOGNIZED_HEADINGS = REQUIRED_HEADINGS + OPTIONAL_HEADINGS
 
 MANAGEMENT_INSERT_TEMPLATE = <<SQL
 INSERT INTO managements (citation_id, date, dateloc, mgmttype, level, units, notes, user_id)
-                 VALUES ( %i, %s, %s, %s, %s, %s, %s, %i );
+                 VALUES ( %i, %s, %s, %s, %s, %s, %s, (SELECT id FROM users WHERE login = %s) );
 SQL
 
 MANAGEMENTS_TREATMENTS_INSERT_TEMPLATE = <<SQL
@@ -203,6 +203,7 @@ def csvrow_to_input_statements(row_as_hash)
   level = row_as_hash["level"].nil? ? "DEFAULT" : row_as_hash["level"]
   units = row_as_hash["units"].nil? ? "DEFAULT" : "'#{row_as_hash["units"]}'"
   notes = row_as_hash["notes"].nil? ? "DEFAULT" : "'#{row_as_hash["notes"]}'"
+  login = "'#{@user_login}'"
 
   statement += sprintf(MANAGEMENT_INSERT_TEMPLATE,
                        c.id,
@@ -212,7 +213,7 @@ def csvrow_to_input_statements(row_as_hash)
                        level,
                        units,
                        notes,
-                       @user_id)
+                       login)
   statement += sprintf(MANAGEMENTS_TREATMENTS_INSERT_TEMPLATE, t.id)
 
   statement += "COMMIT;\n"
@@ -223,7 +224,7 @@ end
 
 # main
 
-# Parse command line
+## Parse command line
 
 require 'trollop'
 opts = Trollop::options do
@@ -273,12 +274,13 @@ end
 
 
 Trollop::die :login, "must be specified" if opts[:login].nil?
+@user_login = User.find_by_login(opts[:login])
 Trollop::die "You must specify an input file" if ARGV.empty?
 Trollop::die "Too many command line arguments" if ARGV.size > 1
 csvpath = ARGV[0]
 Trollop::die "File \"#{csvpath}\" does not exist" unless File.exist?(csvpath)
 
-# Load Rails
+## Load Rails
 
 APP_PATH = File.expand_path('../../config/application',  __FILE__)
 require File.expand_path('../../config/boot',  __FILE__)
@@ -289,16 +291,8 @@ Rails.env = opts[:environment]
 Rails.application.require_environment!
 
 
-# More options validation
 
-user = User.find_by_login(opts[:login])
-Trollop::die :login, "must be a valid Rails login for the #{Rails.env} environment" if user.nil?
-@user_id = user.id
-
-
-
-
-
+## Read and process the input file
 
 csv = CSV.open(csvpath, { headers: true })
 
