@@ -127,7 +127,8 @@ class CultivarsController < ApplicationController
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { @species = [@cultivar.specie] if !@cultivar.specie.nil?
+                      render :action => "edit" }
         format.xml  { render :xml => @cultivar.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @cultivar.errors, :status => :unprocessable_entity }
         format.json  { render :json => @cultivar.errors, :status => :unprocessable_entity }
