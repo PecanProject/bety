@@ -226,7 +226,15 @@ end
 
 ## Parse command line
 
-require 'trollop'
+begin
+  require 'trollop'
+rescue LoadError => e
+  puts 'Be sure you have run "bundle install" to install the "trollop" gem.'
+  puts 'You may have to prefix this script invocation with "bundle exec"'
+  puts
+  raise
+end
+
 opts = Trollop::options do
   #version "..."
   banner <<-EOS
@@ -244,7 +252,7 @@ EOS
   opt :man, "Show complete usage instuctions"
 end
 
-    
+
 if opts[:man]
 
   # modify some Trollop methods:
@@ -252,7 +260,7 @@ if opts[:man]
     def self.parser
       @last_parser
     end
-    
+
     # allow Trollop::educate to take a stream parameter
     def self.educate(stream)
       @last_parser.educate(stream)
@@ -265,7 +273,7 @@ if opts[:man]
   Trollop.parser.banner USAGE_DETAILS
 
   # put the whole banner into a string buffer
-  sio = StringIO.new                                                                      
+  sio = StringIO.new
   Trollop.educate sio
 
   # use the os's "less" command to display the usage manual
