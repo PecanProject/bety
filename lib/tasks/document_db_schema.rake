@@ -53,6 +53,10 @@ MESSAGE
       @rails_env = Rails.env
     end
 
+    if @java.nil?
+      @java = "java"
+    end
+
   end # task :config
 
 end # namespace :bety
