@@ -20,7 +20,7 @@ namespace :bety do
 
     if @remove_root_dir_files
       FileUtils.rm([ "#{@outdir}/deletionOrder.txt", "#{@outdir}/insertionOrder.txt",
-                     "#{@outdir}/bety.public.xml", "#{@outdir}/schemaSpy.css" ]) 
+                     "#{@outdir}/#{database}.public.xml", "#{@outdir}/schemaSpy.css" ]) 
     end 
 
   end
