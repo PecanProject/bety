@@ -8,7 +8,7 @@ namespace :bety do
     username = config["username"]
     password = config["password"]
 
-    sh "java -jar #{@schemaSpy} "                 +
+    sh "#{@java} -jar #{@schemaSpy} "             +
       "-t pgsql "                                 +
       "-host #{host || "localhost"} "             +
       "-dp #{@driver} "                           +

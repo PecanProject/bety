@@ -6,6 +6,17 @@
 
 # Typical configuration for ordinary usage:
 
+# @java should be set to the command for invoking java.  If needed, this could
+# be prefixed by environment variable settings, e.g. @java =
+# "CLASSPATH=~/java_class_files java" or by calls to "module" in order to set up
+# the environment.  On ebi-forecast we use
+#
+#     @java = "module load java/1.8.0_45; module load graphviz/2.2.1; java"
+#
+# so that the correct versions of java and graphviz are used.
+#
+@java = "java"
+
 # Download schemaSpy.jar from
 # https://www.dropbox.com/s/j50hk7cbqw7680u/schemaSpy.jar?dl=0 and place the
 # downloaded file in some accessible location.  (The @schemaSpy variable should
@@ -50,13 +61,13 @@
 # Download the Schema Spy Jar file from
 # http://sourceforge.net/projects/schemaspy/files/schemaspy/
 #
-#    @schemaSpy = "~/Applications/SchemaSpy/schemaSpy_5.0.0.jar"
+# @schemaSpy = "~/Applications/SchemaSpy/schemaSpy_5.0.0.jar"
  
 # The same driver as above may be used.  Since this version of Schema Spy is
 # compatible with Java 5 and later, you could use jdbc3 or jdbc4 if you are
 # using Java 5 or Java 6:
 #
-@driver = "~/Applications/SchemaSpy/postgresql-9.3-1103.jdbc3.jar"
+# @driver = "~/Applications/SchemaSpy/postgresql-9.3-1103.jdbc3.jar"
 
 # Use something other that the Rails root directory if you are not using the
 # customized version of Schema Spy.  Otherwise the generated files will pollute
