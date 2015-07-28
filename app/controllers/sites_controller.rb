@@ -61,6 +61,42 @@ class SitesController < ApplicationController
     end
   end
 
+  # general autocompletion
+  def autocomplete
+    search_term = params[:term]
+    # match against any portion of the sitename, city, state, or country
+    match_string = '%' + search_term + '%'
+
+    filtered_sites = Site.where("LOWER(sitename) LIKE LOWER(:match_string) OR LOWER(city) LIKE LOWER(:match_string) OR LOWER(state) LIKE LOWER(:match_string) OR LOWER(country) LIKE LOWER(:match_string)",
+                                 match_string: match_string)
+
+    if filtered_sites.size > 0 || search_term.size > 1
+      sites = filtered_sites
+      # else if there are no matches and the user has only typed one letter, just return everything
+    end
+
+    sites = sites.to_a.map do |item|
+      {
+        # show city, state, and country information in site suggestions, but only show sitename after selection
+        label: "#{item.sitename.squish} (#{item.city.squish}, #{!(item.state.nil? || item.state.empty?) ? " #{item.state.squish}," : ""} #{item.country.squish})",
+        value: item.id
+      }
+    end
+
+
+    # don't show rows where name is null or empty
+    # TO-DO: eliminate these from the database and prevent them with a constraint
+    sites.delete_if { |item| item.nil? || item.empty? }
+
+    if sites.empty?
+      sites = [ { label: "No matches", value: "" }]
+    end
+
+    respond_to do |format|
+      format.json { render :json => sites }
+    end
+  end
+
   # autocompletion for bulk upload wizard
   def bu_autocomplete
     search_term = params[:term]

@@ -1,3 +1,8 @@
+<% content_for(:autocomplete_javascript) do %>
+  <!-- bulk_upload.js needs to know the root -->
+  <script type="text/javascript" charset="utf-8">var ROOT_URL = '<%= root_url %>';</script>
+  <%= javascript_include_tag 'lazy/autocomplete.js' %>
+<% end %>
 <div class="content">
   <div class="container">
     <div class="sixteen columns">
@@ -10,8 +15,11 @@
 
         <div class="row">
           <div class="sixteen columns alpha">
-            <%= f.label :site %>
-            <%= f.select :site_id, Site.order("id ASC").all.collect { |p| [ p.select_default, p.id ] }, :class => "input-full" %>
+          <%= f.label :site %>
+          <%= text_field_tag :search_sites, "",
+              placeholder: "Search sites by name, city, state, or country",
+              class: "input-full" %>
+          <%= f.hidden_field :site_id %>
           </div>
         </div>
         <div class="row">

@@ -56,7 +56,11 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id(.:format)))'
 
+  # route for autocompletion actions used by the bulk upload wizard:
   get ':controller/bu_autocomplete', action: 'bu_autocomplete'
+
+  # route for other autocompletion actions:
+  get ':controller/autocomplete', action: 'autocomplete'
 
   resources :yieldsviews, :only => [:show]
   resources :workflows
