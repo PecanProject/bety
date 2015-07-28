@@ -1,3 +1,8 @@
+<% content_for(:autocomplete_javascript) do %>
+  <!-- bulk_upload.js needs to know the root -->
+  <script type="text/javascript" charset="utf-8">var ROOT_URL = '<%= root_url %>';</script>
+  <%= javascript_include_tag 'lazy/bulk_upload.js' %>
+<% end %>
 <div class="content">
   <div class="container">
 	<div class="sixteen columns">

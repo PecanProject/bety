@@ -3,23 +3,23 @@ jQuery(function() {
 
     // to-do: options should be restricted by citation choosen
     jQuery('#autocomplete_site').autocomplete({
-        source: ROOT_URL + "/sites/autocomplete.json"
+        source: ROOT_URL + "/sites/bu_autocomplete.json"
     });
 
     jQuery('#autocomplete_species').autocomplete({
-        source: ROOT_URL + "/species/autocomplete.json",
+        source: ROOT_URL + "/species/bu_autocomplete.json",
 
         // update source for the cultivars fields: cultivar suggestions depend on what species was chosen
         change: function(event, ui) {
             jQuery('#autocomplete_cultivar').autocomplete("option", "source", ROOT_URL +
-                                                          "/cultivars/autocomplete.json?species=" +
+                                                          "/cultivars/bu_autocomplete.json?species=" +
                                                           encodeURIComponent(jQuery('#autocomplete_species').val()))
         }
     });
 
     // to-do: options should be restricted by citation choosen
     jQuery('#autocomplete_treatment').autocomplete({
-        source: ROOT_URL + "/treatments/autocomplete.json"
+        source: ROOT_URL + "/treatments/bu_autocomplete.json"
     });
 
 
@@ -29,7 +29,7 @@ jQuery(function() {
     }
     else {
         // We only get here in the case the species value was prepopulated at the time the page was loaded.
-        optionList = (ROOT_URL + "/cultivars/autocomplete.json?species=" +
+        optionList = (ROOT_URL + "/cultivars/bu_autocomplete.json?species=" +
                       encodeURIComponent(jQuery('#autocomplete_species').val()))
     }
     jQuery('#autocomplete_cultivar').autocomplete({
@@ -40,7 +40,7 @@ jQuery(function() {
 
     // for choose_global_citation page:
     jQuery('#autocomplete_citation').autocomplete({
-        source: ROOT_URL + "/citations/autocomplete.json"
+        source: ROOT_URL + "/citations/bu_autocomplete.json"
     });
 
     jQuery('#autocomplete_citation').on("autocompleteselect", function(e, ui) {

@@ -7,7 +7,8 @@ class SpeciesController < ApplicationController
 
   require 'csv'
 
-  def autocomplete
+  # autocompletion for bulk upload wizard
+  def bu_autocomplete
     # match against the initial portion of the scientificname only
     species = Specie.where("LOWER(scientificname) LIKE LOWER(?)", params[:term] + '%' ).to_a.map do |item|
        item.scientificname.squish

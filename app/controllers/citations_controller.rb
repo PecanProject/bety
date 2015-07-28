@@ -35,7 +35,8 @@ class CitationsController < ApplicationController
     end
   end
 
-  def autocomplete
+  # autocompletion for bulk upload wizard
+  def bu_autocomplete
     search_term = params[:term]
 
     # match against any portion of the author, year, title, or doi

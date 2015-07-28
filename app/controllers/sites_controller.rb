@@ -61,7 +61,8 @@ class SitesController < ApplicationController
     end
   end
 
-  def autocomplete
+  # autocompletion for bulk upload wizard
+  def bu_autocomplete
     search_term = params[:term]
 
     # filter site list by citation(s)

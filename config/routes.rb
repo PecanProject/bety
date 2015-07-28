@@ -56,7 +56,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id(.:format)))'
 
-  get ':controller/autocomplete', action: 'autocomplete'
+  get ':controller/bu_autocomplete', action: 'bu_autocomplete'
 
   resources :yieldsviews, :only => [:show]
   resources :workflows

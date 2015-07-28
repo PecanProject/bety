@@ -4,7 +4,8 @@ class CultivarsController < ApplicationController
 
   require 'csv'
 
-  def autocomplete
+  # autocompletion for bulk upload wizard
+  def bu_autocomplete
     search_term = params[:term]
 
     species_id = Specie.find_by_scientificname(params[:species])
