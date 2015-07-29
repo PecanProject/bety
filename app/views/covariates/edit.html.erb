@@ -1,3 +1,15 @@
+<% content_for(:autocomplete_javascript) do %>
+  <!-- autocomplete.js needs a `completion_fields` object describing the
+  autocompletion fields on the page and needs to know the Rails root -->
+  <script type="text/javascript" charset="utf-8">
+    var ROOT_URL = '<%= root_url %>';
+    var completion_fields = {
+      "search_variables": { controller: "variables",
+                        hidden_field_id: "covariate_variable_id" }
+    };
+  </script>
+  <%= javascript_include_tag 'lazy/autocomplete.js' %>
+<% end %>
 <div class="content">
   <div class="container">
     <div class="sixteen columns">
@@ -9,9 +21,7 @@
         <%= f.error_messages %>
 
         <p>
-          <%= f.label :variable_id %><br />
-          <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }, {:selected => @covariate.variable_id.to_i } %>
-
+          <%= autocompletion_field(f, "Variable", "variables", :variable_id, "#{f.object.variable.autocomplete_label} - Search variables by name") %> 
         </p>
 
         <%= render :partial => "traits/trait_search" %>
@@ -38,18 +48,21 @@
           <%= f.submit 'Update' %>
         </p>
 
-      <% end %>
-
-      <div class="form-actions">
-        <div class="button-group">
-          <%= link_to( covariates_path ) do %>
-            <button class="button"><i class="icon-arrow-left"></i> All Records</button>
-          <% end %>
-          <%= link_to( @covariate ) do %>
-            <button type="submit" class="button button-primary">Show</button>
-          <% end %>
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( covariates_path ) do %>
+              <button class="button"><i class="icon-arrow-left"></i> All Records</button>
+            <% end %>
+            <%= link_to( @covariate ) do %>
+              <button class="button">Show</button>
+            <% end %>
+          </div>
+          <div class="button-group pull-right">
+            <%= f.submit 'Update', :class => "button button-primary" %>
+          </div>
         </div>
-      </div>
+
+      <% end %>
     </div>
   </div>
 </div>

@@ -4,6 +4,23 @@ class VariablesController < ApplicationController
 
   require 'csv'
 
+  # general autocompletion
+  def autocomplete
+    variables = search_model(Variable, %w( name units ), params[:term])
+
+    variables = variables.to_a.map do |item|
+      {
+        # show variable name and site name in suggestions
+        label: item.autocomplete_label,
+        value: item.id
+      }
+    end
+
+    respond_to do |format|
+      format.json { render :json => variables }
+    end
+  end
+
   # GET /variables
   # GET /variables.xml
   def index
