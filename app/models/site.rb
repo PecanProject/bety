@@ -233,7 +233,9 @@ CONDITION
     "#{id}: #{self}"
   end
 
-
+  def autocomplete_label
+    "#{sitename.squish} (#{city.squish}, #{!(state.nil? || state.empty?) ? " #{state.squish}," : ""} #{country.squish})"
+  end
 
   private
 

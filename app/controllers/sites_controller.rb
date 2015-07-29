@@ -68,7 +68,7 @@ class SitesController < ApplicationController
     sites = sites.to_a.map do |item|
       {
         # show city, state, and country information in site suggestions
-        label: "#{item.sitename.squish} (#{item.city.squish}, #{!(item.state.nil? || item.state.empty?) ? " #{item.state.squish}," : ""} #{item.country.squish})",
+        label: item.autocomplete_label,
         value: item.id
       }
     end
