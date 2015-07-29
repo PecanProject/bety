@@ -1,6 +1,15 @@
 <% content_for(:autocomplete_javascript) do %>
-  <!-- bulk_upload.js needs to know the root -->
-  <script type="text/javascript" charset="utf-8">var ROOT_URL = '<%= root_url %>';</script>
+  <!-- autocomplete.js needs a `completion_fields` object describing the
+  autocompletion fields on the page and needs to know the Rails root -->
+  <script type="text/javascript" charset="utf-8">
+    var ROOT_URL = '<%= root_url %>';
+    var completion_fields = {
+      "search_sites": { controller: "sites",
+                        hidden_field_id: "input_site_id" },
+      "search_inputs": { controller: "inputs",
+                         hidden_field_id: "input_parent_id" }
+    };
+  </script>
   <%= javascript_include_tag 'lazy/autocomplete.js' %>
 <% end %>
 <div class="content">
@@ -15,20 +24,12 @@
 
         <div class="row">
           <div class="sixteen columns alpha">
-          <%= f.label :site %>
-          <%= text_field_tag :search_sites, "",
-              placeholder: "Search sites by name, city, state, or country",
-              class: "input-full" %>
-          <%= f.hidden_field :site_id %>
+            <%= autocompletion_field(f, "Site", "sites", :site_id, "Search sites by name, city, state, or country") %>
           </div>
         </div>
         <div class="row">
           <div class="sixteen columns alpha">
-            <%= f.label :parent %>
-            <%= text_field_tag :search_inputs, "",
-                placeholder: "Search inputs by name or site",
-                class: "input-full" %>
-            <%= f.hidden_field :parent_id %>
+            <%= autocompletion_field(f,"Parent", "inputs", :parent_id, "Search inputs by name or site") %>
           </div>
         </div>
         <div class="row">

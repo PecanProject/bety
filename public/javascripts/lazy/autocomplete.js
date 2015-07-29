@@ -1,11 +1,3 @@
-
-var completion_fields = {
-    "search_sites": { controller: "sites",
-                      hidden_field_id: "input_site_id" },
-    "search_inputs": { controller: "inputs",
-                       hidden_field_id: "input_parent_id" }
-};
-
 // We use this creation function to create the select function so that
 // the value of "autocompletion_widget_id" used in the function is the
 // value at the time the function was defined rather than the value at
