@@ -174,4 +174,27 @@ class ApplicationController < ActionController::Base
     redirect_to :back
   end
 
+  # Given a model class, a list of columns (attributes) of the model, and a
+  # search term, search the database table corresponding to the model and return
+  # objects for all rows that contain the text of the search term in any of the
+  # text of any of the given columns.
+  def search_model(model_class, column_list, search_term)
+    clauses = column_list.collect {|column_name| "LOWER(#{column_name}) LIKE LOWER(:match_string)"}
+    where_clause = clauses.join(" OR ")
+    result_set = model_class.where(where_clause, match_string: '%' + search_term + '%')
+
+    if result_set.size == 0
+      # there are no matches
+      if search_term.size <= 1
+        # If the user has only typed one letter, just return everything so the
+        # user can at least see some possible options.
+        result_set = model_class.scoped
+      else
+        # Otherwise, let the user know there were no matches.
+        result_set = [ { label: "No matches", value: "" }]
+      end
+    end
+    return result_set
+  end
+
 end

@@ -50,7 +50,7 @@ class SitesController < ApplicationController
     end
   end
 
-  def map 
+  def map
     @site = Site.find(params[:id])
     respond_to do |format|
       format.html # map.html.erb
@@ -63,33 +63,14 @@ class SitesController < ApplicationController
 
   # general autocompletion
   def autocomplete
-    search_term = params[:term]
-    # match against any portion of the sitename, city, state, or country
-    match_string = '%' + search_term + '%'
-
-    filtered_sites = Site.where("LOWER(sitename) LIKE LOWER(:match_string) OR LOWER(city) LIKE LOWER(:match_string) OR LOWER(state) LIKE LOWER(:match_string) OR LOWER(country) LIKE LOWER(:match_string)",
-                                 match_string: match_string)
-
-    if filtered_sites.size > 0 || search_term.size > 1
-      sites = filtered_sites
-      # else if there are no matches and the user has only typed one letter, just return everything
-    end
+    sites = search_model(Site, %w( sitename city state country ), params[:term])
 
     sites = sites.to_a.map do |item|
       {
-        # show city, state, and country information in site suggestions, but only show sitename after selection
+        # show city, state, and country information in site suggestions
         label: "#{item.sitename.squish} (#{item.city.squish}, #{!(item.state.nil? || item.state.empty?) ? " #{item.state.squish}," : ""} #{item.country.squish})",
         value: item.id
       }
-    end
-
-
-    # don't show rows where name is null or empty
-    # TO-DO: eliminate these from the database and prevent them with a constraint
-    sites.delete_if { |item| item.nil? || item.empty? }
-
-    if sites.empty?
-      sites = [ { label: "No matches", value: "" }]
     end
 
     respond_to do |format|
@@ -134,7 +115,7 @@ class SitesController < ApplicationController
 
     # don't show rows where name is null or empty
     # TO-DO: eliminate these from the database and prevent them with a constraint
-    sites.delete_if { |item| item.nil? || item.empty? }
+    sites.delete_if { |item| item[:value].nil? || item[:value].empty? }
 
     if sites.empty?
       sites = [ { label: "No matches", value: "" }]
@@ -153,7 +134,7 @@ class SitesController < ApplicationController
       @citation = Citation.find_by_id(session["citation"])
       # We will list those already linked above those that are not, so remove them from the list.
       @sites = Site.minus_already_linked(@citation).sorted_order("#{sort_column('sites','sitename')} #{sort_direction}").search(params[:search]).paginate(
-        :page => params[:page], 
+        :page => params[:page],
         :per_page => params[:DataTables_Table_0_length]
       )
       log_searches(Site.minus_already_linked(@citation).search(params[:search]).to_sql)

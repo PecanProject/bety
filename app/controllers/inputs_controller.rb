@@ -1,7 +1,24 @@
 class InputsController < ApplicationController
 
-  before_filter :login_required 
+  before_filter :login_required
   helper_method :sort_direction, :sort_column
+
+  # general autocompletion
+  def autocomplete
+    inputs = search_model(Input.joins(:site), %w( name sitename), params[:term])
+
+    inputs = inputs.to_a.map do |item|
+      {
+        # show input name and site name in suggestions
+        label: "#{item.name.squish} (#{item.site.sitename.squish})",
+        value: item.id
+      }
+    end
+
+    respond_to do |format|
+      format.json { render :json => inputs }
+    end
+  end
 
   def edit_inputs_variables
     @input = Input.find(params[:id])
@@ -31,11 +48,11 @@ class InputsController < ApplicationController
     # We now ALWAYS use wildcards (unless the search is blank).
     wildcards = true
 
-    if !@search.blank? 
-      if wildcards 
+    if !@search.blank?
+      if wildcards
         @search = "%#{@search}%"
       end
-      search_cond = [["description", "name"].collect {|x| "variables.#{x}" }.join(" LIKE :search OR ") + " LIKE :search", {:search => @search}] 
+      search_cond = [["description", "name"].collect {|x| "variables.#{x}" }.join(" LIKE :search OR ") + " LIKE :search", {:search => @search}]
       search = "Showing records for \"#{@search}\""
     else
       @search = ""
@@ -86,11 +103,11 @@ class InputsController < ApplicationController
     # We now ALWAYS use wildcards (unless the search is blank).
     wildcards = true
 
-    if !@search.blank? 
-      if wildcards 
+    if !@search.blank?
+      if wildcards
         @search = "%#{@search}%"
       end
-      search_cond = [["file_path", "file_name"].collect {|x| "dbfiles.#{x}" }.join(" LIKE :search OR ") + " LIKE :search", {:search => @search}] 
+      search_cond = [["file_path", "file_name"].collect {|x| "dbfiles.#{x}" }.join(" LIKE :search OR ") + " LIKE :search", {:search => @search}]
       search = "Showing records for \"#{@search}\""
     else
       @search = ""
@@ -119,7 +136,7 @@ class InputsController < ApplicationController
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
       @inputs = Input.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate(
-        :page => params[:page], 
+        :page => params[:page],
         :per_page => params[:DataTables_Table_0_length]
       )
       @dbfiles = DBFile.all
@@ -175,7 +192,7 @@ class InputsController < ApplicationController
 
     @input = Input.new(params[:input])
     @input.user_id = current_user.id
-    
+
     respond_to do |format|
       #if @input.save and input_file.save
       if @input.save
