@@ -97,7 +97,7 @@ class SitesController < ApplicationController
 
     # don't show rows where name is null or empty
     # TO-DO: eliminate these from the database and prevent them with a constraint
-    sites.delete_if { |item| item.nil? || item.empty? }
+    sites.delete_if { |item| item[:value].nil? || item[:value].empty? }
 
     if sites.empty?
       sites = [ { label: "No matches", value: "" }]
