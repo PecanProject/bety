@@ -20,7 +20,7 @@ module ApplicationHelper
         ": <span class='red_back'>treatment_id: #{ty.treatment.id}, not in associated citation associated treatments!</span>"
       end
     end
-        
+
   end
 
   $dateloc_drop = {  "4   time of day, e.g. morning, afternoon" => "4.0" ,
@@ -70,4 +70,38 @@ end
 # Call this to make a link inside a form that submits the form.
 def link_to_submit(*args, &block)
   link_to_function (block_given? ? capture(&block) : args[0]), "jQuery(this).closest('form').submit()", args.extract_options!
+end
+
+# Given a FormBuilder object `f`, a string `label`, a SQL table name
+# `table_name`, a symbol `id`, and a string `placeholder`, make an
+# autocompletion field with id "search_#{table_name}", an associated label with
+# text `label`, and an associated hidden field that will use a parameter name
+# derived from `id`.  The text of `placeholder` will appear in the
+# autocompletion field, and the field will have class `autocompletion_class` or
+# "input-full" if not given.
+#
+# In order that this be recognized as an autocompletion field, the template for
+# the page using this helper should include a "content_for" block of the form
+#
+# <% content_for(:autocomplete_javascript) do %>
+#     <script type="text/javascript" charset="utf-8">
+#         var ROOT_URL = '<%= root_url %>';
+#         var completion_fields = {
+#             <id of autocompletion field>: {
+#                 controller:
+#                     <controller portion of URL for the controller whose autocomplete action is called>,
+#                 hidden_field_id:
+#                     <id of associated hidden field> },
+#             ...
+#         }
+#   </script>
+#   <%= javascript_include_tag 'lazy/autocomplete.js' %>
+# <% end %>
+def autocompletion_field(f, label, table_name, id, placeholder, autocompletion_class = "input-full")
+  autocompletion_field_id = "search_".concat(table_name).to_sym
+  (label_tag autocompletion_field_id, label).
+    concat(text_field_tag(autocompletion_field_id, "",
+                          placeholder: placeholder,
+                          class: autocompletion_class)).
+    concat(f.hidden_field id)
 end
