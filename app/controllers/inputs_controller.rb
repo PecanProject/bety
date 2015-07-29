@@ -10,7 +10,7 @@ class InputsController < ApplicationController
     inputs = inputs.to_a.map do |item|
       {
         # show input name and site name in suggestions
-        label: "#{item.name.squish} (#{item.site.sitename.squish})",
+        label: item.autocomplete_label,
         value: item.id
       }
     end

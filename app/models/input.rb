@@ -48,6 +48,10 @@ class Input < ActiveRecord::Base
     "#{id}: #{self}"
   end
 
+  def autocomplete_label
+    "#{name.squish} (#{site.sitename.squish})"
+  end
+
   #Columns we search when referenced from another model
   #Fields present in 'select_default'
   def self.search_columns
