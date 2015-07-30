@@ -17,6 +17,8 @@ class CitationsController < ApplicationController
       }
     end
 
+    citations = citations.unshift({ label: "[no value]", value: nil })
+
     respond_to do |format|
       format.json { render :json => citations }
     end
