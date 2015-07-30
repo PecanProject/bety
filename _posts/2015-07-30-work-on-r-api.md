@@ -1,7 +1,9 @@
 ---
-layout: page
-title: "Ropensci Traits API"
+layout: post
+title: "rOpensci Traits API"
 description: "List of funded tasks for BETYdb development"
+category: jobs
+tags: [api,r]
 ---
 {% include JB/setup %}
 
@@ -29,9 +31,3 @@ We are looking for help writing an R based interface to the BETYdb API.
 * [BETYdb source code](https://github.com/pecanproject/bety]
 * [vignette from traits package demonstrating current functionality](https://github.com/ropensci/traits/blob/master/vignettes/betydb.Rmd)
 
-
-## Miscellaneous Jobs: Open Issues, Features and Bugs:
-
-These mostly require familiarity with Ruby-on-Rails, Jquery, Postgres, and PostGIS.
-
-BETYdb is an open-source project and we always welcome contributions. Depending on the scope of the contribution, we have funding to implement specific features (e.g. the rOpensci traits package interface). See our list of open issues, and if there is one you want to take a shot at either a) go for it and submit a pull request or b) submit a bid for resolving one or more open issues to betydb@gmail.com (we don't have funding for all open issues, and availability of funds is variable).
