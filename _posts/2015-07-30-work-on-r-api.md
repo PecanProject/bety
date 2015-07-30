@@ -21,8 +21,8 @@ We are looking for help writing an R based interface to the BETYdb API.
 ### Skills
 
 * Package development
-* Familiarity `httr` package  (minimum: read ["Best Practices for writing an API package" by Hadley Wickham](https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html)
-* Familiarity with `testthat` package (minimum: read [Wickham chapter on tests](http://r-pkgs.had.co.nz/tests.html)
+* Familiarity with `httr` package  (minimum: read ["Best Practices for writing an API package" by Hadley Wickham](https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html)).
+* Familiarity with `testthat` package (minimum: read [Wickham chapter on tests](http://r-pkgs.had.co.nz/tests.html))
 
 ### References
 
