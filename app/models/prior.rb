@@ -22,8 +22,9 @@ class Prior < ActiveRecord::Base
   ## Validations
 
   validates_presence_of :parama, message: "(Parameter a can't be blank)"
-  validates_numericality_of [:parama, :paramb]
-  validates_numericality_of :n, only_integer: true, greater_than_or_equal_to: 0
+  validates_presence_of :variable_id
+  validates_numericality_of [:parama, :paramb], allow_nil: true
+  validates_numericality_of :n, allow_nil: true, only_integer: true, greater_than_or_equal_to: 0
 
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
