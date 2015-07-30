@@ -21,7 +21,7 @@
         <%= f.error_messages %>
 
         <p>
-          <%= autocompletion_field(f, "Variable", "variables", :variable_id, "#{f.object.variable.autocomplete_label} - Search variables by name") %> 
+          <%= autocompletion_field(f, "Variable", "variables", :variable_id, "Search variables by name or units") %>
         </p>
 
         <%= render :partial => "traits/trait_search" %>

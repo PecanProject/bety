@@ -40,12 +40,12 @@
 
         <div class="row">
           <div class="sixteen columns alpha">
-            <%= autocompletion_field(f, "Site", "sites", :site_id, "#{f.object.site.autocomplete_label} - Search sites by name, city, state, or country") %>
+            <%= autocompletion_field(f, "Site", "sites", :site_id, "Search sites by name, city, state, or country") %>
           </div>
         </div>          
         <div class="row">
           <div class="sixteen columns alpha">
-            <%= autocompletion_field(f,"Parent", "inputs", :parent_id, "#{f.object.parent.autocomplete_label} - Search inputs by name or site") %>
+            <%= autocompletion_field(f,"Parent", "inputs", :parent_id, "Search inputs by name or site") %>
           </div>
         </div>          
         <div class="row">

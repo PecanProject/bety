@@ -28,7 +28,7 @@
             <%= f.label :name %>
             <%= f.text_field :name, :class => "input-full" %>
             <br />
-            <%= autocompletion_field(f, "Citation", "citations", :citation_id, "#{f.object.citation.autocomplete_label} - Search citations by author or title") %>
+            <%= autocompletion_field(f, "Citation", "citations", :citation_id, "Search citations by author or title") %>
             <em><%= link_to "New Citation", new_citation_path %></em>
           </div>
           <div class="eight columns omega">
