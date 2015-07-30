@@ -90,6 +90,9 @@ class Citation < ActiveRecord::Base
   def author_year_title
     self.to_s
   end
+
+  # for now
+  alias_method :autocomplete_label, :author_year_title
   
   # override the default of when you call a citation in a string
   # Better ways to do this, but this one works for me. 

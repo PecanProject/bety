@@ -5,6 +5,23 @@ class CitationsController < ApplicationController
 
   require 'csv'
 
+  # general autocompletion
+  def autocomplete
+    citations = search_model(Citation.order('author'), %w( author title ), params[:term])
+
+    citations = citations.to_a.map do |item|
+      {
+        # show variable name and site name in suggestions
+        label: item.autocomplete_label,
+        value: item.id
+      }
+    end
+
+    respond_to do |format|
+      format.json { render :json => citations }
+    end
+  end
+
   def rem_citations_sites
     @citation = Citation.find(params[:id])
     @site = Site.find(params[:site])
