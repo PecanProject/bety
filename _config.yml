@@ -12,9 +12,9 @@ title : BETYdb Development Website
 tagline: Developing the Biofuel Ecophysiological Traits and Yields Database web application
 author :
   name : David LeBauer
-  email : dlebauer@gmail.com
-  github : dlebauer
-  twitter : @dlebauer
+  email : betydb@gmail.com
+  github : pecanproject
+  twitter : betydatabase
 
 
 # The production_url is only used when full-domain names are needed
