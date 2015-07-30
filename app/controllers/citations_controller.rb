@@ -11,7 +11,6 @@ class CitationsController < ApplicationController
 
     citations = citations.to_a.map do |item|
       {
-        # show variable name and site name in suggestions
         label: item.autocomplete_label,
         value: item.id
       }
