@@ -27,7 +27,7 @@ We are looking for help writing an R based interface to the BETYdb API.
 ### References
 
 * The [BETYdb API documentation](https://authorea.com/users/5574/articles/7062/_show_article#sec__colon__betyapi) includes example urls.
-* [BETYdb website](https://betydb.org]
-* [BETYdb source code](https://github.com/pecanproject/bety]
+* [BETYdb website](https://betydb.org)
+* [BETYdb source code](https://github.com/pecanproject/bety)
 * [vignette from traits package demonstrating current functionality](https://github.com/ropensci/traits/blob/master/vignettes/betydb.Rmd)
 

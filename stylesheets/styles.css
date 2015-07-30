@@ -25,7 +25,7 @@ h1 {
 }
 
 h2 {
-  color:#393939;
+  color:#222;
 }
 
 h3, h4, h5, h6 {
@@ -33,7 +33,7 @@ h3, h4, h5, h6 {
 }
 
 a {
-  color:#39c;
+  color:#222;
   font-weight:400;
   text-decoration:none;
 }
