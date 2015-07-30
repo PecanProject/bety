@@ -1,13 +1,14 @@
 ---
 layout: post
-title: "rOpensci Traits API"
+title: "Help Improve the rOpensci Traits API!"
 description: "List of funded tasks for BETYdb development"
 category: jobs
 tags: [api,r]
 ---
 {% include JB/setup %}
 
-## Description 
+## Job Description 
+
 We are looking for help writing an R based interface to the BETYdb API.
 
 @sckott, @gsrohde, @phenolphtalein and @dlebauer implemented a few basic functions in the [rOpensci traits package](https://github.com/ropensci/traits/) that can be found in the file [R/betydb.R](https://github.com/ropensci/traits/blob/master/R/betydb.R).
@@ -23,6 +24,10 @@ We are looking for help writing an R based interface to the BETYdb API.
 * Package development
 * Familiarity with `httr` package  (minimum: read ["Best Practices for writing an API package" by Hadley Wickham](https://cran.r-project.org/web/packages/httr/vignettes/api-packages.html)).
 * Familiarity with `testthat` package (minimum: read [Wickham chapter on tests](http://r-pkgs.had.co.nz/tests.html))
+
+### To Apply:
+
+If you are interested, please send an email with your GitHub username, a brief statment of interest, and relevant experience to <betydb@gmail.com>.
 
 ### References
 
