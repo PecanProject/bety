@@ -50,8 +50,9 @@ class Variable < ActiveRecord::Base
     "#{id}: #{self}"
   end
 
-  # for now:
-  alias_method :autocomplete_label, :select_default
+  def autocomplete_label
+    "#{name} (#{units}) #{description.blank? ? "(no description)" : "- #{description}"}"
+  end
 
   #Columns we search when referenced from another model
   #Fields present in 'select_default'

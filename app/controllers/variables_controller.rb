@@ -6,7 +6,7 @@ class VariablesController < ApplicationController
 
   # general autocompletion
   def autocomplete
-    variables = search_model(Variable, %w( name units ), params[:term])
+    variables = search_model(Variable.order(:description), %w( name units ), params[:term])
 
     variables = variables.to_a.map do |item|
       {
