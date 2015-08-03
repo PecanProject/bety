@@ -44,3 +44,15 @@ module BulkUploadHelper
   end
 end
 
+module AutocompletionHelper
+  def fill_autocomplete(field_id, options = {})
+    fill_in field_id, :with => options[:with]
+    selector = "ul.ui-autocomplete a:contains('#{options[:select]}')"
+
+    # RSpec doesn't seem to recognize the :contains syntax for selectors
+    #page.should have_selector selector
+
+    sleep 1 # needed to allow time for the menu to manifest
+    page.execute_script "jQuery(\"#{selector}\").mouseenter().click()"
+  end
+end

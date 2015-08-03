@@ -1,5 +1,5 @@
 require 'spec_helper'
-include LoginHelper
+include LoginHelper, AutocompletionHelper
 
 feature 'Priors index works' do
   before :each do
@@ -12,9 +12,11 @@ feature 'Priors index works' do
       page.should have_content 'Listing Priors'
     end
 
-    it 'should allow creation of new  priors' do
+    it 'should allow creation of new  priors', js:true do
       visit '/priors/new'
-      
+
+      fill_autocomplete "search_variables", with: "Amax", select: "Amax"
+
       fill_in 'Phylogen', :with => 'Bats'
       fill_in 'prior_parama', :with =>'1.34'
       fill_in 'prior_paramb', :with => '5.622'
@@ -22,8 +24,19 @@ feature 'Priors index works' do
       fill_in 'Notes', :with => 'for querying the page for the existence of certain elements'
 
       click_button 'Create'
-      
+
       page.should have_content 'Prior was successfully created'
+
+
+      # now do clean-up
+      visit '/priors'
+      page.find(:xpath, ".//table/tbody/tr[contains(., 'Bats')]/td/a[@alt = 'delete']").click
+      # If we're using Selenium, we have to deal with the modal dialogue:
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
+
     end
 
     context 'clicking view prior button' do

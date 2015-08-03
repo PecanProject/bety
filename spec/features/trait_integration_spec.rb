@@ -1,5 +1,5 @@
 require 'spec_helper'
-include LoginHelper
+include LoginHelper, AutocompletionHelper
 
 feature 'Traits index works' do
   before :each do
@@ -32,41 +32,37 @@ feature 'Traits index works' do
       end
     end
 
-    it 'should allow creation of new traits' do
+    it 'should allow creation of new traits', js:true do
      # Create Citation association
      visit '/citations'
      first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
      page.should have_content 'Sites already associated with this citation'
 
-     # Create Treatment association
-     visit '/treatments'
-     click_link 'New Treatment'
-     fill_in 'Name', :with => 'Erduah'
-     fill_in 'Definition', :with => 'Hot Earth'
-     click_button 'Create'
-
-     # Create Site association
-     visit '/sites'
-     click_link 'New Site'
-     fill_in 'Site name', :with => 'Erduah'
-     fill_in 'site_notes', :with => 'Hot Earth'
-     click_button 'Create'
-
 
      # Verify the trait creation
      visit '/traits/new'
-     
-     page.should have_content 'New Trait'
-     
-     fill_in 'trait_mean', :with => '238.12'
-     select 'SE', :from => 'trait_statname'
-     fill_in 'trait_stat', :with => '7.76'
-     fill_in 'trait_n', :with => '3'
-     fill_in 'trait_notes', :with => 'Research Interwebs Papers Research Interwebs PapersResearch Interwebs PapersResearch Interwebs Papers' 
 
-     click_button 'Create'
-     
-     page.should have_content 'Trait was successfully created'
+      page.should have_content 'New Trait'
+
+      fill_autocomplete "search_variables", with: "Amax", select: "Amax"
+      fill_in 'trait_mean', :with => '238.12'
+      select 'SE', :from => 'trait_statname'
+      fill_in 'trait_stat', :with => '7.76'
+      fill_in 'trait_n', :with => '3'
+      fill_in 'trait_notes', :with => 'Research Interwebs Papers Research Interwebs PapersResearch Interwebs PapersResearch Interwebs Papers' 
+
+      click_button 'Create'
+
+      page.should have_content 'Trait was successfully created'
+
+      visit '/traits'
+      binding.pry
+      all(:xpath, './/a[@alt = "delete"]')[-1].click
+      # If we're using Selenium, we have to deal with the modal dialogue:
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
     end
 
 
