@@ -10,32 +10,43 @@ class PftsController < ApplicationController
     redirect_to root_path
   end
 
+  def search_priors
+    @pft = Pft.find(params[:id])
+
+    # the "sorted_order" call is mainly so "search" has the joins it needs
+    @priors = Prior.sorted_order("#{sort_column('priors','updated_at')} #{sort_direction}").search(params[:search_priors])
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
+    end
+  end
+
+
   def rem_pfts_priors
     @pft = Pft.find(params[:id])
     @prior = Prior.find(params[:prior])
 
-    render :update do |page|
-      if @pft.priors.delete(@prior)
-        page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
-      else
-        page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
-      end
+    @pft.priors.delete(@prior)
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
-  def edit_pfts_priors
+  def add_pfts_priors
     @pft = Pft.find(params[:id])
+    @prior = Prior.find(params[:prior])
 
-    render :update do |page|
-      if !params[:prior].nil?
-        params[:prior][:id].each do |c|
-          next if c.empty?
-          @pft.priors << Prior.find(c)
-        end
-        page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
-      else
-        page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
-      end
+    @pft.priors << @prior
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
@@ -163,8 +174,16 @@ class PftsController < ApplicationController
   # GET /pfts/1/edit
   def edit
     @pft = Pft.find(params[:id])
+    @priors = @pft.priors
     @species = @pft.specie.paginate :page => params[:page]
-  end
+
+    respond_to do |format|
+      format.html
+      format.js {
+        render layout: false
+      }
+    end
+   end
 
   # POST /pfts
   # POST /pfts.xml

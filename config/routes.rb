@@ -123,12 +123,13 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :covariates
   resources :pfts do
     member do
+      get :search_priors
       get :make_clone
       get :edit2_pfts_species # for adding a species to the pft
       post :edit2_pfts_species # for species search
     end
     collection do
-      post :edit_pfts_priors
+      get :add_pfts_priors
       get :rem_pfts_priors
    end
   end

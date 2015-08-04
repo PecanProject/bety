@@ -1,0 +1,7 @@
+/* Restores the priors list as it looked before doing any searches */
+
+jQuery('tbody').html(
+    "<%= j render(partial: 'priors_tbody') %>"
+);
+
+jQuery('h3').html("Existing Priors Relationships");
