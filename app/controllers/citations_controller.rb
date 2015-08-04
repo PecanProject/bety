@@ -23,33 +23,43 @@ class CitationsController < ApplicationController
     end
   end
 
+  def search_sites
+    @citation = Citation.find(params[:id])
+
+    # the "sorted_order" call is mainly so "search" has the joins it needs
+    @sites = Site.sorted_order("#{sort_column('sites','updated_at')} #{sort_direction}").search(params[:search_sites])
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
+    end
+  end
+
   def rem_citations_sites
     @citation = Citation.find(params[:id])
     @site = Site.find(params[:site])
 
-    render :update do |page|
-      if @citation.sites.delete(@site)
-        page.replace_html 'edit_citations_sites', :partial => 'edit_citations_sites'
-      else
-        page.replace_html 'edit_citations_sites', :partial => 'edit_citations_sites'
-      end
+    @citation.sites.delete(@site)
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
-  def edit_citations_sites
+  def add_citations_sites
 
     @citation = Citation.find(params[:id])
+    @site = Site.find(params[:site])
 
-    render :update do |page|
-      if !params[:site].nil?
-        params[:site][:id].each do |c|
-          next if c.empty?
-          @citation.sites << Site.find(c)
-        end
-        page.replace_html 'edit_citations_sites', :partial => 'edit_citations_sites'
-      else
-        page.replace_html 'edit_citations_sites', :partial => 'edit_citations_sites'
-      end
+    @citation.sites << @site
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
@@ -135,7 +145,15 @@ class CitationsController < ApplicationController
   # GET /citations/1/edit
   def edit
     @citation = Citation.find(params[:id])
-  end
+    @sites = @citation.sites
+
+    respond_to do |format|
+      format.html
+      format.js {
+        render layout: false
+      }
+    end
+ end
 
   # POST /citations
   # POST /citations.xml

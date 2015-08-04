@@ -1,34 +1,31 @@
+<% content_for(:autocomplete_javascript) do %>
+  <%= javascript_tag do %>
+    jQuery(function() {
+        jQuery('#search_sites').on('keyup', search_sites);
+    });
 
-<table width="100%">
-  <tr>
-    <td width="50%"><h3>Existing Sites Relationships</h3></td>
-    <td width="50%"><h3>Add Site Relationship(s)</h3></td>
-  </tr>
-  <tr>
-    <td>
-      <table>
-        <tr>
-          <th></th>
-          <th></th>
-          <th>Site</th>
-        </tr>
-        <% @citation.sites.each do |site| %>
-        <tr>
-          <td><%= link_to "X", { :controller => :citations, :action => :rem_citations_sites, :id => @citation.id, :site => site }, :confirm => 'Are you sure?', :remote => true %></td>
-          <td><%= link_to "edit", edit_site_path(site.id) %></td>
-          <td><%= site.sitename_state_country %></td>
-        </tr>
-        <% end %>
-      </table>
-    </td>
-    <td>
-      <%= form_tag url_for(:controller => :citations, :action => :edit_citations_sites), :remote => true do %>
-          <%= collection_select( :site, :id, Site.all.reject { |r| @citation.sites.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
-          <%= hidden_field_tag 'id', @citation.id %>
-          <br /><br />
-          <%= submit_tag "Select" %>
-      <% end %>
-    </td>
-  </tr>
+    function search_sites() {
+        jQuery.get("search_sites", jQuery('#search_sites').serialize(), null, 'script');
+    }
+  <% end %>
+<% end %>
+<h1>Listing Sites Relationships</h1>
+<p>
+  <b>Search: </b><%= text_field_tag :search_sites %><br />
+
+<h3>Existing Sites Relationships</h3>
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th></th>
+      <th>Site Name</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Country</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render 'sites_tbody' %>
+  </tbody>
 </table>
-

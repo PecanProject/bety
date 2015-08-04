@@ -1,0 +1,2 @@
+// find the link whose href ends with "site=<the id of the site we're unlinking>"
+jQuery('a[href$="site=<%= @site.id %>"').html('<%= link_to "+", { :controller => :citations, :action => :add_citations_sites, :id => @citation.id, :site => @site.id }, :remote => true %></td>');

@@ -1,0 +1,9 @@
+/* Restores the sites list as it looked before doing any searches */
+
+jQuery('tbody').html(
+    "<%= j render(partial: 'sites_tbody') %>"
+);
+
+jQuery('h3').html("Existing Sites Relationships");
+
+jQuery('#search_sites').val('').focus();
