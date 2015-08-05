@@ -1,0 +1,12 @@
+/* Restores the treatments list to show only linked priors */
+
+jQuery('table#treatments tbody').html(
+    "<%= j render(partial: 'treatments_tbody') %>"
+);
+
+jQuery('table#treatments caption').html("Existing Treatments Relationships" +
+                                    ' <%= link_to "Update",
+                                          { controller: :managements, action: :edit, remote: true },
+                                          { style: "display: none" } %>');
+
+jQuery('#search_treatments').val('').focus();

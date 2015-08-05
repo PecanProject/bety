@@ -1,0 +1,11 @@
+console.log('hi')
+jQuery('table#treatments tbody').html(
+    "<%= j render(partial: 'treatments_tbody') %>"
+);
+
+jQuery('table#treatments caption').html(
+    "All Search Matches" +
+        ' <%= link_to "Show only related treatments",
+              { controller: :managements, action: :edit, remote: true } %>'
+    );
+

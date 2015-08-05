@@ -2,6 +2,10 @@ class Treatment < ActiveRecord::Base
 
   include Overrides
 
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ }
+  SEARCH_FIELDS = %w{ name definition }
+
   has_many :traits
   has_many :yields
 
@@ -19,7 +23,7 @@ class Treatment < ActiveRecord::Base
 
 
   scope :sorted_order, lambda { |order| order(order) }
-
+  scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do
     id

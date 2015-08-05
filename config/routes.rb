@@ -137,8 +137,11 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   get 'pfts/edit2_pfts_species(/:id)' => 'pfts#edit2_pfts_species' # for searching
 
   resources :managements do
+    member do
+      get :search_treatments
+    end
     collection do
-      post :edit_managements_treatments
+      get :add_managements_treatments
       get :rem_managements_treatments
     end
   end

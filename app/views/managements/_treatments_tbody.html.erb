@@ -1,0 +1,13 @@
+<% @treatments.each do |treatment| %>
+    <tr>
+    <td>
+  <% if @management.treatments.include?(treatment) %>
+    <%= link_to "X", { :controller => :managements, :action => :rem_managements_treatments, :id => @management.id, :treatment => treatment }, :remote => true %></td>
+  <% else %>
+    <%= link_to "+", { :controller => :managements, :action => :add_managements_treatments, :id => @management.id, :treatment => treatment }, :remote => true %></td>
+  <% end %>
+    <td><%= link_to "edit", edit_treatment_path(treatment.id) %></td>
+    <td><%= treatment.name %></td>
+    <td><%= treatment.definition %></td>
+    </tr>
+<% end %>

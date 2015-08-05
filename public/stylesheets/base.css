@@ -1562,6 +1562,7 @@ table.relationships caption {
     line-height:normal;
     color: #007eac;
     text-align: left;
+    white-space: nowrap;
 }
 
 
