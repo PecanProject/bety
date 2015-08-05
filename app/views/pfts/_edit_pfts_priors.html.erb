@@ -13,8 +13,11 @@
 <p>
   <b>Search: </b><%= text_field_tag :search_priors %><br />
 
-<h3>Existing Priors Relationships</h3>
-<table id="priors">
+<table id="priors" class="relationships">
+  <caption>Existing Priors Relationships
+    <%= link_to "Update",
+        { controller: :pfts, action: :edit, remote: true },
+        { style: "display: none" } %></caption>
   <thead>
     <tr>
       <th></th>

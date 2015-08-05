@@ -2,7 +2,8 @@ jQuery('table#priors tbody').html(
     "<%= j render(partial: 'priors_tbody') %>"
 );
 
-jQuery('h3').html(
+jQuery('table#priors caption').html(
     "All Search Matches" +
-        ' <%= link_to "Show only related priors", { controller: :pfts, action: :edit, remote: true } %>'
+        ' <%= link_to "Show only related priors",
+              { controller: :pfts, action: :edit, remote: true } %>'
     );

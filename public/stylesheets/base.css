@@ -1555,6 +1555,16 @@ table {
 	border-spacing: 0;
 }
 
+/* for displaying associated entities */
+table.relationships caption {
+    font-size: 14px;
+    font-weight: bold;
+    line-height:normal;
+    color: #007eac;
+    text-align: left;
+}
+
+
 .table {
 	width: 100%;
 	margin-bottom: 20px;
