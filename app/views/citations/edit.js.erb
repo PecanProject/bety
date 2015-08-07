@@ -1,9 +1,12 @@
-/* Restores the sites list as it looked before doing any searches */
+/* Restores the sites list to show only linked sites */
 
 jQuery('table#sites tbody').html(
     "<%= j render(partial: 'sites_tbody') %>"
 );
 
-jQuery('h3').html("Existing Sites Relationships");
+jQuery('table#sites caption').html("Existing Sites Relationships" +
+                                    ' <%= link_to "Update",
+                                          { controller: :citations, action: :edit, remote: true },
+                                          { style: "display: none" } %>');
 
 jQuery('#search_sites').val('').focus();

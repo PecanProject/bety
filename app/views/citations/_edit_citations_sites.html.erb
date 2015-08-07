@@ -13,8 +13,11 @@
 <p>
   <b>Search: </b><%= text_field_tag :search_sites %><br />
 
-<h3>Existing Sites Relationships</h3>
-<table id="sites">
+<table id="sites" class="relationships">
+  <caption>Existing Sites Relationships
+    <%= link_to "Update",
+        { controller: :citations, action: :edit, remote: true },
+        { style: "display: none" } %></caption>
   <thead>
     <tr>
       <th></th>
