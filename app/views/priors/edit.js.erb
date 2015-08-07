@@ -1,0 +1,12 @@
+/* Restores the pfts list to show only linked pfts */
+
+jQuery('table#pfts tbody').html(
+    "<%= j render(partial: 'pfts_tbody') %>"
+);
+
+jQuery('table#pfts caption').html("Existing Pfts Relationships" +
+                                    ' <%= link_to "Update",
+                                          { controller: :priors, action: :edit, remote: true },
+                                          { style: "display: none" } %>');
+
+jQuery('#search_pfts').val('').focus();

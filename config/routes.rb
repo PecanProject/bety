@@ -188,10 +188,11 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :priors do
     member do
       get :preview
+      get :search_pfts
     end
     collection do
       get :rem_pfts_priors
-      post :edit_pfts_priors
+      get :add_pfts_priors
     end
   end
 

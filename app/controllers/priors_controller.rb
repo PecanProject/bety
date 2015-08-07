@@ -5,28 +5,42 @@ class PriorsController < ApplicationController
   require 'csv'
   require 'open3'
 
-  def rem_pfts_priors
-    @pft = Pft.find(params[:id])
-    @prior = Prior.find(params[:prior])
+  def search_pfts
+    @prior = Prior.find(params[:id])
 
-    render :update do |page|
-      @pft.priors.delete(@prior)
-      page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
+    # the "sorted_order" call is mainly so "search" has the joins it needs
+    @pfts = Pft.sorted_order("#{sort_column('pfts','updated_at')} #{sort_direction}").search(params[:search_pfts])
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
-  def edit_pfts_priors
-
+  def rem_pfts_priors
     @prior = Prior.find(params[:id])
+    @pft = Pft.find(params[:pft])
 
-    render :update do |page|
-      if !params[:pft].nil?
-        params[:pft][:id].each do |c|
-          next if c.empty?
-          @prior.pfts << Pft.find(c)
-        end
-      end
-      page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
+    @prior.pfts.delete(@pft)
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
+    end
+  end
+
+  def add_pfts_priors
+    @prior = Prior.find(params[:id])
+    @pft = Pft.find(params[:pft])
+
+    @prior.pfts << @pft
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
@@ -130,6 +144,15 @@ class PriorsController < ApplicationController
   # GET /priors/1/edit
   def edit
     @prior = Prior.find(params[:id])
+    @pfts = @prior.pfts
+
+    respond_to do |format|
+      format.html
+      format.js {
+
+        render layout: false
+      }
+    end
   end
 
   # POST /priors
