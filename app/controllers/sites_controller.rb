@@ -25,28 +25,43 @@ class SitesController < ApplicationController
     end
   end
 
-  def rem_citations_sites
-    @citation = Citation.find(params[:id])
-    @site = Site.find(params[:site])
+  def search_citations
+    @site = Site.find(params[:id])
 
-    render :update do |page|
-      @citation.sites.delete(@site)
-      page.replace_html 'edit_citations_sites', :partial => 'edit_citations_sites'
+    # the "sorted_order" call is mainly so "search" has the joins it needs
+    @citations = Citation.sorted_order("#{sort_column('citations','updated_at')} #{sort_direction}").
+      search(params[:search_citations])
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
-  def edit_citations_sites
-
+  def rem_citations_sites
     @site = Site.find(params[:id])
+    @citation = Citation.find(params[:citation])
 
-    render :update do |page|
-      if !params["citation"].nil?
-        params["citation"][:id].each do |c|
-          next if c.empty?
-          @site.citations << Citation.find(c)
-        end
-      end
-      page.replace_html 'edit_citations_sites', :partial => 'edit_citations_sites'
+    @site.citations.delete(@citation)
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
+    end
+  end
+
+  def add_citations_sites
+    @site = Site.find(params[:id])
+    @citation = Citation.find(params[:citation])
+
+    @site.citations << @citation
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
@@ -181,6 +196,14 @@ class SitesController < ApplicationController
   # GET /sites/1/edit
   def edit
     @site = Site.find(params[:id])
+    @citations = @site.citations
+
+    respond_to do |format|
+      format.html
+      format.js {
+        render layout: false
+      }
+    end
   end
 
   # POST /sites
@@ -234,7 +257,8 @@ class SitesController < ApplicationController
         else
           flash.delete(:error) # erase the flash if the elevation error is gone
         end
-        format.html { render :action => "edit", :notice => 'try again' }
+        format.html { @citations = @site.citations
+                      render :action => "edit", :notice => 'try again' }
         format.xml  { render :xml => @site.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @site.errors, :status => :unprocessable_entity }
         format.json  { render :json => @site.errors, :status => :unprocessable_entity }

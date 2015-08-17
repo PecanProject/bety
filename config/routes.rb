@@ -157,11 +157,14 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   end
 
   resources :sites do
+    member do
+      get :search_citations
+    end
     collection do
       get :map
       get :linked
       get :rem_citations_sites
-      post :edit_citations_sites
+      get :add_citations_sites
     end
   end
 

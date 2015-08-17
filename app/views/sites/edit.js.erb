@@ -1,0 +1,12 @@
+/* Restores the citations list to show only linked citations */
+
+jQuery('table#citations tbody').html(
+    "<%= j render(partial: 'citations_tbody') %>"
+);
+
+jQuery('table#citations caption').html("Existing Citation Relationships" +
+                                    ' <%= link_to "Update",
+                                          { controller: :sites, action: :edit, remote: true },
+                                          { style: "display: none" } %>');
+
+jQuery('#search_citations').val('').focus();

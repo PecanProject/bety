@@ -1,0 +1,14 @@
+<% @citations.each do |citation| %>
+    <tr>
+    <td>
+  <% if @site.citations.include?(citation) %>
+    <%= link_to "X", { :controller => :sites, :action => :rem_citations_sites, :id => @site.id, :citation => citation }, :remote => true %></td>
+  <% else %>
+    <%= link_to "+", { :controller => :sites, :action => :add_citations_sites, :id => @site.id, :citation => citation }, :remote => true %></td>
+  <% end %>
+    <td><%= link_to "edit", edit_citation_path(citation.id) %></td>
+    <td><%= citation.author %></td>
+    <td><%= citation.year %></td>
+    <td><%= citation.title %></td>
+    </tr>
+<% end %>
