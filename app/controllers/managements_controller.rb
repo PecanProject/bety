@@ -168,7 +168,8 @@ class ManagementsController < ApplicationController
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { @treatments = @management.treatments
+                      render :action => "edit" }
         format.xml  { render :xml => @management.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @management.errors, :status => :unprocessable_entity }
         format.json  { render :json => @management.errors, :status => :unprocessable_entity }

@@ -194,7 +194,8 @@ class CitationsController < ApplicationController
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { @sites = @citation.sites
+                      render :action => "edit" }
         format.xml  { render :xml => @citation.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @citation.errors, :status => :unprocessable_entity }
         format.json  { render :json => @citation.errors, :status => :unprocessable_entity }

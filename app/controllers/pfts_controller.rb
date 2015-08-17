@@ -220,6 +220,7 @@ class PftsController < ApplicationController
         format.json  { head :ok }
       else
         format.html {
+          @priors = @pft.priors
           @species = @pft.specie.paginate :page => params[:page]
           render :action => "edit"
         }
