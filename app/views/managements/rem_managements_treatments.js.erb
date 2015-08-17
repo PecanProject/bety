@@ -1,5 +1,5 @@
 // find the link whose href ends with "treatment=<the id of the treatment we're unlinking>"
-jQuery('a[href$="treatment=<%= @treatment.id %>"').html('<%= link_to "+",
+jQuery('a[href$="treatment=<%= @treatment.id %>"]').html('<%= link_to "+",
            { :controller => :managements, :action => :add_managements_treatments,
              :id => @management.id, :treatment => @treatment.id },
            :remote => true %></td>');
