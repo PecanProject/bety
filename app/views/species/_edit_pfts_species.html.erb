@@ -1,34 +1,32 @@
-<table width="100%">
-  <tr>
-    <td width="50%"><h3>Existing Pft Relationships</h3></td>
-    <td width="50%"><h3>Add Pft Relationship(s)</h3></td>
-  </tr>
-  <tr>
-    <td>
-      <table>
-        <tr>
-          <th></th>
-          <th></th>
-          <th>Name</th>
-          <th>Definition</th>
-        </tr>
-        <% @species.pfts.each do |pft| %>
-        <tr>
-          <td><%= link_to "X", { :controller => :species, :action => :rem_pfts_species, :id => pft.id, :specie => @species }, :confirm => 'Are you sure?', :remote => true %></td>
-          <td><%= link_to "edit", edit_pft_path(pft.id) %></td>
-          <td><%= pft.name %></td>
-          <td><%= pft.definition[0..19] %></td>
-        </tr>
-        <% end %>
-      </table>
-    </td>
-    <td>
-      <%= form_tag url_for(:controller => :species, :action => :edit_pfts_species), :remote => true do  %>
-      <%= collection_select( :pft, :id, Pft.all.reject { |r| @species.pfts.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
-      <%= hidden_field_tag 'id', @species.id %>
-      <br /><br />
-      <%= submit_tag "Select" %>
-      <% end %>
-    </td>
-  </tr>
+<% content_for(:autocomplete_javascript) do %>
+  <%= javascript_tag do %>
+    jQuery(function() {
+        jQuery('#search_pfts').on('keyup', search_pfts);
+    });
+
+    function search_pfts() {
+        jQuery.get("search_pfts", jQuery('#search_pfts').serialize(), null, 'script');
+    }
+  <% end %>
+<% end %>
+<h1>Listing Pft Relationships</h1>
+<p>
+  <b>Search: </b><%= text_field_tag :search_pfts %><br />
+
+<table id="pfts" class="relationships">
+  <caption>Existing Pft Relationships
+    <%= link_to "Update",
+        { controller: :species, action: :edit, remote: true },
+        { style: "display: none" } %></caption>
+  <thead>
+    <tr>
+      <th></th>
+      <th></th>
+      <th>Name</th>
+      <th>Definition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render 'pfts_tbody' %>
+  </tbody>
 </table>

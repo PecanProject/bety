@@ -28,6 +28,19 @@ class SpeciesController < ApplicationController
     end
   end
 
+  def search_pfts
+    @species = Specie.find(params[:id])
+
+    # the "sorted_order" call is mainly so "search" has the joins it needs
+    @pfts = Pft.sorted_order("#{sort_column('pfts','updated_at')} #{sort_direction}").search(params[:search_pfts])
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
+    end
+  end
+
   def species_search
     @query = params[:symbol] || nil
 
@@ -65,27 +78,29 @@ class SpeciesController < ApplicationController
 
 
   def rem_pfts_species
-    @pft = Pft.find(params[:id])
-    @species = Specie.find(params[:specie])
+    @species = Specie.find(params[:id])
+    @pft = Pft.find(params[:pft])
 
-    render :update do |page|
-      @pft.specie.delete(@species)
-      page.replace_html 'edit_pfts_species', :partial => 'edit_pfts_species'
+    @species.pfts.delete(@pft)
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
-  def edit_pfts_species
+  def add_pfts_species
 
     @species = Specie.find(params[:id])
+    @pft = Pft.find(params[:pft])
 
-    render :update do |page|
-      if !params[:pft].nil?
-        params[:pft][:id].each do |c|
-          next if c.empty?
-          @species.pfts << Pft.find(c)
-        end
-      end
-      page.replace_html 'edit_pfts_species', :partial => 'edit_pfts_species'
+    @species.pfts << @pft
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
@@ -147,6 +162,14 @@ class SpeciesController < ApplicationController
   # GET /species/1/edit
   def edit
     @species = Specie.find(params[:id])
+    @pfts = @species.pfts
+
+    respond_to do |format|
+      format.html
+      format.js {
+        render layout: false
+      }
+    end
   end
 
   # POST /species

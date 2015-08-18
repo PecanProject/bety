@@ -180,10 +180,11 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :variables
   resources :species do
     member do
-      get :rem_pfts_species
+      get :search_pfts
     end
     collection do
-      post :edit_pfts_species # for adding a pft relationship
+      get :rem_pfts_species
+      get :add_pfts_species # for adding a pft relationship
       post :species_search # for help making new yields
     end
   end
