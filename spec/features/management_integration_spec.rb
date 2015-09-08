@@ -35,18 +35,19 @@ feature 'Management features work' do
 
       it 'should allow adding new related treatments', js: true do
         click_link 'View Related Treatments'
-        page.select 'observational', from: 'treatment_id'
-        click_button 'Select'
+        fill_in "search_treatments", with: 'observational'
+        click_link '+'
+        click_button 'Update'
+        # reopen related treatments listing
+        click_link 'View Related Treatments'
         page.should have_content 'observational'
 
       # now do clean-up:
-      page.find(:xpath, ".//table/tbody/tr[preceding-sibling::tr/th/text() = 'Name'][td/text() = 'observational']/td/a[text() = 'X']").click
-      # If we're using Selenium, we have to deal with the modal dialogue:
-      if page.driver.is_a? Capybara::Selenium::Driver
-        a = page.driver.browser.switch_to.alert
-        a.accept
-      end
-  
+        click_link 'X'
+        click_button 'Update'
+        # reopen related treatments listing
+        click_link 'View Related Treatments'
+        page.should_not have_content 'observational'
     end
 
 

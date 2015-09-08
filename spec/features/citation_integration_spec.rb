@@ -52,17 +52,21 @@ feature 'Citation features work' do
 
     it 'should allow adding a related site', js: true do
       click_link 'View Related Sites'
-      page.select 'USA', from: 'site_id'
-      click_button 'Select'
+      fill_in 'search_sites', with: 'USA'
+      click_link '+'
+      click_button 'Update'
+      # reopen related sites listing
+      click_link 'View Related Sites'
       page.should have_content 'USA'
 
       # now do clean-up:
-      page.find(:xpath, ".//table/tbody[tr[1]/th[3]/text() = 'Site']/tr[contains(td/text(), 'USA')]/td[1]/a").click
-      # If we're using Selenium, we have to deal with the modal dialogue:
-      if page.driver.is_a? Capybara::Selenium::Driver
-        a = page.driver.browser.switch_to.alert
-        a.accept
-      end
+      fill_in 'search_sites', with: 'USA'
+      click_link 'X'
+      click_button 'Update'
+      # reopen related sites listing
+      click_link 'View Related Sites'
+      page.should_not have_content 'USA'
+
   
     end
 

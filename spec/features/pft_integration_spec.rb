@@ -60,18 +60,20 @@ feature 'Pfts features work works' do
 
     it 'should allow adding a related prior', js: true do
       click_link 'View Related Priors'
-      page.select 'plants', from: 'prior_id'
-      click_button 'Select'
-      page.should have_content 'plants'
+      fill_in 'search_priors', with: 'plants'
+
+      # Since there is another '+' link on the page, we resort to this:
+      first(:css, "table#priors").find(:xpath, ".//a[text() = '+']").click
+
+      click_button 'Update'
+      # go back to edit page and reopen related priors listing
+      click_button "Edit Record"
+      click_link 'View Related Priors'
+      page.should have_text 'plants'
 
       # now do clean-up:
-      page.find(:xpath, ".//table/tbody/tr[preceding-sibling::tr/th/text() = 'Phylogeny'][td/text() = 'plants']/td/a[text() = 'X']").click
-      # If we're using Selenium, we have to deal with the modal dialogue:
-      if page.driver.is_a? Capybara::Selenium::Driver
-        a = page.driver.browser.switch_to.alert
-        a.accept
-      end
-
+      click_link 'X'
+      click_button 'Update'
     end
 
     it 'should allow searching for species', js: true do

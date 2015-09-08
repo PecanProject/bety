@@ -53,18 +53,20 @@ feature 'Sites index works' do
 
       it 'show allow adding new related citations', js: true do
         click_link 'View Related Citations'
-        page.select 'Wood', from: 'citation_id'
-        click_button 'Select'
+        fill_in 'search_citations', with: 'Wood'
+        click_link '+'
+        click_button 'Update'
+        # reopen related citations listing
+        click_link 'View Related Citations'
         page.should have_content 'Wood'
 
-      # now do clean-up:
-      page.find(:xpath, ".//table/tbody/tr[preceding-sibling::tr/th/text() = 'Auth'][contains(td[3], 'Wood')]/td/a[text() = 'X']").click
-      # If we're using Selenium, we have to deal with the modal dialogue:
-      if page.driver.is_a? Capybara::Selenium::Driver
-        a = page.driver.browser.switch_to.alert
-        a.accept
-      end
-  
+        # now do clean-up:
+        fill_in 'search_citations', with: 'Wood'
+        click_link 'X'
+        click_button 'Update'
+        # reopen related citations listing
+        click_link 'View Related Citations'
+        page.should_not have_content 'Wood'
     end      
 
         
