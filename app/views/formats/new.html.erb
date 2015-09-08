@@ -17,7 +17,9 @@
         <h1>New Format</h1>
       </header>
 
-      <%= form_for @format, :as => :form, :url => { :action => "create" } do |f| %>
+      <%= form_for @format,
+          :as => :form, # because "format" is used for something else by Rails
+          :url => { :action => "create" } do |f| %>
         <%= f.error_messages %>
 
         <div class="row">
