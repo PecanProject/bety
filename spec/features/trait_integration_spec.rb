@@ -56,7 +56,6 @@ feature 'Traits index works' do
       page.should have_content 'Trait was successfully created'
 
       visit '/traits'
-      binding.pry
       all(:xpath, './/a[@alt = "delete"]')[-1].click
       # If we're using Selenium, we have to deal with the modal dialogue:
       if page.driver.is_a? Capybara::Selenium::Driver
