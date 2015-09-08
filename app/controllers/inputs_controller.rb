@@ -20,61 +20,6 @@ class InputsController < ApplicationController
     end
   end
 
-  def edit_inputs_variables
-    @input = Input.find(params[:id])
-    variable = params[:variable]
-
-    if @input and variable
-      _variable = Variable.find(variable)
-      # If relationship exists we must want to remove it...
-      if @input.variables.include?(_variable)
-        @input.variables.delete(_variable)
-        logger.info "deleted input:#{@input.id} - file:#{_variable.id}"
-      # Otherwise add it
-      else
-        @input.variables << _variable
-        logger.info "add input:#{@input.id} - file:#{_variable.id}"
-      end
-    end
-
-    @page = params[:page]
-
-    # RAILS3 had to add the || '' in order for @search not be nil when params[:search] is nil
-    @search = params[:search] || ''
-    @searchparam = @search
-
-    # If they search just a number it is probably an id, and we do not want to wrap that in wildcards.
-    # @search.match(/\D/) ? wildcards = true : wildcards = false
-    # We now ALWAYS use wildcards (unless the search is blank).
-    wildcards = true
-
-    if !@search.blank?
-      if wildcards
-        @search = "%#{@search}%"
-      end
-      search_cond = [["description", "name"].collect {|x| "variables.#{x}" }.join(" LIKE :search OR ") + " LIKE :search", {:search => @search}]
-      search = "Showing records for \"#{@search}\""
-    else
-      @search = ""
-      search = "Showing all results"
-      search_cond = ""
-    end
-
-    if @input and @search.blank?
-      search = "Showing already related records"
-      if @input.variables
-        @variables = @input.variables.paginate :page => params[:page]
-      end
-    else
-      @variables = Variable.paginate :select => "id,name,units", :page => params[:page], :conditions => search_cond
-    end
-
-    render :update do |page|
-      page.replace_html :vars_index_table, :partial => "edit_inputs_variables_table"
-      page.replace_html :vars_search_term, search
-    end
-  end
-
   def edit_inputs_files
     @input = Input.find(params[:id])
     file = params[:file]

@@ -9,6 +9,8 @@ class Format < ActiveRecord::Base
   has_many :formats_variables
   has_many :variables, :through => :formats_variables
 
+  belongs_to :mimetype
+
   # VALIDATION
 
   ## Validation callbacks
@@ -17,9 +19,10 @@ class Format < ActiveRecord::Base
 
   ## Validations
 
-  validates :mime_type,
-      presence: true,
-      mediatype: true
+## To do: fix validation of mimetype
+#  validates :mimetype_id,
+#      presence: true,
+#      mediatype: true
 
 
 
@@ -37,7 +40,7 @@ class Format < ActiveRecord::Base
   end
 
   def name_mimetype
-    "#{name} #{mime_type}"
+    "#{name} #{mimetype.type_string}"
   end
   def to_s
     name_mimetype

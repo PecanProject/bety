@@ -5,7 +5,7 @@
     var ROOT_URL = '<%= root_url %>';
     var completion_fields = {
       "search_mimetypes": { controller: "mimetypes",
-                            hidden_field_id: "form_mime_type" }
+                            hidden_field_id: "form_mimetype_id" }
     };
   </script>
   <%= javascript_include_tag 'lazy/autocomplete.js' %>
@@ -22,7 +22,7 @@
 
         <div class="row">
           <div class="four columns alpha">
-            <%= autocompletion_field(f, "Mime type", "mimetypes", :mime_type, "Search mime types") %>
+            <%= autocompletion_field(f, "Mime type", "mimetypes", :mimetype_id, "Search mime types") %>
           </div>
           <div class="four columns">
             <%= f.label :new_mime_type %>

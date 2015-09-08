@@ -6,4 +6,8 @@ class Mimetype < ActiveRecord::Base
       presence: true,
       mediatype: true # see app/validations
 
+  def to_s
+    type_string
+  end
+
 end

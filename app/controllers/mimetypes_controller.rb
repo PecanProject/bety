@@ -6,7 +6,7 @@ class MimetypesController < ApplicationController
     mimetypes = mimetypes.to_a.map do |item|
       {
         label: item.type_string,
-        value: item.type_string
+        value: item.id
       }
     end
 

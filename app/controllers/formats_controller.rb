@@ -94,23 +94,10 @@ class FormatsController < ApplicationController
   # POST /formats
   # POST /formats.xml
   def create
+
+    maybe_add_mimetype(params)
+
     @format = Format.new(params["form"])
-
-    if !params[:mime_type_other].blank?
-      @format.mime_type = params[:mime_type_other]
-    end
-
-    # Want to move recently used string to top, this will do this by adding them to end of
-    # the table
-    m = Mimetype.find_by_type_string(@format.mime_type)
-    m.delete if !m.nil?
-    new_m = Mimetype.new(:type_string => @format.mime_type)
-
-    # If validation of the new_m fails, so will validation of @format.
-    if new_m.valid?
-      new_m.save
-    end
-
 
     respond_to do |format|
       if @format.save
@@ -131,6 +118,8 @@ class FormatsController < ApplicationController
   # PUT /formats/1.xml
   def update
     @format = Format.find(params[:id])
+
+    maybe_add_mimetype(params)
 
     respond_to do |format|
       if @format.update_attributes(params[:form])
@@ -158,6 +147,31 @@ class FormatsController < ApplicationController
       format.xml  { head :ok }
       format.csv  { head :ok }
       format.json  { head :ok }
+    end
+  end
+
+  private
+
+  # If params included a non-blank :mime_type_other key, try to find an existing
+  # corresponding mimetype, or if not found, try to add a new mimetype using
+  # that as the type string; then use its id as the value for the mimetype_id
+  # attribute stored in params[:form].
+  def maybe_add_mimetype(params)
+
+    mime_type_other = params[:mime_type_other]
+
+    if !mime_type_other.blank?
+
+      # Check to see if it already exists before creating a new mimetype:
+      m = Mimetype.find_by_type_string(mime_type_other)
+      if m.nil?
+        m = Mimetype.new(type_string: mime_type_other)
+        if m.valid?
+          m.save
+        end
+      end
+
+      params[:form][:mimetype_id] = m.id
     end
   end
 
