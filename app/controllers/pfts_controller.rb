@@ -110,11 +110,16 @@ class PftsController < ApplicationController
     pft.name += '-copy'
     pft.parent_id = orig_pft.id
 
+    # We save the pft BEFORE copying the associations so we don't try to
+    # validate them: Some associated species may have been entered into the
+    # database before we imposted stricter Rails validation on species objects.
+    # (Some species constraints haven't yet been implemented at the database
+    # level.)
+    pft.save
+
     # copy some of the associations:
     pft.specie = orig_pft.specie
     pft.priors = orig_pft.priors
-
-    pft.save
 
     respond_to do |format|
       format.html { redirect_to(pft_url(pft)) }
