@@ -1,0 +1,9 @@
+// find the link whose href ends with "pft=<the id of the pft we're unlinking>"
+jQuery('a[href$="pft=<%= @pft.id %>"]').html('<%= link_to "+",
+           { :controller => :priors, :action => :add_pfts_priors,
+             :id => @prior.id, :pft => @pft.id },
+           :remote => true %></td>');
+
+// Ensure the link for updating the list is visible now that we've unlinked
+// something:
+jQuery('table#pfts caption a').show()
