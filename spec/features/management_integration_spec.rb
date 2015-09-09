@@ -37,6 +37,7 @@ feature 'Management features work' do
         click_link 'View Related Treatments'
         fill_in "search_treatments", with: 'observational'
         click_link '+'
+        page.should have_content 'X'
         click_button 'Update'
         # reopen related treatments listing
         click_link 'View Related Treatments'
