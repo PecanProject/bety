@@ -847,21 +847,6 @@ CREATE SEQUENCE counties_id_seq
 
 
 --
--- Name: counties; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE counties (
-    id bigint DEFAULT nextval('counties_id_seq'::regclass) NOT NULL,
-    name character varying(255),
-    created_at timestamp(6) without time zone DEFAULT utc_now(),
-    updated_at timestamp(6) without time zone DEFAULT utc_now(),
-    state character varying(255),
-    state_fips integer,
-    county_fips integer
-);
-
-
---
 -- Name: covariates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1069,8 +1054,7 @@ CREATE TABLE ensembles (
     created_at timestamp(6) without time zone DEFAULT utc_now(),
     updated_at timestamp(6) without time zone DEFAULT utc_now(),
     runtype character varying(255) NOT NULL,
-    workflow_id bigint,
-    CONSTRAINT valid_ensemble_runtype CHECK (((runtype)::text = ANY ((ARRAY['ensemble'::character varying, 'sensitivity analysis'::character varying, 'MCMC'::character varying, 'pda.emulator'::character varying])::text[])))
+    workflow_id bigint
 );
 
 
@@ -1119,7 +1103,6 @@ CREATE SEQUENCE formats_id_seq
 
 CREATE TABLE formats (
     id bigint DEFAULT nextval('formats_id_seq'::regclass) NOT NULL,
-    mime_type character varying(255),
     dataformat text DEFAULT ''::text NOT NULL,
     notes text DEFAULT ''::text NOT NULL,
     created_at timestamp(6) without time zone DEFAULT utc_now(),
@@ -1127,6 +1110,7 @@ CREATE TABLE formats (
     name character varying(255) NOT NULL,
     header character varying(255) DEFAULT ''::character varying NOT NULL,
     skip character varying(255) DEFAULT ''::character varying NOT NULL,
+    mimetype_id bigint,
     CONSTRAINT normalized_format_name CHECK (is_whitespace_normalized((name)::text))
 );
 
@@ -1227,38 +1211,6 @@ ALTER SEQUENCE inputs_runs_id_seq OWNED BY inputs_runs.id;
 
 
 --
--- Name: inputs_variables; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE inputs_variables (
-    input_id bigint NOT NULL,
-    variable_id bigint NOT NULL,
-    created_at timestamp(6) without time zone DEFAULT utc_now(),
-    updated_at timestamp(6) without time zone DEFAULT utc_now(),
-    id bigint NOT NULL
-);
-
-
---
--- Name: inputs_variables_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE inputs_variables_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: inputs_variables_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE inputs_variables_id_seq OWNED BY inputs_variables.id;
-
-
---
 -- Name: likelihoods_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1298,20 +1250,6 @@ CREATE SEQUENCE location_yields_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
---
--- Name: location_yields; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE location_yields (
-    id bigint DEFAULT nextval('location_yields_id_seq'::regclass) NOT NULL,
-    yield numeric(20,15),
-    species character varying(255),
-    created_at timestamp(6) without time zone DEFAULT utc_now(),
-    updated_at timestamp(6) without time zone DEFAULT utc_now(),
-    county_id bigint
-);
 
 
 --
@@ -1946,9 +1884,7 @@ CREATE TABLE runs (
     updated_at timestamp(6) without time zone DEFAULT utc_now(),
     started_at timestamp(6) without time zone,
     finished_at timestamp(6) without time zone,
-    ensemble_id bigint NOT NULL,
-    start_date character varying(255),
-    end_date character varying(255)
+    ensemble_id bigint NOT NULL
 );
 
 
@@ -2680,6 +2616,10 @@ CREATE TABLE yields (
     checked integer DEFAULT 0 NOT NULL,
     access_level level_of_access,
     method_id bigint,
+    entity_id bigint,
+    date_year integer,
+    date_month integer,
+    date_day integer,
     CONSTRAINT valid_yield_checked_value CHECK (((checked >= (-1)) AND (checked <= 1)))
 );
 
@@ -3015,13 +2955,6 @@ ALTER TABLE ONLY inputs_runs ALTER COLUMN id SET DEFAULT nextval('inputs_runs_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY inputs_variables ALTER COLUMN id SET DEFAULT nextval('inputs_variables_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY managements_treatments ALTER COLUMN id SET DEFAULT nextval('managements_treatments_id_seq'::regclass);
 
 
@@ -3080,14 +3013,6 @@ ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq':
 
 ALTER TABLE ONLY citations
     ADD CONSTRAINT citations_pkey PRIMARY KEY (id);
-
-
---
--- Name: counties_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY counties
-    ADD CONSTRAINT counties_pkey PRIMARY KEY (id);
 
 
 --
@@ -3168,14 +3093,6 @@ ALTER TABLE ONLY inputs
 
 ALTER TABLE ONLY likelihoods
     ADD CONSTRAINT likelihoods_pkey PRIMARY KEY (id);
-
-
---
--- Name: location_yields_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY location_yields
-    ADD CONSTRAINT location_yields_pkey PRIMARY KEY (id);
 
 
 --
@@ -3347,14 +3264,6 @@ ALTER TABLE ONLY inputs_runs
 
 
 --
--- Name: unique_input_variable_pairs; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY inputs_variables
-    ADD CONSTRAINT unique_input_variable_pairs UNIQUE (input_id, variable_id);
-
-
---
 -- Name: unique_name_per_model; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3520,13 +3429,6 @@ CREATE INDEX index_entities_on_parent_id ON entities USING btree (parent_id);
 
 
 --
--- Name: index_formats_on_mime_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_formats_on_mime_type ON formats USING btree (mime_type);
-
-
---
 -- Name: index_formats_variables_on_format_id_and_variable_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3569,13 +3471,6 @@ CREATE UNIQUE INDEX index_inputs_runs_on_input_id_and_run_id ON inputs_runs USIN
 
 
 --
--- Name: index_inputs_variables_on_input_id_and_variable_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_inputs_variables_on_input_id_and_variable_id ON inputs_variables USING btree (input_id, variable_id);
-
-
---
 -- Name: index_likelihoods_on_input_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3594,34 +3489,6 @@ CREATE INDEX index_likelihoods_on_run_id ON likelihoods USING btree (run_id);
 --
 
 CREATE INDEX index_likelihoods_on_variable_id ON likelihoods USING btree (variable_id);
-
-
---
--- Name: index_location_yields_on_county_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_location_yields_on_county_id ON location_yields USING btree (county_id);
-
-
---
--- Name: index_location_yields_on_location_and_species; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_location_yields_on_location_and_species ON location_yields USING btree (species);
-
-
---
--- Name: index_location_yields_on_species_and_county_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_location_yields_on_species_and_county_id ON location_yields USING btree (species, county_id);
-
-
---
--- Name: index_location_yields_on_yield; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_location_yields_on_yield ON location_yields USING btree (yield);
 
 
 --
@@ -4037,13 +3904,6 @@ CREATE TRIGGER update_citations_treatments_timestamp BEFORE UPDATE ON citations_
 
 
 --
--- Name: update_counties_timestamp; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER update_counties_timestamp BEFORE UPDATE ON counties FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
-
-
---
 -- Name: update_covariates_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -4121,24 +3981,10 @@ CREATE TRIGGER update_inputs_timestamp BEFORE UPDATE ON inputs FOR EACH ROW EXEC
 
 
 --
--- Name: update_inputs_variables_timestamp; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER update_inputs_variables_timestamp BEFORE UPDATE ON inputs_variables FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
-
-
---
 -- Name: update_likelihoods_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER update_likelihoods_timestamp BEFORE UPDATE ON likelihoods FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
-
-
---
--- Name: update_location_yields_timestamp; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER update_location_yields_timestamp BEFORE UPDATE ON location_yields FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
 
 
 --
@@ -4524,22 +4370,6 @@ ALTER TABLE ONLY inputs
 
 
 --
--- Name: fk_inputs_variables_inputs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY inputs_variables
-    ADD CONSTRAINT fk_inputs_variables_inputs_1 FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE;
-
-
---
--- Name: fk_inputs_variables_variables_1; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY inputs_variables
-    ADD CONSTRAINT fk_inputs_variables_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id) ON DELETE CASCADE;
-
-
---
 -- Name: fk_likelihoods_inputs_1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4561,14 +4391,6 @@ ALTER TABLE ONLY likelihoods
 
 ALTER TABLE ONLY likelihoods
     ADD CONSTRAINT fk_likelihoods_variables_1 FOREIGN KEY (variable_id) REFERENCES variables(id);
-
-
---
--- Name: fk_location_yields_counties_1; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY location_yields
-    ADD CONSTRAINT fk_location_yields_counties_1 FOREIGN KEY (county_id) REFERENCES counties(id);
 
 
 --
