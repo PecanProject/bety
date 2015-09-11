@@ -17,7 +17,7 @@
 		    <% @formats.each do |format| %>
           <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and format.id == @search.to_i%>>
             <td class="center"><%= format.name %></td>
-            <td class="center"><%= format.mimetype.type_string %></td>
+            <td class="center"><%= format.mimetype.nil? ? "(no mimetype specified)" : format.mimetype.type_string %></td>
             <td class="center"><%= format.header %></td>
             <td class="center"><%= format.skip %></td>
             <td class="center"><%= format.dataformat %></td>
