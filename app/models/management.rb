@@ -34,7 +34,7 @@ class Management < ActiveRecord::Base
   end
 
   def self.management_types
-    [ 'burned', 'coppice', 'cultivated', 'cultivated or grazed', 'fertilizer_Ca', 'fertilizer_K', 'fertilizer_N', 'fertilizer_P', 'fertilizer_other',  'fertilizer_Ca_rate', 'fertilizer_K_rate', 'fertilizer_N_rate', 'fertilizer_P_rate', 'fertilizer_other_rate' 'fungicide', 'grazed', 'harvest', 'herbicide', 'irrigation', 'light', 'pesticide', 'planting (plants / m2)', 'row spacing', 'seeding', 'tillage','warming_soil','warming_air','initiation_of_natural_succession','major_storm','root_exclusion', 'trenching', 'CO2_fumigation', 'soil_disturbance', 'rain_exclusion']
+    [ 'burned', 'coppice', 'cultivated', 'cultivated or grazed', 'fertilizer_Ca', 'fertilizer_K', 'fertilizer_N', 'fertilizer_P', 'fertilizer_other',  'fertilizer_Ca_rate', 'fertilizer_K_rate', 'fertilizer_N_rate', 'fertilizer_P_rate', 'fertilizer_other_rate', 'fungicide', 'grazed', 'harvest', 'herbicide', 'irrigation', 'light', 'pesticide', 'planting (plants / m2)', 'row spacing', 'seeding', 'tillage','warming_soil','warming_air','initiation_of_natural_succession','major_storm','root_exclusion', 'trenching', 'CO2_fumigation', 'soil_disturbance', 'rain_exclusion']
   end
 
   def date_type_level
