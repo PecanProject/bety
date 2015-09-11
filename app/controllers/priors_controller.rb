@@ -107,8 +107,8 @@ class PriorsController < ApplicationController
         # On ebi-forecast, the version of R we want to use is in
         # /usr/local/R-3.1.0/bin, so put it first in the path so that that version
         # gets used if it exists:
-        o, error_output, s = Open3.capture3({ 'PATH' => "/usr/local/R-3.1.0/bin:/usr/bin:/usr/local/bin" },
-                                            "R", "--vanilla", "--args", imgfile, distname, aparam.to_s, bparam.to_s, n.to_s,
+        ENV["PATH"] = "/usr/local/R-3.1.0/bin:/usr/bin:/usr/local/bin"                                                                                 
+        o, error_output, s = Open3.capture3("R", "--vanilla", "--args", imgfile, distname, aparam.to_s, bparam.to_s, n.to_s,                           
                                             stdin_data: Rails.root.join('script/previewhelp.R').read)
       else
         error_output = sprintf("Invalid argument set:\n\timgfile = %s\n\tdistname = %s\n\taparam = %s\n\tbparam = %s\n\tn = %s\n", 

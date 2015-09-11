@@ -40,7 +40,7 @@ class Format < ActiveRecord::Base
   end
 
   def name_mimetype
-    "#{name} #{mimetype.type_string}"
+    "#{name}#{mimetype.nil? ? "" : " #{mimetype.type_string}"}"
   end
   def to_s
     name_mimetype
