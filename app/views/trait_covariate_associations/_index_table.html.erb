@@ -1,0 +1,36 @@
+<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
+
+  <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+	<thead>
+	  <tr role="row">
+        <th class="center" role="columnheader" aria-controls="DataTables_Table_0">Trait Variable</th>
+        <th class="center" role="columnheader" aria-controls="DataTables_Table_0" >Required Covariates</th>
+        <th class="center" role="columnheader" aria-controls="DataTables_Table_0">Optional Covariates</th>
+      </tr>
+    </thead>    
+	<tbody role="alert" aria-live="polite" aria-relevant="all">
+	  <% @recognized_traits.each do |trait| %>
+      <tr>
+        <td>
+          <%= raw "<em>#{trait.name}</em> (#{trait.units})" %>
+        </td>
+        <td class="center"><%= Variable.where("id in (SELECT covariate_variable_id FROM trait_covariate_associations WHERE trait_variable_id = ? AND required = 't')", trait.id).map { |v| v.name }.join(", ") %></td>
+        <td class="center"><%= Variable.where("id in (SELECT covariate_variable_id FROM trait_covariate_associations WHERE trait_variable_id = ? AND required = 'f')", trait.id).map { |v| v.name }.join(", ") %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+

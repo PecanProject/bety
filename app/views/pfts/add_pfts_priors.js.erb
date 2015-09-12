@@ -1,0 +1,5 @@
+// find the link whose href ends with "prior=<the id of the prior we're linking>"
+jQuery('a[href$="prior=<%= @prior.id %>"]').html('<%= link_to "X",
+           { :controller => :pfts, :action => :rem_pfts_priors,
+             :id => @pft.id, :prior => @prior.id },
+           :remote => true %></td>');

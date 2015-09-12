@@ -1,0 +1,17 @@
+<% @priors.each do |prior| %>
+    <tr>
+    <td>
+  <% if @pft.priors.include?(prior) %>
+    <%= link_to "X", { :controller => :pfts, :action => :rem_pfts_priors, :id => @pft.id, :prior => prior }, :remote => true %></td>
+  <% else %>
+    <%= link_to "+", { :controller => :pfts, :action => :add_pfts_priors, :id => @pft.id, :prior => prior }, :remote => true %></td>
+  <% end %>
+    <td><%= link_to "edit", edit_prior_path(prior.id) %></td>
+    <td><%= link_to_if prior.variable, prior.variable, prior.variable %></td>
+    <td><%= prior.distn %></td>
+    <td><%= sprintf("%#1.2f", prior.parama) %></td>
+    <td><%= sprintf("%#1.2f", prior.paramb) rescue "" %></td>
+    <td><%= prior.phylogeny %></td>
+    <td><%= link_to_if prior.citation, prior.citation, prior.citation %></td>
+    </tr>
+<% end %>

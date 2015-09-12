@@ -46,8 +46,14 @@ module AuthenticatedSystem
       # RAILS3 changed below line with second below line. controller_class_name appears to have been removed Rails3
       # controller_class = controller_class_name if controller_class.nil?
       controller_class = "#{controller_name.camelize}Controller" if controller_class.nil?
-      admin_requirement = ["UsersController.ALL"],
-      manage_requirement = ["CitationsController.ALL",
+      admin_requirement = ["UsersController.ALL",
+                                "BulkUploadController.ALL" ] # For now, only administrators are allowed access to the insert_data action of the bulk upload wizard.
+      manage_requirement = ["BulkUploadController.start_upload", # For now, only administrators and managers are allowed access to the bulk upload wizard.
+                                "BulkUploadController.choose_global_citation",
+                                "BulkUploadController.display_csv_file",
+                                "BulkUploadController.choose_global_data_values",
+                                "BulkUploadController.confirm_data",
+                                "CitationsController.ALL",
                                 "CovariatesController.ALL",
                                 "CultivarsController.ALL",
                                 "DbfilesController.ALL",

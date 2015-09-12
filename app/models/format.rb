@@ -9,6 +9,23 @@ class Format < ActiveRecord::Base
   has_many :formats_variables
   has_many :variables, :through => :formats_variables
 
+  belongs_to :mimetype
+
+  # VALIDATION
+
+  ## Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:name])
+
+  ## Validations
+
+## To do: fix validation of mimetype
+#  validates :mimetype_id,
+#      presence: true,
+#      mediatype: true
+
+
+
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
@@ -23,7 +40,7 @@ class Format < ActiveRecord::Base
   end
 
   def name_mimetype
-    "#{name} #{mime_type}"
+    "#{name}#{mimetype.nil? ? "" : " #{mimetype.type_string}"}"
   end
   def to_s
     name_mimetype

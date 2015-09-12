@@ -56,6 +56,11 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id(.:format)))'
 
+  # route for autocompletion actions used by the bulk upload wizard:
+  get ':controller/bu_autocomplete', action: 'bu_autocomplete'
+
+  # route for other autocompletion actions:
+  get ':controller/autocomplete', action: 'autocomplete'
 
   resources :yieldsviews, :only => [:show]
   resources :workflows
@@ -80,48 +85,136 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   end
 
   resources :entities
-  resources :formats
+  post '/feedback/feedback_email' => 'feedback#feedback_email'
+  resources :formats do
+    post :add_formats_variables, on: :collection
+  end
+  get 'formats/edit_formats_variables'
+  get '/formats/rem_formats_variables(/:id)' => 'formats#rem_formats_variables'
+
   resources :likelihoods
-  resources :inputs
-  resources :models
-  resources :modeltypes
+  resources :inputs do
+    collection do
+      get :edit_inputs_variables # for linking and unlinking variables
+      post :edit_inputs_variables # for searching variables
+      get :edit_inputs_files # for linking and unlinking files
+      post :edit_inputs_files # for searching files
+    end
+  end
+  resources :models do
+    member do
+      get :edit_models_files
+      post :edit_models_files
+    end
+  end
+  resources :modeltypes do
+    # Because of the way the controller was written to deal with the associates
+    # set of formats, we have to use collection here even though the actions
+    # pertain to a particular modeltype:
+    collection do
+      post :add_modeltypes_format
+      post :edit_modeltypes_format
+      get :remove_modeltypes_format
+    end
+    # TO DO: do the routing of association editing properly.
+  end
   resources :runs
   resources :posteriors
   resources :covariates
   resources :pfts do
     member do
+      get :search_priors
       get :make_clone
+      get :edit2_pfts_species # for adding a species to the pft
+      post :edit2_pfts_species # for species search
+    end
+    collection do
+      get :add_pfts_priors
+      get :rem_pfts_priors
+   end
+  end
+  # TO-DO: eliminate this route after modifying the tests that use it:
+  get 'pfts/edit2_pfts_species(/:id)' => 'pfts#edit2_pfts_species' # for searching
+
+  resources :managements do
+    member do
+      get :search_treatments
+    end
+    collection do
+      get :add_managements_treatments
+      get :rem_managements_treatments
     end
   end
-
-  resources :managements
   resources :treatments do
     collection do
       get :linked
       get :new_management
+      get :flag_control
+      post :edit_managements_treatments
+      get :rem_managements_treatments
+      post :create_new_management
     end
   end
 
   resources :sites do
+    member do
+      get :search_citations
+    end
     collection do
       get :map
+      get :linked
+      get :rem_citations_sites
+      get :add_citations_sites
     end
   end
 
-  resources :citations
+  resources :citations do
+    member do
+      get :search_sites
+    end
+    collection do
+      get :rem_citations_sites
+      get :add_citations_sites
+    end
+  end
   resources :variables
-  resources :species
+  resources :species do
+    member do
+      get :search_pfts
+    end
+    collection do
+      get :rem_pfts_species
+      get :add_pfts_species # for adding a pft relationship
+      post :species_search # for help making new yields
+    end
+  end
   resources :cultivars
   resources :priors do
     member do
       get :preview
+      get :search_pfts
+    end
+    collection do
+      get :rem_pfts_priors
+      get :add_pfts_priors
     end
   end
 
-  resources :yields
+  resources :yields do
+    collection do
+      post :access_level
+      post :checked
+    end
+  end
   resources :traits do
+    member do
+      get :unlink_covariate
+    end
     collection do
       get :linked
+      post :access_level
+      post :checked
+      post :trait_search
     end
   end
 
@@ -134,8 +227,17 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
 
 
   resources :errors, :only => [:index, :create]
-  resources :users
+  resources :users do
+    collection do
+      get :create_apikey
+    end
+  end
   resources :schemas, :only => [:index]
+  resources :search, :only => :index
+  resources :trait_covariate_associations, only: :index
+
+  get '/application/use_citation/:id', controller: 'application', action: 'use_citation'
+  get '/application/remove_citation'
 
   match '/maps' => 'maps#location_yields'
 
@@ -143,11 +245,6 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
 
 
   root :to => "sessions#new"
-
-  match '/:controller(/:action(/:id))'
-  match ':controller/:action.:format' => '#index'
-
-
 
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/login' => 'sessions#new', :as => :login
@@ -159,11 +256,17 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   # match '*path' => 'static#index'
   match ':action' => 'static#:action'
 
-  # This seems a somewhat kludgy way to get 'link_to "User Guide",
-  # user_guide_path' to create a robust link to
-  # /public/dbdocumentation_users.pdf, but it works.
-  get '/dbdocumentation_users.pdf' => redirect('/dbdocumentation_users.pdf'), :as => :user_guide
-  # Similarly, data entry guide:
-  get '/dbdocumentation_data_entry.pdf' => redirect('/dbdocumentation_data_entry.pdf'), :as => :data_entry_guide
+  # add named routes for bulk_upload controller:
+  match '/bulk_upload/start_upload' => 'bulk_upload#start_upload', :as => :start_upload
+  match '/bulk_upload/display_csv_file', :as => :show_upload_file_contents
+  match '/bulk_upload/choose_global_citation', as: :choose_global_citation
+  match '/bulk_upload/choose_global_data_values', :as => :choose_global_data_values
+  match '/bulk_upload/confirm_data', :as => :bulk_upload_data_confirmation
+  match '/bulk_upload/insert_data', :as => :bulk_upload_data_insertion
+
+  # This seems a somewhat kludgy way to get 'link_to "CF Guidelines",
+  # guidelines_path' to create a robust link (i.e., one that works even in
+  # subdirectory deployments) to /public/guidelines.html, but it works.
+  get '/guidelines.html' => redirect('/guidelines.html'), :as => :guidelines
 
 end

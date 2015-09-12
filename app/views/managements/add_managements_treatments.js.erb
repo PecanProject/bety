@@ -1,0 +1,5 @@
+// find the link whose href ends with "treatment=<the id of the treatment we're linking>"
+jQuery('a[href$="treatment=<%= @treatment.id %>"]').html('<%= link_to "X",
+           { :controller => :managements, :action => :rem_managements_treatments,
+             :id => @management.id, :treatment => @treatment.id },
+           :remote => true %></td>');

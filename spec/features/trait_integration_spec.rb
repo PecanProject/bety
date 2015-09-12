@@ -1,5 +1,5 @@
 require 'spec_helper'
-include LoginHelper
+include LoginHelper, AutocompletionHelper
 
 feature 'Traits index works' do
   before :each do
@@ -32,42 +32,36 @@ feature 'Traits index works' do
       end
     end
 
-    ## pending
-    it 'should allow creation of new traits' do
-#      # Create Citation association
-#      visit '/citations'
-#      first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
-#      page.should have_content 'Sites already associated with this citation'
+    it 'should allow creation of new traits', js:true do
+     # Create Citation association
+     visit '/citations'
+     first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
+     page.should have_content 'Sites already associated with this citation'
 
-#      # Create Treatment association
-#      visit '/treatments'
-#      click_link 'New Treatment'
-#      fill_in 'Name', :with => 'Erduah'
-#      fill_in 'Definition', :with => 'Hot Earth'
-#      click_button 'Create'
 
-#      # Create Site association
-#      visit '/sites'
-#      click_link 'New Site'
-#      fill_in 'Site name', :with => 'Erduah'
-#      fill_in 'site_notes', :with => 'Hot Earth'
-#      click_button 'Create'
+     # Verify the trait creation
+     visit '/traits/new'
 
-#      # Verify the trait creation
-#      visit '/traits/new'
-#      
-#      page.should have_content 'New Trait'
-#      
-#      fill_in 'trait_mean', :with => '238.12'
-#      fill_in 'trait_stat', :with => '7.76'
-#      fill_in 'trait_n', :with => '3'
-#      fill_in 'trait_notes', :with => 'Research Interwebs Papers Research Interwebs PapersResearch Interwebs PapersResearch Interwebs Papers' 
+      page.should have_content 'New Trait'
 
-#      print page.body
+      fill_autocomplete "search_variables", with: "Amax", select: "Amax"
+      fill_in 'trait_mean', :with => '238.12'
+      select 'SE', :from => 'trait_statname'
+      fill_in 'trait_stat', :with => '7.76'
+      fill_in 'trait_n', :with => '3'
+      fill_in 'trait_notes', :with => 'Research Interwebs Papers Research Interwebs PapersResearch Interwebs PapersResearch Interwebs Papers' 
 
-#      click_button 'Create'
-#      
-#      page.should have_content 'Trait was successfully created'
+      click_button 'Create'
+
+      page.should have_content 'Trait was successfully created'
+
+      visit '/traits'
+      all(:xpath, './/a[@alt = "delete"]')[-1].click
+      # If we're using Selenium, we have to deal with the modal dialogue:
+      if page.driver.is_a? Capybara::Selenium::Driver
+        a = page.driver.browser.switch_to.alert
+        a.accept
+      end
     end
 
 
@@ -84,4 +78,84 @@ feature 'Traits index works' do
   end
 end
 
+feature "Trait creation works" do
 
+  before :each do
+    login_test_user
+    visit '/citations'
+    first(:xpath, "//a[@alt = 'use']").click
+    visit '/traits/new'
+  end
+
+  it "should complain that the mean wasn't specified if it is left blank" do
+    click_button "Create"
+    expect(page).to have_content "Mean can't be blank"
+  end
+
+  it "should not give a message about \"undefined method '<' for nil:NilClass\"", js:true do
+    click_button "Create"
+    expect(page).to_not have_content "undefined method `<' for nil:NilClass"
+  end
+
+  # Test for Redmine bug #2486:
+  it "should not complain \"You have a nil object when you didn't expect it!\" if the create button is pressed twice" do
+    click_button "Create"
+    click_button "Create"
+    expect(page).to_not have_content "You have a nil object when you didn't expect it!"
+  end
+
+end
+
+feature "Editing traits works" do
+
+  before :each do
+    login_test_user
+    visit '/traits/2/edit'
+  end
+
+  it "should complain that the mean wasn't specified if it is erased" do
+    fill_in "trait_mean", with: ""
+    click_button "Update"
+    expect(page).to have_content "Mean can't be blank"
+  end
+
+  it "should not give a message about \"undefined method '<' for nil:NilClass\"" do
+    fill_in "trait_mean", with: ""
+    click_button "Update"
+    expect(page).to_not have_content "undefined method `<' for nil:NilClass"
+  end
+
+  # Test for Redmine bug #2486:
+  it "should not complain \"You have a nil object when you didn't expect it!\" if the update button is pressed twice" do
+    fill_in "trait_mean", with: ""
+    click_button "Update"
+    click_button "Update"
+    expect(page).to_not have_content "You have a nil object when you didn't expect it!"
+  end
+
+  it "should allow adding and removing a covariate", js: true do
+    # add:
+    select('Amax - umol CO2 m-2 s-1', from: 'covariate[][variable_id]')
+    fill_in "covariate[][level]", with: '1.0'
+    click_button 'Update'
+    page.should have_content 'Amax - umol CO2 m-2 s-1'
+
+    # remove
+    click_button 'Edit Record'
+    click_link "View Existing Covariates"
+    click_link "unlink"
+    # If we're using Selenium, we have to deal with the modal dialogue:
+    if page.driver.is_a? Capybara::Selenium::Driver
+      a = page.driver.browser.switch_to.alert
+      a.accept
+    end
+    if page.driver.is_a? Capybara::Selenium::Driver
+      # If display = none, Selenium doesn't see the node at all:
+      expect(not(page.has_css?('#edit_covariates_traits')))
+    else
+      # Webkit sees the element.  But the table inside should be empty.
+      expect(page.find('#edit_covariates_traits')).to_not have_xpath('./table/tbody/tr')
+    end
+  end
+
+end

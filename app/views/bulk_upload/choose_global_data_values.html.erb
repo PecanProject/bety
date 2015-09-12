@@ -1,0 +1,78 @@
+<% content_for(:autocomplete_javascript) do %>
+  <!-- bulk_upload.js needs to know the root -->
+  <script type="text/javascript" charset="utf-8">var ROOT_URL = '<%= root_url %>';</script>
+  <%= javascript_include_tag 'lazy/bulk_upload.js' %>
+<% end %>
+<div class="content">
+  <div class="container">
+	<div class="sixteen columns">
+	  <header>
+        <h1>Specify Upload Options and Global Values</h1>
+        <h2 class="file_info"><%= render 'file_info' %></h2>
+      </header>
+      <%= form_tag(bulk_upload_data_confirmation_path, method: "post", multipart: true) do %>
+      <div id="process_container">
+        <div id="back">
+          <%= link_to "<< View Validation Results", show_upload_file_contents_path %>
+          <br />
+          <%= link_to start_upload_path do
+              content_tag :em, "START OVER with a different file"
+              end %>
+        </div>
+        <div id="new">&nbsp;</div>
+        <div id="forward">
+          <%= submit_tag "Confirm Data >>" %>
+        </div>
+      </div>
+      <h2>Specify Rounding</h2>
+      <ul>
+        <li>
+          <%= label_tag "rounding_vars" do %>
+          Round all variable values to
+          <%= select_tag("rounding[vars]",
+              options_for_select([['1', 1], ['2', 2], ['3', 3], ['4', 4]], '3')
+              ) %> significant digits
+          <% end %>
+        </li>
+        <% if @data_set.headers.include?("SE") %>
+        <li>
+          <%= label_tag "rounding_SE" do %>
+          Round standard error to
+          <%= select_tag("rounding[SE]",
+              options_for_select([['1', 1], ['2', 2], ['3', 3], ['4', 4]], '2')
+              ) %>
+          significant digits
+          <% end %>
+        </li>
+        <% end %>
+      </ul>
+      <% if @data_set.missing_interactively_specified_fields.length > 0 %>
+      <h2>Specify Data-Set Wide Values</h2>
+      <ul>
+        <% @data_set.missing_interactively_specified_fields.each do |field| %>
+        <li>
+          <% if field == "access_level" %>
+          <%= label_tag "global_values_" + field, field %>
+          <%= select_tag "global_values[access_level]",
+              options_for_select([['', 0], ['Restricted', 1], ['Internal EBI & Collaborators', 2], ['External Researcher', 3], ['Public', 4]],
+              @session[:global_values] &&
+              @session[:global_values]["access_level"] || 0),
+              size: "1"
+          %>
+          <% else %>
+          <%= label_tag "autocomplete_" + field, field + (field == "cultivar" ? " (optional)" : "") %>
+          <%= text_field_tag "global_values[#{field.to_sym}]",
+              "#{@session[:global_values] && @session[:global_values][field.to_sym] || ''}",
+              id: "autocomplete_#{field}",
+              placeholder: @placeholders[field.to_sym],
+              style: "width: 400px" %>
+          <% end %>
+        </li>
+        <% end %>
+      </ul>
+      <% end # Data-Set Wide Value specification block %>
+      <% end %>
+
+    </div>
+  </div>
+</div>

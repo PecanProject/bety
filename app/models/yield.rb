@@ -17,9 +17,17 @@ class Yield < ActiveRecord::Base
   belongs_to :ebi_method, :class_name => 'Methods', :foreign_key => 'method_id'
 
   validates_presence_of     :mean
-  validates_numericality_of :mean
+  validates_numericality_of :mean, :greater_than_or_equal_to => 0.0
   validates_presence_of     :statname, :if => Proc.new { |y| !y.stat.blank? }
 
+  validates_presence_of     :citation_id
+  validates_presence_of     :site_id
+  validates_presence_of     :specie_id
+  validates_presence_of     :treatment_id
+  validates_presence_of     :user_id
+  validates_presence_of     :access_level
+  validates_presence_of     :date
+  
   scope :all_order, includes(:specie).order('species.genus, species.species')
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
@@ -63,6 +71,13 @@ class Yield < ActiveRecord::Base
      cultivar :sn_name
      treatment :name_definition
 
+  end
+
+  # Now that the access_level column of "yields" has user-defined (domain) type
+  # "level_of_access", we have to ensure it maps to a Ruby Fixnum because Rails
+  # seems to map unknown SQL types to strings by default:
+  def access_level
+    super.to_i
   end
 
   def to_s

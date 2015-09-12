@@ -1,3 +1,15 @@
+<% content_for(:autocomplete_javascript) do %>
+  <!-- autocomplete.js needs a `completion_fields` object describing the
+  autocompletion fields on the page and needs to know the Rails root -->
+  <script type="text/javascript" charset="utf-8">
+    var ROOT_URL = '<%= root_url %>';
+    var completion_fields = {
+      "search_variables": { controller: "variables",
+                        hidden_field_id: "trait_variable_id" }
+    };
+  </script>
+  <%= javascript_include_tag 'lazy/autocomplete.js' %>
+<% end %>
 <div class="content">
   <div class="container " style="margin-left:100px; width:1260px">
     <div class="row" >
@@ -12,8 +24,7 @@
             <%= f.error_messages %>
               <div class="row">
                 <div class="eight columns alpha">
-                  <%= f.label :variable_id, "Trait" %>
-                  <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }.sort { |a,b| a[0].split(': ')[1] <=> b[0].split(': ')[1] }, {}, :class => "input-full" %>
+                  <%= autocompletion_field(f, "Trait Variable", "variables", :variable_id, "Search variables by name or units") %>
                 </div>
                 <div class="eight columns omega">
                   <%= f.label :cultivar_id %>
@@ -89,7 +100,7 @@
                 </div>
                 <div class="four columns omega">
                   <%= f.label :access_level %>
-                  <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :selected => 2,:class => "input-full" %>
+                  <%= f.select :access_level, [["1.Restricted",1],['2.EBI Researchers',2],['3.External Researchers',3],['4.Public',4]], :class => "input-full" %>
                 </div>
               </div>
         

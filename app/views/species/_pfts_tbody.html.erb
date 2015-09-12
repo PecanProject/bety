@@ -1,0 +1,13 @@
+<% @pfts.each do |pft| %>
+    <tr>
+    <td>
+  <% if @species.pfts.include?(pft) %>
+    <%= link_to "X", { :controller => :species, :action => :rem_pfts_species, :id => @species.id, :pft => pft }, :remote => true %></td>
+  <% else %>
+    <%= link_to "+", { :controller => :species, :action => :add_pfts_species, :id => @species.id, :pft => pft }, :remote => true %></td>
+  <% end %>
+    <td><%= link_to "edit", edit_pft_path(pft.id) %></td>
+    <td><%= pft.name %></td>
+    <td><%= pft.definition %></td>
+    </tr>
+<% end %>

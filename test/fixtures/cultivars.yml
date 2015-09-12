@@ -6,3 +6,22 @@ test_cultivar:
   created_at: "2013-03-31 23:16:35"
   updated_at: "2013-03-31 23:16:35"
   previous_id: "pvhyl"
+
+test_cultivar_bulk_upload:
+  specie_id: 3
+  name: "s5-14"
+  ecotype: "Upland"
+  notes: "asdfasdfasdfasdfasdfasdfasdf"
+  created_at: "2013-03-31 23:16:35"
+  updated_at: "2013-03-31 23:16:35"
+  previous_id: "pvhyl"
+
+test_cultivar_bulk_upload_fuzzy_matching:
+  id: '417'
+  specie_id: '18'
+  name: "Gremie"
+  ecotype: ''
+  notes: 'Ploidy: 2n'
+  created_at: '2012-05-29 19:34:10'
+  updated_at: '2012-05-29 19:34:10'
+  previous_id: ''

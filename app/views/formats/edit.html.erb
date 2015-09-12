@@ -1,3 +1,15 @@
+<% content_for(:autocomplete_javascript) do %>
+  <!-- autocomplete.js needs a `completion_fields` object describing the
+  autocompletion fields on the page and needs to know the Rails root -->
+  <script type="text/javascript" charset="utf-8">
+    var ROOT_URL = '<%= root_url %>';
+    var completion_fields = {
+      "search_mimetypes": { controller: "mimetypes",
+                            hidden_field_id: "form_mimetype_id" }
+    };
+  </script>
+  <%= javascript_include_tag 'lazy/autocomplete.js' %>
+<% end %>
 <div class="content">
 	<div class="container">
 		<div class="sixteen columns">
@@ -11,17 +23,18 @@
         <%= render 'edit_formats_variables' %>
       </div>
       <hr />
-      <%= form_for @format, :as => :form, :url => { :action => "update", :id => @format.id }, :html => {:method => :put} do |f| %>
+      <%= form_for @format,
+          :as => :form, # because "format" is used for something else by Rails
+          :url => { :action => "update", :id => @format.id }, :html => {:method => :put} do |f| %>
         <%= f.error_messages %>
 
         <div class="row">
           <div class="four columns alpha">
-            <%= f.label :mime_type %>
-            <%= f.select :mime_type, Mimetype.order("id desc").collect(&:type_string), {:include_blank => true } %>
+            <%= autocompletion_field(f, "Mime type", "mimetypes", :mimetype_id, "Search mime types") %>
           </div>
           <div class="four columns">
             <%= f.label :new_mime_type %>
-            <%= text_field :mime_type_other, :class => "input-full" %>
+            <%= text_field_tag :mime_type_other, nil, :class => "input-full" %>
           </div>
           <div class="eight columns omega">
             <%= f.label :name %>

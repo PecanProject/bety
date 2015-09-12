@@ -1,5 +1,9 @@
 class Variable < ActiveRecord::Base
 
+  # rename inheritance column from "type" so we can have "type" as the name of
+  # an attribute:
+  self.inheritance_column = 'zoink'
+
   include Overrides
 
   extend SimpleSearch
@@ -14,6 +18,13 @@ class Variable < ActiveRecord::Base
   has_many :likelihoods
   has_many :traits
   has_and_belongs_to_many :inputs
+
+  # VALIDATION
+
+  ## Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:description, :units, :name])
+
 
   scope :all_order, order('name')
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
@@ -39,6 +50,9 @@ class Variable < ActiveRecord::Base
     "#{id}: #{self}"
   end
 
+  def autocomplete_label
+    "#{name} (#{units}) #{description.blank? ? "(no description)" : "- #{description}"}"
+  end
 
   #Columns we search when referenced from another model
   #Fields present in 'select_default'

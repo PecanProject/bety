@@ -10,31 +10,43 @@ class PftsController < ApplicationController
     redirect_to root_path
   end
 
+  def search_priors
+    @pft = Pft.find(params[:id])
+
+    # the "sorted_order" call is mainly so "search" has the joins it needs
+    @priors = Prior.sorted_order("#{sort_column('priors','updated_at')} #{sort_direction}").search(params[:search_priors])
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
+    end
+  end
+
+
   def rem_pfts_priors
     @pft = Pft.find(params[:id])
     @prior = Prior.find(params[:prior])
 
-    render :update do |page|
-      if @pft.priors.delete(@prior)
-        page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
-      else
-        page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
-      end
+    @pft.priors.delete(@prior)
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
-  def edit_pfts_priors
+  def add_pfts_priors
     @pft = Pft.find(params[:id])
+    @prior = Prior.find(params[:prior])
 
-    render :update do |page|
-      if !params[:prior].nil?
-        params[:prior][:id].each do |c|
-          @pft.priors << Prior.find(c)
-        end
-        page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
-      else
-        page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
-      end
+    @pft.priors << @prior
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
@@ -92,11 +104,22 @@ class PftsController < ApplicationController
 
   def make_clone
     orig_pft = Pft.find(params[:id])
-    pft = orig_pft.clone()
+    pft = orig_pft.dup() # not .clone()!
+
+    # tweak the attributes of the clone:
+    pft.name += '-copy'
+    pft.parent_id = orig_pft.id
+
+    # We save the pft BEFORE copying the associations so we don't try to
+    # validate them: Some associated species may have been entered into the
+    # database before we imposted stricter Rails validation on species objects.
+    # (Some species constraints haven't yet been implemented at the database
+    # level.)
+    pft.save
+
+    # copy some of the associations:
     pft.specie = orig_pft.specie
     pft.priors = orig_pft.priors
-    pft.parent_id = orig_pft.id
-    pft.save
 
     respond_to do |format|
       format.html { redirect_to(pft_url(pft)) }
@@ -156,8 +179,16 @@ class PftsController < ApplicationController
   # GET /pfts/1/edit
   def edit
     @pft = Pft.find(params[:id])
+    @priors = @pft.priors
     @species = @pft.specie.paginate :page => params[:page]
-  end
+
+    respond_to do |format|
+      format.html
+      format.js {
+        render layout: false
+      }
+    end
+   end
 
   # POST /pfts
   # POST /pfts.xml
@@ -193,7 +224,11 @@ class PftsController < ApplicationController
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html {
+          @priors = @pft.priors
+          @species = @pft.specie.paginate :page => params[:page]
+          render :action => "edit"
+        }
         format.xml  { render :xml => @pft.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @pft.errors, :status => :unprocessable_entity }
         format.json  { render :json => @pft.errors, :status => :unprocessable_entity }
@@ -205,7 +240,6 @@ class PftsController < ApplicationController
   # DELETE /pfts/1.xml
   def destroy
     @pft = Pft.find(params[:id])
-    @pft.priors.destroy
     @pft.destroy
 
     respond_to do |format|

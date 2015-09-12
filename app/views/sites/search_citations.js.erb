@@ -1,0 +1,9 @@
+jQuery('table#citations tbody').html(
+    "<%= j render(partial: 'citations_tbody') %>"
+);
+
+jQuery('table#citations caption').html(
+    "All Search Matches" +
+        ' <%= link_to "Show only related citations",
+              { controller: :sites, action: :edit, remote: true } %>'
+);

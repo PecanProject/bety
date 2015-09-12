@@ -1,0 +1,42 @@
+<% content_for(:autocomplete_javascript) do %>
+  <!-- bulk_upload.js needs to know the root -->
+  <script type="text/javascript" charset="utf-8">var ROOT_URL = '<%= root_url %>';</script>
+  <%= javascript_include_tag 'lazy/bulk_upload.js' %>
+<% end %>
+<div class="content">
+  <div class="container">
+	<div class="sixteen columns">
+	  <header>
+		<h1>Choose a Citation</h1>
+        <h2 class="file_info"><%= render 'file_info' %></h2>
+      </header>
+      <%= form_tag(show_upload_file_contents_path, method: "post", multipart: true) do %>
+      <div id="process_container">
+        <div id="back">
+          <%= link_to start_upload_path do
+              content_tag :em, "START OVER with a different file"
+              end %>
+        </div>
+        <div id="new">&nbsp;</div>
+        <div id="forward">
+          <%= submit_tag "View Validation Results >>" %>
+        </div>
+      </div>
+
+      <h2>Specify Citation</h2>
+      <ul>
+        <li>
+          <%= label_tag "autocomplete_citation", "citation" %>
+          <%= text_field_tag "global_values[:citation]",
+              "",
+              id: "autocomplete_citation",
+              placeholder: "Enter citation",
+              style: "width: 400px" %>
+          <%= hidden_field_tag "global_values[citation_id]", @session[:citation] %>
+        </li>
+      </ul>
+      <% end %>
+
+		</div> <!-- class="sixteen columns" -->
+	</div> <!-- container --> 
+</div>

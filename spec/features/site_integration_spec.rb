@@ -20,7 +20,7 @@ feature 'Sites index works' do
       
       fill_in 'Site name', :with =>'tester'
       fill_in 'Elevation (m)', :with => '2900'
-      fill_in 'Mean Annual Precipitation (mm/yr)', :with => '11/90'
+      fill_in 'Mean Annual Precipitation (mm/yr)', :with => '672'
       fill_in 'Mean Annual Temperature', :with => '19'
       fill_in 'City', :with => 'Taipei'
       fill_in 'State', :with => 'hungsha'
@@ -41,11 +41,36 @@ feature 'Sites index works' do
     end
     
     context 'clicking edit site button' do
-      it 'should return "Editing Site" ' do
+      
+      before :each do
         visit '/sites/'
-         first(:xpath,".//a[ contains(@alt,'edit')]").click
+        first(:xpath,".//a[ contains(@alt,'edit')]").click
+      end
+
+      it 'should return "Editing Site" ' do
         page.should have_content 'Editing Site'
       end
+
+      it 'show allow adding new related citations', js: true do
+        click_link 'View Related Citations'
+        fill_in 'search_citations', with: 'Wood'
+        click_link '+'
+        click_button 'Update'
+        # reopen related citations listing
+        click_link 'View Related Citations'
+        page.should have_content 'Wood'
+
+        # now do clean-up:
+        fill_in 'search_citations', with: 'Wood'
+        click_link 'X'
+        click_button 'Update'
+        # reopen related citations listing
+        click_link 'View Related Citations'
+        page.should_not have_content 'Wood'
+    end      
+
+        
+
     end
 
     context 'clicking use site button' do

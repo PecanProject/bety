@@ -10,7 +10,6 @@ rescue => e
   puts "Go to https://github.com/PecanProject/bety/wiki/Testing for instructions on setting up the testing environment."
   exit
 end
-include Rails.application.routes.url_helpers
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -34,6 +33,19 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
-  Capybara.javascript_driver = :webkit
+  if ENV["RAILS_DEBUG"] == "true"
+    Bundler.require('debug')
+    Capybara.javascript_driver = :selenium
+  else
+    Bundler.require('javascript_testing')
+    Capybara.javascript_driver = :webkit
+
+
+    class Binding
+      def pry
+        puts "!!! binding.pry is for use with the Selenium JavaScript driver."
+      end
+    end
+  end
 
 end

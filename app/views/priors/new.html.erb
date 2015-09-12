@@ -1,4 +1,17 @@
-
+<% content_for(:autocomplete_javascript) do %>
+  <!-- autocomplete.js needs a `completion_fields` object describing the
+  autocompletion fields on the page and needs to know the Rails root -->
+  <script type="text/javascript" charset="utf-8">
+    var ROOT_URL = '<%= root_url %>';
+    var completion_fields = {
+      "search_citations": { controller: "citations",
+                        hidden_field_id: "prior_citation_id" },
+      "search_variables": { controller: "variables",
+                        hidden_field_id: "prior_variable_id" }
+    };
+  </script>
+  <%= javascript_include_tag 'lazy/autocomplete.js' %>
+<% end %>
 <div class="content">
 	<div class="container">
 		<div class="sixteen columns">
@@ -11,14 +24,12 @@
 
         <div class="row">
           <div class="eight columns alpha">
-            <%= f.label :citation_id %>
-            <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true }, :class => "input-full" %>
+            <%= autocompletion_field(f, "Citation", "citations", :citation_id, "Search citations by author or title") %>
             <em><%= link_to "New Citation", new_citation_path %></em>
           </div>
-          
+
           <div class="eight columns omega">
-            <%= f.label :variable_id %>
-            <%= f.select :variable_id, Variable.order('description').collect { |p| [ p.select_default, p.id ] }, {:selected => @prior.variable_id.to_i }, :class => "input-full" %>
+            <%= autocompletion_field(f, "Variable", "variables", :variable_id, "Search variables by name or units") %>
           </div>
         </div>
 
@@ -29,7 +40,7 @@
           </div>
           <div class="five columns">
             <%= f.label :distribution %>
-            <%= f.select :distn, %w(beta binom cauchy chisq exp f gamma geom hyper lnorm logis nbinom norm pois t unif weibull wilcox), :class => "input-full" %><br />
+            <%= f.select :distn, Prior.distn_types, :class => "input-full" %><br />
             <em><%= link_to "More information about distributions", "http://cran.r-project.org/doc/manuals/R-intro.html#R-as-a-set-of-statistical-tables", :target =>"_blank" %></em>
           </div>
           <div class="three columns">
@@ -45,18 +56,18 @@
             <%= f.text_field :n %>
           </div>
         </div>
-        
+
         <div class="row">
           <div class="sixteen columns alpha">
             <%= f.label :notes %>
             <%= f.text_area :notes, :rows => 10, :class => "input-full"  %>
           </div>
         </div>
-        
+
         <div class="form-actions">
           <div class="button-group">
             <%= link_to( priors_path ) do %>
-              <button class="button" type="button">Back</button>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
             <% end%>
           </div>
 		      <div class="button-group pull-right">

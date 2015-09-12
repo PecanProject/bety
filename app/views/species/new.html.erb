@@ -1,7 +1,7 @@
 <div class="content">
-	<div class="container">
-		<div class="sixteen columns">
-			<header>
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
         <h1>New Species</h1>
       </header>
 
@@ -44,6 +44,13 @@
           <div class="four columns omega">
             <%= f.label :Symbol %>
             <%= f.text_field :Symbol, :class => "input-full" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="sixteen columns alpha">
+            <%= f.label :notes %>
+            <%= f.text_area :notes, :rows => 5, :class => "input-full" %>
           </div>
         </div>
 
@@ -297,25 +304,6 @@
 
         <div class="row">
           <div class="four columns alpha">
-            <%= f.label :HedgeTolerance %>
-            <%= f.text_field :HedgeTolerance, :class => "input-full" %>
-          </div>
-          <div class="four columns">
-            <%= f.label :MoistureUse %>
-            <%= f.text_field :MoistureUse, :class => "input-full" %>
-          </div>
-          <div class="four columns">
-            <%= f.label :pH_Minimum %>
-            <%= f.text_field :pH_Minimum, :class => "input-full" %>
-          </div>
-          <div class="four columns omega">
-            <%= f.label :pH_Maximum %>
-            <%= f.text_field :pH_Maximum, :class => "input-full" %>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="four columns alpha">
             <%= f.label :Min_PlantingDensity %>
             <%= f.text_field :Min_PlantingDensity, :class => "input-full" %>
           </div>
@@ -431,13 +419,13 @@
         <div class="form-actions">
           <div class="button-group">
             <%= link_to( species_index_path ) do %>
-              <button class="button" type="button">Back</button>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
             <% end%>
           </div>
-		      <div class="button-group pull-right">
-			      <%= f.submit 'Create', :class => "button button-primary" %>
-		      </div>
-	      </div>
+          <div class="button-group pull-right">
+            <%= f.submit 'Create', :class => "button button-primary" %>
+          </div>
+        </div>
 
 
       <% end %>

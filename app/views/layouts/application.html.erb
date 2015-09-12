@@ -3,19 +3,30 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Energy Biosciences Institute</title>
+  <title><%= if @title then @title else "BETYdb: #{request.env['PATH_INFO']}" end %></title>
   <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />
-  <meta name="keywords" content="biofuel, biofuels, bioenergy, bioscience, biosciences, miscanthus, switchgrass, ethanol, alternative energy"> 
+  <meta name="keywords" content="biofuel, biofuels, bioenergy, bioscience, biosciences, miscanthus, switchgrass, ethanol, alternative energy" /> 
   <meta name="description" content="The Energy Biosciences Institute (EBI) is a new research and development organization that harnesses advanced knowledge in biology, the physical sciences, engineering, and environmental and social sciences to devise viable solutions to global energy challenges and reduce the impact of fossil fuels to global warming.  The worlds first research institution solely dedicated to the new field of energy bioscience, is initially focusing on the development of next-generation biofuels, but will also look into various applications of biology to the energy sector." />
   <meta name="robots" content="index, follow" />
 
   <%= csrf_meta_tag %>
- 
+
+  <!-- to do: reconcile these two sets of includes: -->
+
+  <!-- Set One -->
+  <%= javascript_include_tag 'lazy/jquery-1.11.0.js' %>
+  <%= javascript_include_tag 'libs/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js' %>
+  <%= javascript_include_tag 'libs/jquery-migrate-1.2.1.js' %>
+
+  <!-- Set Two -->
   <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
   <%= javascript_include_tag 'lazy/jquery-ui-1.10.4.min.js' %>
   <%= stylesheet_link_tag "jquery-ui-1.10.4.min" %>
   
   <!--  It seems so far that everything works in 1.7.2.-->
+
+  <!-- End of alternate sets -->
+  
   <%#= javascript_include_tag 'libs/jquery-1.6.2.min.js' %>
   <%= javascript_include_tag :all, :cache => "cache/all" %>
 
@@ -25,17 +36,18 @@
   <![endif]-->
   <%= javascript_include_tag 'libs/respond.min.js', 'libs/modernizr-2.0.6.min.js' %>
 
+  <%= yield :autocomplete_javascript %>
 
   <!-- For iPhone 4 -->
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/h/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/h/apple-touch-icon.png" />
   <!-- For iPad 1-->
-  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/m/apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/m/apple-touch-icon.png" />
   <!-- For iPhone 3G, iPod Touch and Android -->
-  <link rel="apple-touch-icon-precomposed" href="images/l/apple-touch-icon-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="images/l/apple-touch-icon-precomposed.png" />
   <!-- For Nokia -->
-  <link rel="shortcut icon" href="/images/l/apple-touch-icon.png">
+  <link rel="shortcut icon" href="/images/l/apple-touch-icon.png" />
   <!-- For everything else -->
-  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="shortcut icon" href="/favicon.ico" />
   
   <!-- ############## ENDED verifying all JS imports from here ############## -->
   
@@ -77,6 +89,12 @@
   <!-- Redesign CSS -->
   <%= yield :schemaCSS %>
   <%= stylesheet_link_tag "base", "grid", "layout", "dropdown", "tables", "demo" %>
+
+  <% if params[:controller] == 'bulk_upload' %>
+    <%= stylesheet_link_tag "bulk_upload" %>
+  <% end %>
+
+  <%= stylesheet_link_tag "jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" %>
 
 </head>
 
@@ -180,6 +198,10 @@
               </ul>
             </li>
 
+            <% if current_user != nil && current_user.page_access_level <= 2 %>
+            <li><%= link_to "Bulk Upload", controller: "bulk_upload", action: session[:bulk_upload_stage] || "start_upload" %></li>
+            <% end %>
+            
             <% if current_user != nil %>
               <li class="menu-login">                            
                 <%= link_to "Logout", logout_path %>
@@ -201,7 +223,7 @@
   <% elsif !session['citation'].nil? and !Citation.exists?(session['citation'])
        session['citation'] = nil
   %>
-    <hr>
+    <hr />
     
   <% end %>
   
@@ -232,20 +254,16 @@
 				  <h3><strong>BETY</strong>db</h3>
 				  <ul class="unstyled">
 					  <li><%= link_to "Homepage", root_path %></li>
-					  <li><%= link_to 'Documentation', user_guide_path %></li>
+                                          <li><%= link_to "Documentation","https://github.com/PecanProject/bety/wiki/The-Biofuel-Ecophysiological-Traits-and-Yields-Database", :target =>"_blank" %></li>
 					  <li><%= link_to "Maps & Data", maps_path %></li>
 				  </ul>
 			  </div>
 			  <div class="three columns">
-				  <h3><strong>Contact</strong> Info</h3>
+				  <h3><strong>Contact</strong> Us</h3>
 				  <ul class="unstyled">
-					  <li><%= link_to "Report a problem", controller: "contacts" %></li>
-					  <li><%= link_to "Send us a message", controller: "contacts" %></li>
+					  <li>&#9742; (217) 300-0266</li>
+					  <li>&#9993; betydb@gmail.com</li>
 				  </ul>
-			  </div>
-			  <div class="four columns">
-				  <h3><strong>Translate</strong> Page</h3>
-				  <div id="google_translate_element"><div class="skiptranslate goog-te-gadget" dir="ltr" style=""><div id=":0.targetLanguage" style="white-space: nowrap; " class="goog-te-gadget-simple"><img src="http://www.google.com/images/cleardot.gif" class="goog-te-gadget-icon" style="background-image: url(http://translate.googleapis.com/translate_static/img/te_ctrl3.gif); background-position: -65px 0px; "><span style="vertical-align: middle; "><a class="goog-te-menu-value" href="javascript:void(0)"><span>Select Language</span><img src="http://www.google.com/images/cleardot.gif" width="1" height="1"><span style="border-left-width: 1px; border-left-style: solid; border-left-color: rgb(187, 187, 187); ">​</span><img src="http://www.google.com/images/cleardot.gif" width="1" height="1"><span style="color: rgb(155, 155, 155); ">▼</span></a></span></div></div></div>
 			  </div>
 			  <div class="six columns omega">
 				  <p>LeBauer, David, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney, Gareth Scott Rohde, Dan Wang (2010).
@@ -255,11 +273,11 @@
                   <p>All public data in BETYdb is made available under the
                      <a href="http://opendatacommons.org/licenses/by/1-0/">Open Data Commons Attribution License (ODC-By) v1.0.</a>
                      You are free to share, create, and adapt its contents.
-                     Data with an access_level field and value <= 2 is is not covered by this license but may be available for use with consent.</p>
+                     Data with an access_level field and value &lt;= 2 is is not covered by this license but may be available for use with consent.</p>
 				  <p>Copyright © 2010-2014 Energy Biosciences Institute</p>
 			  </div>
 		  </div>
-		  <hr>
+		  <hr />
 		  <div class="row">
 			  <div class="footnotes">
 				  <div class="four columns alpha"><a href="http://illinois.edu" title="University of Illinois at Urbana-Champaign" class="illinois">University of Illinois at Urbana-Champaign</a></div>

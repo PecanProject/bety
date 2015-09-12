@@ -4,32 +4,43 @@ class ManagementsController < ApplicationController
 
   require 'csv'
 
+  def search_treatments
+    @management = Management.find(params[:id])
+
+    # the "sorted_order" call is mainly so "search" has the joins it needs
+    @treatments = Treatment.sorted_order("#{sort_column('treatments','updated_at')} #{sort_direction}").search(params[:search_treatments])
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
+    end
+  end
+
   def rem_managements_treatments
     @management = Management.find(params[:id])
     @treatment = Treatment.find(params[:treatment])
 
-    render :update do |page|
-      if @management.treatments.delete(@treatment)
-        page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
-      else
-        page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
-      end
+    @management.treatments.delete(@treatment)
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
-  def edit_managements_treatments
+  def add_managements_treatments
 
     @management = Management.find(params[:id])
+    @treatment = Treatment.find(params[:treatment])
 
-    render :update do |page|
-      if !params[:treatment].nil?
-        params[:treatment][:id].each do |c|
-          @management.treatments << Treatment.find(c)
-        end
-        page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
-      else
-        page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
-      end
+    @management.treatments << @treatment
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
@@ -100,7 +111,15 @@ class ManagementsController < ApplicationController
   # GET /managements/1/edit
   def edit
     @management = Management.find(params[:id])
-  end
+    @treatments = @management.treatments
+
+    respond_to do |format|
+      format.html
+      format.js {
+        render layout: false
+      }
+    end
+ end
 
   # POST /managements
   # POST /managements.xml
@@ -143,14 +162,14 @@ class ManagementsController < ApplicationController
 
     respond_to do |format|
       if @management.update_attributes(params[:management])
-        @management.update_attribute('citation_id', session['citation'])
         flash[:notice] = 'Management was successfully updated.'
         format.html { redirect_to( :action => :edit ) }
         format.xml  { head :ok }
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { @treatments = @management.treatments
+                      render :action => "edit" }
         format.xml  { render :xml => @management.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @management.errors, :status => :unprocessable_entity }
         format.json  { render :json => @management.errors, :status => :unprocessable_entity }
@@ -162,7 +181,6 @@ class ManagementsController < ApplicationController
   # DELETE /managements/1.xml
   def destroy
     @management = Management.find(params[:id])
-    @management.treatments.destroy
     @management.destroy
 
     respond_to do |format|

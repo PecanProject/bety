@@ -4,6 +4,22 @@ class VariablesController < ApplicationController
 
   require 'csv'
 
+  # general autocompletion
+  def autocomplete
+    variables = search_model(Variable.order(:description), %w( name units ), params[:term])
+
+    variables = variables.to_a.map do |item|
+      {
+        label: item.autocomplete_label,
+        value: item.id
+      }
+    end
+
+    respond_to do |format|
+      format.json { render :json => variables }
+    end
+  end
+
   # GET /variables
   # GET /variables.xml
   def index
@@ -105,7 +121,6 @@ class VariablesController < ApplicationController
   # DELETE /variables/1.xml
   def destroy
     @variable = Variable.find(params[:id])
-    @variable.traits.destroy
     @variable.destroy
 
     respond_to do |format|

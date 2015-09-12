@@ -1,7 +1,7 @@
 <div class="content">
-	<div class="container">
-		<div class="sixteen columns">
-			<header>
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
         <h1>New Covariate</h1>
       </header>
       
@@ -28,8 +28,8 @@
           <h2>Covariates associated with Trait -- <%= f.object.trait.select_default %></h2>
           
           <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
-		        <thead>
-	            <tr role="row">
+            <thead>
+              <tr role="row">
                 <th role="columnheader" style="width: 100px">Variable</th>
                 <th role="columnheader" style="width: 100px">Species, trait, treatment, and citation associated with this covariate</th>
                 <th role="columnheader" style="width: 100px">Level</th>
@@ -76,13 +76,13 @@
           <div class="form-actions">
             <div class="button-group">
               <%= link_to( covariates_path ) do %>
-                <button class="button" type="button">Back</button>
+                <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
               <% end%>
             </div>
-		        <div class="button-group pull-right">
-			        <%= f.submit 'Create', :class => "button button-primary" %>
-		        </div>
-	        </div>
+            <div class="button-group pull-right">
+              <%= f.submit 'Create', :class => "button button-primary" %>
+            </div>
+          </div>
         <% end %>
         
       <% end %><!-- @trait.nil? -->

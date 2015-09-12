@@ -8,7 +8,18 @@ class TraitsController < ApplicationController
   def trait_search
     @query = params[:symbol] || nil
     if !params[:symbol].nil? and !params[:cont].nil? and params[:symbol].length > 3
-      @trait = Trait.all_limited(current_user).includes([:specie,:variable,:cultivar,:treatment,:citation]).where('species.scientificname like :query or species.genus like :query or species.AcceptedSymbol like :query or variables.name like :query or treatments.name like :query or citations.author like :query', {:query => "%" + @query + "%"}).limit(100)
+
+      @trait = Trait.all_limited(current_user).
+        includes([:specie,:variable,:cultivar,:treatment,:citation]).
+        where(%q{   species.scientificname LIKE :query
+                 OR species.genus LIKE :query
+                 OR species."AcceptedSymbol" LIKE :query
+                 OR variables.name LIKE :query
+                 OR treatments.name LIKE :query
+                 OR citations.author LIKE :query},
+              {:query => "%" + @query + "%"}).
+        limit(100)
+
     else
       @trait = nil
     end
@@ -38,11 +49,11 @@ class TraitsController < ApplicationController
     t = Trait.all_limited(current_user).find(params[:id])
 
     t.access_level = params[:trait][:access_level] if t
-    
+
     render :update do |page|
       if t and t.save
         page['access_level-'+t.id.to_s].visual_effect :pulsate
-      else 
+      else
         page['access_level-'+t.id.to_s].visual_effect :shake
       end
     end
@@ -52,11 +63,11 @@ class TraitsController < ApplicationController
     t = Trait.all_limited(current_user).find(params[:id])
     t.current_user = current_user
     t.checked = params[:trait][:checked] if t
-   
+
     render :update do |page|
       if t and t.save
         page.replace_html 'checked_notify-'+t.id.to_s, "<br />Updated to #{t.checked}"
-      else 
+      else
         page.replace_html 'checked_notify-'+t.id.to_s, "<br />Something went wrong, not updated!"
       end
     end
@@ -70,7 +81,7 @@ class TraitsController < ApplicationController
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
       @traits = @traits.citation(session["citation"]).sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate(
-        :page => params[:page], 
+        :page => params[:page],
         :per_page => params[:DataTables_Table_0_length]
       )
       log_searches(@traits.citation(session["citation"]).search(params[:search]).to_sql)
@@ -80,8 +91,8 @@ class TraitsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html 
-      format.js 
+      format.html
+      format.js
       format.xml  { render :xml => @traits }
       format.json { render :json => @traits }
       format.csv  { render :csv => @traits, :style => (params[:style] ||= 'default').to_sym }
@@ -109,7 +120,7 @@ class TraitsController < ApplicationController
       @trait = Trait.new
     else
       @trait_old = params[:id]
-      @trait = Trait.all_limited(current_user).find(@trait_old).clone
+      @trait = Trait.all_limited(current_user).find(@trait_old).dup
       @trait.specie.nil? ? @species = nil :  @species = [@trait.specie]
     end
 
@@ -169,6 +180,9 @@ class TraitsController < ApplicationController
     logger.info(e)
     flash[:error] = e.message
     @citation = @trait.citation
+    if @new_covariates.empty?
+      @new_covariates = [Covariate.new]
+    end
     respond_to do |format|
       format.html { render :action => "new" }
       format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }
@@ -214,6 +228,9 @@ class TraitsController < ApplicationController
     logger.info(e)
     flash[:error] = e.message
     @citation = @trait.citation
+    if @new_covariates.empty?
+      @new_covariates = [Covariate.new]
+    end
     respond_to do |format|
       format.html { render :action =>"edit" }
       format.xml  { render :xml => @trait.errors, :status => :unprocessable_entity }

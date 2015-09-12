@@ -4,7 +4,12 @@ require 'rails/all'
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(:default, Rails.env) if defined?(Bundler)
+if defined?(Bundler)
+  # If you precompile assets before deploying to production, use this line
+  Bundler.require *Rails.groups(:assets => %w(development test))
+  # If you want your assets lazily compiled in production, use this line
+  # Bundler.require(:default, :assets, Rails.env)
+end
 
 module BetyRails3
   class Application < Rails::Application
@@ -17,7 +22,7 @@ module BetyRails3
 
     # RAILS3 - Added to get RESTful authentication working
     # http://stackoverflow.com/questions/7547281/rails-3-restful-authentication-uninitialized-constant-applicationcontrollera
-    config.autoload_paths << "#{Rails.root}/lib"
+    config.autoload_paths << "#{Rails.root}/lib" << "#{Rails.root}/app/validators"
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -33,6 +38,9 @@ module BetyRails3
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+
+    # Set this to avoid a Rails 3.2+ deprecation warning:
+    I18n.enforce_available_locales = true
 
     # JavaScript files you want as :defaults (application.js is always included).
     # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
@@ -52,5 +60,12 @@ module BetyRails3
       instance_eval File.read(File.join(File.dirname(__FILE__), 'additional_environment.rb'))
     end
 
+    # Until we enable the assets pipeline, ensure the old behavior of javascript_include_tag(:all) with this:
+    config.action_view.javascript_expansions[:defaults] = ['prototype', 'effects']
+    # Enable the asset pipeline
+    # config.assets.enabled = true
+
+    # Version of your assets, change this if you want to expire all your assets
+    # config.assets.version = '1.0'
   end
 end

@@ -5,6 +5,11 @@ class Machine < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ machines.hostname }
 
+  validates :hostname,
+      presence: true,
+      uniqueness: true,
+      host: true
+
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 

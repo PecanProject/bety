@@ -10,13 +10,13 @@ describe TraitsController do
     {:mean => "-1",:stat => "a"}
   }
   let(:valid_covariate){
-    [{'variable_id' => '3','level' =>'10'}]
+    [{'variable_id' => '404','level' =>'10'}]
   }
   let(:invalid_covariate){
-    [{'variable_id' => '3','level' =>'50'}]
+    [{'variable_id' => '404','level' =>'50'}]
   }
   let(:mixed_covariate){
-    [{'variable_id' => '3','level' =>'50'},{'variable_id' => '2','level' =>'10'}]
+    [{'variable_id' => '404','level' =>'50'},{'variable_id' => '2','level' =>'10'}]
   }
 
 	context'message on invalid input' do
@@ -72,17 +72,17 @@ describe TraitsController do
 
     it "should display error messages" do
 	    post :update,{:id =>@trait.to_param,:trait => invalid_attr},session
-	    response.body.should contain("2 errors")
+	    response.body.should have_content("2 errors")
     end
 
     it "should not change attribute inputs" do
 	    post :update,{:id =>@trait.to_param,:trait => invalid_attr},session
-	    response.should have_selector("input#trait_mean", :value =>invalid_attr[:mean])
+      response.body.should have_selector("input#trait_mean[value = '#{invalid_attr[:mean]}']")
     end
 
     it "should not change covariate inputs" do
 	    post :update,{:id =>@trait.to_param,:trait => invalid_attr, :covariate =>invalid_covariate},session
-	    response.should have_xpath(".//select[@id='covariate__variable_id']/option[@value='3' and @selected='selected']")
+	    response.body.should have_xpath(".//select[@id='covariate__variable_id']/option[@value='404' and @selected='selected']")
     end
   end
 

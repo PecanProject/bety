@@ -10,14 +10,12 @@ test_trait:
   timeloc: NULL
   mean: NULL
   n: NULL
-  statname: NULL
   stat: NULL
-  notes: NULL
   created_at: NULL
   updated_at: NULL
   variable_id: 1
   user_id: 1
-  checked: 0
+  checked: 1
   access_level: 4
   entity_id: 1
   method_id: 1
@@ -29,26 +27,26 @@ test_trait:
 
 test_edit_trait:
   id: 2
-  site_id: 2
-  specie_id: 2
+  site_id: 1
+  specie_id: 18
   citation_id: 1
-  cultivar_id: 1
+  cultivar_id: 417
   treatment_id: 1
   date: NULL
-  dateloc: NULL
+  dateloc: 9.00
   time: NULL
-  timeloc: NULL
+  timeloc: 9.00
   mean: '5'
   n: NULL
-  statname: NULL
+  statname: ""
   stat: NULL
-  notes: NULL
+  notes: ""
   created_at: NULL
   updated_at: NULL
   variable_id: 1
   user_id: 1
-  checked: 0
-  access_level: 4
+  checked: 1
+  access_level: 2
   entity_id: 1
   method_id: 1
   date_year: NULL

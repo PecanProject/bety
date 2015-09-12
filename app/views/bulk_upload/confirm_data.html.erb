@@ -1,0 +1,102 @@
+<div class="content">
+  <div class="container">
+	<div class="sixteen columns">
+	  <header>
+        <h1>Verify Upload Specifications and Data-Set References</h1>
+        <h2 class="file_info"><%= render 'file_info' %></h2>
+      </header>
+      <%= form_tag(bulk_upload_data_insertion_path, method: "post", multipart: true) do %>
+      <div id="process_container">
+        <div id="back">
+          <% if @data_set.need_interactively_specified_data %>
+          <%= link_to "<< Specify Dataset-wide values", choose_global_data_values_path %>
+          <% else %>
+          <%= link_to "<< Specify Amount of Rounding", choose_global_data_values_path %>
+          <% end %>
+          <br />
+          <%= link_to start_upload_path do
+              content_tag :em, "START OVER with a different file"
+              end %>
+        </div>
+        <div id="new">&nbsp;</div>
+        <div id="forward">
+          <%= submit_tag "Insert Data >>" %>
+        </div>
+      </div>
+      <% end %>
+      <h2 class="directive">Review the following upload specifications to ensure they are correct:</h2>
+      <ul>
+        <% if session[:global_values] && session[:global_values][:access_level] %>
+        <li>Data Access Level: <%= get_access_level(session) %></li>
+        <% end %>
+        <li>Variable values will be rounded to <%= session[:rounding][:vars] %> significant digits.</li>
+        <% if session[:rounding][:SE] %>
+        <li>Standard Error values will be rounded to <%= session[:rounding][:SE] %> significant digits.</li>
+        <% end %>
+      </ul>
+      <hr>
+      <h2 class="directive">Review the following items referenced by your data set to ensure they are correct:</h2>
+      <table>
+        <caption>Citations:</caption>
+        <thead>
+          <tr><th>Title</th><th>Author</th><th>Year</th><th>Journal</th><th>DOI</th></tr>
+        </thead>
+        <tbody>
+          <% @upload_citations.each do |c| %>
+          <tr><td><%= c.title %></td><td><%= c.author %></td><td><%= c.year %></td><td><%= c.journal %></td><td><%= c.doi %></td></tr>
+          <% end %>
+        </tbody>
+      </table>
+      <hr>
+      <table>
+        <caption>Sites:</caption>
+        <thead>
+          <tr><th>Site Name</th><th>City</th><th>State</th><th>Country</th><th>Latitude</th><th>Longitude</th><th>Soil Type</th><th>Soil Notes</th></tr>
+        </thead>
+        <tbody>
+          <% @upload_sites.each do |s| %>
+          <tr><td><%= s.sitename %></td><td><%= s.city %></td><td><%= s.state %></td><td><%= s.country %></td><td><%= s.lat %></td><td><%= s.lon %></td><td><%= s.soil %></td><td><%= s.soilnotes %></td></tr>
+          <% end %>
+        </tbody>
+      </table>
+      <hr>
+      <table>
+        <caption>Species:</caption>
+        <thead>
+          <tr><th>Species Name</th><th>Genus</th><th>Common Name</th><th>Accepted Symbol</th></tr>
+        </thead>
+        <tbody>
+          <% @upload_species.each do |s| %>
+          <tr><td><%= s.scientificname %></td><td><%= s.genus %></td><td><%= s.commonname %></td><td><%= s.AcceptedSymbol %></tr>
+          <% end %>
+        </tbody>
+      </table>
+      <hr>
+      <% if !@upload_cultivars.empty? %>
+      <table>
+        <caption>Cultivars:</caption>
+        <thead>
+          <tr><th>Cultivar Name</th><th>Ecotype</th><th>Associated Species</th></tr>
+        </thead>
+        <tbody>
+          <% @upload_cultivars.each do |c| %>
+          <tr><td><%= c[:cultivar].name %></td><td><%= c[:cultivar].ecotype %></td><td><%= c[:species_name] %></tr>
+          <% end %>
+        </tbody>
+      </table>
+      <hr>
+      <% end %>
+      <table>
+        <caption>Treatments:</caption>
+        <thead>
+          <tr><th>Treatment Name</th><th>Definition</th><th>Control?</th><th>Associated Citation Author</th></tr>
+        </thead>
+        <tbody>
+          <% @upload_treatments.each do |t| %>
+          <tr><td><%= t[:treatment].name %></td><td><%= t[:treatment].definition %></td><td><%= t[:treatment].control %></td><td><%= t[:associated_citation].author %></tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -18,10 +18,10 @@ class ModeltypesController < ApplicationController
 
   def add_modeltypes_format
     @modeltype = Modeltype.find(params[:id])
-    modeltypes_format = ModeltypesFormat.new(params[:modeltypes_format])
-    modeltypes_format.modeltype = @modeltype
-    modeltypes_format.format = Format.find(params[:format_id])
-    modeltypes_format.save
+    @modeltypes_format = ModeltypesFormat.new(params[:modeltypes_format])
+    @modeltypes_format.modeltype = @modeltype
+    @modeltypes_format.format = Format.find(params[:format_id])
+    @modeltypes_format.save
 
     render :update do |page|
       page.replace_html 'edit_formats', :partial => 'edit_formats'

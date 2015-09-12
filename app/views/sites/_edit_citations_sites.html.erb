@@ -1,36 +1,33 @@
-<table width="100%">
-  <tr>
-    <td width="50%"><h3>Existing Citation Relationships</h3></td>
-    <td width="50%"><h3>Add Citation Relationship(s)</h3></td>
-  </tr>
-  <tr>
-    <td>
-      <table>
-        <tr>
-          <th></th>
-          <th></th>
-          <th>Auth</th>
-          <th>Year</th>
-          <th>Title</th>
-        </tr>
-        <% @site.citations.each do |citation| %>
-        <tr>
-          <td><%= link_to "X", { :controller => :sites, :action => :rem_citations_sites, :id => citation.id, :site => @site }, :confirm => 'Are you sure?', :remote => true %></td>
-          <td><%= link_to "edit", edit_citation_path(citation.id) %></td>
-          <td><%= citation.author %></td>
-          <td><%= citation.year %></td>
-          <td><%= citation.title %></td>
-        </tr>
-        <% end %>
-      </table>
-    </td>
-    <td>
-      <%= form_tag url_for(:controller=> :sites, :action => :edit_citations_sites), :remote => true do  %>
-      <%= collection_select( :citation, :id, Citation.all.reject { |r| @site.citations.include?(r) }, :id, :select_default, {}, { :multiple => true } )%>
-      <%= hidden_field_tag 'id', @site.id %>
-      <br /><br />
-      <%= submit_tag "Select" %>
-      <% end %>
-    </td>
-  </tr>
+<% content_for(:autocomplete_javascript) do %>
+  <%= javascript_tag do %>
+    jQuery(function() {
+        jQuery('#search_citations').on('keyup', search_citations);
+    });
+
+    function search_citations() {
+        jQuery.get("search_citations", jQuery('#search_citations').serialize(), null, 'script');
+    }
+  <% end %>
+<% end %>
+<h1>Listing Citation Relationships</h1>
+<p>
+  <b>Search: </b><%= text_field_tag :search_citations %><br />
+
+<table id="citations" class="relationships">
+  <caption>Existing Citation Relationships
+    <%= link_to "Update",
+        { controller: :sites, action: :edit, remote: true },
+        { style: "display: none" } %></caption>
+  <thead>
+    <tr>
+      <th></th>
+      <th></th>
+      <th>Author</th>
+      <th>Year</th>
+      <th>Title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render 'citations_tbody' %>
+  </tbody>
 </table>

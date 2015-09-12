@@ -4,6 +4,40 @@ class CultivarsController < ApplicationController
 
   require 'csv'
 
+  # autocompletion for bulk upload wizard
+  def bu_autocomplete
+    search_term = params[:term]
+
+    species_id = Specie.find_by_scientificname(params[:species])
+
+    cultivars = Cultivar.where("specie_id = ?", species_id)
+
+    logger.debug("cultivars for autocompletion: #{cultivars.inspect}")
+
+    filtered_cultivars = cultivars.where("LOWER(name) LIKE LOWER(?)", '%' + search_term + '%')
+
+    if filtered_cultivars.size > 0 || search_term.size > 1
+      cultivars = filtered_cultivars
+      # else if there are no matches and the user has only typed one letter, just return every cultivar associated with the chosen species
+    end
+
+    cultivars = cultivars.to_a.map do |item|
+      item.name.squish
+    end
+
+    # don't show rows where name is null or empty
+    # TO-DO: eliminate these from the database and prevent them with a constraint
+    cultivars.delete_if { |item| item.nil? || item.empty? }
+
+    if cultivars.empty?
+      cultivars = [ { label: "No matches", value: "" }]
+    end
+
+    respond_to do |format|
+      format.json { render :json => cultivars }
+    end
+  end
+
   # GET /cultivars
   # GET /cultivars.xml
   def index
@@ -94,7 +128,8 @@ class CultivarsController < ApplicationController
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { @species = [@cultivar.specie] if !@cultivar.specie.nil?
+                      render :action => "edit" }
         format.xml  { render :xml => @cultivar.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @cultivar.errors, :status => :unprocessable_entity }
         format.json  { render :json => @cultivar.errors, :status => :unprocessable_entity }

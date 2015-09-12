@@ -1,0 +1,54 @@
+<div class="content">
+  <div class="container unconstrained csv_display">
+    <header>
+      <h1 class="file_info"><%= render 'file_info' %></h1>
+    </header>
+
+    <div id="process_container">
+      <div id="back">
+          <% if !@data_set.file_includes_citation_info %>
+            <%= link_to "<< Choose a different citation", { action: "choose_global_citation" } %>
+          <% end %>
+          <br />
+          <%= link_to start_upload_path do
+            content_tag :em, "START OVER with a different file"
+          end %>
+      </div>
+      <div id="new">&nbsp;</div>
+      <div id="forward">
+        <% if @data_set.file_has_fatal_errors or @data_set.validated_data.size == 0 %>
+           &nbsp;
+        <% elsif @data_set.need_interactively_specified_data %>
+           <%= link_to "Specify Dataset-wide values >>", choose_global_data_values_path %>
+        <% else %>
+           <%= link_to "Specify Amount of Rounding >>", choose_global_data_values_path %>
+        <% end %>
+      </div>
+    </div>
+    <%= make_validation_summary %>
+    <%= make_warning_summary  %>
+    <table>
+      <thead>
+        <tr>
+          <th>row number</th>
+          <% @data_set.headers.each do |header| %>
+          <th><%= header %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @data_set.validated_data.each_with_index do |row, i| %>
+        <% row_number = i + 1 %>
+        <tr>
+          <th><%= row_number %><%= link_to "", {}, name: "row_#{row_number}" %></th>
+          <% row.each do |value| %>
+          <td class="<%= value[:validation_result].result_css_class %>" title="<%= value[:validation_result].message %>"><%= value[:data] %></td>
+          <% end %>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+

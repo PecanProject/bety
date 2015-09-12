@@ -6,16 +6,14 @@ test_yield:
   cultivar_id: 8
   date: "1998-11-15"
   dateloc: #<BigDecimal:2aaaab890500,'0.6E1',9(18)>
-  statname: NULL
   stat: NULL
-  mean: #<BigDecimal:2aaaab890348,'0.107E2',18(18)>
+  mean: '0.107E2'
   n: NULL
-  notes: NULL
   created_at: NULL
   updated_at: "2012-08-28 15:23:44"
   user_id: 1
   checked: 1
-  access_level: 3
+  access_level: 4
   method_id: 1
   
   

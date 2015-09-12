@@ -1,60 +1,22 @@
 class InputsController < ApplicationController
 
-  before_filter :login_required 
+  before_filter :login_required
   helper_method :sort_direction, :sort_column
 
-  def edit_inputs_variables
-    @input = Input.find(params[:id])
-    variable = params[:variable]
+  # general autocompletion
+  def autocomplete
+    inputs = search_model(Input.joins(:site), %w( name sitename), params[:term])
 
-    if @input and variable
-      _variable = Variable.find(variable)
-      # If relationship exists we must want to remove it...
-      if @input.variables.include?(_variable)
-        @input.variables.delete(_variable)
-        logger.info "deleted input:#{@input.id} - file:#{_variable.id}"
-      # Otherwise add it
-      else
-        @input.variables << _variable
-        logger.info "add input:#{@input.id} - file:#{_variable.id}"
-      end
+    inputs = inputs.to_a.map do |item|
+      {
+        # show input name and site name in suggestions
+        label: item.autocomplete_label,
+        value: item.id
+      }
     end
 
-    @page = params[:page]
-
-    # RAILS3 had to add the || '' in order for @search not be nil when params[:search] is nil
-    @search = params[:search] || ''
-    @searchparam = @search
-
-    # If they search just a number it is probably an id, and we do not want to wrap that in wildcards.
-    # @search.match(/\D/) ? wildcards = true : wildcards = false
-    # We now ALWAYS use wildcards (unless the search is blank).
-    wildcards = true
-
-    if !@search.blank? 
-      if wildcards 
-        @search = "%#{@search}%"
-      end
-      search_cond = [["description", "name"].collect {|x| "variables.#{x}" }.join(" LIKE :search OR ") + " LIKE :search", {:search => @search}] 
-      search = "Showing records for \"#{@search}\""
-    else
-      @search = ""
-      search = "Showing all results"
-      search_cond = ""
-    end
-
-    if @input and @search.blank?
-      search = "Showing already related records"
-      if @input.variables
-        @variables = @input.variables.paginate :page => params[:page]
-      end
-    else
-      @variables = Variable.paginate :select => "id,name,units", :page => params[:page], :conditions => search_cond
-    end
-
-    render :update do |page|
-      page.replace_html :vars_index_table, :partial => "edit_inputs_variables_table"
-      page.replace_html :vars_search_term, search
+    respond_to do |format|
+      format.json { render :json => inputs }
     end
   end
 
@@ -86,11 +48,11 @@ class InputsController < ApplicationController
     # We now ALWAYS use wildcards (unless the search is blank).
     wildcards = true
 
-    if !@search.blank? 
-      if wildcards 
+    if !@search.blank?
+      if wildcards
         @search = "%#{@search}%"
       end
-      search_cond = [["file_path", "file_name"].collect {|x| "dbfiles.#{x}" }.join(" LIKE :search OR ") + " LIKE :search", {:search => @search}] 
+      search_cond = [["file_path", "file_name"].collect {|x| "dbfiles.#{x}" }.join(" LIKE :search OR ") + " LIKE :search", {:search => @search}]
       search = "Showing records for \"#{@search}\""
     else
       @search = ""
@@ -119,7 +81,7 @@ class InputsController < ApplicationController
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
       @inputs = Input.sorted_order("#{sort_column} #{sort_direction}").search(params[:search]).paginate(
-        :page => params[:page], 
+        :page => params[:page],
         :per_page => params[:DataTables_Table_0_length]
       )
       @dbfiles = DBFile.all
@@ -175,7 +137,7 @@ class InputsController < ApplicationController
 
     @input = Input.new(params[:input])
     @input.user_id = current_user.id
-    
+
     respond_to do |format|
       #if @input.save and input_file.save
       if @input.save

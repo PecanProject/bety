@@ -3,6 +3,31 @@
 
 class ApplicationController < ActionController::Base
 
+  rescue_from ActiveRecord::InvalidForeignKey do |e|
+
+    case e.message
+
+      # deletion of sites
+    when /fk_citations_sites_sites_1/
+      flash[:error] = 'There are still citations referring to this site.'
+    when /fk_traits_sites_1/
+      flash[:error] = 'There are still traits that refer to this site.'
+    when /fk_sites_yields_1/
+      flash[:error] = 'There are still yields that refer to this site.'
+    when /fk_inputs_sites_1/
+      flash[:error] = 'There are still inputs that refer to this site.'
+
+      # TO DO: Add to this list of 'when' clauses.
+
+      # catch-all until we write specific messages for all cases:
+    else
+      flash[:error] = e.message
+    end
+
+
+    redirect_to :back
+  end
+
   # Be sure to include AuthenticationSystem in Application Controller instead
   include AuthenticatedSystem
   require 'csv'
@@ -30,7 +55,7 @@ class ApplicationController < ActionController::Base
   end
 
   def not_found
-    render :file => Rails.root.to_s + '/app/views/static/404.html', :layout => true, :status => 404
+    render :file => Rails.root.to_s + '/app/views/static/404', :formats => [:html], :layout => true, :status => 404
   end
  
   def sort_column(default_table = params[:controller],default_sort = 'id')
@@ -99,6 +124,45 @@ class ApplicationController < ActionController::Base
     return sql
   end
 
+
+  protected
+
+  # Override built-in render method so that if rendering to XML or JSON,
+  # automatically add params[:include] to list of associations to render.
+  def render *args, &block
+    logger.info "********************************************************************************"
+    logger.info("args = #{args}; block = #{block}")
+
+    if !args.empty? && args[0].is_a?(Hash) &&
+        (args[0].keys.include?(:xml) || args[0].keys.include?(:json))
+
+      # The :include key may not exist; or the corresponding value may be a
+      # scalar.  We want to add in the values in params[:include] to any given
+      # in args and have the result be an array:
+      case args[0][:include]
+      when Array
+        args[0][:include] += params[:include]
+      when nil
+        args[0][:include] = params[:include]
+      else
+        args[0][:include] = [args[0][:include]] + params[:include]
+      end
+
+      if !(args[0][:include].nil?)
+        # Normalize array members to symbols and eliminate any duplicates:
+        args[0][:include].collect! { |o| o.to_sym }.uniq!
+
+        # Be sure user information isn't inadvertently displayed:
+        args[0][:include].delete(:user)
+      end
+
+    end
+
+    super *args, &block
+
+  end
+
+
   private
   
   def handle_constraint_violations(e)
@@ -110,5 +174,27 @@ class ApplicationController < ActionController::Base
     redirect_to :back
   end
 
-  
+  # Given a model class, a list of columns (attributes) of the model, and a
+  # search term, search the database table corresponding to the model and return
+  # objects for all rows that contain the text of the search term in any of the
+  # text of any of the given columns.
+  def search_model(model_class, column_list, search_term)
+    clauses = column_list.collect {|column_name| "LOWER(#{column_name}) LIKE LOWER(:match_string)"}
+    where_clause = clauses.join(" OR ")
+    result_set = model_class.where(where_clause, match_string: '%' + search_term + '%')
+
+    if result_set.size == 0
+      # there are no matches
+      if search_term.size <= 1
+        # If the user has only typed one letter, just return everything so the
+        # user can at least see some possible options.
+        result_set = model_class.scoped
+      else
+        # Otherwise, let the user know there were no matches.
+        result_set = [ { label: "No matches", value: "" }]
+      end
+    end
+    return result_set
+  end
+
 end

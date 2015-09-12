@@ -1,0 +1,30 @@
+<div class="content">
+  <div class="container">
+	<div class="sixteen columns">
+	  <header>
+        <h1>New Bulk Upload</h1>
+      </header>
+      <%= form_tag({ action: "display_csv_file" }, method: "post", multipart: true) do %>
+
+      <div id="process_container">
+        <div id="back">&nbsp;</div>
+        <div id="new">&nbsp;</div>
+        <div id="forward"><%= submit_tag "Upload and validate file >>" %></div>
+      </div>
+
+      <%= label_tag 'CSV file', "Data File: #{if session[:csvpath]; "(Currently #{session[:csvpath]})"; end}" %>
+      <%= file_field_tag 'CSV file', accept: 'text/csv' %>
+      <%= hidden_field_tag 'new upload', value: true %>
+
+      <% end %>
+
+      <%= link_to "View List of Recognized Traits", url_for( controller: "trait_covariate_associations", action: "index" ) %>
+
+      <% if @file_contents %>
+      <%= content_tag :div, raw(@file_contents.gsub("\n", "<br>")) %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+

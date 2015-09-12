@@ -1,0 +1,9 @@
+jQuery('table#pfts tbody').html(
+    "<%= j render(partial: 'pfts_tbody') %>"
+);
+
+jQuery('table#pfts caption').html(
+    "All Search Matches" +
+        ' <%= link_to "Show only related pfts",
+              { controller: :species, action: :edit, remote: true } %>'
+);

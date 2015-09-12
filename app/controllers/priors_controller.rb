@@ -3,28 +3,44 @@ class PriorsController < ApplicationController
   helper_method :sort_column, :sort_direction
 
   require 'csv'
+  require 'open3'
 
-  def rem_pfts_priors
-    @pft = Pft.find(params[:id])
-    @prior = Prior.find(params[:prior])
+  def search_pfts
+    @prior = Prior.find(params[:id])
 
-    render :update do |page|
-      @pft.priors.delete(@prior)
-      page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
+    # the "sorted_order" call is mainly so "search" has the joins it needs
+    @pfts = Pft.sorted_order("#{sort_column('pfts','updated_at')} #{sort_direction}").search(params[:search_pfts])
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
-  def edit_pfts_priors
-
+  def rem_pfts_priors
     @prior = Prior.find(params[:id])
+    @pft = Pft.find(params[:pft])
 
-    render :update do |page|
-      if !params[:pft].nil?
-        params[:pft][:id].each do |c|
-          @prior.pfts << Pft.find(c)
-        end
-      end
-      page.replace_html 'edit_pfts_priors', :partial => 'edit_pfts_priors'
+    @prior.pfts.delete(@pft)
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
+    end
+  end
+
+  def add_pfts_priors
+    @prior = Prior.find(params[:id])
+    @pft = Pft.find(params[:pft])
+
+    @prior.pfts << @pft
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
@@ -73,7 +89,7 @@ class PriorsController < ApplicationController
     bparam = @prior.paramb
     distname = @prior.distn
     n = @prior.n
-    imgfile = Rails.root.join("public/images/prev/#{id}.png");
+    imgfile = Rails.root.join("public/images/prev/#{id}.png").to_s
     updatetime = @prior.updated_at
 
     if updatetime.nil?
@@ -81,19 +97,30 @@ class PriorsController < ApplicationController
     end
 
     if !File.exist?( imgfile ) or File.atime(imgfile) < updatetime
-      # On ebi-forecast, the version of R we want to use is in
-      # /usr/local/R-3.1.0/bin, so prepend it to the path so that that
-      # version gets used if it exists:
-      error_output = `PATH=/usr/local/R-3.1.0/bin:$PATH R --vanilla --args #{imgfile} #{distname} #{aparam} #{bparam} #{n} < #{Rails.root.join('script/previewhelp.R')} 2>&1 >/dev/null`
+
+      if id =~ /\A\d+\z/ &&
+          Prior.distn_types.include?(distname) &&
+          aparam.is_a?(Numeric) &&
+          (n.nil? || bparam.is_a?(Numeric)) &&
+          (n.nil? || n.is_a?(Integer))
+
+        # On ebi-forecast, the version of R we want to use is in
+        # /usr/local/R-3.1.0/bin, so put it first in the path so that that version
+        # gets used if it exists:
+        ENV["PATH"] = "/usr/local/R-3.1.0/bin:/usr/bin:/usr/local/bin"                                                                                 
+        o, error_output, s = Open3.capture3("R", "--vanilla", "--args", imgfile, distname, aparam.to_s, bparam.to_s, n.to_s,                           
+                                            stdin_data: Rails.root.join('script/previewhelp.R').read)
+      else
+        error_output = sprintf("Invalid argument set:\n\timgfile = %s\n\tdistname = %s\n\taparam = %s\n\tbparam = %s\n\tn = %s\n", 
+                               imgfile, distname, aparam, bparam, n)
+      end
+
       if !error_output.empty?
         logger.error("\nR error output:")
         logger.error("========================================")
         logger.error(error_output)
         logger.error("========================================\n\n")
       end
-      # for debugging purposes only if something goes wrong
-      #r=%x[R --vanilla --args #{imgfile} #{distname} #{aparam} #{bparam} #{n} < #{Rails.root.join('script/previewhelp.R')} 2>&1]
-      #logger.error(r)
       send_file(imgfile, :type =>'image/png', :disposition => 'inline')
     else
       send_file(imgfile, :type =>'image/png', :disposition => 'inline')
@@ -117,6 +144,15 @@ class PriorsController < ApplicationController
   # GET /priors/1/edit
   def edit
     @prior = Prior.find(params[:id])
+    @pfts = @prior.pfts
+
+    respond_to do |format|
+      format.html
+      format.js {
+
+        render layout: false
+      }
+    end
   end
 
   # POST /priors
@@ -153,7 +189,8 @@ class PriorsController < ApplicationController
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { @pfts = @prior.pfts
+                      render :action => "edit" }
         format.xml  { render :xml => @prior.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @prior.errors, :status => :unprocessable_entity }
         format.json  { render :json => @prior.errors, :status => :unprocessable_entity }
@@ -165,7 +202,6 @@ class PriorsController < ApplicationController
   # DELETE /priors/1.xml
   def destroy
     @prior = Prior.find(params[:id])
-    @prior.pfts.destroy
     @prior.destroy
 
     respond_to do |format|

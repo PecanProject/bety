@@ -48,13 +48,21 @@
 
 
         <div class="row">
+          <div class="one columns alpha">
+            <%= f.label :change_password %>
+            <%= check_box_tag(:change_password) %>
+          </div>
+        </div>
+
+
+        <div class="row">
           <div class="four columns alpha">
             <%= label_tag 'password' %>
-            <%= f.password_field :password, :class => "input-full" %>
+            <%= f.password_field :password, :class => "input-full", :disabled => true %>
           </div>
           <div class="four columns">
             <%= label_tag 'password_confirmation', 'Confirm Password' %>
-            <%= f.password_field :password_confirmation, :class => "input-full" %>
+            <%= f.password_field :password_confirmation, :class => "input-full", :disabled => true %>
           </div>
           <div class="four columns">
             <%= f.label 'page_access_level', "Page Access Level*" %>

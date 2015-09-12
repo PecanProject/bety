@@ -1,12 +1,21 @@
 class DBFile < ActiveRecord::Base
 
-  set_table_name 'dbfiles'
+  self.table_name = 'dbfiles'
   
   include Overrides
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ machine }
   SEARCH_FIELDS = %w{ dbfiles.file_name dbfiles.file_path dbfiles.md5 machines.hostname }
+
+  validates :file_name,
+      format: /\A[^\/]*\z/,
+      uniqueness: { scope: [ :file_path, :machine_id ],
+                    message: ": You can't use the same file name and path more than once for the same machine." }
+  validates :file_path,
+      format: { with: /\A\//,
+                message: "must begin with '/'." }
+
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
@@ -21,8 +30,6 @@ class DBFile < ActiveRecord::Base
   def setup(user_id, upload, args = nil)
     self[:created_user_id] = user_id
     self[:updated_user_id] = user_id
-    self[:parent_id] = args[:parent_id]
-    self[:file_id] = args[:file_id]
     if upload # Uploaded file
       self[:file_name] =  upload.original_filename
       self[:md5] = Digest::MD5.file(upload.path).hexdigest

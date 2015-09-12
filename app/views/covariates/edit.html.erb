@@ -1,50 +1,68 @@
-<h1>Editing covariate <%= link_to_prototype_window(image_tag("help.gif"), "help_popup1", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node24.html?min" }) %></h1>
-
-<p><%= link_to_prototype_window("Extracting information from tables and graphs", "help_popup2", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node25.html?min" }) %><br />
-<%= link_to_prototype_window("Extracting data from a figure using R", "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node26.html?min" }) %><br />
-<%= link_to_prototype_window("Extracting data from a figure using GetData", "help_popup4", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node27.html?min" }) %></p>
-
-<%= form_for(@covariate) do |f| %>
-  <%= f.error_messages %>
-
-  <p>
-    <%= f.label :variable_id %><br />
-    <%= f.select :variable_id, Variable.order('name').collect { |p| [ p.select_default, p.id ] }, {:selected => @covariate.variable_id.to_i } %>
-
-  </p>
-
-  <%= render :partial => "traits/trait_search" %>
-
-  <p>
-  </p>
-  <p>
-    <%= f.label :level %><br />
-    <%= f.text_field :level %>
-  </p>
-  <p>
-    <%= f.label :n %><br />
-    <%= f.text_field :n %>
-  </p>
-  <p>
-    <%= f.label :stat %>  <%= link_to_prototype_window(image_tag("help.gif"), "help_popup3", { :className => "alphacube", :width => "625", :height => "525", :zIndex => "100", :resizable => "true", :draggable => "true", :wiredDrag => "true", :url => "/node22.html?min" }) %><br />
-    <%= f.text_field :stat %>
-  </p>
-  <p>
-    <%= f.label :statname %><br />
-    <%= f.select :statname, ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD", "P"] %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
+<% content_for(:autocomplete_javascript) do %>
+  <!-- autocomplete.js needs a `completion_fields` object describing the
+  autocompletion fields on the page and needs to know the Rails root -->
+  <script type="text/javascript" charset="utf-8">
+    var ROOT_URL = '<%= root_url %>';
+    var completion_fields = {
+      "search_variables": { controller: "variables",
+                        hidden_field_id: "covariate_variable_id" }
+    };
+  </script>
+  <%= javascript_include_tag 'lazy/autocomplete.js' %>
 <% end %>
+<div class="content">
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
+        <h1>Editing covariate</h1>
+      </header>
 
-<div class="form-actions">
-        <div class="button-group">
-          <%= link_to( covariates_path ) do %>
-            <button class="button"><i class="icon-arrow-left"></i> All Records</button>
-          <% end %>
-          <%= link_to( @covariate ) do %>
-            <button type="submit" class="button button-primary">Show</button>
-          <% end %>
+      <%= form_for(@covariate) do |f| %>
+        <%= f.error_messages %>
+
+        <p>
+          <%= autocompletion_field(f, "Variable", "variables", :variable_id, "Search variables by name or units") %>
+        </p>
+
+        <%= render :partial => "traits/trait_search" %>
+
+        <p>
+        </p>
+        <p>
+          <%= f.label :level %><br />
+          <%= f.text_field :level %>
+        </p>
+        <p>
+          <%= f.label :n %><br />
+          <%= f.text_field :n %>
+        </p>
+        <p>
+          <%= f.label :stat %><br />
+          <%= f.text_field :stat %>
+        </p>
+        <p>
+          <%= f.label :statname %><br />
+          <%= f.select :statname, $statname_list %>
+        </p>
+        <p>
+          <%= f.submit 'Update' %>
+        </p>
+
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( covariates_path ) do %>
+              <button class="button"><i class="icon-arrow-left"></i> All Records</button>
+            <% end %>
+            <%= link_to( @covariate ) do %>
+              <button class="button">Show</button>
+            <% end %>
+          </div>
+          <div class="button-group pull-right">
+            <%= f.submit 'Update', :class => "button button-primary" %>
+          </div>
         </div>
-      </div>
+
+      <% end %>
+    </div>
+  </div>
+</div>

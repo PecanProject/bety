@@ -3,7 +3,38 @@ require 'will_paginate/array'
 class TreatmentsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
 
+  helper_method :sort_column, :sort_direction
+
   require 'csv'
+
+  # autocompletion for bulk upload wizard
+  def bu_autocomplete
+    search_term = params[:term]
+
+    # filter treatment list by citation(s)
+
+    if session[:citation_id_list]
+      treatment_names = Treatment.in_all_citations(session[:citation_id_list]).map{|n| n.squish}
+    elsif session[:citation] 
+      treatment_names = Treatment.in_all_citations([session[:citation]]).map{|n| n.squish}
+    end
+
+    treatment_names.uniq!
+
+    filtered_treatment_names = treatment_names.select {|name| name =~ Regexp.new('^' + search_term, Regexp::IGNORECASE)}
+
+    if filtered_treatment_names.size > 0 || search_term.size > 1
+      treatment_names = filtered_treatment_names
+    end
+
+    if treatment_names.empty?
+      treatment_names = [ { label: "No matches", value: "" }]
+    end
+
+    respond_to do |format|
+      format.json { render :json => treatment_names }
+    end
+  end
 
   def new_management
     @management = Management.new 
@@ -24,6 +55,12 @@ class TreatmentsController < ApplicationController
         @treatment.managements << @management
         flash[:notice] = "Management was successfully created"
         page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
+
+        # After we've added the newly-created management to the collection, we
+        # have to pass an unsaved copy of it to the 'new_management' partial so the
+        # form it contains doesn't try to to a PUT instead of a POST:
+        @management = @management.dup
+
         page.replace_html 'new_management', :partial => 'new_management'
         page.call 'showHide', 'new_management'
       else
@@ -54,6 +91,7 @@ class TreatmentsController < ApplicationController
     render :update do |page|
       if !params[:management].nil?
         params[:management][:id].each do |c|
+          next if c.empty?
           @treatment.managements << Management.find(c)
         end
         page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
@@ -111,14 +149,14 @@ class TreatmentsController < ApplicationController
       search_term_matcher = "%#{params[:treatment]}%"
 
       if !session["citation"].nil?
-  
+
         # If they have selected a citation we want to find all the sites
         # associated with it, then find all the citations associated with
         # those sites, and finally find all the treatments associated with
         # those citations and list them.
   
         tts = []
-        @treatments = Citation.find(session["citation"]).treatments
+        @treatments = Citation.find(session["citation"]).treatments.sorted_order("#{sort_column('citations', 'name')} #{sort_direction}")
         treatment_ids = @treatments.collect {|x| x.id}
 
 =begin # commenting out implementation of "Include all treatments in search?" checkbox
@@ -146,6 +184,7 @@ class TreatmentsController < ApplicationController
 =begin # commenting out implementation of "Include all treatments in search?" checkbox
         end
 =end
+        # TO DO: @other_treatments in this branch always seems to be empty; fix.
         @other_treatments = tts.paginate :page => params[:page]
         
       else
@@ -154,7 +193,7 @@ class TreatmentsController < ApplicationController
         else
           conditions = []
         end
-        @other_treatments = Treatment.paginate :page => params[:page], :conditions => conditions
+        @other_treatments = Treatment.sorted_order("#{sort_column('citations', 'name')} #{sort_direction}").paginate :page => params[:page], :conditions => conditions
       end
     else
       conditions = {}
@@ -262,7 +301,6 @@ class TreatmentsController < ApplicationController
   # DELETE /treatments/1.xml
   def destroy
     @treatment = Treatment.find(params[:id])
-    @treatment.managements.destroy
     @treatment.destroy
 
     respond_to do |format|

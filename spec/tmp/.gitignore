@@ -1,0 +1,3 @@
+# certain tests put files here; ignore them
+*
+!.gitignore

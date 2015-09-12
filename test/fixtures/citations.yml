@@ -5,12 +5,12 @@ test_citation:
   title: "Biomass crops for energy of possible introduction t..."
   journal: "Proceedings of Ninth European Bioenergy Conference ..."
   vol: 98
-  pg: "622-627"
+  pg: "622–627"
   url: "https://docs.google.com/a/illinois.edu/file/d/0B3dq..."
   pdf: ""
   created_at: "2010-09-21 21:10:43"
   updated_at: "2012-04-10 17:31:31"
-  doi: NULL
+  doi: ""
   user_id: 1
 
 citation_with_no_associated_treatment:
@@ -20,10 +20,32 @@ citation_with_no_associated_treatment:
   title: "Biomass yield and biofuel quality of switchgrass harvested in fall or spring"
   journal: "Agronomy Journal"
   vol: 98
-  pg: "1518-1525"
+  pg: "1518–1525"
   url: "http://hdl.handle.net/10113/3966"
   pdf: "http://ddr.nal.usda.gov/dspace/bitstream/10113/3966/1/IND43886658.pdf"
   created_at: "2010-09-22 21:10:43"
   updated_at: "2010-09-22 21:10:43"
   doi: "10.2134/agronj2005.0351"
-  
+
+citation_for_bulk_upload:
+  id: 3
+  author: Adams
+  year: 1986
+  title: "Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange"
+  journal: "Plant Physiology"
+  vol: 81
+  pg: "297–300"
+  url: "http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1075323/?page=1"
+  user: 1
+
+citation_for_bulk_upload_rounding:
+  id: 4
+  author: Wood
+  year: 1996
+  title: "Growth of sugarcane under high input conditions in tropical Australia. III. Accumulation, partitioning and use of nitrogen"
+  journal: "Field Crops Research"
+  vol: 81
+  pg: "297–300"
+  url: "http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1075323/?page=1"
+  doi: "10.1016/S0378-4290(96)00043-3"
+  user: 1

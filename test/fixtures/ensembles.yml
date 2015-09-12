@@ -1,4 +1,5 @@
 test_ensemble:  
   notes: Lorem ipsem sit amed dolor
-  runtype: happy
+  runtype: ensemble
   workflow_id: 1
+  id: 1

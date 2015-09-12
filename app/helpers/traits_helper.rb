@@ -8,7 +8,7 @@ module TraitsHelper
         "<td>#{ select_tag 'checked-'+trait.id.to_s, options_for_select([['failed',-1],['unchecked',0],['passed',1]],trait.checked) }<span id='checked_notify-#{ trait.id }'></span></td>"
       end
     else
-      ''
+      "<td class='center'>#{["failed", "unchecked", "passed"][trait.checked + 1]}</td>"
     end
   end
 

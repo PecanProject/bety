@@ -1,4 +1,6 @@
 class ManagementsTreatments < ActiveRecord::Base
+  self.primary_key = "id"
+
   validates_presence_of     :management_id
   validates_presence_of     :treatment_id
 

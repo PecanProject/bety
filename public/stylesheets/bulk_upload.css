@@ -1,0 +1,113 @@
+
+
+/* bulk upload layout */
+
+.container.csv_display table {
+    margin-left: auto;
+    margin-right: auto;
+    clear: left;
+}
+
+.container.csv_display table caption {
+    height: 4em;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.container.csv_display div#process_container {
+    margin-bottom: 1em;
+}
+
+.container.csv_display header {
+    width: 850px;
+    margin: auto;
+}
+
+.container.csv_display div.alert {
+    clear: left;
+}
+
+h2.file_info {
+    padding: 0 0 10px
+}
+
+.file_info {
+  text-align: center;
+  font-weight: bold;
+}
+
+
+
+/* errors and warnings */
+
+#error_explanation {
+    width:850px;
+    margin: auto;
+    color: #f00;
+}
+
+#warning_explanation {
+    width:850px;
+    margin: auto;
+    color: #c90
+}
+
+#error_explanation ul,
+#warning_explanation ul {
+  list-style: none;
+  margin: 10px 0px 18px 0;
+}
+
+
+
+/* validation */
+
+td.valid { background-color: lightgreen }
+
+td.ignored { background-color: grey }
+
+#error_explanation li.non_unique_referent, #error_explanation li.non_unique_referent a { color: orange }
+td.non_unique_referent { background-color: orange }
+
+#error_explanation li.missing_referent, #error_explanation li.missing_referent a { color: deeppink }
+td.missing_referent { background-color: deeppink }
+
+#error_explanation li.missing_correlative, #error_explanation li.missing_correlative a { color: tomato }
+td.missing_correlative { background-color: tomato }
+
+#error_explanation li.unacceptable_date_format, #error_explanation li.unacceptable_date_format a { color: pink }
+td.unacceptable_date_format { background-color: pink }
+
+#error_explanation li.invalid_date, #error_explanation li.invalid_date a { color: purple }
+td.invalid_date { background-color: purple }
+
+#error_explanation li.inconsistent_correlatives, #error_explanation li.inconsistent_correlatives a { color: #B2B200 }
+td.inconsistent_correlatives { background-color: #B2B200 }
+
+#error_explanation li.out_of_bounds, #error_explanation li.out_of_bounds a { color: #a8a }
+td.out_of_bounds { background-color: #aa88aa }
+
+#error_explanation li.unparsable_number, #error_explanation li.unparsable_number a { color: blue }
+td.unparsable_number { background-color: blue }
+
+
+/* confirmation page */
+
+div.content {
+    color: #007eac;
+}
+h2.directive, table caption {
+    font-style: italic;
+}
+
+
+div.content table, div.content ul {
+    color: #333;
+}
+
+caption {
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #003f56;
+}

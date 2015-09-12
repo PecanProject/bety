@@ -1,0 +1,9 @@
+jQuery('table#sites tbody').html(
+    "<%= j render(partial: 'sites_tbody') %>"
+);
+
+jQuery('table#sites caption').html(
+    "All Search Matches" +
+        ' <%= link_to "Show only related sites",
+              { controller: :citations, action: :edit, remote: true } %>'
+);

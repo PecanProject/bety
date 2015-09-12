@@ -144,7 +144,7 @@ class ModelsController < ApplicationController
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { @files = @model.files.paginate :page => params[:page]; render :action => "edit" }
         format.xml  { render :xml => @model.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @model.errors, :status => :unprocessable_entity }
         format.json  { render :json => @model.errors, :status => :unprocessable_entity }

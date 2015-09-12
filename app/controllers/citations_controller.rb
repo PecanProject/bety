@@ -5,32 +5,92 @@ class CitationsController < ApplicationController
 
   require 'csv'
 
+  # general autocompletion
+  def autocomplete
+    citations = search_model(Citation.order('author'), %w( author title ), params[:term])
+
+    citations = citations.to_a.map do |item|
+      {
+        label: item.autocomplete_label,
+        value: item.id
+      }
+    end
+
+    citations = citations.unshift({ label: "[no value]", value: nil })
+
+    respond_to do |format|
+      format.json { render :json => citations }
+    end
+  end
+
+  def search_sites
+    @citation = Citation.find(params[:id])
+
+    # the "sorted_order" call is mainly so "search" has the joins it needs
+    @sites = Site.sorted_order("#{sort_column('sites','updated_at')} #{sort_direction}").search(params[:search_sites])
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
+    end
+  end
+
   def rem_citations_sites
     @citation = Citation.find(params[:id])
     @site = Site.find(params[:site])
 
-    render :update do |page|
-      if @citation.sites.delete(@site)
-        page.replace_html 'edit_citations_sites', :partial => 'edit_citations_sites'
-      else
-        page.replace_html 'edit_citations_sites', :partial => 'edit_citations_sites'
-      end
+    @citation.sites.delete(@site)
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
-  def edit_citations_sites
+  def add_citations_sites
 
     @citation = Citation.find(params[:id])
+    @site = Site.find(params[:site])
 
-    render :update do |page|
-      if !params[:site].nil?
-        params[:site][:id].each do |c|
-          @citation.sites << Site.find(c)
-        end
-        page.replace_html 'edit_citations_sites', :partial => 'edit_citations_sites'
-      else
-        page.replace_html 'edit_citations_sites', :partial => 'edit_citations_sites'
-      end
+    @citation.sites << @site
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
+    end
+  end
+
+  # autocompletion for bulk upload wizard
+  def bu_autocomplete
+    search_term = params[:term]
+
+    # match against any portion of the author, year, title, or doi
+    match_string = '%' + search_term + '%'
+
+    filtered_citations = Citation.where("LOWER(author) LIKE LOWER(:match_string) OR year::text LIKE :match_string OR LOWER(title) LIKE LOWER(:match_string) OR LOWER(doi) LIKE LOWER(:match_string)",
+                                        match_string: match_string)
+
+    if filtered_citations.size > 0 || search_term.size > 1
+      citations = filtered_citations
+      # else if there are no matches and the user has only typed one letter, just return everything
+    end
+
+    citations = citations.to_a.map do |item|
+      {
+        label: "#{item.to_s} #{item.doi.blank? ? "" : "(doi: #{item.doi})"}",
+        value: item.id
+      }
+    end
+
+    if citations.empty?
+      citations = [ { label: "No matches", value: "" }]
+    end
+
+    respond_to do |format|
+      format.json { render :json => citations }
     end
   end
 
@@ -85,7 +145,15 @@ class CitationsController < ApplicationController
   # GET /citations/1/edit
   def edit
     @citation = Citation.find(params[:id])
-  end
+    @sites = @citation.sites
+
+    respond_to do |format|
+      format.html
+      format.js {
+        render layout: false
+      }
+    end
+ end
 
   # POST /citations
   # POST /citations.xml
@@ -126,7 +194,8 @@ class CitationsController < ApplicationController
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { @sites = @citation.sites
+                      render :action => "edit" }
         format.xml  { render :xml => @citation.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @citation.errors, :status => :unprocessable_entity }
         format.json  { render :json => @citation.errors, :status => :unprocessable_entity }
@@ -138,7 +207,6 @@ class CitationsController < ApplicationController
   # DELETE /citations/1.xml
   def destroy
     @citation = Citation.find(params[:id])
-    @citation.sites.destroy
     @citation.destroy
 
     # Someone might erase a citation they (or someone else) is 'linked' to so remove it for them

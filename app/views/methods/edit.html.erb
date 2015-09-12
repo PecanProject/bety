@@ -1,3 +1,18 @@
+<% content_for(:autocomplete_javascript) do %>
+  <!-- autocomplete.js needs a `completion_fields` object describing the
+  autocompletion fields on the page and needs to know the Rails root -->
+  <script type="text/javascript" charset="utf-8">
+    var ROOT_URL = '<%= root_url %>';
+    var completion_fields = {
+      "search_citations": { controller: "citations",
+                            // Because the model name is Methods (plural) and
+                            // not Method, we have to use "methods" for the first
+                            // component of the hidden_field_id.
+                            hidden_field_id: "methods_citation_id" }
+    };
+  </script>
+  <%= javascript_include_tag 'lazy/autocomplete.js' %>
+<% end %>
 <div class="content">
 	<div class="container">
 		<div class="sixteen columns">
@@ -13,8 +28,7 @@
             <%= f.label :name %>
             <%= f.text_field :name, :class => "input-full" %>
             <br />
-            <%= f.label :citation_id %>
-            <%= f.select :citation_id, Citation.order('author').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true } %> 
+            <%= autocompletion_field(f, "Citation", "citations", :citation_id, "Search citations by author or title") %>
             <em><%= link_to "New Citation", new_citation_path %></em>
           </div>
           <div class="eight columns omega">

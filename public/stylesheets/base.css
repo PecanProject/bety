@@ -1555,6 +1555,17 @@ table {
 	border-spacing: 0;
 }
 
+/* for displaying associated entities */
+table.relationships caption {
+    font-size: 14px;
+    font-weight: bold;
+    line-height:normal;
+    color: #007eac;
+    text-align: left;
+    white-space: nowrap;
+}
+
+
 .table {
 	width: 100%;
 	margin-bottom: 20px;
@@ -3181,6 +3192,7 @@ input[type="submit"].button.button-mini {
 	line-height: 20px;
 }
 
+.alert-notice,
 .alert-success {
 	color: #237825;
   background-color: #99FF66;

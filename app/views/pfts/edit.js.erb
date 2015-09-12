@@ -1,0 +1,12 @@
+/* Restores the priors list to show only linked priors */
+
+jQuery('table#priors tbody').html(
+    "<%= j render(partial: 'priors_tbody') %>"
+);
+
+jQuery('table#priors caption').html("Existing Priors Relationships" +
+                                    ' <%= link_to "Update",
+                                          { controller: :pfts, action: :edit, remote: true },
+                                          { style: "display: none" } %>');
+
+jQuery('#search_priors').val('').focus();

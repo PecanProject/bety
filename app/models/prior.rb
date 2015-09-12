@@ -12,6 +12,21 @@ class Prior < ActiveRecord::Base
   belongs_to :variable
   belongs_to :citation
 
+
+  # VALIDATION
+
+  ## Validation callbacks
+
+  before_validation WhitespaceNormalizer.new([:phylogeny])
+
+  ## Validations
+
+  validates_presence_of :parama, message: "(Parameter a can't be blank)"
+  validates_presence_of :variable_id
+  validates_numericality_of [:parama, :paramb], allow_nil: true
+  validates_numericality_of :n, allow_nil: true, only_integer: true, greater_than_or_equal_to: 0
+
+
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
@@ -28,6 +43,10 @@ class Prior < ActiveRecord::Base
     notes
     created_at
     updated_at
+  end
+
+  def self.distn_types
+    %w(beta binom cauchy chisq exp f gamma geom hyper lnorm logis nbinom norm pois t unif weibull wilcox)
   end
 
   def var_cit

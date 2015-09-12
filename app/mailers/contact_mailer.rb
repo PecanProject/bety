@@ -24,14 +24,14 @@ class ContactMailer < ActionMailer::Base
   end
 
   def signup_email(user, url)
-  	@user = user
-  	@url = url
+    @user = user
+    @url = url
 
-  	email_from = "#{@user[:name]} <#{@user[:email]}>"
-	email_to = User.where(page_access_level: 1).map! do |attributes|
-		"#{attributes.name} < #{attributes.email}>"
-	end
-	email_to << email_from
+    email_from = "#{@user[:name]} <#{@user[:email]}>"
+  email_to = User.where(page_access_level: 1).map! do |attributes|
+    "#{attributes.name} < #{attributes.email}>"
+  end
+  email_to << email_from
 
     mail(:to => email_to,
          :from => email_from,
@@ -39,14 +39,25 @@ class ContactMailer < ActionMailer::Base
          :date => Time.now)
   end
 
-  def admin_approval(user, url)
-  	@user = user
-  	@url = url
+  def apikey_email(user)
+    @user = user
+    email_to = "#{@user[:name]} <#{@user[:email]}>"
+    email_from = "BETYdb: <betydb@gmail.com>"
 
-  	email_from = "#{@user[:name]} <#{@user[:email]}>"
-	email_to = User.where(page_access_level: 1).map! do |attributes|
-		"#{attributes.name} < #{attributes.email}>"
-	end
+    mail(:to => email_to,
+         :from => email_from,
+         :subject => "[BETYdb] API key created",
+         :date => Time.now)
+  end
+
+  def admin_approval(user, url)
+    @user = user
+    @url = url
+
+    email_from = "#{@user[:name]} <#{@user[:email]}>"
+  email_to = User.where(page_access_level: 1).map! do |attributes|
+    "#{attributes.name} < #{attributes.email}>"
+  end
 
     mail(:to => email_to,
          :from => email_from,
