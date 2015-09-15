@@ -1,0 +1,13 @@
+This is a list of proposed constraints.  In most or all cases, these are the
+actual SQL statements that could be used in a migration to alter the database is
+such a way as to apply the constraint.
+
+
+
+/* Proposed partial index on the species table.  A full uniqueness constraint
+would require updating or eliminating all but one of the 162 rows where the
+scientificname value is equal to the empty string.  (Many of these rows have a
+commanname value designating types of plants.)
+SEE GH issue #247. */
+
+CREATE UNIQUE INDEX unique_scientificname ON species(scientificname) WHERE NOT (scientificname = '');
