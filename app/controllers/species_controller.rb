@@ -221,7 +221,9 @@ class SpeciesController < ApplicationController
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { 
+          @pfts = @species.pfts
+          render :action => "edit" }
         format.xml  { render :xml => @species.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @species.errors, :status => :unprocessable_entity }
         format.json  { render :json => @species.errors, :status => :unprocessable_entity }
