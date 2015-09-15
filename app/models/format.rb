@@ -2,8 +2,8 @@ class Format < ActiveRecord::Base
   include Overrides
 
   extend SimpleSearch
-  SEARCH_INCLUDES = %w{ }
-  SEARCH_FIELDS = %w{ formats.name formats.mime_type formats.dataformat formats.notes formats.skip formats.header }
+  SEARCH_INCLUDES = %w{ mimetype }
+  SEARCH_FIELDS = %w{ formats.name mimetypes.type_string formats.dataformat formats.notes formats.skip formats.header }
 
   has_many :inputs
   has_many :formats_variables
