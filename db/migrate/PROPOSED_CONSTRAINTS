@@ -11,3 +11,10 @@ commanname value designating types of plants.)
 SEE GH issue #247. */
 
 CREATE UNIQUE INDEX unique_scientificname ON species(scientificname) WHERE NOT (scientificname = '');
+
+
+/* Proposed index functional index on citations table that will enforce
+uniqueness of (author, year, title) case-insensitively.
+SEE GH issue #181. */
+
+CREATE UNIQUE INDEX author_year_title ON citations (LOWER(author), year, LOWER(title));
