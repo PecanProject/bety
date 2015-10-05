@@ -43,7 +43,7 @@ CREDITS
   #
   # Instance variables:
   #   @iteration (not clear why this is needed)
-  #   @all_marker_locations (city, sitename, lat, and lon for all distinct sites)
+  #   @all_marker_locations (city, sitename, lat, and lon for all distinct sites) that correspond to ANY trait or yield
   #   @all_result_locations (city, sitename, lat, and lon for all distinct sites in the search results)
   #   @results (all table data for the current page of search results in sorted order)
   def index
@@ -64,7 +64,8 @@ CREDITS
         .all_limited(current_user)
 
       # for making map markers
-      @all_marker_locations = all_viewable_rows
+      @all_marker_locations = TraitsAndYieldsViewPrivate # make markers even for locations corresponding to unchecked traits and yields
+        .all_limited(current_user)
         .select("site_id, city, sitename, lat, lon")
         .where("lat IS NOT NULL AND lon IS NOT NULL")
         .group("site_id, city, sitename, lat, lon")
