@@ -43,39 +43,37 @@ CREDITS
   #
   # Instance variables:
   #   @iteration (not clear why this is needed)
-  #   @all_marker_locations (city, sitename, lat, and lon for all distinct sites) that correspond to ANY trait or yield
+  #   @all_marker_locations (city, sitename, lat, and lon for all distinct sites)
   #   @all_result_locations (city, sitename, lat, and lon for all distinct sites in the search results)
   #   @results (all table data for the current page of search results in sorted order)
   def index
 
+    # Set the minimum value for the "checked" attribute:
     if params[:include_unchecked].nil?
-      model = TraitsAndYieldsView
-      view = "traits_and_yields_view"
+      checked_minimum = 1
     else
-      model = TraitsAndYieldsViewPrivate
-      view = "traits_and_yields_view_private"
+      checked_minimum = -1
     end
 
     if params[:format].nil? or params[:format] == 'html'
       @iteration = params[:iteration][/\d+/] rescue 1
 
       # Ensure only permitted access
-      all_viewable_rows = model
+      all_viewable_rows = TraitsAndYieldsViewPrivate
         .all_limited(current_user)
 
       # for making map markers
-      @all_marker_locations = TraitsAndYieldsViewPrivate # make markers even for locations corresponding to unchecked traits and yields
-        .all_limited(current_user)
+      @all_marker_locations = all_viewable_rows
         .select("site_id, city, sitename, lat, lon")
         .where("lat IS NOT NULL AND lon IS NOT NULL")
         .group("site_id, city, sitename, lat, lon")
 
       # intermediate variable used in getting locations in the
       # selected by clicking the map:
-      results_in_map_region = all_viewable_rows
+      rows_in_map_region = all_viewable_rows
         .coordinate_search(params)
 
-      sites_in_map_region = results_in_map_region
+      sites_in_map_region = rows_in_map_region
         .select("site_id, city, sitename, lat, lon")
         .where("lat IS NOT NULL AND lon IS NOT NULL")
         .group("site_id, city, sitename, lat, lon")
@@ -84,9 +82,9 @@ CREDITS
 
       # intermediate variable used in getting result locations and
       # result table data:
-      search_results = results_in_map_region
+      search_results = rows_in_map_region
         .search(params[:search])
-
+        .checked(checked_minimum)
       
       @all_result_locations = search_results
         .select("site_id, city, sitename, lat, lon")
@@ -102,36 +100,39 @@ CREDITS
       
       # for search results table
       @results = search_results
-        .sorted_order("#{sort_column(view,'scientificname')} #{sort_direction}")
+        .sorted_order("#{sort_column('traits_and_yields_view_private','scientificname')} #{sort_direction}")
         .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
 
-      sql_query = log_searches(model
+      sql_query = log_searches(TraitsAndYieldsViewPrivate
                                  .all_limited(current_user)
                                  .coordinate_search(params)
                                  .search(params[:search])
+                                 .checked(checked_minimum)
                                  .to_sql)
 
     elsif params[:format] == 'csv' # Allow url queries of data in csv format
-      @results = model
+      @results = TraitsAndYieldsViewPrivate
         .all_limited(current_user)
         .coordinate_search(params)
         .search(params[:search])
+        .checked(checked_minimum)
 
-      sql_query = log_searches(model
+      sql_query = log_searches(TraitsAndYieldsViewPrivate
                                  .all_limited(current_user)
                                  .coordinate_search(params)
                                  .search(params[:search])
+                                 .checked(checked_minimum)
                                  .to_sql)
 
     else # Allow url queries of data in xml & json formats
-      @results = model
+      @results = TraitsAndYieldsViewPrivate
         .all_limited(current_user)
         .coordinate_search(params)
         .search(params[:search])
         .api_search(params)
 
 
-      sql_query = log_searches(model
+      sql_query = log_searches(TraitsAndYieldsViewPrivate
                                  .all_limited(current_user)
                                  .coordinate_search(params)
                                  .search(params[:search])

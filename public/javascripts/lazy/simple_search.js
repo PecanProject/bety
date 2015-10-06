@@ -24,7 +24,7 @@ var search_function = function (event, locationParameters) {
         jQuery('#simple_search_table').addClass('simple_search_table_' + iteration);
         jQuery.extend(locationParameters, { iteration: iteration });
         var additionalParams = jQuery.param(locationParameters); // parameters that aren't from the search form
-        jQuery.get(this.action, jQuery('#simple_search').serialize() + '&' + additionalParams, null, 'script');
+        jQuery.get(jQuery('form').attr('action'), jQuery('#simple_search').serialize() + '&' + additionalParams, null, 'script');
         return false;
     }, 1000);
 }
