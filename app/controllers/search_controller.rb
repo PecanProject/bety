@@ -49,7 +49,9 @@ CREDITS
   def index
 
     # Set the minimum value for the "checked" attribute:
-    if params[:include_unchecked].nil?
+    if params[:include_unchecked].nil? ||
+        !['true', 'TRUE', 'yes', 'YES', 'y', 'Y', '1', 't', 'T',
+          'include_unchecked'].include?(params[:include_unchecked])
       checked_minimum = 1
     else
       checked_minimum = -1
@@ -100,7 +102,7 @@ CREDITS
       
       # for search results table
       @results = search_results
-        .sorted_order("#{sort_column('traits_and_yields_view_private','scientificname')} #{sort_direction}")
+        .sorted_order("#{sort_column('traits_and_yields_view_private', 'sitename')} #{sort_direction}")
         .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
 
       sql_query = log_searches(TraitsAndYieldsViewPrivate
@@ -116,6 +118,7 @@ CREDITS
         .coordinate_search(params)
         .search(params[:search])
         .checked(checked_minimum)
+        .order("checked desc")
 
       sql_query = log_searches(TraitsAndYieldsViewPrivate
                                  .all_limited(current_user)
