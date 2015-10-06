@@ -28,7 +28,7 @@ class TraitsAndYieldsViewPrivate < ActiveRecord::Base
                       trait_description city sitename author
                       citation_year }
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).order("id asc") }
   scope :search, lambda { |search| where(advanced_search(search)) }
   scope :checked, lambda { |checked_minimum| where("checked >= #{checked_minimum}") }
 
@@ -38,6 +38,13 @@ class TraitsAndYieldsViewPrivate < ActiveRecord::Base
   extend ActionView::Helpers::NumberHelper
 
   comma do
+    checked 'checked' do |num|
+      if num == 1 then
+        'checked'
+      else
+        'unchecked'
+      end
+    end
     #result_type 'result_type'
     #id 'id'
     #citation_id 'citation_id'
