@@ -130,6 +130,7 @@ CREDITS
         .coordinate_search(params)
         .search(params[:search])
         .api_search(params)
+        .checked(checked_minimum)
 
 
       sql_query = log_searches(TraitsAndYieldsViewPrivate
@@ -137,6 +138,7 @@ CREDITS
                                  .coordinate_search(params)
                                  .search(params[:search])
                                  .api_search(params)
+                                 .checked(checked_minimum)
                                  .to_sql)
 
     end
