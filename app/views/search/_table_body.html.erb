@@ -36,6 +36,7 @@
                                  -->
           <td class="center"><%= t.lat ? t.lat.round(2) : nil  %></td>
           <td class="center"><%= t.lon ? t.lon.round(2) : nil %></td>
+          <td class="center"><%= t.date %></td>
           <td class="center"><%= link_to species_path(t.species_id.to_i) do %>
             <em><%= t.scientificname.to_s %></em>
             <%= if t.commonname && !t.commonname.strip.blank? then raw("<br>(" + t.commonname.strip + ")") end %>
