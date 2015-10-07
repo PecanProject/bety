@@ -54,7 +54,7 @@ CREDITS
           'include_unchecked'].include?(params[:include_unchecked])
       checked_minimum = 1
     else
-      checked_minimum = -1
+      checked_minimum = 0
     end
 
     if params[:format].nil? or params[:format] == 'html'
