@@ -158,7 +158,7 @@ CREDITS
           csv << [ "#" ]
           csv << [ "# SQL query:", sql_query ]
           csv << [ "#" ]
-          csv << [ "# Date of query:", Time.now ]
+          csv << [ "# Time of query:", Time.now.utc ]
           csv << [ "#" ]
         end
 
