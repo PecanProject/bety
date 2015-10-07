@@ -61,7 +61,7 @@ CREDITS
       @iteration = params[:iteration][/\d+/] rescue 1
 
       # Ensure only permitted access
-      all_viewable_rows = TraitsAndYieldsViewPrivate
+      all_viewable_rows = TraitsAndYieldsView
         .all_limited(current_user)
 
       # for making map markers
@@ -102,10 +102,10 @@ CREDITS
       
       # for search results table
       @results = search_results
-        .sorted_order("#{sort_column('traits_and_yields_view_private', 'sitename')} #{sort_direction}")
+        .sorted_order("#{sort_column('traits_and_yields_view', 'sitename')} #{sort_direction}")
         .paginate :page => params[:page], :per_page => params[:DataTables_Table_0_length]
 
-      sql_query = log_searches(TraitsAndYieldsViewPrivate
+      sql_query = log_searches(TraitsAndYieldsView
                                  .all_limited(current_user)
                                  .coordinate_search(params)
                                  .search(params[:search])
@@ -113,14 +113,14 @@ CREDITS
                                  .to_sql)
 
     elsif params[:format] == 'csv' # Allow url queries of data in csv format
-      @results = TraitsAndYieldsViewPrivate
+      @results = TraitsAndYieldsView
         .all_limited(current_user)
         .coordinate_search(params)
         .search(params[:search])
         .checked(checked_minimum)
         .order("checked desc")
 
-      sql_query = log_searches(TraitsAndYieldsViewPrivate
+      sql_query = log_searches(TraitsAndYieldsView
                                  .all_limited(current_user)
                                  .coordinate_search(params)
                                  .search(params[:search])
@@ -128,7 +128,7 @@ CREDITS
                                  .to_sql)
 
     else # Allow url queries of data in xml & json formats
-      @results = TraitsAndYieldsViewPrivate
+      @results = TraitsAndYieldsView
         .all_limited(current_user)
         .coordinate_search(params)
         .search(params[:search])
@@ -136,7 +136,7 @@ CREDITS
         .checked(checked_minimum)
 
 
-      sql_query = log_searches(TraitsAndYieldsViewPrivate
+      sql_query = log_searches(TraitsAndYieldsView
                                  .all_limited(current_user)
                                  .coordinate_search(params)
                                  .search(params[:search])
