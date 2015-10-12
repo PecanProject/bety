@@ -4,4 +4,8 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
+task :log => :environment do
+  ActiveRecord::Base.logger = Logger.new(STDOUT)
+end
+
 BetyRails3::Application.load_tasks
