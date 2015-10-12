@@ -9,6 +9,7 @@ class Workflow < ActiveRecord::Base
   has_many :ensembles
   belongs_to :model
   belongs_to :site
+  belongs_to :user
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
@@ -20,6 +21,7 @@ class Workflow < ActiveRecord::Base
     finished_at
     created_at
     updated_at
+    notes
   end
 
   def to_s(format=nil)
