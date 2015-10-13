@@ -42,6 +42,11 @@ module ApplicationHelper
 
   $statname_list =  ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD"]
 
+  offsets_query = "SELECT DISTINCT utc_offset FROM pg_timezone_names ORDER BY utc_offset"
+  $utc_offsets = ActiveRecord::Base.connection.execute(offsets_query).to_a.collect do |item|
+    item['utc_offset']
+  end
+
 
   # Simple Search
   def sortable(column, title = nil)

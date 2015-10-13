@@ -2,6 +2,10 @@ class Trait < ActiveRecord::Base
   # Passed from controller for validation of ability
   attr_accessor :current_user
 
+  attr_accessor :timezone_offset
+
+  before_save :apply_offset
+
   include Overrides
 
   extend DataAccess # provides all_limited
@@ -23,6 +27,43 @@ class Trait < ActiveRecord::Base
   belongs_to :entity
   belongs_to :ebi_method, :class_name => 'Methods', :foreign_key => 'method_id'
 
+
+
+  # VALIDATION
+
+  ## Validation methods
+
+  def consistent_date_and_time_fields
+    case dateloc
+    when 9
+      if !(date_year.nil? && date_month.nil? && date_day.nil?)
+        errors.add(:base, "When dateloc = 9, year, month and day should be blank")
+      else
+        date_year = 2000
+        date_month = 1
+        date_day = 1
+      end
+    end
+
+        Rails.logger.info("date_year = #{date_year} and has type #{date_year.class}")
+
+    begin
+      t = DateTime.new(date_year, date_month, date_day, time_hour, time_minute, 0, timezone_offset)
+      Rails.logger.info("Time is #{t}")
+    rescue => e
+      e.backtrace.each do |m|
+        Rails.logger.info(m)
+      end
+      errors.add(:base, e.message)
+    end
+  end
+
+  ## Validation callback methods
+
+  ## Validation callbacks
+
+  ## Validations
+
   validates_presence_of     :mean, :access_level
   validates_numericality_of :mean
   validates_presence_of     :variable
@@ -33,6 +74,8 @@ class Trait < ActiveRecord::Base
   validates_format_of       :date_day, :with => /\A\d{1,2}\z/, :allow_blank => true
   validates_format_of       :time_hour, :with => /\A\d{1,2}\z/, :allow_blank => true
   validates_format_of       :time_minute, :with => /\A\d{1,2}\z/, :allow_blank => true
+  validates_format_of        :timezone_offset, :with => /\A *[+-]?([01]?[0-9]|2[0-3]):(00|15|30|45) *\z/
+  validate :consistent_date_and_time_fields
   validate :can_change_checked
   validate :mean_in_range
 
@@ -175,5 +218,50 @@ class Trait < ActiveRecord::Base
   def self.search_columns
     return ["traits.id"]
   end
+
+
+
+  private
+
+  def apply_offset
+=begin
+    sign, hour, minutes = /\A *([+-]?)(\d\d?):(\d\d) *\z/.match(self.timezone_offset).captures
+
+    Rails.logger.info("self.timezone_offset: #{self.timezone_offset}")
+    Rails.logger.info("sign, hour, minutes: #{sign}, #{hour}, #{minutes}")
+
+    if sign == "-"
+      sign = -1
+    else 
+      sign = 1
+    end
+
+    hour = hour.to_i
+    minutes = minutes.to_i
+
+    # convert time to UTC : UTC time = local time - local time offset
+    Rails.logger.info("time_hour: #{time_hour}")
+    Rails.logger.info("sign * hour: #{sign * hour}")
+    Rails.logger.info("time_hour - sign * hour: #{time_hour - sign * hour}")
+    self.time_hour -= sign * hour
+    self.time_minute -= sign * minutes
+
+    self.notes = "blah"
+
+    Rails.logger.info("self = #{self}")
+=end
+
+
+=begin
+    t_utc = DateTime.new(date_year, date_month, date_day, time_hour, time_minute, 0, self.timezone_offset).utc.to_s(:db)
+    Rails.logger.info("t_utc = #{t_utc}")
+    #self.date_year, self.date_month, self.date_day, self.time_hour, self.time_minute = /\A(\d\d\d\d)-(\d\d)-(\d\d) (\d\d):(\d\d):\d\d\z/.match(t_utc).captures
+    
+    self.date = t_utc
+
+=end
+
+  end
+    
 
 end

@@ -73,15 +73,16 @@
                   </fieldset>
                 </div>
                 <div class="four columns">
-                  <%= f.label :dateloc, "Date Level of Confidence" %>
-                  <%= f.select :dateloc, options_for_select($dateloc_drop.sort, f.object.dateloc || $dateloc_drop_default) %>
-                </div>
-                <div class="four columns">
                   <fieldset>
                     <legend>Time</legend>
-                    <%= f.select :time_hour, [''] + (0..23).to_a %>
-                    <%= f.select :time_minute, [''] + (0..59).to_a %>
+                    <%= f.select :time_hour, [''] + (0..23).to_a.collect { |i| '% 2i' % i } %>
+                    <%= f.select :time_minute, [''] + (0..59).to_a.collect { |i| '%02i' % i } %>
+                    <%= f.select :timezone_offset, [''] + $utc_offsets %>
                   </fieldset>
+                </div>
+                <div class="four columns">
+                  <%= f.label :dateloc, "Date Level of Confidence" %>
+                  <%= f.select :dateloc, options_for_select($dateloc_drop.sort, f.object.dateloc || $dateloc_drop_default) %>
                 </div>
                 <div class="four columns omega">
                   <%= f.label :timeloc, "Time Level of Confidence" %>
