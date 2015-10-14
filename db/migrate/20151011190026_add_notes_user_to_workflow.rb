@@ -3,7 +3,7 @@ class AddNotesUserToWorkflow < ActiveRecord::Migration
     add_column :workflows, :notes, :text
     add_column :workflows, :user_id, :integer, :limit => 8
   end
- 
+
   def down
     remove_column :workflows, :notes
     remove_column :workflows, :user_id
