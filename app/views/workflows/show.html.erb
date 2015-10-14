@@ -31,6 +31,10 @@
         <dd><%= @workflow.updated_at %></dd>
         <dt>Parameters:</dt>
         <dd><%= @workflow.params %></dd>
+        <dt>Notes:</dt>
+        <dd><%= @workflow.notes %></dd>
+        <dt>Record Creator</dt>
+        <dd><%= user_for_view(@workflow.user) %></dd>
       </dl>
 
       <div class="form-actions">
