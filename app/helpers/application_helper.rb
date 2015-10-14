@@ -42,9 +42,15 @@ module ApplicationHelper
 
   $statname_list =  ["","SD", "SE", "MSE", "95%CI", "LSD", "MSD"]
 
+
+  # Query the database to get all possible timezone offsets in current use:
   offsets_query = "SELECT DISTINCT utc_offset FROM pg_timezone_names ORDER BY utc_offset"
   $utc_offsets = ActiveRecord::Base.connection.execute(offsets_query).to_a.collect do |item|
-    item['utc_offset']
+    offset = item['utc_offset']
+    if !offset.match(/\+|-/)
+      offset = "+#{offset}"
+    end
+    offset
   end
 
 

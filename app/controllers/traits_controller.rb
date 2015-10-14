@@ -126,7 +126,6 @@ class TraitsController < ApplicationController
 
     @citation = Citation.find_by_id(session["citation"])
     @new_covariates = [Covariate.new]
-    @utc_offsets = utc_offsets
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @trait }
