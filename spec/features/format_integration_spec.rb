@@ -18,7 +18,6 @@ feature 'Formats index works' do
       fill_in 'Name', :with =>'PAPER'
       fill_in 'Header', :with => 'Research'
       fill_in 'Skip', :with =>'DEAR'
-      fill_in 'Dataformat', :with =>'XML'
       fill_in 'Notes', :with => 'DingoesDingoesDingoesDingoesDingoes'
       click_button 'Create'
       
