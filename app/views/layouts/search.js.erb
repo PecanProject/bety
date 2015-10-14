@@ -1,0 +1,56 @@
+// Re-render the portion of the form containing the state (hidden) variables so that they get updated:
+jQuery('div#state_variables').html('<%= escape_javascript(render("#{controller_name}/state_variables")) %>');
+
+/* Note: We could do something like this instead of re-rendering the
+ * state_variable template as above:
+ *
+ *      jQuery('#simple_search #direction').val('<%#= sort_direction %>');
+ *      jQuery('#simple_search #sort').val('<%#= sort_column %>');
+ *      [etc.]
+ */
+
+
+// Update table headers so URLs in column-sort links incorporate current search parameters:
+jQuery('.simple_search_table_<%= @iteration -%> table#DataTables_Table_0 thead').html('<%= escape_javascript(render("#{controller_name}/table_head")) %>');
+
+// Update table with search results:
+jQuery('.simple_search_table_<%= @iteration -%> table#DataTables_Table_0 tbody').html('<%= escape_javascript(render("#{controller_name}/table_body")) %>');
+
+// Update paginate row:
+jQuery('div.final_paginate_row').html('<%= escape_javascript(render("#{controller_name}/paginate_row")) %>');
+
+// Restore table opacity to normal:
+jQuery('#simple_search_table table').css('opacity', '1');
+
+function updateMarkers() {
+    var selectedSitesAsString = "<%= raw escape_javascript @all_result_locations.to_json %>";
+    var selectedSites = eval(selectedSitesAsString);
+
+    for (var i = 0; i < selectedSites.length; ++i) {
+        var id = selectedSites[i]["site_id"];
+        marker[id].setIcon(RED_ICON);
+    }
+
+    var mapSelectedSitesExcludedBySearchTerms = "<%= raw escape_javascript @map_selected_sites_excluded_by_search_terms.to_json %>";
+    var mapSelectedSitesExcludedBySearch = eval(mapSelectedSitesExcludedBySearchTerms);
+
+    for (var i = 0; i < mapSelectedSitesExcludedBySearch.length; ++i) {
+        var id = mapSelectedSitesExcludedBySearch[i]["site_id"];
+        marker[id].setIcon(GREY_ICON);
+    }
+
+
+    var nonMapSelectedSitesAsString = "<%= raw escape_javascript @non_map_selected_sites.to_json %>";
+    var nonMapSelectedSites = eval(nonMapSelectedSitesAsString);
+
+    for (var i = 0; i < nonMapSelectedSites.length; ++i) {
+        var id = nonMapSelectedSites[i]["site_id"];
+        marker[id].setIcon(WHITE_ICON);
+    }
+
+}
+
+// Update markers if map is showing:
+if (jQuery("#simple_search #mapDisplayed").val() == "true") {
+    updateMarkers();
+}

@@ -1,48 +1,6 @@
 // Update table with search results:
 jQuery('.simple_search_table_<%= @iteration -%>').html('<%= escape_javascript(render("#{controller_name}/index_table")) %>');
 
-function updateMarkers() {
-
-    var selectedSitesAsString = "<%= raw escape_javascript @all_result_locations.to_json %>";
-    var selectedSites = eval(selectedSitesAsString);
-
-    for (var i = 0; i < selectedSites.length; ++i) {
-        var id = selectedSites[i]["site_id"];
-        marker[id].setIcon(RED_ICON);
-    }
-
-    var mapSelectedSitesExcludedBySearchTerms = "<%= raw escape_javascript @map_selected_sites_excluded_by_search_terms.to_json %>";
-    var mapSelectedSitesExcludedBySearch = eval(mapSelectedSitesExcludedBySearchTerms);
-
-    for (var i = 0; i < mapSelectedSitesExcludedBySearch.length; ++i) {
-        var id = mapSelectedSitesExcludedBySearch[i]["site_id"];
-        marker[id].setIcon(GREY_ICON);
-    }
-
-
-    var nonMapSelectedSitesAsString = "<%= raw escape_javascript @non_map_selected_sites.to_json %>";
-    var nonMapSelectedSites = eval(nonMapSelectedSitesAsString);
-
-    for (var i = 0; i < nonMapSelectedSites.length; ++i) {
-        var id = nonMapSelectedSites[i]["site_id"];
-        marker[id].setIcon(WHITE_ICON);
-    }
-
-}
-
-// Update markers if map is showing:
-if (jQuery("#simple_search #mapDisplayed").val() == "true") {
-    updateMarkers();
-}
-
-    
-// Reset values of hidden variables:
-// COMMENTING THIS OUT FOR NOW; WE MAY NEED IT AGAIN IF WE LIMIT AJAX SEARCHES TO REPLACING THE SEARCH RESULTS TABLE AND NOT ALSO THE SEARCH FORM
-/*
-jQuery('#simple_search #direction').val('<%#= sort_direction %>');
-jQuery('#simple_search #sort').val('<%#= sort_column %>');
-*/
-
 // Make cursor go to the end when search box gets focus ...
 jQuery('#search').focus(
     function() {

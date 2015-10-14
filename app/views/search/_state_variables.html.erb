@@ -1,0 +1,10 @@
+        <%= hidden_field_tag :direction, params[:direction] %>
+        <%= hidden_field_tag :sort, params[:sort] %>
+        <%= hidden_field_tag :lat, params[:lat] %>
+        <%= hidden_field_tag :lng, params[:lng] %>
+        <%= hidden_field_tag :radius, params[:radius].blank? ? 200 : params[:radius] %>
+        <%= hidden_field_tag :mapSearchMode, params[:mapSearchMode] %>
+        <%= hidden_field_tag :mapDisplayed, params[:mapDisplayed] %>
+        <%= hidden_field_tag :mapZoomLevel, params[:mapZoomLevel] %>
+        <%= hidden_field_tag :mapCenterLat, params[:mapCenterLat] %>
+        <%= hidden_field_tag :mapCenterLng, params[:mapCenterLng] %>
