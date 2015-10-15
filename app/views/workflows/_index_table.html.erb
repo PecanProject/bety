@@ -24,7 +24,7 @@
     <td class="center"><%=h workflow.created_at %></td>
     <td class="center"><%=h workflow.updated_at %></td>
 
-    <td class="center"><%= link_to 'Results', "/pecan/finished.php?workflowid=" + workflow.id.to_s %></td>
+    <td class="center"><%= link_to 'Results', "/pecan/08-finished.php?workflowid=" + workflow.id.to_s %></td>
     <td>
     <%= link_to workflow, :class => "button button-small", :alt => "show" do %>
                         <i class="icon-zoom-in"></i>
