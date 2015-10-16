@@ -83,7 +83,7 @@ class Trait < ActiveRecord::Base
       
 
     begin
-      t = DateTime.new(@d_year.to_i, @d_month.to_i, @d_day.to_i, @t_hour.to_i, @t_minute.to_i, 0, timezone_offset)
+      #t = DateTime.new(@d_year.to_i, @d_month.to_i, @d_day.to_i, @t_hour.to_i, @t_minute.to_i, 0, timezone_offset)
     rescue => e
       errors.add(:base, e.message)
     end
@@ -205,13 +205,7 @@ class Trait < ActiveRecord::Base
   end
 
   def pretty_date
-    date_string = ""
-    date_string += "#{d_year} " unless d_year == 9996
-    date_string += "#{Date::ABBR_MONTHNAMES[d_month]} " unless d_month.nil?
-    date_string += "#{d_day} " unless d_day.nil?
-    date_string += " (year unspecified)" if d_year == 9996
-
-    date_string
+    date.to_formatted_s(date_format)
   end
 
   def format_statname
@@ -231,9 +225,7 @@ class Trait < ActiveRecord::Base
   end
 
   def pretty_time
-    time_string = ""
-    time_string += "#{"%02i" % t_hour}" unless t_hour.nil?
-    time_string += ":#{"%02i" % t_minute}" unless t_hour.nil? or t_minute.nil?
+    time.nil? ? '[unspecified]' : time.to_s(time_format)
   end
 
   def specie_treat_cultivar
@@ -313,6 +305,59 @@ class Trait < ActiveRecord::Base
 
 
   end
+
+
+  private
+
+  def date_format
+    case dateloc
+    when      9 
+      :no_date_data
+    when      8 
+      :year_only
+    when      7 
+      :season_and_year
+    when      6 
+      :month_and_year
+    when      5.5 
+      :week_of_year
+    when      5 
+      :year_month_day
+    when      97 
+      :season_only
+    when      96 
+      :month_only
+    when      95 
+      :month_day
+    when nil
+      :unspecified_dateloc
+    else
+      :unrecognized_dateloc
+    end
+  end
+
+  def time_format
+    case timeloc
+    when      9 
+      :no_time_data
+    when      4 
+      :time_of_day
+    when      3 
+      :hour_only
+    when      2 
+      :hour_minutes
+    when      1 
+      :hour_minutes_seconds
+    when nil
+      :unspecified_timeloc
+    else
+      :unrecognized_timeloc
+    end
+  end
+  
+  
+  
+
     
 
 end
