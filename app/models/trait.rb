@@ -26,7 +26,7 @@ class Trait < ActiveRecord::Base
     #Rails.logger.info("In t_hour, date.utc = #{self.date.utc} and date.utc.hour = #{date.utc.hour}")
   end
 
-  before_save :apply_offset
+  before_save :process_datetime_input
 
   include Overrides
 
@@ -76,7 +76,7 @@ class Trait < ActiveRecord::Base
       # estimate time zone from site longitude
       appx_offset = (Site.find site_id).lon / 15.0
       hour_offset = (timezone_offset.sub(/:.*/, '')).to_i
-      if(appx_offset - hour_offset).abs > 2
+      if timezone_offset != '+00:00:00' && (appx_offset - hour_offset).abs > 2
         errors.add(:base, "The UTC offset value you have selected seems inconsistent with the site location.")
       end
     end
@@ -101,7 +101,7 @@ class Trait < ActiveRecord::Base
   validates_inclusion_of    :access_level, in: 1..4, message: "You must select an access level"
   validates_presence_of     :statname, :if => Proc.new { |trait| !trait.stat.blank? }
   validates_format_of       :d_year, :with => /\A(\d{2}|\d{4})\z/, :allow_blank => true
-  validates_format_of       :d_month, :with => /\A\d{1,2}\z/, :allow_blank => true
+  validates_format_of       :d_month, :with => /\A\d{1,2}|Spring|Summer|Winter|Autumn\z/, :allow_blank => true
   validates_format_of       :d_day, :with => /\A\d{1,2}\z/, :allow_blank => true
   #validates_format_of       :t_hour, :with => /\A\d{1,2}\z/, :allow_blank => true
   validates_format_of       :t_minute, :with => /\A\d{1,2}\z/, :allow_blank => true
@@ -225,7 +225,7 @@ class Trait < ActiveRecord::Base
   end
 
   def pretty_time
-    time.nil? ? '[unspecified]' : time.to_s(time_format)
+    date.nil? ? '[unspecified]' : date.to_s(time_format)
   end
 
   def specie_treat_cultivar
@@ -250,7 +250,7 @@ class Trait < ActiveRecord::Base
 
   private
 
-  def apply_offset
+  def process_datetime_input
 
 
     # Supply missing year if needed:
@@ -258,6 +258,11 @@ class Trait < ActiveRecord::Base
     if @d_year.blank?
       @d_year = 9996
       self.dateloc = 95
+    end
+
+    if ['Spring', 'Summer', 'Autumn', 'Winter'].include? @d_month
+      @d_month = { 'Spring' => '4', 'Summer' => '7', 'Autumn' => '10', 'Winter' => '1' }[@d_month]
+      dateloc = 7
     end
 
 
@@ -288,7 +293,7 @@ class Trait < ActiveRecord::Base
     Rails.logger.info("self = #{self}")
 =end
     begin
-      t_utc = DateTime.new(@d_year.to_i, @d_month.to_i, @d_day.to_i, @t_hour.to_i, @t_minute.to_i, 0, timezone_offset).utc
+      t_utc = DateTime.now#new(@d_year.to_i, @d_month.to_i, @d_day.to_i, @t_hour.to_i, @t_minute.to_i, 0, timezone_offset).utc
     rescue => e
       Rails.logger.info("in apply offset, got this error: #{e.message}")
       Rails.logger.info("values of @d_year, @d_month, @d_day, @t_hour, @t_minute are #{@d_year}, #{@d_month}, #{@d_day}, #{@t_hour}, #{@t_minute} with types #{@d_year.class}, #{@d_month.class}, #{@d_day.class}, #{@t_hour.class}, #{@t_minute.class}")
