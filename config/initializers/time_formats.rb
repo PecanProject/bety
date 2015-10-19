@@ -43,7 +43,7 @@ NEW_FORMATS = {
   month_only: '%B',
 
   # dateloc 95:
-  month_day: ->(date) { date.strftime("%B #{time.day.ordinalize} %Y") },
+  month_day: ->(date) { date.strftime("%B #{date.day.ordinalize}") },
 
   unspecified_dateloc: 'Date Level of Confidence Unknown',
 
