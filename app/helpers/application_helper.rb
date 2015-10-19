@@ -31,12 +31,16 @@ module ApplicationHelper
                      "7   season" => "7.0" ,
                      "7.5 " => "7.5" ,
                      "8   year" => "8.0" ,
-                     "9   no data" => "9.0"  }
+                     "9   no data" => "9.0",
+                     "95   day (year unspecified)" => "95.0",
+                     "96   month (year unspecified)" => "96.0",
+                     "97   season (year unspecified)" => "97.0" }
   $dateloc_drop_default = "9.0"
   $timeloc_drop = {  "1   second" => "1.0" ,
                      "2   minute" => "2.0" ,
                      "2.5 quarter-hour" => "2.5" ,
                      "3   hour" => "3.0" ,
+                     "4   time of day, e.g. morning, afternoon" => "4.0" ,
                      "9   no data" => "9.0"  }
   $timeloc_drop_default = "9.0"
 
