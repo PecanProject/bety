@@ -2,24 +2,88 @@ class Trait < ActiveRecord::Base
   # Passed from controller for validation of ability
   attr_accessor :current_user
 
-  attr_accessor :timezone_offset, :d_year, :d_month, :d_day, :t_hour, :t_minute
+  attr_writer :timezone_offset, :d_year, :d_month, :d_day, :t_hour, :t_minute
 
   def d_year
-    Rails.logger.info("In method d_year, @d_year = #{@d_year}")
-    @d_year || (date.nil? ? '' : date.utc.year)
+    if !@d_year.nil?
+      return @d_year
+    end
+
+    case dateloc
+    when 95, 96, 97, 9
+      ''
+    when 5, 5.5, 6, 7, 8
+      date.nil? ? '' : date.utc.year
+    else
+      raise
+    end
   end
   def d_month
-    @d_month || (date.nil? ? '' : date.utc.month)
+    if !@d_month.nil?
+      return @d_month
+    end
+
+    case dateloc
+    when 8, 9
+      nil
+    when 7, 97
+      case date.utc.month
+      when 1
+        'Winter'
+      when 4
+        'Spring'
+      when 7
+        'Summer'
+      when 10
+        'Autumn'
+      else
+        raise
+      end
+    when 5, 5.5, 6, 95, 96
+      date.nil? ? '' : date.utc.month
+    else
+      raise
+    end
   end
   def d_day
-    @d_day || (date.nil? ? '' : date.utc.day)
+    if !@d_day.nil?
+      return @d_day
+    end
+
+    case dateloc
+    when 6, 7, 8, 9, 96, 97
+      nil
+    when 5, 5.5
+      date.nil? ? '' : date.utc.day
+    end
   end
   def t_hour
-    @t_hour || (date.nil? ? '' : date.utc.hour)
+    if !@t_hour.nil?
+      return @t_hour
+    end
+
+    case timeloc
+      when 9
+      nil
+    when 4
+      'morning'
+    when 1, 2, 3
+      date.nil? ? '' : date.utc.hour
+    else
+      raise
+    end
   end
   def t_minute
-    # use formatting to make sure value matches dropdown values:
-    @t_minute || (date.nil? ? '' : date.utc.min)
+    if !@t_minute.nil?
+      @t_minute
+    end
+
+    case timeloc
+    when 3, 4, 5
+      nil
+    when 1, 2
+      date.nil? ? '' : date.utc.strftime('%M')
+    end
   end
   def timezone_offset
     @timezone_offset.nil? ?  "+00:00:00" : (@timezone_offset.match(/\+|-/) ? @timezone_offset : "+#{@timezone_offset}")
@@ -205,7 +269,7 @@ class Trait < ActiveRecord::Base
   end
 
   def pretty_date
-    date.to_formatted_s(date_format)
+    date.nil? ? '[unspecified]' : date.utc.to_formatted_s(date_format) + ([7, 9, 97].include?(dateloc) ? '' : ' (UTC)')
   end
 
   def format_statname
@@ -225,7 +289,8 @@ class Trait < ActiveRecord::Base
   end
 
   def pretty_time
-    date.nil? ? '[unspecified]' : date.to_s(time_format)
+    Rails.logger.info("date = #{date.to_s}; date.to_s(time_format) = #{date.to_s(time_format)}")
+    date.nil? ? '[unspecified]' : date.utc.to_s(time_format) + (timeloc == 9 ? '' : ' UTC')
   end
 
   def specie_treat_cultivar
@@ -252,51 +317,108 @@ class Trait < ActiveRecord::Base
 
   def process_datetime_input
 
+    # Use local variables year, month, day, hour, minute for instantiating
+    # DateTime object; initialize them from form fields:
+    year = d_year.to_i
+    month = d_month.to_i
+    day = d_day.to_i
+    hour = t_hour.to_i
+    minute = @t_minute.to_i
+
+
+    Rails.logger.info("values of @d_year, @d_month, @d_day, @t_hour, @t_minute are #{@d_year}, #{@d_month}, #{@d_day}, #{@t_hour}, #{@t_minute} with types #{@d_year.class}, #{@d_month.class}, #{@d_day.class}, #{@t_hour.class}, #{@t_minute.class}")
+
+
+    Rails.logger.info("d_year = #{d_year} and @d_year = #{@d_year}")
+    Rails.logger.info("d_month = #{d_month} and @d_month = #{@d_month}")
+    Rails.logger.info("d_day = #{d_day} and @d_day = #{@d_day}")
+    Rails.logger.info("t_hour = #{t_hour} and @t_hour = #{@t_hour}")
+    Rails.logger.info("t_minute = #{t_minute} and @t_minute = #{@t_minute}")
+
 
     # Supply missing year if needed:
 
     if @d_year.blank?
-      @d_year = 9996
-      self.dateloc = 95
+      if @d_month.blank?
+        if !@d_day.blank?
+          # shouldn't ever get here
+          raise "If you set a day, you must also set a month."
+        end
+        year = 9999
+        month = 1
+        day = 1
+        self.dateloc = 9
+      else
+        year = 9996
+        if ['Spring', 'Summer', 'Autumn', 'Winter'].include? @d_month
+          if !@d_day.blank?
+            # shouldn't ever get here
+            raise "If you set a season, you must leave day blank."
+          end
+          month = { 'Spring' => 4, 'Summer' => 7, 'Autumn' => 10, 'Winter' => 1 }[@d_month]
+          day = 1
+          self.dateloc = 97
+        else # month is an integer
+          if @d_day.blank?
+            day = 1
+            self.dateloc = 96
+          else
+            self.dateloc = 95
+          end
+        end
+      end
+    else # year is given
+      if @d_month.blank?
+        if !@d_day.blank?
+          # shouldn't ever get here
+          raise "If you set a day, you must also set a month."
+        end
+        month = 1
+        day = 1
+        self.dateloc = 8
+      else
+        if ['Spring', 'Summer', 'Autumn', 'Winter'].include? @d_month
+          if !@d_day.blank?
+            # shouldn't ever get here
+            raise "If you set a season, you must leave day blank."
+          end
+          month = { 'Spring' => 4, 'Summer' => 7, 'Autumn' => 10, 'Winter' => 1 }[@d_month]
+          day = 1
+          self.dateloc = 7
+        else # month is an integer
+          if @d_day.blank?
+            day = 1
+            self.dateloc = 6
+          else
+            self.dateloc = 5
+          end
+        end
+      end
     end
 
-    if ['Spring', 'Summer', 'Autumn', 'Winter'].include? @d_month
-      @d_month = { 'Spring' => '4', 'Summer' => '7', 'Autumn' => '10', 'Winter' => '1' }[@d_month]
-      dateloc = 7
+
+    if @t_hour.blank?
+      if !@t_minute.blank?
+        # shouldn't ever get here
+        raise "If you set a minute, you must set the hour."
+      end
+      hour = 0
+      minute = 0
+      self.timeloc = 9
+    else # hour is given
+      if @t_minute.blank?
+        minute = 0
+        self.timeloc = 3
+      else
+        self.timeloc = 2
+      end
     end
 
-
-=begin
-    sign, hour, minutes = /\A *([+-]?)(\d\d?):(\d\d) *\z/.match(self.timezone_offset).captures
-
-    Rails.logger.info("self.timezone_offset: #{self.timezone_offset}")
-    Rails.logger.info("sign, hour, minutes: #{sign}, #{hour}, #{minutes}")
-
-    if sign == "-"
-      sign = -1
-    else 
-      sign = 1
-    end
-
-    hour = hour.to_i
-    minutes = minutes.to_i
-
-    # convert time to UTC : UTC time = local time - local time offset
-    Rails.logger.info("@t_hour: #{@t_hour}")
-    Rails.logger.info("sign * hour: #{sign * hour}")
-    Rails.logger.info("@t_hour - sign * hour: #{@t_hour - sign * hour}")
-    self.@t_hour -= sign * hour
-    self.@t_minute -= sign * minutes
-
-    self.notes = "blah"
-
-    Rails.logger.info("self = #{self}")
-=end
     begin
-      t_utc = DateTime.now#new(@d_year.to_i, @d_month.to_i, @d_day.to_i, @t_hour.to_i, @t_minute.to_i, 0, timezone_offset).utc
+      Rails.logger.info("values of year, month, day, hour, minute are #{year}, #{month}, #{day}, #{hour}, #{minute} with types #{year.class}, #{month.class}, #{day.class}, #{hour.class}, #{minute.class}")
+      t_utc = DateTime.new(year, month, day, hour, minute, 0, timezone_offset).utc
     rescue => e
       Rails.logger.info("in apply offset, got this error: #{e.message}")
-      Rails.logger.info("values of @d_year, @d_month, @d_day, @t_hour, @t_minute are #{@d_year}, #{@d_month}, #{@d_day}, #{@t_hour}, #{@t_minute} with types #{@d_year.class}, #{@d_month.class}, #{@d_day.class}, #{@t_hour.class}, #{@t_minute.class}")
       return false
     end
       Rails.logger.info("values of @d_year, @d_month, @d_day, @t_hour, @t_minute are #{@d_year}, #{@d_month}, #{@d_day}, #{@t_hour}, #{@t_minute} with types #{@d_year.class}, #{@d_month.class}, #{@d_day.class}, #{@t_hour.class}, #{@t_minute.class}")
@@ -307,7 +429,6 @@ class Trait < ActiveRecord::Base
     end
 
     self.date = t_utc
-
 
   end
 
