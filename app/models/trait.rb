@@ -89,7 +89,7 @@ class Trait < ActiveRecord::Base
     end
 
     case timeloc
-    when 3, 4, 5
+    when 3, 4, 5, 9
       nil
     when 1, 2
       date.nil? ? '' : date.utc.strftime('%M')
