@@ -14,6 +14,8 @@ class Trait < ActiveRecord::Base
       ''
     when 5, 5.5, 6, 7, 8
       date.nil? ? '' : date.utc.year
+    when nil
+      nil
     else
       raise
     end
@@ -41,6 +43,8 @@ class Trait < ActiveRecord::Base
       end
     when 5, 5.5, 6, 95, 96
       date.nil? ? '' : date.utc.month
+    when nil
+      nil
     else
       raise
     end
@@ -55,6 +59,10 @@ class Trait < ActiveRecord::Base
       nil
     when 5, 5.5
       date.nil? ? '' : date.utc.day
+    when nil
+      nil
+    else
+      raise
     end
   end
   def t_hour
@@ -69,6 +77,8 @@ class Trait < ActiveRecord::Base
       'morning'
     when 1, 2, 3
       date.nil? ? '' : date.utc.hour
+    when nil
+      nil
     else
       raise
     end
@@ -83,6 +93,10 @@ class Trait < ActiveRecord::Base
       nil
     when 1, 2
       date.nil? ? '' : date.utc.strftime('%M')
+    when nil
+      nil
+    else
+      raise
     end
   end
   def timezone_offset
