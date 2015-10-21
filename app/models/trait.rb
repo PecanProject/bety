@@ -146,15 +146,15 @@ class Trait < ActiveRecord::Base
     end
 
     # Require a timezone offset if the hour is specified:
-    if timezone_offset.blank? && !@t_hour.blank?
+    if @timezone_offset.blank? && !@t_hour.blank?
       errors.add(:base, "If you specify the hour, you must specify a timezone offset.")
     end
 
-    if !timezone_offset.blank? && !site_id.blank?
+    if !@timezone_offset.blank? && !site_id.blank?
       # estimate time zone from site longitude
       appx_offset = (Site.find site_id).lon / 15.0
-      hour_offset = (timezone_offset.sub(/:.*/, '')).to_i
-      if timezone_offset != '+00:00:00' && (appx_offset - hour_offset).abs > 2
+      hour_offset = (@timezone_offset.sub(/:.*/, '')).to_i
+      if @timezone_offset != '+00:00:00' && (appx_offset - hour_offset).abs > 2
         errors.add(:base, "The UTC offset value you have selected seems inconsistent with the site location.")
       end
     end
