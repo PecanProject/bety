@@ -57,7 +57,7 @@ class Trait < ActiveRecord::Base
     case dateloc
     when 6, 7, 8, 9, 96, 97
       nil
-    when 5, 5.5
+    when 5, 5.5, 95
       date.nil? ? '' : date.utc.day
     when nil
       nil
