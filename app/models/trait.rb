@@ -317,7 +317,7 @@ class Trait < ActiveRecord::Base
   end
 
   def pretty_date
-    date.nil? ? '[unspecified]' : date_in_site_timezone.to_formatted_s(date_format) + ([7, 9, 97].include?(dateloc) ? '' : ' (UTC)')
+    date.nil? ? '[unspecified]' : date_in_site_timezone.to_formatted_s(date_format) + ([7, 9, 97].include?(dateloc) || timeloc != 9 ? '' : " (#{site_timezone})")
   end
 
   def format_statname
@@ -338,7 +338,7 @@ class Trait < ActiveRecord::Base
 
   def pretty_time
 #    Rails.logger.info("date = #{date.to_s}; date.to_s(time_format) = #{date.to_s(time_format)}")
-    date.nil? ? '[unspecified]' : date_in_site_timezone.to_s(time_format) + (timeloc == 9 ? '' : ' ' + site_timezone)
+    date.nil? ? '[unspecified]' : date_in_site_timezone.to_s(time_format) + (timeloc == 9 ? '' : " (#{site_timezone})")
   end
 
   def specie_treat_cultivar
