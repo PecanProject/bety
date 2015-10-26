@@ -2,7 +2,9 @@ class Trait < ActiveRecord::Base
   # Passed from controller for validation of ability
   attr_accessor :current_user
 
-  attr_writer :timezone_offset, :d_year, :d_month, :d_day, :t_hour, :t_minute
+  attr_writer :d_year, :d_month, :d_day, :t_hour, :t_minute
+
+  Seasons = ['Spring', 'Summer', 'Autumn', 'Winter']
 
   def d_year
     if !@d_year.nil?
@@ -13,7 +15,7 @@ class Trait < ActiveRecord::Base
     when 95, 96, 97, 9
       ''
     when 5, 5.5, 6, 7, 8
-      date.nil? ? '' : date.utc.year
+      date.nil? ? '' : date_in_site_timezone.year
     when nil
       nil
     else
@@ -29,7 +31,7 @@ class Trait < ActiveRecord::Base
     when 8, 9
       nil
     when 7, 97
-      case date.utc.month
+      case date_in_site_timezone.month
       when 1
         'Winter'
       when 4
@@ -42,7 +44,7 @@ class Trait < ActiveRecord::Base
         raise
       end
     when 5, 5.5, 6, 95, 96
-      date.nil? ? '' : date.utc.month
+      date.nil? ? '' : date_in_site_timezone.month
     when nil
       nil
     else
@@ -58,7 +60,7 @@ class Trait < ActiveRecord::Base
     when 6, 7, 8, 9, 96, 97
       nil
     when 5, 5.5, 95
-      date.nil? ? '' : date.utc.day
+      date.nil? ? '' : date_in_site_timezone.day
     when nil
       nil
     else
@@ -76,7 +78,7 @@ class Trait < ActiveRecord::Base
     when 4
       'morning'
     when 1, 2, 3
-      date.nil? ? '' : date.utc.hour
+      date.nil? ? '' : date_in_site_timezone.strftime('%H')
     when nil
       nil
     else
@@ -85,23 +87,19 @@ class Trait < ActiveRecord::Base
   end
   def t_minute
     if !@t_minute.nil?
-      @t_minute
+      return @t_minute
     end
 
     case timeloc
     when 3, 4, 5, 9
       nil
     when 1, 2
-      date.nil? ? '' : date.utc.strftime('%M')
+      date.nil? ? '' : date_in_site_timezone.strftime('%M')
     when nil
       nil
     else
       raise
     end
-  end
-  def timezone_offset
-    @timezone_offset.nil? ?  "+00:00:00" : (@timezone_offset.match(/\+|-/) ? @timezone_offset : "+#{@timezone_offset}")
-    #Rails.logger.info("In t_hour, date.utc = #{self.date.utc} and date.utc.hour = #{date.utc.hour}")
   end
 
   before_save :process_datetime_input
@@ -135,35 +133,71 @@ class Trait < ActiveRecord::Base
 
   def consistent_date_and_time_fields
 
-    # Require a month if there is a day:
-    if @d_month.blank? && !@d_day.blank?
-      errors.add(:base, "If you have a date day, you must specify the month.")
+    # use local copies of instance variables
+    d_year = @d_year
+    d_month = @d_month
+    d_day = @d_day
+    t_hour = @t_hour
+    t_minute = @t_minute
+
+
+    begin
+      dateloc = compute_dateloc(d_year, d_month, d_day)
+    rescue => e
+      errors.add(:base, e.message)
     end
 
     # Require an hour if minutes are specified:
-    if @t_hour.blank? && !@t_minute.blank?
+    if t_hour.blank? && !t_minute.blank?
       errors.add(:base, "If you specify minutes, you must specify the hour.")
     end
-
-    # Require a timezone offset if the hour is specified:
-    if @timezone_offset.blank? && !@t_hour.blank?
-      errors.add(:base, "If you specify the hour, you must specify a timezone offset.")
-    end
-
-    if !@timezone_offset.blank? && !site_id.blank?
-      # estimate time zone from site longitude
-      appx_offset = (Site.find site_id).lon / 15.0
-      hour_offset = (@timezone_offset.sub(/:.*/, '')).to_i
-      if @timezone_offset != '+00:00:00' && (appx_offset - hour_offset).abs > 2
-        errors.add(:base, "The UTC offset value you have selected seems inconsistent with the site location.")
-      end
-    end
       
+    # set defaults if needed
+    case dateloc
+    when 9
+      d_year, d_month, d_day = 9999, 1, 1
+    when 8
+      d_month, d_day = 1, 1
+    when 7
+      d_day = 1
+      case d_month
+      when 'Spring'
+        d_month = 4
+        when 'Summer'
+        d_month = 7
+        when 'Autumn'
+        d_month = 10
+        when 'Winter'
+        d_month = 1
+      end
+    when 6
+      d_day = 1
+    when 5
+      # nothing to do
+    when 97
+      d_year = 9996
+      d_day = 1
+      case d_month
+      when 'Spring'
+        d_month = 4
+        when 'Summer'
+        d_month = 7
+        when 'Autumn'
+        d_month = 10
+        when 'Winter'
+        d_month = 1
+      end
+    when 6
+      d_year = 9996
+      d_day = 1
+    when 5
+      d_year = 9996
+    end
 
     begin
-      #t = DateTime.new(@d_year.to_i, @d_month.to_i, @d_day.to_i, @t_hour.to_i, @t_minute.to_i, 0, timezone_offset)
+      t = utctime_from_sitetime(d_year.to_i, d_month.to_i, d_day.to_i, t_hour.to_i, t_minute.to_i) #DateTime.new(d_year.to_i, d_month.to_i, d_day.to_i, t_hour.to_i, t_minute.to_i, 0, timezone_offset)
     rescue => e
-      errors.add(:base, e.message)
+      errors.add(:base, "With dateloc = #{dateloc}, can't make DateTime from #{d_year}, #{d_month}, #{d_day}, #{t_hour}, #{t_minute}")
     end
   end
 
@@ -173,7 +207,7 @@ class Trait < ActiveRecord::Base
 
   ## Validations
 
-  validates_presence_of     :mean, :access_level
+  validates_presence_of     :mean, :access_level, :site
   validates_numericality_of :mean
   validates_presence_of     :variable
   validates_inclusion_of    :access_level, in: 1..4, message: "You must select an access level"
@@ -283,7 +317,7 @@ class Trait < ActiveRecord::Base
   end
 
   def pretty_date
-    date.nil? ? '[unspecified]' : date.utc.to_formatted_s(date_format) + ([7, 9, 97].include?(dateloc) ? '' : ' (UTC)')
+    date.nil? ? '[unspecified]' : date_in_site_timezone.to_formatted_s(date_format) + ([7, 9, 97].include?(dateloc) ? '' : ' (UTC)')
   end
 
   def format_statname
@@ -303,8 +337,8 @@ class Trait < ActiveRecord::Base
   end
 
   def pretty_time
-    Rails.logger.info("date = #{date.to_s}; date.to_s(time_format) = #{date.to_s(time_format)}")
-    date.nil? ? '[unspecified]' : date.utc.to_s(time_format) + (timeloc == 9 ? '' : ' UTC')
+#    Rails.logger.info("date = #{date.to_s}; date.to_s(time_format) = #{date.to_s(time_format)}")
+    date.nil? ? '[unspecified]' : date_in_site_timezone.to_s(time_format) + (timeloc == 9 ? '' : ' ' + site_timezone)
   end
 
   def specie_treat_cultivar
@@ -323,6 +357,14 @@ class Trait < ActiveRecord::Base
   #Fields present in 'select_default'
   def self.search_columns
     return ["traits.id"]
+  end
+
+  def site_timezone
+    begin
+      zone = (Site.find site_id).time_zone
+    rescue
+      zone = 'UTC'
+    end
   end
 
 
@@ -430,7 +472,7 @@ class Trait < ActiveRecord::Base
 
     begin
       Rails.logger.info("values of year, month, day, hour, minute are #{year}, #{month}, #{day}, #{hour}, #{minute} with types #{year.class}, #{month.class}, #{day.class}, #{hour.class}, #{minute.class}")
-      t_utc = DateTime.new(year, month, day, hour, minute, 0, timezone_offset).utc
+      t_utc = utctime_from_sitetime(year, month, day, hour, minute) # DateTime.new(year, month, day, hour, minute, 0, timezone_offset).utc
     rescue => e
       Rails.logger.info("in apply offset, got this error: #{e.message}")
       return false
@@ -446,8 +488,41 @@ class Trait < ActiveRecord::Base
 
   end
 
-
-  private
+  def compute_dateloc(y, m, d)
+    if !d.blank?
+      if m.blank?
+        raise "If month is blank, day must be also."
+      elsif Seasons.include?(m)
+        raise "If you select a season, day must be blank."
+      else
+        if y.blank?
+          95
+        else
+          5
+        end
+      end
+    else # d is blank
+      if m.blank?
+        if y.blank?
+          9
+        else
+          8
+        end
+      elsif Seasons.include?(m)
+        if y.blank?
+          97
+        else
+          7
+        end
+      else # month is a number (a real month)
+        if y.blank?
+          96
+        else
+          6
+        end
+      end
+    end
+  end
 
   def date_format
     case dateloc
@@ -495,9 +570,16 @@ class Trait < ActiveRecord::Base
     end
   end
   
-  
-  
+  def utctime_from_sitetime(y, m, d, hr, min)
+    utctime = nil
+    Time.use_zone site_timezone do
+      utctime = Time.zone.local(y, m, d, hr, min, 0).utc
+    end
+    return utctime.to_datetime
+  end
 
-    
-
+  def date_in_site_timezone
+    date.in_time_zone(site_timezone)
+  end
+  
 end
