@@ -55,7 +55,7 @@
               </div>
 
               <div class="row">
-                <div class="four columns alpha">
+                <div class="eight columns alpha">
                   <fieldset>
                     <legend>Date</legend>
                     <%= f.select :d_year, [''] + (1800..Time.now.year).to_a %>
@@ -63,15 +63,17 @@
                     <%= f.select :d_day, [''] + (1..31).to_a %>
                   </fieldset>
                 </div>
-                <div class="four columns">
+                <div class="eight columns omega">
                   <fieldset>
-                    <legend>Time</legend>
-                    <%= f.select :t_hour, [''] + (0..23).to_a %>
+                    <legend>Time (at site)</legend>
+                    <%= f.select :t_hour, [''] + (0..23).to_a.collect { |i| '%02i' % i } %>
                     <%= f.select :t_minute, [''] + (0..59).to_a.collect { |i| '%02i' % i } %>
-                    <%= f.select :timezone_offset, $utc_offsets, include_blank: true %>
                   </fieldset>
                 </div>
-                <div class="four columns">
+              </div>
+
+              <div class="row">
+                 <div class="four columns alpha">
                   <%= f.label :dateloc, "Date Level of Confidence" %>
                   <%= f.select :dateloc, options_for_select($dateloc_drop.sort, f.object.dateloc || $dateloc_drop_default) %>
                 </div>
@@ -79,12 +81,15 @@
                   <%= f.label :timeloc, "Time Level of Confidence" %>
                   <%= f.select :timeloc, options_for_select($timeloc_drop.sort, f.object.timeloc || $timeloc_drop_default),{},:class => "input-full" %>
                 </div>
+                <div class="eight columns omega" style="height: 65px; line-height: 65px">
+                  &lt;--- This will be removed!
+                </div>
               </div>
 
               <div class="row">
                 <div class="eight columns alpha">
                   <%= f.label :site_id %>
-                  <%= f.select :site_id, @citation.sites.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+                  <%= f.select :site_id, @citation.sites.collect { |p| [ p.select_default, p.id ] }, {include_blank: true}, :class => "input-full" %>
                 </div>
                 <div class="eight columns omega">
                   <%= f.label :treatment_id %>
