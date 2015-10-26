@@ -969,6 +969,13 @@ CREATE TABLE current_posteriors (
 
 
 --
+-- Name: COLUMN current_posteriors.id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN current_posteriors.id IS 'This table makes it easier to identify the ''latest'' posterior for any PFT or other functional grouping. For example, if you query a specific PFT and project you get the list of variables that have been estimated and their (joint) posteriors.';
+
+
+--
 -- Name: current_posteriors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1103,7 +1110,6 @@ CREATE SEQUENCE formats_id_seq
 
 CREATE TABLE formats (
     id bigint DEFAULT nextval('formats_id_seq'::regclass) NOT NULL,
-    dataformat text DEFAULT ''::text NOT NULL,
     notes text DEFAULT ''::text NOT NULL,
     created_at timestamp(6) without time zone DEFAULT utc_now(),
     updated_at timestamp(6) without time zone DEFAULT utc_now(),
@@ -1668,6 +1674,13 @@ CREATE TABLE posterior_samples (
 
 
 --
+-- Name: COLUMN posterior_samples.id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN posterior_samples.id IS 'Allows a posterior to be updated asynchronously (i.e. for a given PFT, not all variables have to have the same posterior_id).';
+
+
+--
 -- Name: posterior_samples_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1721,6 +1734,13 @@ CREATE TABLE posteriors_ensembles (
     updated_at timestamp without time zone DEFAULT utc_now(),
     id bigint NOT NULL
 );
+
+
+--
+-- Name: COLUMN posteriors_ensembles.posterior_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN posteriors_ensembles.posterior_id IS 'Allows analyst to more easily see the functional grouping of the different sets of model runs used to generate a posterior.';
 
 
 --
@@ -1833,6 +1853,13 @@ CREATE TABLE projects (
     updated_at timestamp without time zone DEFAULT utc_now(),
     CONSTRAINT normalized_project_name CHECK (is_whitespace_normalized((name)::text))
 );
+
+
+--
+-- Name: COLUMN projects.id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN projects.id IS 'Defines the directory under which a set of analyses is done. Will allow migration of content from PEcAn settings.xml files that are not specific to a particular workflow instance but rather are shared across a set of analyses out of the settings file and into the database. There might be multiple ''workflows'' or analyses within a single project, but each of their workflows.outdir should be within the larger projects.outdir.';
 
 
 --
@@ -2853,7 +2880,8 @@ UNION ALL
 --
 
 CREATE VIEW traits_and_yields_view AS
- SELECT traits_and_yields_view_private.result_type,
+ SELECT traits_and_yields_view_private.checked,
+    traits_and_yields_view_private.result_type,
     traits_and_yields_view_private.id,
     traits_and_yields_view_private.citation_id,
     traits_and_yields_view_private.site_id,
@@ -2884,7 +2912,7 @@ CREATE VIEW traits_and_yields_view AS
     traits_and_yields_view_private.notes,
     traits_and_yields_view_private.access_level
    FROM traits_and_yields_view_private
-  WHERE (traits_and_yields_view_private.checked > 0);
+  WHERE (traits_and_yields_view_private.checked >= 0);
 
 
 --
@@ -2917,6 +2945,8 @@ CREATE TABLE workflows (
     advanced_edit boolean DEFAULT false NOT NULL,
     start_date timestamp(6) without time zone,
     end_date timestamp(6) without time zone,
+    notes text,
+    user_id bigint,
     CONSTRAINT normalized_workflow_folder_name CHECK (is_whitespace_normalized((folder)::text)),
     CONSTRAINT normalized_workflow_hostname CHECK (is_whitespace_normalized((hostname)::text)),
     CONSTRAINT normalized_workflow_params_value CHECK (is_whitespace_normalized(params))
@@ -4639,6 +4669,14 @@ ALTER TABLE ONLY workflows
 
 ALTER TABLE ONLY workflows
     ADD CONSTRAINT fk_workflows_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id);
+
+
+--
+-- Name: fk_workflows_users_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY workflows
+    ADD CONSTRAINT fk_workflows_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
 
 
 --

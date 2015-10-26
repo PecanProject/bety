@@ -1,0 +1,73 @@
+	    <% @results.each do |t| %>
+        <tr><!--<%
+=begin
+        <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and citation.id == @search.to_i%>>
+<%
+=end
+%>
+          <!--
+              <%
+=begin %>
+          <td class="center"><%= t.author %></td>
+          <td class="center"><%= t.year %></td>
+          <%
+=end %>
+          -->
+          <td class="center"><%= link_to site_path(t.site_id.to_i) do %>
+            <%= t.sitename %><%= if t.sitename && t.city &&
+                                 !t.sitename.strip.empty? && !t.city.strip.empty?
+                                 then raw("<br>") end
+                                 %><%= if t.city && !t.city.strip.empty?
+                                       then raw("<em>(#{t.city})</em>") end %>
+            <% end %>
+          </td>
+          <!--
+              <%
+=begin %>
+          <td class="center"><%= if t.dateloc < 5 then
+                                 t.date
+                                 elsif t.dateloc < 8
+                                                   t.year
+                                                   else
+                                                   "-"
+                                                   end %></td>
+                                 <%
+=end %>
+                                 -->
+          <td class="center"><%= t.lat ? t.lat.round(2) : nil  %></td>
+          <td class="center"><%= t.lon ? t.lon.round(2) : nil %></td>
+          <td class="center"><%= # convert timestamp to UTC and then truncate to show only the date portion:
+                                 t.date.nil? ? "" : # display the empty string if date is null
+                                 t.date.utc.to_s[0, 10] %></td>
+          <td class="center"><%= link_to species_path(t.species_id.to_i) do %>
+            <em><%= t.scientificname.to_s %></em>
+            <%= if t.commonname && !t.commonname.strip.blank? then raw("<br>(" + t.commonname.strip + ")") end %>
+            <% end %>
+          </td>
+          <td class="center"><%= link_to (t.result_type == "yields" ? yield_path(t.id) : trait_path(t.id)) do %>
+            <%= t.trait %><br>(<%= t.trait_description %>)
+            <% end %>
+          </td>
+          <!--
+              <%
+=begin %>
+          <td class="center"><%= t.treatment  %></td>
+          <%
+=end %>
+          -->
+          <td class="center"><%= "#{number_with_precision(t.mean, precision: 3, significant: true)} #{t.units}"  %></td>
+          <!--
+              <%
+=begin %>
+          <td class="center"><%= t.n %></td>
+          <td class="center"><%= if t.statname == "SE" then t.stat
+                  elsif t.statname == "SD" then t.stat/Math.sqrt(t.n) 
+                  else "-"
+                  end
+                  %></td>
+          <%
+=end %>
+          -->
+        </tr>
+      <% end %>
+

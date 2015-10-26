@@ -1,6 +1,5 @@
 test_format:
   mimetype_id: 1
-  dataformat: "<number of file formats/>\r\n<path and prefix of file..."
   notes: "# README\r\n# Line 1:  Number of file formats (n)\r\n# ..."
   created_at: "2011-10-17 20:33:09"
   updated_at: "2012-04-26 14:10:57"

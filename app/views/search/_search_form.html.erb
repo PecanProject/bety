@@ -2,7 +2,7 @@
 
     <%= form_tag nil, :method => 'get', :id => 'simple_search', :class => "no-margin" do %>
     <div class="span6">
-      <div id="DataTables_Table_0_length" class="dataTables_length">
+      <div id="DataTables_Table_0_length" class="dataTables_length" style="width: 20%">
 
       <label>
         <%= select_tag :DataTables_Table_0_length,
@@ -12,24 +12,26 @@
             "aria-controls" => "DataTables_Table_0"
         %> records per page
       </label>
-      
+
       </div> <!-- id="DataTables_Table_0_length" -->
     </div> <!-- class="span6" -->
-    
+
+    <div class="span6">
+      <div id="DataTables_Table_0_length" class="dataTables_length" style="width: 30%">
+
+      <label style="margin-left: 20px">
+        <%= check_box_tag :include_unchecked, "include_unchecked", !params[:include_unchecked].nil?
+        %> include unchecked records
+      </label>
+
+      </div> <!-- id="DataTables_Table_0_length" -->
+    </div> <!-- class="span6" -->
+
     <div class="span6">
       <div class="dataTables_filter" id="DataTables_Table_0_filter">
   		<label>Search: <%= text_field_tag :search, params[:search] %></label>
         <button type="button" id="clear_search_terms" style="margin-right: 30px">Clear Search</button>
-        <%= hidden_field_tag :direction, params[:direction] %>
-        <%= hidden_field_tag :sort, params[:sort] %>
-        <%= hidden_field_tag :lat, params[:lat] %>
-        <%= hidden_field_tag :lng, params[:lng] %>
-        <%= hidden_field_tag :radius, params[:radius].blank? ? 200 : params[:radius] %>
-        <%= hidden_field_tag :mapSearchMode, params[:mapSearchMode] %>
-        <%= hidden_field_tag :mapDisplayed, params[:mapDisplayed] %>
-        <%= hidden_field_tag :mapZoomLevel, params[:mapZoomLevel] %>
-        <%= hidden_field_tag :mapCenterLat, params[:mapCenterLat] %>
-        <%= hidden_field_tag :mapCenterLng, params[:mapCenterLng] %>
+        <div id="state_variables"><%= render 'state_variables' %></div>
       </div> <!-- id="DataTables_Table_0_filter" -->
     </div> <!-- class="span6" -->
     <% end %>
