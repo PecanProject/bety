@@ -7,6 +7,26 @@ class SitesController < ApplicationController
   require 'csv'
 
   #AJAX Calls
+
+  def get_timezone
+    begin
+      site = Site.find(params[:id])
+      if site.time_zone.nil?
+        tz = 'UTC - site timezone unknown'
+      else
+        tz = site.time_zone
+      end
+    rescue ActiveRecord::RecordNotFound
+      tz = 'UTC'
+    end
+
+    respond_to do |format|
+      format.text {
+        render(text: tz)
+      }
+    end
+  end
+
   def linked
     @citation = Citation.find(session["citation"])
     @site = Site.find(params[:id])

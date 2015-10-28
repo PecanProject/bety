@@ -362,9 +362,13 @@ class Trait < ActiveRecord::Base
   def site_timezone
     begin
       zone = (Site.find site_id).time_zone
+      if zone.blank?
+        zone = 'UTC'
+      end
     rescue
       zone = 'UTC'
     end
+    return zone
   end
 
 
