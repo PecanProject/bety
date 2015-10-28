@@ -50,6 +50,7 @@ feature 'Traits index works' do
       fill_in 'trait_stat', :with => '7.76'
       fill_in 'trait_n', :with => '3'
       fill_in 'trait_notes', :with => 'Research Interwebs Papers Research Interwebs PapersResearch Interwebs PapersResearch Interwebs Papers' 
+      select('1: Aliartos, Greece - Aliartos, Greece', :from => 'trait[site_id]')
 
       click_button 'Create'
 

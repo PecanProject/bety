@@ -7,8 +7,8 @@ describe Trait do
     t.invalid?.should == true
   end
 
-  it 'should be valid if a valid mean, variable_id, and access_level are given' do
-    t = Trait.new mean: 6, access_level: 1, variable_id: 1
+  it 'should be valid if a valid mean, variable_id, site_id, and access_level are given' do
+    t = Trait.new mean: 6, access_level: 1, variable_id: 1, site_id: 1
     t.invalid?.should == false
   end
 
