@@ -359,12 +359,18 @@ class Trait < ActiveRecord::Base
     return ["traits.id"]
   end
 
+  # Returns the time zone of the associated site or "UTC" if no there is no
+  # associated site or if its time_zone attribute is blank.
   def site_timezone
     begin
-      zone = (Site.find site_id).time_zone
+      zone = site.time_zone
+      if zone.blank?
+        zone = 'UTC'
+      end
     rescue
-      zone = 'UTC'
+      zone = 'UTC' # site not found
     end
+    return zone
   end
 
 

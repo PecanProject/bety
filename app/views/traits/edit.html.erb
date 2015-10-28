@@ -9,6 +9,36 @@
     };
   </script>
   <%= javascript_include_tag 'lazy/autocomplete.js' %>
+  <script>
+    <% # Code for automatically adjusting timezone information when the trait site is changed. %>
+    function update_timezone() {
+        tz = jQuery.ajax({
+            url: "<%= url_for( controller: "sites", action: "get_timezone") %>",
+            data: { id: this.value },
+            dataType: "text"
+        }).success(function (tz) {
+            if (tz.match("^UTC$")) {
+                jQuery('#time_label_descriptor').html("at site")
+                jQuery('#timezone').html("(no site selected)")
+            }
+            else if (tz.match("^UTC")) {
+                <% # A site was selected but no time zone information was stored for it. %>
+                jQuery('#time_label_descriptor').html("(UTC)")
+                jQuery('#timezone').html(tz)
+            }
+            else {
+                jQuery('#time_label_descriptor').html("at site")
+                jQuery('#timezone').html(tz)
+            }
+        });
+
+    };
+
+    jQuery(function () {
+        jQuery('#trait_site_id').on('change', update_timezone);
+    });
+  </script>
+
 <% end %>
 <div class="content">
   <div class="container " style="margin-left:100px; width:1260px">
@@ -63,16 +93,24 @@
                     <%= f.select :d_day, [''] + (1..31).to_a %>
                   </fieldset>
                 </div>
-                <div class="eight columns omega">
+                <div class="four columns">
                   <fieldset>
-                    <legend>Time (at site)</legend>
+                    <legend>Time <span class="inherit" id="time_label_descriptor"><%= @trait.site.nil? || !@trait.site.time_zone.blank? ? "at site" : "(UTC)" %></span></legend>
                     <%= f.select :t_hour, [''] + (0..23).to_a.collect { |i| '%02i' % i } %>
                     <%= f.select :t_minute, [''] + (0..59).to_a.collect { |i| '%02i' % i } %>
                   </fieldset>
                 </div>
+                <div class="four columns omega">
+                  <fieldset>
+                    <legend>Time Zone</legend>
+                    <span id="timezone"><%= !@trait.site.nil?
+                                            ? (!@trait.site.time_zone.blank? ? @trait.site.time_zone : "UTC - site time zone unknown")
+                                            : "(no site selected)" %></span>
+                  </fieldset>
+                </div>
               </div>
 
-              <div class="row">
+              <div class="row" style="color: red">
                  <div class="four columns alpha">
                   <%= f.label :dateloc, "Date Level of Confidence" %>
                   <%= f.select :dateloc, options_for_select($dateloc_drop.sort, f.object.dateloc || $dateloc_drop_default) %>
@@ -82,7 +120,7 @@
                   <%= f.select :timeloc, options_for_select($timeloc_drop.sort, f.object.timeloc || $timeloc_drop_default),{},:class => "input-full" %>
                 </div>
                 <div class="eight columns omega" style="height: 65px; line-height: 65px">
-                  &lt;--- This will be removed!
+                  &lt;--- These will be removed!
                 </div>
               </div>
 

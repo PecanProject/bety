@@ -7,6 +7,29 @@ class SitesController < ApplicationController
   require 'csv'
 
   #AJAX Calls
+
+  # Returns the name of the time zone for the site whose id is passed in the
+  # HTTP parameter "id"; or returns 'UTC' if no site having that id is found or
+  # if the time_zone attribute of the site found is NULL.
+  def get_timezone
+    begin
+      site = Site.find(params[:id])
+      if site.time_zone.nil?
+        tz = 'UTC - site timezone unknown'
+      else
+        tz = site.time_zone
+      end
+    rescue ActiveRecord::RecordNotFound
+      tz = 'UTC'
+    end
+
+    respond_to do |format|
+      format.text {
+        render(text: tz)
+      }
+    end
+  end
+
   def linked
     @citation = Citation.find(session["citation"])
     @site = Site.find(params[:id])
