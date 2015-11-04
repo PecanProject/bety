@@ -1,13 +1,88 @@
 class Trait < ActiveRecord::Base
-  # Passed from controller for validation of ability
-  attr_accessor :current_user
 
-  attr_writer :d_year, :d_month, :d_day, :t_hour, :t_minute
+  #--
+  ### Module Usage ###
+
+  include Overrides
+
+  extend DataAccess # provides all_limited
+
+  extend SimpleSearch
+  SEARCH_INCLUDES = %w{ citation variable specie site treatment }
+  SEARCH_FIELDS = %w{ traits.id traits.mean traits.n traits.stat traits.statname variables.name species.genus citations.author sites.sitename treatments.name }
+
+
+
+  #--
+  ### Associations ###
+
+  has_many :covariates
+  has_many :variables, :through => :covariates
+
+  belongs_to :variable
+  belongs_to :site
+  belongs_to :specie
+  belongs_to :citation
+  belongs_to :treatment
+  belongs_to :cultivar
+  belongs_to :user
+  belongs_to :entity
+  belongs_to :ebi_method, :class_name => 'Methods', :foreign_key => 'method_id'
+
+  
+
+  #--
+  ### Scopes ###
+
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :search, lambda { |search| where(simple_search(search)) }
+  scope :exclude_api, where("checked != ?","-1")
+  scope :citation, lambda { |citation|
+    if citation.nil?
+      {}
+    else
+      where("citation_id = ?", citation)
+    end
+  }
+
+
+
+  #--
+  ### Callbacks ###
+
+  before_save :process_datetime_input
+
+
+
+  #--
+  ### Constants ###
 
   Seasons = ['Spring', 'Summer', 'Autumn', 'Winter']
   TimesOfDay = ['morning', 'mid-day', 'afternoon', 'night']
 
-  # Custom accessors for virtual attributes.
+
+
+  #--
+  ### Virtual Attributes ###
+
+  # Passed from controller for validation of ability
+  attr_accessor :current_user
+
+  attr_writer :d_year
+  attr_writer :d_month
+  attr_writer :d_day
+  attr_writer :t_hour
+  attr_writer :t_minute
+
+
+  #--
+  ## Custom accessors for virtual attributes. ##
+
+  # A getter for the +d_year+ virtual attribute.  If the @+d_year+ instance
+  # variable has been set, it is used.  (This occurs, for example, when
+  # returning to a form that failed validation.)  Otherwise, the value is
+  # computed from these persistent (i.e., database-backed) attributes: date,
+  # dateloc, and site.time_zone.
   def d_year
     if !@d_year.nil?
       return @d_year
@@ -24,6 +99,12 @@ class Trait < ActiveRecord::Base
       raise
     end
   end
+
+  # A getter for the +d_month+ virtual attribute.  If the @+d_month+ instance
+  # variable has been set, it is used.  (This occurs, for example, when
+  # returning to a form that failed validation.)  Otherwise, the value is
+  # computed from these persistent (i.e., database-backed) attributes: date,
+  # dateloc, and site.time_zone.
   def d_month
     if !@d_month.nil?
       return @d_month
@@ -53,6 +134,12 @@ class Trait < ActiveRecord::Base
       raise
     end
   end
+
+  # A getter for the +d_day+ virtual attribute.  If the @+d_day+ instance
+  # variable has been set, it is used.  (This occurs, for example, when
+  # returning to a form that failed validation.)  Otherwise, the value is
+  # computed from these persistent (i.e., database-backed) attributes: date,
+  # dateloc, and site.time_zone.
   def d_day
     if !@d_day.nil?
       return @d_day
@@ -69,6 +156,12 @@ class Trait < ActiveRecord::Base
       raise
     end
   end
+
+  # A getter for the +t_hour+ virtual attribute.  If the @+t_hour+ instance
+  # variable has been set, it is used.  (This occurs, for example, when
+  # returning to a form that failed validation.)  Otherwise, the value is
+  # computed from these persistent (i.e., database-backed) attributes: date,
+  # dateloc, and site.time_zone.
   def t_hour
     if !@t_hour.nil?
       return @t_hour
@@ -87,6 +180,12 @@ class Trait < ActiveRecord::Base
       raise
     end
   end
+
+  # A getter for the +t_minute+ virtual attribute.  If the @+t_minute+ instance
+  # variable has been set, it is used.  (This occurs, for example, when
+  # returning to a form that failed validation.)  Otherwise, the value is
+  # computed from these persistent (i.e., database-backed) attributes: date,
+  # dateloc, and site.time_zone.
   def t_minute
     if !@t_minute.nil?
       return @t_minute
@@ -104,35 +203,31 @@ class Trait < ActiveRecord::Base
     end
   end
 
-  before_save :process_datetime_input
-
-  include Overrides
-
-  extend DataAccess # provides all_limited
-
-  extend SimpleSearch
-  SEARCH_INCLUDES = %w{ citation variable specie site treatment }
-  SEARCH_FIELDS = %w{ traits.id traits.mean traits.n traits.stat traits.statname variables.name species.genus citations.author sites.sitename treatments.name }
-
-  has_many :covariates
-  has_many :variables, :through => :covariates
-
-  belongs_to :variable
-  belongs_to :site
-  belongs_to :specie
-  belongs_to :citation
-  belongs_to :treatment
-  belongs_to :cultivar
-  belongs_to :user
-  belongs_to :entity
-  belongs_to :ebi_method, :class_name => 'Methods', :foreign_key => 'method_id'
+  # Returns the time zone of the associated site or "UTC" if no there is no
+  # associated site or if its time_zone attribute is blank.
+  def site_timezone
+    begin
+      zone = site.time_zone
+      if zone.blank?
+        zone = 'UTC'
+      end
+    rescue
+      zone = 'UTC' # site not found
+    end
+    return zone
+  end
 
 
 
-  # VALIDATION
+  #--
+  ### VALIDATION ###
 
-  ## Validation methods
+  #--
+  ## Validation methods ##
 
+  # Validation Method: Check that the five time/date fields represent a valid
+  # date and time and are consistent with our conventions for allowable partial
+  # information about dates and times.
   def consistent_date_and_time_fields
 
     # use local copies of instance variables
@@ -203,11 +298,28 @@ class Trait < ActiveRecord::Base
     end
   end
 
-  ## Validation callback methods
+  # Validation Method: Only allow admins/managers to change traits marked as failed.
+  def can_change_checked
+    errors.add(:checked, "You do not have permission to change") if
+      checked == -1 and current_user.page_access_level > 2
+  end
 
-  ## Validation callbacks
+  # Validation Method: Check that the mean is in the range stipulated for the variable.
+  # To do: change the database type of min and max and constrain to be
+  # non-null so that these tests can be simplified.
+  def mean_in_range
+    return if mean.blank? || variable.blank? # validates_presence_of should handle this error
+    if variable.min != "-Infinity" and mean < variable.min.to_f
+      errors.add(:mean, "The value of mean for the #{variable.name} trait must be at least #{variable.min}.")
+    end
+    if variable.max != "Infinity" and mean > variable.max.to_f
+      errors.add(:mean, "The value of mean for the #{variable.name} trait must be at most #{variable.max}.")
+    end
+  end
 
-  ## Validations
+
+  #--
+  ## Validations ##
 
   validates_presence_of     :mean, :access_level, :site
   validates_numericality_of :mean
@@ -225,34 +337,9 @@ class Trait < ActiveRecord::Base
   validate :mean_in_range
 
 
-  # Only allow admins/managers to change traits marked as failed.
-  def can_change_checked
-    errors.add(:checked, "You do not have permission to change") if
-      checked == -1 and current_user.page_access_level > 2
-  end
 
-  # To do: change the database type of min and max and constrain to be
-  # non-null so that these tests can be simplified.
-  def mean_in_range
-    return if mean.blank? || variable.blank? # validates_presence_of should handle this error
-    if variable.min != "-Infinity" and mean < variable.min.to_f
-      errors.add(:mean, "The value of mean for the #{variable.name} trait must be at least #{variable.min}.")
-    end
-    if variable.max != "Infinity" and mean > variable.max.to_f
-      errors.add(:mean, "The value of mean for the #{variable.name} trait must be at most #{variable.max}.")
-    end
-  end
-
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
-  scope :search, lambda { |search| where(simple_search(search)) }
-  scope :exclude_api, where("checked != ?","-1")
-  scope :citation, lambda { |citation|
-    if citation.nil?
-      {}
-    else
-      where("citation_id = ?", citation)
-    end
-  }
+  #--
+  ### CSV Formats ###
 
   comma do
     id
@@ -318,6 +405,11 @@ class Trait < ActiveRecord::Base
     site :lat => 'Latitude', :lon => 'Longitude'
   end
 
+
+  
+  #--
+  ### Presentation Methods ###
+
   def pretty_date
     date.nil? ? '[unspecified]' : date_in_site_timezone.to_formatted_s(date_format) + ([7, 9, 97].include?(dateloc) || timeloc != 9 ? '' : " (#{site_timezone})")
   end
@@ -361,24 +453,12 @@ class Trait < ActiveRecord::Base
     return ["traits.id"]
   end
 
-  # Returns the time zone of the associated site or "UTC" if no there is no
-  # associated site or if its time_zone attribute is blank.
-  def site_timezone
-    begin
-      zone = site.time_zone
-      if zone.blank?
-        zone = 'UTC'
-      end
-    rescue
-      zone = 'UTC' # site not found
-    end
-    return zone
-  end
-
 
 
   private
 
+  # Computes the values to store for date, dateloc, and timeloc based on the
+  # values of the virtual attributes.
   def process_datetime_input
 
     # Use local variables year, month, day, hour, minute for instantiating
@@ -387,7 +467,7 @@ class Trait < ActiveRecord::Base
     month = d_month.to_i
     day = d_day.to_i
     hour = t_hour.to_i
-    minute = @t_minute.to_i
+    minute = t_minute.to_i
 
 
     logger.info("values of @d_year, @d_month, @d_day, @t_hour, @t_minute are #{@d_year}, #{@d_month}, #{@d_day}, #{@t_hour}, #{@t_minute} with types #{@d_year.class}, #{@d_month.class}, #{@d_day.class}, #{@t_hour.class}, #{@t_minute.class}")
@@ -534,23 +614,23 @@ class Trait < ActiveRecord::Base
 
   def date_format
     case dateloc
-    when      9 
+    when 9 
       :no_date_data
-    when      8 
+    when 8 
       :year_only
-    when      7 
+    when 7 
       :season_and_year
-    when      6 
+    when 6 
       :month_and_year
-    when      5.5 
+    when 5.5 
       :week_of_year
-    when      5 
+    when 5 
       :year_month_day
-    when      97 
+    when 97 
       :season_only
-    when      96 
+    when 96 
       :month_only
-    when      95 
+    when 95 
       :month_day
     when nil
       :unspecified_dateloc
@@ -561,15 +641,15 @@ class Trait < ActiveRecord::Base
 
   def time_format
     case timeloc
-    when      9 
+    when 9 
       :no_time_data
-    when      4 
+    when 4 
       :time_of_day
-    when      3 
+    when 3 
       :hour_only
-    when      2 
+    when 2 
       :hour_minutes
-    when      1 
+    when 1 
       :hour_minutes_seconds
     when nil
       :unspecified_timeloc
