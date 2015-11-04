@@ -230,72 +230,55 @@ class Trait < ActiveRecord::Base
   # information about dates and times.
   def consistent_date_and_time_fields
 
-    # use local copies of instance variables
-    d_year = @d_year
-    d_month = @d_month
-    d_day = @d_day
-    t_hour = @t_hour
-    t_minute = @t_minute
-
-
-    begin
-      dateloc = compute_dateloc(d_year, d_month, d_day)
-    rescue => e
-      errors.add(:base, e.message)
-    end
-
-    # Require an hour if minutes are specified:
-    if t_hour.blank? && !t_minute.blank?
-      errors.add(:base, "If you specify minutes, you must specify the hour.")
-    end
-      
-    # set defaults if needed
-    case dateloc
+    # Set defaults for unspecified components and convert the supplied ones to
+    # integers.
+    case computed_dateloc
     when 9
-      d_year, d_month, d_day = 9999, 1, 1
+      year, month, day = 9996, 1, 1
     when 8
-      d_month, d_day = 1, 1
+      year, month, day = d_year.to_i, 1, 1
     when 7
-      d_day = 1
       case d_month
       when 'Spring'
-        d_month = 4
+        month = 4
       when 'Summer'
-        d_month = 7
+        month = 7
       when 'Autumn'
-        d_month = 10
+        month = 10
       when 'Winter'
-        d_month = 1
+        month = 1
       end
+      year, day = d_year.to_i, 1
     when 6
-      d_day = 1
+      year, month, day = d_year.to_i, d_month.to_i, 1
     when 5
-      # nothing to do
+      year, month, day = d_year.to_i, d_month.to_i, d_day.to_i
     when 97
-      d_year = 9996
-      d_day = 1
       case d_month
       when 'Spring'
-        d_month = 4
+        month = 4
       when 'Summer'
-        d_month = 7
+        month = 7
       when 'Autumn'
-        d_month = 10
+        month = 10
       when 'Winter'
-        d_month = 1
+        month = 1
       end
-    when 6
-      d_year = 9996
-      d_day = 1
-    when 5
-      d_year = 9996
+      year, day = 9996, 1
+    when 96
+      year, month, day = 9996, d_month.to_i, 1
+    when 95
+      year, month, day = 9996, d_month.to_i, d_day.to_i
     end
 
-    begin
-      t = utctime_from_sitetime(d_year.to_i, d_month.to_i, d_day.to_i, t_hour.to_i, t_minute.to_i) #DateTime.new(d_year.to_i, d_month.to_i, d_day.to_i, t_hour.to_i, t_minute.to_i, 0, timezone_offset)
-    rescue => e
-      errors.add(:base, "With dateloc = #{dateloc}, can't make DateTime from #{d_year}, #{d_month}, #{d_day}, #{t_hour}, #{t_minute}")
-    end
+    hour, minute = t_hour.to_i, t_minute.to_i
+    # This will catch some illegal dates (1900-02-29, for example) that Time.new
+    # will silently covert to an acceptible date (1900-03-01, in this example).
+    DateTime.new(year, month, day, hour, minute)
+
+    @computed_date = utctime_from_sitetime(year, month, day, hour, minute)
+  rescue => e
+    errors.add(:base, e.message)
   end
 
   # Validation Method: Only allow admins/managers to change traits marked as failed.
@@ -460,126 +443,23 @@ class Trait < ActiveRecord::Base
   # Computes the values to store for date, dateloc, and timeloc based on the
   # values of the virtual attributes.
   def process_datetime_input
-
-    # Use local variables year, month, day, hour, minute for instantiating
-    # DateTime object; initialize them from form fields:
-    year = d_year.to_i
-    month = d_month.to_i
-    day = d_day.to_i
-    hour = t_hour.to_i
-    minute = t_minute.to_i
-
-
-    logger.info("values of @d_year, @d_month, @d_day, @t_hour, @t_minute are #{@d_year}, #{@d_month}, #{@d_day}, #{@t_hour}, #{@t_minute} with types #{@d_year.class}, #{@d_month.class}, #{@d_day.class}, #{@t_hour.class}, #{@t_minute.class}")
-
-
-    logger.info("d_year = #{d_year} and @d_year = #{@d_year}")
-    logger.info("d_month = #{d_month} and @d_month = #{@d_month}")
-    logger.info("d_day = #{d_day} and @d_day = #{@d_day}")
-    logger.info("t_hour = #{t_hour} and @t_hour = #{@t_hour}")
-    logger.info("t_minute = #{t_minute} and @t_minute = #{@t_minute}")
-
-
-    # Supply missing year if needed:
-
-    if @d_year.blank?
-      if @d_month.blank?
-        if !@d_day.blank?
-          # shouldn't ever get here
-          raise "If you set a day, you must also set a month."
-        end
-        year = 9999
-        month = 1
-        day = 1
-        self.dateloc = 9
-      else
-        year = 9996
-        if ['Spring', 'Summer', 'Autumn', 'Winter'].include? @d_month
-          if !@d_day.blank?
-            # shouldn't ever get here
-            raise "If you set a season, you must leave day blank."
-          end
-          month = { 'Spring' => 4, 'Summer' => 7, 'Autumn' => 10, 'Winter' => 1 }[@d_month]
-          day = 1
-          self.dateloc = 97
-        else # month is an integer
-          if @d_day.blank?
-            day = 1
-            self.dateloc = 96
-          else
-            self.dateloc = 95
-          end
-        end
-      end
-    else # year is given
-      if @d_month.blank?
-        if !@d_day.blank?
-          # shouldn't ever get here
-          raise "If you set a day, you must also set a month."
-        end
-        month = 1
-        day = 1
-        self.dateloc = 8
-      else
-        if ['Spring', 'Summer', 'Autumn', 'Winter'].include? @d_month
-          if !@d_day.blank?
-            # shouldn't ever get here
-            raise "If you set a season, you must leave day blank."
-          end
-          month = { 'Spring' => 4, 'Summer' => 7, 'Autumn' => 10, 'Winter' => 1 }[@d_month]
-          day = 1
-          self.dateloc = 7
-        else # month is an integer
-          if @d_day.blank?
-            day = 1
-            self.dateloc = 6
-          else
-            self.dateloc = 5
-          end
-        end
-      end
-    end
-
-
-    if @t_hour.blank?
-      if !@t_minute.blank?
-        # shouldn't ever get here
-        raise "If you set a minute, you must set the hour."
-      end
-      hour = 0
-      minute = 0
-      self.timeloc = 9
-    else # hour is given
-      if @t_minute.blank?
-        minute = 0
-        self.timeloc = 3
-      else
-        self.timeloc = 2
-      end
-    end
-
-    begin
-      logger.info("values of year, month, day, hour, minute are #{year}, #{month}, #{day}, #{hour}, #{minute} with types #{year.class}, #{month.class}, #{day.class}, #{hour.class}, #{minute.class}")
-      t_utc = utctime_from_sitetime(year, month, day, hour, minute) # DateTime.new(year, month, day, hour, minute, 0, timezone_offset).utc
-    rescue => e
-      logger.info("in apply offset, got this error: #{e.message}")
-      return false
-    end
-      logger.info("values of @d_year, @d_month, @d_day, @t_hour, @t_minute are #{@d_year}, #{@d_month}, #{@d_day}, #{@t_hour}, #{@t_minute} with types #{@d_year.class}, #{@d_month.class}, #{@d_day.class}, #{@t_hour.class}, #{@t_minute.class}")
-    logger.info("t_utc = #{t_utc}")
-    
-    if t_utc.year == 9995 || t_utc.year == 9997
-      t_utc.change(year: 9996)
-    end
-
-    self.date = t_utc
-
+    self.dateloc = computed_dateloc
+    self.timeloc = computed_timeloc
+    self.date = @computed_date # this is set in the consistent_date_and_time_fields validate method
   end
 
-  def compute_dateloc(y, m, d)
+
+  def computed_dateloc
+    # Convenience variables; since we only use this method in cases where the
+    # accessor returns exactly the same value as the instance variable, we may
+    # as well use the latter since it's faster.
+    y = @d_year
+    m = @d_month
+    d = @d_day
+
     if !d.blank?
       if m.blank?
-        raise "If month is blank, day must be also."
+        raise "If you set a day, you must also set a month."
       elsif Seasons.include?(m)
         raise "If you select a season, day must be blank."
       else
@@ -608,6 +488,22 @@ class Trait < ActiveRecord::Base
         else
           6
         end
+      end
+    end
+  end
+
+  def computed_timeloc
+    if @t_hour.blank?
+      if !@t_minute.blank?
+        # shouldn't ever get here
+        raise "If you specify minutes, you must specify the hour.!"
+      end
+      9
+    else # hour is given
+      if @t_minute.blank?
+        3
+      else
+        2
       end
     end
   end
@@ -666,6 +562,10 @@ class Trait < ActiveRecord::Base
     return utctime.to_datetime
   end
 
+  # Convert the Trait date attribute (which is an ActiveSupport::TimeWithZone
+  # object) to a new TimeWithZone object representing the time in site_timezone.
+  # This is used in various methods used for presenting the date and time to the
+  # user, which is always done in local (site) time.
   def date_in_site_timezone
     date.in_time_zone(site_timezone)
   end
