@@ -5,7 +5,9 @@ class Trait < ActiveRecord::Base
   attr_writer :d_year, :d_month, :d_day, :t_hour, :t_minute
 
   Seasons = ['Spring', 'Summer', 'Autumn', 'Winter']
+  TimesOfDay = ['morning', 'mid-day', 'afternoon', 'night']
 
+  # Custom accessors for virtual attributes.
   def d_year
     if !@d_year.nil?
       return @d_year
@@ -163,11 +165,11 @@ class Trait < ActiveRecord::Base
       case d_month
       when 'Spring'
         d_month = 4
-        when 'Summer'
+      when 'Summer'
         d_month = 7
-        when 'Autumn'
+      when 'Autumn'
         d_month = 10
-        when 'Winter'
+      when 'Winter'
         d_month = 1
       end
     when 6
@@ -180,11 +182,11 @@ class Trait < ActiveRecord::Base
       case d_month
       when 'Spring'
         d_month = 4
-        when 'Summer'
+      when 'Summer'
         d_month = 7
-        when 'Autumn'
+      when 'Autumn'
         d_month = 10
-        when 'Winter'
+      when 'Winter'
         d_month = 1
       end
     when 6
@@ -388,14 +390,14 @@ class Trait < ActiveRecord::Base
     minute = @t_minute.to_i
 
 
-    Rails.logger.info("values of @d_year, @d_month, @d_day, @t_hour, @t_minute are #{@d_year}, #{@d_month}, #{@d_day}, #{@t_hour}, #{@t_minute} with types #{@d_year.class}, #{@d_month.class}, #{@d_day.class}, #{@t_hour.class}, #{@t_minute.class}")
+    logger.info("values of @d_year, @d_month, @d_day, @t_hour, @t_minute are #{@d_year}, #{@d_month}, #{@d_day}, #{@t_hour}, #{@t_minute} with types #{@d_year.class}, #{@d_month.class}, #{@d_day.class}, #{@t_hour.class}, #{@t_minute.class}")
 
 
-    Rails.logger.info("d_year = #{d_year} and @d_year = #{@d_year}")
-    Rails.logger.info("d_month = #{d_month} and @d_month = #{@d_month}")
-    Rails.logger.info("d_day = #{d_day} and @d_day = #{@d_day}")
-    Rails.logger.info("t_hour = #{t_hour} and @t_hour = #{@t_hour}")
-    Rails.logger.info("t_minute = #{t_minute} and @t_minute = #{@t_minute}")
+    logger.info("d_year = #{d_year} and @d_year = #{@d_year}")
+    logger.info("d_month = #{d_month} and @d_month = #{@d_month}")
+    logger.info("d_day = #{d_day} and @d_day = #{@d_day}")
+    logger.info("t_hour = #{t_hour} and @t_hour = #{@t_hour}")
+    logger.info("t_minute = #{t_minute} and @t_minute = #{@t_minute}")
 
 
     # Supply missing year if needed:
@@ -477,14 +479,14 @@ class Trait < ActiveRecord::Base
     end
 
     begin
-      Rails.logger.info("values of year, month, day, hour, minute are #{year}, #{month}, #{day}, #{hour}, #{minute} with types #{year.class}, #{month.class}, #{day.class}, #{hour.class}, #{minute.class}")
+      logger.info("values of year, month, day, hour, minute are #{year}, #{month}, #{day}, #{hour}, #{minute} with types #{year.class}, #{month.class}, #{day.class}, #{hour.class}, #{minute.class}")
       t_utc = utctime_from_sitetime(year, month, day, hour, minute) # DateTime.new(year, month, day, hour, minute, 0, timezone_offset).utc
     rescue => e
-      Rails.logger.info("in apply offset, got this error: #{e.message}")
+      logger.info("in apply offset, got this error: #{e.message}")
       return false
     end
-      Rails.logger.info("values of @d_year, @d_month, @d_day, @t_hour, @t_minute are #{@d_year}, #{@d_month}, #{@d_day}, #{@t_hour}, #{@t_minute} with types #{@d_year.class}, #{@d_month.class}, #{@d_day.class}, #{@t_hour.class}, #{@t_minute.class}")
-    Rails.logger.info("t_utc = #{t_utc}")
+      logger.info("values of @d_year, @d_month, @d_day, @t_hour, @t_minute are #{@d_year}, #{@d_month}, #{@d_day}, #{@t_hour}, #{@t_minute} with types #{@d_year.class}, #{@d_month.class}, #{@d_day.class}, #{@t_hour.class}, #{@t_minute.class}")
+    logger.info("t_utc = #{t_utc}")
     
     if t_utc.year == 9995 || t_utc.year == 9997
       t_utc.change(year: 9996)
