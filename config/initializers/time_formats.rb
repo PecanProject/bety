@@ -58,7 +58,7 @@ NEW_FORMATS = {
   # timeloc 4:
   time_of_day: ->(time) do
     case time.hour
-    when 1
+    when 0
       'night'
     when 9
       'morning'
@@ -66,10 +66,6 @@ NEW_FORMATS = {
       'mid-day'
     when 15
       'afternoon'
-    when 18
-      'evening'
-    when 23
-      'late evening'
     else
       '[Invalid time-of-day designation]'
     end

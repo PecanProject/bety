@@ -171,7 +171,18 @@ class Trait < ActiveRecord::Base
       when 9
       nil
     when 4
-      'morning'
+      case date_in_site_timezone.hour
+      when 9
+        'morning'
+      when 12
+        'mid-day'
+      when 15
+        'afternoon'
+      when 0
+        'night'
+      else
+        raise
+      end
     when 1, 2, 3
       date.nil? ? '' : date_in_site_timezone.strftime('%H')
     when nil
@@ -271,7 +282,28 @@ class Trait < ActiveRecord::Base
       year, month, day = 9996, d_month.to_i, d_day.to_i
     end
 
-    hour, minute = t_hour.to_i, t_minute.to_i
+    case computed_timeloc
+    when 9
+      hour, minute = 0, 0
+    when 4
+      case t_hour
+      when 'morning'
+        hour, minute = 9, 0
+      when 'mid-day'
+        hour, minute = 12, 0
+      when 'afternoon'
+        hour, minute = 15, 0
+      when 'night'
+        hour, minute = 0, 0
+      end
+    when 3
+      hour, minute = t_hour.to_i, 0
+    when 2
+      hour, minute = t_hour.to_id, t_minute.to_i
+    else
+      raise
+    end
+
     # This will catch some illegal dates (1900-02-29, for example) that Time.new
     # will silently covert to an acceptible date (1900-03-01, in this example).
     DateTime.new(year, month, day, hour, minute)
@@ -493,17 +525,21 @@ class Trait < ActiveRecord::Base
   end
 
   def computed_timeloc
-    if @t_hour.blank?
-      if !@t_minute.blank?
-        # shouldn't ever get here
+    if !@t_minute.blank?
+      if @t_hour.blank?
         raise "If you specify minutes, you must specify the hour.!"
-      end
-      9
-    else # hour is given
-      if @t_minute.blank?
-        3
+      elsif TimesOfDay.include?(@t_hour)
+        raise "If you select a time of day, minutes must be blank."
       else
         2
+      end
+    else # @t_minute is blank
+      if @t_hour.blank?
+        9
+      elsif TimesOfDay.include?(@t_hour)
+        4
+      else
+        3
       end
     end
   end
