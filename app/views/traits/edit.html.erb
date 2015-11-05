@@ -11,6 +11,7 @@
   <%= javascript_include_tag 'lazy/autocomplete.js' %>
   <script>
     <% # Code for automatically adjusting timezone information when the trait site is changed. %>
+    <% # TO-DO: Factor this out into a .js file. %>
     function update_timezone() {
         tz = jQuery.ajax({
             url: "<%= url_for( controller: "sites", action: "get_timezone") %>",
@@ -88,24 +89,24 @@
                 <div class="eight columns alpha">
                   <fieldset>
                     <legend>Date</legend>
-                    <%= f.select :d_year, [''] + (1800..Time.now.year).to_a %>
-                    <%= f.select :d_month, Trait::Seasons + (1..12).to_a, include_blank: true %>
-                    <%= f.select :d_day, [''] + (1..31).to_a %>
+                    <%= f.select :d_year, (1800..Time.now.year).to_a, include_blank: true %>
+                    <%= f.select :d_month, Trait::Seasons + Trait::Months.to_a, include_blank: true %>
+                    <%= f.select :d_day, Trait::Days.to_a, include_blank: true %>
                   </fieldset>
                 </div>
                 <div class="four columns">
                   <fieldset>
                     <legend>Time <span class="inherit" id="time_label_descriptor"><%= @trait.site.nil? || !@trait.site.time_zone.blank? ? "at site" : "(UTC)" %></span></legend>
-                    <%= f.select :t_hour, [''] + (0..23).to_a.collect { |i| '%02i' % i } %>
-                    <%= f.select :t_minute, [''] + (0..59).to_a.collect { |i| '%02i' % i } %>
+                    <%= f.select :t_hour, Trait::TimesOfDay + Trait::Hours.to_a.collect { |i| '%02i' % i }, include_blank: true %>
+                    <%= f.select :t_minute, Trait::Minutes.to_a.collect { |i| '%02i' % i }, include_blank: true %>
                   </fieldset>
                 </div>
                 <div class="four columns omega">
                   <fieldset>
                     <legend>Time Zone</legend>
-                    <span id="timezone"><%= !@trait.site.nil?
-                                            ? (!@trait.site.time_zone.blank? ? @trait.site.time_zone : "UTC - site time zone unknown")
-                                            : "(no site selected)" %></span>
+                    <span id="timezone"><%= @trait.site.nil?             ? "(no site selected)"
+                                          : @trait.site.time_zone.blank? ? "UTC - site time zone unknown"
+                                          :                                 @trait.site.time_zone          %></span>
                   </fieldset>
                 </div>
               </div>

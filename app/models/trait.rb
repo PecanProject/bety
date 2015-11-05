@@ -60,6 +60,10 @@ class Trait < ActiveRecord::Base
   Seasons = ['Spring', 'Summer', 'Autumn', 'Winter']
   TimesOfDay = ['morning', 'mid-day', 'afternoon', 'night']
 
+  Months = 1..12
+  Days = 1..31
+  Hours = 0..23
+  Minutes = 0..59
 
 
   #--
@@ -299,7 +303,7 @@ class Trait < ActiveRecord::Base
     when 3
       hour, minute = t_hour.to_i, 0
     when 2
-      hour, minute = t_hour.to_id, t_minute.to_i
+      hour, minute = t_hour.to_i, t_minute.to_i
     else
       raise
     end
@@ -527,7 +531,7 @@ class Trait < ActiveRecord::Base
   def computed_timeloc
     if !@t_minute.blank?
       if @t_hour.blank?
-        raise "If you specify minutes, you must specify the hour.!"
+        raise "If you specify minutes, you must specify the hour."
       elsif TimesOfDay.include?(@t_hour)
         raise "If you select a time of day, minutes must be blank."
       else
