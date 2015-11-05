@@ -100,7 +100,7 @@ class Trait < ActiveRecord::Base
     when nil
       nil
     else
-      raise
+      raise "In d_year, unrecognized dateloc value."
     end
   end
 
@@ -128,14 +128,14 @@ class Trait < ActiveRecord::Base
       when 10
         'Autumn'
       else
-        raise
+        raise "In d_month, month value is not appropriate for representing a season."
       end
     when 5, 5.5, 6, 95, 96
       date.nil? ? '' : date_in_site_timezone.month
     when nil
       nil
     else
-      raise
+      raise "In d_month, unrecognized dateloc value."
     end
   end
 
@@ -157,7 +157,7 @@ class Trait < ActiveRecord::Base
     when nil
       nil
     else
-      raise
+      raise "In d_day, unrecognized dateloc value."
     end
   end
 
@@ -185,14 +185,14 @@ class Trait < ActiveRecord::Base
       when 0
         'night'
       else
-        raise
+        raise "In t_hour, hour is not appropriate for representing a time of day."
       end
     when 1, 2, 3
       date.nil? ? '' : date_in_site_timezone.strftime('%H')
     when nil
       nil
     else
-      raise
+      raise "In t_hour, unrecognized timeloc value."
     end
   end
 
@@ -214,7 +214,7 @@ class Trait < ActiveRecord::Base
     when nil
       nil
     else
-      raise
+      raise "In t_minute, unrecognized timeloc value."
     end
   end
 
@@ -284,6 +284,8 @@ class Trait < ActiveRecord::Base
       year, month, day = 9996, d_month.to_i, 1
     when 95
       year, month, day = 9996, d_month.to_i, d_day.to_i
+    else
+      raise "Unexpected computed_dateloc value in Trait#consistent_date_and_time_fields."
     end
 
     case computed_timeloc
@@ -305,16 +307,22 @@ class Trait < ActiveRecord::Base
     when 2
       hour, minute = t_hour.to_i, t_minute.to_i
     else
-      raise
+      raise "Unexpected computed_timeloc value in Trait#consistent_date_and_time_fields."
     end
 
-    # This will catch some illegal dates (1900-02-29, for example) that Time.new
-    # will silently covert to an acceptible date (1900-03-01, in this example).
-    DateTime.new(year, month, day, hour, minute)
+    begin
 
-    @computed_date = utctime_from_sitetime(year, month, day, hour, minute)
-  rescue => e
-    errors.add(:base, e.message)
+      # This will catch some illegal dates (1900-02-29, for example) that Time.new
+      # will silently covert to an acceptible date (1900-03-01, in this example).
+      DateTime.new(year, month, day, hour, minute)
+
+      # Store the computed date for use by the before_save call-back "process_datetime_input".
+      @computed_date = utctime_from_sitetime(year, month, day, hour, minute)
+
+    rescue ArgumentError => e
+      errors.add(:date, "is invalid")
+    end
+
   end
 
   # Validation Method: Only allow admins/managers to change traits marked as failed.
@@ -495,9 +503,11 @@ class Trait < ActiveRecord::Base
 
     if !d.blank?
       if m.blank?
-        raise "If you set a day, you must also set a month."
+        errors.add(:base, "If you set a day, you must also set a month.")
+        9
       elsif Seasons.include?(m)
-        raise "If you select a season, day must be blank."
+        errors.add(:base, "If you select a season, day must be blank.")
+        9
       else
         if y.blank?
           95
@@ -531,9 +541,11 @@ class Trait < ActiveRecord::Base
   def computed_timeloc
     if !@t_minute.blank?
       if @t_hour.blank?
-        raise "If you specify minutes, you must specify the hour."
+        errors.add(:base, "If you specify minutes, you must specify the hour.")
+        9
       elsif TimesOfDay.include?(@t_hour)
-        raise "If you select a time of day, minutes must be blank."
+        errors.add(:base, "If you select a time of day, minutes must be blank.")
+        9
       else
         2
       end
