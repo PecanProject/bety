@@ -1,3 +1,14 @@
+module DateTimeConstants
+  Seasons = ['Season: MAN', 'Season: JJA', 'Season: SON', 'Season: DJF']
+  SeasonRepresentativeMonths = { 'Season: MAN' => 4, 'Season: JJA' => 7, 'Season: SON' => 10, 'Season: DJF' => 1 }
+  TimesOfDay = ['morning', 'mid-day', 'afternoon', 'night']
+  TimesOfDayRepresentativeHours = { 'morning' => 9, 'mid-day' => 12, 'afternoon' => 15, 'night' => 0 }
+
+  Months = 1..12
+  Days = 1..31
+  Hours = 0..23
+  Minutes = 0..59
+end
 
 NEW_FORMATS = {
 
@@ -25,18 +36,8 @@ NEW_FORMATS = {
 
   # dateloc 97:
   season_only: ->(date) do
-    case date.month
-    when 1
-      'Winter'
-    when 4
-      'Spring'
-    when 7
-      'Summer'
-    when 10
-      'Autumn'
-    else
+    DateTimeConstants::SeasonRepresentativeMonths.key(date.month) ||
       '[Invalid season designation]'
-    end
   end,
 
   # dateloc 96:

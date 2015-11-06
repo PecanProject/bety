@@ -11,7 +11,7 @@ class Trait < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ citation variable specie site treatment }
   SEARCH_FIELDS = %w{ traits.id traits.mean traits.n traits.stat traits.statname variables.name species.genus citations.author sites.sitename treatments.name }
 
-
+  include DateTimeConstants
 
   #--
   ### Associations ###
@@ -29,7 +29,7 @@ class Trait < ActiveRecord::Base
   belongs_to :entity
   belongs_to :ebi_method, :class_name => 'Methods', :foreign_key => 'method_id'
 
-  
+
 
   #--
   ### Scopes ###
@@ -52,18 +52,6 @@ class Trait < ActiveRecord::Base
 
   before_save :process_datetime_input
 
-
-
-  #--
-  ### Constants ###
-
-  Seasons = ['Spring', 'Summer', 'Autumn', 'Winter']
-  TimesOfDay = ['morning', 'mid-day', 'afternoon', 'night']
-
-  Months = 1..12
-  Days = 1..31
-  Hours = 0..23
-  Minutes = 0..59
 
 
   #--
@@ -118,18 +106,8 @@ class Trait < ActiveRecord::Base
     when 8, 9
       nil
     when 7, 97
-      case date_in_site_timezone.month
-      when 1
-        'Winter'
-      when 4
-        'Spring'
-      when 7
-        'Summer'
-      when 10
-        'Autumn'
-      else
+      SeasonRepresentativeMonths.key(date_in_site_timezone.month) or
         raise "In d_month, month value is not appropriate for representing a season."
-      end
     when 5, 5.5, 6, 95, 96
       date.nil? ? '' : date_in_site_timezone.month
     when nil
@@ -175,18 +153,8 @@ class Trait < ActiveRecord::Base
       when 9
       nil
     when 4
-      case date_in_site_timezone.hour
-      when 9
-        'morning'
-      when 12
-        'mid-day'
-      when 15
-        'afternoon'
-      when 0
-        'night'
-      else
+      TimesOfDayRepresentativeHours.key(date_in_site_timezone.hour) or
         raise "In t_hour, hour is not appropriate for representing a time of day."
-      end
     when 1, 2, 3
       date.nil? ? '' : date_in_site_timezone.strftime('%H')
     when nil
@@ -218,20 +186,6 @@ class Trait < ActiveRecord::Base
     end
   end
 
-  # Returns the time zone of the associated site or "UTC" if no there is no
-  # associated site or if its time_zone attribute is blank.
-  def site_timezone
-    begin
-      zone = site.time_zone
-      if zone.blank?
-        zone = 'UTC'
-      end
-    rescue
-      zone = 'UTC' # site not found
-    end
-    return zone
-  end
-
 
 
   #--
@@ -253,32 +207,14 @@ class Trait < ActiveRecord::Base
     when 8
       year, month, day = d_year.to_i, 1, 1
     when 7
-      case d_month
-      when 'Spring'
-        month = 4
-      when 'Summer'
-        month = 7
-      when 'Autumn'
-        month = 10
-      when 'Winter'
-        month = 1
-      end
+      month = SeasonRepresentativeMonths[d_month]
       year, day = d_year.to_i, 1
     when 6
       year, month, day = d_year.to_i, d_month.to_i, 1
     when 5
       year, month, day = d_year.to_i, d_month.to_i, d_day.to_i
     when 97
-      case d_month
-      when 'Spring'
-        month = 4
-      when 'Summer'
-        month = 7
-      when 'Autumn'
-        month = 10
-      when 'Winter'
-        month = 1
-      end
+      month = SeasonRepresentativeMonths[d_month]
       year, day = 9996, 1
     when 96
       year, month, day = 9996, d_month.to_i, 1
@@ -292,16 +228,8 @@ class Trait < ActiveRecord::Base
     when 9
       hour, minute = 0, 0
     when 4
-      case t_hour
-      when 'morning'
-        hour, minute = 9, 0
-      when 'mid-day'
-        hour, minute = 12, 0
-      when 'afternoon'
-        hour, minute = 15, 0
-      when 'night'
-        hour, minute = 0, 0
-      end
+      hour = TimesOfDayRepresentativeHours[t_hour]
+      minute = 0
     when 3
       hour, minute = t_hour.to_i, 0
     when 2
@@ -354,11 +282,10 @@ class Trait < ActiveRecord::Base
   validates_inclusion_of    :access_level, in: 1..4, message: "You must select an access level"
   validates_presence_of     :statname, :if => Proc.new { |trait| !trait.stat.blank? }
   validates_format_of       :d_year, :with => /\A(\d{2}|\d{4})\z/, :allow_blank => true
-  validates_format_of       :d_month, :with => /\A\d{1,2}|Spring|Summer|Winter|Autumn\z/, :allow_blank => true
+  validates_format_of       :d_month, :with => /\A(\d{1,2}|#{Seasons.join("|")})\z/, :allow_blank => true
   validates_format_of       :d_day, :with => /\A\d{1,2}\z/, :allow_blank => true
-  #validates_format_of       :t_hour, :with => /\A\d{1,2}\z/, :allow_blank => true
-  validates_format_of       :t_minute, :with => /\A\d{1,2}\z/, :allow_blank => true
-  #validates_format_of        :timezone_offset, :with => /\A *[+-]?([01]?[0-9]|2[0-3]):(00|15|30|45):00 *\z/
+  validates_format_of       :t_hour, :with => /\A(\d{2}|#{TimesOfDay.join('|')})\z/, :allow_blank => true
+  validates_format_of       :t_minute, :with => /\A\d{2}\z/, :allow_blank => true
   validate :consistent_date_and_time_fields
   validate :can_change_checked
   validate :mean_in_range
@@ -428,17 +355,23 @@ class Trait < ActiveRecord::Base
     end
     site :sitename_state_country => 'Site Name'
     treatment :name_definition => 'Treatment'
-    citation :author_year_title => 'Author Year Title' 
+    citation :author_year_title => 'Author Year Title'
     site :lat => 'Latitude', :lon => 'Longitude'
   end
 
 
-  
+
   #--
   ### Presentation Methods ###
 
   def pretty_date
-    date.nil? ? '[unspecified]' : date_in_site_timezone.to_formatted_s(date_format) + ([7, 9, 97].include?(dateloc) || timeloc != 9 ? '' : " (#{site_timezone})")
+    if date.nil?
+      '[unspecified]'
+    else
+      date_in_site_timezone.to_formatted_s(date_format) +
+        # show the site timezone next to the date only if the time is unspecified or unknown
+        (timeloc == 9 && [5, 6, 8, 95, 96].include?(dateloc) ? " (#{site_timezone})" : "")
+    end
   end
 
   def format_statname
@@ -562,23 +495,23 @@ class Trait < ActiveRecord::Base
 
   def date_format
     case dateloc
-    when 9 
+    when 9
       :no_date_data
-    when 8 
+    when 8
       :year_only
-    when 7 
+    when 7
       :season_and_year
-    when 6 
+    when 6
       :month_and_year
-    when 5.5 
+    when 5.5
       :week_of_year
-    when 5 
+    when 5
       :year_month_day
-    when 97 
+    when 97
       :season_only
-    when 96 
+    when 96
       :month_only
-    when 95 
+    when 95
       :month_day
     when nil
       :unspecified_dateloc
@@ -589,15 +522,15 @@ class Trait < ActiveRecord::Base
 
   def time_format
     case timeloc
-    when 9 
+    when 9
       :no_time_data
-    when 4 
+    when 4
       :time_of_day
-    when 3 
+    when 3
       :hour_only
-    when 2 
+    when 2
       :hour_minutes
-    when 1 
+    when 1
       :hour_minutes_seconds
     when nil
       :unspecified_timeloc
@@ -605,7 +538,7 @@ class Trait < ActiveRecord::Base
       :unrecognized_timeloc
     end
   end
-  
+
   def utctime_from_sitetime(y, m, d, hr, min)
     utctime = nil
     Time.use_zone site_timezone do
@@ -621,5 +554,19 @@ class Trait < ActiveRecord::Base
   def date_in_site_timezone
     date.in_time_zone(site_timezone)
   end
-  
+
+  # Returns the time zone of the associated site or "UTC" if no there is no
+  # associated site or if its time_zone attribute is blank.
+  def site_timezone
+    begin
+      zone = site.time_zone
+      if zone.blank?
+        zone = 'UTC'
+      end
+    rescue
+      zone = 'UTC' # site not found
+    end
+    return zone
+  end
+
 end
