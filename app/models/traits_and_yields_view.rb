@@ -113,8 +113,10 @@ class TraitsAndYieldsView < ActiveRecord::Base
   def pretty_date
     if date.nil?
       '[unspecified]'
-    else
+    elsif result_type =~ /traits/
       date_in_site_timezone.to_formatted_s(date_format) + " (#{site_timezone})"
+    else # for yields, don't mess with time zones
+      date.to_time.to_formatted_s(date_format)
     end
   end
 
