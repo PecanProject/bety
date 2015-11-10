@@ -43,7 +43,8 @@ class Yield < ActiveRecord::Base
     when 9
       year, month, day = DummyYear, DummyMonth, DummyDay
     when 8
-      year, month, day = (julianyear || d_year).to_i, DummyMonth, DummyDay
+      year = julianyear.blank? ? d_year.to_i : julianyear.to_i
+      month, day = DummyMonth, DummyDay
     when 7
       month = SeasonRepresentativeMonths[d_month]
       year, day = d_year.to_i, DummyDay
