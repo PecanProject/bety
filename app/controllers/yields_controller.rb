@@ -144,7 +144,7 @@ class YieldsController < ApplicationController
   def update
     @yield = Yield.all_limited(current_user).find(params[:id])
 
-    @yield.update_attributes(params[:yield])
+    @yield.assign_attributes(params[:yield])
 
     respond_to do |format|
       # This save is a no-op unless Julian date was set:
