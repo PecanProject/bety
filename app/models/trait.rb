@@ -203,35 +203,35 @@ class Trait < ActiveRecord::Base
     # integers.
     case computed_dateloc
     when 9
-      year, month, day = 9996, 1, 1
+      year, month, day = DummyYear, DummyMonth, DummyDay
     when 8
-      year, month, day = d_year.to_i, 1, 1
+      year, month, day = d_year.to_i, DummyMonth, DummyDay
     when 7
       month = SeasonRepresentativeMonths[d_month]
-      year, day = d_year.to_i, 1
+      year, day = d_year.to_i, DummyDay
     when 6
-      year, month, day = d_year.to_i, d_month.to_i, 1
+      year, month, day = d_year.to_i, d_month.to_i, DummyDay
     when 5
       year, month, day = d_year.to_i, d_month.to_i, d_day.to_i
     when 97
       month = SeasonRepresentativeMonths[d_month]
-      year, day = 9996, 1
+      year, day = DummyYear, DummyDay
     when 96
-      year, month, day = 9996, d_month.to_i, 1
+      year, month, day = DummyYear, d_month.to_i, DummyDay
     when 95
-      year, month, day = 9996, d_month.to_i, d_day.to_i
+      year, month, day = DummyYear, d_month.to_i, d_day.to_i
     else
       raise "Unexpected computed_dateloc value in Trait#consistent_date_and_time_fields."
     end
 
     case computed_timeloc
     when 9
-      hour, minute = 0, 0
+      hour, minute = DummyHour, DummyMinute
     when 4
       hour = TimesOfDayRepresentativeHours[t_hour]
-      minute = 0
+      minute = DummyMinute
     when 3
-      hour, minute = t_hour.to_i, 0
+      hour, minute = t_hour.to_i, DummyMinute
     when 2
       hour, minute = t_hour.to_i, t_minute.to_i
     else
@@ -515,7 +515,7 @@ class Trait < ActiveRecord::Base
   def utctime_from_sitetime(y, m, d, hr, min)
     utctime = nil
     Time.use_zone site_timezone do
-      utctime = Time.zone.local(y, m, d, hr, min, 0).utc
+      utctime = Time.zone.local(y, m, d, hr, min, DummySecond).utc
     end
     return utctime.to_datetime
   end

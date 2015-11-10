@@ -4,6 +4,14 @@ module DateTimeConstants
   TimesOfDay = ['morning', 'mid-day', 'afternoon', 'night']
   TimesOfDayRepresentativeHours = { 'morning' => 9, 'mid-day' => 12, 'afternoon' => 15, 'night' => 0 }
 
+  # dummy values to use when date/times are not fully explicit
+  DummyYear = 9996
+  DummyMonth = 1
+  DummyDay = 1
+  DummyHour = 0
+  DummyMinute = 0
+  DummySecond = 0
+
   Months = 1..12
   Days = 1..31
   Hours = 0..23

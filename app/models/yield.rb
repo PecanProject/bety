@@ -41,14 +41,14 @@ class Yield < ActiveRecord::Base
     # integers.
     case computed_dateloc
     when 9
-      year, month, day = 9996, 1, 1
+      year, month, day = DummyYear, DummyMonth, DummyDay
     when 8
-      year, month, day = (julianyear || d_year).to_i, 1, 1
+      year, month, day = (julianyear || d_year).to_i, DummyMonth, DummyDay
     when 7
       month = SeasonRepresentativeMonths[d_month]
-      year, day = d_year.to_i, 1
+      year, day = d_year.to_i, DummyDay
     when 6
-      year, month, day = d_year.to_i, d_month.to_i, 1
+      year, month, day = d_year.to_i, d_month.to_i, DummyDay
     when 5
       if !julianday.blank?
         @computed_date = Date.ordinal(julianyear.to_i, julianday.to_i)
@@ -57,15 +57,15 @@ class Yield < ActiveRecord::Base
       year, month, day = d_year.to_i, d_month.to_i, d_day.to_i
     when 97
       month = SeasonRepresentativeMonths[d_month]
-      year, day = 9996, 1
+      year, day = DummyYear, DummyDay
     when 96
-      year, month, day = 9996, d_month.to_i, 1
+      year, month, day = DummyYear, d_month.to_i, DummyDay
     when 95
       if !julianday.blank?
-        @computed_date = Date.ordinal(9996, julianday)
+        @computed_date = Date.ordinal(DummyYear, julianday)
         return
       end
-      year, month, day = 9996, d_month.to_i, d_day.to_i
+      year, month, day = DummyYear, d_month.to_i, d_day.to_i
     else
       raise "Unexpected computed_dateloc value in Trait#consistent_date_and_time_fields."
     end
