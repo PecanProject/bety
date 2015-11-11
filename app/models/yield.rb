@@ -191,9 +191,9 @@ class Yield < ActiveRecord::Base
     end
 
     case dateloc
-    when 6, 7, 8, 9, 96, 97
+    when 5.5, 6, 7, 8, 9, 96, 97
       nil
-    when 5, 5.5, 95
+    when 5, 95
       date.nil? ? '' : date.day
     when nil
       nil
