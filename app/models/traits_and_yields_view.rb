@@ -80,9 +80,7 @@ class TraitsAndYieldsView < ActiveRecord::Base
     author 'author'
     citation_year 'citation_year'
     treatment 'treatment'
-    date 'date'
-    month 'month'
-    year 'year'
+    pretty_date 'date'
     dateloc 'dateloc'
     trait 'trait'
     mean 'mean' do |num|

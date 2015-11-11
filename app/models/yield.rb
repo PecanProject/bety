@@ -170,7 +170,7 @@ class Yield < ActiveRecord::Base
       nil
     when 7, 97
       SeasonRepresentativeMonths.key(date.month) or
-        raise "In d_month, month value is not appropriate for representing a season."
+        "[bad month value #{date_in_site_timezone.month} doesn't correspond to a season]"
     when 5, 5.5, 6, 95, 96
       date.nil? ? '' : date.month
     when nil
@@ -214,7 +214,8 @@ class Yield < ActiveRecord::Base
     specie_id
     treatment_id
     cultivar_id
-    date
+    date 'raw date'
+    pretty_date
     dateloc
     statname
     stat

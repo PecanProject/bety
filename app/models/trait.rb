@@ -107,7 +107,7 @@ class Trait < ActiveRecord::Base
       nil
     when 7, 97
       SeasonRepresentativeMonths.key(date_in_site_timezone.month) or
-        raise "In d_month, month value is not appropriate for representing a season."
+        "[bad month value #{date_in_site_timezone.month} doesn't correspond to a season]"
     when 5, 5.5, 6, 95, 96
       date.nil? ? '' : date_in_site_timezone.month
     when nil
@@ -303,10 +303,13 @@ class Trait < ActiveRecord::Base
     cultivar_id
     treatment_id
     entity_id
+    date 'raw date' do |date| date.utc end
+    pretty_date
     d_year
     d_month
     d_day
     dateloc
+    pretty_time
     t_hour
     t_minute
     timeloc
