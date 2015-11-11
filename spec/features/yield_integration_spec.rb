@@ -32,9 +32,9 @@ feature 'Yields pages work' do
       fill_in 'yield[stat]', :with => '98736.0'
       fill_in 'yield[n]', :with =>  '100'
       fill_in 'Notes', :with =>  'In some technical publications, appendices are so long and important as part of the book that they are a creative endeavour of the author'
-      select('10', :from => 'yield[date(3i)]')
-      select('10', :from => 'yield[date(2i)]')
-      select('1800', :from => 'yield[date(1i)]')
+      select('10', :from => 'yield[d_day]')
+      select('10', :from => 'yield[d_month]')
+      select('1800', :from => 'yield[d_year]')
 
       fill_in 'species_query', :with => 'sacc'
       select('3', :from => 'yield[specie_id]')
@@ -60,9 +60,9 @@ feature 'Yields pages work' do
       visit '/yields/new'
       fill_in 'yield[mean]', :with => 'asdf'
       fill_in 'yield[stat]', :with => '98736.0'
-      select('1', :from => 'yield[date(3i)]')
-      select('1 - January', :from => 'yield[date(2i)]')
-      select('1800', :from => 'yield[date(1i)]')
+      select('1', :from => 'yield[d_day]')
+      select('1', :from => 'yield[d_month]')
+      select('1800', :from => 'yield[d_year]')
 
       fill_in 'species_query', :with => 'sacc'
       select('3', :from => 'yield[specie_id]')
@@ -80,9 +80,9 @@ feature 'Yields pages work' do
 
       # Required attributes:
       fill_in 'yield[mean]', :with => '10.0'
-      select('10', :from => 'yield[date(3i)]')
-      select('10', :from => 'yield[date(2i)]')
-      select('1800', :from => 'yield[date(1i)]')
+      select('10', :from => 'yield[d_day]')
+      select('10', :from => 'yield[d_month]')
+      select('1800', :from => 'yield[d_year]')
       fill_in 'species_query', :with => 'Abar'
       select('2', :from => 'yield[specie_id]')
 
@@ -159,9 +159,9 @@ feature 'Yields pages work' do
 
       # Required attributes:
       fill_in 'yield[mean]', :with => '10.0'
-      select('10', :from => 'yield[date(3i)]')
-      select('10', :from => 'yield[date(2i)]')
-      select('1800', :from => 'yield[date(1i)]')
+      select('10', :from => 'yield[d_day]')
+      select('10', :from => 'yield[d_month]')
+      select('1800', :from => 'yield[d_year]')
       fill_in 'species_query', :with => 'Abar'
       select('2', :from => 'yield[specie_id]')
 
