@@ -94,7 +94,7 @@ def getSiteID(sitename, host, dbname, user, passwd):
         else:
                 return 0
 
-def getUSGSAltitude(x,y, units="Meters"):
+def getUSGSAltitude(x, y, units="Meters"):
         """
         Send a GET request to USGS Elevation Point Query Service to get altitude at given lat/lon.
                 Requires requests: http://docs.python-requests.org/en/latest/
@@ -112,6 +112,34 @@ def getUSGSAltitude(x,y, units="Meters"):
         if alt_req.status_code == 200:
                 # Extract elevation value from response object if successful
                 return alt_req.json()['USGS_Elevation_Point_Query_Service']['Elevation_Query']['Elevation']
+        else:
+                return None
+
+def getGoogleAltitude(x,y):
+        """
+        Send a GET request to Google Maps Elevation API to get altitude at given lat/lon.
+                Requires requests: http://docs.python-requests.org/en/latest/
+                API source: https://developers.google.com/maps/documentation/elevation/intro
+        :param x: Longitude coordinate
+        :param y: Latitude coordinate
+        :return: Altitude in meters, or None if query fails
+        """
+
+        # Read Google Maps Elevation API key from file (should be only contents in file)
+        # https://developers.google.com/maps/documentation/elevation/get-api-key
+        api_key_file = r"C:\Users\mburnet2\Documents\NCSA\TERRAref\GOOGLE_ELEVATION_API_KEY.txt"
+
+        api_file = open(api_key_file, 'r')
+        google_api_key = api_file.readline().rstrip()
+        api_file.close()
+
+        sess = requests.Session()
+        get_args = "locations="+str(y)+","+str(x)+"&key="+google_api_key
+        alt_req = sess.get("https://maps.googleapis.com/maps/api/elevation/json?"+get_args)
+
+        if alt_req.status_code == 200:
+                # Extract elevation value from response object if successful
+                return alt_req.json()['results'][0]['elevation']
         else:
                 return None
 
@@ -201,6 +229,7 @@ def main(argv):
 
                 if len(coords) == 2:
                         # No altitude has been provided; attempt to fetch it
+                        # TODO: getGoogleAltitude() will work with global coordinates
                         alt = getUSGSAltitude(lon, lat)
                         if alt:
                                 q_line += " " + str(alt)
