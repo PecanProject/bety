@@ -1,16 +1,20 @@
 #!/usr/bin/env python
 
 """
-This module will accept an input text file with (x,y,z) coordinates in a CSV-format list
+This module will accept an input text file with (x,y,[z]) coordinates in a CSV-format list
 and generate a SQL string that will add these coordinates as a PostGIS Polygon
 to sites.geometry within a BETYdb instance.
+
+A header row should be included in the input file, although the column names do not matter. If a z column
+for altitude is not included, the script will attempt to get it from USGS NED (US) or Google (global).
 
 Command line usage:
         -h      show help
         -i      input filename
-        -e      EPSG reference number, default is 3857
-        -s      site_id in BETYdb sites table to associate geometry with
-        -o      flag to write resulting SQL to output file, as "<input_filename>_SQL.txt"
+        -r      EPSG reference number, default is 4326
+        -s      sitename or site_id in BETYdb sites table to associate geometry with.
+                if a string is provided, site_id will be queried. if an int is provided, site_id is assumed.
+        -o      flag to write resulting SQL to output file, as "<input_filename>_insert.sql"
         -x      will attempt to execute resulting SQL on db instance defined in next 4 params
         -n      PostgreSQL host address
         -d      Database name, default is 'bety'
@@ -18,30 +22,37 @@ Command line usage:
         -p      Password
 
 Example:
-        buildSQLGeom.py -i C:/folder/coordinates.csv -e 4326 -s 19000000000 -x -n localhost -d bety -u GUEST -p GUES -o
+        buildSQLGeom.py -i C:/folder/coordinates.csv -r 4326 -s 19000000000 -x -n localhost -d bety -u GUEST -p GUES -o
 
-Sample input file contents:
+Sample input files that are both valid:
         LONGITUDE,LATITUDE,ALTITUDE
         -76.116081,42.794448,415
         -76.116679,42.794448,415
         -76.116679,42.79231,415
-A header row should be included in the document, although the column names do not matter.
+  Or:
+        X,Y
+        -76.116081,42.794448
+        -76.116679,42.794448
+        -76.116679,42.79231
 """
 
 import sys
 import getopt
+import requests
 #import psycopg2
 
-def executeSQL(query, host, dbname, user, passwd):
+def executeSQL(query, host, dbname, user, passwd, return_results=False):
         """
         Execute SQL query on specified host database with given credentials.
                 Requires psycopg2: https://pypi.python.org/pypi/psycopg2 (un-comment line 32!)
                 Adapted from https://wiki.postgresql.org/wiki/Using_psycopg2_with_PostgreSQL
-        :param query: SQL string containg query to execute.
+        :param query: SQL string containing query to execute.
         :param host: Host address of target PostgreSQL instance
         :param dbname: Database to execute query in
         :param user: Username
         :param passwd: Password
+        :param return_results: Boolean indicating whether to return query output,
+                               otherwise return True or False based on query success
         """
 
         # Build connection string & remove excess quotes if given
@@ -54,48 +65,103 @@ def executeSQL(query, host, dbname, user, passwd):
                 cursor = conn.cursor()
                 print("Sucessfully connected.")
                 cursor.execute(query)
-                
+
+                if return_results:
+                        return cursor.fetchall()
+                else:
+                        return True
         except Exception as e:
                 print(e)
+                return False
+
+def getSiteID(sitename, host, dbname, user, passwd):
+        """
+        Get site_id of given sitename from sites table in BETYdb instance pointed to by host.
+        :param sitename: string representing sitename field in sites table
+        :param host: Host address of target PostgreSQL instance
+        :param dbname: Database to execute query in
+        :param user: Username
+        :param passwd: Password
+        :return: site_id as a string, or 0 if query fails
+        """
+
+        query = "select first id from sites where sitename = '"+sitename+"'"
+        sql = executeSQL(query, host, dbname, user, passwd, True)
+
+        if sql and type(sql) is list:
+                # Return id from first row
+                return sql[0][0]
+        else:
+                return 0
+
+def getUSGSAltitude(x,y, units="Meters"):
+        """
+        Send a GET request to USGS Elevation Point Query Service to get altitude at given lat/lon.
+                Requires requests: http://docs.python-requests.org/en/latest/
+                API source: http://ned.usgs.gov/epqs/
+        :param x: Longitude coordinate
+        :param y: Latitude coordinate
+        :param units: Can be Meters or Feet, defaults to Meters
+        :return: Altitude in requested units, or None if query fails
+        """
+
+        sess = requests.Session()
+        get_args = "x="+str(x)+"&y="+str(y)+"&units="+units+"&output=json"
+        alt_req = sess.get("http://ned.usgs.gov/epqs/pqs.php?"+get_args)
+
+        if alt_req.status_code == 200:
+                # Extract elevation value from response object if successful
+                return alt_req.json()['USGS_Elevation_Point_Query_Service']['Elevation_Query']['Elevation']
+        else:
+                return None
 
 def main(argv):
         # These are default values, will be overwritten by command line parameters if given.
         input_file = None
-        epsg       = 3857
-        site_id    = 0
+        srid       = 3857
+        site_id    = False
+        sitename   = False
+
         out_file   = False
-        run_query = False
-        host = None
-        dbname = 'bety'
-        user = 'USERNAME'
-        passwd = 'PASSWORD'
+        run_query  = False
+        # BETYdb instance details
+        host       = None
+        dbname     = 'bety'
+        user       = 'USERNAME'
+        passwd     = 'PASSWORD'
 
         # Parse command line parameters
         try:
-                opts, args = getopt.getopt(argv, "hi:e:s:xn:d:u:p:o", ["input=","output=","epsg=","site=","execute","host=","dbname=", "user=", "pass="])
+                opts, args = getopt.getopt(argv, "hi:e:s:xn:d:u:p:o", ["input=","output=","srid=","site=","execute","host=","dbname=", "user=", "pass="])
         except getopt.GetoptError:
-                print('buildSQLGeom.py -i <inputfile> -e <epsg> -s <site_id> -x -n <postgres_hostname> -d <dbname> -u <username> -p <password> -o <outputfile> ')
-                print('epsg default is 3857')
-                print('-o will write query to <input_filename>_SQL.txt')
+                print('buildSQLGeom.py -i <inputfile> -r <srid> -s <site> -x -n <postgres_hostname> -d <dbname> -u <username> -p <password> -o <outputfile> ')
+                print('srid default is 4326')
+                print('-s can be a site_id or a sitename. if sitename, -n, -d, -u, -p required to lookup site_id')
                 print('-x will attempt to execute resulting query')
                 print('-n, -d, -u, -p required if -x flag enabled')
+                print('-o will write query to <input_filename>_insert.sql')
                 sys.exit(2)
         for opt, arg in opts:
                 if opt == '-h':
-                        print('buildSQLGeom.py -i <inputfile> -e <epsg> -s <site_id> -x -n <postgres_hostname> -d <dbname> -u <username> -p <password> -o <outputfile> ')
-                        print('epsg default is 3857')
-                        print('-o will write query to <input_filename>_SQL.txt')
+                        print('buildSQLGeom.py -i <inputfile> -r <srid> -s <site> -x -n <postgres_hostname> -d <dbname> -u <username> -p <password> -o <outputfile> ')
+                        print('srid default is 4326')
+                        print('-s can be a site_id or a sitename. if sitename, -n, -d, -u, -p required to lookup site_id')
                         print('-x will attempt to execute resulting query')
                         print('-n, -d, -u, -p required if -x flag enabled')
+                        print('-o will write query to <input_filename>_insert.sql')
                         sys.exit()
                 elif opt in ("-i", "--input"):
                         input_file = arg
                 elif opt in ("-o", "--output"):
                         out_file = True
-                elif opt in ("-e", "--epsg"):
-                        epsg = arg
+                elif opt in ("-r", "--srid"):
+                        srid = arg
                 elif opt in ("-s", "--site"):
-                        site_id = arg
+                        # Try to interpret site as a string; if it fails, assume this is a sitename
+                        try:
+                                site_id = int(arg)
+                        except ValueError:
+                                sitename = arg
                 elif opt in ("-x", "--execute"):
                         run_query = True
                 elif opt in ("-n", "--host"):
@@ -109,10 +175,16 @@ def main(argv):
         if input_file == None:
                 print('input file is required. -h for help.')
                 sys.exit(2)
+        if not site_id:
+                if not host:
+                        print('site_id cannot be queried without BETYdb credentials. using 0 as default.')
+                        site_id = 0
+                else:
+                        site_id = getSiteID(sitename, host, dbname, user, passwd)
         if out_file:
-                # Use input filename with "_SQL.txt"
+                # Use input filename with "_insert.sql"
                 input_ext = input_file[input_file.rfind("."):]
-                out_file = input_file.replace(input_ext, "_SQL.txt")
+                out_file = input_file.replace(input_ext, "_insert.sql")
 
         # Generate query by iterating through input file contents
         query = "UPDATE sites SET geometry = ST_Geomfromtext('POLYGON(("
@@ -123,12 +195,23 @@ def main(argv):
         while l:
                 # Get values from each row of file separated by ',' and append to query
                 coords = l.split(",")
-                q_line = coords[0] + " " + coords[1] + " " + coords[2] + ","
-                query += q_line 
-                l = csv.readline().rstrip()
+                lon = coords[0]
+                lat = coords[1]
+                q_line = lon + " " + lat
+
+                if len(coords) == 2:
+                        # No altitude has been provided; attempt to fetch it
+                        alt = getUSGSAltitude(lon, lat)
+                        if alt:
+                                q_line += " " + str(alt)
+                else:
+                        q_line += " " + coords[2]
+
+                query += q_line + ","
+                l = csv.readline().rstrip() # next data line
 
         # Finish the end of the query and print to console
-        query += "))', "+str(epsg)+") WHERE ID="+str(site_id)
+        query += "))', "+str(srid)+") WHERE ID="+str(site_id)
         csv.close()
 
         print("-----")
