@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-This module will accept an input text file with (x,y,[z]) coordinates in a CSV-format list
+This module will accept (x,y,[z]) coordinates (from CSV-format file or cmd arguments)
 and generate a SQL string that will add these coordinates as a PostGIS Polygon
 to sites.geometry within a BETYdb instance.
 
@@ -10,19 +10,23 @@ for altitude is not included, the script will attempt to get it from USGS NED (U
 
 Command line usage:
         -h      show help
-        -i      input filename
+        -i      input filename; will override x,y,z args if provided
+        -x      longitude value, if no file provided
+        -y      latitude value, if no file provided
+        -z      altitude value, if no file provided
         -r      EPSG reference number, default is 4326
         -s      sitename or site_id in BETYdb sites table to associate geometry with.
                 if a string is provided, site_id will be queried. if an int is provided, site_id is assumed.
         -o      flag to write resulting SQL to output file, as "<input_filename>_insert.sql"
-        -x      will attempt to execute resulting SQL on db instance defined in next 4 params
+        -e      will attempt to execute resulting SQL on db instance defined in next 4 params
         -n      PostgreSQL host address
         -d      Database name, default is 'bety'
         -u      Username
         -p      Password
 
-Example:
-        buildSQLGeom.py -i C:/folder/coordinates.csv -r 4326 -s 19000000000 -x -n localhost -d bety -u GUEST -p GUES -o
+Examples:
+        buildSQLGeom.py -i C:/folder/coordinates.csv -r 4326 -s 19000000000 -e -n localhost -d bety -u GUEST -p GUES -o
+        buildSQLGeom.py -x 76.116081 -y 42.794448
 
 Sample input files that are both valid:
         LONGITUDE,LATITUDE,ALTITUDE
@@ -146,6 +150,9 @@ def getGoogleAltitude(x,y):
 def main(argv):
         # These are default values, will be overwritten by command line parameters if given.
         input_file = None
+        lon        = None
+        lat        = None
+        alt        = None
         srid       = 3857
         site_id    = False
         sitename   = False
@@ -160,28 +167,23 @@ def main(argv):
 
         # Parse command line parameters
         try:
-                opts, args = getopt.getopt(argv, "hi:e:s:xn:d:u:p:o", ["input=","output=","srid=","site=","execute","host=","dbname=", "user=", "pass="])
+                opts, args = getopt.getopt(argv, "hi:x:y:z:r:s:oen:d:u:p:",
+                        ["input=","lon=","lat=","alt=","srid=","site=","output=","execute","host=","dbname=", "user=", "pass="])
         except getopt.GetoptError:
-                print('buildSQLGeom.py -i <inputfile> -r <srid> -s <site> -x -n <postgres_hostname> -d <dbname> -u <username> -p <password> -o <outputfile> ')
-                print('srid default is 4326')
-                print('-s can be a site_id or a sitename. if sitename, -n, -d, -u, -p required to lookup site_id')
-                print('-x will attempt to execute resulting query')
-                print('-n, -d, -u, -p required if -x flag enabled')
-                print('-o will write query to <input_filename>_insert.sql')
+                print(__doc__)
                 sys.exit(2)
         for opt, arg in opts:
                 if opt == '-h':
-                        print('buildSQLGeom.py -i <inputfile> -r <srid> -s <site> -x -n <postgres_hostname> -d <dbname> -u <username> -p <password> -o <outputfile> ')
-                        print('srid default is 4326')
-                        print('-s can be a site_id or a sitename. if sitename, -n, -d, -u, -p required to lookup site_id')
-                        print('-x will attempt to execute resulting query')
-                        print('-n, -d, -u, -p required if -x flag enabled')
-                        print('-o will write query to <input_filename>_insert.sql')
+                        print(__doc__)
                         sys.exit()
                 elif opt in ("-i", "--input"):
                         input_file = arg
-                elif opt in ("-o", "--output"):
-                        out_file = True
+                elif opt in ("-x", "--lon"):
+                        lon = arg
+                elif opt in ("-y", "--lat"):
+                        lat = arg
+                elif opt in ("-z", "--alt"):
+                        alt = arg
                 elif opt in ("-r", "--srid"):
                         srid = arg
                 elif opt in ("-s", "--site"):
@@ -190,7 +192,9 @@ def main(argv):
                                 site_id = int(arg)
                         except ValueError:
                                 sitename = arg
-                elif opt in ("-x", "--execute"):
+                elif opt in ("-o", "--output"):
+                        out_file = True
+                elif opt in ("-e", "--execute"):
                         run_query = True
                 elif opt in ("-n", "--host"):
                         host = arg
@@ -200,8 +204,8 @@ def main(argv):
                         user = arg
                 elif opt in ("-p", "--pass"):
                         passwd = arg
-        if input_file == None:
-                print('input file is required. -h for help.')
+        if input_file == None and (lon == None or lat == None):
+                print('input file is required if no coordinates provided. -h for help.')
                 sys.exit(2)
         if not site_id:
                 if not host:
@@ -217,33 +221,46 @@ def main(argv):
         # Generate query by iterating through input file contents
         query = "UPDATE sites SET geometry = ST_Geomfromtext('POLYGON(("
 
-        csv = open(input_file, 'r')
-        l = csv.readline()          # header; we can skip this
-        l = csv.readline().rstrip() # first data line
-        while l:
-                # Get values from each row of file separated by ',' and append to query
-                coords = l.split(",")
-                lon = coords[0]
-                lat = coords[1]
-                q_line = lon + " " + lat
+        if input_file != None:
+                # Pull coordinates list from input CSV-format file
+                csv = open(input_file, 'r')
+                l = csv.readline()          # header; we can skip this
+                l = csv.readline().rstrip() # first data line
+                while l:
+                        # Get values from each row of file separated by ',' and append to query
+                        coords = l.split(",")
+                        lon = coords[0]
+                        lat = coords[1]
+                        q_line = lon + " " + lat
+                        if len(coords) == 2:
+                                # No altitude has been provided; attempt to fetch it
+                                alt = getUSGSAltitude(lon, lat)
+                                if alt == '-1000000':
+                                        # These coordinates are outside USGS domestic boundary - Google has global coverage
+                                        alt = getGoogleAltitude(lon, lat)
+                                if alt:
+                                        q_line += " " + str(alt)
+                        else:
+                                q_line += " " + coords[2]
 
-                if len(coords) == 2:
+                        query += q_line + ","
+                        l = csv.readline().rstrip() # next data line
+                csv.close()
+        else:
+                # Use lat/lon provided in command line arguments
+                q_line = lon + " " + lat
+                if alt == None:
                         # No altitude has been provided; attempt to fetch it
                         alt = getUSGSAltitude(lon, lat)
                         if alt == '-1000000':
                                 # These coordinates are outside USGS domestic boundary - Google has global coverage
                                 alt = getGoogleAltitude(lon, lat)
-                        if alt:
-                                q_line += " " + str(alt)
-                else:
-                        q_line += " " + coords[2]
-
-                query += q_line + ","
-                l = csv.readline().rstrip() # next data line
+                if alt:
+                        q_line += " " + str(alt)
+                query += q_line
 
         # Finish the end of the query and print to console
         query += "))', "+str(srid)+") WHERE ID="+str(site_id)
-        csv.close()
 
         print("-----")
         print(query)
