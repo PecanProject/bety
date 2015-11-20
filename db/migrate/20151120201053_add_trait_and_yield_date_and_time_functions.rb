@@ -85,6 +85,82 @@ BEGIN
 END;
 $body$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION pretty_time(
+    date timestamp,
+    timeloc numeric(4,2),
+    site_id bigint
+) RETURNS text AS $body$
+DECLARE
+    FORMAT text;
+    TIME_OF_DAY text;
+    SITE_OR_UTC_TIMEZONE text;
+    TIMEZONE_DESIGNATION text;
+    SITE_OR_UTC_DATE timestamp;
+BEGIN
+
+
+    SELECT COALESCE(time_zone, 'UTC') FROM sites WHERE id = site_id INTO SITE_OR_UTC_TIMEZONE;
+
+    TIMEZONE_DESIGNATION := '';
+    IF timeloc != 9 THEN
+        TIMEZONE_DESIGNATION := FORMAT(' (%s)', SITE_OR_UTC_TIMEZONE);
+    END IF;
+
+    /* Interpret the date column as being UTC (not server time!), then convert it site time (if determined) or UTC.
+       Note that "date || ' UTC'" is NULL if date is NULL (unlike CONCAT(date, ' UTC)', which is ' UTC' if date is NULL.
+       This is what we want. */
+    SELECT CAST((date::text || ' UTC') AS timestamp with time zone) AT TIME ZONE SITE_OR_UTC_TIMEZONE INTO SITE_OR_UTC_DATE;
+
+
+    CASE extract(hour FROM SITE_OR_UTC_DATE)
+        WHEN 0 THEN
+            TIME_OF_DAY := '"night"';
+        WHEN 9 THEN
+            TIME_OF_DAY := '"morning"';
+        WHEN 12 THEN
+            TIME_OF_DAY := '"mid-day"';
+        WHEN 15 THEN
+            TIME_OF_DAY := '"afternoon"';
+        ELSE
+            TIME_OF_DAY := '"[Invalid time-of-day designation]"';
+    END CASE;
+
+
+    CASE COALESCE(timeloc, -1)
+
+
+        WHEN 9 THEN
+            FORMAT := '"[time unspecified or unknown]"';
+
+        WHEN 4 THEN
+            FORMAT := TIME_OF_DAY;
+
+        WHEN 3 THEN
+            FORMAT := 'FMHH AM';
+
+        WHEN 2 THEN
+            FORMAT := 'HH24:MI';
+
+        WHEN 1 THEN
+            FORMAT := 'HH24:MI:SS';
+
+        WHEN -1 THEN
+            FORMAT := '"Time Level of Confidence Unknown"';
+
+        ELSE
+            FORMAT := '"Unrecognized Value for Time Level of Confidence"';
+
+    END CASE;
+
+    RETURN CONCAT(to_char(SITE_OR_UTC_DATE, FORMAT), TIMEZONE_DESIGNATION);
+
+END;
+$body$ LANGUAGE plpgsql;
+
+
+
+
     }
 
   end
@@ -99,6 +175,12 @@ DROP FUNCTION pretty_date(
     timeloc numeric(4,2),
     site_id bigint
 );
+
+DROP FUNCTION pretty_time(
+    date timestamp,
+    timeloc numeric(4,2),
+    site_id bigint
+)
 
     }
 

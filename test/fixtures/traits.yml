@@ -4,10 +4,10 @@ test_trait:
   citation_id: 1
   cultivar_id: 1
   treatment_id: 1
-  date: NULL
-  dateloc: NULL
+  date: "2005-07-25 09:31:00"
+  dateloc: 5
   time: NULL
-  timeloc: NULL
+  timeloc: 2
   mean: NULL
   n: NULL
   stat: NULL
@@ -32,10 +32,10 @@ test_edit_trait:
   citation_id: 1
   cultivar_id: 417
   treatment_id: 1
-  date: NULL
-  dateloc: 9.00
+  date: "2015-10-01 04:00:00"
+  dateloc: 7
   time: NULL
-  timeloc: 9.00
+  timeloc: 3
   mean: '5'
   n: NULL
   statname: ""

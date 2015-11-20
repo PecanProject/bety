@@ -141,7 +141,7 @@ NEW_FORMATS = {
   end,
 
   # timeloc 3:
-  hour_only: '%l %p',
+  hour_only: '%-l %p',
 
   # timeloc 2:
   hour_minutes: '%H:%M',

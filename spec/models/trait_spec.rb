@@ -14,6 +14,14 @@ TEST_DATE_SAMPLES = [
                      { dateloc: 95, date_attributes: { d_month: 11, d_day: 9 }, description: "only a month and day are given"  }
                     ]
 
+# samples for all possible timeloc values
+TEST_TIME_SAMPLES = [
+                     { timeloc: 9, time_attributes: {}, description: "no time information is given" },
+                     { timeloc: 4, time_attributes: { t_hour: 'afternoon' }, description: "only the approximate time of day is given" },
+                     { timeloc: 3, time_attributes: { t_hour: 17 }, description: "only the hour is given" },
+                     { timeloc: 2, time_attributes: { t_hour: 19, t_minute: 25 }, description: "both hour and minutes are given" }
+                    ]
+
 TEST_SITES = [
               { site_id: 1 },
               { site_id: 2 },
@@ -37,6 +45,26 @@ def rails_pp_output_agrees_with_sql_pp_output(t)
   
   sql_text = ActiveRecord::Base.connection.select_all(sql_call).first.fetch("pretty_date")
   rails_text = t.pretty_date
+  
+  expect(sql_text).to eq(rails_text), <<MSG
+
+       With trait = #{t.inspect},
+
+       expected: "#{sql_text}"
+            got: "#{rails_text}"
+
+MSG
+
+end
+
+# Compare result of calling Trait#pretty_print with calling the PL/pgSQL
+# function pretty_print.  (The latter comprises the normative interpretation of
+# trait date/dateloc information.)
+def rails_pretty_time_output_agrees_with_sql_pretty_time_output(t)
+  sql_call = "SELECT pretty_time(date, timeloc, site_id) FROM traits WHERE id = #{t.id}"
+  
+  sql_text = ActiveRecord::Base.connection.select_all(sql_call).first.fetch("pretty_time")
+  rails_text = t.pretty_time
   
   expect(sql_text).to eq(rails_text), <<MSG
 
@@ -120,6 +148,45 @@ describe "Trait" do
         end # ABERRANT_DATA.each
       end # describe "aberrant cases"
 
+    end # describe "pretty-printing date"
+
+
+
+
+
+    describe "pretty-printing date should pretty print the date and time according to the normative SQL function" do
+
+      TEST_TIME_SAMPLES.each do |sample_time|
+        TEST_SITES.each do |sample_site|
+          it "when #{sample_time.fetch(:description)} and site timezone is #{Site.find(sample_site.fetch(:site_id)).time_zone || 'nil'}" do
+
+            # set the site first so that timezone is taken into consideration when date is set
+            sample_trait.update_attributes(sample_site)
+
+            sample_trait.update_attributes(sample_time.fetch(:time_attributes))
+
+            rails_pretty_time_output_agrees_with_sql_pretty_time_output(sample_trait)
+
+          end # end it
+        end # inner each loop
+      end # outer each loop
+=begin
+      describe "pretty_date should display aberrant date information according to the normative SQL function" do
+        let(:sample_trait_with_date) do
+          t = Trait.create(mean: 1, variable_id: 1, access_level: 1, site_id: 1, d_year: 2001, d_month: 7, d_day: 23)
+          t.raw_update = true # circumvent before_save callback so we can set dateloc at will
+          return t
+        end # let
+
+        ABERRANT_DATA.each do |facet|
+          it "when #{facet.fetch(:description)}" do
+            sample_trait_with_date.update_attributes(dateloc: facet.fetch(:dateloc))
+
+            rails_pp_output_agrees_with_sql_pp_output(sample_trait_with_date)
+          end
+        end # ABERRANT_DATA.each
+      end # describe "aberrant cases"
+=end
     end # describe "pretty-printing date"
 
   end # describe "date and time semantics"
