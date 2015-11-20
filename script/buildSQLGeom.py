@@ -243,8 +243,11 @@ def main(argv):
                         else:
                                 q_line += " " + coords[2]
 
-                        query += q_line + ","
                         l = csv.readline().rstrip() # next data line
+                        query += q_line
+                        if l:
+                                # Don't include a trailing comma on the final set of coordinates
+                                query += ","
                 csv.close()
         else:
                 # Use lat/lon provided in command line arguments
