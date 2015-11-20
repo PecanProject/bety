@@ -229,8 +229,10 @@ def main(argv):
 
                 if len(coords) == 2:
                         # No altitude has been provided; attempt to fetch it
-                        # TODO: getGoogleAltitude() will work with global coordinates
                         alt = getUSGSAltitude(lon, lat)
+                        if alt == '-1000000':
+                                # These coordinates are outside USGS domestic boundary - Google has global coverage
+                                alt = getGoogleAltitude(lon, lat)
                         if alt:
                                 q_line += " " + str(alt)
                 else:
