@@ -25,8 +25,8 @@ Command line usage:
         -p      Password
 
 Examples:
-        buildSQLGeom.py -i C:/folder/coordinates.csv -r 4326 -s 19000000000 -e -n localhost -d bety -u GUEST -p GUES -o
-        buildSQLGeom.py -x 76.116081 -y 42.794448
+        buildSQLGeom.py -i C:/folder/coordinates.csv -r 4326 -s 19000000000 -e -n localhost -d bety -u GUEST -p GUES -o - sitename "Danforth"
+        buildSQLGeom.py -x 76.116081 -y 42.794448 -site_id 3
 
 Sample input files that are both valid:
         LONGITUDE,LATITUDE,ALTITUDE
@@ -74,7 +74,8 @@ def executeSQL(query, host, dbname, user, passwd, return_results=False):
                         return cursor.fetchall()
                 else:
                         return True
-        except Exception as e:
+        except:
+                e = sys.exc_info()[0]
                 print(e)
                 return False
 
