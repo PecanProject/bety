@@ -132,7 +132,7 @@ def getGoogleAltitude(x,y):
 
         # Read Google Maps Elevation API key from file (should be only contents in file)
         # https://developers.google.com/maps/documentation/elevation/get-api-key
-        api_key_file = r"C:\Users\mburnet2\Documents\NCSA\TERRAref\GOOGLE_ELEVATION_API_KEY.txt"
+        api_key_file = r"GOOGLE_ELEVATION_API_KEY.txt"
 
         api_file = open(api_key_file, 'r')
         google_api_key = api_file.readline().rstrip()
@@ -154,7 +154,7 @@ def main(argv):
         lon        = None
         lat        = None
         alt        = None
-        srid       = 3857
+        srid       = 4326
         site_id    = False
         sitename   = False
 
@@ -201,6 +201,9 @@ def main(argv):
                         host = arg
                 elif opt in ("-d", "--dbname"):
                         dbname = arg
+                # TODO: Use default path if no user and password provided
+                # http://www.peterbe.com/plog/connecting-with-psycopg2-without-a-username-and-password
+                # http://stackoverflow.com/questions/15692437/ident-connection-fails-via-psycopg2-but-works-via-command-line
                 elif opt in ("-u", "--user"):
                         user = arg
                 elif opt in ("-p", "--pass"):
@@ -225,8 +228,11 @@ def main(argv):
         if input_file != None:
                 # Pull coordinates list from input CSV-format file
                 csv = open(input_file, 'r')
-                l = csv.readline()          # header; we can skip this
+                csv.readline()              # header; we can skip this
                 l = csv.readline().rstrip() # first data line
+
+                # The first coordinates provided must also be the last - copy it if raw data doesn't have this
+                first_coords = None
                 while l:
                         # Get values from each row of file separated by ',' and append to query
                         coords = l.split(",")
@@ -235,20 +241,28 @@ def main(argv):
                         q_line = lon + " " + lat
                         if len(coords) == 2:
                                 # No altitude has been provided; attempt to fetch it
-                                alt = getUSGSAltitude(lon, lat)
-                                if alt == '-1000000':
-                                        # These coordinates are outside USGS domestic boundary - Google has global coverage
-                                        alt = getGoogleAltitude(lon, lat)
+                                if alt == None:
+                                        alt = getUSGSAltitude(lon, lat)
+                                        if alt == '-1000000':
+                                                # These coordinates are outside USGS domestic boundary - Google has global coverage
+                                                alt = getGoogleAltitude(lon, lat)
                                 if alt:
                                         q_line += " " + str(alt)
                         else:
                                 q_line += " " + coords[2]
+
+                        if not first_coords:
+                                first_coords = q_line
 
                         l = csv.readline().rstrip() # next data line
                         query += q_line
                         if l:
                                 # Don't include a trailing comma on the final set of coordinates
                                 query += ","
+                        else:
+                                # Last set of coordinates; do they match the first set? If not, repeat first set.
+                                if q_line != first_coords:
+                                        query += "," + first_coords
                 csv.close()
         else:
                 # Use lat/lon provided in command line arguments
