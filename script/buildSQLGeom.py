@@ -237,15 +237,15 @@ def main(argv):
                         col_name = headers[column].strip().lower()
                         if col_name in ["longitude", "long", "lon", "x"]:
                                 lon_col = column
-                                print("found x in column "+str(column)+': "'+col_name+'"')
+                                print("found longitude in column "+str(column)+': "'+headers[column].strip()+'"')
                                 unassigned_cols.remove(column)
                         elif col_name in ["latitude", "lat", "y"]:
                                 lat_col = column
-                                print("found y in column "+str(column)+': "'+col_name+'"')
+                                print("found latitude in column "+str(column)+': "'+headers[column].strip()+'"')
                                 unassigned_cols.remove(column)
                         elif col_name in ["altitude", "elevation", "alt", "elev", "z"]:
                                 alt_col = column
-                                print("found z in column "+str(column)+': "'+col_name+'"')
+                                print("found elevation in column "+str(column)+': "'+headers[column].strip()+'"')
                                 unassigned_cols.remove(column)
                 # If we checked all the headers and didn't find lon/lat, assign to unidentified columns in order
                 while (lon_col==-1 or lat_col==-1):
@@ -284,7 +284,12 @@ def main(argv):
                                 if coords[alt_col]!="":
                                         q_line += " " + coords[alt_col].strip()
                                 else:
-                                        print("line "+str(line_index)+": altitude column empty, omitting z value.")
+                                        print("line "+str(line_index)+": altitude column empty, querying for elevation value.")
+                                        alt = getUSGSAltitude(lon, lat)
+                                        if alt == '-1000000':
+                                                # These coordinates are outside USGS domestic boundary - Google has global coverage
+                                                alt = getGoogleAltitude(lon, lat)
+                                        q_line += " " + str(alt)
 
                         if not first_coords:
                                 first_coords = q_line
