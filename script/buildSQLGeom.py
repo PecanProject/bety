@@ -228,36 +228,74 @@ def main(argv):
         if input_file != None:
                 # Pull coordinates list from input CSV-format file
                 csv = open(input_file, 'r')
-                csv.readline()              # header; we can skip this
-                l = csv.readline().rstrip() # first data line
+
+                # Examine header to attempt to determine ordering of fields
+                headers = csv.readline().rstrip().split(",")
+                lon_col, lat_col, alt_col = -1, -1, -1
+                unassigned_cols = [i for i in range(len(headers))]
+                for column in range(len(headers)):
+                        col_name = headers[column].strip().lower()
+                        if col_name in ["longitude", "long", "lon", "x"]:
+                                lon_col = column
+                                print("found x in column "+str(column)+': "'+col_name+'"')
+                                unassigned_cols.remove(column)
+                        elif col_name in ["latitude", "lat", "y"]:
+                                lat_col = column
+                                print("found y in column "+str(column)+': "'+col_name+'"')
+                                unassigned_cols.remove(column)
+                        elif col_name in ["altitude", "elevation", "alt", "elev", "z"]:
+                                alt_col = column
+                                print("found z in column "+str(column)+': "'+col_name+'"')
+                                unassigned_cols.remove(column)
+                # If we checked all the headers and didn't find lon/lat, assign to unidentified columns in order
+                while (lon_col==-1 or lat_col==-1):
+                        if len(unassigned_cols)==0:
+                                print('lat and lon columns could not be identified. not enough columns.')
+                                sys.exit(2)
+                        # Don't automatically assume altitude is a column if not found, since we can query for it
+                        if lon_col == -1:
+                                lon_col = unassigned_cols[0]
+                                unassigned_cols.remove(column)
+                        elif lat_col == -1:
+                                lon_col = unassigned_cols[0]
+                                unassigned_cols.remove(column)
 
                 # The first coordinates provided must also be the last - copy it if raw data doesn't have this
+                l = csv.readline().rstrip()
+                line_index = 2
                 first_coords = None
                 while l:
                         # Get values from each row of file separated by ',' and append to query
                         coords = l.split(",")
-                        lon = coords[0]
-                        lat = coords[1]
+
+                        lon = coords[lon_col].strip()
+                        lat = coords[lat_col].strip()
                         q_line = lon + " " + lat
-                        if len(coords) == 2:
+                        if len(coords) == 2 or alt_col == -1:
                                 # No altitude has been provided; attempt to fetch it
                                 if alt == None:
                                         alt = getUSGSAltitude(lon, lat)
                                         if alt == '-1000000':
                                                 # These coordinates are outside USGS domestic boundary - Google has global coverage
                                                 alt = getGoogleAltitude(lon, lat)
-                                if alt:
+                                if alt and alt!="":
                                         q_line += " " + str(alt)
                         else:
-                                q_line += " " + coords[2]
+                                if coords[alt_col]!="":
+                                        q_line += " " + coords[alt_col].strip()
+                                else:
+                                        print("line "+str(line_index)+": altitude column empty, omitting z value.")
 
                         if not first_coords:
                                 first_coords = q_line
 
-                        l = csv.readline().rstrip() # next data line
                         query += q_line
+
+                        # Get next data line and close out query if we reached end of input file
+                        l = csv.readline().rstrip()
+                        line_index += 1
                         if l:
-                                # Don't include a trailing comma on the final set of coordinates
+                                # Include a trailing comma unless we're on the final set of coordinates
                                 query += ","
                         else:
                                 # Last set of coordinates; do they match the first set? If not, repeat first set.
