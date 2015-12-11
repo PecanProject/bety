@@ -29,8 +29,8 @@
         <div class="row">
           <div class="five columns alpha">
             <%= f.label :masl, "Elevation (m)" %>
-            <%= f.text_field :masl, :class => "input-full" %>
-             Elevation can only be updated if lat or lon is updated as well!
+            <%= geometry_aware_text_field(f, :masl, { class: "input-full" }) %>
+            <%= if @site.point?; "Elevation can only be updated if lat or lon is updated as well!"; end %>
           </div>
           <div class="five columns">
             <%= f.label :map, "Mean Annual Precipitation (mm/yr)" %>
@@ -307,9 +307,9 @@
         <div class="row">
           <div class="eight columns alpha">
             <%= f.label :lat %><br />
-            <%= f.text_field :lat, :class => "input-full" %><br />
+            <%= geometry_aware_text_field(f, :lat, { class: "input-full" }) %>
             <%= f.label :lon %>
-            <%= f.text_field :lon, :class => "input-full" %><br />
+            <%= geometry_aware_text_field(f, :lon, { class: "input-full" }) %>
             <%= f.label :soil %>
             <%= f.select :soil, %w(sandloamy sandsandy loamsilt loamloamsandy clay loamsilty clay loamclay loamsandy claysilty clayclaypeat), { :include_blank => true }, :class => "input-full" %>
             
