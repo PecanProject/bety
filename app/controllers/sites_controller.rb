@@ -201,7 +201,7 @@ class SitesController < ApplicationController
     respond_to do |format|
       format.html {
         if !@site.point?
-          flash[:warning] = "Non-point site. Use SQL to update site coordinates or contact administrator for more information."
+          flash.now[:warning] = "Non-point site. Use SQL to update site coordinates or contact administrator for more information."
         end
       }
       format.js {
