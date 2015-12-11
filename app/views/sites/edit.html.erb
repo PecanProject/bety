@@ -30,7 +30,7 @@
           <div class="five columns alpha">
             <%= f.label :masl, "Elevation (m)" %>
             <%= geometry_aware_text_field(f, :masl, { class: "input-full" }) %>
-             Elevation can only be updated if lat or lon is updated as well!
+            <%= if @site.point?; "Elevation can only be updated if lat or lon is updated as well!"; end %>
           </div>
           <div class="five columns">
             <%= f.label :map, "Mean Annual Precipitation (mm/yr)" %>
