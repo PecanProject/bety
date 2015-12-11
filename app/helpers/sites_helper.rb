@@ -13,7 +13,7 @@ module SitesHelper
                                      placeholder: "Site coordinates can't be updated for non-point sites.")
     end
 
-    text_field(site_form, attribute, options)
+    site_form.text_field(attribute, options)
 
   end
 

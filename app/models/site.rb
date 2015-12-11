@@ -62,8 +62,9 @@ class Site < ActiveRecord::Base
     end
   end
 
+  # Returns true if the site geometry is null or has type 'ST_Point'.
   def point?
-    geometry.geometry_type.type_name == 'Point'
+    geometry.nil? || geometry.geometry_type.type_name == 'Point'
   end
 
   def masl
