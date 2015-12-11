@@ -9,10 +9,7 @@ module SitesHelper
     if @site.point?
       options = common_options
     else
-      # Use :dummy (which returns "") as the attribute to force display of the placeholder.
-      #attribute = :dummy
-      options = common_options.merge(disabled: true,
-                                     placeholder: "[non-point site]")
+      options = common_options.merge(disabled: true)
     end
 
     site_form.text_field(attribute, options)
