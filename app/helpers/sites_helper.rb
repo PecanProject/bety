@@ -9,6 +9,8 @@ module SitesHelper
     if @site.point?
       options = common_options
     else
+      # Use :dummy (which returns "") as the attribute to force display of the placeholder.
+      attribute = :dummy
       options = common_options.merge(disabled: true,
                                      placeholder: "Site coordinates can't be updated for non-point sites.")
     end

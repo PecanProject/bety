@@ -62,6 +62,11 @@ class Site < ActiveRecord::Base
     end
   end
 
+  # This is used as the attribute for disabled fields to force display of the placeholder.
+  def dummy
+    ""
+  end
+
   # Returns true if the site geometry is null or has type 'ST_Point'.
   def point?
     geometry.nil? || geometry.geometry_type.type_name == 'Point'
@@ -72,7 +77,7 @@ class Site < ActiveRecord::Base
       if self[:geometry].geometry_type.type_name == 'Point'
         return self[:geometry].z
       else
-        return self[:geometry].centroid.z
+        return nil # self[:geometry].centroid.z is always NaN, so return nil
       end
     else
       return nil
