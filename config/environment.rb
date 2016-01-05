@@ -1,6 +1,14 @@
 # Load the rails application
 require File.expand_path('../application', __FILE__)
 
+# Load customization settings:
+if File.exists?(File.join(File.dirname(__FILE__), 'customization.rb'))
+  require_relative 'customization'
+else
+  puts "YOU MUST HAVE A CUSTOMIZATION FILE \"config/customization.rb\".\nSee \"config/customization.rb.template\" for an example."
+  exit
+end
+
 # Initialize the rails application
 BetyRails3::Application.initialize!
 
