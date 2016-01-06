@@ -58,6 +58,10 @@ module BetyRails3
     # (e.g. gems, patches).
     if File.exists?(File.join(File.dirname(__FILE__), 'additional_environment.rb'))
       instance_eval File.read(File.join(File.dirname(__FILE__), 'additional_environment.rb'))
+    else
+      puts "YOU MUST HAVE A CUSTOMIZATION FILE \"config/additional_environment.rb\"."
+      puts "See \"config/additional_environment_ebi.rb\" and  \"config/additional_environment_vm.rb\" for sample files."
+      exit
     end
 
     # Until we enable the assets pipeline, ensure the old behavior of javascript_include_tag(:all) with this:
