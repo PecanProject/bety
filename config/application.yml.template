@@ -1,0 +1,7 @@
+admin_phone: "(000) 000-0000"
+
+development:
+    admin_email: "developer@example.com"
+production:
+    admin_email: "admin@example.com"
+

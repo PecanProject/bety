@@ -2,7 +2,7 @@ class ContactMailer < ActionMailer::Base
   def contact_email(email_params)
     @email_body = email_params[:body]
     @sender_name = email_params[:name]
-    mail(:to => ADMIN_EMAIL,
+    mail(:to => CONFIG[:admin_email],
          :subject => email_params[:subject],
          :from => email_params[:name] + " <" + email_params[:address] + ">",
          :date => Time.now)
@@ -39,7 +39,7 @@ class ContactMailer < ActionMailer::Base
   def apikey_email(user)
     @user = user
     email_to = "#{@user[:name]} <#{@user[:email]}>"
-    email_from = "BETYdb: <#{ADMIN_EMAIL}>"
+    email_from = "BETYdb: <#{CONFIG[:admin_email]}>"
 
     mail(:to => email_to,
          :from => email_from,
@@ -70,7 +70,7 @@ class ContactMailer < ActionMailer::Base
     admins = User.where(page_access_level: 1).map! do |attributes|
       "#{attributes.name} < #{attributes.email}>"
     end
-    admins << ADMIN_EMAIL
+    admins << CONFIG[:admin_email]
     admins.uniq! # remove duplicates
 
     return admins
