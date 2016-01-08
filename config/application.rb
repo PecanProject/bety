@@ -58,12 +58,6 @@ module BetyRails3
     # Don't bother making schema.rb any more:
     config.active_record.schema_format = :sql
 
-    # Load any local configuration that is kept out of source control
-    # (e.g. gems, patches).
-    if File.exists?(File.join(File.dirname(__FILE__), 'additional_environment.rb'))
-      instance_eval File.read(File.join(File.dirname(__FILE__), 'additional_environment.rb'))
-    end
-
     # Until we enable the assets pipeline, ensure the old behavior of javascript_include_tag(:all) with this:
     config.action_view.javascript_expansions[:defaults] = ['prototype', 'effects']
     # Enable the asset pipeline
