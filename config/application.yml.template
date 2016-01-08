@@ -1,4 +1,5 @@
 admin_phone: "(000) 000-0000"
+rest_auth_site_key: 'thisisnotasecret'
 
 development:
     admin_email: "developer@example.com"
