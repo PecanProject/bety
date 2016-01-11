@@ -25,8 +25,8 @@ Command line usage:
         -p      Password
 
 Examples:
-        buildSQLGeom.py -i C:/folder/coordinates.csv -r 4326 -s 19000000000 -e -n localhost -d bety -u GUEST -p GUES -o
-        buildSQLGeom.py -x 76.116081 -y 42.794448
+        buildSQLGeom.py -i C:/folder/coordinates.csv -r 4326 -s 19000000000 -e -n localhost -d bety -u GUEST -p GUES -o - sitename "Danforth"
+        buildSQLGeom.py -x 76.116081 -y 42.794448 -site_id 3
 
 Sample input files that are both valid:
         LONGITUDE,LATITUDE,ALTITUDE
@@ -74,7 +74,8 @@ def executeSQL(query, host, dbname, user, passwd, return_results=False):
                         return cursor.fetchall()
                 else:
                         return True
-        except Exception as e:
+        except:
+                e = sys.exc_info()[0]
                 print(e)
                 return False
 
@@ -131,7 +132,7 @@ def getGoogleAltitude(x,y):
 
         # Read Google Maps Elevation API key from file (should be only contents in file)
         # https://developers.google.com/maps/documentation/elevation/get-api-key
-        api_key_file = r"C:\Users\mburnet2\Documents\NCSA\TERRAref\GOOGLE_ELEVATION_API_KEY.txt"
+        api_key_file = r"GOOGLE_ELEVATION_API_KEY.txt"
 
         api_file = open(api_key_file, 'r')
         google_api_key = api_file.readline().rstrip()
@@ -153,7 +154,7 @@ def main(argv):
         lon        = None
         lat        = None
         alt        = None
-        srid       = 3857
+        srid       = 4326
         site_id    = False
         sitename   = False
 
@@ -200,6 +201,9 @@ def main(argv):
                         host = arg
                 elif opt in ("-d", "--dbname"):
                         dbname = arg
+                # TODO: Use default path if no user and password provided
+                # http://www.peterbe.com/plog/connecting-with-psycopg2-without-a-username-and-password
+                # http://stackoverflow.com/questions/15692437/ident-connection-fails-via-psycopg2-but-works-via-command-line
                 elif opt in ("-u", "--user"):
                         user = arg
                 elif opt in ("-p", "--pass"):
@@ -224,30 +228,84 @@ def main(argv):
         if input_file != None:
                 # Pull coordinates list from input CSV-format file
                 csv = open(input_file, 'r')
-                l = csv.readline()          # header; we can skip this
-                l = csv.readline().rstrip() # first data line
+
+                # Examine header to attempt to determine ordering of fields
+                headers = csv.readline().rstrip().split(",")
+                lon_col, lat_col, alt_col = -1, -1, -1
+                unassigned_cols = [i for i in range(len(headers))]
+                for column in range(len(headers)):
+                        col_name = headers[column].strip().lower()
+                        if col_name in ["longitude", "long", "lon", "x"]:
+                                lon_col = column
+                                print("found longitude in column "+str(column)+': "'+headers[column].strip()+'"')
+                                unassigned_cols.remove(column)
+                        elif col_name in ["latitude", "lat", "y"]:
+                                lat_col = column
+                                print("found latitude in column "+str(column)+': "'+headers[column].strip()+'"')
+                                unassigned_cols.remove(column)
+                        elif col_name in ["altitude", "elevation", "alt", "elev", "z"]:
+                                alt_col = column
+                                print("found elevation in column "+str(column)+': "'+headers[column].strip()+'"')
+                                unassigned_cols.remove(column)
+                # If we checked all the headers and didn't find lon/lat, assign to unidentified columns in order
+                while (lon_col==-1 or lat_col==-1):
+                        if len(unassigned_cols)==0:
+                                print('lat and lon columns could not be identified. not enough columns.')
+                                sys.exit(2)
+                        # Don't automatically assume altitude is a column if not found, since we can query for it
+                        if lon_col == -1:
+                                lon_col = unassigned_cols[0]
+                                unassigned_cols.remove(column)
+                        elif lat_col == -1:
+                                lon_col = unassigned_cols[0]
+                                unassigned_cols.remove(column)
+
+                # The first coordinates provided must also be the last - copy it if raw data doesn't have this
+                l = csv.readline().rstrip()
+                line_index = 2
+                first_coords = None
                 while l:
                         # Get values from each row of file separated by ',' and append to query
                         coords = l.split(",")
-                        lon = coords[0]
-                        lat = coords[1]
+
+                        lon = coords[lon_col].strip()
+                        lat = coords[lat_col].strip()
                         q_line = lon + " " + lat
-                        if len(coords) == 2:
+                        if len(coords) == 2 or alt_col == -1:
                                 # No altitude has been provided; attempt to fetch it
-                                alt = getUSGSAltitude(lon, lat)
-                                if alt == '-1000000':
-                                        # These coordinates are outside USGS domestic boundary - Google has global coverage
-                                        alt = getGoogleAltitude(lon, lat)
-                                if alt:
+                                if alt == None:
+                                        alt = getUSGSAltitude(lon, lat)
+                                        if alt == '-1000000':
+                                                # These coordinates are outside USGS domestic boundary - Google has global coverage
+                                                alt = getGoogleAltitude(lon, lat)
+                                if alt and alt!="":
                                         q_line += " " + str(alt)
                         else:
-                                q_line += " " + coords[2]
+                                if coords[alt_col]!="":
+                                        q_line += " " + coords[alt_col].strip()
+                                else:
+                                        print("line "+str(line_index)+": altitude column empty, querying for elevation value.")
+                                        alt = getUSGSAltitude(lon, lat)
+                                        if alt == '-1000000':
+                                                # These coordinates are outside USGS domestic boundary - Google has global coverage
+                                                alt = getGoogleAltitude(lon, lat)
+                                        q_line += " " + str(alt)
 
-                        l = csv.readline().rstrip() # next data line
+                        if not first_coords:
+                                first_coords = q_line
+
                         query += q_line
+
+                        # Get next data line and close out query if we reached end of input file
+                        l = csv.readline().rstrip()
+                        line_index += 1
                         if l:
-                                # Don't include a trailing comma on the final set of coordinates
+                                # Include a trailing comma unless we're on the final set of coordinates
                                 query += ","
+                        else:
+                                # Last set of coordinates; do they match the first set? If not, repeat first set.
+                                if q_line != first_coords:
+                                        query += "," + first_coords
                 csv.close()
         else:
                 # Use lat/lon provided in command line arguments
