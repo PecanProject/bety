@@ -1,0 +1,34 @@
+admin_phone: "(999) 999-9999" # This number appears in the footer
+admin_email: "admin@yoursite.com" # This appears in the footer and is included in the "To:" field of administrative e-mails.
+
+rest_auth_site_key: 'your secret key'
+# Note: If your site is not public (e.g., you are a developer), it is better
+# to use the default site key and not override it here.  This is because if you
+# use the default site key, the caryaXX and guestuser account passwords will
+# work out of the box.
+
+
+
+
+
+# PER-ENVIRONMENT SETTINGS
+#
+# You can override any top-level settings or any values set in defaults.yml on
+# a per-environment basis by nesting the settings under an environment key.
+# For example, if you're a developer and want to avoid sending e-mail to the
+# real site administrator during testing and development, you could override
+# the value given above for the developement and test environments as follows:
+
+development:
+    admin_email: "developer@example.com"
+test:
+    admin_email: "developer@example.com"
+
+# Of course, you can have a production environment section too.  For example,
+# you might want to use the site key from defaults.yml for the test and
+# development environments (omitting the global setting above) and override it
+# with a secret key only in production mode:
+
+production:
+    rest_auth_site_key: 'some moderately long, unpredictable text'
+
