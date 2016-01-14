@@ -14,7 +14,6 @@ end
 CONFIG = YAML.load(File.read(File.expand_path('../defaults.yml', __FILE__)))
 if File.exists?(File.expand_path('../application.yml', __FILE__))
   customizations = YAML.load(File.read(File.expand_path('../application.yml', __FILE__)))
-puts customizations
   CONFIG.update customizations
   CONFIG.merge! CONFIG.fetch(Rails.env, {})
 end
