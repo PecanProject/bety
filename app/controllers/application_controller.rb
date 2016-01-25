@@ -125,8 +125,6 @@ class ApplicationController < ActionController::Base
   end
 
 
-  protected
-
   # Override built-in render method so that if rendering to XML or JSON,
   # automatically add params[:include] to list of associations to render.
   def render *args, &block
@@ -161,7 +159,6 @@ class ApplicationController < ActionController::Base
     super *args, &block
 
   end
-
 
   private
   

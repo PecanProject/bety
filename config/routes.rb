@@ -236,6 +236,30 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :search, :only => :index
   resources :trait_covariate_associations, only: :index
 
+  #api
+  namespace :api, defaults: { format: 'json' } do
+    namespace :e1 do
+      resources :users, only: [:index, :create, :show, :update, :destroy]
+      resources :species, only: [:index, :show]
+      resources :sites, only: [:index, :show]
+    end
+    namespace :e2 do
+      resources :users, only: [:index, :create, :show, :update, :destroy]
+      resources :species, only: [:index, :show]
+      resources :sites, only: [:index, :show]
+    end
+    namespace :e3 do
+      resources :users, only: [:index, :create, :show, :update, :destroy]
+      resources :species, only: [:index, :show]
+      resources :sites, only: [:index, :show]
+    end
+    namespace :e4 do
+      resources :users, only: [:index, :create, :show, :update, :destroy]
+      resources :species, only: [:index, :show]
+      resources :sites, only: [:index, :show]
+    end
+  end
+
   get '/application/use_citation/:id', controller: 'application', action: 'use_citation'
   get '/application/remove_citation'
 
