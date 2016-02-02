@@ -238,6 +238,15 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
 
   #api
   namespace :api, defaults: { format: 'json' } do
+    namespace :v0 do
+      [:citations, :covariates, :cultivars, :dbfiles, :ensembles, :entities,
+      :formats, :inputs, :likelihoods, :machines, :managements, :methods,
+      :mimetypes, :models, :modeltypes, :pfts, :posteriors, :priors, :runs,
+      :search, :sites, :species, :traits, :treatments, :users, :variables,
+      :yields].each do |model|
+        resources model, only: [:index, :show]
+      end
+    end
     namespace :e1 do
       resources :users, only: [:index, :create, :show, :update, :destroy]
       resources :species, only: [:index, :show]
