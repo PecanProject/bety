@@ -10,16 +10,21 @@ children = root_object.class.reflect_on_all_associations(:belongs_to)
 multiple_associations = root_object.class.reflect_on_all_associations(:has_many)
 
 # List of join tables that don't add any useful information
-excluded_join_tables = [:citation_sites, :citation_treatments,
-                        :management_treatments, :posteriors_ensembles,
-                        :pft_priors, :pft_species]
+excluded_join_tables = [:citation_sites, # excludes citations_sites from both citation and site display
+                        :citation_treatments, # excludes citations_treatments from citation display
+                        :citations_treatments, # excludes citations_treatments from treatment display
+                        :managements_treatments, # excludes managements_treatments from both management and treatment display
+                        :posteriors_ensembles, # this association is not working
+                        :pfts_priors, # excludes pfts_priors from both pfts and priors display
+                        :pfts_species # excludes pfts_species from both pfts and species display
+                       ]
 
 # Don't display join table information if no useful information is to be had
 multiple_associations.reject! { |assoc| excluded_join_tables.include?(assoc.name) }
 
 if locals[:abbreviate_associations]
   (multiple_associations).each do |assoc|
-    node ((assoc.name).to_s + "_ids") do
+    node "associated #{assoc.name.to_s.singularize} ids" do
       begin
         root_object.send(assoc.name).map(&:id)
       rescue => e
