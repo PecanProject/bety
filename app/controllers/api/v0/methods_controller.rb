@@ -1,3 +1,3 @@
 class Api::V0::MethodsController < Api::V0::BaseController
-  define_actions(Method)
+  define_actions(Methods)
 end
