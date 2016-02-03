@@ -1,7 +1,10 @@
-{
-    "metadata": {
-        "URI": "<%= request.url %>",
-        "timestamp": "<%= DateTime.now %>"
-    },
-    "result": <%= yield %>
-}
+<%=
+  require 'yajl'
+  raw({
+        metadata: {
+          URI: request.url,
+          timestamp: DateTime.now
+        },
+        data: Yajl::Parser.parse(yield)
+      }.to_json)
+%>
