@@ -1,6 +1,6 @@
 object @row
 
-if !@row.nil?
+if !root_object.nil?
 
   # Show all columns for this model
   attributes *root_object.class.column_names.map(&:to_sym)
