@@ -1,4 +1,4 @@
-class Api::BaseController < ApplicationController
+class Api::BaseController < ActionController::Base
 
   # Not sure why or even if these eight lines are needed.  Just copied them from
   # article at https://labs.kollegorna.se/blog/2015/04/build-an-api-now/
@@ -14,6 +14,13 @@ class Api::BaseController < ApplicationController
   end
 
 
+  # Actions
+
+  # We route all illegitimate requests beginning "/api" here so that we
+  # return errors in JSON rather than the default HTML:
+  def bad_url
+    @error = "There is no resource at this URL."
+  end
 
   private
 
