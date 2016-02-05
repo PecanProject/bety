@@ -9,7 +9,13 @@ class Api::V0::BaseController < Api::BaseController
   def self.define_actions(model)
     define_method(:index) do
       @row_set = query(model, params)
-      @error = nil
+      if @row_set.size > 200
+        @error = "The #{@row_set.size}-row result set exceeds the 200 row limit.  " +
+          "Use the \"limit=nnn\" parameter or do a more restrictive search."
+        @row_set = nil
+      else
+        @error = nil
+      end
     end
 
     define_method(:show) do
