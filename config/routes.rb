@@ -236,7 +236,12 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :search, :only => :index
   resources :trait_covariate_associations, only: :index
 
-  #api
+  # API
+  # testing various methods of creating traits
+  post '/api/v0/traits.csv', controller: 'api/v0/traits', action: 'create_csv'
+  post '/api/v0/traits.json', controller: 'api/v0/traits', action: 'create_json'
+  post '/api/v0/traits.xml', controller: 'api/v0/traits', action: 'create_xml'
+  get '/api/v0/traits/create', controller: 'api/v0/traits', action: 'create' # Easily test things like "/api/v0/traits/create?mean=4&variable_id=5" in the browser
   namespace :api, defaults: { format: 'json' } do
     namespace :v0 do
       [:citations, :covariates, :cultivars, :dbfiles, :ensembles, :entities,
@@ -246,6 +251,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
       :yields].each do |model|
         resources model, only: [:index, :show]
       end
+      resources :traits, only: :create # This is probably what we'll use eventually, setting the format automatically to XML
     end
     namespace :e1 do
       resources :users, only: [:index, :create, :show, :update, :destroy]
