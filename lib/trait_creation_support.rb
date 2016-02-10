@@ -183,7 +183,7 @@ module TraitCreationSupport
         if matches.size != 1
           raise "no unique treatment matches #{where_hash}"
         end
-        id_hash[:method_id] = matches.first.id
+        id_hash[:treatment_id] = matches.first.id
       when "variable"
         matches = Variable.where(where_hash)
         if matches.size != 1
