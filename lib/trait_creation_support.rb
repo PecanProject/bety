@@ -309,7 +309,7 @@ module TraitCreationSupport
   # parser if the document is not valid.
   def schema_validate(doc)
 
-    xsd = Nokogiri::XML::Schema(Rails.root.join('api_stuff', 'TraitData.xsd').read)
+    xsd = Nokogiri::XML::Schema(Rails.root.join('api_stuff', 'TraitData.xsd').open)
 
     errors = []
     xsd.validate(doc).each do |error|

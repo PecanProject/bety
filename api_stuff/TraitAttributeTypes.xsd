@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="site">
+    <xs:attribute name="id" type="xs:integer"/>
+    <xs:attribute name="city" type="xs:string"/>
+    <xs:attribute name="state" type="xs:string"/>
+    <xs:attribute name="country" type="xs:string"/>
+    <xs:attribute name="sitename" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="species">
+    <xs:sequence>
+      <xs:element name="cultivar" type="cultivar" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:integer"/>
+    <xs:attribute name="genus" type="xs:string"/>
+    <xs:attribute name="species" type="xs:string"/>
+    <xs:attribute name="scientificname" type="xs:string"/>
+    <xs:attribute name="commonname" type="xs:string"/>
+    <xs:attribute name="AcceptedSymbol" type="xs:string"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="citation">
+    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute name="author" type="xs:string"/>
+    <xs:attribute name="year" type="xs:gYear"/>
+    <xs:attribute name="title" type="xs:string"/>
+    <xs:attribute name="doi" type="xs:string"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="cultivar">
+    <xs:attribute name="id" type="xs:integer"/>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="treatment">
+    <xs:attribute name="id" type="xs:integer"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="control" type="xs:boolean"/>
+  </xs:complexType>
+
+
+
+
+  <xs:complexType name="stat">
+    <xs:attribute name="name" type="stat-type" use="required"/>
+    <xs:attribute name="sample-size" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="value" type="xs:decimal" use="required"/>
+  </xs:complexType>
+
+  <xs:simpleType name="stat-type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SD"/>
+      <xs:enumeration value="SE"/>
+      <xs:enumeration value="MSE"/>
+      <xs:enumeration value="95%Cl"/>
+      <xs:enumeration value="LSD"/>
+      <xs:enumeration value="MSD"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="variable">
+    <xs:attribute name="id" type="xs:integer"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="description" type="xs:string"/>
+  </xs:complexType>
+
+
+  <xs:simpleType name="access-level">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="method">
+    <xs:sequence>
+      <xs:element name="citation" type="citation"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+
+
+
+
+
+
+</xs:schema>
