@@ -114,7 +114,11 @@ def getUSGSAltitude(x, y, units="Meters"):
 
         if alt_req.status_code == 200:
                 # Extract elevation value from response object if successful
-                return alt_req.json()['USGS_Elevation_Point_Query_Service']['Elevation_Query']['Elevation']
+                try:
+                        res = alt_req.json()['USGS_Elevation_Point_Query_Service']['Elevation_Query']['Elevation']
+                except ValueError:
+                        res = '-1000000'
+                return res
         else:
                 return None
 
@@ -159,7 +163,7 @@ def main(argv):
         out_file   = False
         run_query  = False
         # BETYdb instance details
-        host       = None
+        host       = 'localhost'
         dbname     = 'bety'
         user       = None
         passwd     = 'PASSWORD'
@@ -211,9 +215,12 @@ def main(argv):
         if input_file == None and (lon == None or lat == None):
                 print('input file is required if no coordinates provided. -h for help.')
                 sys.exit(2)
+
+        print(site_id)
+        print(host)
         if not site_id:
                 if not host:
-                        print('site_id cannot be queried without BETYdb credentials. using 0 as default.')
+                        print('site_id cannot be queried without BETYdb host and credentials. using 0 as default.')
                         site_id = 0
                 else:
                         site_id = getSiteID(sitename, host, dbname, user, passwd)
