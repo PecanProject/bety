@@ -4,10 +4,8 @@
 This module will accept (x,y,[z]) coordinates (from CSV-format file or cmd arguments)
 and generate a SQL string that will add these coordinates as a PostGIS Polygon
 to sites.geometry within a BETYdb instance.
-
 A header row should be included in the input file, although the column names do not matter. If a z column
 for altitude is not included, the script will attempt to get it from USGS NED (US) or Google (global).
-
 Command line usage:
         -h      show help
         -i      input filename; will override x,y,z args if provided
@@ -15,19 +13,17 @@ Command line usage:
         -y      latitude value, if no file provided
         -z      altitude value, if no file provided
         -r      EPSG reference number, default is 4326
-        -s      sitename or site_id in BETYdb sites table to associate geometry with.
-                if a string is provided, site_id will be queried. if an int is provided, site_id is assumed.
+        -s      sitename or numerical id in BETYdb sites table to associate geometry with.
+                If a string is provided, id will be looked up with a query. If an int is provided, id is assumed.
         -o      flag to write resulting SQL to output file, as "<input_filename>_insert.sql"
         -e      will attempt to execute resulting SQL on db instance defined in next 4 params
-        -n      PostgreSQL host address
+        -n      PostgreSQL host address; default is Unix-domain socket to server on localhost, if available, otherwise "localhost"
         -d      Database name, default is 'bety'
         -u      Username
         -p      Password
-
 Examples:
-        buildSQLGeom.py -i C:/folder/coordinates.csv -r 4326 -s 19000000000 -e -n localhost -d bety -u GUEST -p GUES -o - sitename "Danforth"
-        buildSQLGeom.py -x 76.116081 -y 42.794448 -site_id 3
-
+        buildSQLGeom.py -i /rel/or/abs/path/to/coordinates.csv -r 4326 -s 19000000000 -e -n localhost -d bety -u GUEST -p GUES -o - sitename "Danforth"
+        buildSQLGeom.py -x 76.116081 -y 42.794448 -s 3
 Sample input files that are both valid:
         LONGITUDE,LATITUDE,ALTITUDE
         -76.116081,42.794448,415
@@ -43,61 +39,63 @@ Sample input files that are both valid:
 import sys
 import getopt
 import requests
-#import psycopg2
+import psycopg2
 
-def executeSQL(query, host, dbname, user, passwd, return_results=False):
+def getDatabaseConnection(host, dbname, user, passwd):
         """
-        Execute SQL query on specified host database with given credentials.
-                Requires psycopg2: https://pypi.python.org/pypi/psycopg2 (un-comment line 32!)
-                Adapted from https://wiki.postgresql.org/wiki/Using_psycopg2_with_PostgreSQL
-        :param query: SQL string containing query to execute.
+        Get a database connection to the specified host and database with given credentials.
         :param host: Host address of target PostgreSQL instance
         :param dbname: Database to execute query in
         :param user: Username
         :param passwd: Password
-        :param return_results: Boolean indicating whether to return query output,
-                               otherwise return True or False based on query success
+        :raises psycopg2.OperationalError: if the connection fails
         """
 
-        # Build connection string & remove excess quotes if given
-        conn_string = "host='"+host+"' dbname='"+dbname+"' user='"+user+"' password='"+passwd+"'"
-        conn_string = conn_string.replace("=''", "='").replace("'' ", "' ")
-        print "Connecting to database\n ->%s" % (conn_string)
+        print("Connecting to database %s on host %s" % (dbname, host))
 
-        try:
-                conn = psycopg2.connect(conn_string)
-                cursor = conn.cursor()
-                print("Sucessfully connected.")
-                cursor.execute(query)
+        conn = psycopg2.connect(host = host, database = dbname, user = user, password = passwd)
 
-                if return_results:
-                        return cursor.fetchall()
-                else:
-                        return True
-        except:
-                e = sys.exc_info()[0]
-                print(e)
-                return False
+        print("Sucessfully connected to database {0} on host {1}.".format(dbname, host))
+        return conn
+
 
 def getSiteID(sitename, host, dbname, user, passwd):
         """
-        Get site_id of given sitename from sites table in BETYdb instance pointed to by host.
-        :param sitename: string representing sitename field in sites table
+        Get the id of the site with the given sitename in the BETYdb instance pointed to by host/dbname.
+        If the connection fails, return 0.
+        If multiple sites or no site has the given sitename, print an error message and exit.
+        :param sitename: string representing sitename column in sites table
         :param host: Host address of target PostgreSQL instance
         :param dbname: Database to execute query in
         :param user: Username
         :param passwd: Password
-        :return: site_id as a string, or 0 if query fails
+        :return: the site id as a string
         """
 
-        query = "select first id from sites where sitename = '"+sitename+"'"
-        sql = executeSQL(query, host, dbname, user, passwd, True)
-
-        if sql and type(sql) is list:
-                # Return id from first row
-                return sql[0][0]
+        try:
+                conn = getDatabaseConnection(host, dbname, user, passwd)
+        except psycopg2.OperationalError:
+                print("Couldn't connect to database to get site id.")
+                print("Using 0 in place of actual value.")
+                site_id = 0
         else:
-                return 0
+                cur = conn.cursor()
+                cur.execute("SELECT id FROM sites WHERE sitename = %s", (sitename,))
+
+                if cur.rowcount == 0:
+                        sys.exit("\nThe database contains no site with sitename '{0}'.\n"
+                                 "Please be sure you have spelled the site name correctly\n".format(sitename))
+                elif cur.rowcount > 1:
+                        sys.exit("\nThe database contains multiple sites having sitename '{0}'.\n"
+                                 "Sitenames should be unique.  "
+                                 "Please correct this problem and\nre-run this script.\n".format(sitename))
+
+                (site_id,) = cur.fetchone()
+
+                cur.close()
+                conn.close()
+
+        return site_id
 
 def getUSGSAltitude(x, y, units="Meters"):
         """
@@ -163,20 +161,22 @@ def main(argv):
         # BETYdb instance details
         host       = None
         dbname     = 'bety'
-        user       = 'USERNAME'
+        user       = None
         passwd     = 'PASSWORD'
 
         # Parse command line parameters
         try:
                 opts, args = getopt.getopt(argv, "hi:x:y:z:r:s:oen:d:u:p:",
-                        ["input=","lon=","lat=","alt=","srid=","site=","output=","execute","host=","dbname=", "user=", "pass="])
+                                           ["input=","lon=","lat=","alt=","srid=","site=","output=","execute","host=","dbname=", "user=", "pass="])
         except getopt.GetoptError:
                 print(__doc__)
                 sys.exit(2)
         for opt, arg in opts:
                 if opt == '-h':
-                        print(__doc__)
-                        sys.exit()
+                        import os
+                        os.execlp('pydoc', '', 'buildSQLGeom')
+                        # os.system('pydoc buildSQLGeom | head -n 47')
+                        # sys.exit(0)
                 elif opt in ("-i", "--input"):
                         input_file = arg
                 elif opt in ("-x", "--lon"):
@@ -336,10 +336,24 @@ def main(argv):
 
         # Try to execute query if enabled
         if run_query:
-                if not host:
-                        print('hostname missing; query will not be executed. -h for help.')
-                        sys.exit(2)   
-                executeSQL(query, host, dbname, user, passwd)
+                try:
+                        conn = getDatabaseConnection(host, dbname, user, passwd)
+                except psycopg2.OperationalError:
+                        sys.exit("Couldn't connect to database to run update statement.")
+                else:
+                        cur = conn.cursor()
+                        try:
+                                cur.execute(query)
+                                if cur.rowcount == 1:
+                                        print("One row was updated.")
+                                else:
+                                        print("{0} rows were updated.".format(cur.rowcount))
+                                conn.commit() # changes will be rolled back unless you have this
+                        except psycopg2.ProgrammingError:
+                                sys.exit("Couldn't execute query \"{0}\".".format(query))
+                        finally:
+                                cur.close()
+                                conn.close()
 
 if __name__ == "__main__":
         main(sys.argv[1:])
