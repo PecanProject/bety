@@ -1,5 +1,5 @@
 <trait-data-set>
-  <trait access_level="4" mean="1.4" utc-timestamp="1990-07-08T12:34:56.789123456Z">
+  <trait access_level="4" mean="1.4">
     <variable name="barkC"/>
   </trait>
 </trait-data-set>
