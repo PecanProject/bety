@@ -105,6 +105,12 @@ module TraitCreationSupport
 
     column_values[:notes] = (trait_node.xpath("notes").first && trait_node.xpath("notes").first.content) || ""
 
+    # Set dateloc and timeloc to 9 ("no data") if no date was given:
+    if !column_values.has_key? :date
+      column_values[:dateloc] = 9
+      column_values[:timeloc] = 9
+    end
+
     begin
 
       new_trait = Trait.create!(column_values)
@@ -151,6 +157,10 @@ module TraitCreationSupport
     date = get_date(element_node)
     if date
       defaults[:date] = date
+      # For now at least, assume dates are accurate to the second and are on a
+      # definite date of a definite year:
+      defaults[:dateloc] = 5
+      defaults[:timeloc] = 1
     end
 
     new_access_level  = get_access_level(element_node)
