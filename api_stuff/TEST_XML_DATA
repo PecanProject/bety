@@ -4,11 +4,14 @@
     <species scientificname="Sorghum bicolor">
       <cultivar name="keller"/>
     </species>
+    <citation author="Adler"/>
   </defaults>
 
   <trait access_level="4" mean="3.2">
     <site sitename="Gutenzell-Hürbel"/>
     <variable id="571"/>
+    <stat name="SD" value="0.12" sample-size="70"/>
+    <notes>This measurement was made with substandard equipment.</notes>
   </trait>
 
   <trait access_level="4" mean="1.4">
@@ -36,7 +39,7 @@
     <variable name="b2Ca"/>
 
     <species scientificname="Zenobia pulverulenta"/>
-    <!-- <cultivar ... /> -->
+
     <stat name="SE" value="0.0030" sample-size="10"/>
 
     <method name="CC">
