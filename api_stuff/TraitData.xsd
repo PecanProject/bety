@@ -9,11 +9,11 @@
     <xs:choice>
       <xs:sequence>
         <xs:element name="entity" type="entity"/>
-        <xs:element name="defaults" type="trait-attribute-set" minOccurs="0"/>
+        <xs:element name="defaults" type="default-trait-attribute-set" minOccurs="0"/>
         <xs:element name="trait" type="trait" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:sequence>
-        <xs:element name="defaults" type="trait-attribute-set" minOccurs="0"/>
+        <xs:element name="defaults" type="default-trait-attribute-set" minOccurs="0"/>
         <xs:choice maxOccurs="unbounded">
           <xs:element name="trait-group" type="trait-group"/>
           <xs:element name="trait" type="trait"/>
@@ -27,21 +27,40 @@
     <xs:attribute name="notes" type="xs:string"/>
   </xs:complexType>
 
-  <xs:complexType name="trait-attribute-set">
+  <xs:complexType name="default-trait-attribute-set">
     <xs:all>
       <xs:element name="site" type="site" minOccurs="0"/>
       <xs:element name="species" type="species" minOccurs="0"/>
       <xs:element name="citation" type="citation" minOccurs="0"/>
       <xs:element name="treatment" type="treatment" minOccurs="0"/>
-      <xs:element name="stat" type="stat" minOccurs="0"/>
-      <xs:element name="notes" type="xs:string" minOccurs="0"/>
       <xs:element name="variable" type="variable" minOccurs="0"/>
       <xs:element name="method" type="method" minOccurs="0"/>
+    </xs:all>
+    <xs:attribute name="access_level" type="access-level"/>
+    <xs:attribute name="utc-timestamp" type="utc-datetime"/>
+  </xs:complexType>
+
+  <xs:complexType name="trait">
+    <xs:annotation>
+      <xs:documentation>This is just like the default-trait-attribute-set type
+      except that it also allows inclusion of "stat", "notes", and "covariates"
+      elements and requires the "mean" attribute.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="site" type="site" minOccurs="0"/>
+      <xs:element name="species" type="species" minOccurs="0"/>
+      <xs:element name="citation" type="citation" minOccurs="0"/>
+      <xs:element name="treatment" type="treatment" minOccurs="0"/>
+      <xs:element name="variable" type="variable" minOccurs="0"/>
+      <xs:element name="method" type="method" minOccurs="0"/>
+      <xs:element name="stat" type="stat" minOccurs="0"/>
+      <xs:element name="notes" type="xs:string" minOccurs="0"/>
 
       <xs:element name="covariates" type="covariates" minOccurs="0"/>
     </xs:all>
     <xs:attribute name="access_level" type="access-level"/>
-     <xs:attribute name="utc-timestamp" type="utc-datetime"/>
+    <xs:attribute name="utc-timestamp" type="utc-datetime"/>
+    <xs:attribute name="mean" use="required" type="numeric-16-4"/>
   </xs:complexType>
 
   <xs:simpleType name="utc-datetime">
@@ -49,15 +68,6 @@
       <xs:pattern value=".*[0-9]Z"/>
     </xs:restriction>
   </xs:simpleType>
-
-  <xs:complexType name="trait">
-    <xs:complexContent>
-      <xs:extension base="trait-attribute-set">
-        <xs:attribute name="mean" use="required" type="xs:decimal"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
 
   <xs:complexType name="covariates">
     <xs:sequence maxOccurs="unbounded">
@@ -68,10 +78,9 @@
 
   <xs:complexType name="covariate">
     <xs:sequence>
-      <xs:element name="variable" type="variable" minOccurs="0"/>
+      <xs:element name="variable" type="variable"/>
     </xs:sequence>
-    <xs:attribute name="level" use="required" type="xs:decimal"/>
-    <xs:attribute name="variable-name" type="xs:decimal"/>
+    <xs:attribute name="level" use="required" type="numeric-16-4"/>
   </xs:complexType>
 
 </xs:schema>
