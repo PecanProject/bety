@@ -1,19 +1,34 @@
 module TraitCreationSupport
 
+  private
+
   class InvalidDocument < Exception
+  end
+
+  class NotFoundException < Exception
+    def initialize(node, entity_name, selection_criteria)
+      node.set_attribute("error", "match not found")
+      super("No #{entity_name} could be found matching #{selection_criteria}")
+    end
+  end
+
+  class NotUniqueException < Exception
+    def initialize(node, entity_name, selection_criteria)
+      node.set_attribute("error", "multiple matches")
+      super("Multiple #{entity_name} objects were found matching #{selection_criteria}")
+    end
   end
 
   # Given data, and XML string, extract the information from it and insert
   # appropriate rows into the entities, traits, and covariates tables.
   def create_traits_from_post_data(data)
 
-    doc = Nokogiri::XML(data)
+    doc = Nokogiri::XML(data, nil, nil, Nokogiri::XML::ParseOptions::STRICT)
 
     schema_validate(doc)
 
     trait_data_set_node = doc.root
 
-    
     ActiveRecord::Base.transaction do
 
       # The root element "trait-data-set" can be treated just like a
@@ -21,6 +36,27 @@ module TraitCreationSupport
       process_trait_group_node(trait_data_set_node, {})
 
     end # transaction
+
+  rescue Exception => e
+
+    e.backtrace.each do |line|
+      if !line.match /\.rvm/
+        logger.debug line
+      end
+    end
+    logger.debug e.message
+
+    raise e
+
+  ensure
+
+    if @lookup_errors.size > 0 ||
+        @model_validation_errors.size > 0 ||
+        @database_insertion_errors.size > 0
+      @new_trait_ids = []
+    end
+
+    return Hash.from_xml(doc.to_s)
 
   end # method
 
@@ -60,34 +96,49 @@ module TraitCreationSupport
       defaults[:entity_id] = new_entity.id
     end
 
-    
-
     column_values = merge_new_defaults(trait_node, defaults)
+
+    # add stat info
+    column_values.merge!(get_stat_info(trait_node))
 
     column_values[:mean] = trait_node.attribute("mean").value
 
     column_values[:notes] = (trait_node.xpath("notes").first && trait_node.xpath("notes").first.content) || ""
 
-    new_trait = Trait.create!(column_values)
+    begin
 
-    @trait_ids << new_trait.id
+      new_trait = Trait.create!(column_values)
 
-    if trait_node.xpath("boolean(covariates)")
+      @new_trait_ids << new_trait.id
 
-      trait_node.xpath("covariates/covariate").each do |covariate_node|
-        column_values = get_foreign_keys(covariate_node) # get variable_id
-        
-        column_values[:level] = covariate_node.attribute("level").value
+      if trait_node.xpath("boolean(covariates)")
 
-        column_values[:trait_id] = new_trait.id
+        trait_node.xpath("covariates/covariate").each do |covariate_node|
 
-        
-        Covariate.create!(column_values)
+          column_values = get_foreign_keys(covariate_node) # get variable_id
+
+          column_values[:level] = covariate_node.attribute("level").value
+
+          column_values[:trait_id] = new_trait.id
+
+          Covariate.create!(column_values)
+
+        end
 
       end
 
+    rescue ActiveRecord::RecordInvalid => invalid
+      # add error info to trait node
+      trait_node.set_attribute("validation_errors", invalid.record.errors.messages)
+      @model_validation_errors << "#{invalid.record.errors.messages}"
+      return
+    rescue ActiveRecord::StatementInvalid => e
+      # Note: In Rails 4 we can get information from the original_exception attribute
+      message = e.message.sub!(/.*ERROR: *([^\n]*).*/m, '\1')
+      trait_node.set_attribute("database_exception", message)
+      @database_insertion_errors << message
+      raise # Don't continue with this transaction -- it's unstable.
     end
-        
 
   end
 
@@ -101,7 +152,7 @@ module TraitCreationSupport
     if date
       defaults[:date] = date
     end
-    defaults.merge!(get_stat_info(element_node))
+
     new_access_level  = get_access_level(element_node)
     if new_access_level
       defaults[:access_level] = new_access_level
@@ -128,7 +179,7 @@ module TraitCreationSupport
   def get_access_level(element_node)
     element_node.attribute("access_level") && element_node.attribute("access_level").value
   end
-    
+
 
   # Given an element node containing child elements corresponding to the
   # foreign-key columns in the traits table, look up the id to use for each
@@ -136,192 +187,97 @@ module TraitCreationSupport
   def get_foreign_keys(parent_node)
     id_hash = {}
 
-    parent_node.children.each do |child_node|
+    parent_node.element_children.each do |child_node|
 
-      where_hash = attr_hash_2_where_hash(child_node.attributes)
-
-      case child_node.name
-      when "site"
-        matches = Site.where(where_hash)
-        if matches.size != 1
-          raise "no unique site matches #{where_hash}"
-        end
-        id_hash[:site_id] = matches.first.id
-      when "species"
-        matches = Specie.where(where_hash)
-        if matches.size != 1
-          raise "no unique species matches #{where_hash}"
-        end
-        id_hash[:specie_id] = matches.first.id
-
-        # If there is a cultivar specified, get cultivar_id:
-        if child_node.xpath("boolean(cultivar)")
-          where_hash = attr_hash_2_where_hash(child_node.xpath("cultivar").first.attributes)
-          matches = Cultivar.where(where_hash)
-          if matches.size != 1
-            raise "no unique cultivar matches #{where_hash}"
-          end
-          id_hash[:cultivar_id] = matches.first.id
-        else
-          # Don't keep cultivar_id associated with overriden species:
-          id_hash[:cultivar_id] = nil
-        end
-      when "citation"
-        matches = Citation.where(where_hash)
-        if matches.size != 1
-          raise "no unique citation matches #{where_hash}"
-        end
-        id_hash[:citation_id] = matches.first.id
-      when "method"
-        matches = Methods.where(where_hash)
-        if matches.size != 1
-          raise "no unique method matches #{where_hash}"
-        end
-        id_hash[:method_id] = matches.first.id
-      when "treatment"
-        matches = Treatment.where(where_hash)
-        if matches.size != 1
-          raise "no unique treatment matches #{where_hash}"
-        end
-        id_hash[:treatment_id] = matches.first.id
-      when "variable"
-        matches = Variable.where(where_hash)
-        if matches.size != 1
-          raise "no unique variable matches #{where_hash}"
-        end
-        id_hash[:variable_id] = matches.first.id
+      entity_name = child_node.name
+      if !["site", "species", "citation", "treatment", "variable", "method"].include? entity_name
+        next
       end
-    end
+
+      selection_criteria = attr_hash_2_where_hash(child_node.attributes)
+
+      if entity_name != "species"
+        model = (entity_name == "method") ? Methods : entity_name.classify.constantize
+        foreign_key = (entity_name + "_id").to_sym
+      end
+
+      begin
+        case child_node.name
+
+        when "species"
+          # If there is a cultivar specified, get cultivar_id:
+          if child_node.xpath("boolean(cultivar)")
+            cultivar_selection_criteria = attr_hash_2_where_hash(child_node.xpath("cultivar").first.attributes)
+            matches = Cultivar.where(cultivar_selection_criteria)
+            if matches.size == 0
+              raise NotFoundException.new(child_node, "cultivar", cultivar_selection_criteria)
+            elsif matches.size > 1
+              raise NotUniqueException.new(child_node, "cultivar", cultivar_selection_criteria)
+            end
+            id_hash[:cultivar_id] = matches.first.id
+          else
+            # Don't keep cultivar_id associated with overriden species:
+            id_hash[:cultivar_id] = nil
+          end
+
+          matches = Specie.where(selection_criteria)
+          if matches.size == 0
+            raise NotFoundException.new(child_node, entity_name, selection_criteria)
+          elsif matches.size > 1
+            raise NotUniqueException.new(child_node, entity_name, selection_criteria)
+          end
+          id_hash[:specie_id] = matches.first.id
+        else
+          matches = model.where(selection_criteria)
+          if matches.size == 0
+            raise NotFoundException.new(child_node, entity_name, selection_criteria)
+          elsif matches.size > 1
+            raise NotUniqueException.new(child_node, entity_name, selection_criteria)
+          end
+          id_hash[foreign_key] = matches.first.id
+        end # case
+      rescue NotFoundException, NotUniqueException => e
+        @lookup_errors << e.message
+      end
+
+    end # children.each
 
     return id_hash
   end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=begin
-        variable = trait.at_xpath "variable"
-        if variable
-          column_values[:variable_id] = get_unique_match_id(Variable, variable)
-        end
-        #logger.debug "about to create new Trait with these column values: #{column_values}"
-=end
-
-  def get_site_id(trait_node)
-    site_node = trait_node.at_xpath "(ancestor-or-self::*/site)[1]"
-
-    site_id = site_node.attributes["site_id"]
-
-    Rails.logger.debug("SITE ID = #{site_id}")
-
-  end
-
-  def create_traits_from_post_data_old(data)
-
-    #logger.debug "data = #{data}"
-
-    doc = Nokogiri::XML(data)
-
-    ########### validation #############
-
-    xsd = Nokogiri::XML::Schema(Rails.root.join('api_stuff', 'TraitData.xsd').read)
-
-    errors = ''
-    xsd.validate(doc).each do |error|
-      errors += error.message + "\n"
-    end
-
-    if !errors.blank?
-      raise InvalidDocument, errors
-    end
-
-    ####################################
-
-    #logger.debug(doc.root)
-    #logger.debug(doc.root.elements)
-
-    doc.root.elements.each do |e|
-      #logger.debug(e.attributes)
-    end
-
-
-    result = Trait.transaction do
-
-      doc.root.elements.each do |trait|
-
-        get_site_id(trait)
-
-        column_values = attr_hash_2_where_hash(trait.attributes)
-
-        variable = trait.at_xpath "variable"
-        if variable
-          column_values[:variable_id] = get_unique_match_id(Variable, variable)
-        end
-        #logger.debug "about to create new Trait with these column values: #{column_values}"
-
-        Trait.create!(column_values)
-
-      end
-
-   
-    end
-
-    return result
-
-  end
-
-
   # Validate the XML document "doc" using the TraitData.xsd schema.  Raise and
-  # InvalidDocument exception containing the list of erros returned by the
+  # InvalidDocument exception containing the list of errors returned by the
   # parser if the document is not valid.
   def schema_validate(doc)
 
-    xsd = Nokogiri::XML::Schema(Rails.root.join('api_stuff', 'TraitData.xsd').open)
+    xsd = Nokogiri::XML::Schema.from_document(
+      Nokogiri::XML(Rails.root.join('api_stuff', 'TraitData.xsd').open,
+                    nil,
+                    nil,
+                    Nokogiri::XML::ParseOptions::STRICT))
 
-    errors = []
     xsd.validate(doc).each do |error|
-      errors << error.message
+      @schema_validation_errors << error.message
     end
 
-    if !errors.blank?
-      raise InvalidDocument, errors
+    if !@schema_validation_errors.blank?
+      raise InvalidDocument, @schema_validation_errors
     end
 
 
   end
 
+  def attr_hash_2_where_hash(h)
+    Hash[h.map { |k, v| [canonicalize_key(k), v.value] }]
+  end
+
+  def canonicalize_key(k)
+    case k
+      when "access-level", "variable-id"
+      return k.sub(/-/, '_').to_sym
+    else
+      return k.to_sym
+    end
+  end
 
 end
