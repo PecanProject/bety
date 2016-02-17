@@ -1,11 +1,11 @@
 <%=
   require 'yajl'
-  raw({
+  raw(Yajl::Encoder.new(pretty: true).encode({
         metadata: {
           URI: request.url,
           timestamp: DateTime.now
         },
         error: @error,
         data: Yajl::Parser.parse(yield)
-      }.to_json)
+      }))
 %>
