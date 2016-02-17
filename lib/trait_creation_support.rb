@@ -135,7 +135,7 @@ module TraitCreationSupport
 
     rescue ActiveRecord::RecordInvalid => invalid
       # add error info to trait node
-      trait_node.set_attribute("validation_errors", invalid.record.errors.messages)
+      trait_node.set_attribute("model_validation_errors", invalid.record.errors.messages)
       @model_validation_errors << "#{invalid.record.errors.messages}"
       return
     rescue ActiveRecord::StatementInvalid => e

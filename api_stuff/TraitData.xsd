@@ -1,5 +1,71 @@
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:annotation>
+    <xs:documentation>
+      In the simplest case, a valid trait data document consists of a top-level
+      "trait-data-set" element containing one or more "trait" elements.  Each
+      trait element must have a "mean" attribute whose value is a floating point
+      number.  And unless a "defaults" element is used in the document (see
+      below), each trait element must have an "access_level" attribute with an
+      integral value between 1 and 4 and a child "variable" element having some
+      combination of "id", "name", and "description" attributes that uniquely
+      identify the variable this trait measures.
+
+      By default, an anonymous "entity" row is created for each trait created,
+      with the "entity_id" for that trait pointing to it.  To have all traits
+      point to a common entity, include an "entity" element as the first child
+      element of "trait-data-set".  You may name or describe this entity by
+      giving it a "name" or a "notes" attribute.
+
+      A trait may optionally be associated with a site, species, citation,
+      treatment, or method.  To do so, give the trait a child element with the
+      corresponding name having attributes that uniquely identify it.  (See the
+      included schema "TraitAttributeTypes.xsd" to see which identifying
+      attributes are available for each element type.)  A trait may also have a
+      "notes" child element that just contains the text of the desired note.
+      And it may have a "stat" child element.  This element has required
+      attributes "sample-size", "name", and "value".  Again, see
+      "TraitAttributeTypes.xsd" to see a list of valid stat names.
+
+      A timestamp for a trait measurement may be specified by using the optional
+      "utc-timestamp" attribute on the "trait" element.  The value of the
+      timestamp must be specified in the form "1990-07-08T12:34:56Z" (fractional
+      seconds may be included--for example "1990-07-08T12:34:56.0789Z").
+
+      If all the traits share some common property, a "defaults" element may be
+      used.  This must be placed before all the "traits" elements but after the
+      "entity" element (if there is one).  Like a trait element, the "defaults"
+      element may have "access_level" and "utc-timestamp" attributes, and may
+      have one or more of "site", "species", "citation", "treatment",
+      "variable", or "method" as child elements.  If the defaults element has an
+      "access_level" attribute, then the associated traits are not required to
+      have one.  Similarly, if the defaults element has a "variable" child
+      element, then the traits do not need one.  But individual traits may
+      override these or any of the other values specified by the "defaults"
+      element.
+
+      There may be cases where one group of traits is associated with one entity
+      and another group is associated with a different entity.  Or the groups
+      may be associated with distinct species, sites, timestamps, etc. so that
+      more that one set of defaults would be in order.  One way to handle this
+      situation is to create distinct data files for each group.  The traits in
+      a given file would share a common entity and/or a common set of defaults.
+      The alternative is to use a "trait-group" element.  Like the top-level
+      "trait-data-set" element, a "trait-group" element may contain (as
+      immediate children) an "entity" element, a "defaults" element, and any
+      combination of "traits" and "trait-group" elements.  (The only
+      restrictions are these: the "entity" element, if present, must be first;
+      the "defaults" element, if present, must occur before any "trait" or
+      "trait-group" elements; there must be at least one "trait" or
+      "trait-group" element; if the "entity" element is used, then there can be
+      no "trait-group" elements.)  The "entity" and "defaults" for that
+      "trait-group" apply only to the traits that are descendants of that
+      "trait-group".  Note that in the case where a default value for a given
+      trait property exists at various levels of the document, the default value
+      specified on the nearest ancestor of the "trait" element will be used
+      (unless overriden in the trait itself).
+    </xs:documentation>
+  </xs:annotation>
 
   <xs:include schemaLocation="TraitAttributeTypes.xsd"/>
 
