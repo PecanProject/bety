@@ -120,7 +120,7 @@ def getUSGSAltitude(x, y, units="Meters"):
                         res = '-1000000'
                 return res
         else:
-                return None
+                return '-1000000'
 
 def getGoogleAltitude(x,y):
         """
