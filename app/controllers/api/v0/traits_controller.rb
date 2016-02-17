@@ -68,48 +68,37 @@ class Api::V0::TraitsController < Api::V0::BaseController
   def create_xml
     data = request.raw_post
 
-    @trait_ids = []
-    begin
-      result = create_traits_from_post_data(data)
-    rescue InvalidDocument => e
-      #render text: e.message + "\n"
-      @error = { schema_validation_errors: Yajl::Parser.parse(e.message) }
-      return
-    end
+    @new_trait_ids = []
 
-    #render text: "Success!  These traits were created: #{@trait_ids}"
+    @schema_validation_errors = []
+    @lookup_errors = []
+    @model_validation_errors = []
+    @database_insertion_errors = []
 
-  rescue => e
-    @error = "This error occurred: #{e.class}\n#{e.message}\n#{e.backtrace.join("\n")}\n"
-  end
+    @result = create_traits_from_post_data(data)
 
+    @error = { }
 
-
-  private
-
-  def get_unique_match_id(model, element)
-    column_values = attr_hash_2_where_hash(element.attributes)
-    matches = model.where(column_values)
-    if matches.size > 1
-      raise "No unique variable matches has these column values: #{column_values}"
-    elsif matches.size == 0
-      raise "No variable matches has these column values: #{column_values}"
-    end
-
-    return matches.first.id
-  end
-
-  def attr_hash_2_where_hash(h)
-    Hash[h.map { |k, v| [canonicalize_key(k), v.value] }]
-  end
-
-  def canonicalize_key(k)
-    case k
-      when "access-level", "variable-id"
-      return k.sub(/-/, '_').to_sym
+    if !@schema_validation_errors.blank?
+      @error[:schema_validation_errors] = @schema_validation_errors
     else
-      return k.to_sym
+      if !@lookup_errors.blank?
+        @error[:lookup_errors] = @lookup_errors
+      end
+      if !@model_validation_errors.blank?
+        @error[:model_validation_errors] = @model_validation_errors
+      end
+      if !@database_insertion_errors.blank?
+        @error[:database_insertion_errors] = @database_insertion_errors
+      end
     end
+
+  rescue Exception => e
+    logger.debug "RESCUE CLAUSE!!!"
+    @error = "This error occurred: #{e.class}\n#{e.message}\n"##{e.backtrace.join("\n")}\n"
   end
+
+
+
 
 end
