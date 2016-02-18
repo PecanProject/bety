@@ -216,8 +216,6 @@ def main(argv):
                 print('input file is required if no coordinates provided. -h for help.')
                 sys.exit(2)
 
-        print(site_id)
-        print(host)
         if not site_id:
                 if not host:
                         print('site_id cannot be queried without BETYdb host and credentials. using 0 as default.')
