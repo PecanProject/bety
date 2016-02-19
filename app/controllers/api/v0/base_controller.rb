@@ -1,4 +1,7 @@
 class Api::V0::BaseController < Api::BaseController
+  include ApiAuthenticationSystem
+
+  before_filter :login_required
 
   # Given a model, define +index+ and +show+ actions.
   #
