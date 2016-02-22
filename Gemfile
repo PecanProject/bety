@@ -37,6 +37,16 @@ gem "activerecord-postgis-adapter"
 
 gem "trollop" # for Rails scripts
 
+# For enabling the assets pipeline
+group :assets do
+  gem 'sass-rails',   '~> 3.2.6'
+  gem 'coffee-rails', '~> 3.2.2'
+
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  # gem 'therubyracer', :platforms => :ruby
+
+  gem 'uglifier', '1.0.3'
+end
 
 group :development, :test do
   # Although rspec-rails is mainly for the test environment, we
