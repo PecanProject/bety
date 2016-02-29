@@ -113,7 +113,7 @@ function makeLegend(){
     legend.setAttribute('id', 'legend')
     legend.setAttribute('style', "backgroundColor: white; padding: 10px;");
 
-    var images = ['images/redball.png', 'images/greyball.png','images/whiteball.png']
+    var images = ['<%= image_path "redball.png" %>', '<%= image_path "greyball.png" %>','<%= image_path "whiteball.png" %>']
     var text = ['Selected Sites Matching Search', 'Selected Sites Not Matching Search', 'Sites Outside Search Area']
     for (i = 0;  i < images.length; ++i) {
         var itemdiv = document.createElement('div');
