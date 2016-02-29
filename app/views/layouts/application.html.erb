@@ -11,65 +11,33 @@
 
   <%= csrf_meta_tag %>
 
-  <!-- to do: reconcile these two sets of includes: -->
+  <%= javascript_include_tag 'application' %>
 
-  <!-- Set One -->
-  <%= javascript_include_tag 'lazy/jquery-1.11.0.js' %>
-  <%= javascript_include_tag 'libs/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js' %>
-  <%= javascript_include_tag 'libs/jquery-migrate-1.2.1.js' %>
-
-  <!-- Set Two -->
-  <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
-  <%= javascript_include_tag 'lazy/jquery-ui-1.10.4.min.js' %>
-  <%= stylesheet_link_tag "jquery-ui-1.10.4.min" %>
-  
-  <!--  It seems so far that everything works in 1.7.2.-->
-
-  <!-- End of alternate sets -->
-  
-  <%#= javascript_include_tag 'libs/jquery-1.6.2.min.js' %>
-  <%= javascript_include_tag :all, :cache => "cache/all" %>
+  <%= stylesheet_link_tag "application" %>
 
   <!-- ############## BEGAN verifying all JS imports from here ############## -->
   <!--[if (lt IE 9) & (!IEMobile)]>
     <script src="js/libs/selectivizr-min.js"></script>
   <![endif]-->
-  <%= javascript_include_tag 'libs/respond.min.js', 'libs/modernizr-2.0.6.min.js' %>
 
   <%= yield :autocomplete_javascript %>
 
   <!-- For iPhone 4 -->
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/h/apple-touch-icon.png" />
+  <%= favicon_link_tag image_path("h/apple-touch-icon.png"), rel: "apple-touch-icon-precomposed", sizes: "114x114" %>
   <!-- For iPad 1-->
-  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/m/apple-touch-icon.png" />
+  <%= favicon_link_tag image_path("m/apple-touch-icon.png"), rel: "apple-touch-icon-precomposed", sizes: "72x72" %>
   <!-- For iPhone 3G, iPod Touch and Android -->
-  <link rel="apple-touch-icon-precomposed" href="images/l/apple-touch-icon-precomposed.png" />
+  <%= favicon_link_tag image_path("l/apple-touch-icon-precomposed.png"), rel: "apple-touch-icon-precomposed" %>
   <!-- For Nokia -->
-  <link rel="shortcut icon" href="/images/l/apple-touch-icon.png" />
+  <%= favicon_link_tag image_path("l/apple-touch-icon.png"), rel: "shortcut icon" %>
   <!-- For everything else -->
-  <link rel="shortcut icon" href="/favicon.ico" />
+  <%= favicon_link_tag image_path("favicon.ico"), rel: "shortcut icon" %>
   
-  <!-- ############## ENDED verifying all JS imports from here ############## -->
-  
-  <!--  This disables the use of $ as the jQuery alias-->
-  <script> jQuery.noConflict(); </script>
-  
-  <%= javascript_include_tag 'lazy/simple_search.js' %>
-  <%= javascript_include_tag 'lazy/application.js' %>
-
-  <% if params[:controller] == 'sessions' %>
-    <%= javascript_include_tag 'lazy/login' %>
-  <% end %>
   <% if ['sites','maps','visitors','search'].include?(params[:controller]) %>
     <%= javascript_include_tag 'https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyA9Ac4XswpkdjIslQcRJzgwnbkEDdomZS4&sensor=false' %>
   <% end %>
-  <% if ['maps','search'].include?(params[:controller]) %>
-    <%= javascript_include_tag 'lazy/map_search' %>
-  <% end %>
 
   <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />	
-  <%= stylesheet_link_tag 'themes/default' %>
-  <%= stylesheet_link_tag 'themes/alphacube' %>
 
   <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -83,18 +51,11 @@
     })();
   </script>
   
-  <!-- Maintain the order of the following CSS until we can gut the "scaffold" CSS -->
-  <!-- Old CSS -->
-  <%= stylesheet_link_tag "scaffold" %>
-  <!-- Redesign CSS -->
   <%= yield :schemaCSS %>
-  <%= stylesheet_link_tag "base", "grid", "layout", "dropdown", "tables", "demo" %>
 
   <% if params[:controller] == 'bulk_upload' %>
     <%= stylesheet_link_tag "bulk_upload" %>
   <% end %>
-
-  <%= stylesheet_link_tag "jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" %>
 
 </head>
 

@@ -1,0 +1,18 @@
+/*
+ * require jquery-ui-1.10.4.min
+
+ *= require themes/default
+ *= require themes/alphacube
+ *= require scaffold
+ *= require base
+ *= require grid
+ *= require layout
+ *= require dropdown
+ *= require tables
+ *= require demo
+
+ * require jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.min
+ * require jquery-ui-1.10.4.min
+
+ * require jquery-ui/selectable
+ */
