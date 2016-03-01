@@ -70,6 +70,6 @@ module BetyRails3
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
-    config.assets.precompile += %w( lazy/feedback.js lazy/bulk_upload.js lazy/autocomplete.js mylibs/maps.js )
+    config.assets.precompile += %w( jquery-compilation.js lazy/feedback.js lazy/bulk_upload.js lazy/autocomplete.js mylibs/maps.js bulk_upload.css )
   end
 end
