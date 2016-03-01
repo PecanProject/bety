@@ -5,7 +5,6 @@
 //= require bootstrap
 //= require controls
 //= require dragdrop
-//= require feedback-bundle
 //= require min
 //= require plugins
 //= require rails
