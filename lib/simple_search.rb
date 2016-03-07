@@ -134,7 +134,7 @@ module SimpleSearch
 #      search[/[\.\d]*/] == search ? "CAST(#{column} AS TEXT) LIKE :wildcard_search" : nil
       search[/[\.\d]*/] == search ? "#{column} = :search" : nil
     when :float
-      search[/((\d+(\.\d*)?)|(\.\d+))([eE][+-]?\d\d?)?/] == search ? "#{column} = :search" : nil
+      search[/(-?(\d+(\.\d*)?)|(\.\d+))([eE][+-]?\d\d?)?/] == search ? "#{column} = :search" : nil
     when :string, :text
       "LOWER(#{column}) LIKE LOWER(:wildcard_search)"
     when :timestamp
