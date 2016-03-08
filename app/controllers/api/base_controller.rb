@@ -45,7 +45,7 @@ class Api::BaseController < ActionController::Base
     end
 
     # restrict traits and yields by access level
-    if model == Trait || model = Yield
+    if model == Trait || model == Yield
       model = model.all_limited(current_user)
     end
 
