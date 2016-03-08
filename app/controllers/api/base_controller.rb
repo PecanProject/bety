@@ -44,6 +44,10 @@ class Api::BaseController < ActionController::Base
       offset = params['offset']
     end
 
+    # restrict traits and yields by access level
+    if model == Trait || model == Yield
+      model = model.all_limited(current_user)
+    end
 
     result = model.where(where_params)
 
