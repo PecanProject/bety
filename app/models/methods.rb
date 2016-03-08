@@ -6,8 +6,8 @@ class Methods < ActiveRecord::Base
   SEARCH_FIELDS = %w{ methods.name methods.description citations.author }
 
   belongs_to :citation
-  has_many :traits
-  has_many :yields
+  has_many :traits, foreign_key: :method_id
+  has_many :yields, foreign_key: :method_id
 
   # VALIDATION
 
