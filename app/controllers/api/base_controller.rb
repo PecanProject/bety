@@ -100,7 +100,7 @@ class Api::BaseController < ActionController::Base
     where_clause = where_clause_array.join(" AND ")
     value_array = kv_pairs.map { |kv| kv[1][1..-1] }
 
-    model_or_relation = model.where(where_clause, *value_array)
+    model_or_relation = model_or_relation.where(where_clause, *value_array)
 
   end    
     
