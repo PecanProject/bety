@@ -24,13 +24,15 @@ class Api::BaseController < ActionController::Base
 
   private
 
-  # utility method shared by all the API controllers
+  # Utility method shared by all the API controllers
 
   # Given a model class and a params hash, construct a WHERE clause by taking
   # the conjunction of clauses of the form "key = value" where "key" is an
   # attribute of "model"; use this as the basis of a query and return the
   # result, subject to the values specified by the limit and offset parameters,
-  # if given.
+  # if given.  If a param value is a string beginning with a tilde (~), the
+  # clause "key = value" is replaced by "key::text ~ value*", where "value*" is
+  # "value" with the tilde removed.
   def query(model, params)
     where_params = params.slice(*model.column_names)
 
@@ -49,6 +51,12 @@ class Api::BaseController < ActionController::Base
       model = model.all_limited(current_user)
     end
 
+    # Do filtering by regexp matching first.  Note that fuzzy_match_restrictions
+    # may modify where_params by removing key-value pairs corresponding to fuzzy
+    # matches.
+    model = fuzzy_match_restrictions(model, where_params)
+
+    # Now filter by exact matching.
     result = model.where(where_params)
 
     # If limit and/or offset parameters were given, use them.
@@ -61,5 +69,40 @@ class Api::BaseController < ActionController::Base
 
     result
   end
+
+
+
+  # Utility method used by the 'query' method
+
+  # Removes all key-value pairs from where_params for which the value is a
+  # string beginning with '~' and then filters the table or query results
+  # corresponding to model_or_relation by doing a regular expression match of
+  # column values corresponding to keys in where_params (converted to text, if
+  # necessary) with the corresponding values (with the leading tilde removed).
+  # The result set (an ActiveRecord::Relation)--or model_or_relation itself if
+  # there were not fuzzy parameters--is then returned.  The where_params is
+  # modified in place, and the modified version is then available to the caller.
+  def fuzzy_match_restrictions(model_or_relation, where_params)
+    fuzzy_params = where_params.select { |k, v| v.is_a?(String) && v[0] == '~' }
+
+    # If there are not fuzzy-match parameters, just return the model_or_relation
+    # as is:
+    if fuzzy_params.empty?
+      return model_or_relation
+    end
+
+    # remove these from where_params
+    where_params.delete_if { |k, v| fuzzy_params.has_key?(k) }
+
+    kv_pairs = fuzzy_params.to_a
+    
+    where_clause_array = kv_pairs.map { |kv| "#{kv[0]}::text ~ ?" }
+    where_clause = where_clause_array.join(" AND ")
+    value_array = kv_pairs.map { |kv| kv[1][1..-1] }
+
+    model_or_relation = model.where(where_clause, *value_array)
+
+  end    
+    
 
 end

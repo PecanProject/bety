@@ -1,0 +1,28 @@
+<%=
+
+  # The data from the template gets converted from its rendered format (either
+  # JSON or XML) to a Ruby Hash, this Hash gets inserted into a containing Hash,
+  # and then the result is converted back to the target format.
+
+  if controller.request.format == 'xml'
+    data_from_template = Hash.from_xml(yield)
+  else # JSON
+    require 'yajl'
+    data_from_template = Yajl::Parser.parse(yield)
+  end
+
+  data_hash = {
+    metadata: {
+      URI: request.url,
+      timestamp: DateTime.now
+    },
+    error: @error,
+    data: data_from_template
+  }
+
+  if controller.request.format == 'xml'
+    raw(data_hash.to_xml)
+  else
+    raw(Yajl::Encoder.new(pretty: true).encode(data_hash))
+  end
+%>
