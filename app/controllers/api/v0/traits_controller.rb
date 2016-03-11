@@ -41,32 +41,28 @@ class Api::V0::TraitsController < Api::V0::BaseController
   def create_json
     data = request.raw_post
 
-    logger.debug "data = #{data}"
+    xml = json_2_xml(data)
 
-    parser = Yajl::Parser.new(:symbolize_keys => true)
+    create_from_xml_string(xml)
 
-    trait_array = parser.parse(data)
-
-
-    result = Trait.transaction do
-
-      trait_array.each do |trait|
-
-        logger.debug "about to create new Trait from this: #{trait}"
-
-        Trait.create!(trait)
-
-      end
-
-    end
-
-
-    render text: "result = #{result}"
   end
 
 
   def create_xml
     data = request.raw_post
+
+    create_from_xml_string(data)
+
+  rescue Exception => e
+    logger.debug "RESCUE CLAUSE!!!"
+    @error = "This error occurred: #{e.class}\n#{e.message}\n"##{e.backtrace.join("\n")}\n"
+  end
+
+
+
+  private
+
+  def create_from_xml_string(data)
 
     @new_trait_ids = []
 
@@ -93,12 +89,6 @@ class Api::V0::TraitsController < Api::V0::BaseController
       end
     end
 
-  rescue Exception => e
-    logger.debug "RESCUE CLAUSE!!!"
-    @error = "This error occurred: #{e.class}\n#{e.message}\n"##{e.backtrace.join("\n")}\n"
   end
-
-
-
 
 end

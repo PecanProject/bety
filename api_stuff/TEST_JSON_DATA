@@ -1,0 +1,261 @@
+{
+  "trait-data-set": {
+    "children": [
+      {
+        "defaults": {
+          "children": [
+            {
+              "species": {
+                "attributes": {
+                  "scientificname": "Sorghum bicolor"
+                },
+                "children": [
+                  {
+                    "cultivar": {
+                      "attributes": {
+                        "name": "keller"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "citation": {
+                "attributes": {
+                  "author": "Adler"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "trait": {
+          "attributes": {
+            "access_level": "4",
+            "mean": "3.2"
+          },
+          "children": [
+            {
+              "site": {
+                "attributes": {
+                  "sitename": "Gutenzell-Hürbel"
+                }
+              }
+            },
+            {
+              "variable": {
+                "attributes": {
+                  "id": "571"
+                }
+              }
+            },
+            {
+              "stat": {
+                "attributes": {
+                  "name": "SD",
+                  "value": "0.12",
+                  "sample-size": "70"
+                }
+              }
+            },
+            {
+              "notes": {
+                "children": [
+                  {
+                    "content": "This measurement was made with substandard equipment."
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "trait": {
+          "attributes": {
+            "access_level": "4",
+            "mean": "1.4"
+          },
+          "children": [
+            {
+              "variable": {
+                "attributes": {
+                  "name": "barkC"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "trait-group": {
+          "children": [
+            {
+              "entity": {
+                "attributes": {
+                  "name": "photo 93456",
+                  "notes": "This is from camera #5"
+                }
+              }
+            },
+            {
+              "defaults": {
+                "attributes": {
+                  "utc-timestamp": "2016-03-12T12:00:56Z"
+                }
+              }
+            },
+            {
+              "trait": {
+                "attributes": {
+                  "access_level": "3",
+                  "mean": "5.1"
+                },
+                "children": [
+                  {
+                    "variable": {
+                      "attributes": {
+                        "name": "canopy_layer"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "trait": {
+                "attributes": {
+                  "access_level": "3",
+                  "mean": "1.2"
+                },
+                "children": [
+                  {
+                    "variable": {
+                      "attributes": {
+                        "description": "leaves year-1"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "trait": {
+          "attributes": {
+            "access_level": "1",
+            "mean": "-10"
+          },
+          "children": [
+            {
+              "variable": {
+                "attributes": {
+                  "name": "b2Ca"
+                }
+              }
+            },
+            {
+              "species": {
+                "attributes": {
+                  "scientificname": "Zenobia pulverulenta"
+                }
+              }
+            },
+            {
+              "stat": {
+                "attributes": {
+                  "name": "SE",
+                  "value": "0.0030",
+                  "sample-size": "10"
+                }
+              }
+            },
+            {
+              "method": {
+                "attributes": {
+                  "name": "CC"
+                },
+                "children": [
+                  {
+                    "citation": {
+                      "attributes": {
+                        "author": "Biggs",
+                        "year": "2008"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "site": {
+                "attributes": {
+                  "sitename": "Aliartos"
+                }
+              }
+            },
+            {
+              "treatment": {
+                "attributes": {
+                  "id": "1"
+                }
+              }
+            },
+            {
+              "notes": {
+                "children": [
+                  {
+                    "content": "blah blah"
+                  }
+                ]
+              }
+            },
+            {
+              "covariates": {
+                "children": [
+                  {
+                    "covariate": {
+                      "attributes": {
+                        "level": "10"
+                      },
+                      "children": [
+                        {
+                          "variable": {
+                            "attributes": {
+                              "id": "456"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "covariate": {
+                      "attributes": {
+                        "level": "1000"
+                      },
+                      "children": [
+                        {
+                          "variable": {
+                            "attributes": {
+                              "description": "leaves year-1"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
