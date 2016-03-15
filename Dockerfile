@@ -6,7 +6,7 @@ EXPOSE 3000
 
 # Install dependencies
 RUN apt-get update &&\
-    apt-get install -y sudo curl unzip postgresql-client &&\
+    apt-get install -y sudo curl unzip netcat postgresql-client &&\
     /bin/mkdir /home/bety
 
 COPY / /home/bety

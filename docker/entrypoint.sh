@@ -16,7 +16,16 @@ if [ "$1" = 'bety' ]; then
     #bundle install
 
     # Wait for Postgres
-    sleep 10
+    # http://www.onegeek.com.au/articles/waiting-for-dependencies-in-docker-compose
+    WAIT=0
+    while ! nc -z $PG_PORT_5432_TCP_ADDR $PG_PORT_5432_TCP_PORT; do
+      sleep 1
+      WAIT=$(($WAIT + 1))
+      if [ "$WAIT" -gt 15 ]; then
+        echo "Error: Timeout wating for Postgres to start"
+        exit 1
+      fi
+    done
 
     # Move database config file into config directory
     cd config
