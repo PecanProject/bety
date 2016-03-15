@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # The source for load.bety.sh:
-SCRIPT_SOURCE_LOCATION=https://raw.githubusercontent.com/PecanProject/pecan/master/scripts/load.bety.sh
+SCRIPT_SOURCE_LOCATION=https://raw.githubusercontent.com/max-zilla/bety/max-docker/docker/load.bety.sh
 
 # These are options we want to pass through to load.bety.sh.  Update this as
 # needed if load.bety.sh is revised:

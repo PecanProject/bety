@@ -18,7 +18,7 @@ RUN apt-get update &&\
 COPY / /home/bety/
 
 # Download BETY zip file from pecan archive
-RUN cd home/bety &&\
+RUN cd /home/bety &&\
     /bin/cp docker/database.yml config/database.yml &&\
     # Comment out capybara-webkit line and install Rails dependencies
     /bin/sed -i "/capybara-webkit/ s/^/# /" Gemfile &&\

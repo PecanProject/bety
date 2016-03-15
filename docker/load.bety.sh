@@ -412,5 +412,3 @@ wait $PSQL_PID
 
 # all done, cleanup
 rm -rf "${DUMPDIR}"
-Status API Training Shop Blog About Pricing
-© 2016 GitHub, Inc. Terms Privacy Security Contact Help
