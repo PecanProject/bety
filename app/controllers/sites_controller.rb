@@ -199,7 +199,11 @@ class SitesController < ApplicationController
     @citations = @site.citations
 
     respond_to do |format|
-      format.html
+      format.html {
+        if !@site.point?
+          flash.now[:warning] = "Non-point site. Use SQL to update site coordinates or contact administrator for more information."
+        end
+      }
       format.js {
         render layout: false
       }

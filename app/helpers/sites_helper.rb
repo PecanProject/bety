@@ -1,5 +1,21 @@
 module SitesHelper
 
+  # Generate a text field control for form "site_form" for submitting the value
+  # of attribute "attribute" of the Site model being edited.  Use options passed
+  # in "common_options", but disable the control if the Site "@site" is not a
+  # point.
+  def geometry_aware_text_field(site_form, attribute, common_options)
+
+    if @site.point?
+      options = common_options
+    else
+      options = common_options.merge(disabled: true)
+    end
+
+    site_form.text_field(attribute, options)
+
+  end
+
     def params_for_javascript(params) #options_for_javascript doesn't works fine
         
         '{' + params.map {|k, v| "#{k}: #{ 

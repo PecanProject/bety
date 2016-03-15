@@ -1184,7 +1184,7 @@ class BulkUploadDataSet
   def normalize_heading(heading)
     heading = heading.to_s.strip
 
-    if /SE/i.match heading
+    if /^SE$/i.match heading
       heading.upcase
     elsif Regexp.new("^(#{RECOGNIZED_COLUMNS.join('|')})$", Regexp::IGNORECASE).match heading
       heading.downcase

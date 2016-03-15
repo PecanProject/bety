@@ -128,7 +128,6 @@ class InputsController < ApplicationController
   def edit
     @input = Input.find(params[:id])
     @files = @input.files.paginate :page => params[:page]
-    @variables = @input.variables.paginate :page => params[:page]
   end
 
   # POST /inputs
