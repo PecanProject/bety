@@ -6,27 +6,19 @@ EXPOSE 3000
 # Install dependencies
 RUN apt-get update &&\
     apt-get install -y sudo curl unzip postgresql-client &&\
-    /bin/mkdir /home/bety
-    # Create postgres user (which will play nice with postgres container)
-    #useradd -s /bin/bash postgres &&\
-    #sudo gpasswd -a postgres sudo &&\
-    #/bin/chown -R postgres /home/bety &&\
-    #/bin/chown postgres /tmp
+    /bin/mkdir /home/bety &&\
+    useradd -s /bin/bash postgres &&\
+    /bin/chown -R postgres /home/bety
 
+# Create postgres user (which will play nice with postgres container)
 
-# Move the bety files out to remote server
-COPY / /home/bety/
-
-# Download BETY zip file from pecan archive
-RUN cd /home/bety &&\
-    /bin/cp docker/database.yml config/database.yml &&\
-    # Comment out capybara-webkit line and install Rails dependencies
-    /bin/sed -i "/capybara-webkit/ s/^/# /" Gemfile &&\
-    gem install bundler &&\
-    bundle install
+# Move the build file & bety config out to remote server
+COPY docker/entrypoint.sh /home/bety/
+COPY docker/database.yml /home/bety/
 
 # Change permissions for files/folders & change to user postgres
-#USER postgres
+# RUN chown -R postgres /home/bety
+USER postgres
 
-ENTRYPOINT ["/home/bety/docker/entrypoint.sh"]
+ENTRYPOINT ["/home/bety/entrypoint.sh"]
 CMD ["bety"]
