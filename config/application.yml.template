@@ -31,3 +31,4 @@ test:
 
 production:
     rest_auth_site_key: 'some moderately long, unpredictable text'
+

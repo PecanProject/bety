@@ -8,4 +8,3 @@ admin_email: "admin@example.com" # a test
 
 # Override this with a secret key to run a secure site:
 rest_auth_site_key: 'thisisnotasecret'
-Status API Training Shop Blog About Pricing
