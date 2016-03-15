@@ -1,29 +1,14 @@
 #!/bin/bash
 
 if [ "$1" = 'bety' ]; then
-
-    BETY_VERSION="betydb_4.5"
-
-    # Download BETY zip file from pecan archive
-    cd home/bety
-    curl -LOk https://github.com/PecanProject/bety/archive/${BETY_VERSION}.zip
-    unzip ${BETY_VERSION}.zip
-    cd bety-${BETY_VERSION}
-
-    # Comment out capybara-webkit line and install Rails dependencies
-    /bin/sed -i "/capybara-webkit/ s/^/# /" Gemfile
-    gem install bundler
-    bundle install
-
-    # Move database config file into config directory
-    cd config
-    /bin/cp /home/bety/database.yml database.yml
+    # Add relevant host/port info to database config
+    cd /home/bety/config
     /bin/sed -i "/host:/ s/$/ $PG_PORT_5432_TCP_ADDR/" database.yml
     /bin/sed -i "/port:/ s/$/ $PG_PORT_5432_TCP_PORT/" database.yml
-    /bin/cp application.yml.template application.yml
 
     # Create bety database
-    createdb -h $PG_PORT_5432_TCP_ADDR bety
+    # TODO: ping bety database to see if exists, if not load it, otherwise dont overwrite
+    createdb -h $PG_PORT_5432_TCP_ADDR -U postgres bety
 
     # Download & initialize config file
     cd ../script
