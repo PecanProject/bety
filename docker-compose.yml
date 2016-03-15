@@ -1,6 +1,6 @@
 # ruby & bety
 bety:
-  image: maxzilla2/betydb
+  image: pecan/bety
   ports:
     - "3000"
   links:
