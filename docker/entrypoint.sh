@@ -1,21 +1,7 @@
 #!/bin/bash
 
 if [ "$1" = 'bety' ]; then
-
-    BETY_VERSION="betydb_4.5"
-
-    # Download BETY zip file from pecan archive
-    cd /home/bety
-    #curl -LOk https://github.com/PecanProject/bety/archive/${BETY_VERSION}.zip
-    #unzip ${BETY_VERSION}.zip
-    #cd bety-${BETY_VERSION}
-
-    # Comment out capybara-webkit line and install Rails dependencies
-    #/bin/sed -i "/capybara-webkit/ s/^/# /" Gemfile
-    #gem install bundler
-    #bundle install
-
-    # Wait for Postgres
+    # Wait for Postgres to start
     # http://www.onegeek.com.au/articles/waiting-for-dependencies-in-docker-compose
     WAIT=0
     while ! nc -z $PG_PORT_5432_TCP_ADDR $PG_PORT_5432_TCP_PORT; do
@@ -27,24 +13,20 @@ if [ "$1" = 'bety' ]; then
       fi
     done
 
-    # Move database config file into config directory
-    cd config
+    # Move database config file into config directory & add host/port
+    cd /home/bety/config
     /bin/cp /home/bety/docker/database.yml database.yml
     /bin/sed -i "/host:/ s/$/ $PG_PORT_5432_TCP_ADDR/" database.yml
     /bin/sed -i "/port:/ s/$/ $PG_PORT_5432_TCP_PORT/" database.yml
-    # /bin/cp application.yml.template application.yml
 
     # Create bety database
-    createdb -h $PG_PORT_5432_TCP_ADDR -p $PG_PORT_5432_TCP_PORT bety
+    createdb -U postgres -h $PG_PORT_5432_TCP_ADDR -p $PG_PORT_5432_TCP_PORT bety
 
-    # Download & initialize config file
+    # Download & initialize Bety database contents
     cd ../script
-    ./update-betydb.sh
-    ./update-betydb.sh -i
-    # Run database install script
-    ./update-betydb.sh -o postgres -g -p "--host=$PG_PORT_5432_TCP_ADDR"
-
-    # psql -h $PG_PORT_5432_TCP_ADDR -p $PG_PORT_5432_TCP_PORT
+    curl -LOs https://raw.githubusercontent.com/PecanProject/pecan/master/scripts/load.bety.sh
+    chmod +x load.bety.sh
+    ./load.bety.sh -a "postgres" -p "-h $PG_PORT_5432_TCP_ADDR -p $PG_PORT_5432_TCP_PORT" -o postgres -c -u -g -r 0 -m 99
 
     cd ..
     rails s

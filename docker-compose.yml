@@ -1,6 +1,6 @@
 # ruby & bety
 bety:
-  image: maxzilla2/betydb:developV2
+  image: maxzilla2/betydb
   ports:
     - "3000"
   links:
