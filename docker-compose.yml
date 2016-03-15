@@ -1,0 +1,13 @@
+# ruby & bety
+bety:
+  image: maxzilla2/betydb:developV2
+  ports:
+    - "3000"
+  links:
+    - postgres:pg
+
+# postgres database
+postgres:
+  image: mdillon/postgis
+  ports:
+    - "5432:5432"

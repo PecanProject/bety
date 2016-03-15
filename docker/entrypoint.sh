@@ -15,6 +15,9 @@ if [ "$1" = 'bety' ]; then
     #gem install bundler
     #bundle install
 
+    # Wait for Postgres
+    sleep 10
+
     # Move database config file into config directory
     cd config
     /bin/cp /home/bety/docker/database.yml database.yml
