@@ -35,14 +35,14 @@ if [ "$1" = 'bety' ]; then
     # /bin/cp application.yml.template application.yml
 
     # Create bety database
-    createdb -h $PG_PORT_5432_TCP_ADDR bety
+    createdb -h $PG_PORT_5432_TCP_ADDR -p $PG_PORT_5432_TCP_PORT bety
 
     # Download & initialize config file
     cd ../script
     ./update-betydb.sh
     ./update-betydb.sh -i
     # Run database install script
-    ./update-betydb.sh -o postgres -p "--host=$PG_PORT_5432_TCP_ADDR"
+    ./update-betydb.sh -o postgres -g -p "--host=$PG_PORT_5432_TCP_ADDR"
 
     # psql -h $PG_PORT_5432_TCP_ADDR -p $PG_PORT_5432_TCP_PORT
 
