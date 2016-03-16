@@ -39,10 +39,11 @@ recreate it.
 DESC
 )
 
-Rake::Task["db:test:load_structure"].add_description(<<DESC
-Loads the test database with database structure defined in the file "db/<RAILS_ENV>_structure.sql",
-where RAILS_ENV is the current Rails environment.  It will first run
-db:test:purge to drop the test database (if it exists) and then
-recreate it.
+Rake::Task["db:test:clone_structure"].add_description(<<DESC
+Clones the structure of the current environment and then loads it into the test database.
+It will first run db:test:purge to drop the test database (if it exists) and
+recreate it.  Then it creates (or recreates) the structure.sql file for the
+current environment ("db/<RAILS_ENV>_structure.sql") and loads it into the test
+database.
 DESC
 )
