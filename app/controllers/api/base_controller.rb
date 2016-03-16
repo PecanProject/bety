@@ -60,7 +60,7 @@ class Api::BaseController < ActionController::Base
     result = model.where(where_params)
 
     # If limit and/or offset parameters were given, use them.
-    if offset.nil?
+    if !offset.nil?
       result = result.limit(limit).offset(offset)
     end
     if !limit.nil?
