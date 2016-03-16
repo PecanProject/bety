@@ -1,3 +1,4 @@
+# Task for ensuring script/load.bety.sh exists
 file "script/load.bety.sh" do
   puts "downloading load.bety.sh"
   url = "https://raw.githubusercontent.com/PecanProject/pecan/master/scripts/load.bety.sh"
@@ -33,6 +34,8 @@ end
 
 namespace :bety do
   namespace :db do
+
+    # Task for ensuring script/load.bety.sh exists and is executable
     task :enable_load_execution => "script/load.bety.sh" do
       output = `chmod +x script/load.bety.sh`
       puts output
