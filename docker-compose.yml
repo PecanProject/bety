@@ -10,4 +10,4 @@ bety:
 postgres:
   image: mdillon/postgis:9.4
   ports:
-    - "5432:5432"
+    - "5432"

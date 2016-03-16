@@ -5,7 +5,7 @@ EXPOSE 3000
 
 # Install dependencies
 RUN apt-get update &&\
-    apt-get install -y sudo curl unzip netcat &&\
+    apt-get install -y sudo curl netcat &&\
     /bin/mkdir /home/bety
 
 # Install postgres client from officially versioned repos
@@ -19,9 +19,8 @@ RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" 
 COPY / /home/bety
 
 RUN cd /home/bety &&\
-    /bin/sed -i "/capybara-webkit/ s/^/# /" Gemfile &&\
     gem install bundler &&\
-    bundle install
+    bundle install --without javascript_testing
 
 ENTRYPOINT ["/home/bety/docker/entrypoint.sh"]
 CMD ["bety"]
