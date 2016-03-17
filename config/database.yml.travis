@@ -1,0 +1,8 @@
+test:
+  adapter: postgis
+  encoding: utf8 
+  reconnect: false
+  database: test
+  pool: 5
+  username: bety
+  password: bety
