@@ -47,3 +47,15 @@ current environment ("db/<RAILS_ENV>_structure.sql") and loads it into the test
 database.
 DESC
 )
+
+namespace :db do
+  namespace :fixtures do
+    task :load => :block_for_non_test_env
+
+    task :block_for_non_test_env do
+      if Rails.env != 'test'
+        raise "Loading fixtures has been disabled for all environments other than the test environment."
+      end
+    end
+  end
+end
