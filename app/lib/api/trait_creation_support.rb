@@ -1,4 +1,4 @@
-module TraitCreationSupport
+module Api::TraitCreationSupport
 
   private
 
@@ -261,7 +261,7 @@ module TraitCreationSupport
   def schema_validate(doc)
 
     xsd = Nokogiri::XML::Schema.from_document(
-      Nokogiri::XML(Rails.root.join('api_stuff', 'TraitData.xsd').open,
+      Nokogiri::XML(Rails.root.join('app', 'lib', 'api', 'validation', 'TraitData.xsd').open,
                     nil,
                     nil,
                     Nokogiri::XML::ParseOptions::STRICT))
