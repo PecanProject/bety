@@ -1,0 +1,62 @@
+# use ruby
+language: ruby
+
+# use containers
+sudo: false
+
+# versions of ruby to use
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - 2.1.8
+
+env:
+  - RAILS_ENV=test
+
+# cache packages and bundler
+cache:
+  - packages
+  - bundler
+
+# install R: use r-packages-precise (https://cran.r-project.org/bin/linux/ubuntu/precise/) 
+# as source which is white listed (https://github.com/travis-ci/apt-source-whitelist/)
+addons:
+  postgresql: 9.4
+  apt:
+    packages:
+      - postgresql-9.4-postgis-2.1
+      - postgresql-9.4-postgis-2.1-scripts
+  
+# notifications should go to gitter
+notifications:
+  webhooks:
+    urls:
+      - secure: "gL81TwDOcK/32Hxxl2BcY7pioyrtyV4y1f+D/vGEpQz8mYL+M+55tUkhHJF53779XSUdQdML/gsr8JZVtApJdLIBysFU67GVYXm1s7x/b8J61CkMfDgsmposEWK4NFYHfeIRj32ioeajrQ+RKi1I6chjzYT7gLyl70gtPelRJ4s="
+    on_success: always
+    on_failure: always
+    on_start: always
+  hipchat:
+    rooms:
+      - secure: "R1jwW3fFSEKlHFjr8IVlbN6YOSkxdIZVdtMdmrp663SXzFdoQCZlo8y6TRhEiWuXP/2zrzS1NcutWVN6DxenSJTOz4zANk2h8awF2WfJ6yGpV481TRCrSOSqKZy6cLZRlECBfNrJXvRF77uQULOgZRv/hb9un57KErlJ8aCc22g3zsy8QUIhMQ0sWiqUJeEtlHliRaVmOuuUwuz/1tnMAJPn7C3PLMIaDwstMdohc/wtmWxbyPWIkPVFmdX0kTyTj7lLw2dNFsIZ9g0wAhoBBxWgQSOHeg72HiZvAfjLgXnUowHhMO4EO4lXyutkrZeUG05HQ9tcfZkMbh/mZ3hl5s54KIfbCY/1knvhE/zi7SSfGeMDHS8NBaUqlR3iY+Rf8/GU++AtZkyqZZKlu25auUa6LajsqBRsmJLe9z/q4ifksUpPAdzT4XuyS450lgbWblxIeIv8ONATrN8/wTz9l0RfTLEXSfodFyMQIjiEpoWgpfUAmLZm43P+uB9CkVAtfIiu4Wpnl1m93bFxaZBrda+iW6kBcC3Ai41sXKRbFMiBj6ci+N3pMw06lkY6WMhZYjjETQcZbr2oxm6xVdY5WLj666NEaXr9e/73BdYkFCG1zS6e4MIfbwTWuumvZXviqhC6kscvGj39eIiblcZ/uon11sWwF1Myjn1Uu24RSOU="
+    on_success: always
+    on_failure: always
+    on_start: always
+  email:
+    on_success: always
+    on_failure: always
+
+# list of services to be running
+services:
+  - postgresql
+
+before_script:
+  - psql -U postgres -c "CREATE USER bety WITH SUPERUSER CREATEDB UNENCRYPTED PASSWORD 'bety'";
+  - cp config/database.yml.travis config/database.yml
+  - cp db/production_structure.sql db/test_structure.sql
+  - psql -U postgres -c "CREATE DATABASE test WITH OWNER bety;"
+  - psql -U bety -d test -c "CREATE EXTENSION postgis;"
+  - bundle exec rake db:structure:load
+  - bundle exec rake db:fixtures:load
+  
+script: 
+  - bundle exec rspec --tag ~js
