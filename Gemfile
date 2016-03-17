@@ -19,8 +19,6 @@ gem "will_paginate", "3.0.4"
 gem "bootstrap-will_paginate"
 gem 'rails3-restful-authentication', '~> 3.0.1'
 gem 'dynamic_form'
-gem 'active_model_serializers', '~> 0.9'
-gem 'jbuilder'
 gem 'rabl'
 gem 'yajl-ruby'
 
