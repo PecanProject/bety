@@ -47,6 +47,7 @@ export CREATE=YES
 export FIXSEQUENCE=YES
 export USERS=YES
 export DATABASE=bety
+export GUESTUSER=YES
 EOF
 }
 
