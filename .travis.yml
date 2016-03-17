@@ -5,11 +5,13 @@ language: ruby
 sudo: false
 
 # versions of ruby to use
+# see the list at http://rubies.travis-ci.org/
 rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.8
 
+# used for all ruby tasks to specify the database
 env:
   - RAILS_ENV=test
 
@@ -31,16 +33,9 @@ addons:
 notifications:
   webhooks:
     urls:
-      - secure: "gL81TwDOcK/32Hxxl2BcY7pioyrtyV4y1f+D/vGEpQz8mYL+M+55tUkhHJF53779XSUdQdML/gsr8JZVtApJdLIBysFU67GVYXm1s7x/b8J61CkMfDgsmposEWK4NFYHfeIRj32ioeajrQ+RKi1I6chjzYT7gLyl70gtPelRJ4s="
+      - secure: "ZmbBufQG5F4RPPxEJU/rUHCZlkWyt5efTb/G1/eON86Gsje87ZpEFImPYAc66nx9YSe7MmjXgcym4Ko0L+e7eBwGlze0vexfGhrTX5xnGEFBWdMTOqvhu/PUVpm0nwhmGif5HYksGO2Av++irDsqWVfVoGlFRQpxxVYH2LwdTeuwg1CtDKnbGlbfm3rtT8/ErMQQoUx5S8WiTDVaF/w9S7VLr9nJ0bVuooYAZKGNTOAcSkG7GPsEnwdER9WGqeCoNLZE2UKfbJhj9YIEvEKgvjeGdY51ckDlD0zaz8Noiy44ivJmzdww37bCPSP4cDoeIr/tgjlsqTua5zoDBlsGQ1JgcDwOGDtIqRgzEkY4bHfMO6Ij1D5aw5p0oXv86kJnnxiFVogbO4PRyyb9oyOgWHOgMiCL7K3ccAtV8UcMTixvWXxi8BuCXUlPbHokGSxdN9yvEiPuDDTDiVQnCUbDEvlPwimvDvu0ZEYE6aY0ctNAovu9guiRysgBYDYPqplxgyycnmY71I0MzIozNyvIt9TRbORid5pBixcvVepWuNAWxBjgsTWmj6Jl+WlTB0ecLysyFrs2Npop4ZK8hSouV07a2LNjAQENt6ztbhTcqJiOqcm3VczoBjHkL/A7X6rELU0z4fum+tBjfeKAB0UxTUcznXpu7wl2kDa4whuE0Uo="
     on_success: always
     on_failure: always
-    on_start: always
-  hipchat:
-    rooms:
-      - secure: "R1jwW3fFSEKlHFjr8IVlbN6YOSkxdIZVdtMdmrp663SXzFdoQCZlo8y6TRhEiWuXP/2zrzS1NcutWVN6DxenSJTOz4zANk2h8awF2WfJ6yGpV481TRCrSOSqKZy6cLZRlECBfNrJXvRF77uQULOgZRv/hb9un57KErlJ8aCc22g3zsy8QUIhMQ0sWiqUJeEtlHliRaVmOuuUwuz/1tnMAJPn7C3PLMIaDwstMdohc/wtmWxbyPWIkPVFmdX0kTyTj7lLw2dNFsIZ9g0wAhoBBxWgQSOHeg72HiZvAfjLgXnUowHhMO4EO4lXyutkrZeUG05HQ9tcfZkMbh/mZ3hl5s54KIfbCY/1knvhE/zi7SSfGeMDHS8NBaUqlR3iY+Rf8/GU++AtZkyqZZKlu25auUa6LajsqBRsmJLe9z/q4ifksUpPAdzT4XuyS450lgbWblxIeIv8ONATrN8/wTz9l0RfTLEXSfodFyMQIjiEpoWgpfUAmLZm43P+uB9CkVAtfIiu4Wpnl1m93bFxaZBrda+iW6kBcC3Ai41sXKRbFMiBj6ci+N3pMw06lkY6WMhZYjjETQcZbr2oxm6xVdY5WLj666NEaXr9e/73BdYkFCG1zS6e4MIfbwTWuumvZXviqhC6kscvGj39eIiblcZ/uon11sWwF1Myjn1Uu24RSOU="
-    on_success: always
-    on_failure: always
-    on_start: always
   email:
     on_success: always
     on_failure: always
