@@ -1,0 +1,67 @@
+<trait-data-set>
+
+  <defaults>
+    <species scientificname="Sorghum bicolor">
+      <cultivar name="keller"/>
+    </species>
+    <citation author="Adler"/>
+  </defaults>
+
+  <trait access_level="4" mean="3.2">
+    <site sitename="Gutenzell-Hürbel"/>
+    <variable id="571"/>
+    <stat name="SD" value="0.12" sample-size="70"/>
+    <notes>This measurement was made with substandard equipment.</notes>
+  </trait>
+
+  <trait access_level="4" mean="1.4">
+    <variable name="barkC"/>
+  </trait>
+
+  <trait-group>
+
+    <entity name="photo 93456" notes="This is from camera #5"/>
+    <defaults utc-timestamp="2016-03-12T12:00:56Z"/>
+
+
+    <trait access_level="3" mean="5.1">
+      <variable name="canopy_layer"/>
+    </trait>
+
+    <trait access_level="3" mean="1.2">
+      <variable description="leaves year-1"/>
+    </trait>
+
+  </trait-group>
+
+  <trait access_level="1" mean="-10">
+
+    <variable name="b2Ca"/>
+
+    <species scientificname="Zenobia pulverulenta"/>
+
+    <stat name="SE" value="0.0030" sample-size="10"/>
+
+    <method name="CC">
+      <citation author="Biggs" year="2008"/><!-- or use citation-id on method element -->
+    </method><!-- or use method-id on trait element -->
+
+    <!-- data time info not yet supported -->
+
+    <site sitename="Aliartos"/>
+
+    <treatment id="1"/>
+
+    <notes>blah blah</notes>
+    <covariates>
+      <covariate level="10">
+        <variable id="456"/>
+      </covariate>
+
+      <covariate level="1000">
+        <variable description="leaves year-1"/>
+      </covariate>
+    </covariates>
+  </trait>
+
+</trait-data-set>
