@@ -74,14 +74,16 @@ class Api::BaseController < ActionController::Base
 
   # Utility method used by the 'query' method
 
-  # Removes all key-value pairs from where_params for which the value is a
-  # string beginning with '~' and then filters the table or query results
-  # corresponding to model_or_relation by doing a regular expression match of
-  # column values corresponding to keys in where_params (converted to text, if
-  # necessary) with the corresponding values (with the leading tilde removed).
-  # The result set (an ActiveRecord::Relation)--or model_or_relation itself if
-  # there were not fuzzy parameters--is then returned.  The where_params is
-  # modified in place, and the modified version is then available to the caller.
+  # Removes all key-value pairs from where_params for which the value
+  # is a string beginning with '~' and then filters the table or query
+  # results corresponding to model_or_relation by doing a case
+  # insensitive regular expression match of column values
+  # corresponding to keys in where_params (converted to text, if
+  # necessary) with the corresponding values (with the leading tilde
+  # removed).  The result set (an ActiveRecord::Relation)--or
+  # model_or_relation itself if there were not fuzzy parameters--is
+  # then returned.  The where_params is modified in place, and the
+  # modified version is then available to the caller.
   def fuzzy_match_restrictions(model_or_relation, where_params)
     fuzzy_params = where_params.select { |k, v| v.is_a?(String) && v[0] == '~' }
 
@@ -96,7 +98,7 @@ class Api::BaseController < ActionController::Base
 
     kv_pairs = fuzzy_params.to_a
     
-    where_clause_array = kv_pairs.map { |kv| "#{kv[0]}::text ~ ?" }
+    where_clause_array = kv_pairs.map { |kv| "#{kv[0]}::text ~* ?" }
     where_clause = where_clause_array.join(" AND ")
     value_array = kv_pairs.map { |kv| kv[1][1..-1] }
 
