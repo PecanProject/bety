@@ -59,6 +59,11 @@ class Api::BaseController < ActionController::Base
     # Now filter by exact matching.
     result = model.where(where_params)
 
+    # "limit(nil)" means no limit, so use nil if limit is "all"
+    if limit == "all"
+      limit = nil
+    end
+
     # If limit and/or offset parameters were given, use them.
     if !offset.nil?
       result = result.limit(limit).offset(offset)

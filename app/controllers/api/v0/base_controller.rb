@@ -12,23 +12,24 @@ class Api::V0::BaseController < Api::BaseController
   def self.define_actions(model)
     define_method(:index) do
       @row_set = query(model, params)
-      if @row_set.size > 200
-        @error = "The #{@row_set.size}-row result set exceeds the 200 row limit.  " +
-          "Use the \"limit=nnn\" parameter or do a more restrictive search."
-        @row_set = nil
+      if !params.has_key?("limit") && @row_set.size > 200
+        @warnings = "The #{@row_set.size}-row result set exceeds the default 200 row limit.  " +
+          "Showing the first 200 results only.  Set an explicit limit to show more results."
+        @row_set = @row_set.limit(200)
       else
-        @error = nil
+        @errors = nil
       end
+      @count = @row_set.size
     end
 
     define_method(:show) do
       id = params[:id]
       begin
         @row = model.find(id)
-        @error = nil
+        @errors = nil
       rescue ActiveRecord::RecordNotFound
         @row = nil
-        @error = "Non-Existent Resource: No #{model} object with id #{id} was found."
+        @errors = "Non-Existent Resource: No #{model} object with id #{id} was found."
       end
     end
   end

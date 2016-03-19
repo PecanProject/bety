@@ -16,9 +16,24 @@
       URI: request.url,
       timestamp: DateTime.now
     },
-    error: @error,
+    errors: @errors,
+    warnings: @warnings,
     data: data_from_template
   }
+
+  # Don't show extraneous keys--just delete if the value is empty:
+  if @errors.nil?
+    data_hash.delete(:errors)
+  end
+  if @warnings.nil?
+    data_hash.delete(:warnings)
+  end
+
+  # If we are "GET"ting a list, show the return count:
+  if controller.action_name == 'index'
+    data_hash[:metadata][:count] = @count
+  end
+
 
   if controller.request.format == 'xml'
     raw(data_hash.to_xml)
