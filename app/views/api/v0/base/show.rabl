@@ -44,9 +44,9 @@ if !root_object.nil?
   end
 
 
-  # Show the edit URL for this object
-  node(:edit_url) do |ob|
-    edit_site_url(ob)
+  # Show the "show" URL for this object
+  node(:view_url) do |ob|
+    polymorphic_url(ob)
   end
 
 end
