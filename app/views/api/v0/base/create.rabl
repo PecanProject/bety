@@ -1,4 +1,4 @@
-object false
+object :data
 
 if @new_trait_ids && @new_trait_ids.size != 0
   node(:ids_of_new_traits) do

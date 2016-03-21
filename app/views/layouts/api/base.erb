@@ -18,8 +18,11 @@
     },
     errors: @errors,
     warnings: @warnings,
-    data: data_from_template
   }
+
+  if !@result.nil?
+    data_hash.merge! data_from_template
+  end
 
   # Don't show extraneous keys--just delete if the value is empty:
   if @errors.nil?
@@ -33,7 +36,6 @@
   if controller.action_name == 'index'
     data_hash[:metadata][:count] = @count
   end
-
 
   if controller.request.format == 'xml'
     raw(data_hash.to_xml)
