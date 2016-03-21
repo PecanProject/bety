@@ -2,17 +2,17 @@ module Api::TraitCreationSupport
 
   private
 
-  class InvalidDocument < Exception
+  class InvalidDocument < StandardError
   end
 
-  class NotFoundException < Exception
+  class NotFoundException < StandardError
     def initialize(node, entity_name, selection_criteria)
       node.set_attribute("error", "match not found")
       super("No #{entity_name} could be found matching #{selection_criteria}")
     end
   end
 
-  class NotUniqueException < Exception
+  class NotUniqueException < StandardError
     def initialize(node, entity_name, selection_criteria)
       node.set_attribute("error", "multiple matches")
       super("Multiple #{entity_name} objects were found matching #{selection_criteria}")
@@ -23,37 +23,41 @@ module Api::TraitCreationSupport
   # appropriate rows into the entities, traits, and covariates tables.
   def create_traits_from_post_data(data)
 
-    doc = Nokogiri::XML(data, nil, nil, Nokogiri::XML::ParseOptions::STRICT)
+    begin
 
-    schema_validate(doc)
+      doc = Nokogiri::XML(data, nil, nil, Nokogiri::XML::ParseOptions::STRICT)
 
-    trait_data_set_node = doc.root
+      schema_validate(doc)
 
-    ActiveRecord::Base.transaction do
+      trait_data_set_node = doc.root
 
-      # The root element "trait-data-set" can be treated just like a
-      # "trait-group" node.
-      process_trait_group_node(trait_data_set_node, {})
+      ActiveRecord::Base.transaction do
 
-    end # transaction
+        # The root element "trait-data-set" can be treated just like a
+        # "trait-group" node.
+        process_trait_group_node(trait_data_set_node, {})
 
-  rescue Exception => e
+      end # transaction
 
-    e.backtrace.each do |line|
-      if !line.match /\.rvm/
-        logger.debug line
+    rescue StandardError => e
+
+      e.backtrace.each do |line|
+        if !line.match /\.rvm/
+          logger.debug line
+        end
       end
-    end
-    logger.debug e.message
+      logger.debug e.message
 
-    raise e
+      raise e
 
-  ensure
+    ensure
 
-    if @lookup_errors.size > 0 ||
-        @model_validation_errors.size > 0 ||
-        @database_insertion_errors.size > 0
-      @new_trait_ids = []
+      if @lookup_errors.size > 0 ||
+          @model_validation_errors.size > 0 ||
+          @database_insertion_errors.size > 0
+        @new_trait_ids = []
+      end
+
     end
 
     return Hash.from_xml(doc.to_s)
