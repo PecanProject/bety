@@ -14,6 +14,15 @@ class Api::BaseController < ActionController::Base
   end
 
 
+
+  # This ensures that when we are in the API realm, an exception won't get
+  # handled by the default Rails exception handler that returns an HTML result.
+  rescue_from StandardError do |e|
+    logger.debug("EXCEPTION: #{e}")
+    @errors = e
+    render
+  end
+
   # Actions
 
   # We route all illegitimate requests beginning "/api" here so that we
