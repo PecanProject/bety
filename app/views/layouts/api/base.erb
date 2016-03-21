@@ -20,8 +20,14 @@
     warnings: @warnings,
   }
 
+  # Add data from create template if it's significant:
   if !@result.nil?
     data_hash.merge! data_from_template
+  end
+
+  # Add data from index or show template if those actions were called:
+  if !@row_set.nil? || !@row.nil?
+    data_hash[:data] = data_from_template
   end
 
   # Don't show extraneous keys--just delete if the value is empty:
