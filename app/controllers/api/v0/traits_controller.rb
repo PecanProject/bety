@@ -34,19 +34,19 @@ class Api::V0::TraitsController < Api::V0::BaseController
 
     @result = create_traits_from_post_data(data)
 
-    @error = { }
+    @errors = { }
 
     if !@schema_validation_errors.blank?
-      @error[:schema_validation_errors] = @schema_validation_errors
+      @errors[:schema_validation_errors] = @schema_validation_errors
     else
       if !@lookup_errors.blank?
-        @error[:lookup_errors] = @lookup_errors
+        @errors[:lookup_errors] = @lookup_errors
       end
       if !@model_validation_errors.blank?
-        @error[:model_validation_errors] = @model_validation_errors
+        @errors[:model_validation_errors] = @model_validation_errors
       end
       if !@database_insertion_errors.blank?
-        @error[:database_insertion_errors] = @database_insertion_errors
+        @errors[:database_insertion_errors] = @database_insertion_errors
       end
     end
 
