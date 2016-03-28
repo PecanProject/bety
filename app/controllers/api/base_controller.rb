@@ -19,7 +19,7 @@ class Api::BaseController < ActionController::Base
   # handled by the default Rails exception handler that returns an HTML result.
   rescue_from StandardError do |e|
     logger.debug("EXCEPTION: #{e}")
-    @errors = e
+    @errors = e.message
     render
   end
 

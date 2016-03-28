@@ -8,14 +8,14 @@ class Api::V0::TraitsController < Api::V0::BaseController
   define_actions(Trait)
 
   def create
-   case params['format']
-   when 'xml'
-     xml_data = request.raw_post
-   when 'json'
-     xml_data = json_2_xml(request.raw_post)
-   else
-     raise "Unsupported API format"
-   end
+    case params['format']
+    when 'xml'
+      xml_data = request.raw_post
+    when 'json'
+      xml_data = json_2_xml(request.raw_post)
+    else
+      raise "Unsupported API format"
+    end
     create_from_xml_string(xml_data)
   end
 
