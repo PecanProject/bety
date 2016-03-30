@@ -5,7 +5,7 @@ SCRIPT_SOURCE_LOCATION=https://raw.githubusercontent.com/PecanProject/pecan/mast
 
 # These are options we want to pass through to load.bety.sh.  Update this as
 # needed if load.bety.sh is revised:
-LOAD_BETY_OPTION_STRING=c:d:f:hm:o:p:qr:t:u:
+LOAD_BETY_OPTION_STRING=a:cd:efghl:m:o:p:qr:tu
 
 function configure_interactively {
     cat <<EOF
@@ -47,12 +47,16 @@ export CREATE=YES
 export FIXSEQUENCE=YES
 export USERS=YES
 export DATABASE=bety
+export GUESTUSER=YES
 EOF
 }
 
 function display_help {
     local commandname=$(basename $0)
     cat <<EOF
+
+NOTE: If you just want to create an up-to-date copy of the BETYdb database,
+consider using the bety:db:populate Rake task.
 
 USAGE:
  $commandname [-h|-i]
@@ -138,6 +142,18 @@ through to load.bety.sh.]
 EOF
 fi
 
-echo "About to run $THIS_DIR/load.bety.sh $*"
+echo -n "About to run $THIS_DIR/load.bety.sh"
 
-"$THIS_DIR/load.bety.sh" $*
+# This convoluted sequence of commands should echo the positional parameters
+# that are passed to load.bety.sh:
+for value in "$@"; do
+    if [ "${value/ /}" == "$value" ]; then
+        # no spaces; echo without quoting
+        echo -n " $value"
+    else
+        echo -n " \"$value\""
+    fi
+done
+echo
+
+"$THIS_DIR/load.bety.sh" "$@"

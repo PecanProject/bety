@@ -1,0 +1,51 @@
+<%=
+
+  # The data from the template gets converted from its rendered format (either
+  # JSON or XML) to a Ruby Hash, this Hash gets inserted into a containing Hash,
+  # and then the result is converted back to the target format.
+
+  if controller.request.format == 'xml'
+    data_from_template = Hash.from_xml(yield)
+  else # JSON
+    require 'yajl'
+    data_from_template = Yajl::Parser.parse(yield)
+  end
+
+  data_hash = {
+    metadata: {
+      URI: request.url,
+      timestamp: DateTime.now
+    },
+    errors: @errors,
+    warnings: @warnings,
+  }
+
+  # Add data from create template if it's significant:
+  if !@result.nil?
+    data_hash.merge! data_from_template
+  end
+
+  # Add data from index or show template if those actions were called:
+  if !@row_set.nil? || !@row.nil?
+    data_hash[:data] = data_from_template
+  end
+
+  # Don't show extraneous keys--just delete if the value is empty:
+  if @errors.nil?
+    data_hash.delete(:errors)
+  end
+  if @warnings.nil?
+    data_hash.delete(:warnings)
+  end
+
+  # If we are "GET"ting a list, show the return count:
+  if controller.action_name == 'index'
+    data_hash[:metadata][:count] = @count
+  end
+
+  if controller.request.format == 'xml'
+    raw(data_hash.to_xml)
+  else
+    raw(Yajl::Encoder.new(pretty: true).encode(data_hash))
+  end
+%>

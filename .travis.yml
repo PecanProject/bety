@@ -1,0 +1,57 @@
+# use ruby
+language: ruby
+
+# use containers
+sudo: false
+
+# versions of ruby to use
+# see the list at http://rubies.travis-ci.org/
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - 2.1.8
+
+# used for all ruby tasks to specify the database
+env:
+  - RAILS_ENV=test
+
+# cache packages and bundler
+cache:
+  - packages
+  - bundler
+
+# install R: use r-packages-precise (https://cran.r-project.org/bin/linux/ubuntu/precise/) 
+# as source which is white listed (https://github.com/travis-ci/apt-source-whitelist/)
+addons:
+  postgresql: 9.4
+  apt:
+    packages:
+      - postgresql-9.4-postgis-2.1
+      - postgresql-9.4-postgis-2.1-scripts
+  
+# notifications should go to gitter
+notifications:
+  webhooks:
+    urls:
+      - secure: "ZmbBufQG5F4RPPxEJU/rUHCZlkWyt5efTb/G1/eON86Gsje87ZpEFImPYAc66nx9YSe7MmjXgcym4Ko0L+e7eBwGlze0vexfGhrTX5xnGEFBWdMTOqvhu/PUVpm0nwhmGif5HYksGO2Av++irDsqWVfVoGlFRQpxxVYH2LwdTeuwg1CtDKnbGlbfm3rtT8/ErMQQoUx5S8WiTDVaF/w9S7VLr9nJ0bVuooYAZKGNTOAcSkG7GPsEnwdER9WGqeCoNLZE2UKfbJhj9YIEvEKgvjeGdY51ckDlD0zaz8Noiy44ivJmzdww37bCPSP4cDoeIr/tgjlsqTua5zoDBlsGQ1JgcDwOGDtIqRgzEkY4bHfMO6Ij1D5aw5p0oXv86kJnnxiFVogbO4PRyyb9oyOgWHOgMiCL7K3ccAtV8UcMTixvWXxi8BuCXUlPbHokGSxdN9yvEiPuDDTDiVQnCUbDEvlPwimvDvu0ZEYE6aY0ctNAovu9guiRysgBYDYPqplxgyycnmY71I0MzIozNyvIt9TRbORid5pBixcvVepWuNAWxBjgsTWmj6Jl+WlTB0ecLysyFrs2Npop4ZK8hSouV07a2LNjAQENt6ztbhTcqJiOqcm3VczoBjHkL/A7X6rELU0z4fum+tBjfeKAB0UxTUcznXpu7wl2kDa4whuE0Uo="
+    on_success: always
+    on_failure: always
+  email:
+    on_success: always
+    on_failure: always
+
+# list of services to be running
+services:
+  - postgresql
+
+before_script:
+  - psql -U postgres -c "CREATE USER bety WITH SUPERUSER CREATEDB UNENCRYPTED PASSWORD 'bety'";
+  - cp config/database.yml.travis config/database.yml
+  - cp db/production_structure.sql db/test_structure.sql
+  - psql -U postgres -c "CREATE DATABASE test WITH OWNER bety;"
+  - psql -U bety -d test -c "CREATE EXTENSION postgis;"
+  - bundle exec rake db:structure:load
+  - bundle exec rake db:fixtures:load
+  
+script: 
+  - bundle exec rspec --tag ~js
