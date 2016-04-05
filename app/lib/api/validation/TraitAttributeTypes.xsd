@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:simpleType name="normalizedString">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="preserve"/>
+      <xs:pattern value="(\S+( \S+)*)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="numeric-16-4">
+    <xs:restriction base="xs:decimal">
+      <xs:totalDigits value="16"/>
+      <xs:fractionDigits value="4"/>
+      <xs:minExclusive value="-1000000000000"/>
+      <xs:maxExclusive value="1000000000000"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+
+  <xs:complexType name="site">
+    <xs:attribute name="id" type="xs:positiveInteger"/>
+    <xs:attribute name="city" type="normalizedString"/>
+    <xs:attribute name="state" type="normalizedString"/>
+    <xs:attribute name="country" type="normalizedString"/>
+    <xs:attribute name="sitename" type="normalizedString"/>
+  </xs:complexType>
+
+  <xs:complexType name="species">
+    <xs:sequence>
+      <xs:element name="cultivar" type="cultivar" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:positiveInteger"/>
+    <xs:attribute name="genus" type="normalizedString"/>
+    <xs:attribute name="species" type="normalizedString"/>
+    <xs:attribute name="scientificname" type="normalizedString"/>
+    <xs:attribute name="commonname" type="normalizedString"/>
+    <xs:attribute name="AcceptedSymbol" type="normalizedString"/>
+  </xs:complexType>
+
+  <xs:complexType name="citation">
+    <xs:attribute name="id" type="xs:positiveInteger"/>
+    <xs:attribute name="author" type="normalizedString"/>
+    <xs:attribute name="year" type="xs:gYear"/>
+    <xs:attribute name="title" type="normalizedString"/>
+    <xs:attribute name="doi" type="normalizedString"/>
+  </xs:complexType>
+
+  <xs:complexType name="cultivar">
+    <xs:attribute name="id" type="xs:positiveInteger"/>
+    <xs:attribute name="name" type="normalizedString"/>
+  </xs:complexType>
+
+  <xs:complexType name="treatment">
+    <xs:attribute name="id" type="xs:positiveInteger"/>
+    <xs:attribute name="name" type="normalizedString"/>
+    <xs:attribute name="control" type="xs:boolean"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="stat">
+    <xs:attribute name="name" type="stat-type" use="required"/>
+    <xs:attribute name="sample-size" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="value" type="numeric-16-4" use="required"/>
+  </xs:complexType>
+
+  <xs:simpleType name="stat-type">
+    <xs:restriction base="normalizedString">
+      <xs:enumeration value="SD"/>
+      <xs:enumeration value="SE"/>
+      <xs:enumeration value="MSE"/>
+      <xs:enumeration value="95%Cl"/>
+      <xs:enumeration value="LSD"/>
+      <xs:enumeration value="MSD"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="variable">
+    <xs:attribute name="id" type="xs:positiveInteger"/>
+    <xs:attribute name="name" type="normalizedString"/>
+    <xs:attribute name="description" type="normalizedString"/>
+  </xs:complexType>
+
+
+  <xs:simpleType name="access-level">
+    <xs:restriction base="xs:positiveInteger">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="4"/>
+      <xs:pattern value="\d"/>
+      <xs:whiteSpace value="preserve"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="method">
+    <xs:sequence>
+      <xs:element name="citation" type="citation"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="normalizedString"/>
+  </xs:complexType>
+
+
+
+
+
+
+</xs:schema>

@@ -14,7 +14,7 @@ class Input < ActiveRecord::Base
   belongs_to :format
 
   #Self reference
-  has_many :children, :class_name => "Input"
+  has_many :children, :class_name => "Input", :foreign_key => "parent_id"
   belongs_to :parent, :class_name => "Input", :foreign_key => "parent_id"
 
   accepts_nested_attributes_for :site
