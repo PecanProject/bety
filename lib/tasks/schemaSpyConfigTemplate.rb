@@ -69,4 +69,7 @@
 # customized version of SchemaSpy.  Otherwise the generated files will pollute
 # your Rails root directory:
 #
-# @outdir = "db_docs" # This is the setting we use on ebi-forecast for the version of BETYdb at www.betydb.org.
+# @outdir = "public/db_docs" # This is the setting we use on ebi-forecast for
+#                            # the version of BETYdb at www.betydb.org, which
+#                            # makes the docs viewable at
+#                            # www.betydb.org/db_docs/index.html.

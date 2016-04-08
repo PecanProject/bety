@@ -100,7 +100,7 @@ config/application.yml.  The general format of this section of the file is
 
         settings_for_full_documentation:
            schema_spy_jar_file: ~/Applications/SchemaSpy/schemaSpy_5.0.0.jar
-           output_directory: db_docs
+           output_directory: public/db_docs
            remove_root_dir_files: false
 
         settings_for_customized_documentation:
