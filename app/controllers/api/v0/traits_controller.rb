@@ -7,6 +7,12 @@ class Api::V0::TraitsController < Api::V0::BaseController
 
   define_actions(Trait)
 
+  api!
+  description <<-DESC
+    Create new traits from the data specified in the posted data.  Data about
+    traits to be inserted can be supplied in either JSON or XML format.
+  DESC
+  param :key, lambda {|val| true }, :desc => "The apikey to use for authorization."
   def create
     case params['format']
     when 'xml'

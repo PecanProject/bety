@@ -81,3 +81,10 @@ group :production do
   gem "passenger"
 end
 
+# API-related Gems:
+
+gem "rspec_api_documentation"
+gem "json-schema" # needed by rspec_api_documentation
+
+gem "apipie-rails"
+

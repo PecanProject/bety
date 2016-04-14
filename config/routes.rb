@@ -1,4 +1,5 @@
 BetyRails3::Application.routes.draw do # RAILS3 |map| removed
+  apipie
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
