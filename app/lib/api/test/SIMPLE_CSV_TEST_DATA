@@ -1,0 +1,3 @@
+variable,mean,access_level,site,species,cultivar,n,SE,citation_author,citation_year
+barkC,1.4,4,Bear Creek,Abronia minor,,100,3.7,Dusek,2006
+barkC,2.1,1,Y site,Panicum virgatum,Alamo+SL933,230,6.3,Yin,2007

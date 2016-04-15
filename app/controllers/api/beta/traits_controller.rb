@@ -19,6 +19,8 @@ class Api::Beta::TraitsController < Api::Beta::BaseController
       xml_data = request.raw_post
     when 'json'
       xml_data = json_2_xml(request.raw_post)
+    when 'csv'
+      xml_data = csv_2_xml(request.raw_post)
     else
       raise "Unsupported API format"
     end
