@@ -225,7 +225,7 @@ div#banner a.logo {
   width: 213px;
   height: 109px;
   text-indent: -9999em;
- top left no-repeat;
+/* top left no-repeat;*/
 }
 
 div#banner a.bety-db {
