@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "3.2.21"
+gem "rails", "3.2.22.2"
 gem "prototype-rails" # needed for rails 3.1 and above until we phase out prototype
 gem "query_reviewer", "0.1.6"
 gem "nokogiri"
@@ -64,7 +64,7 @@ end
 #     bundle install --without javascript_testing
 #
 group :javascript_testing do
-  gem "capybara-webkit"
+  gem "capybara-webkit", "1.7.1"
 end
 
 # This group is used by RSpec if the environment variable RAILS_DEBUG is set to
