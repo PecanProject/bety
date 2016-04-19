@@ -10,7 +10,7 @@ feature 'Citation index works' do
     it 'should have "Welcome to BETYdb" ' do
       visit root_path
       
-      page.should have_content 'Welcome to BETYdb'
+      expect(page).to have_content 'Welcome to BETYdb'
     end
   end
 

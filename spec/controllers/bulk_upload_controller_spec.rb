@@ -69,7 +69,7 @@ describe BulkUploadController, :type => :controller do
           session[:citation] = 1
           post 'display_csv_file', @form
           assert_nil session[:citation], "Failed to remove citation from session"
-          session[:flash][:warning].should =~ /^Removing/i
+          expect(session[:flash][:warning]).to match(/^Removing/i)
         end
 
         it "should validate the file data" do

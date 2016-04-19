@@ -9,7 +9,7 @@ feature 'Ensembles work' do
   context 'GET /ensembles' do
     it 'should have "Listing Ensembles" ' do
       visit '/ensembles'
-      page.should have_content 'Listing Ensembles'
+      expect(page).to have_content 'Listing Ensembles'
     end
 
     it 'should not have "New Ensemble" page ' do
@@ -24,7 +24,7 @@ feature 'Ensembles work' do
       it 'should return "Viewing Ensemble" ' do
         visit '/ensembles/'
         first(:xpath,".//a[@alt='show' and contains(@href,'/ensembles/')]").click
-        page.should have_content 'Viewing Ensemble'
+        expect(page).to have_content 'Viewing Ensemble'
       end
     end
   end
