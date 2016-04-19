@@ -390,8 +390,7 @@ describe BulkUploadDataSet do
       dataset.check_header_list
       expect {
         dataset.validate_csv_data
-      }.not_to change { dataset.validation_summary }.from({ field_list_errors: [] })
-        .to ({:field_list_errors=>[]})
+      }.not_to change { dataset.validation_summary }
     end
 
     # tests for the get_upload_* methods
