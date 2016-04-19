@@ -44,7 +44,7 @@ group :development, :test do
   # Although rspec-rails is mainly for the test environment, we
   # include it in development in case we want to have access to
   # RSpec-specific generators.
-  gem "rspec-rails"
+  gem "rspec-rails", "2.99"
   # Don't think we need this:
   # gem "sqlite3", "1.3.3"
 end
@@ -83,7 +83,7 @@ end
 
 # API-related Gems:
 
-gem "rspec_api_documentation"
+#gem "rspec_api_documentation"
 gem "json-schema" # needed by rspec_api_documentation
 
 gem "apipie-rails"
