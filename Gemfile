@@ -7,7 +7,7 @@ gem "nokogiri"
 gem "narray", "0.6.0.4"
 gem "choice", "0.1.6"
 gem "comma", "3.0.4"
-gem "json", "1.5.5"
+gem "json"
 gem "multi_json", "1.3.6"
 gem "railroad", "0.5.0"
 gem "recaptcha", "0.3.4", :require => "recaptcha/rails"
@@ -45,8 +45,6 @@ group :development, :test do
   # include it in development in case we want to have access to
   # RSpec-specific generators.
   gem "rspec-rails", "~> 3.0"
-  # Don't think we need this:
-  # gem "sqlite3", "1.3.3"
 end
 
 
@@ -87,4 +85,5 @@ gem "rspec_api_documentation"
 gem "json-schema" # needed by rspec_api_documentation
 
 gem "apipie-rails"
+gem "test-unit" # seems to be needed by apipie-rails and prototype-rails
 
