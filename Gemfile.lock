@@ -89,6 +89,8 @@ GEM
     pg (0.17.0)
     polyglot (0.3.5)
     power_assert (0.2.2)
+    prototype-rails (3.2.1)
+      rails (~> 3.2)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -207,6 +209,7 @@ DEPENDENCIES
   nokogiri
   passenger
   pg
+  prototype-rails
   prototype_legacy_helper (= 0.0.0)!
   pry
   query_reviewer (= 0.1.6)
@@ -226,6 +229,3 @@ DEPENDENCIES
   tzinfo (= 0.3.35)
   will_paginate (= 3.0.4)
   yajl-ruby
-
-BUNDLED WITH
-   1.11.2
