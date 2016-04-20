@@ -1,6 +1,6 @@
 # the test for the work_flow page
 
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Work_flow index works' do

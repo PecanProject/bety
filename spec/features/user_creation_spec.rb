@@ -1,4 +1,3 @@
-require 'spec_helper'
  
 describe "Signup page", :type => :request do
   describe "GET /signup"  do

@@ -1,5 +1,5 @@
 # test for redmine task #1908
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Posteriors search' do

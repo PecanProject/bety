@@ -1,4 +1,3 @@
-require 'spec_helper'
 describe TraitsController do
 	let(:session) {
 		{user_id: 512127716}

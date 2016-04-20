@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe BulkUploadController, :type => :controller do
 

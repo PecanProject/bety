@@ -1,4 +1,3 @@
-require 'spec_helper'
  
 describe "Login page", :type => :request do
   describe "GET /login"  do

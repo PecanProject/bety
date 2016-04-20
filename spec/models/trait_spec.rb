@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe Trait do
   it 'should be invalid if no attributes are given' do

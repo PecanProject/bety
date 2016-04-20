@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper, AutocompletionHelper
 
 feature 'Priors index works' do

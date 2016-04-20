@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe "treatments/new" do
   before(:each) do
