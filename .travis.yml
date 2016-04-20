@@ -7,9 +7,10 @@ sudo: false
 # versions of ruby to use
 # see the list at http://rubies.travis-ci.org/
 rvm:
-  - 1.9.3
-  - 2.0.0
+  - 2.1.5
   - 2.1.8
+  - 2.2.4
+  - 2.3.0
 
 # used for all ruby tasks to specify the database
 env:

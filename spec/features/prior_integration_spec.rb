@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper, AutocompletionHelper
 
 feature 'Priors index works' do
@@ -9,7 +9,7 @@ feature 'Priors index works' do
   context 'GET /priors' do
     it 'should have "Listing Priors" ' do
       visit '/priors'
-      page.should have_content 'Listing Priors'
+      expect(page).to have_content 'Listing Priors'
     end
 
     it 'should allow creation of new  priors', js:true do
@@ -25,7 +25,7 @@ feature 'Priors index works' do
 
       click_button 'Create'
 
-      page.should have_content 'Prior was successfully created'
+      expect(page).to have_content 'Prior was successfully created'
 
 
       # now do clean-up
@@ -43,7 +43,7 @@ feature 'Priors index works' do
       it 'should return "Viewing Prior" ' do
         visit '/priors/'
         first(:xpath,".//a[@alt='show' and contains(@href,'/priors/')]").click
-        page.should have_content 'Viewing Prior'
+        expect(page).to have_content 'Viewing Prior'
       end
     end
     
@@ -55,28 +55,28 @@ feature 'Priors index works' do
       end
 
       it 'should return "Editing Prior" ' do
-        page.should have_content 'Editing Prior'
+        expect(page).to have_content 'Editing Prior'
       end
 
       it 'should allow adding related pfts', js: true do
         click_link 'View Related PFTs'
         fill_in 'search_pfts', with: 'temperate.Northern_Pine'
         click_link '+'
-        page.should have_content 'temperate.Northern_Pine'
-        page.should have_content 'X' # this seems to be needed
+        expect(page).to have_content 'temperate.Northern_Pine'
+        expect(page).to have_content 'X' # this seems to be needed
         click_button 'Update'
         # reopen related pfts listing
         click_link 'View Related PFTs'
-        page.should have_content 'temperate.Northern_Pine'
+        expect(page).to have_content 'temperate.Northern_Pine'
 
         # now do clean-up:
         fill_in 'search_pfts', with: 'temperate.Northern_Pine'
         click_link 'X'
-        page.should have_content '+' # this seems to be needed
+        expect(page).to have_content '+' # this seems to be needed
         click_button 'Update'
         # reopen related pfts listing
         click_link 'View Related PFTs'
-        page.should_not have_content 'temperate.Northern_Pine'
+        expect(page).not_to have_content 'temperate.Northern_Pine'
       end
 
     end

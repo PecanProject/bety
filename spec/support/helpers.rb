@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 module LoginHelper
   def login_test_user

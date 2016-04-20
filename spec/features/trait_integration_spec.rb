@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper, AutocompletionHelper
 
 feature 'Traits index works' do
@@ -9,7 +9,7 @@ feature 'Traits index works' do
   context 'GET /traits' do
     it 'should have "Listing Traits" ' do
       visit '/traits'
-      page.should have_content 'Listing Traits'
+      expect(page).to have_content 'Listing Traits'
     end
 
     context 'clicking view trait button' do
@@ -17,7 +17,7 @@ feature 'Traits index works' do
         visit '/traits/'
         
         first(:xpath,".//a[@alt='show' and contains(@href,'/traits/')]").click
-        page.should have_content 'Viewing Trait'
+        expect(page).to have_content 'Viewing Trait'
       end
     end
 
@@ -28,7 +28,7 @@ feature 'Traits index works' do
         click_link 'Traits'
         click_link 'New Trait'
         
-        page.should_not have_content 'Please choose a citation to work with first.'
+        expect(page).not_to have_content 'Please choose a citation to work with first.'
       end
     end
 
@@ -36,13 +36,13 @@ feature 'Traits index works' do
      # Create Citation association
      visit '/citations'
      first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
-     page.should have_content 'Sites already associated with this citation'
+     expect(page).to have_content 'Sites already associated with this citation'
 
 
      # Verify the trait creation
      visit '/traits/new'
 
-      page.should have_content 'New Trait'
+      expect(page).to have_content 'New Trait'
 
       fill_autocomplete "search_variables", with: "Amax", select: "Amax"
       fill_in 'trait_mean', :with => '238.12'
@@ -53,7 +53,7 @@ feature 'Traits index works' do
 
       click_button 'Create'
 
-      page.should have_content 'Trait was successfully created'
+      expect(page).to have_content 'Trait was successfully created'
 
       visit '/traits'
       all(:xpath, './/a[@alt = "delete"]')[-1].click
@@ -70,7 +70,7 @@ feature 'Traits index works' do
       it 'should return "Editing Trait" ' do
         visit '/traits/'
         first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
-        page.should have_content 'Editing Trait'
+        expect(page).to have_content 'Editing Trait'
       end
     end
 
@@ -138,7 +138,7 @@ feature "Editing traits works" do
     select('Amax - umol CO2 m-2 s-1', from: 'covariate[][variable_id]')
     fill_in "covariate[][level]", with: '1.0'
     click_button 'Update'
-    page.should have_content 'Amax - umol CO2 m-2 s-1'
+    expect(page).to have_content 'Amax - umol CO2 m-2 s-1'
 
     # remove
     click_button 'Edit Record'

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Yields pages work' do
@@ -17,8 +17,8 @@ feature 'Yields pages work' do
       visit '/yields'
       click_link 'New Yield'
       
-      page.should have_content 'Choose a citation to work with ( Actions Tab > Check )'
-      page.should have_content 'Listing Citations'
+      expect(page).to have_content 'Choose a citation to work with ( Actions Tab > Check )'
+      expect(page).to have_content 'Listing Citations'
     end
 
     it 'should allow creation of new yields after selecting a citation', :js => true do
@@ -41,7 +41,7 @@ feature 'Yields pages work' do
 
       click_button 'Create'
       
-      page.should have_content 'Yield was successfully created.'
+      expect(page).to have_content 'Yield was successfully created.'
 
       # now do clean-up:
       visit '/yields?search=sacc'
@@ -69,7 +69,7 @@ feature 'Yields pages work' do
 
       click_button 'Create'
       
-      page.should have_content 'Mean is not a number'
+      expect(page).to have_content 'Mean is not a number'
     end
 
     specify "Managers should be allowed to delete yields, even those they didn't create", js: true do
@@ -108,14 +108,14 @@ feature 'Yields pages work' do
         a.accept
       end
 
-      page.should_not have_content 'Abarema jupunba'
+      expect(page).not_to have_content 'Abarema jupunba'
     end
 
     context 'clicking view yield button' do
       it 'should return "Viewing Yield" ' do
         visit '/yields/'
         first(:xpath,".//a[@alt='show' and contains(@href,'/yields/')]").click
-        page.should have_content 'Viewing Yield'
+        expect(page).to have_content 'Viewing Yield'
       end
     end
     
@@ -123,7 +123,7 @@ feature 'Yields pages work' do
       it 'should return "Editing Yield" ' do
         visit '/yields/'
         first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
-        page.should have_content 'Editing Yield'
+        expect(page).to have_content 'Editing Yield'
       end
     end
 
@@ -183,7 +183,7 @@ feature 'Yields pages work' do
         a.accept
       end
 
-      page.should_not have_content 'Abarema jupunba'
+      expect(page).not_to have_content 'Abarema jupunba'
     end
 
 

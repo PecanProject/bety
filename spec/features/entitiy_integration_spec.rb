@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Entities index works' do
@@ -9,12 +9,12 @@ feature 'Entities index works' do
   context 'GET /entities' do
     it 'should have "Listing Entities" ' do
       visit '/entities'
-      page.should have_content 'Listing Entities'
+      expect(page).to have_content 'Listing Entities'
     end
 
     it 'should have "New Entity" ' do
       visit '/entities/new'
-      page.should have_content 'New Entity'
+      expect(page).to have_content 'New Entity'
     end
 
     it 'should allow creation of new entities' do
@@ -24,14 +24,14 @@ feature 'Entities index works' do
 
       click_button 'Create'
       
-      page.should have_content 'Entity was successfully created'
+      expect(page).to have_content 'Entity was successfully created'
     end
 
     context 'clicking view entity button' do
       it 'should return "Viewing Entity" ' do
         visit '/entities/'
         first(:xpath,".//a[@alt='show' and contains(@href,'/entities/')]").click
-        page.should have_content 'Viewing Entity'
+        expect(page).to have_content 'Viewing Entity'
       end
     end
     
@@ -39,7 +39,7 @@ feature 'Entities index works' do
       it 'should have_content "Editing Entity" ' do
         visit '/entities/'
         first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
-        page.should have_content 'Editing Entity'
+        expect(page).to have_content 'Editing Entity'
       end
     end      
 
@@ -51,7 +51,7 @@ feature 'Entities index works' do
         fill_in 'Notes', :with => 'in reducing greenhouse gas'
 
         click_button 'Update'
-        page.should have_content 'Entity was successfully updated.'
+        expect(page).to have_content 'Entity was successfully updated.'
       end
     end
 

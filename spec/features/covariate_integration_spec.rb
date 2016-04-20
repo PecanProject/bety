@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Covariate pages work' do
@@ -9,14 +9,14 @@ feature 'Covariate pages work' do
   context 'GET /covariates' do
     it 'should have "Listing Covariates" ' do
       visit '/covariates'
-      page.should have_content 'Listing Covariates'
+      expect(page).to have_content 'Listing Covariates'
     end
   end
 
   specify 'Individual covariates should be editable' do
     visit '/covariates'
     first(:xpath, ".//a[@alt = 'edit']").click
-    page.should have_content 'Editing covariate'
+    expect(page).to have_content 'Editing covariate'
   end
 
 end

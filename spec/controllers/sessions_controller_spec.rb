@@ -1,11 +1,10 @@
-require 'spec_helper'
 
 describe SessionsController do
 
   describe "GET 'login'" do
     it "should be successful" do
       get 'create'
-      response.should be_success
+      expect(response).to be_success
     end
 #    it "should have 'Log In'" do
 #      get 'create'
@@ -84,7 +83,7 @@ describe SessionsController do
 
     it "should re-render the new page" do
       post :create, :session => @attr
-      response.should render_template('new')
+      expect(response).to render_template('new')
     end
 
 #    it "should have the right title" do
