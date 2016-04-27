@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe BulkUploadDataSet do
 
@@ -56,7 +55,7 @@ describe BulkUploadDataSet do
 
       it "should be marked as a yield upload file" do
         dataset.check_header_list
-        expect(dataset.send(:yield_data?)).to be_true
+        expect(dataset.send(:yield_data?)).to be_truthy
       end
 
     end
@@ -81,7 +80,7 @@ describe BulkUploadDataSet do
 
         it "should be marked as a trait upload file" do
           dataset.check_header_list
-          expect(dataset.send(:trait_data?)).to be_true
+          expect(dataset.send(:trait_data?)).to be_truthy
         end
 
       end
@@ -343,7 +342,7 @@ describe BulkUploadDataSet do
     }
 
     it 'responds to check_header_list' do
-      dataset.should respond_to(:check_header_list)
+      expect(dataset).to respond_to(:check_header_list)
     end
 
     it 'updates the validation summary when check_header_list is run' do
@@ -390,8 +389,7 @@ describe BulkUploadDataSet do
       dataset.check_header_list
       expect {
         dataset.validate_csv_data
-      }.not_to change { dataset.validation_summary }.from({ field_list_errors: [] })
-        .to ({:field_list_errors=>[]})
+      }.not_to change { dataset.validation_summary }
     end
 
     # tests for the get_upload_* methods
@@ -538,23 +536,23 @@ describe BulkUploadDataSet do
       }
       
       specify "should show no inconsistent species references" do
-        expect(validation_summary.keys.should_not include(:inconsistent_species_reference))
+        expect(validation_summary.keys).not_to include(:inconsistent_species_reference)
       end
 
       specify "should show no inconsistent site references" do
-        expect(validation_summary.keys.should_not include(:inconsistent_site_reference))
+        expect(validation_summary.keys).not_to include(:inconsistent_site_reference)
       end
 
       specify "should show no inconsistent treatment references" do
-        expect(validation_summary.keys.should_not include(:inconsistent_treatment_reference))
+        expect(validation_summary.keys).not_to include(:inconsistent_treatment_reference)
       end
 
       specify "should show no inconsistent citation references" do
-        expect(validation_summary.keys.should_not include(:inconsistent_citation_reference))
+        expect(validation_summary.keys).not_to include(:inconsistent_citation_reference)
       end
 
       specify "should show no inconsistent cultivar references" do
-        expect(validation_summary.keys.should_not include(:inconsistent_cultivar_reference))
+        expect(validation_summary.keys).not_to include(:inconsistent_cultivar_reference)
       end
 
     end

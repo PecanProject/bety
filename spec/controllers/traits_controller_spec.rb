@@ -1,4 +1,3 @@
-require 'spec_helper'
 describe TraitsController do
 	let(:session) {
 		{user_id: 512127716}
@@ -72,17 +71,17 @@ describe TraitsController do
 
     it "should display error messages" do
 	    post :update,{:id =>@trait.to_param,:trait => invalid_attr},session
-	    response.body.should have_content("2 errors")
+	    expect(response.body).to have_content("2 errors")
     end
 
     it "should not change attribute inputs" do
 	    post :update,{:id =>@trait.to_param,:trait => invalid_attr},session
-      response.body.should have_selector("input#trait_mean[value = '#{invalid_attr[:mean]}']")
+      expect(response.body).to have_selector("input#trait_mean[value = '#{invalid_attr[:mean]}']")
     end
 
     it "should not change covariate inputs" do
 	    post :update,{:id =>@trait.to_param,:trait => invalid_attr, :covariate =>invalid_covariate},session
-	    response.body.should have_xpath(".//select[@id='covariate__variable_id']/option[@value='404' and @selected='selected']")
+	    expect(response.body).to have_xpath(".//select[@id='covariate__variable_id']/option[@value='404' and @selected='selected']")
     end
   end
 

@@ -11,16 +11,21 @@ if defined?(Bundler)
   # Bundler.require(:default, :assets, Rails.env)
 end
 
-CONFIG = YAML.load(File.read(File.expand_path('../defaults.yml', __FILE__)))
-if File.exists?(File.expand_path('../application.yml', __FILE__))
-  customizations = YAML.load(File.read(File.expand_path('../application.yml', __FILE__)))
-  CONFIG.update customizations
-  CONFIG.merge! CONFIG.fetch(Rails.env, {})
-end
-CONFIG.symbolize_keys!
-
 module BetyRails3
   class Application < Rails::Application
+
+    # Enable Hash#deep_symbolize_keys method defined in lib/symbolize_helper.rb.
+    require 'symbolize_helper'
+    using SymbolizeHelper
+
+    # Define top-level Hash constant CONFIG by merging settings in defaults.yml and application.yml.
+    ::CONFIG = YAML.load(File.read(File.expand_path('../defaults.yml', __FILE__))).deep_symbolize_keys
+    if File.exists?(File.expand_path('../application.yml', __FILE__))
+      customizations = YAML.load(File.read(File.expand_path('../application.yml', __FILE__))).deep_symbolize_keys
+      ::CONFIG.update customizations
+      ::CONFIG.merge! CONFIG.fetch(Rails.env, {})
+    end
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

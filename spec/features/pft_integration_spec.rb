@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Pfts features work works' do
@@ -13,14 +13,14 @@ feature 'Pfts features work works' do
     end
 
     it 'should have "Listing pfts" ' do
-      page.should have_content 'Listing PFTs'
+      expect(page).to have_content 'Listing PFTs'
     end
 
     # tests for redmine bug #1936
     it 'should redirect to the home page if user is logged out' do
       click_link 'Logout'
       visit '/pfts'
-      page.should have_content "Welcome to BETYdb"
+      expect(page).to have_content "Welcome to BETYdb"
     end
 
   end
@@ -33,7 +33,7 @@ feature 'Pfts features work works' do
       fill_in 'Definition', :with => '2900'
       click_button 'Create'
       
-      page.should have_content 'Pft was successfully created'
+      expect(page).to have_content 'Pft was successfully created'
     end
 
   end
@@ -43,7 +43,7 @@ feature 'Pfts features work works' do
     it 'should return "Viewing Pft" ' do
       visit '/pfts/'
       first(:xpath,".//a[@alt='show' and contains(@href,'/pfts/')]").click
-      page.should have_content 'Viewing PFT'
+      expect(page).to have_content 'Viewing PFT'
     end
   end
   
@@ -55,7 +55,7 @@ feature 'Pfts features work works' do
     end
 
     it 'should return "Editing Pft" ' do
-      page.should have_content 'Editing PFT'
+      expect(page).to have_content 'Editing PFT'
     end
 
     it 'should allow adding a related prior', js: true do
@@ -69,7 +69,7 @@ feature 'Pfts features work works' do
       # go back to edit page and reopen related priors listing
       click_button "Edit Record"
       click_link 'View Related Priors'
-      page.should have_text 'plants'
+      expect(page).to have_text 'plants'
 
       # now do clean-up:
       click_link 'X'
@@ -79,21 +79,21 @@ feature 'Pfts features work works' do
     it 'should allow searching for species', js: true do
       click_link "View Related Species"
       fill_in 'search', with: 'Lolium'
-      page.should have_link 'Lolium perenne'
+      expect(page).to have_link 'Lolium perenne'
     end
 
 
     it 'should allow adding a new species', js: true do
       click_link "View Related Species"
       fill_in 'search', with: 'Lolium'
-      page.should have_xpath ".//tr[contains(string(.), 'Lolium')]/td/a[text() = '+']"
+      expect(page).to have_xpath ".//tr[contains(string(.), 'Lolium')]/td/a[text() = '+']"
       first(:xpath, ".//tr[contains(string(.), 'Lolium')]/td/a[text() = '+']").click
       # If we're using Selenium, we have to deal with the modal dialogue:
       if page.driver.is_a? Capybara::Selenium::Driver
         a = page.driver.browser.switch_to.alert
         a.accept
       end
-      page.should have_xpath(".//tr[td/a[contains(text(), 'Lolium perenne')]]/td/a[text() = 'X']")
+      expect(page).to have_xpath(".//tr[td/a[contains(text(), 'Lolium perenne')]]/td/a[text() = 'X']")
 
 
       # now do clean-up:
@@ -124,7 +124,7 @@ feature 'Pfts features work works' do
       some_pft_id = Pft.first.id
       visit "/pfts/edit2_pfts_species/#{some_pft_id}?search=Abarema+jupunba"
       # The returned 'page' is actually the text of the Prototype "Element.update" calls.
-      page.should have_content 'Abarema jupunba'
+      expect(page).to have_content 'Abarema jupunba'
     end
 
     it 'should not be case-sensitive' do
@@ -133,7 +133,7 @@ feature 'Pfts features work works' do
       some_pft_id = Pft.first.id
       visit "/pfts/edit2_pfts_species/#{some_pft_id}?search=ABAREMA+JUPUNBA"
       # The returned 'page' is actually the text of the Prototype "Element.update" calls.
-      page.should have_content 'Abarema jupunba'
+      expect(page).to have_content 'Abarema jupunba'
     end
 
   end
@@ -142,7 +142,7 @@ feature 'Pfts features work works' do
   it 'should not create a new PFT when the Back button is clicked' do
     visit '/pfts/new'
     click_button 'All Records'
-    page.should_not have_content 'Pft was successfully created.'
+    expect(page).not_to have_content 'Pft was successfully created.'
   end
   
 end

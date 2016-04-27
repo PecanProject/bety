@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Variables index works' do
@@ -9,7 +9,7 @@ feature 'Variables index works' do
   context 'GET /variables' do
     it 'should have "Listing variables" ' do
       visit '/variables'
-      page.should have_content 'Listing Variables'
+      expect(page).to have_content 'Listing Variables'
     end
 
     it 'should allow creation of new variables' do
@@ -21,7 +21,7 @@ feature 'Variables index works' do
 
       click_button 'Create'
       
-      page.should have_content 'Variable was successfully created'
+      expect(page).to have_content 'Variable was successfully created'
     end
 
     context 'clicking view variable button' do
@@ -29,7 +29,7 @@ feature 'Variables index works' do
         visit '/variables/'
         
         first(:xpath,".//a[@alt='show' and contains(@href,'/variables/')]").click
-        page.should have_content 'Viewing Variable'
+        expect(page).to have_content 'Viewing Variable'
       end
     end
     
@@ -37,7 +37,7 @@ feature 'Variables index works' do
       it 'should return "Editing Variable" ' do
         visit '/variables/'
         first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
-        page.should have_content 'Editing Variable'
+        expect(page).to have_content 'Editing Variable'
       end
     end
 

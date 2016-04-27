@@ -1,6 +1,6 @@
 # the test for the work_flow page
 
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Work_flow index works' do
@@ -12,7 +12,7 @@ feature 'Work_flow index works' do
   context 'GET /workflows' do
     it 'should have "Listing Workflows" ' do
       visit workflows_path
-      page.should have_content 'Listing Workflows'
+      expect(page).to have_content 'Listing Workflows'
     end
   end
 
@@ -21,7 +21,7 @@ feature 'Work_flow index works' do
     it ' should have "Listing Inputs" ' do
       visit '/users'
       click_link('Inputs')
-      page.should have_content 'Listing Inputs'
+      expect(page).to have_content 'Listing Inputs'
     end
   end
 end

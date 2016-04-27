@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Cultivars index works' do
@@ -9,7 +9,7 @@ feature 'Cultivars index works' do
   context 'GET /cultivars' do
     it 'should have "Listing Cultivars" ' do
       visit '/cultivars'
-      page.should have_content 'Listing Cultivars'
+      expect(page).to have_content 'Listing Cultivars'
     end
   end
 
@@ -24,7 +24,7 @@ feature 'Cultivars index works' do
       select('3', :from => 'cultivar[specie_id]')
       click_button 'Create'
       
-      page.should have_content 'Cultivar was successfully created'
+      expect(page).to have_content 'Cultivar was successfully created'
 
       # clean-up:
       visit '/cultivars'
@@ -41,7 +41,7 @@ feature 'Cultivars index works' do
     it 'should return "Viewing Cultivar" ' do
       visit '/cultivars/'
       first(:xpath,".//a[@alt='show' and contains(@href,'/cultivars/')]").click
-      page.should have_content 'Viewing Cultivar'
+      expect(page).to have_content 'Viewing Cultivar'
     end
   end
   
@@ -49,7 +49,7 @@ feature 'Cultivars index works' do
     it 'should return "Editing Cultivar" ' do
       visit '/cultivars/'
       first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
-      page.should have_content 'Editing Cultivar'
+      expect(page).to have_content 'Editing Cultivar'
     end
   end
   
@@ -61,7 +61,7 @@ feature 'Cultivars index works' do
       fill_in 'Name', :with => 'Plantesque'
       
       click_button 'Update'
-      page.should have_content 'Cultivar was successfully updated.'
+      expect(page).to have_content 'Cultivar was successfully updated.'
     end
     
   end  

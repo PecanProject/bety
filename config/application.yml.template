@@ -7,6 +7,26 @@ rest_auth_site_key: 'your secret key'
 # use the default site key, the caryaXX and guestuser account passwords will
 # work out of the box.
 
+# CONFIGURATION SETTINGS FOR SchemaSpy.  Settings here will override the
+# configuration file lib/tasks/schemaSpyConfig.rb if it exists.  For more
+# information about what settings to use, run "rake -D bety:dbdocs"; and also
+# look in the sample configuration file lib/tasks/schemaSpyConfigTemplate.rb.
+#
+# schema_spy_settings:
+#     java_executable: java
+#     postgresql_driver_jar_file: some/path/to/postgresql-9.3-1103.jdbc41.jar
+#
+#     settings_for_full_documentation:
+#         schema_spy_jar_file: some/path/to/schemaSpy_5.0.0.jar
+#         output_directory: public/db_docs # can be anything, but this is what is used for www.betydb.org,
+#                                          # which makes the docs viewable at www.betydb.org/db_docs/index.html
+#         remove_root_dir_files: false # (the default)
+#
+#     settings_for_customized_documentation:
+#         schema_spy_jar_file: some/path/to/schemaSpy.jar
+#         output_directory: . # Always use this value for the customized documentation.
+#         remove_root_dir_files: true # Recommended value for the customized documentation.
+
 
 
 

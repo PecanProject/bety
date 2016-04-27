@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Management features work' do
@@ -9,7 +9,7 @@ feature 'Management features work' do
 
   context 'GET /managements' do
     it 'should have "Listing Managements" ' do
-      page.should have_content 'Listing Managements'
+      expect(page).to have_content 'Listing Managements'
     end
 
     it 'should allow creation of new managments' do
@@ -19,7 +19,7 @@ feature 'Management features work' do
     context 'clicking view managment button' do
       it 'should return "Viewing Management" ' do
         first(:xpath,".//a[@alt='show' and contains(@href,'/managements/')]").click
-        page.should have_content 'Viewing Management'
+        expect(page).to have_content 'Viewing Management'
       end
     end
     
@@ -30,25 +30,25 @@ feature 'Management features work' do
       end
 
       it 'should return "Editing Management" ' do
-        page.should have_content 'Editing Management'
+        expect(page).to have_content 'Editing Management'
       end
 
       it 'should allow adding new related treatments', js: true do
         click_link 'View Related Treatments'
         fill_in "search_treatments", with: 'observational'
         click_link '+'
-        page.should have_content 'X'
+        expect(page).to have_content 'X'
         click_button 'Update'
         # reopen related treatments listing
         click_link 'View Related Treatments'
-        page.should have_content 'observational'
+        expect(page).to have_content 'observational'
 
       # now do clean-up:
         click_link 'X'
         click_button 'Update'
         # reopen related treatments listing
         click_link 'View Related Treatments'
-        page.should_not have_content 'observational'
+        expect(page).not_to have_content 'observational'
     end
 
 
@@ -70,12 +70,12 @@ feature 'Creating a new management for a treatment associated with a citation wo
     it 'should display the new management form' do
       visit(treatments_path)
       first(:xpath, ".//a[text() = 'Create a New Management for this Treatment']").click
-      page.should_not have_content "We're sorry"
+      expect(page).not_to have_content "We're sorry"
     end
     it 'should not have a citations select box' do
       visit(treatments_path)
       first(:xpath, ".//a[text() = 'Create a New Management for this Treatment']").click
-      page.should_not have_selector(:xpath, '//select[@name="management[citation_id]"]')
+      expect(page).not_to have_selector(:xpath, '//select[@name="management[citation_id]"]')
     end      
   end
 end
@@ -90,7 +90,7 @@ feature 'Attempting to create a new management' do
     it 'should display the message "Please choose a citation to work with first."' do
       visit(managements_path)
       first(:xpath, ".//a[text() = 'New Management']").click
-      page.should have_content "Please choose a citation to work with first."
+      expect(page).to have_content "Please choose a citation to work with first."
     end
   end
 
@@ -100,7 +100,7 @@ feature 'Attempting to create a new management' do
       first(:xpath, ".//tr[contains(td, 'Adler')]/td/a[@alt = 'use']").click
       visit(managements_path)
       first(:xpath, ".//a[text() = 'New Management']").click
-      page.should have_content "You must associate a treatment with this citation before adding a new management"
+      expect(page).to have_content "You must associate a treatment with this citation before adding a new management"
     end
   end
 end

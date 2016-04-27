@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Citation features work' do
@@ -10,7 +10,7 @@ feature 'Citation features work' do
     it 'should have "New Citation" ' do
       visit '/citations/new'
       
-      page.should have_content 'New Citation'
+      expect(page).to have_content 'New Citation'
     end
 
     it 'should allow creation of new citations' do
@@ -24,7 +24,7 @@ feature 'Citation features work' do
       fill_in 'Url', :with =>  'http://www.reddit.com'
       click_button 'Create'
       
-      page.should have_content 'Citation was successfully created'
+      expect(page).to have_content 'Citation was successfully created'
 
       # Apparently this forwards to the /sites/ ?
     end
@@ -35,7 +35,7 @@ feature 'Citation features work' do
     it 'should return "Viewing Citation" ' do
       visit '/citations/'
       first(:xpath,".//a[@alt='show' and contains(@href,'/citations/')]").click
-      page.should have_content 'Viewing Citation'
+      expect(page).to have_content 'Viewing Citation'
     end
   end
   
@@ -47,7 +47,7 @@ feature 'Citation features work' do
     end
 
     it 'should return "Editing Citation" ' do
-      page.should have_content 'Editing Citation'
+      expect(page).to have_content 'Editing Citation'
     end
 
     it 'should allow adding a related site', js: true do
@@ -57,7 +57,7 @@ feature 'Citation features work' do
       click_button 'Update'
       # reopen related sites listing
       click_link 'View Related Sites'
-      page.should have_content 'USA'
+      expect(page).to have_content 'USA'
 
       # now do clean-up:
       fill_in 'search_sites', with: 'USA'
@@ -65,7 +65,7 @@ feature 'Citation features work' do
       click_button 'Update'
       # reopen related sites listing
       click_link 'View Related Sites'
-      page.should_not have_content 'USA'
+      expect(page).not_to have_content 'USA'
 
   
     end
@@ -83,7 +83,7 @@ feature 'Citation features work' do
       # In case the Show button doesn't work, go to the show page via the index:
       visit '/citations/'
       first(:xpath, "//a[@alt = 'show']").click
-      first(:xpath, "//div[@class = 'content']//dl/dd[preceding-sibling::dt[1][text() = 'Vol']]").text.should eq '1066'
+      expect(first(:xpath, "//div[@class = 'content']//dl/dd[preceding-sibling::dt[1][text() = 'Vol']]").text).to eq '1066'
     end
   end
 
@@ -91,7 +91,7 @@ feature 'Citation features work' do
     it 'should return "Sites already associated with this citation" ' do
       visit '/citations/'
       first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
-      page.should have_content 'Sites already associated with this citation'
+      expect(page).to have_content 'Sites already associated with this citation'
     end
   end
 
@@ -106,8 +106,8 @@ feature 'Citation features work' do
     it 'should list sites under the "Listing Sites" section of the Sites page' do
       visit '/citations/'
       first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/#{citation_with_no_sites}')]").click
-      page.should have_content 'Listing Sites'
-      page.should_not have_content 'No entries found'
+      expect(page).to have_content 'Listing Sites'
+      expect(page).not_to have_content 'No entries found'
     end
   end
 
