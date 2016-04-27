@@ -23,4 +23,27 @@ class Machine < ActiveRecord::Base
     hostname
   end
 
+  def hostid
+    ActiveRecord::Base.connection.select_value("select cast(floor(nextval('users_id_seq') / 1e9) as bigint);").to_i
+  end
+
+  def host_start
+    sync_host_id = hostid
+    machine = Machine.where(sync_host_id: sync_host_id)
+    if machine.empty?
+      (sync_host_id * 1e9).to_i
+    else
+      machine[0][:sync_start].to_i
+    end
+  end
+
+  def host_end
+    sync_host_id = hostid
+    machine = Machine.where(sync_host_id: sync_host_id)
+    if machine.empty?
+      ((sync_host_id + 1) * 1e9 - 1).to_i
+    else
+      machine[0][:sync_end].to_i
+    end
+  end
 end

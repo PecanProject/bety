@@ -96,6 +96,12 @@ module AuthenticatedSystem
                                 "CitationsSitesController.new",
                                 "CitationsTreatmentsController.create",
                                 "CitationsTreatmentsController.new",
+                                "ClustersController.new",
+                                "ClustersController.create",
+                                "ClustersController.edit",
+                                "ClustersController.update",
+                                "ClustersSitesController.create",
+                                "ClustersSitesController.new",
                                 "CovariatesController.new",
                                 "CovariatesController.create",
                                 "CovariatesController.edit",
@@ -188,6 +194,11 @@ module AuthenticatedSystem
                                 "CitationsController.search_by_species",
                                 "CitationsSitesController.index",
                                 "CitationsTreatmentssController.index",
+                                "ClustersController.index",
+                                "ClustersController.show",
+                                "ClustersController.search",
+                                "ClustersSitesController.index",
+                                "ClustersController.edit_clusters_sites",
                                 "CovariatesController.index",
                                 "CovariatesController.show",
                                 "CultivarsController.index",
@@ -248,6 +259,9 @@ module AuthenticatedSystem
       elsif manage_requirement.include?(controller_action) || manage_requirement.include?(controller_all_actions)
         level = 2
       elsif admin_requirement.include?(controller_action) || admin_requirement.include?(controller_all_actions)
+        level = 1
+      else
+        logger.info "Did not find level for " + controller_action
         level = 1
       end
 
