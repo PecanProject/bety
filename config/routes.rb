@@ -157,6 +157,13 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
     end
   end
 
+  resources :clusters do
+    member do
+      get :edit_clusters_sites
+      post :edit_clusters_sites
+    end
+  end
+
   resources :sites do
     member do
       get :search_citations
