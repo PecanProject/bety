@@ -21,7 +21,7 @@ module Api::TraitCreationSupport
     end
   end
 
-  # Given data, and XML string, extract the information from it and insert
+  # Given data, an XML string, extract the information from it and insert
   # appropriate rows into the entities, traits, and covariates tables.
   def create_traits_from_post_data(data)
 
@@ -261,7 +261,7 @@ module Api::TraitCreationSupport
     return id_hash
   end
 
-  # Validate the XML document "doc" using the TraitData.xsd schema.  Raise and
+  # Validate the XML document "doc" using the TraitData.xsd schema.  Raise an
   # InvalidDocument exception containing the list of errors returned by the
   # parser if the document is not valid.
   def schema_validate(doc)
@@ -283,17 +283,10 @@ module Api::TraitCreationSupport
 
   end
 
+  # Convert h from a Hash mapping attribute names to attribute nodes
+  # to one mapping attribute names to their value.
   def attr_hash_2_where_hash(h)
-    Hash[h.map { |k, v| [canonicalize_key(k), v.value] }]
-  end
-
-  def canonicalize_key(k)
-    case k
-      when "access-level", "variable-id"
-      return k.sub(/-/, '_').to_sym
-    else
-      return k.to_sym
-    end
+    Hash[h.map { |k, v| [k, v.value] }]
   end
 
 end
