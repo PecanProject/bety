@@ -33,6 +33,7 @@ class Api::BaseController < ActionController::Base
   # return errors in JSON rather than the default HTML:
   def bad_url
     @errors = "There is no resource at this URL.  Visit #{root_url}apipie for information about available API paths."
+    render status: 404
   end
 
   private
