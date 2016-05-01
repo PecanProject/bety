@@ -18,8 +18,12 @@ class Api::BaseController < ActionController::Base
   # This ensures that when we are in the API realm, an exception won't get
   # handled by the default Rails exception handler that returns an HTML result.
   rescue_from StandardError do |e|
-    logger.debug("EXCEPTION: #{e}")
-    @errors = e.message
+    logger.info("UNEXPECTED EXCEPTION: #{e.class}\n#{e}")
+    # only show the first line of the backtrace in production mode:
+    logger.info("THROWN AT: #{e.backtrace[0]}")
+    # show the rest in development mode:
+    logger.debug("BACKTRACE: #{e.backtrace.join("\n")}")
+    @errors = "UNEXPECTED EXCEPTION #{e.class}. #{e.message}"
     render
   end
 
