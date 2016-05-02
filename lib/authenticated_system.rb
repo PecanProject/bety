@@ -47,6 +47,7 @@ module AuthenticatedSystem
       # controller_class = controller_class_name if controller_class.nil?
       controller_class = "#{controller_name.camelize}Controller" if controller_class.nil?
       admin_requirement = ["UsersController.ALL",
+#                                "ClustersController.ALL",
                                 "BulkUploadController.ALL" ] # For now, only administrators are allowed access to the insert_data action of the bulk upload wizard.
       manage_requirement = ["BulkUploadController.start_upload", # For now, only administrators and managers are allowed access to the bulk upload wizard.
                                 "BulkUploadController.choose_global_citation",
@@ -100,8 +101,6 @@ module AuthenticatedSystem
                                 "ClustersController.create",
                                 "ClustersController.edit",
                                 "ClustersController.update",
-                                "ClustersSitesController.create",
-                                "ClustersSitesController.new",
                                 "CovariatesController.new",
                                 "CovariatesController.create",
                                 "CovariatesController.edit",
@@ -197,7 +196,6 @@ module AuthenticatedSystem
                                 "ClustersController.index",
                                 "ClustersController.show",
                                 "ClustersController.search",
-                                "ClustersSitesController.index",
                                 "ClustersController.edit_clusters_sites",
                                 "CovariatesController.index",
                                 "CovariatesController.show",

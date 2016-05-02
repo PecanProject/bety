@@ -1,0 +1,24 @@
+private_cluster:
+  id: 1
+  name: private_cluster
+  everybody: f
+  user_id: 1
+
+public_cluster:
+  id: 2
+  name: public_cluster
+  everybody: t
+  user_id: 1
+
+public_cluster_from_creator_user:
+  id: 3
+  name: creator_public_cluster
+  everybody: t
+  user_id: 2
+
+private_cluster_from_creator_user:
+  id: 4
+  name: creator_private_cluster
+  everybody: f
+  user_id: 2
+
