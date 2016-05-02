@@ -1,4 +1,4 @@
-class Cluster < ActiveRecord::Base
+class Sitegroup < ActiveRecord::Base
   include Overrides
 
   extend SimpleSearch
@@ -11,15 +11,15 @@ class Cluster < ActiveRecord::Base
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :access, lambda { |user|
     if defined?(user.id).nil?
-      where('everybody')
+      where('public_access')
     elsif user.page_access_level != 1
-      where('everybody OR user_id=?', user.id)
+      where('public_access OR user_id=?', user.id)
     end
   }
   scope :search, lambda { |search| where(simple_search(search)) }
 
-  has_many :cluster_sites, :class_name => "ClustersSites"
-  has_many :sites, :through =>  :cluster_sites
+  has_many :sitegroup_sites, :class_name => "SitegroupsSites"
+  has_many :sites, :through =>  :sitegroup_sites
   belongs_to :user
 
   def select_default

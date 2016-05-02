@@ -157,10 +157,10 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
     end
   end
 
-  resources :clusters do
+  resources :sitegroups do
     member do
-      get :edit_clusters_sites
-      post :edit_clusters_sites
+      get :edit_sitegroups_sites
+      post :edit_sitegroups_sites
     end
   end
 

@@ -1,13 +1,14 @@
-class ClustersSites < ActiveRecord::Base
+class SitegroupsSites < ActiveRecord::Base
   self.primary_key = "id"
 
-  belongs_to :cluster
+  belongs_to :sitegroup
   belongs_to :site
 
-  validates_presence_of     :cluster_id
+  validates_presence_of     :sitesgroup_id
   validates_presence_of     :site_id
+
   comma do
-    cluster_id
+    sitegroup_id
     site_id
     created_at
     updated_at

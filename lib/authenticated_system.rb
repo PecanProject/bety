@@ -96,12 +96,6 @@ module AuthenticatedSystem
                                 "CitationsSitesController.new",
                                 "CitationsTreatmentsController.create",
                                 "CitationsTreatmentsController.new",
-                                "ClustersController.new",
-                                "ClustersController.create",
-                                "ClustersController.edit",
-                                "ClustersController.update",
-                                "ClustersSitesController.create",
-                                "ClustersSitesController.new",
                                 "CovariatesController.new",
                                 "CovariatesController.create",
                                 "CovariatesController.edit",
@@ -156,6 +150,12 @@ module AuthenticatedSystem
                                 "SitesController.linked",
                                 "SitesController.edit_citations_sites",
                                 "SitesController.rem_citations_sites",
+                                "SitegroupsController.new",
+                                "SitegroupsController.create",
+                                "SitegroupsController.edit",
+                                "SitegroupsController.update",
+                                "SitegroupsSitesController.create",
+                                "SitegroupsSitesController.new",
                                 "SpeciesController.new",
                                 "SpeciesController.create",
                                 "SpeciesController.edit",
@@ -194,11 +194,6 @@ module AuthenticatedSystem
                                 "CitationsController.search_by_species",
                                 "CitationsSitesController.index",
                                 "CitationsTreatmentssController.index",
-                                "ClustersController.index",
-                                "ClustersController.show",
-                                "ClustersController.search",
-                                "ClustersSitesController.index",
-                                "ClustersController.edit_clusters_sites",
                                 "CovariatesController.index",
                                 "CovariatesController.show",
                                 "CultivarsController.index",
@@ -229,6 +224,11 @@ module AuthenticatedSystem
                                 "SitesController.index",
                                 "SitesController.map",
                                 "SitesController.show",
+                                "SitegroupsController.index",
+                                "SitegroupsController.show",
+                                "SitegroupsController.search",
+                                "SitegroupsSitesController.index",
+                                "SitegroupsController.edit_sitegroups_sites",
                                 "SpeciesController.index",
                                 "SpeciesController.show",
                                 "SpeciesController.search",
@@ -262,7 +262,7 @@ module AuthenticatedSystem
         level = 1
       else
         logger.info "Did not find level for " + controller_action
-        level = 1
+        level = 4
       end
 
       #level = 4 if level.nil?

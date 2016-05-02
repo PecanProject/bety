@@ -4,7 +4,7 @@
   <tr>
     <th>Site Name</th>
   </tr>
-  <% @cluster.sites.limit(100).each do |s| %>
+  <% @sitegroup.sites.limit(100).each do |s| %>
   <tr>
     <td><%=h s.sitename %></td>
     <td><%= link_to "Show", site_path(s) %></td>

@@ -5,15 +5,15 @@
 	      <h1>Editing Cluster</h1>
 			</header>
 
-      <a style="text-decoration: none" href="#" onclick="showHide('edit_clusters_sites'); return false;" id="show_edit_clusters_sites">[+] View Related Sites</a>
+      <a style="text-decoration: none" href="#" onclick="showHide('edit_sitegroups_sites'); return false;" id="show_edit_sitegroups_sites">[+] View Related Sites</a>
       <br/>
-      <div id="edit_clusters_sites" class="hidden notvisible">
-        <%= render 'edit_clusters_sites' %>
+      <div id="edit_sitegroups_sites" class="hidden notvisible">
+        <%= render 'edit_sitegroups_sites' %>
       </div>
 
       <hr />
 
-      <%= form_for(@cluster) do |f| %>
+      <%= form_for(@sitegroup) do |f| %>
         <%= f.error_messages %>
 
         <div class="row">
@@ -24,17 +24,17 @@
         </div>
         <div class="row">
           <div class="6 columns alpha omega">
-            <%= f.label :everybody %>
-            <%= f.check_box :everybody %>
+            <%= f.label :public_access %>
+            <%= f.check_box :public_access %>
           </div>
         </div>
 
         <div class="form-actions">
           <div class="button-group">
-            <%= link_to( clusters_path ) do %>
+            <%= link_to( sitegroups_path ) do %>
               <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
             <% end%>
-            <%= link_to( @cluster ) do %>
+            <%= link_to( @sitegroup ) do %>
               <button class="button" type="button">Show</button>
             <% end%>
           </div>
