@@ -20,27 +20,6 @@ module Api::CsvHandler
     return doc.to_s
   end
 
-  def compute_trait_attribute_names(headers)
-    attribute_list = headers & ["access_level", "mean", "utc-timestamp"]
-  end
-  memoize :compute_trait_attribute_names
-
-  def compute_trait_child_element_names(headers)
-    child_element_name_list = headers & ["site", "species", "treatment", "variable", "method", "notes"]
-
-    # add names of elements that require multiple columns
-    if !(headers & ["citation_doi", "citation_author", "citation_title", "citation_year"]).empty?
-      child_element_name_list << "citation"
-    end
-
-    if !(headers & ["SE", "n"]).empty?
-      child_element_name_list << "stat"
-    end
-
-    child_element_name_list
-  end
-  memoize :compute_trait_child_element_names
-
   # Creates a <trait> element in the XML document 'doc' corresponding to the row
   # 'row' in a CSV file having headers 'headers'.
   def create_trait_element(doc, headers, row)
@@ -93,5 +72,26 @@ module Api::CsvHandler
 
     trait
   end
+
+  def compute_trait_child_element_names(headers)
+    child_element_name_list = headers & ["site", "species", "treatment", "variable", "method", "notes"]
+
+    # add names of elements that require multiple columns
+    if !(headers & ["citation_doi", "citation_author", "citation_title", "citation_year"]).empty?
+      child_element_name_list << "citation"
+    end
+
+    if !(headers & ["SE", "n"]).empty?
+      child_element_name_list << "stat"
+    end
+
+    child_element_name_list
+  end
+  memoize :compute_trait_child_element_names
+
+  def compute_trait_attribute_names(headers)
+    attribute_list = headers & ["access_level", "mean", "utc-timestamp"]
+  end
+  memoize :compute_trait_attribute_names
 
 end
