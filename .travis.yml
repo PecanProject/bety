@@ -52,8 +52,8 @@ before_script:
   - psql -U postgres -c "CREATE DATABASE test WITH OWNER bety;"
   - psql -U bety -d test -c "CREATE EXTENSION postgis;"
   - bundle exec rake db:structure:load
-  - bundle exec rake db:fixtures:load
   - bundle exec rake db:migrate
+  - bundle exec rake db:fixtures:load
   
 script: 
   - bundle exec rspec --tag ~js
