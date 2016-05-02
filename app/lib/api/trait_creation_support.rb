@@ -1,6 +1,6 @@
 module Api::TraitCreationSupport
 
-  include ContentTypeConversion
+  include JsonHandler, CsvHandler
 
   private
 
