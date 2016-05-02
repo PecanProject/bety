@@ -27,7 +27,7 @@ class Sitegroup < ActiveRecord::Base
   end
 
   def to_s
-    hostname
+    name
   end
 
 end

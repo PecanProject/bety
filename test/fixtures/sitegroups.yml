@@ -1,0 +1,24 @@
+private_sitegroup:
+  id: 1
+  name: private_sitegroup
+  public_access: f
+  user_id: 1
+
+public_sitegroup:
+  id: 2
+  name: public_sitegroup
+  public_access: t
+  user_id: 1
+
+public_sitegroup_from_creator_user:
+  id: 3
+  name: creator_public_sitegroup
+  public_access: t
+  user_id: 2
+
+private_sitegroup_from_creator_user:
+  id: 4
+  name: creator_private_sitegroup
+  public_access: f
+  user_id: 2
+
