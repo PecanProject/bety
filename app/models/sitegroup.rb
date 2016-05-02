@@ -3,7 +3,7 @@ class Sitegroup < ActiveRecord::Base
 
   extend SimpleSearch
   SEARCH_INCLUDES = %w{ }
-  SEARCH_FIELDS = %w{ clusters.name }
+  SEARCH_FIELDS = %w{ sitegroups.name }
 
   before_validation WhitespaceNormalizer.new([:name])
   validates_presence_of :name

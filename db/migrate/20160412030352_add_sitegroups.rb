@@ -14,7 +14,7 @@ class AddSitegroups < ActiveRecord::Migration
     # fix the counter for inserting new records
     execute %{
         SELECT setval('sitegroups_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
-        ALTER TABLE clusters
+        ALTER TABLE sitegroups
             ALTER COLUMN created_at SET DEFAULT utc_now(),
             ALTER COLUMN updated_at SET DEFAULT utc_now(),
             ADD CONSTRAINT "fk_sitegroups_users"
@@ -40,18 +40,18 @@ class AddSitegroups < ActiveRecord::Migration
             ADD CONSTRAINT "fk_sitegroups_sites_sites"
                 FOREIGN KEY ("site_id") REFERENCES "sites" ("id")
                 ON DELETE CASCADE ON UPDATE CASCADE,
-            ADD CONSTRAINT "fk_sitegroups_sites_clusters"
-                FOREIGN KEY ("sitegroup_id") REFERENCES "clusters" ("id")
+            ADD CONSTRAINT "fk_sitegroups_sites_sitegroups"
+                FOREIGN KEY ("sitegroup_id") REFERENCES "sitegroups" ("id")
                 ON DELETE CASCADE ON UPDATE CASCADE;
       }
 
     # only execute if migration is running on host 0
     if this_hostid == 0
       execute %{
-        INSERT INTO clusters (name, everybody, user_id)
-            VALUES('AmeriFlux', true, 0);
+        INSERT INTO sitegroups (name, public_access, user_id)
+            VALUES('AmeriFlux', true, 55);
         INSERT INTO sitegroups_sites (sitegroup_id, site_id)
-            SELECT (SELECT id FROM clusters WHERE name='AmeriFlux'), id
+            SELECT (SELECT id FROM sitegroups WHERE name='AmeriFlux'), id
                 FROM sites WHERE sitename LIKE '% (US-%)';
       }
     end

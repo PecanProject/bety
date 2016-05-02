@@ -58,14 +58,14 @@ feature 'Authorization:' do
     specify "shouldn't be able to view private sitegroups of other users" do
       @private_sitegroups_of_other_users.each do |c|
         visit "/sitegroups/#{c.id}"
-        expect(page).not_to have_content 'Viewing Sitegroup'
+        expect(page).not_to have_content 'Viewing Site Group'
       end
     end
 
     specify "should be able to view private sitegroups of his own" do
       @private_sitegroups_of_this_user.each do |c|
         visit "/sitegroups/#{c.id}"
-        expect(page).to have_content 'Viewing Sitegroup'
+        expect(page).to have_content 'Viewing Site Group'
       end
     end
 
@@ -92,7 +92,7 @@ feature 'Authorization:' do
 
     specify "shouldn't have edit access to even a public sitegroup created by another user" do
       visit "/sitegroups/#{public_sitegroup.id}/edit"
-      expect(page).not_to have_content 'Editing Sitegroup'
+      expect(page).not_to have_content 'Editing Site Group'
     end
 
     specify "shouldn't have delete permission for a sitegroup created by another user", type: :routing do
@@ -126,7 +126,7 @@ feature 'Authorization:' do
       sitegroup = sitegroups(:private_sitegroup_from_creator_user)
       id = sitegroup.id
       visit "/sitegroups/#{id}"
-      expect(page).to have_content "Viewing Sitegroup"
+      expect(page).to have_content "Viewing Site Group"
       expect(page).to have_content sitegroup.name
     end
 
@@ -134,7 +134,7 @@ feature 'Authorization:' do
       sitegroup = sitegroups(:private_sitegroup_from_creator_user)
       id = sitegroup.id
       visit "/sitegroups/#{id}/edit"
-      expect(page).to have_content "Editing Sitegroup"
+      expect(page).to have_content "Editing Site Group"
     end
 
     specify "should be able to edit private sitegroups created by other users" do
