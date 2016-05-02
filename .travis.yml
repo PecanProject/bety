@@ -48,11 +48,9 @@ services:
 before_script:
   - psql -U postgres -c "CREATE USER bety WITH SUPERUSER CREATEDB UNENCRYPTED PASSWORD 'bety'";
   - cp config/database.yml.travis config/database.yml
-  - cp db/production_structure.sql db/test_structure.sql
   - psql -U postgres -c "CREATE DATABASE test WITH OWNER bety;"
   - psql -U bety -d test -c "CREATE EXTENSION postgis;"
   - bundle exec rake db:structure:load
-  - bundle exec rake db:migrate
   - bundle exec rake db:fixtures:load
   
 script: 
