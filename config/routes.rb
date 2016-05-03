@@ -157,6 +157,13 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
     end
   end
 
+  resources :sitegroups do
+    member do
+      get :edit_sitegroups_sites
+      post :edit_sitegroups_sites
+    end
+  end
+
   resources :sites do
     member do
       get :search_citations

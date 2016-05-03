@@ -8,6 +8,7 @@
 test_user1:
     id: 1
     login: 'carlcrott'
+    name: 'Carl Crott'
     #crypted_password: 'ace7e0ca3ca773bc2ce6ae77c445955283fb3810' # This hard-coded value only works if REST_AUTH_SITE_KEY = 'thisisnotasecret'
     # Replacing the hard-coded crypted_password above with the computed crypted_password below makes the test login work with any value of REST_AUTH_SITE_KEY
     crypted_password: <%= User.password_digest(test_user1_password, salt) %>
@@ -18,6 +19,7 @@ test_user1:
 
 test_user2:
     login: 'test_admin_user'
+    name: 'An Administrator'
     #crypted_password: '1fd4c5fd881ac316702ebcba084b7e89f154de56' # This hard-coded value only works if REST_AUTH_SITE_KEY = 'thisisnotasecret'
     # Replacing the hard-coded crypted_password above with the computed crypted_password below makes the test login work with any value of REST_AUTH_SITE_KEY
     crypted_password: <%= User.password_digest(test_user2_password, salt) %>
@@ -30,6 +32,7 @@ test_user2:
 test_user3:
     id: 2
     login: 'robben_yang'
+    name: 'Robben Yang'
     #crypted_password: 'ddbf27adfbcb94037a6f1b9b1f762ff601058b8d' # This hard-coded value only works if REST_AUTH_SITE_KEY = 'thisisnotasecret'
     # Replacing the hard-coded crypted_password above with the computed crypted_password below makes the test login work with any value of REST_AUTH_SITE_KEY
     crypted_password: <%= User.password_digest(test_user3_password, salt) %>
@@ -37,9 +40,11 @@ test_user3:
     access_level: 2
     page_access_level: 2
     email: robbenyang@example.com
+
 test_user4:
     id: 3
     login: 'test_user'
+    name: 'Another Administrator'
     #crypted_password: '1fd4c5fd881ac316702ebcba084b7e89f154de56' # This hard-coded value only works if REST_AUTH_SITE_KEY = 'thisisnotasecret'
     # Replacing the hard-coded crypted_password above with the computed crypted_password below makes the test login work with any value of REST_AUTH_SITE_KEY
     crypted_password: <%= User.password_digest(test_user2_password, salt) %>
@@ -47,9 +52,11 @@ test_user4:
     access_level: 1
     page_access_level: 1
     email: test3@example.com
+
 public_creator:
     id: 4
     login: 'creator'
+    name: 'A Creator'
     #crypted_password: '572f8c2e779cb678b517fec32130d30953b363f5' # This hard-coded value only works if REST_AUTH_SITE_KEY = 'thisisnotasecret'
     # Replacing the hard-coded crypted_password above with the computed crypted_password below makes the test login work with any value of REST_AUTH_SITE_KEY
     crypted_password: <%= User.password_digest(public_creator_password, salt) %>

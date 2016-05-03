@@ -1,0 +1,56 @@
+
+<!-- InstanceBeginEditable name="Full Width Content" -->
+<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline" role="grid">
+  <%= render 'shared/search_form' %>
+  <table class="table table-striped table-bordered table-hover datatable dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+    <thead>
+      <tr role="row">
+        <th class="sorting_asc" role="columnheader" aria-controls="DataTables_Table_0"><%= sortable "sitegroups.name", "Name" %></th>
+        <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px">Public Access?</th>
+        <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 100px"># Sites</th>
+        <th role="columnheader" aria-controls="DataTables_Table_0" style="width: 162px">Actions</th>
+      </tr>
+    </thead>
+    <tbody role="alert" aria-live="polite" aria-relevant="all">
+
+      <% @sitegroups.each do |sitegroup| %>
+      <tr<%= " style='background-color:yellow'" if @search and !@search[/[^\d]/] and sitegroup.id == @search.to_i%>>
+      <td class="center"><%= sitegroup.name %></td>
+      <td class="center"><%= sitegroup.public_access %></td>
+      <td class="center"><%= sitegroup.sites.length %></td>
+      <td class="center ">
+        <!-- SHOW -->
+        <%= link_to sitegroup, :class => "button button-small", :alt => "show" do %>
+        <i class="icon-zoom-in"></i>
+        <% end %>
+        <!-- EDIT -->
+        <% if current_user.page_access_level == 1 || current_user.id == sitegroup.user_id %>
+          <%= link_to edit_sitegroup_path(sitegroup), :class => "button button-small", :alt => "edit" do %>
+          <i class="icon-edit"></i>
+          <% end %>
+        <% end %>
+        <!-- DELETE -->
+        <% if current_user.page_access_level == 1 %>
+        <%= link_to sitegroup, :method => :delete, :type => 'sitegroup', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
+        <i class="icon-trash"></i> 
+        <% end %>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="row final_paginagte_row">
+  <div class="span6">
+    <div class="dataTables_info" id="DataTables_Table_0_info">
+    <%= page_entries_info @sitegroups %>
+    </div>
+  </div>
+  <div class="span6">
+    <div class="dataTables_paginate paging_bootstrap pagination alternate">
+      <%= will_paginate @sitegroups %>
+    </div>
+  </div>
+</div>
+</div>

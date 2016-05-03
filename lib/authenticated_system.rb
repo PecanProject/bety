@@ -150,6 +150,10 @@ module AuthenticatedSystem
                                 "SitesController.linked",
                                 "SitesController.edit_citations_sites",
                                 "SitesController.rem_citations_sites",
+                                "SitegroupsController.new",
+                                "SitegroupsController.create",
+                                "SitegroupsController.edit",
+                                "SitegroupsController.update",
                                 "SpeciesController.new",
                                 "SpeciesController.create",
                                 "SpeciesController.edit",
@@ -218,6 +222,10 @@ module AuthenticatedSystem
                                 "SitesController.index",
                                 "SitesController.map",
                                 "SitesController.show",
+                                "SitegroupsController.index",
+                                "SitegroupsController.show",
+                                "SitegroupsController.search",
+                                "SitegroupsController.edit_sitegroups_sites",
                                 "SpeciesController.index",
                                 "SpeciesController.show",
                                 "SpeciesController.search",
@@ -249,6 +257,9 @@ module AuthenticatedSystem
         level = 2
       elsif admin_requirement.include?(controller_action) || admin_requirement.include?(controller_all_actions)
         level = 1
+      else
+        logger.info "Did not find level for " + controller_action
+        level = 4
       end
 
       #level = 4 if level.nil?
