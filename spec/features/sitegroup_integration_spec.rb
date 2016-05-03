@@ -91,9 +91,10 @@ feature 'Authorization:' do
     end
 
     specify "shouldn't have edit access to even a public sitegroup created by another user" do
-    pending: "Restricting access to the edit pages for non-administrators" do
-      visit "/sitegroups/#{public_sitegroup.id}/edit"
-      expect(page).not_to have_content 'Editing Site Group'
+      pending "Restricting access to the edit pages for non-administrators" do
+        visit "/sitegroups/#{public_sitegroup.id}/edit"
+        expect(page).not_to have_content 'Editing Site Group'
+      end
     end
 
     specify "shouldn't have delete permission for a sitegroup created by another user", type: :routing do
