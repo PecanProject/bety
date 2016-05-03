@@ -1978,6 +1978,71 @@ CREATE TABLE sessions (
 
 
 --
+-- Name: sitegroups; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE sitegroups (
+    id bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    public_access boolean DEFAULT false NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp without time zone DEFAULT utc_now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT utc_now() NOT NULL
+);
+
+
+--
+-- Name: sitegroups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE sitegroups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sitegroups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE sitegroups_id_seq OWNED BY sitegroups.id;
+
+
+--
+-- Name: sitegroups_sites; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE sitegroups_sites (
+    id bigint NOT NULL,
+    sitegroup_id bigint NOT NULL,
+    site_id bigint NOT NULL,
+    created_at timestamp without time zone DEFAULT utc_now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT utc_now() NOT NULL
+);
+
+
+--
+-- Name: sitegroups_sites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE sitegroups_sites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sitegroups_sites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE sitegroups_sites_id_seq OWNED BY sitegroups_sites.id;
+
+
+--
 -- Name: sites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -3038,6 +3103,20 @@ ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq':
 
 
 --
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sitegroups ALTER COLUMN id SET DEFAULT nextval('sitegroups_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sitegroups_sites ALTER COLUMN id SET DEFAULT nextval('sitegroups_sites_id_seq'::regclass);
+
+
+--
 -- Name: citations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3235,6 +3314,22 @@ ALTER TABLE ONLY runs
 
 ALTER TABLE ONLY sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sitegroups_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY sitegroups
+    ADD CONSTRAINT sitegroups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sitegroups_sites_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY sitegroups_sites
+    ADD CONSTRAINT sitegroups_sites_pkey PRIMARY KEY (id);
 
 
 --
@@ -4629,6 +4724,30 @@ ALTER TABLE ONLY runs
 
 ALTER TABLE ONLY runs
     ADD CONSTRAINT fk_runs_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id);
+
+
+--
+-- Name: fk_sitegroups_sites_sitegroups; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sitegroups_sites
+    ADD CONSTRAINT fk_sitegroups_sites_sitegroups FOREIGN KEY (sitegroup_id) REFERENCES sitegroups(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: fk_sitegroups_sites_sites; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sitegroups_sites
+    ADD CONSTRAINT fk_sitegroups_sites_sites FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: fk_sitegroups_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sitegroups
+    ADD CONSTRAINT fk_sitegroups_users FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
 --
