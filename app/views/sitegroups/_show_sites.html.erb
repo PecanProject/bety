@@ -1,0 +1,13 @@
+<h2>Associated Sites</h2>
+
+<table>
+  <tr>
+    <th>Site Name</th>
+  </tr>
+  <% @sitegroup.sites.limit(100).each do |s| %>
+  <tr>
+    <td><%=h s.sitename %></td>
+    <td><%= link_to "Show", site_path(s) %></td>
+  </tr>
+  <% end %>
+</table>

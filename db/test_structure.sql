@@ -1024,7 +1024,7 @@ CREATE TABLE dbfiles (
     container_id bigint,
     CONSTRAINT file_path_sanity_check CHECK (((file_path)::text ~ '^/'::text)),
     CONSTRAINT no_slash_in_file_name CHECK (((file_name)::text !~ '/'::text)),
-    CONSTRAINT valid_dbfile_container_type CHECK (((container_type)::text = ANY ((ARRAY['Model'::character varying, 'Posterior'::character varying, 'Input'::character varying])::text[]))),
+    CONSTRAINT valid_dbfile_container_type CHECK (((container_type)::text = ANY (ARRAY[('Model'::character varying)::text, ('Posterior'::character varying)::text, ('Input'::character varying)::text]))),
     CONSTRAINT valid_dbfile_md5_hash_value CHECK (((md5)::text ~ '^([\da-z]{32})?$'::text)),
     CONSTRAINT valid_input_refs CHECK ((((container_type)::text <> 'Input'::text) OR (container_id = ANY (get_input_ids())))),
     CONSTRAINT valid_model_refs CHECK ((((container_type)::text <> 'Model'::text) OR (container_id = ANY (get_model_ids())))),
@@ -1561,7 +1561,7 @@ CREATE TABLE pfts (
     pft_type character varying(255) DEFAULT 'plant'::character varying NOT NULL,
     modeltype_id bigint NOT NULL,
     CONSTRAINT normalized_pft_name CHECK (is_whitespace_normalized((name)::text)),
-    CONSTRAINT valid_pft_type CHECK (((pft_type)::text = ANY ((ARRAY['plant'::character varying, 'cultivar'::character varying, ''::character varying])::text[])))
+    CONSTRAINT valid_pft_type CHECK (((pft_type)::text = ANY (ARRAY[('plant'::character varying)::text, ('cultivar'::character varying)::text, (''::character varying)::text])))
 );
 
 
@@ -1793,7 +1793,7 @@ CREATE TABLE priors (
     updated_at timestamp(6) without time zone DEFAULT utc_now(),
     CONSTRAINT nonnegative_prior_sample_size CHECK ((n >= 0)),
     CONSTRAINT normalized_prior_phylogeny_specifier CHECK (is_whitespace_normalized((phylogeny)::text)),
-    CONSTRAINT valid_prior_distn CHECK (((distn)::text = ANY ((ARRAY['beta'::character varying, 'binom'::character varying, 'cauchy'::character varying, 'chisq'::character varying, 'exp'::character varying, 'f'::character varying, 'gamma'::character varying, 'geom'::character varying, 'hyper'::character varying, 'lnorm'::character varying, 'logis'::character varying, 'nbinom'::character varying, 'norm'::character varying, 'pois'::character varying, 't'::character varying, 'unif'::character varying, 'weibull'::character varying, 'wilcox'::character varying])::text[])))
+    CONSTRAINT valid_prior_distn CHECK (((distn)::text = ANY (ARRAY[('beta'::character varying)::text, ('binom'::character varying)::text, ('cauchy'::character varying)::text, ('chisq'::character varying)::text, ('exp'::character varying)::text, ('f'::character varying)::text, ('gamma'::character varying)::text, ('geom'::character varying)::text, ('hyper'::character varying)::text, ('lnorm'::character varying)::text, ('logis'::character varying)::text, ('nbinom'::character varying)::text, ('norm'::character varying)::text, ('pois'::character varying)::text, ('t'::character varying)::text, ('unif'::character varying)::text, ('weibull'::character varying)::text, ('wilcox'::character varying)::text])))
 );
 
 
