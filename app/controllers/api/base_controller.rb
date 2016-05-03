@@ -24,7 +24,7 @@ class Api::BaseController < ActionController::Base
     # show the rest in development mode:
     logger.debug("BACKTRACE: #{e.backtrace.join("\n")}")
     @errors = "UNEXPECTED EXCEPTION #{e.class}. #{e.message}"
-    render
+    render status: 400
   end
 
   # Actions
