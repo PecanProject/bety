@@ -29,6 +29,7 @@ test_user2:
     email: tau@example.com
 
 test_user3:
+    id: 2
     login: 'robben_yang'
     name: 'Robben Yang'
     #crypted_password: 'ddbf27adfbcb94037a6f1b9b1f762ff601058b8d' # This hard-coded value only works if REST_AUTH_SITE_KEY = 'thisisnotasecret'
