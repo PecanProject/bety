@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Inputs features work' do
@@ -9,7 +9,7 @@ feature 'Inputs features work' do
 
   specify 'The input edit page should be accessible' do
     first(:xpath, './/a[@alt = "edit"]').click
-    page.should have_content 'Editing Input'
+    expect(page).to have_content 'Editing Input'
   end
 
   context 'Editing Input collections' do
@@ -30,7 +30,7 @@ feature 'Inputs features work' do
         a.accept
       end
 
-      page.should_not have_link('X')
+      expect(page).not_to have_link('X')
 
       # re-add file
       fill_in 'filesearch', with: 'CA'
@@ -43,7 +43,7 @@ feature 'Inputs features work' do
         a.accept
       end
 
-      page.should have_link('X')
+      expect(page).to have_link('X')
     end
 
   end

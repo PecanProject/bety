@@ -1,0 +1,12 @@
+
+# rails application database config
+development:
+  adapter: postgis
+  encoding: utf8
+  reconnect: false
+  database: bety
+  pool: 5
+  username: postgres
+  password: bety
+  host:
+  port:

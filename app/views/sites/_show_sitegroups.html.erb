@@ -1,0 +1,17 @@
+<h2>Associated Site Groups</h2>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Public Access</th>
+    <th># Sites</th>
+  </tr>
+  <% @site.sitegroups.limit(100).each do |s| %>
+  <tr>
+    <td><%=h s.name %></td>
+    <td><%=h s.public_access %></td>
+    <td><%=h s.sites.length %></td>
+    <td><%= link_to "Show", sitegroup_path(s) %></td>
+  </tr>
+  <% end %>
+</table>

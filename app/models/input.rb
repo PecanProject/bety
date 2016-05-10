@@ -7,7 +7,6 @@ class Input < ActiveRecord::Base
   SEARCH_FIELDS = %w{ sites.sitename inputs.name inputs.start_date inputs.end_date inputs.notes inputs.created_at inputs.updated_at }
 
   has_and_belongs_to_many :runs
-  has_and_belongs_to_many :variables
   has_many :likelihoods
   has_many :files, :as => :container, :class_name => 'DBFile'
   belongs_to :site
@@ -15,7 +14,7 @@ class Input < ActiveRecord::Base
   belongs_to :format
 
   #Self reference
-  has_many :children, :class_name => "Input"
+  has_many :children, :class_name => "Input", :foreign_key => "parent_id"
   belongs_to :parent, :class_name => "Input", :foreign_key => "parent_id"
 
   accepts_nested_attributes_for :site

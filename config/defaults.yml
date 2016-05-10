@@ -1,0 +1,10 @@
+# This file provides some default values so that the application will work even
+# if you don't make an application.yml configuration file.  But a real site
+# should always override these defaults to provide meaningful values!
+
+# Contact Information
+admin_phone: "(000) 000-0000"
+admin_email: "admin@example.com" # a test
+
+# Override this with a secret key to run a secure site:
+rest_auth_site_key: 'thisisnotasecret'

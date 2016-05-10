@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Species pages work' do
@@ -9,14 +9,14 @@ feature 'Species pages work' do
   context 'GET /species' do
     it 'should have "Listing Species" ' do
       visit '/species'
-      page.should have_content 'Listing Species'
+      expect(page).to have_content 'Listing Species'
     end
   end
 
   context 'GET /species/new' do
     it 'should have "New Species" ' do
       visit '/species/new'
-      page.should have_content("New Species")
+      expect(page).to have_content("New Species")
     end
   end
   
@@ -44,7 +44,7 @@ feature 'Species pages work' do
       
       
       click_button 'Create'
-      page.should have_content("Specie was successfully created.")
+      expect(page).to have_content("Specie was successfully created.")
     end
   end
 
@@ -52,7 +52,7 @@ feature 'Species pages work' do
     it 'should allow editing a species' do
       visit '/species'
       first(:xpath, './/a[@alt = "edit"]').click
-      page.should have_content 'Editing Species'
+      expect(page).to have_content 'Editing Species'
     end
   end
 

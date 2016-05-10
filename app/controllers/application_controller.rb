@@ -162,7 +162,6 @@ class ApplicationController < ActionController::Base
 
   end
 
-
   private
   
   def handle_constraint_violations(e)

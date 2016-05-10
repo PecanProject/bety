@@ -1,0 +1,29 @@
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th>Name</th>
+  </tr>
+    <% @sites.each do |site| %>
+    <tr>
+      <td>
+      <% if @sitegroup.sites.include?(site) %>
+        <%= link_to "X", { :controller => :sitegroups, :action => :edit_sitegroups_sites, :id => @sitegroup.id, :site => site, :search => @searchparam }, :remote => true,
+                          :html => { :style => "text-decoration: none" } %>
+
+
+      <% else %>
+        <%= link_to "+", { :controller => :sitegroups, :action => :edit_sitegroups_sites, :id => @sitegroup.id, :site => site, :search => @searchparam }, :remote => true,
+                          :html => { :style => "text-decoration: none" } %>
+
+
+      <% end %>
+      </td>
+      <td><%= link_to "edit", edit_site_path(site) %></td>
+      <td><%= link_to site, site_path(site) %></td>
+      </tr>
+    <% end %>
+</table>
+
+<%= will_paginate @sites, :renderer => 'WillPaginate::ActionView::RemoteLinkRenderer' , :params => {:action => :edit_sitegroups_sites, :id => @sitegroup.id, :search => @searchparam}, :remote => { :loading => "Element.show('spinner')", :complete => "Element.hide('spinner')" } %>
+

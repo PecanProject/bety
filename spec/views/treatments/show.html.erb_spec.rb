@@ -1,8 +1,7 @@
-require 'spec_helper'
 
 describe "treatments/show" do
   before(:each) do
-    @treatment = assign(:treatment, stub_model(Treatment))
+    @treatment = assign(:treatment, Treatment.first)
   end
 
   it "renders attributes in <p>" do

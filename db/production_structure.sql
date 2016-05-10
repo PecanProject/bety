@@ -866,12 +866,12 @@ CREATE TABLE covariates (
     id bigint DEFAULT nextval('covariates_id_seq'::regclass) NOT NULL,
     trait_id bigint,
     variable_id bigint,
-    level numeric(16,4),
+    level double precision,
     created_at timestamp(6) without time zone DEFAULT utc_now(),
     updated_at timestamp(6) without time zone DEFAULT utc_now(),
     n integer,
     statname statnames DEFAULT ''::text,
-    stat numeric(16,4),
+    stat double precision,
     CONSTRAINT positive_covariate_sample_size CHECK ((n >= 1))
 );
 
@@ -1310,7 +1310,7 @@ CREATE TABLE managements (
     date date,
     dateloc numeric(4,2),
     mgmttype character varying(255) NOT NULL,
-    level numeric(16,4),
+    level double precision,
     units character varying(255),
     notes text DEFAULT ''::text NOT NULL,
     created_at timestamp(6) without time zone DEFAULT utc_now(),
@@ -1784,9 +1784,9 @@ CREATE TABLE priors (
     variable_id bigint NOT NULL,
     phylogeny character varying(255) NOT NULL,
     distn character varying(255) NOT NULL,
-    parama numeric(16,4) NOT NULL,
-    paramb numeric(16,4),
-    paramc numeric(16,4),
+    parama double precision NOT NULL,
+    paramb double precision,
+    paramc double precision,
     n integer,
     notes text,
     created_at timestamp(6) without time zone DEFAULT utc_now(),
@@ -1975,6 +1975,71 @@ CREATE TABLE sessions (
     created_at timestamp(6) without time zone DEFAULT utc_now(),
     updated_at timestamp(6) without time zone DEFAULT utc_now()
 );
+
+
+--
+-- Name: sitegroups; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE sitegroups (
+    id bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    public_access boolean DEFAULT false NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp without time zone DEFAULT utc_now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT utc_now() NOT NULL
+);
+
+
+--
+-- Name: sitegroups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE sitegroups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sitegroups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE sitegroups_id_seq OWNED BY sitegroups.id;
+
+
+--
+-- Name: sitegroups_sites; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE sitegroups_sites (
+    id bigint NOT NULL,
+    sitegroup_id bigint NOT NULL,
+    site_id bigint NOT NULL,
+    created_at timestamp without time zone DEFAULT utc_now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT utc_now() NOT NULL
+);
+
+
+--
+-- Name: sitegroups_sites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE sitegroups_sites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sitegroups_sites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE sitegroups_sites_id_seq OWNED BY sitegroups_sites.id;
 
 
 --
@@ -2226,10 +2291,10 @@ CREATE TABLE traits (
     dateloc numeric(4,2),
     "time" time(6) without time zone,
     timeloc numeric(4,2),
-    mean numeric(16,4),
+    mean double precision,
     n integer,
     statname statnames DEFAULT ''::text,
-    stat numeric(16,4),
+    stat double precision,
     notes text DEFAULT ''::text NOT NULL,
     created_at timestamp(6) without time zone DEFAULT utc_now(),
     updated_at timestamp(6) without time zone DEFAULT utc_now(),
@@ -2633,8 +2698,8 @@ CREATE TABLE yields (
     date date,
     dateloc numeric(4,2),
     statname statnames DEFAULT ''::text,
-    stat numeric(16,4),
-    mean numeric(16,4) NOT NULL,
+    stat double precision,
+    mean double precision NOT NULL,
     n integer,
     notes text DEFAULT ''::text NOT NULL,
     created_at timestamp(6) without time zone DEFAULT utc_now(),
@@ -3038,6 +3103,20 @@ ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq':
 
 
 --
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sitegroups ALTER COLUMN id SET DEFAULT nextval('sitegroups_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sitegroups_sites ALTER COLUMN id SET DEFAULT nextval('sitegroups_sites_id_seq'::regclass);
+
+
+--
 -- Name: citations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3235,6 +3314,22 @@ ALTER TABLE ONLY runs
 
 ALTER TABLE ONLY sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sitegroups_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY sitegroups
+    ADD CONSTRAINT sitegroups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sitegroups_sites_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY sitegroups_sites
+    ADD CONSTRAINT sitegroups_sites_pkey PRIMARY KEY (id);
 
 
 --
@@ -4629,6 +4724,30 @@ ALTER TABLE ONLY runs
 
 ALTER TABLE ONLY runs
     ADD CONSTRAINT fk_runs_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id);
+
+
+--
+-- Name: fk_sitegroups_sites_sitegroups; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sitegroups_sites
+    ADD CONSTRAINT fk_sitegroups_sites_sitegroups FOREIGN KEY (sitegroup_id) REFERENCES sitegroups(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: fk_sitegroups_sites_sites; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sitegroups_sites
+    ADD CONSTRAINT fk_sitegroups_sites_sites FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: fk_sitegroups_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sitegroups
+    ADD CONSTRAINT fk_sitegroups_users FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
 --

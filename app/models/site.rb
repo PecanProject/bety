@@ -62,12 +62,17 @@ class Site < ActiveRecord::Base
     end
   end
 
+  # Returns true if the site geometry is null or has type 'ST_Point'.
+  def point?
+    geometry.nil? || geometry.geometry_type.type_name == 'Point'
+  end
+
   def masl
     if self[:geometry]
       if self[:geometry].geometry_type.type_name == 'Point'
         return self[:geometry].z
       else
-        return self[:geometry].centroid.z
+        return nil # self[:geometry].centroid.z is always NaN, so return nil
       end
     else
       return nil
@@ -108,6 +113,9 @@ class Site < ActiveRecord::Base
   has_many :citation_sites, :class_name => "CitationsSites"
   has_many :citations, :through =>  :citation_sites
 
+  has_many :sitegroups_sites, :class_name => "SitegroupsSites"
+  has_many :sitegroups, :through =>  :sitegroups_sites
+
   has_many :yields
   has_many :traits
   has_many :runs
@@ -145,12 +153,13 @@ class Site < ActiveRecord::Base
   validate :sum_of_soil_percentages_does_not_exceed_100, unless: Proc.new { |a| a.sand_pct.nil? || a.clay_pct.nil? }
   validates_presence_of :sitename
   validates_presence_of :lat, :lon
-  validates_numericality_of :lat, greater_than_or_equal_to: -90 , less_than_or_equal_to: 90
-  validates_numericality_of :lon, greater_than_or_equal_to: -180 , less_than_or_equal_to: 180
+  validates_numericality_of :lat, greater_than_or_equal_to: -90 , less_than_or_equal_to: 90, if: Proc.new { |s| s.point? }
+  validates_numericality_of :lon, greater_than_or_equal_to: -180 , less_than_or_equal_to: 180, if: Proc.new { |s| s.point? }
   validates_numericality_of :masl,
-      greater_than_or_equal_to: -418,
-      less_than_or_equal_to: 8848, # Mount Everest
-      message: "Elevation must be between -418 and 8848 meters"
+    greater_than_or_equal_to: -418,
+    less_than_or_equal_to: 8848, # Mount Everest
+    message: "Elevation must be between -418 and 8848 meters",
+    if: Proc.new { |s| s.point? }
 
   # Returns an +ActiverRecord::Relation containing all Site objects that are
   # associated with every Citation whose id is in +citation_id_list+.

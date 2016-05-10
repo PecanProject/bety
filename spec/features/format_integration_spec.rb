@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Formats index works' do
@@ -9,7 +9,7 @@ feature 'Formats index works' do
   context 'GET /formats/new' do
     it 'should have "New Format" ' do
       visit '/formats/new'
-      page.should have_content 'New Format'
+      expect(page).to have_content 'New Format'
     end
 
     it 'should allow creation of new formats' do
@@ -21,14 +21,14 @@ feature 'Formats index works' do
       fill_in 'Notes', :with => 'DingoesDingoesDingoesDingoesDingoes'
       click_button 'Create'
       
-      page.should have_content 'Format was successfully created'
+      expect(page).to have_content 'Format was successfully created'
     end
 
     context 'clicking view format button' do
       it 'should return "Viewing Format" ' do
         visit '/formats/'
         first(:xpath,".//a[@alt='show' and contains(@href,'/formats/')]").click
-        page.should have_content 'Viewing Format'
+        expect(page).to have_content 'Viewing Format'
       end
     end
     
@@ -36,7 +36,7 @@ feature 'Formats index works' do
       it 'should return "Editing format" ' do
         visit '/formats/'
         first(:xpath,".//a[@alt='edit' and contains(@href,'/edit')]").click
-        page.should have_content 'Editing Format'
+        expect(page).to have_content 'Editing Format'
       end
     end
 

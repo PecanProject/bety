@@ -151,6 +151,7 @@
                 <% end %>
                 <li><%= link_to "PFTs", pfts_path %></li>
                 <li><%= link_to "Priors", priors_path %></li>
+                <li><%= link_to "Site Groups", sitegroups_path %></li>
                 <li><%= link_to "Sites", sites_path %></li>
                 <li><%= link_to "Species", species_index_path %></li>
                 <li><%= link_to "Traits", traits_path %></li>
@@ -261,8 +262,9 @@
 			  <div class="three columns">
 				  <h3><strong>Contact</strong> Us</h3>
 				  <ul class="unstyled">
-					  <li>&#9742; (217) 300-0266</li>
-					  <li>&#9993; betydb@gmail.com</li>
+					  <li>&#9742; <%= CONFIG[:admin_phone] %></li>
+					  <li>&#9993; <%= CONFIG[:admin_email] %></li>
+					  <li><a class="github-button" href="https://github.com/pecanproject/bety" aria-label="BETYdb on GitHub">GitHub</a></li>
 					  <li><a href="https://gitter.im/PecanProject/bety?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Chat Room"></a></li>
 				  </ul>
 			  </div>
@@ -274,7 +276,7 @@
                   <p>All public data in BETYdb is made available under the
                      <a href="http://opendatacommons.org/licenses/by/1-0/">Open Data Commons Attribution License (ODC-By) v1.0.</a>
                      You are free to share, create, and adapt its contents.
-                     Data with an access_level field and value &lt;= 2 is is not covered by this license but may be available for use with consent.</p>
+                     Data with an access_level field and value &lt;= 2 is not covered by this license but may be available for use with consent.</p>
 				  <p>Copyright © 2010-2014 Energy Biosciences Institute</p>
 			  </div>
 		  </div>
@@ -292,6 +294,6 @@
   </div>
   
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-  
+  <!-- Commenting this out for now as it interferes with RSpec tests that use capybara-webkit: <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script> -->
 </body>
 </html>

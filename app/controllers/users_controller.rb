@@ -70,7 +70,7 @@ class UsersController < ApplicationController
   end
 
   def edit
-    # Allow admins to edit any account, and each user thier own
+    # Allow admins to edit any account, and each user their own
     if current_user.page_access_level == 1 or params[:id] == current_user.id.to_s
       user_id = params[:id]
     else
@@ -89,14 +89,29 @@ class UsersController < ApplicationController
         redirect_to logout_path and return
       end
 
-      #Prevent users from changing their own access level unless they are admins...
-      params[:user].delete(:access_level)
-      params[:user].delete(:page_access_level)
+      # Prevent users from increasing their own access levels beyond the default
+      # unless they are admins.  Instead, e-mail a request for more privileged
+      # access.
+      if params[:user][:page_access_level].to_i < [4, current_user.page_access_level].min or
+          params[:user][:access_level].to_i < [3, current_user.access_level].min
+
+        ContactMailer::admin_approval(params[:user], root_url).deliver
+
+        params[:user].delete(:access_level)
+        params[:user].delete(:page_access_level)
+
+        privileged_access_requested = true
+
+      end
     end
 
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        flash[:notice] = 'User was successfully updated.'
+        if privileged_access_requested
+          flash[:notice] = 'Access privilege changes will be submitted for approval.  Other updates were applied.'
+        else
+          flash[:notice] = 'User was successfully updated.'
+        end
         format.html { redirect_to( user_path(@user) ) }
         format.xml  { head :ok }
       else

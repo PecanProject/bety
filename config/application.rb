@@ -13,6 +13,19 @@ end
 
 module BetyRails3
   class Application < Rails::Application
+
+    # Enable Hash#deep_symbolize_keys method defined in lib/symbolize_helper.rb.
+    require 'symbolize_helper'
+    using SymbolizeHelper
+
+    # Define top-level Hash constant CONFIG by merging settings in defaults.yml and application.yml.
+    ::CONFIG = YAML.load(File.read(File.expand_path('../defaults.yml', __FILE__))).deep_symbolize_keys
+    if File.exists?(File.expand_path('../application.yml', __FILE__))
+      customizations = YAML.load(File.read(File.expand_path('../application.yml', __FILE__))).deep_symbolize_keys
+      ::CONFIG.update customizations
+      ::CONFIG.merge! CONFIG.fetch(Rails.env, {})
+    end
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -53,12 +66,6 @@ module BetyRails3
 
     # Don't bother making schema.rb any more:
     config.active_record.schema_format = :sql
-
-    # Load any local configuration that is kept out of source control
-    # (e.g. gems, patches).
-    if File.exists?(File.join(File.dirname(__FILE__), 'additional_environment.rb'))
-      instance_eval File.read(File.join(File.dirname(__FILE__), 'additional_environment.rb'))
-    end
 
     # Until we enable the assets pipeline, ensure the old behavior of javascript_include_tag(:all) with this:
     config.action_view.javascript_expansions[:defaults] = ['prototype', 'effects']

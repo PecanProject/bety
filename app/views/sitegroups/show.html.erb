@@ -1,0 +1,47 @@
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+				<h1>Viewing Site Group</h1>
+			</header>
+			
+			<a style="text-decoration: none" href="#" onclick="showHide('show_sites')" id="show_show_sites">[+] View Related Sites</a>
+			<br/>
+			<div id="show_sites" class="hidden notvisible">
+				<%= render 'show_sites' %>
+			</div>
+
+			<hr />
+			<br />
+			<br />
+
+			<!-- InstanceBeginEditable name="Full Width Content" --> 
+			<dl class="dl-horizontal">
+                <dt>Name</dt>
+                <dd><%= @sitegroup.name %></dd>
+                <dt>Associated Sites</dt>
+                <dd><%= @sitegroup.sites.length %></dd>
+                <dt>Public Access</dt>
+                <dd><%= @sitegroup.public_access %></dd>
+                <dt>Created by:</dt>
+                <dd><%= user_for_view(@sitegroup.user) %></dd>
+                <dt>Last updated:</dt>
+                <dd><%= @sitegroup.updated_at %></dd>
+			</dl>
+
+			<div class="form-actions">
+				<div class="button-group">
+					<%= link_to( sitegroups_path ) do %>
+						<button class="button"><i class="icon-arrow-left"></i> All Records</button>
+					<% end %>
+                    <% if current_user.page_access_level == 1 || current_user.id == @sitegroup.user_id %>
+                        <%= link_to( edit_sitegroup_path(@sitegroup) ) do %>
+                            <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>  
+                        <% end %>
+                    <% end %>
+				</div>
+			</div>
+			<!-- InstanceEndEditable --> </div>
+	</div>
+	<!-- container --> 
+</div>
