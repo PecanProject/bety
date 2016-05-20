@@ -67,12 +67,20 @@ class Api::Beta::BaseController < Api::BaseController
     define_method(:show) do
       id = params[:id]
       begin
-        if current_user.page_access_level > 1
-          # Show current user's record instead of requested record
-          id = current_user.id
-        end
         @row = model.find(id)
         @errors = nil
+        if [Trait, Yield].include? model
+          required_access_level = @row.access_level
+          if required_access_level < self.current_user.access_level
+            @errors = "You must be a#{ { 1 => "n Administrator", 2 => " Internal Collaborator", 3 => " External Researcher" }[required_access_level] } to view this item."
+            @row = nil
+          end
+        elsif model == User && current_user.page_access_level > 1 && id.to_i != current_user.id.to_i
+          # Show current user's record instead of requested record
+          id = current_user.id
+          @errors = "You must be an Administrator to view this item."
+          @row = nil
+        end
       rescue ActiveRecord::RecordNotFound
         @row = nil
         @errors = "Non-Existent Resource: No #{model} object with id #{id} was found."
