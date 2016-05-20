@@ -67,6 +67,10 @@ class Api::Beta::BaseController < Api::BaseController
     define_method(:show) do
       id = params[:id]
       begin
+        if current_user.page_access_level > 1
+          # Show current user's record instead of requested record
+          id = current_user.id
+        end
         @row = model.find(id)
         @errors = nil
       rescue ActiveRecord::RecordNotFound
