@@ -444,6 +444,7 @@ describe BulkUploadDataSet do
         @expected_data = {
           "access_level"=>"3",
           "date"=>"1984-07-14",
+          "dateloc"=>5,
           "n"=>"5000",
           "notes"=>"This is bogus yield data.",
           "citation_id"=>3,
