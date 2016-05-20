@@ -74,8 +74,8 @@ class Api::BaseController < ActionController::Base
     # Now filter by exact matching.
     result = model.where(where_params)
 
-    # "limit(nil)" means no limit, so use nil if limit is "all"
-    if limit == "all"
+    # "limit(nil)" means no limit, so use nil if limit is "all" or "none"
+    if limit == "all" || limit == "none"
       limit = nil
     end
 

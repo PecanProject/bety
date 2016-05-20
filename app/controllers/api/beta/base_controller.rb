@@ -29,7 +29,7 @@ class Api::Beta::BaseController < Api::BaseController
     end
 
     def_param_group :extra_parameters do
-      param :limit, /[1-9][0-9]*/, :desc => "Sets an upper bound on the number of results to return.  Defaults to 200."
+      param :limit, /^([1-9][0-9]*|all|none)$/, :desc => "Sets an upper bound on the number of results to return.  Defaults to 200."
       param :offset, /[1-9][0-9]*/, :desc => "Set the number of rows to skip before returning matching rows."
       param_group :key_parameter
     end
