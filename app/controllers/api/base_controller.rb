@@ -60,6 +60,12 @@ class Api::BaseController < ActionController::Base
       model = model.all_limited(current_user)
     end
 
+	if model == User
+	  if current_user.page_access_level > 1
+        model = model.where("id = #{current_user.id}")
+      end
+    end
+
     # Do filtering by regexp matching first.  Note that fuzzy_match_restrictions
     # may modify where_params by removing key-value pairs corresponding to fuzzy
     # matches.
