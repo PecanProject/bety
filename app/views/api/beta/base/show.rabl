@@ -18,7 +18,8 @@ if !root_object.nil?
                           :managements_treatments, # excludes managements_treatments from both management and treatment display
                           :posteriors_ensembles, # this association is not working
                           :pfts_priors, # excludes pfts_priors from both pfts and priors display
-                          :pfts_species # excludes pfts_species from both pfts and species display
+                          :pfts_species, # excludes pfts_species from both pfts and species display
+                          :sitegroups_sites # excludes sitegroups_sites from sites display
                          ]
 
   # Don't display join table information if no useful information is to be had
@@ -37,6 +38,7 @@ if !root_object.nil?
     end
   else
     (children + multiple_associations).each do |assoc|
+      next if assoc.klass == User
       child assoc.name do
         attributes *assoc.klass.column_names.map(&:to_sym)
       end
