@@ -127,12 +127,12 @@ function initialize() {
         heatmap: { enabled: false },
         query: {
             select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: ""
+            from: "1DAaufoEP405M_MNXAJuLxT-NqSvqQQRf30TRcXs",
+            where: "col6\x3e\x3e0 \x3e\x3d 1 and col6\x3e\x3e0 \x3c\x3d 12"
         },
         options: {
-            styleId: 22,
-            templateId: 15
+            styleId: 2,
+            templateId: 2
         }
     });
 
@@ -142,12 +142,12 @@ function initialize() {
         heatmap: { enabled: false },
         query: {
             select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: ""
+            from: "1DAaufoEP405M_MNXAJuLxT-NqSvqQQRf30TRcXs",
+            where: "col7\x3e\x3e0 \x3e\x3d 1 and col7\x3e\x3e0 \x3c\x3d 40"
         },
         options: {
-            styleId: 23,
-            templateId: 15
+            styleId: 3,
+            templateId: 3
         }
     });
 
@@ -157,12 +157,12 @@ function initialize() {
         heatmap: { enabled: false },
         query: {
             select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: ""
+            from: "1DAaufoEP405M_MNXAJuLxT-NqSvqQQRf30TRcXs",
+            where: "col8\x3e\x3e0 \x3e\x3d 1 and col8\x3e\x3e0 \x3c\x3d 20"
         },
         options: {
-            styleId: 24,
-            templateId: 15
+            styleId: 4,
+            templateId: 4
         }
     });
 
@@ -171,12 +171,12 @@ function initialize() {
         heatmap: { enabled: false },
         query: {
             select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: "col9\x3e\x3e0 \x3e\x3d 0.01"
+            from: "1DAaufoEP405M_MNXAJuLxT-NqSvqQQRf30TRcXs",
+            where: "col9\x3e\x3e0 \x3e\x3d 1 and col9\x3e\x3e0 \x3c\x3d 50"
         },
         options: {
-            styleId: 25,
-            templateId: 15
+            styleId: 5,
+            templateId: 5
         }
     });
 
@@ -385,21 +385,32 @@ function reset() {
 }
 
 function makeyieldlegend(legend, max) {
-    var colors = ['0000ff', 'ead1dc', 'ff0000'];
-    for (i=0; i < colors.length; i++) {
+    
+    var legendParameters = [
+        { "color": "ff9900", "maximum": 5 },
+        { "color": "ffff00", "maximum": 10 },
+        { "color": "00ffff", "maximum": 15 },
+        { "color": "0000ff", "maximum": 20 },
+        { "color": "9900ff", "maximum": 30 },
+        { "color": "ff00ff", "maximum": 50 },
+        { "color": "00ff00", "maximum": 75 },
+        { "color": "ff0000", "maximum": 100 }
+    ];
+
+    for (i=0;
+         i < legendParameters.length && (i == 0 || legendParameters[i - 1]["maximum"] < max);
+         i++) {
 
         var swatchdiv = document.createElement('div');
         var swatch = document.createElement('span');
         swatchdiv.appendChild(swatch)
 
         swatch.setAttribute('class', 'googft-legend-swatch')
-        swatch.setAttribute('style', "background-color: #" + colors[i])
+        swatch.setAttribute('style', "background-color: #" + legendParameters[i]["color"])
         var legrange = document.createElement('span');
         legrange.setAttribute('class', 'googft-legend-range');
-        legrange.innerHTML=Math.round(max*(i)/colors.length) 
-            +" - "+
-            Math.round(max*(i+1)/colors.length)
-            + " Mg/ha/yr";
+        legrange.innerHTML = (i == 0 ? "0" : legendParameters[i - 1]["maximum"]) +
+            " to " + legendParameters[i]["maximum"] + " Mg/ha/yr";
         swatchdiv.appendChild(legrange);
         
         swatchdiv.appendChild(document.createElement('br'));
@@ -477,7 +488,7 @@ function updatemap() {
         legendtitle.id='googft-legend-title';
         legendtitle.innerHTML=opt.text;
         leg.appendChild(legendtitle);
-        var yields = ['12', '34', '20', '46']
+        var yields = [11.75, 34, 19.8, 45.67 ] // maximum yield value in layers 0 - 3
         makeyieldlegend(leg, yields[opt.value]);
         //make gradient legend
     } else if (opt.value == 4) {
@@ -519,20 +530,8 @@ function updatemap() {
         var imgdiv = document.createElement('img');
         imgdiv.setAttribute('src', 'images/lmodelout/switchgrass_yield_grid.png-legend.png')
         leg.appendChild(imgdiv);
-    } else if (opt.value < 18) {
+    } else {
         makeaetlegend(leg);
-    } else if (opt.value == 18) {
-        var legendtitle = document.createElement('p');
-        legendtitle.id='googft-legend-title';
-        legendtitle.innerHTML=opt.text;
-        leg.appendChild(legendtitle);
-        makeyieldlegend(leg, 12)
-    } else if (opt.value == 19) {
-        var legendtitle = document.createElement('p');
-        legendtitle.id='googft-legend-title';
-        legendtitle.innerHTML=opt.text;
-        leg.appendChild(legendtitle);
-        makeyieldlegend(leg, 15)
     }
     downloaddata();
 }
