@@ -9,4 +9,9 @@ This is the source code for the [Biofuel Ecophysiological Traits and Yields data
 The website is primarily written in Ruby-on-Rails, and has a MySQL backend. 
 BETYdb provides an interface for contributing and accessing data, and is the informatics backend for the [Predictive Ecosystem Analyzer (PEcAn)](http://www.pecanproject.org).
 
-See the wiki pages for documentation.
+## Documentation.
+
+* Technical Documentation: https://pecan.gitbooks.io/betydb-documentation/content/
+* Data Entry: https://www.gitbook.com/book/pecan/betydbdoc-dataentry/content/
+* Data Access: https://www.gitbook.com/book/pecan/betydb-data-access/content/
+ 
