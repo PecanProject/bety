@@ -34,7 +34,7 @@
 
   </trait-group>
 
-  <trait access_level="1" mean="-10">
+  <trait access_level="1" mean="-10" utc-timestamp="1984-03-12T12:00:56Z">
 
     <variable name="b2Ca"/>
 
@@ -45,8 +45,6 @@
     <method name="CC">
       <citation author="Biggs" year="2008"/><!-- or use citation-id on method element -->
     </method><!-- or use method-id on trait element -->
-
-    <!-- data time info not yet supported -->
 
     <site sitename="Aliartos"/>
 
