@@ -701,7 +701,10 @@ class BulkUploadDataSet
                 end
                 value = Float(column[:data])
               rescue ArgumentError => e
-                raise UnparsableVariableValueException
+                # Allow empty values but consider anything else an error:
+                if column[:data] != ''
+                  raise UnparsableVariableValueException
+                end
               else
 
                 v = Variable.find_by_name(column[:fieldname])
@@ -1572,6 +1575,11 @@ class BulkUploadDataSet
         csv_row_as_hash["statname"] = "SE"
       end
 
+      # dates are assumed always to be accurate to the day:
+      csv_row_as_hash["dateloc"] = 5
+      # bulk upload doesn't handle time-of-day data:
+      csv_row_as_hash["timeloc"] = 9
+
       if yield_data?
         add_yield_specific_attributes(csv_row_as_hash)
         # eliminate extraneous data from CSV row
@@ -1589,6 +1597,11 @@ class BulkUploadDataSet
           # clone: we have to be more careful than for yields since we may use
           # the row for multiple trait rows
           row_data = csv_row_as_hash.clone
+
+          if row_data[@heading_variable_info[trait_variable_id][:name]].nil?
+            # If the given trait column had nothing in it, go to next trait variable
+            next
+          end
 
           # If this is the first item being added to @mapped_data for the
           # current item of @data, mark it with the key +:new_entity+:
