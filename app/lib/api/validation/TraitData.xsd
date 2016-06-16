@@ -126,7 +126,7 @@
     </xs:all>
     <xs:attribute name="access_level" type="access-level"/>
     <xs:attribute name="utc-timestamp" type="utc-datetime"/>
-    <xs:attribute name="mean" use="required" type="xs:decimal"/>
+    <xs:attribute name="mean" use="required" type="xs:double"/>
   </xs:complexType>
 
   <xs:simpleType name="utc-datetime">
@@ -146,7 +146,7 @@
     <xs:sequence>
       <xs:element name="variable" type="variable"/>
     </xs:sequence>
-    <xs:attribute name="level" use="required" type="xs:decimal"/>
+    <xs:attribute name="level" use="required" type="xs:double"/>
   </xs:complexType>
 
 </xs:schema>
