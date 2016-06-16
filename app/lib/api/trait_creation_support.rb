@@ -117,6 +117,9 @@ module Api::TraitCreationSupport
       column_values[:timeloc] = 9
     end
 
+    # Every trait has the same user_id value:
+    column_values[:user_id] = current_user.id
+
     begin
 
       new_trait = Trait.create!(column_values)
