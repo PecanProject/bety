@@ -199,7 +199,8 @@
               </ul>
             </li>
 
-            <% if current_user != nil && current_user.page_access_level <= 2 %>
+            <%# Show the Bulk Upload link if the user has at least "Creator" page access level. %>
+            <% if current_user != nil && current_user.page_access_level <= 3 %>
             <li><%= link_to "Bulk Upload", controller: "bulk_upload", action: session[:bulk_upload_stage] || "start_upload" %></li>
             <% end %>
             
