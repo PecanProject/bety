@@ -1,9 +1,23 @@
 class Api::Beta::BaseController < Api::BaseController
   include ApiAuthenticationSystem
 
+  before_filter :set_content_type # IMPORTANT: Run this filter first!
   before_filter :login_required
 
   NO_CONSTRAINT = lambda { |value| true }
+
+
+  # Set the response content type based on the "format" parameter.
+  def set_content_type
+    case params['format']
+    when 'xml'
+      response.headers['Content-Type'] = "application/xml"
+    when 'json', 'csv'
+      response.headers['Content-Type'] = "application/json"
+    else
+      raise "Unexpected format!"
+    end
+  end
 
   # Given a model, define +index+ and +show+ actions.
   #

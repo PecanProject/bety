@@ -16,10 +16,8 @@ class Api::Beta::TraitsController < Api::Beta::BaseController
   param :key, lambda {|val| true }, :desc => "The apikey to use for authorization."
   formats ["json", "csv", "xml"]
   def create
-    response.headers['Content-Type'] = "application/json" # the default
     case params['format']
     when 'xml'
-      response.headers['Content-Type'] = "application/xml"
       xml_data = request.raw_post
     when 'json'
       begin

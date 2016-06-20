@@ -74,7 +74,7 @@ RSpec.describe "Trait insertion API:" do
     include_examples "format", "spec/fixtures/files/api/beta/valid-test-data.json", "JSON", "", "application/json"
 
     specify "Sending a malformed JSON document should return a Bad Request status" do
-      post "/api/beta/traits?key=3333333333333333333333333333333333333333", "<no-closing-tag>"
+      post "/api/beta/traits?key=3333333333333333333333333333333333333333", "{ no-closing-brace "
       aggregate_failures do
         expect(response.status).to eq 400
         expect(response.content_type).to eq "application/json"
