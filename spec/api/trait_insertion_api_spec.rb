@@ -44,7 +44,7 @@ RSpec.describe "Trait insertion API:" do
         the apikey of a viewer should not allow database insertions,
         return with status 401 (Unauthorized), respond with the
         correct content type, and return a document of the correct
-        form 
+        form
         MESSAGE
 
         aggregate_failures "Insertion fails without proper authorization" do
@@ -91,7 +91,7 @@ puts response.body
   # XML endpoint
   describe "XML:" do
     include_examples "format", "spec/fixtures/files/api/beta/valid-test-data.xml", "XML", ".xml", "application/xml"
-    
+
     specify "Sending a malformed XML document should return a Bad Request status" do
       post "/api/beta/traits.xml?key=3333333333333333333333333333333333333333", "<no-closing-tag>"
       aggregate_failures do
@@ -120,10 +120,46 @@ puts response.body
 
   end
 
+  # CSV endpoint
+  describe "CSV:" do
+    #include_examples "format", "spec/fixtures/files/api/beta/valid-test-data.csv", "CSV", ".csv", "application/xml"
+
+    specify "Sending a CSV file that refers to missing meta-data should roll back the traits table" do
+
+      expect {
+        post "/api/beta/traits.csv?key=3333333333333333333333333333333333333333",
+          File.open(Rails.root.join "spec/fixtures/files/api/beta/missing-meta-data.csv").read
+        puts response.body
+      }.not_to change { Trait.count }
+
+    end
+
+    specify "Sending a CSV file that refers to missing meta-data should roll back the entities table" do
+
+      expect {
+        post "/api/beta/traits.csv?key=3333333333333333333333333333333333333333",
+          File.open(Rails.root.join "spec/fixtures/files/api/beta/missing-meta-data.csv").read
+        puts response.body
+      }.not_to change { Entity.count }
+
+    end
+
+    specify "Sending a CSV file that contains out-of-range trait values should roll back the entities table" do
+
+      expect {
+        post "/api/beta/traits.csv?key=3333333333333333333333333333333333333333",
+          File.open(Rails.root.join "spec/fixtures/files/api/beta/out-of-range-data.csv").read
+        puts response.body
+      }.not_to change { Entity.count }
+
+    end
+
+  end
+
 
 
 #   context "via XML" do
-    
+
 #     before(:each) do
 #       headers = {
 #         "ACCEPT" => "application/xml",     # This is what Rails 4 accepts
