@@ -35,7 +35,7 @@ class Api::Beta::TraitsController < Api::Beta::BaseController
 
     render status: 201, content_type: "application/xml"
 
-  rescue Nokogiri::XML::SyntaxError, InvalidDocument, Yajl::ParseError
+  rescue Nokogiri::XML::SyntaxError, InvalidDocument, InvalidData, Yajl::ParseError
 
     render status: 400
 
@@ -54,7 +54,7 @@ class Api::Beta::TraitsController < Api::Beta::BaseController
     @model_validation_errors = []
     @database_insertion_errors = []
 
-    @result = create_traits_from_post_data(data)
+    create_traits_from_post_data(data)
 
   rescue Nokogiri::XML::SyntaxError
 
@@ -65,19 +65,20 @@ class Api::Beta::TraitsController < Api::Beta::BaseController
   rescue InvalidDocument
 
     @errors = { }
+    @errors[:schema_validation_errors] = @schema_validation_errors
 
-    if !@schema_validation_errors.blank?
-      @errors[:schema_validation_errors] = @schema_validation_errors
-    else
-      if !@lookup_errors.blank?
-        @errors[:lookup_errors] = @lookup_errors
-      end
-      if !@model_validation_errors.blank?
-        @errors[:model_validation_errors] = @model_validation_errors
-      end
-      if !@database_insertion_errors.blank?
-        @errors[:database_insertion_errors] = @database_insertion_errors
-      end
+    raise
+
+  rescue InvalidData => e
+    @errors = { }
+    if !@lookup_errors.blank?
+      @errors[:lookup_errors] = @lookup_errors
+    end
+    if !@model_validation_errors.blank?
+      @errors[:model_validation_errors] = @model_validation_errors
+    end
+    if !@database_insertion_errors.blank?
+      @errors[:database_insertion_errors] = @database_insertion_errors
     end
 
     raise

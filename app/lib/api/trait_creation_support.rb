@@ -4,7 +4,14 @@ module Api::TraitCreationSupport
 
   private
 
+  # Exception to signal document didn't validate against schema
   class InvalidDocument < StandardError
+  end
+
+  # Exception used for various data errors that prevent data from being saved,
+  # including lookup of metadata references, out-of-range values, missing
+  # attributes, etc.
+  class InvalidData < StandardError
   end
 
   class NotFoundException < StandardError
@@ -39,7 +46,21 @@ module Api::TraitCreationSupport
         # "trait-group" node.
         process_trait_group_node(trait_data_set_node, {})
 
+        if @lookup_errors.size > 0 ||
+          @model_validation_errors.size > 0 ||
+          @database_insertion_errors.size > 0
+
+          raise InvalidData  # roll back everything if there was any error
+
+        end
+
       end # transaction
+
+    rescue InvalidData
+
+      @result = Hash.from_xml(doc.to_s)
+
+      raise
 
     rescue StandardError => e
 
@@ -52,6 +73,10 @@ module Api::TraitCreationSupport
 
       raise e
 
+    else
+
+      @result = Hash.from_xml(doc.to_s)
+
     ensure
 
       if @lookup_errors.size > 0 ||
@@ -62,7 +87,7 @@ module Api::TraitCreationSupport
 
     end
 
-    return Hash.from_xml(doc.to_s)
+    return
 
   end # method
 
