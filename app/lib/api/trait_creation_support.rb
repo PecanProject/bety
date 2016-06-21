@@ -225,10 +225,39 @@ module Api::TraitCreationSupport
         raise InvalidDateSpecification.new(element_node,
                                            "You can't specify both utc_datetime and local_datetime as attributes of the same element.")
       else
-        utc_datetime = element_node.attribute("utc_datetime").value
+        date_string = element_node.attribute("utc_datetime").value
+
+        if date_string.size == 11
+          # date only
+          defaults[:timeloc] = 9
+          # fill out the time portion with zeroes, but keep the "Z" at the end:
+          date_string = date_string[0..-2] + "T00:00:00Z"
+        elsif !date_string.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d*)/) # sanity check; validation should already catch this
+          raise InvalidDateSpecification.new(element_node,
+                                             "Date string #{date_string} has an unexpected format.")
+        else
+          # date and time
+          defaults[:timeloc] = 1
+        end
+
+        utc_datetime = date_string
       end
     elsif element_node.has_attribute?("local_datetime")
       date_string = element_node.attribute("local_datetime").value
+
+      if date_string.size == 10
+        # date only
+        defaults[:timeloc] = 9
+        # fill out the time portion with zeroes
+        date_string += "T00:00:00"
+      elsif !date_string.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)/) # sanity check; validation should already catch this
+        raise InvalidDateSpecification.new(element_node,
+                                           "Date string #{date_string} has an unexpected format.")
+      else
+        # date and time
+        defaults[:timeloc] = 1
+      end
+
       Time.use_zone site_timezone(defaults) do
         utc_datetime = Time.zone.parse(date_string)
       end
@@ -239,7 +268,6 @@ module Api::TraitCreationSupport
 
     defaults[:date] = utc_datetime
     defaults[:dateloc] = 5
-    defaults[:timeloc] = 1
 
   rescue InvalidDateSpecification => e
     @date_data_errors << e.message
