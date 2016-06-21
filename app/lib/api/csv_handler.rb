@@ -2,6 +2,9 @@ require 'memoist'
 module Api::CsvHandler
   extend Memoist
 
+  class BadHeading < Exception
+  end
+
   private
 
   def csv_2_xml(csv_string)
@@ -99,7 +102,7 @@ Rails.logger.debug(doc.to_s)
     end
 
     # maybe add covariates
-    if !covariates.empty?
+    if !covariates.blank?
       covariates_node = trait.add_child(doc.create_element("covariates"))
       covariates.each do |covariate_name, covariate_id|
         covariate_node = doc.create_element("covariate")
@@ -156,6 +159,10 @@ class HeadingVariableInfo
         covariate_hash[c.name] = c.id
       end
       @heading_variable_info[tv.name] = covariate_hash
+    end
+
+    if @trait_variables.size == 0
+      raise Api::CsvHandler::BadHeading.new "No trait variable was found in the CSV file."
     end
 
   end

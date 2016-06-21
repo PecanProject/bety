@@ -27,7 +27,12 @@ class Api::Beta::TraitsController < Api::Beta::BaseController
         raise
       end
     when 'csv'
-      xml_data = csv_2_xml(request.raw_post)
+      begin
+        xml_data = csv_2_xml(request.raw_post)
+      rescue Api::CsvHandler::BadHeading => e
+        @errors = e.message
+        raise
+      end
     else
       raise "Unsupported API format"
     end
@@ -35,7 +40,8 @@ class Api::Beta::TraitsController < Api::Beta::BaseController
 
     render status: 201, content_type: "application/xml"
 
-  rescue Nokogiri::XML::SyntaxError, InvalidDocument, InvalidData, Yajl::ParseError
+  rescue Nokogiri::XML::SyntaxError, InvalidDocument, InvalidData,
+    Yajl::ParseError, Api::CsvHandler::BadHeading
 
     render status: 400
 
