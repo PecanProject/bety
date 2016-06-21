@@ -24,18 +24,18 @@
       attributes are available for each element type.)  A trait may also have a
       "notes" child element that just contains the text of the desired note.
       And it may have a "stat" child element.  This element has required
-      attributes "sample-size", "name", and "value".  Again, see
+      attributes "sample_size", "name", and "value".  Again, see
       "TraitAttributeTypes.xsd" to see a list of valid stat names.
 
       A timestamp for a trait measurement may be specified by using the optional
-      "utc-timestamp" attribute on the "trait" element.  The value of the
+      "utc_datetime" attribute on the "trait" element.  The value of the
       timestamp must be specified in the form "1990-07-08T12:34:56Z" (fractional
       seconds may be included--for example "1990-07-08T12:34:56.0789Z").
 
       If all the traits share some common property, a "defaults" element may be
       used.  This must be placed before all the "traits" elements but after the
       "entity" element (if there is one).  Like a trait element, the "defaults"
-      element may have "access_level" and "utc-timestamp" attributes, and may
+      element may have "access_level" and "utc_datetime" attributes, and may
       have one or more of "site", "species", "citation", "treatment",
       "variable", or "method" as child elements.  If the defaults element has an
       "access_level" attribute, then the associated traits are not required to
@@ -103,7 +103,7 @@
       <xs:element name="method" type="method" minOccurs="0"/>
     </xs:all>
     <xs:attribute name="access_level" type="access-level"/>
-    <xs:attribute name="utc-timestamp" type="utc-datetime"/>
+    <xs:attribute name="utc_datetime" type="utc-datetime"/>
   </xs:complexType>
 
   <xs:complexType name="trait">
@@ -125,7 +125,7 @@
       <xs:element name="covariates" type="covariates" minOccurs="0"/>
     </xs:all>
     <xs:attribute name="access_level" type="access-level"/>
-    <xs:attribute name="utc-timestamp" type="utc-datetime"/>
+    <xs:attribute name="utc_datetime" type="utc-datetime"/>
     <xs:attribute name="mean" use="required" type="xs:double"/>
   </xs:complexType>
 

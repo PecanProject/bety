@@ -77,7 +77,7 @@ Rails.logger.debug(doc.to_s)
         end
       when "stat"
         child.set_attribute("name", "SE") # the only one supported for now
-        child.set_attribute("sample-size", row["n"])
+        child.set_attribute("sample_size", row["n"])
         child.set_attribute("value", row["SE"])
       when "site"
         child.set_attribute("sitename", row[name])
@@ -133,7 +133,7 @@ Rails.logger.debug(doc.to_s)
   memoize :compute_trait_child_element_names
 
   def compute_varying_trait_attribute_names(headers)
-    attribute_list = headers & ["access_level", "utc-timestamp"]
+    attribute_list = headers & ["access_level", "utc_datetime"]
   end
   memoize :compute_varying_trait_attribute_names
 

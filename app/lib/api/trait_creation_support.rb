@@ -206,7 +206,7 @@ module Api::TraitCreationSupport
   end
 
   def get_date(element_node)
-    element_node.attribute("utc-timestamp") && element_node.attribute("utc-timestamp").value
+    element_node.attribute("utc_datetime") && element_node.attribute("utc_datetime").value
   end
 
   def get_stat_info(element_node)
@@ -214,7 +214,7 @@ module Api::TraitCreationSupport
     if element_node.xpath("boolean(stat)")
       stat_node = element_node.xpath("stat").first
       stat_info[:statname] = stat_node.attribute("name").value
-      stat_info[:n] = stat_node.attribute("sample-size").value
+      stat_info[:n] = stat_node.attribute("sample_size").value
       stat_info[:stat] = stat_node.attribute("value").value
     end
     return stat_info

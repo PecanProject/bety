@@ -52,7 +52,7 @@
 
   <xs:complexType name="stat">
     <xs:attribute name="name" type="stat-type" use="required"/>
-    <xs:attribute name="sample-size" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="sample_size" type="xs:positiveInteger" use="required"/>
     <xs:attribute name="value" type="xs:double" use="required"/>
   </xs:complexType>
 

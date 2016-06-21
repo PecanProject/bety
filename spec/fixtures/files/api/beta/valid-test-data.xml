@@ -8,7 +8,7 @@
   </defaults>
   <trait access_level="1" mean="10">
     <variable name="Vcmax"/>
-    <stat name="SE" value="0.0030" sample-size="10"/>
+    <stat name="SE" value="0.0030" sample_size="10"/>
     <site city="Aliartos"/>
     <treatment id="1"/>
     <notes>blah blah</notes>

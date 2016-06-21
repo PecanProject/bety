@@ -49,7 +49,7 @@
                 "attributes": {
                   "name": "SE",
                   "value": "0.0030",
-                  "sample-size": "10"
+                  "sample_size": "10"
                 }
               }
             },
