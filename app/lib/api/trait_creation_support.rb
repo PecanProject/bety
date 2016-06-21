@@ -14,6 +14,13 @@ module Api::TraitCreationSupport
   class InvalidData < StandardError
   end
 
+  class InvalidDateSpecification < StandardError
+    def initialize(node, message, tag_message = message)
+      node.set_attribute("error", tag_message)
+      super(message)
+    end
+  end
+
   class NotFoundException < StandardError
     def initialize(node, entity_name, selection_criteria)
       node.set_attribute("error", "match not found")
@@ -47,8 +54,9 @@ module Api::TraitCreationSupport
         process_trait_group_node(trait_data_set_node, {})
 
         if @lookup_errors.size > 0 ||
-          @model_validation_errors.size > 0 ||
-          @database_insertion_errors.size > 0
+            @model_validation_errors.size > 0 ||
+            @database_insertion_errors.size > 0 ||
+            @date_data_errors.size > 0
 
           raise InvalidData  # roll back everything if there was any error
 
@@ -81,7 +89,9 @@ module Api::TraitCreationSupport
 
       if @lookup_errors.size > 0 ||
           @model_validation_errors.size > 0 ||
-          @database_insertion_errors.size > 0
+          @database_insertion_errors.size > 0 ||
+          @date_data_errors.size > 0
+
         @new_trait_ids = []
       end
 
@@ -188,14 +198,7 @@ module Api::TraitCreationSupport
 
     defaults.merge!(get_foreign_keys(element_node))
 
-    date = get_date(element_node)
-    if date
-      defaults[:date] = date
-      # For now at least, assume dates are accurate to the second and are on a
-      # definite date of a definite year:
-      defaults[:dateloc] = 5
-      defaults[:timeloc] = 1
-    end
+    set_datetime_defaults(element_node, defaults)
 
     new_access_level  = get_access_level(element_node)
     if new_access_level
@@ -205,8 +208,60 @@ module Api::TraitCreationSupport
     return defaults
   end
 
-  def get_date(element_node)
-    element_node.attribute("utc_datetime") && element_node.attribute("utc_datetime").value
+  def set_datetime_defaults(element_node, defaults)
+
+    if element_node.name == 'defaults' &&
+        element_node.has_attribute?("local_datetime") &&
+        !element_node.xpath("../*[local-name(.) != 'defaults']//site").empty?
+
+      raise InvalidDateSpecification.new(element_node,
+                                         "You can't have a local_datetime attribute on a trait-group's defaults element if a trait or trait-group descendant sets (or re-sets) the site.",
+                                         "bad date specification; see error output")
+
+    end
+
+    if element_node.has_attribute?("utc_datetime")
+      if element_node.has_attribute?("local_datetime")
+        raise InvalidDateSpecification.new(element_node,
+                                           "You can't specify both utc_datetime and local_datetime as attributes of the same element.")
+      else
+        utc_datetime = element_node.attribute("utc_datetime").value
+      end
+    elsif element_node.has_attribute?("local_datetime")
+      date_string = element_node.attribute("local_datetime").value
+      Time.use_zone site_timezone(defaults) do
+        utc_datetime = Time.zone.parse(date_string)
+      end
+    else
+      # no date information on this node; return without setting any defaults
+      return
+    end
+
+    defaults[:date] = utc_datetime
+    defaults[:dateloc] = 5
+    defaults[:timeloc] = 1
+
+  rescue InvalidDateSpecification => e
+    @date_data_errors << e.message
+  end
+
+
+  # To-Do: Combine this code with similar code elsewhere when branch containing it is merged in.
+  def site_timezone(defaults)
+
+    site_id = defaults[:site_id]
+
+    if site_id.nil?
+      site_timezone = 'UTC'
+    else
+      site_timezone = (Site.find(site_id)).time_zone
+      if site_timezone.blank?
+        site_timezone = 'UTC'
+      end
+    end
+
+    return site_timezone
+
   end
 
   def get_stat_info(element_node)

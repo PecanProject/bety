@@ -133,7 +133,7 @@ Rails.logger.debug(doc.to_s)
   memoize :compute_trait_child_element_names
 
   def compute_varying_trait_attribute_names(headers)
-    attribute_list = headers & ["access_level", "utc_datetime"]
+    attribute_list = headers & ["access_level", "utc_datetime", "local_datetime"]
   end
   memoize :compute_varying_trait_attribute_names
 

@@ -59,6 +59,7 @@ class Api::Beta::TraitsController < Api::Beta::BaseController
     @lookup_errors = []
     @model_validation_errors = []
     @database_insertion_errors = []
+    @date_data_errors = []
 
     create_traits_from_post_data(data)
 
@@ -85,6 +86,9 @@ class Api::Beta::TraitsController < Api::Beta::BaseController
     end
     if !@database_insertion_errors.blank?
       @errors[:database_insertion_errors] = @database_insertion_errors
+    end
+    if !@date_data_errors.blank?
+      @errors[:date_data_errors] = @date_data_errors
     end
 
     raise
