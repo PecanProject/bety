@@ -25,7 +25,6 @@ RSpec.describe "Trait insertion API:" do
           }.to change { Trait.count }.by(1)
             .and change { Entity.count }.by(1)
             .and change { Covariate.count }.by(2)
-          puts "Response content type is #{response.content_type} and content_type = #{content_type}"
           expect(response.content_type).to eq(content_type)
           if response.content_type == "application/xml"
             expect(Hash.from_xml(response.body).fetch("hash").keys).to match_array(['metadata', 'data'])
@@ -53,7 +52,6 @@ RSpec.describe "Trait insertion API:" do
           }.to change { Trait.count }.by(0)
             .and change { Entity.count }.by(0)
             .and change { Covariate.count }.by(0)
-          puts "Response content type is #{response.content_type} and content_type = #{content_type}"
           expect(response.content_type).to eq(content_type)
           if response.content_type == "application/xml"
             expect(Hash.from_xml(response.body).fetch("hash").keys).to match_array(['metadata', 'errors'])
@@ -79,7 +77,6 @@ RSpec.describe "Trait insertion API:" do
         expect(response.status).to eq 400
         expect(response.content_type).to eq "application/json"
         expect { Yajl::Parser.parse(response.body) }.to_not raise_exception
-puts response.body
       end
       aggregate_failures do
         expect(Yajl::Parser.parse(response.body).keys).to match_array(['metadata', 'errors'])
@@ -129,7 +126,6 @@ puts response.body
       expect {
         post "/api/beta/traits.csv?key=3333333333333333333333333333333333333333",
           File.open(Rails.root.join "spec/fixtures/files/api/beta/missing-meta-data.csv").read
-        puts response.body
       }.not_to change { Trait.count }
 
     end
@@ -139,7 +135,6 @@ puts response.body
       expect {
         post "/api/beta/traits.csv?key=3333333333333333333333333333333333333333",
           File.open(Rails.root.join "spec/fixtures/files/api/beta/missing-meta-data.csv").read
-        puts response.body
       }.not_to change { Entity.count }
 
     end
@@ -149,7 +144,6 @@ puts response.body
       expect {
         post "/api/beta/traits.csv?key=3333333333333333333333333333333333333333",
           File.open(Rails.root.join "spec/fixtures/files/api/beta/out-of-range-data.csv").read
-        puts response.body
       }.not_to change { Entity.count }
 
     end
