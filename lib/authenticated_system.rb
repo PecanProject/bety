@@ -83,6 +83,7 @@ module AuthenticatedSystem
                                 "InputsController.ALL" ]
       create_requirement = ["ApplicationsController.ALL",
                                 "BulkUploadController.ALL",
+                                "CitationsController.autocomplete",
                                 "CitationsController.bu_autocomplete", # <-- needed for bulk upload
                                 "CitationsController.new",
                                 "CitationsController.create",
@@ -176,6 +177,7 @@ module AuthenticatedSystem
                                 "TraitsController.create_multi",
                                 "TraitsController.new_multi",
                                 "VariablesController.new",
+                                "VariablesController.autocomplete",
                                 "VariablesController.create",
                                 "VariablesController.edit",
                                 "VariablesController.update",
