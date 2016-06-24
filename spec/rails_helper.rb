@@ -11,7 +11,7 @@ begin
   require 'capybara/rspec'
 rescue => e
   puts e.message
-  puts "Go to https://github.com/PecanProject/bety/wiki/Testing for instructions on setting up the testing environment."
+  puts "Go to https://pecan.gitbooks.io/betydb-documentation/content/automated_tests.html for instructions on setting up the testing environment."
   exit
 end
 
