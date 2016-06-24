@@ -18,9 +18,13 @@ class Api::BaseController < ActionController::Base
   # This ensures that when we are in the API realm, an exception won't get
   # handled by the default Rails exception handler that returns an HTML result.
   rescue_from StandardError do |e|
-    logger.debug("EXCEPTION: #{e}")
-    @errors = e.message
-    render
+    logger.info("UNEXPECTED EXCEPTION: #{e.class}\n#{e}")
+    # only show the first line of the backtrace in production mode:
+    logger.info("THROWN AT: #{e.backtrace[0]}")
+    # show the rest in development mode:
+    logger.debug("BACKTRACE: #{e.backtrace.join("\n")}")
+    @errors = "UNEXPECTED EXCEPTION #{e.class}. #{e.message}"
+    render status: 400
   end
 
   # Actions
@@ -29,6 +33,7 @@ class Api::BaseController < ActionController::Base
   # return errors in JSON rather than the default HTML:
   def bad_url
     @errors = "There is no resource at this URL.  Visit #{root_url}apipie for information about available API paths."
+    render status: 404
   end
 
   private

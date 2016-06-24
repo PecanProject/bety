@@ -1,8 +1,24 @@
 module Api::TraitCreationSupport
 
+  include JsonHandler, CsvHandler
+
   private
 
+  # Exception to signal document didn't validate against schema
   class InvalidDocument < StandardError
+  end
+
+  # Exception used for various data errors that prevent data from being saved,
+  # including lookup of metadata references, out-of-range values, missing
+  # attributes, etc.
+  class InvalidData < StandardError
+  end
+
+  class InvalidDateSpecification < StandardError
+    def initialize(node, message, tag_message = message)
+      node.set_attribute("error", tag_message)
+      super(message)
+    end
   end
 
   class NotFoundException < StandardError
@@ -19,7 +35,7 @@ module Api::TraitCreationSupport
     end
   end
 
-  # Given data, and XML string, extract the information from it and insert
+  # Given data, an XML string, extract the information from it and insert
   # appropriate rows into the entities, traits, and covariates tables.
   def create_traits_from_post_data(data)
 
@@ -37,7 +53,22 @@ module Api::TraitCreationSupport
         # "trait-group" node.
         process_trait_group_node(trait_data_set_node, {})
 
+        if @lookup_errors.size > 0 ||
+            @model_validation_errors.size > 0 ||
+            @database_insertion_errors.size > 0 ||
+            @date_data_errors.size > 0
+
+          raise InvalidData  # roll back everything if there was any error
+
+        end
+
       end # transaction
+
+    rescue InvalidData
+
+      @result = Hash.from_xml(doc.to_s)
+
+      raise
 
     rescue StandardError => e
 
@@ -50,17 +81,23 @@ module Api::TraitCreationSupport
 
       raise e
 
+    else
+
+      @result = Hash.from_xml(doc.to_s)
+
     ensure
 
       if @lookup_errors.size > 0 ||
           @model_validation_errors.size > 0 ||
-          @database_insertion_errors.size > 0
+          @database_insertion_errors.size > 0 ||
+          @date_data_errors.size > 0
+
         @new_trait_ids = []
       end
 
     end
 
-    return Hash.from_xml(doc.to_s)
+    return
 
   end # method
 
@@ -115,6 +152,9 @@ module Api::TraitCreationSupport
       column_values[:timeloc] = 9
     end
 
+    # Every trait has the same user_id value:
+    column_values[:user_id] = current_user.id
+
     begin
 
       new_trait = Trait.create!(column_values)
@@ -158,14 +198,7 @@ module Api::TraitCreationSupport
 
     defaults.merge!(get_foreign_keys(element_node))
 
-    date = get_date(element_node)
-    if date
-      defaults[:date] = date
-      # For now at least, assume dates are accurate to the second and are on a
-      # definite date of a definite year:
-      defaults[:dateloc] = 5
-      defaults[:timeloc] = 1
-    end
+    set_datetime_defaults(element_node, defaults)
 
     new_access_level  = get_access_level(element_node)
     if new_access_level
@@ -175,8 +208,88 @@ module Api::TraitCreationSupport
     return defaults
   end
 
-  def get_date(element_node)
-    element_node.attribute("utc-timestamp") && element_node.attribute("utc-timestamp").value
+  def set_datetime_defaults(element_node, defaults)
+
+    if element_node.name == 'defaults' &&
+        element_node.has_attribute?("local_datetime") &&
+        !element_node.xpath("../*[local-name(.) != 'defaults']//site").empty?
+
+      raise InvalidDateSpecification.new(element_node,
+                                         "You can't have a local_datetime attribute on a trait-group's defaults element if a trait or trait-group descendant sets (or re-sets) the site.",
+                                         "bad date specification; see error output")
+
+    end
+
+    if element_node.has_attribute?("utc_datetime")
+      if element_node.has_attribute?("local_datetime")
+        raise InvalidDateSpecification.new(element_node,
+                                           "You can't specify both utc_datetime and local_datetime as attributes of the same element.")
+      else
+        date_string = element_node.attribute("utc_datetime").value
+
+        if date_string.size == 11
+          # date only
+          defaults[:timeloc] = 9
+          # fill out the time portion with zeroes, but keep the "Z" at the end:
+          date_string = date_string[0..-2] + "T00:00:00Z"
+        elsif !date_string.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d*)/) # sanity check; validation should already catch this
+          raise InvalidDateSpecification.new(element_node,
+                                             "Date string #{date_string} has an unexpected format.")
+        else
+          # date and time
+          defaults[:timeloc] = 1
+        end
+
+        utc_datetime = date_string
+      end
+    elsif element_node.has_attribute?("local_datetime")
+      date_string = element_node.attribute("local_datetime").value
+
+      if date_string.size == 10
+        # date only
+        defaults[:timeloc] = 9
+        # fill out the time portion with zeroes
+        date_string += "T00:00:00"
+      elsif !date_string.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)/) # sanity check; validation should already catch this
+        raise InvalidDateSpecification.new(element_node,
+                                           "Date string #{date_string} has an unexpected format.")
+      else
+        # date and time
+        defaults[:timeloc] = 1
+      end
+
+      Time.use_zone site_timezone(defaults) do
+        utc_datetime = Time.zone.parse(date_string)
+      end
+    else
+      # no date information on this node; return without setting any defaults
+      return
+    end
+
+    defaults[:date] = utc_datetime
+    defaults[:dateloc] = 5
+
+  rescue InvalidDateSpecification => e
+    @date_data_errors << e.message
+  end
+
+
+  # To-Do: Combine this code with similar code elsewhere when branch containing it is merged in.
+  def site_timezone(defaults)
+
+    site_id = defaults[:site_id]
+
+    if site_id.nil?
+      site_timezone = 'UTC'
+    else
+      site_timezone = (Site.find(site_id)).time_zone
+      if site_timezone.blank?
+        site_timezone = 'UTC'
+      end
+    end
+
+    return site_timezone
+
   end
 
   def get_stat_info(element_node)
@@ -184,7 +297,7 @@ module Api::TraitCreationSupport
     if element_node.xpath("boolean(stat)")
       stat_node = element_node.xpath("stat").first
       stat_info[:statname] = stat_node.attribute("name").value
-      stat_info[:n] = stat_node.attribute("sample-size").value
+      stat_info[:n] = stat_node.attribute("sample_size").value
       stat_info[:stat] = stat_node.attribute("value").value
     end
     return stat_info
@@ -259,7 +372,7 @@ module Api::TraitCreationSupport
     return id_hash
   end
 
-  # Validate the XML document "doc" using the TraitData.xsd schema.  Raise and
+  # Validate the XML document "doc" using the TraitData.xsd schema.  Raise an
   # InvalidDocument exception containing the list of errors returned by the
   # parser if the document is not valid.
   def schema_validate(doc)
@@ -281,60 +394,10 @@ module Api::TraitCreationSupport
 
   end
 
+  # Convert h from a Hash mapping attribute names to attribute nodes
+  # to one mapping attribute names to their value.
   def attr_hash_2_where_hash(h)
-    Hash[h.map { |k, v| [canonicalize_key(k), v.value] }]
-  end
-
-  def canonicalize_key(k)
-    case k
-      when "access-level", "variable-id"
-      return k.sub(/-/, '_').to_sym
-    else
-      return k.to_sym
-    end
-  end
-
-  def json_2_xml(json_string)
-    doc_as_hash = Yajl::Parser.parse(json_string)
-
-    doc = Nokogiri::XML::Document.new
-
-    def create_element(doc, hash)
-      if hash.keys.size != 1
-        raise "Unexpected hash size"
-      end
-
-      element_name = hash.keys.first
-
-      element = doc.create_element(element_name)
-
-      inner_hash = hash[element_name]
-
-      if inner_hash.has_key? "attributes"
-        inner_hash["attributes"].each_pair do |k, v|
-          element.set_attribute(k, v)
-        end
-      end
-
-      if inner_hash.has_key? "children"
-        inner_hash["children"].each do |c|
-          if c.has_key?( "content") && c["content"].is_a?(String)
-            element.content = c["content"]
-          else
-            element.add_child(create_element(doc, c))
-          end
-        end
-      end
-
-      return element
-    end
-
-    # Use create_element to recursively create the document contents from the
-    # Hash we got from the JSON text:
-    doc.root = create_element(doc, doc_as_hash)
-
-    # Return the textual rendition of the XML document:
-    return doc.to_s
+    Hash[h.map { |k, v| [k, v.value] }]
   end
 
 end

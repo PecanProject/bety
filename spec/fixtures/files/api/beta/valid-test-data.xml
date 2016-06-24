@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<trait-data-set>
+  <defaults>
+    <species scientificname="Saccharum officinarum">
+      <cultivar name="s5-14"/>
+    </species>
+    <citation author="Adler"/>
+  </defaults>
+  <trait access_level="1" mean="10">
+    <variable name="Vcmax"/>
+    <stat name="SE" value="0.0030" sample_size="10"/>
+    <site city="Aliartos"/>
+    <treatment id="1"/>
+    <notes>blah blah</notes>
+    <covariates>
+      <covariate level="10">
+        <variable id="6"/>
+      </covariate>
+      <covariate level="1000">
+        <variable description="Specific Leaf Area"/>
+      </covariate>
+    </covariates>
+  </trait>
+</trait-data-set>

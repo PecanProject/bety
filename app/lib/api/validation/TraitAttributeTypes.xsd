@@ -8,15 +8,6 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="numeric-16-4">
-    <xs:restriction base="xs:decimal">
-      <xs:totalDigits value="16"/>
-      <xs:fractionDigits value="4"/>
-      <xs:minExclusive value="-1000000000000"/>
-      <xs:maxExclusive value="1000000000000"/>
-    </xs:restriction>
-  </xs:simpleType>
-
 
 
   <xs:complexType name="site">
@@ -61,8 +52,8 @@
 
   <xs:complexType name="stat">
     <xs:attribute name="name" type="stat-type" use="required"/>
-    <xs:attribute name="sample-size" type="xs:positiveInteger" use="required"/>
-    <xs:attribute name="value" type="numeric-16-4" use="required"/>
+    <xs:attribute name="sample_size" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="value" type="xs:double" use="required"/>
   </xs:complexType>
 
   <xs:simpleType name="stat-type">
