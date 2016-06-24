@@ -12,6 +12,6 @@ BETYdb provides an interface for contributing and accessing data, and is the inf
 ## Documentation.
 
 * Technical Documentation: https://pecan.gitbooks.io/betydb-documentation/content/
-* Data Entry: https://www.gitbook.com/book/pecan/betydbdoc-dataentry/content/
-* Data Access: https://www.gitbook.com/book/pecan/betydb-data-access/content/
+* Data Entry: https://pecan.gitbooks.io/betydbdoc-dataentry/content/
+* Data Access: https://pecan.gitbooks.io/betydb-data-access/content/
  
