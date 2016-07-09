@@ -126,7 +126,6 @@ GEM
     rdoc (3.12.2)
       json (~> 1.4)
     recaptcha (0.3.4)
-    rgeo (0.5.3)
     rgeo-activerecord (0.5.0)
       activerecord (>= 3.0.3)
       arel (>= 2.0.6)
@@ -218,6 +217,7 @@ DEPENDENCIES
   rails (= 3.2.22.2)
   rails3-restful-authentication (~> 3.0.1)
   recaptcha (= 0.3.4)
+  rgeo (~> 0.5.0)
   rspec-rails (~> 3.0)
   rspec_api_documentation
   ruby-graphviz (= 1.0.8)
