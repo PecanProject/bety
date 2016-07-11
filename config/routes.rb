@@ -234,7 +234,6 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :sessions, :only => [:new, :create, :destroy], :controller => 'sessions'
 
 
-  resources :errors, :only => [:index, :create]
   resources :users do
     collection do
       get :create_apikey
