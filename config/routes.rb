@@ -256,7 +256,7 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
       resources :traits, only: :create
     end
   end
-  match '/api/*remainder', controller: 'api/base', action: 'bad_url'
+  match '/api', controller: 'api/base', action: 'bad_url'
 
   get '/application/use_citation/:id', controller: 'application', action: 'use_citation'
   get '/application/remove_citation'

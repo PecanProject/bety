@@ -32,8 +32,7 @@ class Api::BaseController < ActionController::Base
   # We route all illegitimate requests beginning "/api" here so that we
   # return errors in JSON rather than the default HTML:
   def bad_url
-    @errors = "There is no resource at this URL.  Visit #{root_url}apipie for information about available API paths."
-    render status: 404
+    redirect_to apipie_apipie_path
   end
 
   private
