@@ -7,15 +7,15 @@ class CreateBenchmarksTables < ActiveRecord::Migration
     # id's will be set to auto-increment based on the host.
 
     create_table :benchmarks do |t|
+      t.integer :id, :limit => 8
       t.integer :input_id, :limit => 8, :null => false
       t.text    :description
       t.integer :site_id, :limit => 8, :null => false
       t.integer :variable_id, :limit => 8, :null => false
       t.integer :user_id, :limit => 8
-      t.datetime :created_at
-      t.datetime :updated_at
+
+      t.timestamps
     end
-    change_column :benchmarks, :id, :integer, :limit => 8
     execute %{
       SELECT setval('benchmarks_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmarks"
@@ -34,14 +34,14 @@ class CreateBenchmarksTables < ActiveRecord::Migration
     }
 
     create_table :metrics do |t|
+      t.integer :id, :limit => 8
       t.string :name
       t.text :description 
       t.integer :citation_id, :limit => 8
       t.integer :user_id, :limit => 8
-      t.datetime :created_at
-      t.datetime :updated_at
+
+      t.timestamps
     end
-    change_column :metrics, :id, :integer, :limit => 8
     execute %{
       SELECT setval('metrics_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "metrics"
@@ -50,13 +50,13 @@ class CreateBenchmarksTables < ActiveRecord::Migration
     }
 
     create_table :reference_runs do |t|
+      t.integer :id, :limit => 8
       t.integer :model_id, :limit => 8 
       t.text :settings 
       t.integer :user_id, :limit => 8
-      t.datetime :created_at
-      t.datetime :updated_at
+
+      t.timestamps
     end
-    change_column :reference_runs, :id, :integer, :limit => 8
     execute %{
       SELECT setval('reference_runs_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "reference_runs"
@@ -69,13 +69,13 @@ class CreateBenchmarksTables < ActiveRecord::Migration
     }
 
     create_table :benchmark_sets do |t|
+      t.integer :id, :limit => 8
       t.string :name, :null => false
       t.text :description
       t.integer :user_id, :limit => 8
-      t.datetime :created_at
-      t.datetime :updated_at
+
+      t.timestamps
     end
-    change_column :benchmark_sets, :id, :integer, :limit => 8
     execute %{
       SELECT setval('benchmark_sets_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmark_sets"
@@ -84,15 +84,15 @@ class CreateBenchmarksTables < ActiveRecord::Migration
     }
 
     create_table :benchmarks_ensembles do |t|
+      t.integer :id, :limit => 8
       t.integer :reference_run_id, :limit => 8, :null => false
       t.integer :ensemble_id, :limit => 8, :null => false
       t.integer :model_id, :limit => 8, :null => false
       t.integer :citation_id, :limit => 8, :null => false
       t.integer :user_id, :limit => 8
-      t.datetime :created_at
-      t.datetime :updated_at
+
+      t.timestamps
     end
-    change_column :benchmarks_ensembles, :id, :integer, :limit => 8
     execute %{
       SELECT setval('benchmarks_ensembles_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmarks_ensembles"
@@ -111,14 +111,14 @@ class CreateBenchmarksTables < ActiveRecord::Migration
     }
 
     create_table :benchmarks_ensembles_scores do |t|
+      t.integer :id, :limit => 8
       t.integer :benchmarks_ensemble_id, :limit => 8, :null => false
       t.integer :benchmark_id, :limit => 8, :null => false
       t.integer :metric_id, :limit => 8, :null => false
       t.integer :user_id, :limit => 8
-      t.datetime :created_at
-      t.datetime :updated_at
+
+      t.timestamps
     end
-    change_column :benchmarks_ensembles_scores, :id, :integer, :limit => 8
     execute %{
       SELECT setval('benchmarks_ensembles_scores_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmarks_ensembles_scores"
@@ -137,10 +137,10 @@ class CreateBenchmarksTables < ActiveRecord::Migration
     }
 
     create_table :benchmarks_metrics do |t|
+      t.integer :id, :limit => 8
       t.integer :benchmark_id, :limit => 8
       t.integer :metric_id, :limit => 8
     end
-    change_column :benchmarks_metrics, :id, :integer, :limit => 8
     execute %{
       SELECT setval('benchmarks_metrics_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmarks_metrics"
@@ -153,10 +153,10 @@ class CreateBenchmarksTables < ActiveRecord::Migration
     }
 
     create_table :benchmarks_benchmarks_reference_runs do |t|
+      t.integer :id, :limit => 8
       t.integer :benchmark_id, :limit => 8
       t.integer :reference_run_id, :limit => 8
     end
-    change_column :benchmarks_benchmarks_reference_runs, :id, :integer, :limit => 8
     execute %{
       SELECT setval('benchmarks_benchmarks_reference_runs_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmarks_benchmarks_reference_runs"
@@ -169,10 +169,10 @@ class CreateBenchmarksTables < ActiveRecord::Migration
     }
 
     create_table :benchmark_sets_benchmark_reference_runs do |t|
+      t.integer :id, :limit => 8
       t.integer :benchmark_set_id, :limit => 8
       t.integer :reference_run_id, :limit => 8
     end  
-    change_column :benchmark_sets_benchmark_reference_runs, :id, :integer, :limit => 8
     execute %{
       SELECT setval('benchmark_sets_benchmark_reference_runs_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmark_sets_benchmark_reference_runs"
