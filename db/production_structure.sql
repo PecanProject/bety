@@ -935,6 +935,7 @@ CREATE TABLE cultivars_pfts (
     cultivar_id bigint NOT NULL,
     created_at timestamp without time zone DEFAULT utc_now(),
     updated_at timestamp without time zone DEFAULT utc_now(),
+    id bigint NOT NULL,
     CONSTRAINT no_conflicting_member CHECK (no_species_member(pft_id))
 );
 
@@ -951,6 +952,25 @@ COMMENT ON TABLE cultivars_pfts IS 'This table tells which cultivars are members
 --
 
 COMMENT ON CONSTRAINT no_conflicting_member ON cultivars_pfts IS 'Ensure the pft_id does not refer to a pft having one or more species as members; pfts referred to by this table can only contain other cultivars.';
+
+
+--
+-- Name: cultivars_pfts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE cultivars_pfts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cultivars_pfts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE cultivars_pfts_id_seq OWNED BY cultivars_pfts.id;
 
 
 --
@@ -2260,8 +2280,28 @@ CREATE TABLE species (
 CREATE TABLE trait_covariate_associations (
     trait_variable_id bigint NOT NULL,
     covariate_variable_id bigint NOT NULL,
-    required boolean NOT NULL
+    required boolean NOT NULL,
+    id bigint NOT NULL
 );
+
+
+--
+-- Name: trait_covariate_associations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE trait_covariate_associations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: trait_covariate_associations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE trait_covariate_associations_id_seq OWNED BY trait_covariate_associations.id;
 
 
 --
@@ -3036,6 +3076,13 @@ ALTER TABLE ONLY citations_treatments ALTER COLUMN id SET DEFAULT nextval('citat
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY cultivars_pfts ALTER COLUMN id SET DEFAULT nextval('cultivars_pfts_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY current_posteriors ALTER COLUMN id SET DEFAULT nextval('current_posteriors_id_seq'::regclass);
 
 
@@ -3114,6 +3161,13 @@ ALTER TABLE ONLY sitegroups ALTER COLUMN id SET DEFAULT nextval('sitegroups_id_s
 --
 
 ALTER TABLE ONLY sitegroups_sites ALTER COLUMN id SET DEFAULT nextval('sitegroups_sites_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY trait_covariate_associations ALTER COLUMN id SET DEFAULT nextval('trait_covariate_associations_id_seq'::regclass);
 
 
 --
