@@ -4,10 +4,8 @@
 This module will accept (x,y,[z]) coordinates (from CSV-format file or cmd arguments)
 and generate a SQL string that will add these coordinates as a PostGIS Polygon
 to sites.geometry within a BETYdb instance.
-
 A header row should be included in the input file, although the column names do not matter. If a z column
 for altitude is not included, the script will attempt to get it from USGS NED (US) or Google (global).
-
 Command line usage:
         -h      show help
         -i      input filename; will override x,y,z args if provided
@@ -15,19 +13,17 @@ Command line usage:
         -y      latitude value, if no file provided
         -z      altitude value, if no file provided
         -r      EPSG reference number, default is 4326
-        -s      sitename or site_id in BETYdb sites table to associate geometry with.
-                if a string is provided, site_id will be queried. if an int is provided, site_id is assumed.
+        -s      sitename or numerical id in BETYdb sites table to associate geometry with.
+                If a string is provided, id will be looked up with a query. If an int is provided, id is assumed.
         -o      flag to write resulting SQL to output file, as "<input_filename>_insert.sql"
         -e      will attempt to execute resulting SQL on db instance defined in next 4 params
-        -n      PostgreSQL host address
+        -n      PostgreSQL host address; default is Unix-domain socket to server on localhost, if available, otherwise "localhost"
         -d      Database name, default is 'bety'
         -u      Username
         -p      Password
-
 Examples:
-        buildSQLGeom.py -i C:/folder/coordinates.csv -r 4326 -s 19000000000 -e -n localhost -d bety -u GUEST -p GUES -o
-        buildSQLGeom.py -x 76.116081 -y 42.794448
-
+        buildSQLGeom.py -i /rel/or/abs/path/to/coordinates.csv -r 4326 -s 19000000000 -e -n localhost -d bety -u GUEST -p GUES -o - sitename "Danforth"
+        buildSQLGeom.py -x 76.116081 -y 42.794448 -s 3
 Sample input files that are both valid:
         LONGITUDE,LATITUDE,ALTITUDE
         -76.116081,42.794448,415
@@ -43,60 +39,63 @@ Sample input files that are both valid:
 import sys
 import getopt
 import requests
-#import psycopg2
+import psycopg2
 
-def executeSQL(query, host, dbname, user, passwd, return_results=False):
+def getDatabaseConnection(host, dbname, user, passwd):
         """
-        Execute SQL query on specified host database with given credentials.
-                Requires psycopg2: https://pypi.python.org/pypi/psycopg2 (un-comment line 32!)
-                Adapted from https://wiki.postgresql.org/wiki/Using_psycopg2_with_PostgreSQL
-        :param query: SQL string containing query to execute.
+        Get a database connection to the specified host and database with given credentials.
         :param host: Host address of target PostgreSQL instance
         :param dbname: Database to execute query in
         :param user: Username
         :param passwd: Password
-        :param return_results: Boolean indicating whether to return query output,
-                               otherwise return True or False based on query success
+        :raises psycopg2.OperationalError: if the connection fails
         """
 
-        # Build connection string & remove excess quotes if given
-        conn_string = "host='"+host+"' dbname='"+dbname+"' user='"+user+"' password='"+passwd+"'"
-        conn_string = conn_string.replace("=''", "='").replace("'' ", "' ")
-        print "Connecting to database\n ->%s" % (conn_string)
+        print("Connecting to database %s on host %s" % (dbname, host))
 
-        try:
-                conn = psycopg2.connect(conn_string)
-                cursor = conn.cursor()
-                print("Sucessfully connected.")
-                cursor.execute(query)
+        conn = psycopg2.connect(host = host, database = dbname, user = user, password = passwd)
 
-                if return_results:
-                        return cursor.fetchall()
-                else:
-                        return True
-        except Exception as e:
-                print(e)
-                return False
+        print("Sucessfully connected to database {0} on host {1}.".format(dbname, host))
+        return conn
+
 
 def getSiteID(sitename, host, dbname, user, passwd):
         """
-        Get site_id of given sitename from sites table in BETYdb instance pointed to by host.
-        :param sitename: string representing sitename field in sites table
+        Get the id of the site with the given sitename in the BETYdb instance pointed to by host/dbname.
+        If the connection fails, return 0.
+        If multiple sites or no site has the given sitename, print an error message and exit.
+        :param sitename: string representing sitename column in sites table
         :param host: Host address of target PostgreSQL instance
         :param dbname: Database to execute query in
         :param user: Username
         :param passwd: Password
-        :return: site_id as a string, or 0 if query fails
+        :return: the site id as a string
         """
 
-        query = "select first id from sites where sitename = '"+sitename+"'"
-        sql = executeSQL(query, host, dbname, user, passwd, True)
-
-        if sql and type(sql) is list:
-                # Return id from first row
-                return sql[0][0]
+        try:
+                conn = getDatabaseConnection(host, dbname, user, passwd)
+        except psycopg2.OperationalError:
+                print("Couldn't connect to database to get site id.")
+                print("Using 0 in place of actual value.")
+                site_id = 0
         else:
-                return 0
+                cur = conn.cursor()
+                cur.execute("SELECT id FROM sites WHERE sitename = %s", (sitename,))
+
+                if cur.rowcount == 0:
+                        sys.exit("\nThe database contains no site with sitename '{0}'.\n"
+                                 "Please be sure you have spelled the site name correctly\n".format(sitename))
+                elif cur.rowcount > 1:
+                        sys.exit("\nThe database contains multiple sites having sitename '{0}'.\n"
+                                 "Sitenames should be unique.  "
+                                 "Please correct this problem and\nre-run this script.\n".format(sitename))
+
+                (site_id,) = cur.fetchone()
+
+                cur.close()
+                conn.close()
+
+        return site_id
 
 def getUSGSAltitude(x, y, units="Meters"):
         """
@@ -115,9 +114,13 @@ def getUSGSAltitude(x, y, units="Meters"):
 
         if alt_req.status_code == 200:
                 # Extract elevation value from response object if successful
-                return alt_req.json()['USGS_Elevation_Point_Query_Service']['Elevation_Query']['Elevation']
+                try:
+                        res = alt_req.json()['USGS_Elevation_Point_Query_Service']['Elevation_Query']['Elevation']
+                except ValueError:
+                        res = '-1000000'
+                return res
         else:
-                return None
+                return '-1000000'
 
 def getGoogleAltitude(x,y):
         """
@@ -131,7 +134,7 @@ def getGoogleAltitude(x,y):
 
         # Read Google Maps Elevation API key from file (should be only contents in file)
         # https://developers.google.com/maps/documentation/elevation/get-api-key
-        api_key_file = r"C:\Users\mburnet2\Documents\NCSA\TERRAref\GOOGLE_ELEVATION_API_KEY.txt"
+        api_key_file = r"GOOGLE_ELEVATION_API_KEY.txt"
 
         api_file = open(api_key_file, 'r')
         google_api_key = api_file.readline().rstrip()
@@ -153,29 +156,31 @@ def main(argv):
         lon        = None
         lat        = None
         alt        = None
-        srid       = 3857
+        srid       = 4326
         site_id    = False
         sitename   = False
 
         out_file   = False
         run_query  = False
         # BETYdb instance details
-        host       = None
+        host       = 'localhost'
         dbname     = 'bety'
-        user       = 'USERNAME'
+        user       = None
         passwd     = 'PASSWORD'
 
         # Parse command line parameters
         try:
                 opts, args = getopt.getopt(argv, "hi:x:y:z:r:s:oen:d:u:p:",
-                        ["input=","lon=","lat=","alt=","srid=","site=","output=","execute","host=","dbname=", "user=", "pass="])
+                                           ["input=","lon=","lat=","alt=","srid=","site=","output=","execute","host=","dbname=", "user=", "pass="])
         except getopt.GetoptError:
                 print(__doc__)
                 sys.exit(2)
         for opt, arg in opts:
                 if opt == '-h':
-                        print(__doc__)
-                        sys.exit()
+                        import os
+                        os.execlp('pydoc', '', 'buildSQLGeom')
+                        # os.system('pydoc buildSQLGeom | head -n 47')
+                        # sys.exit(0)
                 elif opt in ("-i", "--input"):
                         input_file = arg
                 elif opt in ("-x", "--lon"):
@@ -200,6 +205,9 @@ def main(argv):
                         host = arg
                 elif opt in ("-d", "--dbname"):
                         dbname = arg
+                # TODO: Use default path if no user and password provided
+                # http://www.peterbe.com/plog/connecting-with-psycopg2-without-a-username-and-password
+                # http://stackoverflow.com/questions/15692437/ident-connection-fails-via-psycopg2-but-works-via-command-line
                 elif opt in ("-u", "--user"):
                         user = arg
                 elif opt in ("-p", "--pass"):
@@ -207,9 +215,10 @@ def main(argv):
         if input_file == None and (lon == None or lat == None):
                 print('input file is required if no coordinates provided. -h for help.')
                 sys.exit(2)
+
         if not site_id:
                 if not host:
-                        print('site_id cannot be queried without BETYdb credentials. using 0 as default.')
+                        print('site_id cannot be queried without BETYdb host and credentials. using 0 as default.')
                         site_id = 0
                 else:
                         site_id = getSiteID(sitename, host, dbname, user, passwd)
@@ -224,30 +233,84 @@ def main(argv):
         if input_file != None:
                 # Pull coordinates list from input CSV-format file
                 csv = open(input_file, 'r')
-                l = csv.readline()          # header; we can skip this
-                l = csv.readline().rstrip() # first data line
+
+                # Examine header to attempt to determine ordering of fields
+                headers = csv.readline().rstrip().split(",")
+                lon_col, lat_col, alt_col = -1, -1, -1
+                unassigned_cols = [i for i in range(len(headers))]
+                for column in range(len(headers)):
+                        col_name = headers[column].strip().lower()
+                        if col_name in ["longitude", "long", "lon", "x"]:
+                                lon_col = column
+                                print("found longitude in column "+str(column)+': "'+headers[column].strip()+'"')
+                                unassigned_cols.remove(column)
+                        elif col_name in ["latitude", "lat", "y"]:
+                                lat_col = column
+                                print("found latitude in column "+str(column)+': "'+headers[column].strip()+'"')
+                                unassigned_cols.remove(column)
+                        elif col_name in ["altitude", "elevation", "alt", "elev", "z"]:
+                                alt_col = column
+                                print("found elevation in column "+str(column)+': "'+headers[column].strip()+'"')
+                                unassigned_cols.remove(column)
+                # If we checked all the headers and didn't find lon/lat, assign to unidentified columns in order
+                while (lon_col==-1 or lat_col==-1):
+                        if len(unassigned_cols)==0:
+                                print('lat and lon columns could not be identified. not enough columns.')
+                                sys.exit(2)
+                        # Don't automatically assume altitude is a column if not found, since we can query for it
+                        if lon_col == -1:
+                                lon_col = unassigned_cols[0]
+                                unassigned_cols.remove(column)
+                        elif lat_col == -1:
+                                lon_col = unassigned_cols[0]
+                                unassigned_cols.remove(column)
+
+                # The first coordinates provided must also be the last - copy it if raw data doesn't have this
+                l = csv.readline().rstrip()
+                line_index = 2
+                first_coords = None
                 while l:
                         # Get values from each row of file separated by ',' and append to query
                         coords = l.split(",")
-                        lon = coords[0]
-                        lat = coords[1]
+
+                        lon = coords[lon_col].strip()
+                        lat = coords[lat_col].strip()
                         q_line = lon + " " + lat
-                        if len(coords) == 2:
+                        if len(coords) == 2 or alt_col == -1:
                                 # No altitude has been provided; attempt to fetch it
-                                alt = getUSGSAltitude(lon, lat)
-                                if alt == '-1000000':
-                                        # These coordinates are outside USGS domestic boundary - Google has global coverage
-                                        alt = getGoogleAltitude(lon, lat)
-                                if alt:
+                                if alt == None:
+                                        alt = getUSGSAltitude(lon, lat)
+                                        if alt == '-1000000':
+                                                # These coordinates are outside USGS domestic boundary - Google has global coverage
+                                                alt = getGoogleAltitude(lon, lat)
+                                if alt and alt!="":
                                         q_line += " " + str(alt)
                         else:
-                                q_line += " " + coords[2]
+                                if coords[alt_col]!="":
+                                        q_line += " " + coords[alt_col].strip()
+                                else:
+                                        print("line "+str(line_index)+": altitude column empty, querying for elevation value.")
+                                        alt = getUSGSAltitude(lon, lat)
+                                        if alt == '-1000000':
+                                                # These coordinates are outside USGS domestic boundary - Google has global coverage
+                                                alt = getGoogleAltitude(lon, lat)
+                                        q_line += " " + str(alt)
 
-                        l = csv.readline().rstrip() # next data line
+                        if not first_coords:
+                                first_coords = q_line
+
                         query += q_line
+
+                        # Get next data line and close out query if we reached end of input file
+                        l = csv.readline().rstrip()
+                        line_index += 1
                         if l:
-                                # Don't include a trailing comma on the final set of coordinates
+                                # Include a trailing comma unless we're on the final set of coordinates
                                 query += ","
+                        else:
+                                # Last set of coordinates; do they match the first set? If not, repeat first set.
+                                if q_line != first_coords:
+                                        query += "," + first_coords
                 csv.close()
         else:
                 # Use lat/lon provided in command line arguments
@@ -278,10 +341,24 @@ def main(argv):
 
         # Try to execute query if enabled
         if run_query:
-                if not host:
-                        print('hostname missing; query will not be executed. -h for help.')
-                        sys.exit(2)   
-                executeSQL(query, host, dbname, user, passwd)
+                try:
+                        conn = getDatabaseConnection(host, dbname, user, passwd)
+                except psycopg2.OperationalError:
+                        sys.exit("Couldn't connect to database to run update statement.")
+                else:
+                        cur = conn.cursor()
+                        try:
+                                cur.execute(query)
+                                if cur.rowcount == 1:
+                                        print("One row was updated.")
+                                else:
+                                        print("{0} rows were updated.".format(cur.rowcount))
+                                conn.commit() # changes will be rolled back unless you have this
+                        except psycopg2.ProgrammingError:
+                                sys.exit("Couldn't execute query \"{0}\".".format(query))
+                        finally:
+                                cur.close()
+                                conn.close()
 
 if __name__ == "__main__":
         main(sys.argv[1:])

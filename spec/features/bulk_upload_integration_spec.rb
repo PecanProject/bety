@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 include BulkUploadHelper
 
@@ -19,7 +19,7 @@ feature 'CSV file upload works' do
                                               'bulk_upload',
                                               'sample_yields.csv')
       click_button 'Upload'
-      page.should have_content 'Uploaded file: sample_yields.csv'
+      expect(page).to have_content 'Uploaded file: sample_yields.csv'
     end
 
 
@@ -34,13 +34,13 @@ feature 'CSV file upload works' do
 
       choose_citation_from_dropdown('Adams')
 
-      page.should_not have_content 'Select a Citation'
-      page.should have_content 'Specify '
+      expect(page).not_to have_content 'Select a Citation'
+      expect(page).to have_content 'Specify '
       click_link 'Specify'
       click_button 'Confirm'
-      page.should have_content 'Verify Upload Specifications and Data-Set References'
+      expect(page).to have_content 'Verify Upload Specifications and Data-Set References'
       click_button 'Insert Data'
-      page.should_not have_selector('.alert-error')
+      expect(page).not_to have_selector('.alert-error')
 
       # do clean-up
       visit '/yields?search=Adams'
@@ -61,7 +61,7 @@ feature 'CSV file upload works' do
                                               'data_validation',
                                               'fuzzily_matching_headings.csv')
       click_button 'Upload'
-      page.should_not have_selector('.alert-error')
+      expect(page).not_to have_selector('.alert-error')
     end
 
     it 'should successfully insert data from a file even when headings are not in canonical form' do
@@ -76,7 +76,7 @@ feature 'CSV file upload works' do
       click_link 'Specify'
       click_button 'Confirm'
       click_button 'Insert Data'
-      first("div.alert-success").should have_content("Data from fuzzily_matching_headings.csv was successfully uploaded.")
+      expect(first("div.alert-success")).to have_content("Data from fuzzily_matching_headings.csv was successfully uploaded.")
     end
 
 

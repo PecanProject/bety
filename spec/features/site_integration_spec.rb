@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Sites index works' do
@@ -9,7 +9,7 @@ feature 'Sites index works' do
   context 'GET /sites' do
     it 'should have "Listing Sites" ' do
       visit '/sites'
-      page.should have_content 'Listing Sites'
+      expect(page).to have_content 'Listing Sites'
     end
 
     it 'should allow creation of new sites' do
@@ -29,14 +29,14 @@ feature 'Sites index works' do
       fill_in 'site_soilnotes', :with => 'methods available, so you can restrict them to specific parts of the page'
       click_button 'Create'
       
-      page.should have_content 'Site was successfully created'
+      expect(page).to have_content 'Site was successfully created'
     end
 
     context 'clicking view site button' do
       it 'should return "Viewing Site" ' do
         visit '/sites/'
          first(:xpath,".//a[contains(@alt,'show')]").click
-        page.should have_content 'Viewing Site'
+        expect(page).to have_content 'Viewing Site'
       end
     end
     
@@ -48,7 +48,7 @@ feature 'Sites index works' do
       end
 
       it 'should return "Editing Site" ' do
-        page.should have_content 'Editing Site'
+        expect(page).to have_content 'Editing Site'
       end
 
       it 'show allow adding new related citations', js: true do
@@ -58,7 +58,7 @@ feature 'Sites index works' do
         click_button 'Update'
         # reopen related citations listing
         click_link 'View Related Citations'
-        page.should have_content 'Wood'
+        expect(page).to have_content 'Wood'
 
         # now do clean-up:
         fill_in 'search_citations', with: 'Wood'
@@ -66,7 +66,7 @@ feature 'Sites index works' do
         click_button 'Update'
         # reopen related citations listing
         click_link 'View Related Citations'
-        page.should_not have_content 'Wood'
+        expect(page).not_to have_content 'Wood'
     end      
 
         

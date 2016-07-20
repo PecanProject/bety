@@ -119,6 +119,7 @@ module SimpleSearch
                 .sub('Method', 'Methods').sub('Dbfile', 'DBFile'))
         .columns_hash[column_split.last].type
     end
+    Rails.logger.debug("got here; column = #{column}; type = #{type}")
     case type
     when :boolean
       search[/[10tfTF]/] == search ? "#{column} = :search" : nil
@@ -132,6 +133,8 @@ module SimpleSearch
 # If we decide to do wildcard searches for decimal types, we need to do something like this to get it to work in PostgreSQL:
 #      search[/[\.\d]*/] == search ? "CAST(#{column} AS TEXT) LIKE :wildcard_search" : nil
       search[/[\.\d]*/] == search ? "#{column} = :search" : nil
+    when :float
+      search[/(-?(\d+(\.\d*)?)|(\.\d+))([eE][+-]?\d\d?)?/] == search ? "#{column} = :search" : nil
     when :string, :text
       "LOWER(#{column}) LIKE LOWER(:wildcard_search)"
     when :timestamp

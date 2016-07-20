@@ -1,0 +1,13 @@
+# ruby & bety
+bety:
+  image: pecan/bety:develop
+  ports:
+    - "3000"
+  links:
+    - postgres:pg
+
+# postgres database
+postgres:
+  image: mdillon/postgis:9.4
+  ports:
+    - "5432"

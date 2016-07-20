@@ -1,0 +1,41 @@
+<div class="content">
+	<div class="container">
+		<div class="sixteen columns">
+			<header>
+        <h1>New Site Group</h1>
+      </header>
+
+      <%= form_for(@sitegroup) do |f| %>
+        <%= f.error_messages %>
+
+        <div class="row">
+          <div class="sixteen columns alpha omega">
+            <%= f.label :name %>
+            <%= f.text_field :name %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="6 columns alpha omega">
+            <%= f.label :public_access %>
+            <%= f.check_box :public_access %>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <div class="button-group">
+            <%= link_to( sitegroups_path ) do %>
+              <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
+            <% end%>
+          </div>
+		      <div class="button-group pull-right">
+			      <%= f.submit 'Create', :class => "button button-primary" %>
+		      </div>
+	      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+
+

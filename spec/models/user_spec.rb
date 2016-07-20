@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 describe User do
   before { @user = User.new(login => "carlcrott", email => "user@gmail.com") }

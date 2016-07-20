@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'support/helpers'
 include LoginHelper
 
 feature 'Models features work' do
@@ -9,7 +9,7 @@ feature 'Models features work' do
   specify 'The model edit page should be accessible' do
     visit '/models/'
     first(:xpath, './/a[@alt = "edit"]').click
-    page.should have_content 'Editing Model'
+    expect(page).to have_content 'Editing Model'
   end
 
   context 'Editing Model collections' do
@@ -40,7 +40,7 @@ feature 'Models features work' do
 
       click_link 'Show only related results'
 
-      page.should have_link('X')
+      expect(page).to have_link('X')
 
       # unlink file
       first(:xpath, ".//a[text() = 'X']").click
@@ -51,7 +51,7 @@ feature 'Models features work' do
         a.accept
       end
 
-      page.should_not have_link('X')
+      expect(page).not_to have_link('X')
     end
 
   end

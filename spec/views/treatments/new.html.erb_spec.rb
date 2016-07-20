@@ -1,9 +1,8 @@
-require 'spec_helper'
 
 describe "treatments/new" do
   before(:each) do
-    assign(:treatment, stub_model(Treatment).as_new_record)
-    assign(:current_user, stub_model(User).as_new_record)
+    assign(:treatment, Treatment.new)
+    assign(:current_user, User.new)
   end
 
   it "renders new treatment form" do

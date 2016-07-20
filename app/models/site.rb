@@ -113,6 +113,9 @@ class Site < ActiveRecord::Base
   has_many :citation_sites, :class_name => "CitationsSites"
   has_many :citations, :through =>  :citation_sites
 
+  has_many :sitegroups_sites, :class_name => "SitegroupsSites"
+  has_many :sitegroups, :through =>  :sitegroups_sites
+
   has_many :yields
   has_many :traits
   has_many :runs

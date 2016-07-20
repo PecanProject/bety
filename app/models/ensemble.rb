@@ -9,6 +9,8 @@ class Ensemble < ActiveRecord::Base
   RUNTYPETYPES = ["ENS","SA"]
 
   has_many :runs
+  has_many :posteriors_ensembles, :class_name => "PosteriorsEnsembles"
+  has_many :posteriors, :through => :posteriors_ensembles
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }

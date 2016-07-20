@@ -1,10 +1,9 @@
-require 'spec_helper'
 
 describe "treatments/edit" do
   before(:each) do
-    @treatment = assign(:treatment, stub_model(Treatment))
-    assign(:management, stub_model(Management))
-    assign(:current_user, stub_model(User))
+    @treatment = assign(:treatment, Treatment.first)
+    assign(:management, Management.new)
+    assign(:current_user, User.new)
   end
 
   it "renders the edit treatment form" do

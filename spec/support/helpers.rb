@@ -1,4 +1,3 @@
-require 'spec_helper'
 
 module LoginHelper
   def login_test_user
@@ -22,6 +21,9 @@ module LoginHelper
     fill_in 'Password', :with => 'fizzie'
     click_button 'Log in'
   end
+
+  alias_method :login_as_adminstrator, :login_test_user
+  alias_method :login_as_manager, :login_nonadmin_test_user
 end
 
 module BulkUploadHelper

@@ -1,4 +1,5 @@
 BetyRails3::Application.routes.draw do # RAILS3 |map| removed
+  apipie
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -156,6 +157,13 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
     end
   end
 
+  resources :sitegroups do
+    member do
+      get :edit_sitegroups_sites
+      post :edit_sitegroups_sites
+    end
+  end
+
   resources :sites do
     member do
       get :search_citations
@@ -236,6 +244,21 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :schemas, :only => [:index]
   resources :search, :only => :index
   resources :trait_covariate_associations, only: :index
+
+  # API
+  namespace :api, defaults: { format: 'json' } do
+    namespace :beta do
+      [:citations, :covariates, :cultivars, :dbfiles, :ensembles, :entities,
+      :formats, :inputs, :likelihoods, :machines, :managements, :methods,
+      :mimetypes, :models, :modeltypes, :pfts, :posteriors, :priors, :runs,
+      :search, :sites, :species, :traits, :treatments, :users, :variables,
+      :yields].each do |model|
+        resources model, only: [:index, :show]
+      end
+      resources :traits, only: :create
+    end
+  end
+  match '/api/*remainder', controller: 'api/base', action: 'bad_url'
 
   get '/application/use_citation/:id', controller: 'application', action: 'use_citation'
   get '/application/remove_citation'
