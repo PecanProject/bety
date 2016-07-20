@@ -18,9 +18,13 @@ class Api::BaseController < ActionController::Base
   # This ensures that when we are in the API realm, an exception won't get
   # handled by the default Rails exception handler that returns an HTML result.
   rescue_from StandardError do |e|
-    logger.debug("EXCEPTION: #{e}")
-    @errors = e.message
-    render
+    logger.info("UNEXPECTED EXCEPTION: #{e.class}\n#{e}")
+    # only show the first line of the backtrace in production mode:
+    logger.info("THROWN AT: #{e.backtrace[0]}")
+    # show the rest in development mode:
+    logger.debug("BACKTRACE: #{e.backtrace.join("\n")}")
+    @errors = "UNEXPECTED EXCEPTION #{e.class}. #{e.message}"
+    render status: 400
   end
 
   # Actions
@@ -28,7 +32,7 @@ class Api::BaseController < ActionController::Base
   # We route all illegitimate requests beginning "/api" here so that we
   # return errors in JSON rather than the default HTML:
   def bad_url
-    @errors = "There is no resource at this URL.  Visit #{root_url}apipie for information about available API paths."
+    redirect_to apipie_apipie_path
   end
 
   private
@@ -60,6 +64,12 @@ class Api::BaseController < ActionController::Base
       model = model.all_limited(current_user)
     end
 
+	if model == User
+	  if current_user.page_access_level > 1
+        model = model.where("id = #{current_user.id}")
+      end
+    end
+
     # Do filtering by regexp matching first.  Note that fuzzy_match_restrictions
     # may modify where_params by removing key-value pairs corresponding to fuzzy
     # matches.
@@ -68,8 +78,8 @@ class Api::BaseController < ActionController::Base
     # Now filter by exact matching.
     result = model.where(where_params)
 
-    # "limit(nil)" means no limit, so use nil if limit is "all"
-    if limit == "all"
+    # "limit(nil)" means no limit, so use nil if limit is "all" or "none"
+    if limit == "all" || limit == "none"
       limit = nil
     end
 

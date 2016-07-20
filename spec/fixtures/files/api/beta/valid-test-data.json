@@ -1,0 +1,122 @@
+{
+  "trait-data-set": {
+    "children": [
+      {
+        "defaults": {
+          "children": [
+            {
+              "species": {
+                "attributes": {
+                  "scientificname": "Saccharum officinarum"
+                },
+                "children": [
+                  {
+                    "cultivar": {
+                      "attributes": {
+                        "name": "s5-14"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "citation": {
+                "attributes": {
+                  "author": "Adler"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "trait": {
+          "attributes": {
+            "access_level": "1",
+            "mean": "10"
+          },
+          "children": [
+            {
+              "variable": {
+                "attributes": {
+                  "name": "Vcmax"
+                }
+              }
+            },
+            {
+              "stat": {
+                "attributes": {
+                  "name": "SE",
+                  "value": "0.0030",
+                  "sample_size": "10"
+                }
+              }
+            },
+            {
+              "site": {
+                "attributes": {
+                  "city": "Aliartos"
+                }
+              }
+            },
+            {
+              "treatment": {
+                "attributes": {
+                  "id": "1"
+                }
+              }
+            },
+            {
+              "notes": {
+                "children": [
+                  {
+                    "content": "blah blah"
+                  }
+                ]
+              }
+            },
+            {
+              "covariates": {
+                "children": [
+                  {
+                    "covariate": {
+                      "attributes": {
+                        "level": "10"
+                      },
+                      "children": [
+                        {
+                          "variable": {
+                            "attributes": {
+                              "id": "6"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "covariate": {
+                      "attributes": {
+                        "level": "1000"
+                      },
+                      "children": [
+                        {
+                          "variable": {
+                            "attributes": {
+                              "description": "Specific Leaf Area"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

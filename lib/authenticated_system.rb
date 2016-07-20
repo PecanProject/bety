@@ -46,14 +46,8 @@ module AuthenticatedSystem
       # RAILS3 changed below line with second below line. controller_class_name appears to have been removed Rails3
       # controller_class = controller_class_name if controller_class.nil?
       controller_class = "#{controller_name.camelize}Controller" if controller_class.nil?
-      admin_requirement = ["UsersController.ALL",
-                                "BulkUploadController.ALL" ] # For now, only administrators are allowed access to the insert_data action of the bulk upload wizard.
-      manage_requirement = ["BulkUploadController.start_upload", # For now, only administrators and managers are allowed access to the bulk upload wizard.
-                                "BulkUploadController.choose_global_citation",
-                                "BulkUploadController.display_csv_file",
-                                "BulkUploadController.choose_global_data_values",
-                                "BulkUploadController.confirm_data",
-                                "CitationsController.ALL",
+      admin_requirement = ["UsersController.ALL" ]
+      manage_requirement = ["CitationsController.ALL",
                                 "CovariatesController.ALL",
                                 "CultivarsController.ALL",
                                 "DbfilesController.ALL",
@@ -88,6 +82,9 @@ module AuthenticatedSystem
                                 "InputsVariablesController.ALL",
                                 "InputsController.ALL" ]
       create_requirement = ["ApplicationsController.ALL",
+                                "BulkUploadController.ALL",
+                                "CitationsController.autocomplete",
+                                "CitationsController.bu_autocomplete", # <-- needed for bulk upload
                                 "CitationsController.new",
                                 "CitationsController.create",
                                 "CitationsController.edit",
@@ -104,6 +101,7 @@ module AuthenticatedSystem
                                 "CultivarsController.create",
                                 "CultivarsController.edit",
                                 "CultivarsController.update",
+                                "CultivarsController.bu_autocomplete", # <-- needed for bulk upload
                                 "EnsemblesController.new",
                                 "EnsemblesController.create",
                                 "EnsemblesController.edit",
@@ -148,6 +146,7 @@ module AuthenticatedSystem
                                 "SitesController.edit",
                                 "SitesController.update",
                                 "SitesController.linked",
+                                "SitesController.bu_autocomplete", # <-- needed for bulk upload
                                 "SitesController.edit_citations_sites",
                                 "SitesController.rem_citations_sites",
                                 "SitegroupsController.new",
@@ -158,12 +157,14 @@ module AuthenticatedSystem
                                 "SpeciesController.create",
                                 "SpeciesController.edit",
                                 "SpeciesController.update",
+                                "SpeciesController.bu_autocomplete", # <-- needed for bulk upload
                                 "SpeciesController.species_search",
                                 "TreatmentsController.new",
                                 "TreatmentsController.edit",
                                 "TreatmentsController.update",
                                 "TreatmentsController.create",
                                 "TreatmentsController.linked",
+                                "TreatmentsController.bu_autocomplete", # <-- needed for bulk upload
                                 "TreatmentsController.create_new_management",
                                 "TraitsController.new",
                                 "TraitsController.create",
@@ -176,6 +177,7 @@ module AuthenticatedSystem
                                 "TraitsController.create_multi",
                                 "TraitsController.new_multi",
                                 "VariablesController.new",
+                                "VariablesController.autocomplete",
                                 "VariablesController.create",
                                 "VariablesController.edit",
                                 "VariablesController.update",
@@ -261,7 +263,7 @@ module AuthenticatedSystem
         logger.info "Did not find level for " + controller_action
         level = 4
       end
-
+      Rails.logger.debug("!!!!!!!!!!!! level = #{level}; controller_action = #{controller_action}")
       #level = 4 if level.nil?
 
       not_restricted_record = true

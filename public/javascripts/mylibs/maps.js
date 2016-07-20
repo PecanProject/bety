@@ -127,12 +127,12 @@ function initialize() {
         heatmap: { enabled: false },
         query: {
             select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: ""
+            from: "1DAaufoEP405M_MNXAJuLxT-NqSvqQQRf30TRcXs",
+            where: "col6\x3e\x3e0 \x3e\x3d 1 and col6\x3e\x3e0 \x3c\x3d 12"
         },
         options: {
-            styleId: 22,
-            templateId: 15
+            styleId: 2,
+            templateId: 2
         }
     });
 
@@ -142,12 +142,12 @@ function initialize() {
         heatmap: { enabled: false },
         query: {
             select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: ""
+            from: "1DAaufoEP405M_MNXAJuLxT-NqSvqQQRf30TRcXs",
+            where: "col7\x3e\x3e0 \x3e\x3d 1 and col7\x3e\x3e0 \x3c\x3d 40"
         },
         options: {
-            styleId: 23,
-            templateId: 15
+            styleId: 3,
+            templateId: 3
         }
     });
 
@@ -157,12 +157,12 @@ function initialize() {
         heatmap: { enabled: false },
         query: {
             select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: ""
+            from: "1DAaufoEP405M_MNXAJuLxT-NqSvqQQRf30TRcXs",
+            where: "col8\x3e\x3e0 \x3e\x3d 1 and col8\x3e\x3e0 \x3c\x3d 20"
         },
         options: {
-            styleId: 24,
-            templateId: 15
+            styleId: 4,
+            templateId: 4
         }
     });
 
@@ -171,41 +171,28 @@ function initialize() {
         heatmap: { enabled: false },
         query: {
             select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: "col9\x3e\x3e0 \x3e\x3d 0.01"
+            from: "1DAaufoEP405M_MNXAJuLxT-NqSvqQQRf30TRcXs",
+            where: "col9\x3e\x3e0 \x3e\x3d 1 and col9\x3e\x3e0 \x3c\x3d 50"
         },
         options: {
-            styleId: 25,
-            templateId: 15
+            styleId: 5,
+            templateId: 5
         }
     });
 
-    layers[4] = lcc = new google.maps.FusionTablesLayer({
-        map: null,
-        heatmap: { enabled: false },
-        query: {
-            select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: ""
-        },
-        options: {
-            styleId: 17,
-            templateId: 19
-        }
-    });
-
+    // layers[4]    Least Cost Crop --- NO LONGER USED
 
     layers[5] = cornstovercost = new google.maps.FusionTablesLayer({
         map: null,
         heatmap: { enabled: false },
         query: {
             select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: ""
+            from: "1DAaufoEP405M_MNXAJuLxT-NqSvqQQRf30TRcXs",
+            where: "col6\x3e\x3e0 \x3e\x3d 1 and col6\x3e\x3e0 \x3c\x3d 12 and col10\x3e\x3e0 \x3e\x3d 1 and col10\x3e\x3e0 \x3c\x3d 500"
         },
         options: {
-            styleId: 18,
-            templateId: 19
+            styleId: 6,
+            templateId: 6
         }
     });
 
@@ -214,12 +201,12 @@ function initialize() {
         heatmap: { enabled: false },
         query: {
             select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: ""
+            from: "1DAaufoEP405M_MNXAJuLxT-NqSvqQQRf30TRcXs",
+            where: "col11\x3e\x3e0 \x3e\x3d 1 and col11\x3e\x3e0 \x3c\x3d 200"
         },
         options: {
-            styleId: 19,
-            templateId: 19
+            styleId: 7,
+            templateId: 7
         }
     });
 
@@ -229,12 +216,12 @@ function initialize() {
         heatmap: { enabled: false },
         query: {
             select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: ""
+            from: "1DAaufoEP405M_MNXAJuLxT-NqSvqQQRf30TRcXs",
+            where: "col8\x3e\x3e0 \x3e\x3d 1 and col8\x3e\x3e0 \x3c\x3d 50 and col12\x3e\x3e0 \x3e\x3d 1 and col12\x3e\x3e0 \x3c\x3d 200"
         },
         options: {
-            styleId: 20,
-            templateId: 19
+            styleId: 8,
+            templateId: 8
         }
     });
 
@@ -243,12 +230,12 @@ function initialize() {
         heatmap: { enabled: false },
         query: {
             select: "col16\x3e\x3e1",
-            from: "1iTbzIeHyhHtOEYUqxPe8uTVeLG8v4nndHZ_qj88",
-            where: "energycane_cost > 0.0"
+            from: "1DAaufoEP405M_MNXAJuLxT-NqSvqQQRf30TRcXs",
+            where: "col13\x3e\x3e0 \x3e\x3d 1 and col13\x3e\x3e0 \x3c\x3d 200" // "energycane_cost > 0.0"
         },
         options: {
-            styleId: 21,
-            templateId: 19
+            styleId: 9,
+            templateId: 9
         }
     });
 
@@ -258,7 +245,7 @@ function initialize() {
     );
 
     layers[9]= bz_sugarcane =
-        new google.maps.GroundOverlay( '../bety/images/lmodelout/energycane_yield_grid.png',
+        new google.maps.GroundOverlay( 'images/lmodelout/energycane_yield_grid.png',
                                        bz_sugarcane_bounds, overlayOptions );
     bz_sugarcane.setMap(null);
 
@@ -380,26 +367,40 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 function reset() {
     for(var i = 0; i < layers.length; i++) {
+        if (layers[i] == null) {
+            continue;
+        }
         layers[i].setMap(null)
     }
 }
 
 function makeyieldlegend(legend, max) {
-    var colors = ['0000ff', 'ead1dc', 'ff0000'];
-    for (i=0; i < colors.length; i++) {
+    
+    var legendParameters = [
+        { "color": "ff9900", "maximum": 5 },
+        { "color": "ffff00", "maximum": 10 },
+        { "color": "00ffff", "maximum": 15 },
+        { "color": "0000ff", "maximum": 20 },
+        { "color": "9900ff", "maximum": 30 },
+        { "color": "ff00ff", "maximum": 50 },
+        { "color": "00ff00", "maximum": 75 },
+        { "color": "ff0000", "maximum": 100 }
+    ];
+
+    for (i=0;
+         i < legendParameters.length && (i == 0 || legendParameters[i - 1]["maximum"] < max);
+         i++) {
 
         var swatchdiv = document.createElement('div');
         var swatch = document.createElement('span');
         swatchdiv.appendChild(swatch)
 
         swatch.setAttribute('class', 'googft-legend-swatch')
-        swatch.setAttribute('style', "background-color: #" + colors[i])
+        swatch.setAttribute('style', "background-color: #" + legendParameters[i]["color"])
         var legrange = document.createElement('span');
         legrange.setAttribute('class', 'googft-legend-range');
-        legrange.innerHTML=Math.round(max*(i)/colors.length) 
-            +" - "+
-            Math.round(max*(i+1)/colors.length)
-            + " Mg/ha/yr";
+        legrange.innerHTML = (i == 0 ? "0" : legendParameters[i - 1]["maximum"]) +
+            " to " + legendParameters[i]["maximum"] + " Mg/ha/yr";
         swatchdiv.appendChild(legrange);
         
         swatchdiv.appendChild(document.createElement('br'));
@@ -424,16 +425,26 @@ function makecroplegend(legend) {
     }
 }
 function makecostlegend(legend) {
-    var colors = ['#00ff00', '#ffff00', '#ff9900', '#ff0000'];
-    var texts = ["< $50/ha", "< $100/ha", "< $150/ha", "> $150/ha"]
-    for(i=0; i < colors.length; i++) {
+    var legendParameters = [
+        { "color": "ffffff", "maximum": 25 },
+        { "color": "d9ead3", "maximum": 50 },
+        { "color": "b6d7a8", "maximum": 75 },
+        { "color": "93c47d", "maximum": 100 },
+        { "color": "6aa84f", "maximum": 125 },
+        { "color": "38761d", "maximum": 150 },
+        { "color": "274e13", "maximum": 175 },
+        { "color": "000000", "maximum": 200 }
+    ];
+
+    for (i=0; i < legendParameters.length; i++) {
         var swatchdiv = document.createElement('div');
         var swatch = document.createElement('span');
         swatch.setAttribute('class', 'googft-legend-swatch');
-        swatch.setAttribute('style', 'background-color: ' + colors[i]);
+        swatch.setAttribute('style', 'background-color: #' + legendParameters[i]["color"]);
         var range = document.createElement('span');
         range.setAttribute('class', 'googft-legend-range');
-        range.innerHTML = texts[i];
+        range.innerHTML = (i == 0 ? "0" : legendParameters[i - 1]["maximum"]) +
+            " to " + legendParameters[i]["maximum"] + " $/ha";
         swatchdiv.appendChild(swatch);
         swatchdiv.appendChild(range);
         swatchdiv.appendChild(document.createElement('br'));
@@ -477,7 +488,7 @@ function updatemap() {
         legendtitle.id='googft-legend-title';
         legendtitle.innerHTML=opt.text;
         leg.appendChild(legendtitle);
-        var yields = ['12', '34', '20', '46']
+        var yields = [11.75, 34, 19.8, 45.67 ] // maximum yield value in layers 0 - 3
         makeyieldlegend(leg, yields[opt.value]);
         //make gradient legend
     } else if (opt.value == 4) {
@@ -519,20 +530,8 @@ function updatemap() {
         var imgdiv = document.createElement('img');
         imgdiv.setAttribute('src', 'images/lmodelout/switchgrass_yield_grid.png-legend.png')
         leg.appendChild(imgdiv);
-    } else if (opt.value < 18) {
+    } else {
         makeaetlegend(leg);
-    } else if (opt.value == 18) {
-        var legendtitle = document.createElement('p');
-        legendtitle.id='googft-legend-title';
-        legendtitle.innerHTML=opt.text;
-        leg.appendChild(legendtitle);
-        makeyieldlegend(leg, 12)
-    } else if (opt.value == 19) {
-        var legendtitle = document.createElement('p');
-        legendtitle.id='googft-legend-title';
-        legendtitle.innerHTML=opt.text;
-        leg.appendChild(legendtitle);
-        makeyieldlegend(leg, 15)
     }
     downloaddata();
 }

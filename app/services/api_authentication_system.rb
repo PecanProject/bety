@@ -8,9 +8,15 @@ module ApiAuthenticationSystem
   end
 
   # Override default permissions method.
-  # For now, allow all users access to all api actions.
   def permissions(action_name, resource)
-    true
+    # To access any action other than "index" or "show", the current user must
+    # have at least "Creator" page access level (i.e., level 1, 2, or 3).  The
+    # "index" and "show" actions are open to any registered user.
+    if action_name == 'index' || action_name == 'show' || current_user.page_access_level <= 3
+      true
+    else
+      false
+    end
   end
 
 end

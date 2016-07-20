@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title><%= if @title then @title else "BETYdb: #{request.env['PATH_INFO']}" end %></title>
   <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />
-  <meta name="keywords" content="biofuel, biofuels, bioenergy, bioscience, biosciences, miscanthus, switchgrass, ethanol, alternative energy" /> 
+  <meta name="keywords" content="biofuel, biofuels, bioenergy, bioscience, biosciences, miscanthus, switchgrass, ethanol, alternative energy" />
   <meta name="description" content="The Energy Biosciences Institute (EBI) is a new research and development organization that harnesses advanced knowledge in biology, the physical sciences, engineering, and environmental and social sciences to devise viable solutions to global energy challenges and reduce the impact of fossil fuels to global warming.  The worlds first research institution solely dedicated to the new field of energy bioscience, is initially focusing on the development of next-generation biofuels, but will also look into various applications of biology to the energy sector." />
   <meta name="robots" content="index, follow" />
 
@@ -22,11 +22,11 @@
   <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
   <%= javascript_include_tag 'lazy/jquery-ui-1.10.4.min.js' %>
   <%= stylesheet_link_tag "jquery-ui-1.10.4.min" %>
-  
+
   <!--  It seems so far that everything works in 1.7.2.-->
 
   <!-- End of alternate sets -->
-  
+
   <%#= javascript_include_tag 'libs/jquery-1.6.2.min.js' %>
   <%= javascript_include_tag :all, :cache => "cache/all" %>
 
@@ -48,12 +48,12 @@
   <link rel="shortcut icon" href="/images/l/apple-touch-icon.png" />
   <!-- For everything else -->
   <link rel="shortcut icon" href="/favicon.ico" />
-  
+
   <!-- ############## ENDED verifying all JS imports from here ############## -->
-  
+
   <!--  This disables the use of $ as the jQuery alias-->
   <script> jQuery.noConflict(); </script>
-  
+
   <%= javascript_include_tag 'lazy/simple_search.js' %>
   <%= javascript_include_tag 'lazy/application.js' %>
 
@@ -67,7 +67,7 @@
     <%= javascript_include_tag 'lazy/map_search' %>
   <% end %>
 
-  <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />	
+  <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />
   <%= stylesheet_link_tag 'themes/default' %>
   <%= stylesheet_link_tag 'themes/alphacube' %>
 
@@ -82,7 +82,7 @@
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
   </script>
-  
+
   <!-- Maintain the order of the following CSS until we can gut the "scaffold" CSS -->
   <!-- Old CSS -->
   <%= stylesheet_link_tag "scaffold" %>
@@ -106,39 +106,39 @@
       table.moduletable-upevents { margin-left: 10px; padding-top:18px; }
     </style>
   <![endif]-->
-  
 
-  
+
+
   <!-- Primary Page Layout
   ================================================== -->
   <div class="header">
-	  <div class="container">
-		  <div class="sixteen columns">
-			  <h1 class="remove-bottom"><a href="/" class="org">Energy Biosciences Institute</a> <a href="/" class="site"><strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small></a></h1>
-			  <div id="header_user_name">
-		      <% if current_user != nil %>
-			      Logged in as: <%= current_user %>
-			    <% end %>
-		    </div>
-		    
-		  </div>
-	  </div><!-- container --> 
+    <div class="container">
+      <div class="sixteen columns">
+        <h1 class="remove-bottom"><a href="/" class="org">Energy Biosciences Institute</a> <a href="/" class="site"><strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small></a></h1>
+        <div id="header_user_name">
+          <% if current_user != nil %>
+            Logged in as: <%= current_user %>
+          <% end %>
+        </div>
+
+      </div>
+    </div><!-- container -->
   </div>
-  
-  
-  
-  
-  
-  <div class="nav">    
+
+
+
+
+
+  <div class="nav">
   <div class="container">
-	<div class="sixteen columns">
-	  <nav id="access" role="navigation">
+  <div class="sixteen columns">
+    <nav id="access" role="navigation">
         <div class="skip-link"><a href="#content">Skip to content</a></div>
         <div class="menu">
           <ul class="main-menu sf-menu clearfix">
             <li class="menu-home"><%= link_to "Home", root_path %></li>
-            
-            
+
+
             <% if current_user != nil %>
             <li class="menu-data"><a>Data</a>
               <ul class="sub-menu">
@@ -162,19 +162,19 @@
               </ul>
             </li>
             <% end %>
-            
-            
+
+
             <li class="menu-docs"> <a>Docs</a>
               <ul class="sub-menu">
-                <li><%= link_to "Data Entry","https://www.authorea.com/users/5574/articles/6800/_show_article", :target =>"_blank" %></li>
-                <li><%= link_to "Data Access","https://authorea.com/users/5574/articles/7062/_show_article", :target =>"_blank" %>></li>
-                <li><%= link_to "Implementation","https://github.com/PecanProject/bety/wiki/The-Biofuel-Ecophysiological-Traits-and-Yields-Database", :target =>"_blank" %></li>
+                <li><%= link_to "Data Entry", "https://pecan.gitbooks.io/betydbdoc-dataentry/content/", :target =>"_blank" %></li>
+                <li><%= link_to "Data Access", "https://pecan.gitbooks.io/betydb-data-access/content/", :target =>"_blank" %>></li>
+                <li><%= link_to "Implementation", "https://pecan.gitbooks.io/betydb-documentation/content/", :target =>"_blank" %></li>
                 <li><%= link_to "Schema", schemas_path %>></li>
               </ul>
             </li>
-            
-            
-            
+
+
+
             <% if current_user != nil && current_user.page_access_level < 4 %>
               <li class="menu-new"><a>Runs</a>
                 <ul class="sub-menu">
@@ -192,42 +192,43 @@
                 </ul>
               </li>
             <% end %>
-            
+
             <li class="menu-modelio"><a>Model I/O</a>
               <ul class="sub-menu">
                 <li><%= link_to "Model Projections", :controller => "maps", :action => "location_yields" %></li>
               </ul>
             </li>
 
-            <% if current_user != nil && current_user.page_access_level <= 2 %>
+            <%# Show the Bulk Upload link if the user is authorized to use the Bulk Upload wizard. %>
+            <% if authorized?("start_upload", "BulkUploadController") %>
             <li><%= link_to "Bulk Upload", controller: "bulk_upload", action: session[:bulk_upload_stage] || "start_upload" %></li>
             <% end %>
-            
+
             <% if current_user != nil %>
-              <li class="menu-login">                            
+              <li class="menu-login">
                 <%= link_to "Logout", logout_path %>
               </li>
             <% end %>
-            
-            
+
+
           </ul>
         </div>
       </nav><!-- #access -->
-			<hr />
-		</div>
-	</div><!-- container -->
-</div> 
-  
-  
+      <hr />
+    </div>
+  </div><!-- container -->
+</div>
+
+
   <% if controller_name != 'search' and !session['citation'].nil? and Citation.exists?(session['citation']) %>
     <h5 class="centered">Citation: <%= link_to Citation.find(session['citation']).author_year_title, citation_url( session['citation']) %> <%= link_to '[remove]', :controller => "application", :action => "remove_citation" %> </h5>
   <% elsif !session['citation'].nil? and !Citation.exists?(session['citation'])
        session['citation'] = nil
   %>
     <hr />
-    
+
   <% end %>
-  
+
   <% flash.each do |key, value| %>
     <%= content_tag(:div, class: "alert alert-#{key} fade in centered") do %>
       <div style="width:850px; margin:auto">
@@ -241,35 +242,35 @@
   <%end%>
 
   <%= yield  %>
-  
 
 
-  
-  
+
+
+
   <div class="footer">
-	  <div class="container">
+    <div class="container">
 
-		  <div class="row">
-			  <h2>Footer</h2>
-			  <div class="three columns alpha">
-				  <h3><strong>BETY</strong>db</h3>
-				  <ul class="unstyled">
-					  <li><%= link_to "Homepage", root_path %></li>
-                                          <li><%= link_to "Documentation","https://github.com/PecanProject/bety/wiki/The-Biofuel-Ecophysiological-Traits-and-Yields-Database", :target =>"_blank" %></li>
-					  <li><%= link_to "Maps & Data", maps_path %></li>
-				  </ul>
-			  </div>
-			  <div class="three columns">
-				  <h3><strong>Contact</strong> Us</h3>
-				  <ul class="unstyled">
-					  <li>&#9742; <%= CONFIG[:admin_phone] %></li>
-					  <li>&#9993; <%= CONFIG[:admin_email] %></li>
-					  <li><a class="github-button" href="https://github.com/pecanproject/bety" aria-label="BETYdb on GitHub">GitHub</a></li>
-					  <li><a href="https://gitter.im/PecanProject/bety?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Chat Room"></a></li>
-				  </ul>
-			  </div>
-			  <div class="six columns omega">
-				  <p>LeBauer, David, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney, Gareth Scott Rohde, Dan Wang (2010).
+      <div class="row">
+        <h2>Footer</h2>
+        <div class="three columns alpha">
+          <h3><strong>BETY</strong>db</h3>
+          <ul class="unstyled">
+                      <li><%= link_to "Homepage", root_path %></li>
+                      <li><%= link_to "Documentation", "https://pecan.gitbooks.io/betydb-documentation/content/", :target =>"_blank" %></li>
+                      <li><%= link_to "Maps & Data", maps_path %></li>
+          </ul>
+        </div>
+        <div class="three columns">
+          <h3><strong>Contact</strong> Us</h3>
+          <ul class="unstyled">
+            <li>&#9742; <%= CONFIG[:admin_phone] %></li>
+            <li>&#9993; <%= CONFIG[:admin_email] %></li>
+            <li><a class="github-button" href="https://github.com/pecanproject/bety" aria-label="BETYdb on GitHub">GitHub</a></li>
+            <li><a href="https://gitter.im/PecanProject/bety?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Chat Room"></a></li>
+          </ul>
+        </div>
+        <div class="six columns omega">
+          <p>LeBauer, David, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney, Gareth Scott Rohde, Dan Wang (2010).
                      <cite>Biofuel Ecophysiological Traits and Yields Database (BETYdb)</cite>,
                      Energy Biosciences Institute, University of Illinois at Urbana-Champaign.
                      doi:10.13012/J8H41PB9</p>
@@ -277,22 +278,22 @@
                      <a href="http://opendatacommons.org/licenses/by/1-0/">Open Data Commons Attribution License (ODC-By) v1.0.</a>
                      You are free to share, create, and adapt its contents.
                      Data with an access_level field and value &lt;= 2 is not covered by this license but may be available for use with consent.</p>
-				  <p>Copyright © 2010-2014 Energy Biosciences Institute</p>
-			  </div>
-		  </div>
-		  <hr />
-		  <div class="row">
-			  <div class="footnotes">
-				  <div class="four columns alpha"><a href="http://illinois.edu" title="University of Illinois at Urbana-Champaign" class="illinois">University of Illinois at Urbana-Champaign</a></div>
-				  <div class="four columns"><a href="http://www.berkeley.edu" title="University of California, Berkeley" class="berkeley">University of California, Berkeley</a></div>
-				  <div class="four columns"><a href="http://www.lbl.gov" title="Lawrence Berkeley National Laboratory (LBL)" class="lbl">Lawrence Berkeley National Laboratory</a></div>
-				  <div class="four columns omega"><a href="http://www.bp.com" title="British Petroleum (BP)" class="bp">British Petroleum (BP)</a></div>
-			  </div>
-		  </div>
-	  </div>
-	  <!-- container --> 
+          <p>Copyright © 2010-2014 Energy Biosciences Institute</p>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="footnotes">
+          <div class="four columns alpha"><a href="http://illinois.edu" title="University of Illinois at Urbana-Champaign" class="illinois">University of Illinois at Urbana-Champaign</a></div>
+          <div class="four columns"><a href="http://www.berkeley.edu" title="University of California, Berkeley" class="berkeley">University of California, Berkeley</a></div>
+          <div class="four columns"><a href="http://www.lbl.gov" title="Lawrence Berkeley National Laboratory (LBL)" class="lbl">Lawrence Berkeley National Laboratory</a></div>
+          <div class="four columns omega"><a href="http://www.bp.com" title="British Petroleum (BP)" class="bp">British Petroleum (BP)</a></div>
+        </div>
+      </div>
+    </div>
+    <!-- container -->
   </div>
-  
+
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <!-- Commenting this out for now as it interferes with RSpec tests that use capybara-webkit: <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script> -->
 </body>

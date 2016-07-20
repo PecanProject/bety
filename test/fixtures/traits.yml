@@ -54,3 +54,19 @@ test_edit_trait:
   date_day: NULL
   time_hour: NULL
   time_minute: NULL
+
+restricted_trait:
+  access_level: 1
+  mean: 5
+
+internal_trait:
+  access_level: 2
+  mean: 5
+
+external_trait:
+  access_level: 3
+  mean: 5
+
+public_trait:
+  access_level: 4
+  mean: 5
