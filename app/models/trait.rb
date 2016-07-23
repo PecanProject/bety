@@ -50,8 +50,13 @@ class Trait < ActiveRecord::Base
   #--
   ### Callbacks ###
 
-  before_save :process_datetime_input
-
+  before_save :process_datetime_input, if: lambda { |obj|
+    !obj.instance_variable_get(:@d_year).nil? ||
+    !obj.instance_variable_get(:@d_month).nil? ||
+    !obj.instance_variable_get(:@d_day).nil? ||
+    !obj.instance_variable_get(:@d_hour).nil? ||
+    !obj.instance_variable_get(:@d_minute).nil?
+  }
 
 
   #--
@@ -430,12 +435,9 @@ class Trait < ActiveRecord::Base
 
 
   def computed_dateloc
-    # Convenience variables; since we only use this method in cases where the
-    # accessor returns exactly the same value as the instance variable, we may
-    # as well use the latter since it's faster.
-    y = @d_year
-    m = @d_month
-    d = @d_day
+    y = d_year
+    m = d_month
+    d = d_day
 
     if !d.blank?
       if m.blank?
@@ -475,20 +477,20 @@ class Trait < ActiveRecord::Base
   end
 
   def computed_timeloc
-    if !@t_minute.blank?
-      if @t_hour.blank?
+    if !t_minute.blank?
+      if t_hour.blank?
         errors.add(:base, "If you specify minutes, you must specify the hour.")
         9
-      elsif TimesOfDay.include?(@t_hour)
+      elsif TimesOfDay.include?(t_hour)
         errors.add(:base, "If you select a time of day, minutes must be blank.")
         9
       else
         2
       end
-    else # @t_minute is blank
-      if @t_hour.blank?
+    else # t_minute is blank
+      if t_hour.blank?
         9
-      elsif TimesOfDay.include?(@t_hour)
+      elsif TimesOfDay.include?(t_hour)
         4
       else
         3
