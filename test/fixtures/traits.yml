@@ -8,7 +8,7 @@ test_trait:
   dateloc: 5
   time: NULL
   timeloc: 2
-  mean: NULL
+  mean: 1
   n: NULL
   stat: NULL
   created_at: NULL
@@ -24,6 +24,17 @@ test_trait:
   date_day: NULL
   time_hour: NULL
   time_minute: NULL
+
+trait_with_inconsistent_date_attributes:
+  site_id: 1
+  specie_id: 1
+  date: "2005-07-25 09:31:00"
+  dateloc: 5
+  time: NULL
+  timeloc: 9
+  mean: 1
+  variable_id: 1
+  access_level: 4
 
 test_edit_trait:
   id: 2
