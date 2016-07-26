@@ -10,7 +10,7 @@ describe "Trait" do
 
   specify "Saving an unchanged trait shouldn't change it." do
 
-    t = create :trait, :minimal_trait
+    t = create :trait
 
     # A bug having to do with method nsec is averted by using reload here:
     expect { t.save }.not_to change { t.updated_at }
