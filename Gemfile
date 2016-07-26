@@ -55,6 +55,7 @@ group :test do
   # gem "webrat", "0.7.1"
   gem "capybara"
   gem "database_cleaner"
+  gem "factory_girl_rails", "~> 4.0"
 end
 
 # If you have difficulty installing or don't wish to install capybara-webkit,

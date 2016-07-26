@@ -3,15 +3,14 @@ RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/test/fixtures"
 end
 
+require 'support/factory_girl'
 
 
 describe "Trait" do
 
-  fixtures :traits
-
   specify "Saving an unchanged trait shouldn't change it." do
 
-    t = traits(:test_trait)
+    t = create :trait, :minimal_trait
 
     # A bug having to do with method nsec is averted by using reload here:
     expect { t.save }.not_to change { t.updated_at }
