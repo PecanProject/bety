@@ -17,19 +17,18 @@ describe "Trait" do
 
   end
 
-  specify "Saving an unchanged trait shouldn't change it, even if date attributes are inconsistent." do
+  specify "Saving an unchanged trait shouldn't change the date, even if date attributes are inconsistent." do
 
-    t = traits(:trait_with_inconsistent_date_attributes)
-
+    t =  create :trait_with_inconsistent_date_attributes
     # A bug having to do with method nsec is averted by using reload here:
-    expect { t.save }.not_to change { t.updated_at }
+    expect { t.save; t.reload }.not_to change { t.date }
 
   end
 
   context "Updating a non-date attribute of a trait having consistent date attributes" do
 
     before(:example) do
-      @trait = traits(:test_trait)
+      @trait = create(:trait)
       @trait.notes = "New note"
     end
 
@@ -57,7 +56,7 @@ describe "Trait" do
 
   context "Adding 1 to the d_year virtual attribute of a valid date should" do
     before(:example) do
-      @trait = traits(:test_trait)
+      @trait = create(:trait_with_consistent_date_attributes)
       @starting_d_year = @trait.d_year
       @trait.d_year += 1
     end
