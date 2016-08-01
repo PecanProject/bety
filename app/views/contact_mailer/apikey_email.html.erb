@@ -4,9 +4,9 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1>Hello, <%= @user[:name] %>.</h1>
+    <h1>Hello, <%= user_name_or_login(@user) %>.</h1>
     <p>
-      An new API key for BETYdb has been created for you.  You may view it by visiting <%= "#{request.protocol}#{request.host_with_port}/users" %>.
+      An new API key for BETYdb has been created for you.  You may view it by visiting <%= @users_url %>.
     </p>
     <p>Thanks and have a great day!</p>
   </body>
