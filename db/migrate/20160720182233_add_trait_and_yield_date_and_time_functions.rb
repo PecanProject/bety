@@ -18,15 +18,19 @@ DECLARE
     SITE_OR_UTC_DATE timestamp;
 BEGIN
 
-    SELECT COALESCE(time_zone, 'UTC') FROM sites WHERE id = site_id INTO SITE_OR_UTC_TIMEZONE;
+    IF site_id IS NULL THEN
+        SITE_OR_UTC_TIMEZONE := 'UTC';
+    ELSE
+        SELECT COALESCE(time_zone, 'UTC') FROM sites WHERE id = site_id INTO SITE_OR_UTC_TIMEZONE;
+    END IF;
 
     TIMEZONE_DESIGNATION := '';
     IF timeloc = 9 AND dateloc IN (5, 6, 8, 95, 96) THEN
         TIMEZONE_DESIGNATION := FORMAT(' (%s)', SITE_OR_UTC_TIMEZONE);
     END IF;
 
-   /* Interpret the date column as being UTC (not server time!), then convert it site time (if determined) or UTC.
-       Note that "date || ' UTC'" is NULL if date is NULL (unlike CONCAT(date, ' UTC)', which is ' UTC' if date is NULL.
+    /* Interpret the date column as being UTC (not server time!), then convert it site time (if determined) or UTC.
+       Note that "date || ' UTC'" is NULL if date is NULL (unlike CONCAT(date, ' UTC'), which is ' UTC' if date is NULL).
        This is what we want. */
     SELECT CAST((date::text || ' UTC') AS timestamp with time zone) AT TIME ZONE SITE_OR_UTC_TIMEZONE INTO SITE_OR_UTC_DATE;
 
@@ -100,7 +104,11 @@ DECLARE
 BEGIN
 
 
-    SELECT COALESCE(time_zone, 'UTC') FROM sites WHERE id = site_id INTO SITE_OR_UTC_TIMEZONE;
+    IF site_id IS NULL THEN
+        SITE_OR_UTC_TIMEZONE := 'UTC';
+    ELSE
+        SELECT COALESCE(time_zone, 'UTC') FROM sites WHERE id = site_id INTO SITE_OR_UTC_TIMEZONE;
+    END IF;
 
     TIMEZONE_DESIGNATION := '';
     IF timeloc != 9 THEN
