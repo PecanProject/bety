@@ -55,7 +55,7 @@ class UsersController < ApplicationController
       if params[:user][:page_access_level].to_i < 4 or params[:user][:access_level].to_i < 3
         ContactMailer::admin_approval(params[:user], root_url).deliver
       end
-      ContactMailer::signup_email(@user, root_url).deliver
+      ContactMailer::signup_email(@user, root_url, users_url).deliver
       # Protects against session fixation attacks, causes request forgery
       # protection if visitor resubmits an earlier form using back
       # button. Uncomment if you understand the tradeoffs.
@@ -125,7 +125,7 @@ class UsersController < ApplicationController
     user = User.find(params[:user])
     user.create_apikey
     if user.save
-      ContactMailer::apikey_email(user).deliver
+      ContactMailer::apikey_email(user, users_url).deliver
       flash[:notice] = "A new api key has been created."
     else
       flash[:error] = "Error creating new api key, please try again."

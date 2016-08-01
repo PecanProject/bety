@@ -242,7 +242,8 @@ module AuthenticatedSystem
                                 "UsersController.index", 
                                 "UsersController.show", 
                                 "UsersController.edit", 
-                                "UsersController.update", 
+                                "UsersController.update",
+                                "UsersController.create_apikey",
                                 "YieldsController.index",
                                 "YieldsController.search",
                                 "YieldsController.show"]
