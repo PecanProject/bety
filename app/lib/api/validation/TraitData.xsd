@@ -150,7 +150,7 @@
     <xs:union>
       <xs:simpleType>
         <xs:restriction base="xs:dateTime">
-          <xs:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}"/><!-- no time zone -->
+          <xs:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?"/><!-- no time zone -->
         </xs:restriction>
       </xs:simpleType>
       <xs:simpleType>
