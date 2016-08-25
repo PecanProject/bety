@@ -48,7 +48,28 @@ if !root_object.nil?
 
   # Show the "show" URL for this object
   node(:view_url) do |ob|
-    polymorphic_url(ob)
+    if !ob.instance_of?(TraitsAndYieldsView)
+      polymorphic_url(ob)
+    else
+      if ob.result_type =~ /traits/
+        trait_url(Trait.find(ob.id))
+      elsif ob.result_type =~ /yields/
+        yield_url(Yield.find(ob.id))
+      end
+    end
+  end
+
+  # Show the "edit" URL for this object
+  node(:edit_url) do |ob|
+    if !ob.instance_of?(TraitsAndYieldsView)
+      edit_polymorphic_url(ob)
+    else
+      if ob.result_type =~ /traits/
+        edit_trait_url(Trait.find(ob.id))
+      elsif ob.result_type =~ /yields/
+        edit_yield_url(Yield.find(ob.id))
+      end
+    end
   end
 
 end
