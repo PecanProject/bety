@@ -218,13 +218,25 @@ module Api::TraitCreationSupport
 
   def set_datetime_defaults(element_node, defaults)
 
-    if element_node.name == 'defaults' &&
-        element_node.has_attribute?("local_datetime") &&
-        !element_node.xpath("../*[local-name(.) != 'defaults']//site").empty?
+    if element_node.has_attribute?("local_datetime")
 
-      raise InvalidDateSpecification.new(element_node,
-                                         "You can't have a local_datetime attribute on a trait-group's defaults element if a trait or trait-group descendant sets (or re-sets) the site.",
-                                         "bad date specification; see error output")
+      if !defaults.has_key?(:site_id)
+        raise InvalidDateSpecification.new(element_node,
+                                           "You can't have a local_datetime attribute on a trait-group's defaults element if no default site has been specified.",
+                                           "bad date specification; see error output")
+      elsif Site.find(defaults[:site_id]).time_zone.nil?
+        raise InvalidDateSpecification.new(element_node,
+                                           "You can't have a local_datetime attribute on a trait-group's defaults element if the default site doesn't specify a time zone.",
+                                           "bad date specification; see error output")
+      end
+
+      if element_node.name == 'defaults' &&
+          !element_node.xpath("../*[local-name(.) != 'defaults']//site").empty?
+
+        raise InvalidDateSpecification.new(element_node,
+                                           "You can't have a local_datetime attribute on a trait-group's defaults element if a trait or trait-group descendant sets (or re-sets) the site.",
+                                           "bad date specification; see error output")
+      end
 
     end
 
