@@ -240,7 +240,7 @@ module Api::TraitCreationSupport
           defaults[:timeloc] = 9
           # fill out the time portion with zeroes, but keep the "Z" at the end:
           date_string = date_string[0..-2] + "T00:00:00Z"
-        elsif !date_string.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d*)/) # sanity check; validation should already catch this
+        elsif !date_string.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/) # sanity check; validation should already catch this
           raise InvalidDateSpecification.new(element_node,
                                              "Date string #{date_string} has an unexpected format.")
         else
@@ -258,7 +258,7 @@ module Api::TraitCreationSupport
         defaults[:timeloc] = 9
         # fill out the time portion with zeroes
         date_string += "T00:00:00"
-      elsif !date_string.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)/) # sanity check; validation should already catch this
+      elsif !date_string.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$/) # sanity check; validation should already catch this
         raise InvalidDateSpecification.new(element_node,
                                            "Date string #{date_string} has an unexpected format.")
       else
