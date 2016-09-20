@@ -124,6 +124,8 @@
       <xs:element name="notes" type="xs:string" minOccurs="0"/>
 
       <xs:element name="covariates" type="covariates" minOccurs="0"/>
+
+      <xs:element name="entity" type="entity" minOccurs="0"/>
     </xs:all>
     <xs:attribute name="access_level" type="access-level"/>
     <xs:attribute name="utc_datetime" type="utc-datetime"/>

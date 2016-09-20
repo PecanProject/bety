@@ -24,7 +24,11 @@ module Api::CsvHandler
         trait_group_node = root.add_child(doc.create_element("trait-group"))
 
         # to-do: add the option to handle columns for entity name and entity notes
-        trait_group_node.add_child(doc.create_element('entity'))
+        entity_node = doc.create_element('entity')
+        if row.has_key?('entity')
+          entity_node.set_attribute('name', row['entity'])
+        end
+        trait_group_node.add_child(entity_node)
 
         variable_info.trait_list.each do |trait_name|
           covariates = variable_info.covariates_for(trait_name)
@@ -35,7 +39,13 @@ module Api::CsvHandler
         # add traits directly to trait-data-set
         trait_name = variable_info.trait_list.first # and only
         covariates = variable_info.covariates_for(trait_name)
-        root.add_child(create_trait_element(doc, headers, row, trait_name, covariates))
+        trait_node = create_trait_element(doc, headers, row, trait_name, covariates)
+        if row.has_key?('entity')
+          entity_node = doc.create_element('entity')
+          entity_node.set_attribute('name', row['entity'])
+          trait_node.add_child(entity_node)
+        end
+        root.add_child(trait_node)
       end
     end
     doc.root = root

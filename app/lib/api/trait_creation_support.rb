@@ -107,8 +107,7 @@ module Api::TraitCreationSupport
 
     if trait_group_node.xpath("boolean(entity)")
       entity_node = trait_group_node.xpath("entity").first
-      entity_attributes = attr_hash_2_where_hash(entity_node.attributes)
-      new_entity = Entity.create!(entity_attributes)
+      new_entity = get_or_create_entity(entity_node)
       defaults[:entity_id] = new_entity.id
     end
 
@@ -132,8 +131,17 @@ module Api::TraitCreationSupport
     defaults = defaults.clone
 
     if !defaults.has_key?(:entity_id)
-      # Make an anonymous singleton entity for this trait
-      new_entity = Entity.create!
+      # If this trait node has a specified entity, use it:
+      if trait_node.xpath("boolean(entity)")
+        entity_node = trait_node.xpath("entity").first
+        new_entity = get_or_create_entity(entity_node)
+
+      # Otherwise, if there is not a default entity, make an anonymous singleton
+      # entity for this trait:
+      else
+        new_entity = Entity.create!
+      end
+
       defaults[:entity_id] = new_entity.id
     end
 
@@ -398,6 +406,23 @@ module Api::TraitCreationSupport
   # to one mapping attribute names to their value.
   def attr_hash_2_where_hash(h)
     Hash[h.map { |k, v| [k, v.value] }]
+  end
+
+  # Search the database for an entity whose data matches the attributes of
+  # entity_node and return the Rails object for it.  If none are found, create
+  # one and return the Rails object for that.  If multiple matches are found,
+  # raise a NotUniqueException.
+  def get_or_create_entity(entity_node)
+    entity_attributes = attr_hash_2_where_hash(entity_node.attributes)
+    matches = Entity.where(entity_attributes)
+    if matches.size == 0
+      entity = Entity.create!(entity_attributes)
+    elsif matches.size > 1
+      raise NotUniqueException.new(entity_node, "entity", entity_attributes)
+    else
+      entity = matches.first
+    end
+    return entity
   end
 
 end
