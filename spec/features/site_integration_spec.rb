@@ -67,9 +67,13 @@ feature 'Sites index works' do
         # reopen related citations listing
         click_link 'View Related Citations'
         expect(page).not_to have_content 'Wood'
-    end      
+      end      
 
-        
+      # Test for github bety issue #439
+      pending 'clicking update without changing anything should not produce an error', js: true do
+        click_button 'Update'
+        expect(page).not_to have_content 'error'
+      end
 
     end
 
