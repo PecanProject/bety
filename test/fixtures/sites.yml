@@ -17,25 +17,14 @@ test_site:
   sand_pct: NULL
   clay_pct: NULL
   geometry: #<RGeo::Geos::CAPIPointImpl:0x3fcccda246d8 "POINT (23.17 38.37 114.0)">
+  time_zone: "Europe/Athens"
 
 test_trait_site:
   id: 4
   city: ""
   state: ""
-  country: "USA"
-  mat: 17
-  map: 984
-  soil: "sandy loam"
-  som: NULL
-  notes: ""
-  soilnotes: "SL with low organic matter"
-  created_at: NULL
-  updated_at: "2010-07-09 18:01:49"
-  sitename: ""
-  greenhouse: false
-  user_id: 1
-  sand_pct: NULL
-  clay_pct: NULL
+  country: "UK"
+  sitename: "United Kingdom"
   
 test_site_2:
   id: 2
@@ -44,6 +33,7 @@ test_site_2:
   state: "Nevada"
   country: US
   geometry: #<RGeo::Geos::CAPIPointImpl:0x3fcccda246d8 "Point(39.538264, -119.812071, 0)">
+  time_zone: "America/Los_Angeles"
    
 test_site_3:
   id: 3
@@ -52,3 +42,4 @@ test_site_3:
   state: "xxx"
   country: xxx
   geometry: #<RGeo::Geos::CAPIPointImpl:0x3fcccda246d8 "Point(39.538264, -119.812071, 0)">
+  time_zone: "Australia/Brisbane"
