@@ -19,14 +19,16 @@ feature 'Sites index works' do
       visit '/sites/new'
       
       fill_in 'Site name', :with =>'tester'
-      fill_in 'Elevation (m)', :with => '2900'
+      fill_in 'Lat', with: '25.03'
+      fill_in 'Lon', with: '121.63'
+      fill_in 'Elevation (m)', :with => '346'
       fill_in 'Mean Annual Precipitation (mm/yr)', :with => '672'
       fill_in 'Mean Annual Temperature', :with => '19'
       fill_in 'City', :with => 'Taipei'
-      fill_in 'State', :with => 'hungsha'
-      select('UNITED STATES', :from => 'Country')
+      select('CHINA', :from => 'Country')
       fill_in 'site_notes', :with => 'working with and manipulating those elements'
       fill_in 'site_soilnotes', :with => 'methods available, so you can restrict them to specific parts of the page'
+
       click_button 'Create'
       
       expect(page).to have_content 'Site was successfully created'
@@ -70,7 +72,7 @@ feature 'Sites index works' do
       end      
 
       # Test for github bety issue #439
-      pending 'clicking update without changing anything should not produce an error', js: true do
+      specify 'clicking update without changing anything should not produce an error', js: true do
         click_button 'Update'
         expect(page).not_to have_content 'error'
       end
