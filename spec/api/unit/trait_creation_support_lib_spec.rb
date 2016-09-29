@@ -5,7 +5,7 @@ class EncapsulatedTraitCreationSupportModule
   def initialize
     @new_trait_ids = []
 
-    @schema_validation_errors = []
+    @structure_validation_errors = []
     @lookup_errors = []
     @model_validation_errors = []
     @database_insertion_errors = []
@@ -38,7 +38,7 @@ RSpec.describe "Trait creation support library" do
     expect {
       @result = ob.send(:create_traits_from_post_data, "<trait-data-set><trait mean='1' access_level='4' local_datetime='2001-04-06'><site sitename='Aliartos, Greece'/><variable name='SLA'/></trait></trait-data-set>")
     }.to change { Trait.count }.by 1
-    expect(ob.instance_variable_get(:@schema_validation_errors)).to be_empty
+    expect(ob.instance_variable_get(:@structure_validation_errors)).to be_empty
   end
 
   it "should throw an XML::SyntaxError exception when the post data is not a well-formed XML document" do

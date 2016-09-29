@@ -4,7 +4,8 @@ module Api::TraitCreationSupport
 
   private
 
-  # Exception to signal document didn't validate against schema
+  # Exception to signal document didn't validate against schema or had other
+  # structural problems not captured by the schema constraints.
   class InvalidDocument < StandardError
   end
 
@@ -204,7 +205,7 @@ module Api::TraitCreationSupport
 
     defaults = defaults.clone
 
-    defaults.merge!(get_foreign_keys(element_node))
+    defaults.merge!(get_foreign_keys(element_node, defaults))
 
     set_datetime_defaults(element_node, defaults)
 
@@ -330,15 +331,42 @@ module Api::TraitCreationSupport
 
   # Given an element node containing child elements corresponding to the
   # foreign-key columns in the traits table, look up the id to use for each
-  # foreign key.
-  def get_foreign_keys(parent_node)
+  # foreign key.  If `defaults` contains the key `:treatment_id`, then an
+  # `InvalidDocument` exception will be raised if `parent_node` has a `citation`
+  # child element.  An `InvalidDocument` exception will also be raised if
+  # `defaults` does not contains the key `:citation_id` and if `parent_node`
+  # contains a `treatment` element but not a `citation` element.
+  #
+  # TO DO: Enforce these constraints using RelaxNG, Schematron, or XSLT instead.
+  def get_foreign_keys(parent_node, defaults = {})
     id_hash = {}
+
+    treatment_node = nil # we set this in the block below (for later processing) if found
 
     parent_node.element_children.each do |child_node|
 
       entity_name = child_node.name
       if !["site", "species", "citation", "treatment", "variable", "method"].include? entity_name
         next
+      end
+
+      if entity_name == "treatment"
+
+        # Store this away for later processing outside the loop when we are sure
+        # to have captured the citation information:
+        treatment_node = child_node
+
+        next
+      end
+
+      # Catch cases where we try to set a new citation after defaulting the
+      # treatment:
+      if entity_name == "citation"
+        if !defaults[:treatment_id].nil?
+          @structure_validation_errors << ["You can't reset the citation after setting a treatment default."]
+          # TO DO: Enforce this constraint using RelaxNG, Schematron, or XSLT instead.
+          raise InvalidDocument
+        end
       end
 
       selection_criteria = attr_hash_2_where_hash(child_node.attributes)
@@ -389,6 +417,39 @@ module Api::TraitCreationSupport
 
     end # children.each
 
+    # Process treatment_node if set:
+    begin
+      if !treatment_node.nil?
+        if id_hash[:citation_id].nil?
+          if defaults[:citation_id].nil?
+            @structure_validation_errors << ["You can't specify a treatment without specifying a citation."]
+            # TO DO: Enforce this constraint using RelaxNG, Schematron, or XSLT instead.
+            raise InvalidDocument
+          else
+            citation_id = defaults[:citation_id]
+          end
+        else
+          citation_id = id_hash[:citation_id]
+        end
+
+        selection_criteria = attr_hash_2_where_hash(treatment_node.attributes)
+
+        matches = Treatment.where(selection_criteria).select { |t| t.citations.map(&:id).include?(citation_id) }
+
+        if matches.size == 0
+          raise NotFoundException.new(treatment_node, "treatment", selection_criteria)
+        elsif matches.size > 1
+          raise NotUniqueException.new(treatment_node, "treatment", selection_criteria)
+        end
+
+        id_hash[:treatment_id] = matches.first.id
+      end
+
+      # Catch exceptions outside the loop having to do with treatment lookup:
+    rescue NotFoundException, NotUniqueException => e
+      @lookup_errors << e.message
+    end
+
     return id_hash
   end
 
@@ -404,11 +465,11 @@ module Api::TraitCreationSupport
                     Nokogiri::XML::ParseOptions::STRICT))
 
     xsd.validate(doc).each do |error|
-      @schema_validation_errors << error.message
+      @structure_validation_errors << error.message
     end
 
-    if !@schema_validation_errors.blank?
-      raise InvalidDocument, @schema_validation_errors
+    if !@structure_validation_errors.blank?
+      raise InvalidDocument, @structure_validation_errors
     end
 
 
