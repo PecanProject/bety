@@ -4,7 +4,7 @@
     <species scientificname="Sorghum bicolor">
       <cultivar name="keller"/>
     </species>
-    <citation author="Adler"/>
+    <citation author="Abbate"/>
   </defaults>
 
   <trait access_level="4" mean="3.2">
