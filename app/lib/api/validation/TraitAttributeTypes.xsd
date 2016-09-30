@@ -8,6 +8,23 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="non-empty-normalizedString">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="preserve"/>
+      <xs:pattern value="\S+( \S+)*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="named_entity">
+    <xs:attribute name="name" use="required" type="non-empty-normalizedString"/>
+    <xs:attribute name="notes" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="entity">
+    <xs:attribute name="name" use="required" type="normalizedString"/>
+    <xs:attribute name="notes" type="xs:string"/>
+  </xs:complexType>
 
 
   <xs:complexType name="site">

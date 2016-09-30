@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <trait-data-set>
+  <entity name=""/>
   <defaults>
     <species scientificname="Saccharum officinarum">
       <cultivar name="s5-14"/>

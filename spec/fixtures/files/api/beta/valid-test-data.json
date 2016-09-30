@@ -38,6 +38,13 @@
           },
           "children": [
             {
+              "entity": {
+                "attributes": {
+                  "name": "photo 12345"
+                }
+              }
+            },
+            {
               "variable": {
                 "attributes": {
                   "name": "Vcmax"

@@ -23,9 +23,11 @@ module Api::TraitCreationSupport
   end
 
   class NotFoundException < StandardError
-    def initialize(node, entity_name, selection_criteria)
+    def initialize(node, entity_name, selection_criteria,
+                   message = "No #{entity_name} could be found matching " +
+                             "#{selection_criteria}")
       node.set_attribute("error", "match not found")
-      super("No #{entity_name} could be found matching #{selection_criteria}")
+      super(message)
     end
   end
 
@@ -108,8 +110,8 @@ module Api::TraitCreationSupport
 
     if trait_group_node.xpath("boolean(entity)")
       entity_node = trait_group_node.xpath("entity").first
-      new_entity = get_or_create_entity(entity_node)
-      defaults[:entity_id] = new_entity.id
+      entity = get_or_create_entity(entity_node)
+      defaults[:entity_id] = entity.id
     end
 
     if trait_group_node.xpath("boolean(defaults)")
@@ -135,15 +137,11 @@ module Api::TraitCreationSupport
       # If this trait node has a specified entity, use it:
       if trait_node.xpath("boolean(entity)")
         entity_node = trait_node.xpath("entity").first
-        new_entity = get_or_create_entity(entity_node)
-
-      # Otherwise, if there is not a default entity, make an anonymous singleton
-      # entity for this trait:
-      else
-        new_entity = Entity.create!
+        entity = get_or_create_entity(entity_node)
+        defaults[:entity_id] = entity.id
       end
-
-      defaults[:entity_id] = new_entity.id
+      # Otherwise, do nothing; don't make an anonymous singleton entity for this
+      # trait.
     end
 
     column_values = merge_new_defaults(trait_node, defaults)
@@ -487,15 +485,27 @@ module Api::TraitCreationSupport
   # raise a NotUniqueException.
   def get_or_create_entity(entity_node)
     entity_attributes = attr_hash_2_where_hash(entity_node.attributes)
-    matches = Entity.where(entity_attributes)
-    if matches.size == 0
+    name_hash = entity_attributes.select { |k, v| k == "name" }
+    matches = Entity.where(name_hash)
+    if matches.size == 0 || entity_attributes["name"].blank?
       entity = Entity.create!(entity_attributes)
     elsif matches.size > 1
-      raise NotUniqueException.new(entity_node, "entity", entity_attributes)
+      raise NotUniqueException.new(entity_node, "entity", name_hash)
     else
       entity = matches.first
+      if !entity_attributes["notes"].nil? && entity.notes != entity_attributes["notes"]
+        # considered this a failed match
+        raise NotFoundException.new(entity_node, "entity", nil,
+                                    # custom message:
+                                    "The existing entity with name " +
+                                    "\"#{entity.name}\" has a conflicting " +
+                                    "value for notes.")
+      end
     end
     return entity
+  rescue NotFoundException, NotUniqueException => e
+    @lookup_errors << e.message
+    raise InvalidData
   end
 
 end
