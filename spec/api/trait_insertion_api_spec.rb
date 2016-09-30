@@ -3,9 +3,12 @@ require 'spec_helper'
 
 RSpec.describe "Trait insertion API:" do
 
-  RSpec.shared_examples "format" do |data_file, type, format_extension, content_type|
+  RSpec.shared_examples "format" do |data_file, type, format_extension,
+                                     content_type, num_new_traits = 1, 
+                                     num_new_entities = 1,
+                                     num_new_covariates = 2|
 
-    context "a valid document is sent" do
+    context "When a valid document is sent" do
 
       let(:valid_data_doc) { File.open(Rails.root.join data_file).read }
 
@@ -22,9 +25,9 @@ RSpec.describe "Trait insertion API:" do
         aggregate_failures "Insertion works correctly" do
           expect {
             post "#{path}?key=3333333333333333333333333333333333333333", valid_data_doc
-          }.to change { Trait.count }.by(1)
-            .and change { Entity.count }.by(1)
-            .and change { Covariate.count }.by(2)
+          }.to change { Trait.count }.by(num_new_traits)
+            .and change { Entity.count }.by(num_new_entities)
+            .and change { Covariate.count }.by(num_new_covariates)
           expect(response.content_type).to eq(content_type)
           if response.content_type == "application/xml"
             expect(Hash.from_xml(response.body).fetch("hash").keys).to match_array(['metadata', 'data'])
@@ -119,7 +122,7 @@ RSpec.describe "Trait insertion API:" do
 
   # CSV endpoint
   describe "CSV:" do
-    #include_examples "format", "spec/fixtures/files/api/beta/valid-test-data.csv", "CSV", ".csv", "application/xml"
+    include_examples "format", "spec/fixtures/files/api/beta/valid-test-data.csv", "CSV", ".csv", "application/json", 2
 
     specify "Sending a CSV file that refers to missing meta-data should roll back the traits table" do
 
