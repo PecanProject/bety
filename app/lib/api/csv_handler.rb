@@ -27,6 +27,9 @@ module Api::CsvHandler
         entity_node = doc.create_element('entity')
         if row.has_key?('entity')
           entity_node.set_attribute('name', row['entity'])
+        else
+          # anonymous entity used only for grouping traits:
+          entity_node.set_attribute('name', '')
         end
         trait_group_node.add_child(entity_node)
 
