@@ -23,6 +23,8 @@ class AddExperimentsTable < ActiveRecord::Migration
 
     execute %q{
         ALTER TABLE experiments
+            ALTER COLUMN created_at SET DEFAULT utc_now(),
+            ALTER COLUMN updated_at SET DEFAULT utc_now(),
             ADD CONSTRAINT "properly_ordered_dates"
                 CHECK (end_date >= start_date);
 
