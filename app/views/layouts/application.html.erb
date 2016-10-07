@@ -114,7 +114,18 @@
   <div class="header">
     <div class="container">
       <div class="sixteen columns">
-        <h1 class="remove-bottom"><a href="/" class="org">Energy Biosciences Institute</a> <a href="/" class="site"><strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small></a></h1>
+        <h1 class="remove-bottom">
+          <a href="<%= CONFIG[:organization_url] %>"
+             class="org"
+             style="background: url(/images/<%=
+                    CONFIG[:organization_logo_file_name]
+                    %>) top right no-repeat">
+            <%= CONFIG[:organization_name] %>
+          </a>
+          <a href="/" class="site">
+            <%= raw(CONFIG[:site_identification_markup]) %>
+          </a>
+        </h1>
         <div id="header_user_name">
           <% if current_user != nil %>
             Logged in as: <%= current_user %>
@@ -269,25 +280,31 @@
             <li><a href="https://gitter.im/PecanProject/bety?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Chat Room"></a></li>
           </ul>
         </div>
-        <div class="six columns omega">
-          <p>LeBauer, David, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney, Gareth Scott Rohde, Dan Wang (2010).
-                     <cite>Biofuel Ecophysiological Traits and Yields Database (BETYdb)</cite>,
-                     Energy Biosciences Institute, University of Illinois at Urbana-Champaign.
-                     doi:10.13012/J8H41PB9</p>
-                  <p>All public data in BETYdb is made available under the
-                     <a href="http://opendatacommons.org/licenses/by/1-0/">Open Data Commons Attribution License (ODC-By) v1.0.</a>
-                     You are free to share, create, and adapt its contents.
-                     Data with an access_level field and value &lt;= 2 is not covered by this license but may be available for use with consent.</p>
-          <p>Copyright © 2010-2014 Energy Biosciences Institute</p>
+        <div class="six columns omega" style="background: url(/images/<%= CONFIG[:footer_background_image_file_name] %>) top center no-repeat">
+          <%= raw(CONFIG[:citation_license_copyright_markup]) %>
         </div>
       </div>
       <hr />
       <div class="row">
         <div class="footnotes">
-          <div class="four columns alpha"><a href="http://illinois.edu" title="University of Illinois at Urbana-Champaign" class="illinois">University of Illinois at Urbana-Champaign</a></div>
-          <div class="four columns"><a href="http://www.berkeley.edu" title="University of California, Berkeley" class="berkeley">University of California, Berkeley</a></div>
-          <div class="four columns"><a href="http://www.lbl.gov" title="Lawrence Berkeley National Laboratory (LBL)" class="lbl">Lawrence Berkeley National Laboratory</a></div>
-          <div class="four columns omega"><a href="http://www.bp.com" title="British Petroleum (BP)" class="bp">British Petroleum (BP)</a></div>
+        <% sponsers = CONFIG[:sponsers]
+          sponsers.each_with_index do |sponser, i| %>
+          <div class="four columns
+                      <%= if i == 0
+                            "alpha"
+                          elsif i == sponsers.size - 1
+                            "omega"
+                          end %>">
+            <a href="<%= sponser[:URL] %>" title="<%= sponser[:title] %>"
+               style="background: url(../images/<%=
+                                        sponser[:logo_file]
+                                      %>) 0 0 no-repeat;
+                      width: <%= sponser[:width] %>;
+                      <%= sponser[:additional_styling] %>">
+              <%= sponser[:text] %>
+            </a>
+          </div>
+        <% end %>
         </div>
       </div>
     </div>

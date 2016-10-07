@@ -2,16 +2,16 @@
   <div class="container">
     <div class="sixteen columns">
       <header>
-	<h1>Welcome to BETYdb</h1>
+	<h1><%= CONFIG[:homepage_heading] %></h1>
       </header>
       <!-- InstanceBeginEditable name="Full Width Content" -->
       <div class="row">
       <div class="ten columns alpha">
-	<p class="lead">The emerging biofuel industry may aid in reducing greenhouse gas emissions and decreasing dependence on foreign oil importation.</p>
+	<p class="lead"><%= CONFIG[:homepage_lead_text] %></p>
 	
-	<div class="inline-block" style="width: 400px">How to develop and implement biofuel crops in an ecologically and economically sustainable way requires evaluating the growth and functionality of biofuel crops from the local scale to the regional scale. <strong class="green">BETYdb</strong> has been developed to support research, agriculture, and policy by synthesizing available information on potential biofuel crops.</div>
+	<div class="inline-block" style="width: 400px"><%= raw CONFIG[:homepage_markedup_block_text] %></div>
 	<div class="inline-block" style="width: 160px; vertical-align:top; margin-left:10px">
-          <%= image_tag 'miscanthus.jpg', class: "inline-block", alt: "Photo by L. Brian Stauffer, provided by University of Illinois at Urbana-Champaign" %>
+          <%= image_tag CONFIG[:homepage_photo_file], class: "inline-block", alt: CONFIG[:homepage_photo_alt_text] %>
 	</div>
 	
 	<% if current_user.nil? %>
@@ -68,6 +68,7 @@
 	  </div>
           <% end %>
 	</div>
+    <% if CONFIG[:show_crop_map_link] %>
 	<div>
 	  <h3><i class="icon-eye-open"></i> COMPARE <em> CROP FORECASTS </em></h3>
 	  <div class="sidebar">
@@ -80,7 +81,8 @@
 	    </ul>
 	  </div>
 	</div>
-      </div>
+    <% end %>
+  </div>
 </div>
 
 
