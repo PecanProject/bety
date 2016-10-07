@@ -3,10 +3,10 @@
 # should always override these defaults to provide meaningful values!
 
 
-
-organization_name: "Energy Biosciences Institute"
-organization_url: "/"
-organization_logo_file_name: "logo-ebi.png"
+organization:
+  name: "Energy Biosciences Institute"
+  url: "/"
+  logo_file_name: "logo-ebi.png"
 
 site_identification_markup: "<strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small>"
 
@@ -62,28 +62,32 @@ sponsers:
 
 homepage_heading: "Welcome to BETYdb"
 
-homepage_lead_text:
+homepage_body:
 
-  The emerging biofuel industry may aid in reducing greenhouse gas emissions and
-  decreasing dependence on foreign oil importation."
+  lead_text:
 
-homepage_markedup_block_text:
+    The emerging biofuel industry may aid in reducing greenhouse gas emissions and
+    decreasing dependence on foreign oil importation."
 
-  How to develop and implement biofuel crops in an ecologically and economically
-  sustainable way requires evaluating the growth and functionality of biofuel
-  crops from the local scale to the regional scale. <strong
-  class="green">BETYdb</strong> has been developed to support research,
-  agriculture, and policy by synthesizing available information on potential
-  biofuel crops.
+  marked_up_block_text:
 
-homepage_photo_file: miscanthus.jpg
+    How to develop and implement biofuel crops in an ecologically and economically
+    sustainable way requires evaluating the growth and functionality of biofuel
+    crops from the local scale to the regional scale. <strong
+    class="green">BETYdb</strong> has been developed to support research,
+    agriculture, and policy by synthesizing available information on potential
+    biofuel crops.
 
-homepage_photo_alt_text:
+  photo:
 
-  Photo by L. Brian Stauffer, provided by University of Illinois at
-  Urbana-Champaign
+    file_name: miscanthus.jpg
 
-show_crop_map_link: true
+    alt_text:
+
+      Photo by L. Brian Stauffer, provided by University of Illinois at
+      Urbana-Champaign
+
+  show_crop_map_link: true
 
 # Override this with a secret key to run a secure site:
 rest_auth_site_key: 'thisisnotasecret'

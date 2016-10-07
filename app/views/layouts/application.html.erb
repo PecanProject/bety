@@ -115,12 +115,12 @@
     <div class="container">
       <div class="sixteen columns">
         <h1 class="remove-bottom">
-          <a href="<%= CONFIG[:organization_url] %>"
+          <a href="<%= CONFIG.try(:[], :organization).try(:[], :url) %>"
              class="org"
              style="background: url(/images/<%=
-                    CONFIG[:organization_logo_file_name]
+                    CONFIG.try(:[], :organization).try(:[], :logo_file_name)
                     %>) top right no-repeat">
-            <%= CONFIG[:organization_name] %>
+            <%= CONFIG.try(:[], :organization).try(:[], :name) %>
           </a>
           <a href="/" class="site">
             <%= raw(CONFIG[:site_identification_markup]) %>
@@ -287,7 +287,7 @@
       <hr />
       <div class="row">
         <div class="footnotes">
-        <% sponsers = CONFIG[:sponsers]
+        <% (sponsers = CONFIG[:sponsers]) &&
           sponsers.each_with_index do |sponser, i| %>
           <div class="four columns
                       <%= if i == 0
@@ -296,7 +296,7 @@
                             "omega"
                           end %>">
             <a href="<%= sponser[:URL] %>" title="<%= sponser[:title] %>"
-               style="background: url(../images/<%=
+               style="background: url(images/<%=
                                         sponser[:logo_file]
                                       %>) 0 0 no-repeat;
                       width: <%= sponser[:width] %>;

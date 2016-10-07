@@ -7,11 +7,11 @@
       <!-- InstanceBeginEditable name="Full Width Content" -->
       <div class="row">
       <div class="ten columns alpha">
-	<p class="lead"><%= CONFIG[:homepage_lead_text] %></p>
+	<p class="lead"><%= CONFIG.try(:[], :homepage_body).try(:[], :lead_text) %></p>
 	
-	<div class="inline-block" style="width: 400px"><%= raw CONFIG[:homepage_markedup_block_text] %></div>
+	<div class="inline-block" style="width: 400px"><%= raw CONFIG.try(:[], :homepage_body).try(:[], :marked_up_block_text) %></div>
 	<div class="inline-block" style="width: 160px; vertical-align:top; margin-left:10px">
-          <%= image_tag CONFIG[:homepage_photo_file], class: "inline-block", alt: CONFIG[:homepage_photo_alt_text] %>
+          <%= image_tag CONFIG.try(:[], :homepage_body).try(:[], :photo).try(:[], :file_name), class: "inline-block", alt: CONFIG.try(:[], :homepage_body).try(:[], :photo).try(:[], :alt_text) %>
 	</div>
 	
 	<% if current_user.nil? %>
@@ -68,7 +68,7 @@
 	  </div>
           <% end %>
 	</div>
-    <% if CONFIG[:show_crop_map_link] %>
+    <% if CONFIG.try(:[], :homepage_body).try(:[], :show_crop_map_link) %>
 	<div>
 	  <h3><i class="icon-eye-open"></i> COMPARE <em> CROP FORECASTS </em></h3>
 	  <div class="sidebar">
