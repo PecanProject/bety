@@ -7,11 +7,11 @@
       <!-- InstanceBeginEditable name="Full Width Content" -->
       <div class="row">
       <div class="ten columns alpha">
-	<p class="lead"><%= CONFIG.try(:[], :homepage_body).try(:[], :lead_text) %></p>
+	<p class="lead"><%= CONFIG[:homepage_body].try(:[], :lead_text) %></p>
 	
-	<div class="inline-block" style="width: 400px"><%= raw CONFIG.try(:[], :homepage_body).try(:[], :marked_up_block_text) %></div>
+	<div class="inline-block" style="width: 400px"><%= raw CONFIG[:homepage_body].try(:[], :marked_up_block_text) %></div>
 	<div class="inline-block" style="width: 160px; vertical-align:top; margin-left:10px">
-          <%= image_tag CONFIG.try(:[], :homepage_body).try(:[], :photo).try(:[], :file_name), class: "inline-block", alt: CONFIG.try(:[], :homepage_body).try(:[], :photo).try(:[], :alt_text) %>
+          <%= image_tag CONFIG[:homepage_body].try(:[], :photo).try(:[], :file_name), class: "inline-block", alt: CONFIG[:homepage_body].try(:[], :photo).try(:[], :alt_text) %>
 	</div>
 	
 	<% if current_user.nil? %>

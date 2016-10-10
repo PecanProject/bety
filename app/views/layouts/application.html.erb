@@ -115,12 +115,12 @@
     <div class="container">
       <div class="sixteen columns">
         <h1 class="remove-bottom">
-          <a href="<%= CONFIG.try(:[], :organization).try(:[], :url) %>"
+          <a href="<%= CONFIG[:organization].try(:[], :url) %>"
              class="org"
-             style="background: url(/images/<%=
-                    CONFIG.try(:[], :organization).try(:[], :logo_file_name)
-                    %>) top right no-repeat">
-            <%= CONFIG.try(:[], :organization).try(:[], :name) %>
+             style="background: url(<%= image_path(
+                    CONFIG[:organization].try(:[], :logo_file_name)
+                    ) %>) top right no-repeat">
+            <%= CONFIG[:organization].try(:[], :name) %>
           </a>
           <a href="/" class="site">
             <%= raw(CONFIG[:site_identification_markup]) %>
@@ -282,7 +282,7 @@
             <li><a href="https://gitter.im/PecanProject/bety?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Chat Room"></a></li>
           </ul>
         </div>
-        <div class="six columns omega" style="background: url(/images/<%= CONFIG[:footer_background_image_file_name] %>) top center no-repeat">
+        <div class="six columns omega" style="background: url(<%= image_path(CONFIG[:footer_background_image_file_name]) %>) top center no-repeat">
           <%= raw(CONFIG[:citation_license_copyright_markup]) %>
         </div>
       </div>
@@ -298,9 +298,9 @@
                             "omega"
                           end %>">
             <a href="<%= sponsor[:URL] %>" title="<%= sponsor[:title] %>"
-               style="background: url(images/<%=
+               style="background: url(<%= image_path(
                                         sponsor[:logo_file]
-                                      %>) 0 0 no-repeat;
+                                      ) %>) 0 0 no-repeat;
                       width: <%= sponsor[:width] %>;
                       <%= sponsor[:additional_styling] %>">
               <%= sponsor[:text] %>
