@@ -268,7 +268,9 @@
           <ul class="unstyled">
                       <li><%= link_to "Homepage", root_path %></li>
                       <li><%= link_to "Documentation", "https://pecan.gitbooks.io/betydb-documentation/content/", :target =>"_blank" %></li>
+                      <% if CONFIG[:show_crop_map_links] %>
                       <li><%= link_to "Maps & Data", maps_path %></li>
+                      <% end %>
           </ul>
         </div>
         <div class="three columns">

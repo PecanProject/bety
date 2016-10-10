@@ -87,7 +87,10 @@ homepage_body:
       Photo by L. Brian Stauffer, provided by University of Illinois at
       Urbana-Champaign
 
-  show_crop_map_link: true
+# Miscellaneous
+
+## This affects both the home page and the footer:
+show_crop_map_links: true
 
 # Override this with a secret key to run a secure site:
 rest_auth_site_key: 'thisisnotasecret'
