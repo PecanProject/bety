@@ -34,7 +34,7 @@ citation_license_copyright_markup:
 
   <p>Copyright © 2010-2014 Energy Biosciences Institute</p>
 
-sponsers:
+sponsors:
     - URL: http://illinois.edu
       title: "University of Illinois at Urbana-Champaign"
       text: "University of Illinois at Urbana-Champaign"
@@ -67,7 +67,7 @@ homepage_body:
   lead_text:
 
     The emerging biofuel industry may aid in reducing greenhouse gas emissions and
-    decreasing dependence on foreign oil importation."
+    decreasing dependence on foreign oil importation.
 
   marked_up_block_text:
 

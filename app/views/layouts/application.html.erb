@@ -289,21 +289,21 @@
       <hr />
       <div class="row">
         <div class="footnotes">
-        <% (sponsers = CONFIG[:sponsers]) &&
-          sponsers.each_with_index do |sponser, i| %>
+        <% (sponsors = CONFIG[:sponsors]) &&
+          sponsors.each_with_index do |sponsor, i| %>
           <div class="four columns
                       <%= if i == 0
                             "alpha"
-                          elsif i == sponsers.size - 1
+                          elsif i == sponsors.size - 1
                             "omega"
                           end %>">
-            <a href="<%= sponser[:URL] %>" title="<%= sponser[:title] %>"
+            <a href="<%= sponsor[:URL] %>" title="<%= sponsor[:title] %>"
                style="background: url(images/<%=
-                                        sponser[:logo_file]
+                                        sponsor[:logo_file]
                                       %>) 0 0 no-repeat;
-                      width: <%= sponser[:width] %>;
-                      <%= sponser[:additional_styling] %>">
-              <%= sponser[:text] %>
+                      width: <%= sponsor[:width] %>;
+                      <%= sponsor[:additional_styling] %>">
+              <%= sponsor[:text] %>
             </a>
           </div>
         <% end %>
