@@ -284,6 +284,18 @@
         </div>
         <div class="six columns omega" style="background: url(<%= image_path(CONFIG[:footer_background_image_file]) %>) top center no-repeat">
           <%= raw(CONFIG[:citation_license_copyright_markup]) %>
+          <div class="version_info">
+            <h3>Version Information</h3>
+            <p>
+              <% if commit_is_tagged? %>
+              <span class="identifier">Tag:</span> <%= commit_tags %>
+              <br />
+              <% end %>
+              <span class="identifier">Date:</span> <%= commit_date %>
+              <br />
+              <span class="identifier">Checksum:</span> <%= commit_checksum %>
+            </p>
+          </div>
         </div>
       </div>
       <hr />

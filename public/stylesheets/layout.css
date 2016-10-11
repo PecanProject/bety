@@ -484,6 +484,13 @@ border-bottom-color: transparent;
 	border-bottom-color: #efefef;
 }
 
+.footer .version_info h3 {
+    margin-bottom: 2px;
+}
+
+.footer .version_info .identifier {
+    font-weight: bold;
+}
 
 
 /* #Media Queries

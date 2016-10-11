@@ -123,3 +123,31 @@ def autocompletion_field(f, label, table_name, id, placeholder, display_value = 
                           class: autocompletion_class)).
     concat(f.hidden_field id)
 end
+
+def commit_is_tagged?
+  !commit_tags.blank?
+end
+
+def commit_tags
+  ref_names = `git log --pretty=format:"%d" -1`
+  if /tag/.match(ref_names).nil?
+    return ""
+  end
+
+  # If we required a version of Git recent enough to support the %D placeholder,
+  # we wouldn't need the following line:
+  ref_names.sub!(/ *\(([^)]*)\) */, '\1')
+
+  ref_array = ref_names.split(',')
+  ref_array.keep_if { |ref| /tag/.match(ref) }
+  ref_array.collect! { |ref| ref.sub(/tag: *(.*) */, '\1') }
+  ref_array.join(', ')
+end
+
+def commit_checksum
+  `git log --pretty=format:"%H" -1`
+end
+
+def commit_date
+  `git log --pretty=format:"%ad" -1`
+end
