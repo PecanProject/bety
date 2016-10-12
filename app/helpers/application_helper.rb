@@ -144,6 +144,10 @@ def commit_tags
   ref_array.join(', ')
 end
 
+def commit_branch
+  `git rev-parse --abbrev-ref HEAD`
+end
+
 def commit_checksum
   `git log --pretty=format:"%H" -1`
 end
