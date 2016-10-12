@@ -284,20 +284,6 @@
         </div>
         <div class="six columns omega" style="background: url(<%= image_path(CONFIG[:footer_background_image_file]) %>) top center no-repeat">
           <%= raw(CONFIG[:citation_license_copyright_markup]) %>
-          <div class="version_info">
-            <h3>Powered by <a href="https://github.com/PecanProject/bety">BETYdb</a></h3>
-            <p>
-              <% if commit_is_tagged? %>
-              <span class="identifier">Tag:</span> <%= commit_tags %>
-              <br />
-              <% end %>
-              <span class="identifier">Branch:</span> <%= commit_branch %>
-              <br />
-              <span class="identifier">Date:</span> <%= commit_date %>
-              <br />
-              <span class="identifier">Checksum:</span> <%= commit_checksum[0..6] %>
-            </p>
-          </div>
         </div>
       </div>
       <hr />
@@ -321,6 +307,21 @@
             </a>
           </div>
         <% end %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="git_info">
+          <h3>Powered by <a href="https://github.com/PecanProject/bety">BETYdb</a></h3>
+          <div class="version_info">
+          <% if commit_is_tagged? %>
+          (<div class="first"><span class="identifier">Tag:</span><span class="value"><%= commit_tags %></span></div>
+          <div><span class="identifier">Branch:</span><span class="value"><%= commit_branch %></span></div>
+          <% else %>
+          (<div class="first"><span class="identifier">Branch:</span><span class="value"><%= commit_branch %></span></div>
+          <% end %>
+          <div><span class="identifier">Date:</span><span class="value"><%= commit_date %></span></div>
+          <div class="last"><span class="identifier">Checksum:</span><span class="value"><%= commit_checksum[0..6] %></span></div>)
+          </div>
         </div>
       </div>
     </div>
