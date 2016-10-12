@@ -26,7 +26,7 @@ class TraitsAndYieldsView < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ scientificname commonname trait
                       trait_description city sitename author
-                      citation_year }
+                      citation_year cultivar entity cultivation_method }
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).order("id asc") }
   scope :search, lambda { |search| where(advanced_search(search)) }
@@ -61,10 +61,12 @@ class TraitsAndYieldsView < ActiveRecord::Base
     scientificname 'scientificname'
     commonname 'commonname'
     genus 'genus'
+    cultivar 'cultivar'
     author 'author'
     citation_year 'citation_year'
     treatment 'treatment'
     date 'date'
+    time 'time'
     month 'month'
     year 'year'
     dateloc 'dateloc'
@@ -87,6 +89,8 @@ class TraitsAndYieldsView < ActiveRecord::Base
       end 
     end
     notes 'notes'
+    entity 'entity'
+    cultivation_method 'method'
   end
 
 end
