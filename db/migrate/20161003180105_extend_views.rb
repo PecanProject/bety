@@ -159,7 +159,7 @@ CREATE VIEW traits_and_yields_view AS
                 access_level,
                 cultivar, -- added
                 entity, -- added
-                method AS cultivation_method -- added
+                method AS method_name -- added
        FROM
                 traits_and_yields_view_private
        WHERE
