@@ -497,6 +497,11 @@ hr {
 	border-bottom: 1px solid #ffffff;
 }
 
+/* If hr is in a table cell, use a smaller margin: */
+table hr {
+    margin: 2px 0;
+}
+
 abbr[title],
 abbr[data-original-title] {
 	cursor: help;
