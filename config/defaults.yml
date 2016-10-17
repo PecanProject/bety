@@ -2,9 +2,95 @@
 # if you don't make an application.yml configuration file.  But a real site
 # should always override these defaults to provide meaningful values!
 
-# Contact Information
+
+organization:
+  name: "Energy Biosciences Institute"
+  url: "/"
+  logo_file: "logo-ebi.png"
+
+site_identification_markup: "<strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small>"
+
+
+# Footer
+
+footer_background_image_file: "logo-ebi-footer.jpg"
+
+## Contact Information
 admin_phone: "(000) 000-0000"
 admin_email: "admin@example.com" # a test
+
+citation_license_copyright_markup:
+
+  <p>LeBauer, David, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney,
+  Gareth Scott Rohde, Dan Wang (2010).  <cite>Biofuel Ecophysiological Traits
+  and Yields Database (BETYdb)</cite>, Energy Biosciences Institute, University
+  of Illinois at Urbana-Champaign.  doi:10.13012/J8H41PB9</p>
+
+  <p>All public data in BETYdb is made available under the <a
+  href="http://opendatacommons.org/licenses/by/1-0/">Open Data Commons
+  Attribution License (ODC-By) v1.0.</a> You are free to share, create, and
+  adapt its contents.  Data with an access_level field and value &lt;= 2 is not
+  covered by this license but may be available for use with consent.</p>
+
+  <p>Copyright © 2010-2014 Energy Biosciences Institute</p>
+
+sponsors:
+    - URL: http://illinois.edu
+      title: "University of Illinois at Urbana-Champaign"
+      text: "University of Illinois at Urbana-Champaign"
+      logo_file: logo-illinois.png
+      width: 246px
+    - URL: http://www.berkeley.edu
+      title: "University of California, Berkeley"
+      text: "University of California, Berkeley"
+      logo_file: logo-berkeley.png
+      width: 145px
+      additional_styling: "margin-left: 20%"
+    - URL: http://www.lbl.gov
+      title: "Lawrence Berkeley National Laboratory (LBL)"
+      text: "Lawrence Berkeley National Laboratory"
+      logo_file: logo-lbl.png
+      width: 232px
+    - URL: http://www.bp.com
+      title: "British Petroleum (BP)"
+      text: "British Petroleum (BP)"
+      logo_file: logo-bp.png
+      width: 54px
+      additional_styling: "margin-right: 40%"
+
+# Home Page
+
+homepage_heading: "Welcome to BETYdb"
+
+homepage_body:
+
+  lead_text:
+
+    The emerging biofuel industry may aid in reducing greenhouse gas emissions and
+    decreasing dependence on foreign oil importation.
+
+  marked_up_block_text:
+
+    How to develop and implement biofuel crops in an ecologically and economically
+    sustainable way requires evaluating the growth and functionality of biofuel
+    crops from the local scale to the regional scale. <strong
+    class="green">BETYdb</strong> has been developed to support research,
+    agriculture, and policy by synthesizing available information on potential
+    biofuel crops.
+
+  photo:
+
+    file: miscanthus.jpg
+
+    alt_text:
+
+      Photo by L. Brian Stauffer, provided by University of Illinois at
+      Urbana-Champaign
+
+# Miscellaneous
+
+## This affects both the home page and the footer:
+show_crop_map_links: true
 
 # Override this with a secret key to run a secure site:
 rest_auth_site_key: 'thisisnotasecret'
