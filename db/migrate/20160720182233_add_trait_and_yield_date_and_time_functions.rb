@@ -93,7 +93,7 @@ BEGIN
     SELECT effective_time_zone(site_id) INTO SITE_OR_UTC_TIMEZONE;
 
     TIMEZONE_DESIGNATION := '';
-    IF date IS NOT NULL AND timeloc = 9 AND dateloc IN (5, 5,5, 6, 8, 95, 96) THEN
+    IF date IS NOT NULL AND timeloc = 9 AND dateloc IN (5, 5.5, 6, 8, 95, 96) THEN
         TIMEZONE_DESIGNATION := FORMAT(' (%s)', SITE_OR_UTC_TIMEZONE);
     END IF;
 
