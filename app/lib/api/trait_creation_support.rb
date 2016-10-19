@@ -174,11 +174,17 @@ module Api::TraitCreationSupport
 
           column_values = get_foreign_keys(covariate_node) # get variable_id
 
-          column_values[:level] = covariate_node.attribute("level").value
+          if @lookup_errors.size == 0
 
-          column_values[:trait_id] = new_trait.id
+            # Only create a covariate if there were no lookup errors:
 
-          Covariate.create!(column_values)
+            column_values[:level] = covariate_node.attribute("level").value
+            
+            column_values[:trait_id] = new_trait.id
+
+            Covariate.create!(column_values)
+
+          end
 
         end
 
