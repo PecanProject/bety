@@ -29,7 +29,7 @@
     </trait>
 
     <trait access_level="3" mean="1.2">
-      <variable description="leaves year-1"/>
+      <variable description="number of leaves per plant"/>
     </trait>
 
   </trait-group>
@@ -57,7 +57,7 @@
       </covariate>
 
       <covariate level="1000">
-        <variable description="leaves year-1"/>
+        <variable description="number of leaves per plant"/>
       </covariate>
     </covariates>
   </trait>
