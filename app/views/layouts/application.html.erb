@@ -115,16 +115,16 @@
     <div class="container">
       <div class="sixteen columns">
         <h1 class="remove-bottom">
-          <a href="<%= CONFIG[:organization].try(:[], :url) %>"
-             class="org"
-             style="background: url(<%= image_path(
-                    CONFIG[:organization].try(:[], :logo_file)
-                    ) %>) top right no-repeat">
-            <%= CONFIG[:organization].try(:[], :name) %>
-          </a>
-          <a href="/" class="site">
-            <%= raw(CONFIG[:site_identification_markup]) %>
-          </a>
+          <%= link_to(CONFIG[:organization].try(:[], :url),
+              {
+                  class: "org",
+                  style: "background: url(#{image_path(CONFIG[:organization].try(:[], :logo_file))}) top right no-repeat"
+              }) do
+                CONFIG[:organization].try(:[], :name)
+              end %>
+          <%= link_to(root_path, { class: "site" }) do
+              raw(CONFIG[:site_identification_markup])
+              end %>
         </h1>
         <div id="header_user_name">
           <% if current_user != nil %>
@@ -297,14 +297,16 @@
                           elsif i == sponsors.size - 1
                             "omega"
                           end %>">
-            <a href="<%= sponsor[:URL] %>" title="<%= sponsor[:title] %>"
-               style="background: url(<%= image_path(
-                                        sponsor[:logo_file]
-                                      ) %>) 0 0 no-repeat;
-                      width: <%= sponsor[:width] %>;
-                      <%= sponsor[:additional_styling] %>">
-              <%= sponsor[:text] %>
-            </a>
+
+            <%= link_to(
+                sponsor[:URL],
+                {
+                title: sponsor[:title],
+                style: "background: url(#{image_path(sponsor[:logo_file])}) 0 0 no-repeat; width: #{sponsor[:width]}; #{sponsor[:additional_styling]}"
+                }
+                ) do
+                  sponsor[:text]
+                end %>
           </div>
         <% end %>
         </div>

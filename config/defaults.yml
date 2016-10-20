@@ -5,7 +5,7 @@
 
 organization:
   name: "Energy Biosciences Institute"
-  url: "/"
+  url: #{root_path}
   logo_file: "logo-ebi.png"
 
 site_identification_markup: "<strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small>"
