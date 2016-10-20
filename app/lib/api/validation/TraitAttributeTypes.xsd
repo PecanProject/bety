@@ -103,9 +103,6 @@
 
 
   <xs:complexType name="method">
-    <xs:sequence>
-      <xs:element name="citation" type="citation"/>
-    </xs:sequence>
     <xs:attribute name="name" type="normalizedString"/>
   </xs:complexType>
 

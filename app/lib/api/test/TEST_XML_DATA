@@ -42,9 +42,7 @@
 
     <stat name="SE" value="0.0030" sample_size="10"/>
 
-    <method name="CC">
-      <citation author="Biggs" year="2008"/><!-- or use citation-id on method element -->
-    </method><!-- or use method-id on trait element -->
+    <method name="CC"/>
 
     <site sitename="Aliartos"/>
 

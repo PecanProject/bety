@@ -107,7 +107,7 @@ Rails.logger.debug(doc.to_s)
       when "variable"
         child.set_attribute("name", variable_name)
       when "method"
-        # TO-DO: add support
+        child.set_attribute("name", row[name])
       when "notes"
         child.set_attribute("notes", row[name])
       end
