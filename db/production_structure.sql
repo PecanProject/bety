@@ -48,6 +48,23 @@ $$;
 
 
 --
+-- Name: effective_time_zone(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION effective_time_zone(site_id bigint) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    SITE_OR_UTC_TIMEZONE text;
+BEGIN
+    SELECT time_zone FROM sites WHERE id = site_id INTO SITE_OR_UTC_TIMEZONE;
+    /* If no rows or a row with NULL time_zone is returned, the effective time zone should be UTC. */
+    RETURN COALESCE(SITE_OR_UTC_TIMEZONE, 'UTC');
+END;
+$$;
+
+
+--
 -- Name: forbid_dangling_input_references(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -472,6 +489,161 @@ COMMENT ON FUNCTION normalize_whitespace(string text) IS 'Removes leading and tr
 
 
 --
+-- Name: pretty_date(timestamp without time zone, numeric, numeric, bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION pretty_date(date timestamp without time zone, dateloc numeric, timeloc numeric, site_id bigint) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    FORMAT text;
+    SEASON text;
+    SITE_OR_UTC_TIMEZONE text;
+    TIMEZONE_DESIGNATION text;
+    SITE_OR_UTC_DATE timestamp;
+BEGIN
+
+    SELECT effective_time_zone(site_id) INTO SITE_OR_UTC_TIMEZONE;
+
+    TIMEZONE_DESIGNATION := '';
+    IF date IS NOT NULL AND timeloc = 9 AND dateloc IN (5, 5.5, 6, 8, 95, 96) THEN
+        TIMEZONE_DESIGNATION := FORMAT(' (%s)', SITE_OR_UTC_TIMEZONE);
+    END IF;
+
+    SELECT site_or_utc_date(date, SITE_OR_UTC_TIMEZONE) INTO SITE_OR_UTC_DATE;
+
+    CASE extract(month FROM SITE_OR_UTC_DATE)
+        WHEN 1 THEN
+            SEASON := '"DJF"';
+        WHEN 4 THEN
+            SEASON := '"MAM"';
+        WHEN 7 THEN
+            SEASON := '"JJA"';
+        WHEN 10 THEN
+            SEASON := '"SON"';
+        ELSE
+            SEASON := '"[UNRECOGNIZED SEASON MONTH]"';
+    END CASE;
+
+
+    CASE COALESCE(dateloc, -1)
+
+        WHEN 9 THEN
+            FORMAT := '"[date unspecified or unknown]"';
+
+        WHEN 8 THEN
+            FORMAT := 'YYYY';
+
+        WHEN 7 THEN                   
+            FORMAT := CONCAT('Season: ', SEASON, ' YYYY');
+
+        WHEN 6 THEN
+            FORMAT := 'FMMonth YYYY';
+
+        WHEN 5.5 THEN
+            FORMAT := '"Week of" Mon FMDD, YYYY';
+
+        WHEN 5 THEN
+            FORMAT := 'YYYY Mon FMDD';
+
+        WHEN 97 THEN
+            FORMAT := CONCAT('Season: ', SEASON);
+
+        WHEN 96 THEN
+            FORMAT := 'FMMonth';
+
+        WHEN 95 THEN
+            FORMAT := 'FMMonth FMDDth';
+
+        WHEN -1 THEN
+            FORMAT := '"Date Level of Confidence Unknown"';
+
+        ELSE
+            FORMAT := '"Unrecognized Value for Date Level of Confidence"';
+    END CASE;
+
+    RETURN CONCAT(to_char(SITE_OR_UTC_DATE, FORMAT), TIMEZONE_DESIGNATION);
+
+END;
+$$;
+
+
+--
+-- Name: pretty_time(timestamp without time zone, numeric, bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION pretty_time(date timestamp without time zone, timeloc numeric, site_id bigint) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    FORMAT text;
+    TIME_OF_DAY text;
+    SITE_OR_UTC_TIMEZONE text;
+    TIMEZONE_DESIGNATION text;
+    SITE_OR_UTC_DATE timestamp;
+BEGIN
+
+
+    SELECT COALESCE(time_zone, 'UTC') FROM sites WHERE id = site_id INTO SITE_OR_UTC_TIMEZONE;
+
+    TIMEZONE_DESIGNATION := '';
+    IF date IS NOT NULL AND timeloc != 9 THEN
+        TIMEZONE_DESIGNATION := FORMAT(' (%s)', SITE_OR_UTC_TIMEZONE);
+    END IF;
+
+    /* Interpret the date column as being UTC (not server time!), then convert it site time (if determined) or UTC.
+       Note that "date || ' UTC'" is NULL if date is NULL (unlike CONCAT(date, ' UTC)', which is ' UTC' if date is NULL.
+       This is what we want. */
+    SELECT CAST((date::text || ' UTC') AS timestamp with time zone) AT TIME ZONE SITE_OR_UTC_TIMEZONE INTO SITE_OR_UTC_DATE;
+
+
+    CASE extract(hour FROM SITE_OR_UTC_DATE)
+        WHEN 0 THEN
+            TIME_OF_DAY := '"night"';
+        WHEN 9 THEN
+            TIME_OF_DAY := '"morning"';
+        WHEN 12 THEN
+            TIME_OF_DAY := '"mid-day"';
+        WHEN 15 THEN
+            TIME_OF_DAY := '"afternoon"';
+        ELSE
+            TIME_OF_DAY := '"[Invalid time-of-day designation]"';
+    END CASE;
+
+
+    CASE COALESCE(timeloc, -1)
+
+
+        WHEN 9 THEN
+            FORMAT := '"[time unspecified or unknown]"';
+
+        WHEN 4 THEN
+            FORMAT := TIME_OF_DAY;
+
+        WHEN 3 THEN
+            FORMAT := 'FMHH AM';
+
+        WHEN 2 THEN
+            FORMAT := 'HH24:MI';
+
+        WHEN 1 THEN
+            FORMAT := 'HH24:MI:SS';
+
+        WHEN -1 THEN
+            FORMAT := '"Time Level of Confidence Unknown"';
+
+        ELSE
+            FORMAT := '"Unrecognized Value for Time Level of Confidence"';
+
+    END CASE;
+
+    RETURN CONCAT(to_char(SITE_OR_UTC_DATE, FORMAT), TIMEZONE_DESIGNATION);
+
+END;
+$$;
+
+
+--
 -- Name: prevent_conflicting_range_changes(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -633,6 +805,73 @@ BEGIN
         RAISE EXCEPTION 'The value of mean for trait % must be between % and %.', name, min::text, max::text;
     END IF;
     RETURN NEW ;
+END;
+$$;
+
+
+--
+-- Name: site_or_utc_date(timestamp without time zone, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION site_or_utc_date(date timestamp without time zone, effective_time_zone text) RETURNS timestamp without time zone
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    SITE_OR_UTC_TIMEZONE text;
+    SITE_OR_UTC_DATE timestamp;
+BEGIN
+    /* Interpret the date column as being UTC (not server time!), then convert it site time (if determined) or UTC.
+       Note that "date || ' UTC'" is NULL if date is NULL (unlike CONCAT(date, ' UTC)', which is ' UTC' if date is NULL.
+       This is what we want. */
+    SELECT CAST((date::text || ' UTC') AS timestamp with time zone) AT TIME ZONE effective_time_zone INTO SITE_OR_UTC_DATE;
+
+    RETURN SITE_OR_UTC_DATE;
+END;
+$$;
+
+
+--
+-- Name: site_or_utc_month(timestamp without time zone, numeric, bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION site_or_utc_month(date timestamp without time zone, dateloc numeric, site_id bigint) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    SITE_OR_UTC_TIMEZONE text;
+    SITE_OR_UTC_DATE timestamp;
+    SITE_OR_UTC_MONTH int;
+BEGIN
+    SELECT effective_time_zone(site_id) INTO SITE_OR_UTC_TIMEZONE;
+    SELECT site_or_utc_date(date, SITE_OR_UTC_TIMEZONE) INTO SITE_OR_UTC_DATE;
+    IF dateloc IN (6, 5.5, 5, 96, 95) THEN
+        SELECT EXTRACT(MONTH FROM SITE_OR_UTC_DATE) INTO SITE_OR_UTC_MONTH;
+        RETURN SITE_OR_UTC_MONTH;
+    END IF;
+    RETURN NULL;
+END;
+$$;
+
+
+--
+-- Name: site_or_utc_year(timestamp without time zone, numeric, bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION site_or_utc_year(date timestamp without time zone, dateloc numeric, site_id bigint) RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    SITE_OR_UTC_TIMEZONE text;
+    SITE_OR_UTC_DATE timestamp;
+    SITE_OR_UTC_YEAR int;
+BEGIN
+    SELECT effective_time_zone(site_id) INTO SITE_OR_UTC_TIMEZONE;
+    SELECT site_or_utc_date(date, SITE_OR_UTC_TIMEZONE) INTO SITE_OR_UTC_DATE;
+    IF dateloc IN (8, 7, 6, 5.5, 5) THEN
+        SELECT EXTRACT(YEAR FROM SITE_OR_UTC_DATE) INTO SITE_OR_UTC_YEAR;
+        RETURN SITE_OR_UTC_YEAR;
+    END IF;
+    RETURN NULL;
 END;
 $$;
 
@@ -827,7 +1066,8 @@ CREATE TABLE benchmarks_ensembles_scores (
     metric_id bigint NOT NULL,
     user_id bigint,
     created_at timestamp without time zone DEFAULT utc_now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT utc_now() NOT NULL
+    updated_at timestamp without time zone DEFAULT utc_now() NOT NULL,
+    score text NOT NULL
 );
 
 
@@ -1337,6 +1577,107 @@ CREATE TABLE entities (
     updated_at timestamp(6) without time zone DEFAULT utc_now(),
     CONSTRAINT normalized_entity_name CHECK (is_whitespace_normalized((name)::text))
 );
+
+
+--
+-- Name: experiments; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE experiments (
+    id bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    start_date date,
+    end_date date,
+    description text DEFAULT ''::text NOT NULL,
+    design text DEFAULT ''::text NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp without time zone DEFAULT utc_now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT utc_now() NOT NULL,
+    CONSTRAINT properly_ordered_dates CHECK ((end_date >= start_date))
+);
+
+
+--
+-- Name: experiments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE experiments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: experiments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE experiments_id_seq OWNED BY experiments.id;
+
+
+--
+-- Name: experiments_sites; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE experiments_sites (
+    id bigint NOT NULL,
+    experiment_id bigint NOT NULL,
+    site_id bigint NOT NULL,
+    created_at timestamp without time zone DEFAULT utc_now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT utc_now() NOT NULL
+);
+
+
+--
+-- Name: experiments_sites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE experiments_sites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: experiments_sites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE experiments_sites_id_seq OWNED BY experiments_sites.id;
+
+
+--
+-- Name: experiments_treatments; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE experiments_treatments (
+    id bigint NOT NULL,
+    experiment_id bigint NOT NULL,
+    treatment_id bigint NOT NULL,
+    created_at timestamp without time zone DEFAULT utc_now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT utc_now() NOT NULL
+);
+
+
+--
+-- Name: experiments_treatments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE experiments_treatments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: experiments_treatments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE experiments_treatments_id_seq OWNED BY experiments_treatments.id;
 
 
 --
@@ -2963,7 +3304,7 @@ COMMENT ON COLUMN variables.name IS 'variable name, this is the name used by PEc
 --
 
 CREATE VIEW traitsview_private AS
- SELECT 'traits'::character(10) AS result_type,
+ SELECT 'traits'::character(6) AS result_type,
     traits.id,
     traits.citation_id,
     traits.site_id,
@@ -2980,9 +3321,11 @@ CREATE VIEW traitsview_private AS
     citations.author,
     citations.year AS citation_year,
     treatments.name AS treatment,
-    traits.date,
-    date_part('month'::text, traits.date) AS month,
-    date_part('year'::text, traits.date) AS year,
+    traits.date AS raw_date,
+    site_or_utc_month(traits.date, traits.dateloc, traits.site_id) AS month,
+    site_or_utc_year(traits.date, traits.dateloc, traits.site_id) AS year,
+    pretty_date(traits.date, traits.dateloc, traits.timeloc, traits.site_id) AS date,
+    pretty_time(traits.date, traits.timeloc, traits.site_id) AS "time",
     traits.dateloc,
     variables.name AS trait,
     variables.description AS trait_description,
@@ -2996,14 +3339,20 @@ CREATE VIEW traitsview_private AS
     traits.checked,
     users.login,
     users.name,
-    users.email
-   FROM ((((((traits
+    users.email,
+    cultivars.name AS cultivar,
+    entities.name AS entity,
+    methods.name AS method
+   FROM (((((((((traits
      LEFT JOIN sites ON ((traits.site_id = sites.id)))
      LEFT JOIN species ON ((traits.specie_id = species.id)))
      LEFT JOIN citations ON ((traits.citation_id = citations.id)))
      LEFT JOIN treatments ON ((traits.treatment_id = treatments.id)))
      LEFT JOIN variables ON ((traits.variable_id = variables.id)))
-     LEFT JOIN users ON ((traits.user_id = users.id)));
+     LEFT JOIN users ON ((traits.user_id = users.id)))
+     LEFT JOIN cultivars ON ((traits.cultivar_id = cultivars.id)))
+     LEFT JOIN entities ON ((traits.entity_id = entities.id)))
+     LEFT JOIN methods ON ((traits.method_id = methods.id)));
 
 
 --
@@ -3153,7 +3502,7 @@ COMMENT ON COLUMN yields.access_level IS 'Level of access required to view data.
 --
 
 CREATE VIEW yieldsview_private AS
- SELECT 'yields'::character(10) AS result_type,
+ SELECT 'yields'::character(6) AS result_type,
     yields.id,
     yields.citation_id,
     yields.site_id,
@@ -3170,9 +3519,11 @@ CREATE VIEW yieldsview_private AS
     citations.author,
     citations.year AS citation_year,
     treatments.name AS treatment,
-    yields.date,
-    date_part('month'::text, yields.date) AS month,
-    date_part('year'::text, yields.date) AS year,
+    yields.date AS raw_date,
+    site_or_utc_month((yields.date)::timestamp without time zone, yields.dateloc, yields.site_id) AS month,
+    site_or_utc_year((yields.date)::timestamp without time zone, yields.dateloc, yields.site_id) AS year,
+    pretty_date((yields.date)::timestamp without time zone, yields.dateloc, (9)::numeric, yields.site_id) AS date,
+    '[time unspecified for yields]'::text AS "time",
     yields.dateloc,
     variables.name AS trait,
     variables.description AS trait_description,
@@ -3186,14 +3537,19 @@ CREATE VIEW yieldsview_private AS
     yields.checked,
     users.login,
     users.name,
-    users.email
-   FROM ((((((yields
+    users.email,
+    cultivars.name AS cultivar,
+    NULL::character varying(255) AS entity,
+    methods.name AS method
+   FROM ((((((((yields
      LEFT JOIN sites ON ((yields.site_id = sites.id)))
      LEFT JOIN species ON ((yields.specie_id = species.id)))
      LEFT JOIN citations ON ((yields.citation_id = citations.id)))
      LEFT JOIN treatments ON ((yields.treatment_id = treatments.id)))
      LEFT JOIN variables ON (((variables.name)::text = 'Ayield'::text)))
-     LEFT JOIN users ON ((yields.user_id = users.id)));
+     LEFT JOIN users ON ((yields.user_id = users.id)))
+     LEFT JOIN cultivars ON ((yields.cultivar_id = cultivars.id)))
+     LEFT JOIN methods ON ((yields.method_id = methods.id)));
 
 
 --
@@ -3218,9 +3574,11 @@ CREATE VIEW traits_and_yields_view_private AS
     traitsview_private.author,
     traitsview_private.citation_year,
     traitsview_private.treatment,
-    traitsview_private.date,
+    traitsview_private.raw_date,
     traitsview_private.month,
     traitsview_private.year,
+    traitsview_private.date,
+    traitsview_private."time",
     traitsview_private.dateloc,
     traitsview_private.trait,
     traitsview_private.trait_description,
@@ -3234,7 +3592,10 @@ CREATE VIEW traits_and_yields_view_private AS
     traitsview_private.checked,
     traitsview_private.login,
     traitsview_private.name,
-    traitsview_private.email
+    traitsview_private.email,
+    traitsview_private.cultivar,
+    traitsview_private.entity,
+    traitsview_private.method
    FROM traitsview_private
 UNION ALL
  SELECT yieldsview_private.result_type,
@@ -3254,9 +3615,11 @@ UNION ALL
     yieldsview_private.author,
     yieldsview_private.citation_year,
     yieldsview_private.treatment,
-    yieldsview_private.date,
+    yieldsview_private.raw_date,
     yieldsview_private.month,
     yieldsview_private.year,
+    yieldsview_private.date,
+    yieldsview_private."time",
     yieldsview_private.dateloc,
     yieldsview_private.trait,
     yieldsview_private.trait_description,
@@ -3270,7 +3633,10 @@ UNION ALL
     yieldsview_private.checked,
     yieldsview_private.login,
     yieldsview_private.name,
-    yieldsview_private.email
+    yieldsview_private.email,
+    yieldsview_private.cultivar,
+    yieldsview_private.entity,
+    yieldsview_private.method
    FROM yieldsview_private;
 
 
@@ -3298,6 +3664,8 @@ CREATE VIEW traits_and_yields_view AS
     traits_and_yields_view_private.citation_year,
     traits_and_yields_view_private.treatment,
     traits_and_yields_view_private.date,
+    traits_and_yields_view_private."time",
+    traits_and_yields_view_private.raw_date,
     traits_and_yields_view_private.month,
     traits_and_yields_view_private.year,
     traits_and_yields_view_private.dateloc,
@@ -3309,7 +3677,10 @@ CREATE VIEW traits_and_yields_view AS
     traits_and_yields_view_private.statname,
     traits_and_yields_view_private.stat,
     traits_and_yields_view_private.notes,
-    traits_and_yields_view_private.access_level
+    traits_and_yields_view_private.access_level,
+    traits_and_yields_view_private.cultivar,
+    traits_and_yields_view_private.entity,
+    traits_and_yields_view_private.method AS method_name
    FROM traits_and_yields_view_private
   WHERE (traits_and_yields_view_private.checked >= 0);
 
@@ -3427,6 +3798,27 @@ ALTER TABLE ONLY cultivars_pfts ALTER COLUMN id SET DEFAULT nextval('cultivars_p
 --
 
 ALTER TABLE ONLY current_posteriors ALTER COLUMN id SET DEFAULT nextval('current_posteriors_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY experiments ALTER COLUMN id SET DEFAULT nextval('experiments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY experiments_sites ALTER COLUMN id SET DEFAULT nextval('experiments_sites_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY experiments_treatments ALTER COLUMN id SET DEFAULT nextval('experiments_treatments_id_seq'::regclass);
 
 
 --
@@ -3637,6 +4029,30 @@ ALTER TABLE ONLY ensembles
 
 ALTER TABLE ONLY entities
     ADD CONSTRAINT entities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: experiments_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY experiments
+    ADD CONSTRAINT experiments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: experiments_sites_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY experiments_sites
+    ADD CONSTRAINT experiments_sites_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: experiments_treatments_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY experiments_treatments
+    ADD CONSTRAINT experiments_treatments_pkey PRIMARY KEY (id);
 
 
 --
@@ -4561,6 +4977,27 @@ CREATE TRIGGER update_entities_timestamp BEFORE UPDATE ON entities FOR EACH ROW 
 
 
 --
+-- Name: update_experiments_sites_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_experiments_sites_timestamp BEFORE UPDATE ON experiments_sites FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_experiments_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_experiments_timestamp BEFORE UPDATE ON experiments FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
+-- Name: update_experiments_treatments_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_experiments_treatments_timestamp BEFORE UPDATE ON experiments_treatments FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
 -- Name: update_formats_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -5031,6 +5468,46 @@ ALTER TABLE ONLY ensembles
 
 ALTER TABLE ONLY entities
     ADD CONSTRAINT fk_entities_entities_1 FOREIGN KEY (parent_id) REFERENCES entities(id);
+
+
+--
+-- Name: fk_experiments_sites_experiments; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY experiments_sites
+    ADD CONSTRAINT fk_experiments_sites_experiments FOREIGN KEY (experiment_id) REFERENCES experiments(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: fk_experiments_sites_sites; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY experiments_sites
+    ADD CONSTRAINT fk_experiments_sites_sites FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: fk_experiments_treatments; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY experiments
+    ADD CONSTRAINT fk_experiments_treatments FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_experiments_treatments_experiments; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY experiments_treatments
+    ADD CONSTRAINT fk_experiments_treatments_experiments FOREIGN KEY (experiment_id) REFERENCES experiments(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: fk_experiments_treatments_treatments; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY experiments_treatments
+    ADD CONSTRAINT fk_experiments_treatments_treatments FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
