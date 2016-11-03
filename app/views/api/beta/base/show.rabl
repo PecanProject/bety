@@ -25,7 +25,18 @@ if !root_object.nil?
   # Don't display join table information if no useful information is to be had
   multiple_associations.reject! { |assoc| excluded_join_tables.include?(assoc.name) }
 
-  if locals[:abbreviate_associations]
+  if locals[:summarize_associations]
+    (multiple_associations).each do |assoc|
+      node "number of associated #{assoc.name.to_s}" do
+        begin
+          root_object.send(assoc.name).size
+        rescue => e
+          Rails.logger.debug("Exception: #{e.message}")
+          Rails.logger.debug("Couldn't send #{assoc.name.inspect} to #{root_object.inspect}")
+        end
+      end
+    end
+  elsif locals[:abbreviate_associations]
     (multiple_associations).each do |assoc|
       node "associated #{assoc.name.to_s.singularize} ids" do
         begin
