@@ -23,7 +23,6 @@ module Api::CsvHandler
         # wrap the set of traits for each row in a trait-group element and add an entity node
         trait_group_node = root.add_child(doc.create_element("trait-group"))
 
-        # to-do: add the option to handle columns for entity name and entity notes
         entity_node = doc.create_element('entity')
         if row.has_key?('entity')
           entity_node.set_attribute('name', row['entity'])
@@ -109,7 +108,7 @@ Rails.logger.debug(doc.to_s)
       when "method"
         child.set_attribute("name", row[name])
       when "notes"
-        child.set_attribute("notes", row[name])
+        child.content = row[name]
       end
       trait.add_child(child)
     end
