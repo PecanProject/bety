@@ -11,9 +11,9 @@ class Api::Beta::BaseController < Api::BaseController
   def set_content_type
     case params['format']
     when 'xml'
-      response.headers['Content-Type'] = "application/xml"
+      response.headers['Content-Type'] = "application/xml; charset=utf-8"
     when 'json', 'csv'
-      response.headers['Content-Type'] = "application/json"
+      response.headers['Content-Type'] = "application/json; charset=utf-8"
     else
       raise "Unexpected format!"
     end
