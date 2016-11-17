@@ -61,13 +61,18 @@ class Api::Beta::BaseController < Api::BaseController
       param c.name, get_validation(model, c), desc: get_column_comment(model.table_name, c.name)
     end
     define_method(:index) do
-      @row_set = query(model, params)
-      if !params.has_key?("limit") && @row_set.size > 200
-        @warnings = "The #{@row_set.size}-row result set exceeds the default 200 row limit.  " +
-          "Showing the first 200 results only.  Set an explicit limit to show more results."
-        @row_set = @row_set.limit(200)
-      else
-        @errors = nil
+      begin
+        @row_set = query(model, params)
+        if !params.has_key?("limit") && @row_set.size > 200
+          @warnings = "The #{@row_set.size}-row result set exceeds the default 200 row limit.  " +
+                      "Showing the first 200 results only.  Set an explicit limit to show more results."
+          @row_set = @row_set.limit(200)
+        else
+          @errors = nil
+        end
+      rescue => e # catch errors having to do with the query
+        @row_set = []
+        @errors = e
       end
       @count = @row_set.size
     end
