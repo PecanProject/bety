@@ -20,7 +20,7 @@ feature 'Pfts features work works' do
     it 'should redirect to the home page if user is logged out' do
       click_link 'Logout'
       visit '/pfts'
-      expect(page).to have_content "Welcome to BETYdb"
+      expect(current_path).to eq('/')
     end
 
   end
