@@ -478,8 +478,11 @@ class BulkUploadDataSet
 
   end
 
-  # A list of recognized column heading strings, excluding names of recognized trait and covariate variables.
-  RECOGNIZED_COLUMNS =  %w{yield citation_doi citation_author citation_year citation_title site species treatment access_level cultivar date n SE notes}
+  # A list of recognized column heading strings, excluding names of recognized
+  # trait and covariate variables.
+  RECOGNIZED_COLUMNS = %w{yield citation_doi citation_author citation_year
+                          citation_title site species treatment access_level
+                          cultivar date n SE notes entity}
 
   # We may eventually support this:
   #REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)(-(?<month>\d\d)(-(?<day>\d\d))?)?$/
@@ -1051,16 +1054,33 @@ class BulkUploadDataSet
         insertion_data.each do |row|
           # Each row may contain some meta-data, which we have to process and
           # delete before we create a new trait row from it.
-          if row[:new_entity]
-            # The :new_entity key marks the first of a group of rows that should
-            # belong to the same entity.  Each of these rows should get the same
-            # entity_id value.
-            e = Entity.create!
+          if row[:is_first_trait_of_csv_row]
+            # The :is_first_trait_of_csv_row key marks the first of a group of
+            # rows that should belong to the same entity.  Each of these rows
+            # should get the same entity_id value.
+            if !row.has_key?("entity") || row["entity"].blank?
+              # If the row doesn't specify an entity name, create a new,
+              # nameless entity for all the traits in this row:
+              e = Entity.create!
+            else
+              # Otherwise, re-use the named entity if it exists, or create a new
+              # one with the specified name:
+              begin
+                e = existing_entity?(row["entity"])
+              rescue MissingReferenceException => e
+                e = Entity.create!({ name: row["entity"]})
+              end
+            end
             current_entity_id = e.id
-            row.delete(:new_entity)
           end
-          row[:entity_id] = current_entity_id
+          
+          row["entity_id"] = current_entity_id
+
+          row.delete(:is_first_trait_of_csv_row)
+          row.delete("entity")
+
           covariate_info = row.delete("covariate_info")
+
           t = Trait.create!(row)
           covariate_info.each do |covariate_attributes|
             covariate_attributes[:trait_id] = t.id
@@ -1385,6 +1405,15 @@ class BulkUploadDataSet
   end
   memoize :existing_cultivar?
 
+  # Returns a +Entity+ object whose +name+ attribute matches +name+.  If
+  # multiple matches are found, a +NonUniquenessException+ is raised, and if no
+  # match is found, a +MissingReferenceException+ is raised.
+  def existing_entity?(name)
+    return existing?(Entity, "name", name, "entity")
+  end
+  memoize :existing_entity?
+
+
   # Given the Hash <tt>args[:input_hash]</tt> containing possible keys
   # "citation_doi", "citation_author", "citation_year", "citation_title",
   # "site", "species", "treatment", and "cultivar", look up the corresponding
@@ -1406,7 +1435,8 @@ class BulkUploadDataSet
     # up the cultivar, and put treatment after citation_doi and
     # citation_author because we need to look up the treatment_id by
     # the treatment name AND the citation.
-    id_lookups = ["citation_doi", "citation_author", "site", "species", "treatment", "cultivar"]
+    id_lookups = ["citation_doi", "citation_author", "site", "species",
+                  "treatment", "cultivar", "entity"]
 
     id_lookups.each do |key|
       if !specified_values.keys.include?(key)
@@ -1589,9 +1619,11 @@ class BulkUploadDataSet
         @mapped_data << csv_row_as_hash
       elsif trait_data?
 
-        new_entity = true
+        first_trait_of_row = true
         @heading_variable_info.each_key do |trait_variable_id|
-          # For each row of @data, that is, for each row of the input file, there will be a row added to the traits table--hence one item added to @mapped_data--for each trait variable occurring in the heading.
+          # For each row of @data, that is, for each row of the input file,
+          # there will be a row added to the traits table--hence one item added
+          # to @mapped_data--for each trait variable occurring in the heading.
 
 
           # clone: we have to be more careful than for yields since we may use
@@ -1604,19 +1636,28 @@ class BulkUploadDataSet
           end
 
           # If this is the first item being added to @mapped_data for the
-          # current item of @data, mark it with the key +:new_entity+:
-          if new_entity
-            row_data[:new_entity] = true
-            new_entity = false
+          # current item of @data, mark it with the key
+          # +:is_first_trait_of_csv_row+:
+          if first_trait_of_row
+            row_data[:is_first_trait_of_csv_row] = true
+            first_trait_of_row = false
+          else
+            row_data[:is_first_trait_of_csv_row] = false
           end
 
           add_trait_specific_attributes(row_data, trait_variable_id)
 
           # Filter everything out of row_data that does not directly correspond
           # to a column of the traits table except for some meta-data which we
-          # are storing under the keys "covariate_info" and :new_entity:
+          # are storing under the keys "covariate_info", "entity", and
+          # :is_first_trait_of_csv_row:
           row_data.keep_if do |key, value|
-            trait_columns.include?(key) || key == "covariate_info" || key == :new_entity
+
+            trait_columns.include?(key) ||
+              key == "covariate_info" ||
+              key == :is_first_trait_of_csv_row ||
+              key == "entity"
+
           end
 
           @mapped_data << row_data
