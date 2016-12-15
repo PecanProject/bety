@@ -1825,10 +1825,10 @@ CREATE TABLE likelihoods (
     run_id bigint NOT NULL,
     variable_id bigint NOT NULL,
     input_id bigint NOT NULL,
-    loglikelihood numeric(10,0),
-    n_eff numeric(10,0),
-    weight numeric(10,0),
-    residual numeric(10,0),
+    loglikelihood double precision,
+    n_eff double precision,
+    weight double precision,
+    residual double precision,
     created_at timestamp(6) without time zone DEFAULT utc_now(),
     updated_at timestamp(6) without time zone DEFAULT utc_now()
 );
@@ -4309,14 +4309,6 @@ ALTER TABLE ONLY cultivars
 
 ALTER TABLE ONLY pfts
     ADD CONSTRAINT unique_names_per_modeltype UNIQUE (name, modeltype_id);
-
-
---
--- Name: unique_run_variable_input_combination; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY likelihoods
-    ADD CONSTRAINT unique_run_variable_input_combination UNIQUE (run_id, variable_id, input_id);
 
 
 --
