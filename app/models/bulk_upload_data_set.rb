@@ -688,6 +688,10 @@ class BulkUploadDataSet
 
             # This is ignored for now until we have the citation information.
 
+          when "entity"
+
+            # accept anything
+
           else # either a trait or covariate variable name or will be ignored
 
             if trait_data?
