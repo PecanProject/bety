@@ -903,6 +903,32 @@ class BulkUploadDataSet
     upload_sites
   end
 
+  # Returns the list of named Entities used by the data set.
+  def get_upload_entities
+    @data.rewind
+
+    entity_names = []
+    if @headers.include?("entity")
+      @data.each do |row|
+        if !row["entity"].blank?
+          entity_names << row["entity"]
+        end
+      end
+    end
+    distinct_entity_names = entity_names.uniq
+    upload_entities = []
+    distinct_entity_names.each do |entity_name|
+      begin
+        upload_entities <<  existing_entity?(entity_name)
+      rescue MissingReferenceException => e
+        # We never save this model; it only exists so that the view has a
+        # uniform way of display both existing entities and new ones.
+        upload_entities << Entity.new({ name: entity_name + " (NEW)"})
+      end
+    end
+    upload_entities
+  end
+
   # Returns the list of Species used by the data set, or the Species specified
   # globally if species information was not included in the upload file.  Raises
   # a RuntimeError if no match is found for some species in the data set.  Used

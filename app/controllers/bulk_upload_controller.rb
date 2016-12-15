@@ -332,6 +332,7 @@ class BulkUploadController < ApplicationController
     @data_set = BulkUploadDataSet.new(session)
 
     @upload_sites = @data_set.get_upload_sites
+    @upload_entities = @data_set.get_upload_entities
     @upload_species = @data_set.get_upload_species
     @upload_citations = @data_set.get_upload_citations
     @upload_treatments = @data_set.get_upload_treatments
