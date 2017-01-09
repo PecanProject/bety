@@ -243,6 +243,8 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :search, :only => :index
   resources :trait_covariate_associations, only: :index
 
+  resources :experiments
+
   # API
   namespace :api, defaults: { format: 'json' } do
     namespace :beta do

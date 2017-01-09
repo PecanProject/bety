@@ -1,0 +1,61 @@
+<div class="content">
+  <div class="container">
+    <div class="sixteen columns">
+      <header>
+        <h1>Editing Experiment</h1>
+      </header>
+
+
+      <%= form_for @experiment, :url => { :action => "update", :id =>
+          @experiment.id }, :html => {:method => :put} do |f| %>
+
+        <%= f.error_messages %>
+
+        <div class="row">
+          <div class="four columns omega">
+          <%= f.label :name %>
+          <%= f.text_field :name, :class => "input-full" %>
+          </div>
+          <div class="six columns omega">
+          <%= f.label :start_date %>
+          <%= f.date_select :start_date, :class => "input-full" %>
+          </div>
+          <div class="six columns omega">
+          <%= f.label :end_date %>
+          <%= f.date_select :end_date, :class => "input-full" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="sixteen columns omega">
+          <%= f.label :description %>
+          <%= f.text_area :description, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="sixteen columns omega">
+          <%= f.label :design %>
+          <%= f.text_area :design, :rows => 10, :class => "input-full" %>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <div class="button-group">
+          <%= link_to( experiments_path ) do %>
+            <button class="button" type="button"><i class="icon-arrow-left"></i> All Records</button>
+          <% end%>
+          <%= link_to( @experiment ) do %>
+            <button class="button" type="button">Show</button>
+          <% end%>
+          </div>
+          <div class="button-group pull-right">
+            <%= f.submit 'Update', :class => "button button-primary" %>
+          </div>
+        </div>
+        
+      <% end %>
+
+    </div>
+  </div>
+</div>
