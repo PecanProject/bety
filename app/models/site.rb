@@ -20,6 +20,9 @@ class Site < ActiveRecord::Base
   has_many :sitegroups_sites, :class_name => "SitegroupsSites"
   has_many :sitegroups, :through =>  :sitegroups_sites
 
+  has_many :experiments_sites
+  has_many :experiments, :through =>  :experiments_sites
+
   has_many :yields
   has_many :traits
   has_many :runs
