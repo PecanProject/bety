@@ -4264,6 +4264,22 @@ ALTER TABLE ONLY treatments
 
 
 --
+-- Name: unique_experiment_site_pair; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY experiments_sites
+    ADD CONSTRAINT unique_experiment_site_pair UNIQUE (experiment_id, site_id);
+
+
+--
+-- Name: unique_experiment_treatment_pair; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY experiments_treatments
+    ADD CONSTRAINT unique_experiment_treatment_pair UNIQUE (experiment_id, treatment_id);
+
+
+--
 -- Name: unique_filename_and_path_per_machine; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
