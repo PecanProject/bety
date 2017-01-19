@@ -39,7 +39,7 @@ class Api::Beta::BaseController < Api::BaseController
     end
 
     def_param_group :key_parameter do
-      param :key, NO_CONSTRAINT, :desc => "The API key to use for authorization.", required: true
+      param :key, NO_CONSTRAINT, :desc => "The API key to use for authorization."
     end
 
     def_param_group :extra_parameters do
