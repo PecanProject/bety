@@ -45,6 +45,18 @@ class Site < ActiveRecord::Base
     super(options)
   end
 
+=begin
+do json / xml api 
+city
+state
+country
+lat
+lon
+sitename
+greenhouse
+notes
+=end
+
   comma do
     id
     city

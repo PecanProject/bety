@@ -74,10 +74,14 @@ TEXT
   scope :by_letter, lambda { |letter| where('genus like ?', letter + "%") }
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
-
+=begin
+do json / xml api fields to return
+genus
+species
+scientificname
+=end
   comma do |f|
     f.id
-    f.spcd
     f.genus
     f.species
     f.scientificname
