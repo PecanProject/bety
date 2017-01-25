@@ -38,14 +38,21 @@ class Api::Beta::BaseController < Api::BaseController
       short short_description
     end
 
-    def_param_group :key_parameter do
+    def_param_group :shared_parameters do
       param :key, NO_CONSTRAINT, :desc => "The API key to use for authorization."
-    end
+      param :associations_mode, [ "full_info", "ids", "count" ],
+            desc: <<-DESC
+              Set the amount of data to display about associations.  Default is
+              "full_info" for the show action and "count" for the index action.
+            DESC
+     end
 
     def_param_group :extra_parameters do
-      param :limit, /^([1-9][0-9]*|all|none)$/, :desc => "Sets an upper bound on the number of results to return.  Defaults to 200."
-      param :offset, /[1-9][0-9]*/, :desc => "Set the number of rows to skip before returning matching rows."
-      param_group :key_parameter
+      param :limit, /^([1-9][0-9]*|all|none)$/,
+            :desc => "Sets an upper bound on the number of results to return.  Defaults to 200."
+      param :offset, /[1-9][0-9]*/,
+            :desc => "Set the number of rows to skip before returning matching rows."
+      param_group :shared_parameters
     end
 
     api!
@@ -61,6 +68,7 @@ class Api::Beta::BaseController < Api::BaseController
       param c.name, get_validation(model, c), desc: get_column_comment(model.table_name, c.name)
     end
     define_method(:index) do
+      @associations_mode = params["associations_mode"].try(:to_sym) || :count
       begin
         @row_set = query(model, params)
         if !params.has_key?("limit") && @row_set.size > 200
@@ -82,8 +90,9 @@ class Api::Beta::BaseController < Api::BaseController
       Get all information about the row with the matching id value.  Information
       about associated rows (those reference by foreign keys) is shown as well.
     DESC
-    param_group :key_parameter
+    param_group :shared_parameters
     define_method(:show) do
+      @associations_mode = params["associations_mode"].try(:to_sym) || :full_info
       id = params[:id]
       begin
         @row = model.find(id)

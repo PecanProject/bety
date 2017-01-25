@@ -25,7 +25,8 @@ if !root_object.nil?
   # Don't display join table information if no useful information is to be had
   multiple_associations.reject! { |assoc| excluded_join_tables.include?(assoc.name) }
 
-  if locals[:summarize_associations]
+  case @associations_mode
+  when :count
     (multiple_associations).each do |assoc|
       node "number of associated #{assoc.name.to_s}" do
         begin
@@ -36,7 +37,7 @@ if !root_object.nil?
         end
       end
     end
-  elsif locals[:abbreviate_associations]
+  when :ids
     (multiple_associations).each do |assoc|
       node "associated #{assoc.name.to_s.singularize} ids" do
         begin
@@ -47,7 +48,7 @@ if !root_object.nil?
         end
       end
     end
-  else
+  when :full_info
     (children + multiple_associations).each do |assoc|
       next if assoc.klass == User
       child assoc.name do

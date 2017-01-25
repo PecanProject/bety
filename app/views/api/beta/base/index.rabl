@@ -5,4 +5,4 @@ collection @row_set
 # :summarize_associations and :abbreviate_associations set to false (to get full
 # association information).  Maybe change from using boolean-valued flags to
 # some 3-valued option.
-extends("api/beta/base/show", :locals => { :summarize_associations => true })
+extends("api/beta/base/show")
