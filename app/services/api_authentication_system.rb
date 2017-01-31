@@ -3,7 +3,7 @@ module ApiAuthenticationSystem
 
   # Override default access_denied action.
   def access_denied
-    @errors = "authenication failed"
+    @errors = "authentication failed"
     render status: 401
   end
 
