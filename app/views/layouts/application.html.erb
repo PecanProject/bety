@@ -204,11 +204,13 @@
               </li>
             <% end %>
 
+            <% if CONFIG[:show_crop_map_links] %>
             <li class="menu-modelio"><a>Model I/O</a>
               <ul class="sub-menu">
                 <li><%= link_to "Model Projections", :controller => "maps", :action => "location_yields" %></li>
               </ul>
             </li>
+            <% end %>
 
             <%# Show the Bulk Upload link if the user is authorized to use the Bulk Upload wizard. %>
             <% if authorized?("start_upload", "BulkUploadController") %>
