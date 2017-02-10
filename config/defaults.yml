@@ -87,6 +87,8 @@ homepage_body:
       Photo by L. Brian Stauffer, provided by University of Illinois at
       Urbana-Champaign
 
+  search_placeholder_text: "EX: Panicum Nitrogen"
+
 # Miscellaneous
 
 ## This affects both the home page and the footer:

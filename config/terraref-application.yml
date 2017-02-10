@@ -75,6 +75,8 @@ homepage_body:
 
       Photo of the Lemnatec Field Scanner by Rick Ward, University of Arizona's Maricopa Agricultural Center
 
+  search_placeholder_text: "EX: Sorghum MAC"
+
 # Miscellaneous
 
 ## This affects the home page, the menu, and the footer:
