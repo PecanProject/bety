@@ -1,0 +1,81 @@
+# To use this file for a terraref BETYDb Web site:
+# 1. Copy this file to config/application.yml
+# 2. Replace the dummy value of rest_auth_site_key with the key appropriate to your site
+# 3. Make any other tweaks you deem appropriate
+# 4. Save the file and restart your BETYdb server
+
+# Contact Information
+admin_phone: "(217) 300-0266"
+admin_email: "dlebauer@illinois.edu"
+
+# Override this with a secret key to run a secure site:
+rest_auth_site_key: 'your site's secret key'
+
+
+schema_spy_settings:
+    java_executable: /usr/java/jre1.8.0_91/bin/java
+    postgresql_driver_jar_file: lib/tasks/jar/postgresql-9.4.1208.jre7.jar
+    settings_for_customized_documentation:
+        schema_spy_jar_file: lib/tasks/jar/schemaSpy.jar
+        output_directory: .
+        remove_root_dir_files: true
+
+organization:
+  name: "TERRA Ref"
+  url: #{root_path}
+  logo_file: "custom/terraref-logo.png"
+
+site_identification_markup: "<strong>BETY</strong>db <small><strong>TERRA REF Phenotype</strong> Database</small>"
+
+
+# Footer
+
+footer_background_image_file: "custom/mac_sorghum.jpg"
+
+citation_license_copyright_markup:
+
+  <p>The TERRA Reference phenotyping data will be public no later than November 2018. At that point, 
+  data will be available within two days of collection. Until then, data access may be granted by request, 
+  but with embargo terms described in our  
+  <a href="https://github.com/terraref/documentation/blob/master/user/data_release_policy.md">data release policy</a></p>
+
+sponsors:
+    - URL: https://arpa-e.energy.gov/
+      title: "ARPA-E"
+      text: "ARPA-E"
+      logo_file: https://arpa-e.energy.gov/img/footer-logo-doe.png
+      width: 246px
+    - URL: http://energy.gov/
+      title: "U.S. Department of Energy"
+      text: "U.S. Department of Energy"
+      logo_file: 
+      width: 145px
+      additional_styling: "margin-left: 20%"
+
+
+# Home Page
+
+homepage_heading: "Welcome to TERRA REF phenotype database"
+
+homepage_body:
+
+  lead_text:
+
+    Reference traits from high throughput sensing platforms
+
+  marked_up_block_text:
+  
+     This is the trait database for the TERRA reference phenotyping project. We are developing reference datasets and software to advance the science of crop breeding. This database contains plant and plot-level trait data such as plant height, biomass, leaf area, transpiration, phenology, water use efficiency, and biomass yield. These are derived from a suite of sensors with unprecedented resolution that have been deployed on a variety of platforms. See the project website <a href="http://terraref.org">terraref.org</a> for more information about our project, including links to sensor data and information about our phenomics pipeline.
+
+  photo:
+
+    file: https://www.danforthcenter.org/images/default-source/blog/dji_0034.jpg
+
+    alt_text:
+
+      Photo of the Lemnatec Field Scanner by Rick Ward, University of Arizona's Maricopa Agricultural Center
+
+# Miscellaneous
+
+## This affects both the home page and the footer:
+show_crop_map_links: false
