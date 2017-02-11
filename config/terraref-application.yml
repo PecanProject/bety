@@ -43,14 +43,14 @@ sponsors:
     - URL: https://arpa-e.energy.gov/
       title: "ARPA-E"
       text: "ARPA-E"
-      logo_file: https://arpa-e.energy.gov/img/footer-logo-doe.png
-      width: 246px
+      logo_file: custom/arpa-e-logo.png
+      width: 162px
     - URL: http://energy.gov/
       title: "U.S. Department of Energy"
       text: "U.S. Department of Energy"
-      logo_file: 
-      width: 145px
-      additional_styling: "margin-left: 20%"
+      logo_file: custom/doe-logo.png
+      width: 152px
+      additional_styling: "margin-left: -20%"
 
 
 # Home Page
