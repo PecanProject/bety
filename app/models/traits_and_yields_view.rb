@@ -69,6 +69,7 @@ class TraitsAndYieldsView < ActiveRecord::Base
     time 'time'
     month 'month'
     year 'year'
+    raw_date 'raw_date'
     dateloc 'dateloc'
     trait 'trait'
     mean 'mean' do |num|
