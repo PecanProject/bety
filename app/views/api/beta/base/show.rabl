@@ -1,4 +1,4 @@
-object @row
+object @row => (@row.class.name == "Specie" ? :species : @row) # correct the object name when viewing a species
 
 if !root_object.nil?
 
