@@ -8,6 +8,13 @@ module Api::CsvHandler
   private
 
   def csv_2_xml(csv_string)
+    doc = csv_2_xml_doc(csv_string)
+    doc_as_string = doc.to_s
+    Rails.logger.debug(doc_as_string)
+    doc_as_string
+  end
+
+  def csv_2_xml_doc(csv_string)
     csv = CSV.new(csv_string, headers: true, return_headers: true)
 
     headers = csv.shift.headers
@@ -51,8 +58,7 @@ module Api::CsvHandler
       end
     end
     doc.root = root
-Rails.logger.debug(doc.to_s)
-    return doc.to_s
+    return doc
   end
 
   # Consult the database table trait_covariate_associations to determine which
