@@ -5,6 +5,19 @@ module Api::CsvHandler
   class BadHeading < Exception
   end
 
+  STAT_HEADING_NAMES = ["SE", "n"]
+
+  CITATION_HEADING_NAMES = ["citation_doi", "citation_author",
+                            "citation_title", "citation_year"]
+
+  CHILD_ELEMENT_HEADING_NAMES = ["site", "species", "treatment",
+                                 "variable", "method", "notes"]
+
+  ALL_METADATA_HEADING_NAMES = STAT_HEADING_NAMES +
+                               CITATION_HEADING_NAMES +
+                               CHILD_ELEMENT_HEADING_NAMES
+
+
   private
 
   def csv_2_xml(csv_string)
@@ -135,14 +148,14 @@ module Api::CsvHandler
   end
 
   def compute_trait_child_element_names(headers)
-    child_element_name_list = headers & ["site", "species", "treatment", "variable", "method", "notes"]
+    child_element_name_list = headers & CHILD_ELEMENT_HEADING_NAMES
 
     # add names of elements that require multiple columns
-    if !(headers & ["citation_doi", "citation_author", "citation_title", "citation_year"]).empty?
+    if !(headers & CITATION_HEADING_NAMES).empty?
       child_element_name_list << "citation"
     end
 
-    if !(headers & ["SE", "n"]).empty?
+    if !(headers & STAT_HEADING_NAMES).empty?
       child_element_name_list << "stat"
     end
 
