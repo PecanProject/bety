@@ -175,22 +175,49 @@ class HeadingVariableInfo
 
   def initialize(heading)
 
+    relevant_associations = TraitCovariateAssociation.all.select do |a|
+      heading.include?(a.trait_variable.name)
+    end
+
     # A list of TraitCovariateAssociation objects corresponding to trait
     # variable names occurring in the heading.  Used by +get_insertion_data+
     # when the upload file has trait data.
-    relevant_associations = TraitCovariateAssociation.all.select { |a| heading.include?(a.trait_variable.name) }
-    @trait_variables = relevant_associations.collect { |a| a.trait_variable }.uniq
+    @trait_variables = relevant_associations.collect { |a|
+      a.trait_variable
+    }.uniq
 
     @heading_variable_info = {}
 
     @trait_variables.each do |tv|
-      covariates = relevant_associations.select { |a| a.trait_variable_id = tv.id && heading.include?(a.covariate_variable.name) }.collect { |a| a.covariate_variable }
+
+      covariates = relevant_associations.select { |a|
+        a.trait_variable_id =
+          tv.id &&
+          heading.include?(a.covariate_variable.name)
+      }.collect { |a| a.covariate_variable }
+
       covariate_hash = {}
       covariates.each do |c|
         covariate_hash[c.name] = c.id
       end
       @heading_variable_info[tv.name] = covariate_hash
     end
+
+
+    # Add in any unrecognized headings that correspond to a trait variable
+    # even if they aren't in the trait_covariate_associations_table:
+    all_heading_variables = Variable.all.select do |v|
+      (heading - Api::CsvHandler::ALL_METADATA_HEADING_NAMES).include?(v.name)
+    end
+    @trait_variables += (all_heading_variables - @trait_variables)
+
+
+    # Ignore any variables listed as covariates:
+    reserved_covariate_variables = TraitCovariateAssociation.all.collect { |a|
+      a.covariate_variable
+    }.uniq
+    @trait_variables -= reserved_covariate_variables
+
 
     if @trait_variables.size == 0
       raise Api::CsvHandler::BadHeading.new "No trait variable was found in the CSV file."
@@ -209,6 +236,5 @@ class HeadingVariableInfo
   def covariates_for(trait_name)
     @heading_variable_info[trait_name]
   end
-    
 
 end
