@@ -23,9 +23,14 @@ RSpec.describe "Api::CsvHandler" do
 
   let(:ob) { (Class.new { include Api::CsvHandler }).new }
 
-  context "the input is a CSV file where each trait in the heading is in the trait_covariate_associations table" do
+  context "the input is a CSV file where each trait in the heading is in " \
+          "the trait_covariate_associations table" do
 
-    let(:valid_data_doc) { File.open(Rails.root.join "spec/fixtures/files/api/beta/valid-test-data.csv").read }
+    let(:valid_data_doc) {
+      File.open(Rails.root.join(
+                  "spec/fixtures/files/api/beta/valid-test-data.csv"
+                )).read
+    }
 
     let(:expected_output) {
       doc_as_string = %q(
@@ -66,18 +71,27 @@ RSpec.describe "Api::CsvHandler" do
         </trait>
       </trait-data-set>
     )
-      doc = Nokogiri.parse(doc_as_string, nil, nil, Nokogiri::XML::ParseOptions.new.strict)
+      doc = Nokogiri.parse(doc_as_string, nil, nil,
+                           Nokogiri::XML::ParseOptions.new.strict)
     }
 
     it "should do a correct transformation from CSV to XML" do
-      expect(ob.send(:csv_2_xml_doc, valid_data_doc).strip_blank_text_nodes.canonicalize).to eq(expected_output.strip_blank_text_nodes.canonicalize)
+      expect(ob.send(:csv_2_xml_doc, valid_data_doc)
+               .strip_blank_text_nodes.canonicalize)
+        .to eq(expected_output.strip_blank_text_nodes .canonicalize)
     end
   end
 
 
-  context "The input CSV file lists traits in the heading that are not in the trait_covariate_associations table" do
+  context "The input CSV file lists traits in the heading that are not in " \
+          "the trait_covariate_associations table" do
 
-    let(:valid_data_doc) { File.open(Rails.root.join "spec/fixtures/files/api/beta/valid-test-data-with-traits-not-in-associations-table.csv").read }
+    let(:valid_data_doc) {
+      File.open(Rails.root.join(
+                  "spec/fixtures/files/api/beta",
+                  "valid-test-data-with-traits-not-in-associations-table.csv"
+                )).read
+    }
 
     let(:expected_output) {
       doc_as_string = %q(
@@ -108,7 +122,8 @@ RSpec.describe "Api::CsvHandler" do
         </trait>
       </trait-data-set>
     )
-      doc = Nokogiri.parse(doc_as_string, nil, nil, Nokogiri::XML::ParseOptions.new.strict)
+      doc = Nokogiri.parse(doc_as_string, nil, nil,
+                           Nokogiri::XML::ParseOptions.new.strict)
     }
 
     it "should not raise an error" do
@@ -116,17 +131,25 @@ RSpec.describe "Api::CsvHandler" do
     end
 
     it "should do a correct transformation from CSV to XML" do
-      expect(ob.send(:csv_2_xml_doc, valid_data_doc).strip_blank_text_nodes.canonicalize).to eq(expected_output.strip_blank_text_nodes.canonicalize)
+      expect(ob.send(:csv_2_xml_doc, valid_data_doc)
+               .strip_blank_text_nodes.canonicalize)
+        .to eq(expected_output.strip_blank_text_nodes.canonicalize)
     end
   end
 
 
-  context "The input CSV file heading contains the name of a recognized covariate but not the name of any trait that it corresponds to" do
+  context "The input CSV file heading contains the name of a recognized " \
+          "covariate but not the name of any trait that it corresponds to" do
 
-    let(:invalid_data_doc) { File.open(Rails.root.join "spec/fixtures/files/api/beta/test-data-with-invalid-extraneous-covariate.csv").read }
+    let(:invalid_data_doc) {
+      File.open(Rails.root.join(
+                  "spec/fixtures/files/api/beta",
+                  "test-data-with-invalid-extraneous-covariate.csv")).read
+    }
 
     it "should raise an 'Unmatched Covariate' error" do
-      expect { ob.send(:csv_2_xml_doc, invalid_data_doc) }.to raise_error Api::CsvHandler::BadHeading
+      expect { ob.send(:csv_2_xml_doc, invalid_data_doc) }
+        .to raise_error Api::CsvHandler::BadHeading
     end
 
   end

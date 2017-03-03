@@ -40,7 +40,9 @@ module Api::CsvHandler
 
     csv.each do |row|
       if variable_info.multiple_traits_per_row?
-        # wrap the set of traits for each row in a trait-group element and add an entity node
+
+        # Wrap the set of traits for each row in a trait-group element
+        # and add an entity node:
         trait_group_node = root.add_child(doc.create_element("trait-group"))
 
         entity_node = doc.create_element('entity')
@@ -54,14 +56,16 @@ module Api::CsvHandler
 
         variable_info.trait_list.each do |trait_name|
           covariates = variable_info.covariates_for(trait_name)
-          trait_group_node.add_child(create_trait_element(doc, headers, row, trait_name, covariates))
+          trait_group_node.add_child(
+            create_trait_element(doc, headers, row, trait_name, covariates))
         end
         #add traits to trait_group_node
       else
         # add traits directly to trait-data-set
         trait_name = variable_info.trait_list.first # and only
         covariates = variable_info.covariates_for(trait_name)
-        trait_node = create_trait_element(doc, headers, row, trait_name, covariates)
+        trait_node =
+          create_trait_element(doc, headers, row, trait_name, covariates)
         if row.has_key?('entity')
           entity_node = doc.create_element('entity')
           entity_node.set_attribute('name', row['entity'])
@@ -74,17 +78,20 @@ module Api::CsvHandler
     return doc
   end
 
-  # Consult the database table trait_covariate_associations to determine which
-  # column headings correspond to trait names.
+  # Consult the database table trait_covariate_associations to
+  # determine which column headings correspond to trait names.
   def get_trait_names(headers)
-    recognized_trait_names = TraitCovariateAssociations.all.collect { |tca| tca.variable.name }
+    recognized_trait_names = TraitCovariateAssociations.all.collect { |tca|
+      tca.variable.name
+    }
   end
 
-  # Creates a <trait> element in the XML document 'doc' corresponding to the row
-  # 'row' in a CSV file having headers 'headers'.
+  # Creates a <trait> element in the XML document 'doc' corresponding
+  # to the row 'row' in a CSV file having headers 'headers'.
   def create_trait_element(doc, headers, row, variable_name, covariates)
     trait_child_element_names = compute_trait_child_element_names(headers)
-    varying_trait_attribute_names = compute_varying_trait_attribute_names(headers)
+    varying_trait_attribute_names =
+      compute_varying_trait_attribute_names(headers)
 
     trait = doc.create_element("trait")
 
@@ -138,7 +145,9 @@ module Api::CsvHandler
       covariates.each do |covariate_name, covariate_id|
         covariate_node = doc.create_element("covariate")
         covariate_node.set_attribute("level", row[covariate_name])
-        variable_node = covariate_node.add_child(doc.create_element("variable"))
+        variable_node = covariate_node.add_child(
+          doc.create_element("variable")
+        )
         variable_node.set_attribute("id", covariate_id)
         covariates_node.add_child(covariate_node)
       end
@@ -164,7 +173,8 @@ module Api::CsvHandler
   memoize :compute_trait_child_element_names
 
   def compute_varying_trait_attribute_names(headers)
-    attribute_list = headers & ["access_level", "utc_datetime", "local_datetime"]
+    attribute_list = headers & ["access_level", "utc_datetime",
+                                "local_datetime"]
   end
   memoize :compute_varying_trait_attribute_names
 
@@ -210,7 +220,8 @@ class HeadingVariableInfo
     # Add in any unrecognized headings that correspond to a trait variable
     # even if they aren't in the trait_covariate_associations_table:
     all_heading_variables = Variable.all.select do |v|
-      (heading - Api::CsvHandler::ALL_METADATA_HEADING_NAMES).include?(v.name)
+      (heading - Api::CsvHandler::ALL_METADATA_HEADING_NAMES)
+        .include?(v.name)
     end
     @trait_variables += (all_heading_variables - @trait_variables)
 
@@ -239,7 +250,8 @@ class HeadingVariableInfo
     end
 
     if @trait_variables.size == 0
-      raise Api::CsvHandler::BadHeading.new "No trait variable was found in the CSV file."
+      raise Api::CsvHandler::BadHeading.new "No trait variable was found " \
+                                            "in the CSV file."
     end
 
   end
