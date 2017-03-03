@@ -126,8 +126,7 @@ RSpec.describe "Api::CsvHandler" do
     let(:invalid_data_doc) { File.open(Rails.root.join "spec/fixtures/files/api/beta/test-data-with-invalid-extraneous-covariate.csv").read }
 
     it "should raise an 'Unmatched Covariate' error" do
-      pending "Implementation of covariate checking"
-      expect { ob.send(:csv_2_xml_doc, invalid_data_doc) }.to raise_error 'Unmatched Covariate'
+      expect { ob.send(:csv_2_xml_doc, invalid_data_doc) }.to raise_error Api::CsvHandler::BadHeading
     end
 
   end
