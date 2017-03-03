@@ -172,3 +172,14 @@ variables_486:
   standard_units:
   label:
   type:
+new_variable:
+  id: 348
+  name: canopy_height
+  min: 0
+  units: cm
+  description: top of the general canopy of the plant, discounting any exceptional branches, leaves or photosynthetic portions of the inflorescence.
+  notes: ! "p 175 of Pérez-Harguindeguy et al 2013 New handbook for
+           standardised measurement of plant functional traits
+           worldwide. Australian Journal of Botany, 61, 167–234
+           http://www.publish.csiro.au/?paper=BT12225
+           doi:10.1071/BT12225"
