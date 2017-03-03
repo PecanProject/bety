@@ -188,6 +188,7 @@ class HeadingVariableInfo
 
     @heading_variable_info = {}
 
+    covariate_list = [] # keep track of what covariates are in the heading
     @trait_variables.each do |tv|
 
       covariates = relevant_associations.select { |a|
@@ -195,6 +196,8 @@ class HeadingVariableInfo
           tv.id &&
           heading.include?(a.covariate_variable.name)
       }.collect { |a| a.covariate_variable }
+
+      covariate_list += covariates
 
       covariate_hash = {}
       covariates.each do |c|
@@ -212,12 +215,28 @@ class HeadingVariableInfo
     @trait_variables += (all_heading_variables - @trait_variables)
 
 
-    # Ignore any variables listed as covariates:
-    reserved_covariate_variables = TraitCovariateAssociation.all.collect { |a|
+
+    # Ignore any variables corresponding to covariates of traits in
+    # the heading:
+    @trait_variables -= covariate_list
+
+
+    # It is an error if there still any "covariate only" variable
+    # names in the @trait_variables list:
+    reserved_covariate_variables =
+      TraitCovariateAssociation.all.collect { |a|
       a.covariate_variable
     }.uniq
-    @trait_variables -= reserved_covariate_variables
 
+    unmatched_covariates = (@trait_variables & reserved_covariate_variables)
+                             .map { |c| c.name }
+    if !unmatched_covariates.empty?
+      error_message =  "Covariate variable(s) " \
+                       "(#{unmatched_covariates.join(", ")}) with no " \
+                       "matching trait variable was found in the CSV file " \
+                       "heading"
+      raise Api::CsvHandler::BadHeading.new(error_message)
+    end
 
     if @trait_variables.size == 0
       raise Api::CsvHandler::BadHeading.new "No trait variable was found in the CSV file."
