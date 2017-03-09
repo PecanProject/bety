@@ -542,7 +542,6 @@ CSV
     describe "How parsing of variables in the heading works" do
 
       specify "A variable in the heading should be recognized even if it isn't in the trait_covariate_associations table" do
-        pending 'Implementation of recognition of arbitrary variables'
         visit '/bulk_upload/start_upload'
         attach_file 'CSV file', Rails.root.join('spec',
                                                 'fixtures',
@@ -559,7 +558,6 @@ CSV
       end
 
       specify "If there is a covariate variable in the heading without there being a corresponding trait variable, the CSV file is invalid" do
-        pending 'Implementation of prevention of extraneous covariates'
         visit '/bulk_upload/start_upload'
         attach_file 'CSV file', Rails.root.join('spec',
                                                 'fixtures',

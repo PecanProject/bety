@@ -421,6 +421,8 @@ class BulkUploadDataSet
     else
       if @traits_in_heading.empty?
         @validation_summary[:field_list_errors] << 'In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'
+      elsif !@unmatched_covariates.empty?
+        @validation_summary[:field_list_errors] << "The following heading names correspond to covariates but the heading contains no corresponding trait variable name: #{@unmatched_covariates.join(", ")}"
       else
         required_covariate_names = @required_covariates.collect { |c| c.name }
         covariate_names_not_in_heading = required_covariate_names - @headers
@@ -1273,6 +1275,35 @@ class BulkUploadDataSet
     # with some member of the set of trait variables in the data set and that
     # are optional for each such variable.
     @optional_covariates = @allowed_covariates - @required_covariates.map { |cov_ob| cov_ob.name }
+
+
+
+
+
+    # Add in any unrecognized headings that correspond to a trait variable
+    # even if they aren't in the trait_covariate_associations_table:
+    all_heading_variables = Variable.all.collect { |v| v.name }.select do |var_name|
+      (@headers - RECOGNIZED_COLUMNS)
+        .include?(var_name)
+    end
+    @traits_in_heading += (all_heading_variables - @traits_in_heading)
+
+
+
+    # Ignore any variables corresponding to covariates of traits in
+    # the heading:
+    @traits_in_heading -= @allowed_covariates
+
+
+    # It is an error if there still any "covariate only" variable
+    # names in the @trait_variables list:
+    reserved_covariate_variables =
+      TraitCovariateAssociation.all.collect { |a|
+      a.covariate_variable.name
+    }.uniq
+
+    @unmatched_covariates = (@traits_in_heading & reserved_covariate_variables)
+
   end
 
   # Using the trait_covariate_associations table and the column headings in the
