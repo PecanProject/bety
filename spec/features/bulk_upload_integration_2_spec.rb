@@ -585,8 +585,24 @@ CSV
         expect(first("div.alert-success")).to have_content("Data from valid-test-data.csv was successfully uploaded.")
       end
 
-    end
+    end # describe "How parsing of variables in the heading works"
 
+  end # context "Various scenarios involving the variable names in the heading of a trait upload file"
+
+  # GitHub issue #485
+  specify "A CSV file with a notes column should be able to leave cells in that column blank" do
+    pending "Implementation of handling of blank notes entries"
+    visit '/bulk_upload/start_upload'
+    attach_file 'CSV file', Rails.root.join('spec',
+                                            'fixtures',
+                                            'files',
+                                            'bulk_upload',
+                                            'blank_cells_in_notes_column.csv')
+    click_button 'Upload'
+    click_link 'Specify'
+    click_button 'Confirm'
+    click_button 'Insert Data'
+    expect(first("div.alert-success")).to have_content("Data from blank_cells_in_notes_column.csv was successfully uploaded.")
   end
 
 end
