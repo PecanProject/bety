@@ -430,111 +430,165 @@ CSV
 
   end # context "Various scenarios involving a file that requires no interactively-specified additional data"
 
-  # Tests related to Redmine task #2556
-  context "A file with some missing optional covariate values has been uploaded" do
+  context "Various scenarios involving the variable names in the heading of a trait upload file" do
 
-    before :all do
-      f = File.new("spec/tmp/file_with_missing_covariate_values.csv", "w")
-      f.write <<CSV
+    # Tests related to Redmine task #2556
+    context "A file with some missing optional covariate values has been uploaded" do
+
+      before :all do
+        f = File.new("spec/tmp/file_with_missing_covariate_values.csv", "w")
+        f.write <<CSV
 SLA,canopy_layer,citation_author,citation_year,citation_title,site,treatment,date,species,access_level
 550,3,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
 540,,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
 460,2,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
 440,,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
 CSV
-      f.close
-    end
+        f.close
+      end
 
-    after :all do
-      File::delete("spec/tmp/file_with_missing_covariate_values.csv")
-    end
+      after :all do
+        File::delete("spec/tmp/file_with_missing_covariate_values.csv")
+      end
 
-    it "should pass validation", js: true do
-      visit '/bulk_upload/start_upload'
-      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
-      click_button 'Upload'
+      it "should pass validation", js: true do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+        click_button 'Upload'
 
-      expect(first("header")).to have_content "Uploaded file: file_with_missing_covariate_values.csv"
-      expect(current_path).to match(/display_csv_file/)
-      expect(page.body).not_to have_selector '#error_explanation'
-    end
+        expect(first("header")).to have_content "Uploaded file: file_with_missing_covariate_values.csv"
+        expect(current_path).to match(/display_csv_file/)
+        expect(page.body).not_to have_selector '#error_explanation'
+      end
 
-    it "should only insert two new covariate rows", js: true do
+      it "should only insert two new covariate rows", js: true do
 
-      start_size = Covariate.all.size
+        start_size = Covariate.all.size
 
-      visit '/bulk_upload/start_upload'
-      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
-      click_button 'Upload'
-      click_link 'Specify'
-      click_button "Confirm"
-      click_button "Insert"
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+        click_button 'Upload'
+        click_link 'Specify'
+        click_button "Confirm"
+        click_button "Insert"
 
-      sleep 1 # give time for insertion to complete
-      end_size = Covariate.all.size
+        sleep 1 # give time for insertion to complete
+        end_size = Covariate.all.size
 
-      # clean up:
+        # clean up:
 
-      time_limit = page.driver.is_a?(Capybara::Selenium::Driver) ? 90 # allow longer for Selenium driver
-                                                                 : 30 # than for WebKit
-      begin
-        # Wrap while loops in timeout in case some deletion fails
-        timeout time_limit do
+        time_limit = page.driver.is_a?(Capybara::Selenium::Driver) ? 90 # allow longer for Selenium driver
+                     : 30 # than for WebKit
+        begin
+          # Wrap while loops in timeout in case some deletion fails
+          timeout time_limit do
 
-          # Remove covariates before traits because they refer to traits:
-          visit '/covariates'
-          # This relies on the covariates being sorted by id and the fact that the
-          # added covariates are assigned higher ids than the fixture covariates:
-          while all(:xpath, "//tbody/tr").size > start_size
-            # delete all covariates except the first
-            first(:xpath, "//tbody/tr[count(preceding-sibling::tr) >= #{start_size}]//a[@alt = 'delete']").click
-            # If we're using Selenium, we have to deal with the modal dialogue:
-            if page.driver.is_a? Capybara::Selenium::Driver
-              a = page.driver.browser.switch_to.alert
-              a.accept
+            # Remove covariates before traits because they refer to traits:
+            visit '/covariates'
+            # This relies on the covariates being sorted by id and the fact that the
+            # added covariates are assigned higher ids than the fixture covariates:
+            while all(:xpath, "//tbody/tr").size > start_size
+              # delete all covariates except the first
+              first(:xpath, "//tbody/tr[count(preceding-sibling::tr) >= #{start_size}]//a[@alt = 'delete']").click
+              # If we're using Selenium, we have to deal with the modal dialogue:
+              if page.driver.is_a? Capybara::Selenium::Driver
+                a = page.driver.browser.switch_to.alert
+                a.accept
+              end
+              sleep 1
             end
-            sleep 1
-          end
 
-          # Removed traits before entities because they refer to entities:
-          visit '/traits'
-          # This relies on the fixtures setting the "checked" attribute to "passed" for them not to be deleted:
-          while all(:xpath, "//tbody/tr[not(td/select/option[@selected = 'selected']/text() = 'passed')]").size > 0
-            # delete all covariates except the first
-            first(:xpath, "//tbody/tr[not(td/select/option[@selected = 'selected']/text() = 'passed')]//a[@alt = 'delete']").click
-            # If we're using Selenium, we have to deal with the modal dialogue:
-            if page.driver.is_a? Capybara::Selenium::Driver
-              a = page.driver.browser.switch_to.alert
-              a.accept
+            # Removed traits before entities because they refer to entities:
+            visit '/traits'
+            # This relies on the fixtures setting the "checked" attribute to "passed" for them not to be deleted:
+            while all(:xpath, "//tbody/tr[not(td/select/option[@selected = 'selected']/text() = 'passed')]").size > 0
+              # delete all covariates except the first
+              first(:xpath, "//tbody/tr[not(td/select/option[@selected = 'selected']/text() = 'passed')]//a[@alt = 'delete']").click
+              # If we're using Selenium, we have to deal with the modal dialogue:
+              if page.driver.is_a? Capybara::Selenium::Driver
+                a = page.driver.browser.switch_to.alert
+                a.accept
+              end
+              sleep 1
             end
-            sleep 1
-          end
 
-          visit '/entities'
-          # This relies on the fixures setting the "notes" attribute to "keepme" as a marker not to delete them:
-          while all(:xpath, "//tbody/tr[not(td/text() = 'keepme')]").size > 0
-            # delete all covariates except the first
-            first(:xpath, "//tbody/tr[not(td/text() = 'keepme')]//a[@alt = 'delete']").click
-            # If we're using Selenium, we have to deal with the modal dialogue:
-            if page.driver.is_a? Capybara::Selenium::Driver
-              a = page.driver.browser.switch_to.alert
-              a.accept
+            visit '/entities'
+            # This relies on the fixures setting the "notes" attribute to "keepme" as a marker not to delete them:
+            while all(:xpath, "//tbody/tr[not(td/text() = 'keepme')]").size > 0
+              # delete all covariates except the first
+              first(:xpath, "//tbody/tr[not(td/text() = 'keepme')]//a[@alt = 'delete']").click
+              # If we're using Selenium, we have to deal with the modal dialogue:
+              if page.driver.is_a? Capybara::Selenium::Driver
+                a = page.driver.browser.switch_to.alert
+                a.accept
+              end
+              sleep 1
             end
-            sleep 1
-          end
 
-        end # timeout
+          end # timeout
 
-      rescue Timeout::Error => e
+        rescue Timeout::Error => e
 
-        raise "Clean-up stage timed out; reload fixture to clean up manually"
+          raise "Clean-up stage timed out; reload fixture to clean up manually"
 
-      end # begin/rescue block
+        end # begin/rescue block
 
-      expect(end_size - start_size).to eq(2)
+        expect(end_size - start_size).to eq(2)
+
+      end
+
+    end # context "A file with some missing covariate values has been uploaded"
+
+    describe "How parsing of variables in the heading works" do
+
+      specify "A variable in the heading should be recognized even if it isn't in the trait_covariate_associations table" do
+        pending 'Implementation of recognition of arbitrary variables'
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', Rails.root.join('spec',
+                                                'fixtures',
+                                                'files',
+                                                'bulk_upload',
+                                                'trait_variables_in_heading',
+                                                'valid-test-data-with-traits-not-in-associations-table.csv')
+        click_button 'Upload'
+        expect(page).not_to have_content('error')
+        click_link 'Specify'
+        click_button 'Confirm'
+        click_button 'Insert Data'
+        expect(first("div.alert-success")).to have_content("Data from valid-test-data-with-traits-not-in-associations-table.csv was successfully uploaded.")
+      end
+
+      specify "If there is a covariate variable in the heading without there being a corresponding trait variable, the CSV file is invalid" do
+        pending 'Implementation of prevention of extraneous covariates'
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', Rails.root.join('spec',
+                                                'fixtures',
+                                                'files',
+                                                'bulk_upload',
+                                                'trait_variables_in_heading',
+                                                'test-data-with-invalid-extraneous-covariate.csv')
+        click_button 'Upload'
+        expect(page).to have_content('error')
+      end
+
+      specify "Heading variables that are in the trait_covariate_associations table should be recognized as usual" do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', Rails.root.join('spec',
+                                                'fixtures',
+                                                'files',
+                                                'bulk_upload',
+                                                'trait_variables_in_heading',
+                                                'valid-test-data.csv')
+        click_button 'Upload'
+        expect(page).not_to have_content('error')
+        click_link 'Specify'
+        click_button 'Confirm'
+        click_button 'Insert Data'
+        expect(first("div.alert-success")).to have_content("Data from valid-test-data.csv was successfully uploaded.")
+      end
 
     end
 
-  end # context "A file with some missing covariate values has been uploaded"
+  end
 
 end
