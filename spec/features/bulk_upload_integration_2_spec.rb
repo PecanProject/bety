@@ -591,7 +591,6 @@ CSV
 
   # GitHub issue #485
   specify "A CSV file with a notes column should be able to leave cells in that column blank" do
-    pending "Implementation of handling of blank notes entries"
     visit '/bulk_upload/start_upload'
     attach_file 'CSV file', Rails.root.join('spec',
                                             'fixtures',
