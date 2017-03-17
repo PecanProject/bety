@@ -542,6 +542,7 @@ CSV
     describe "How parsing of variables in the heading works" do
 
       specify "A variable in the heading should be recognized even if it isn't in the trait_covariate_associations table" do
+        pending "A working implementation for the feature in issue #459"
         visit '/bulk_upload/start_upload'
         attach_file 'CSV file', Rails.root.join('spec',
                                                 'fixtures',
@@ -553,7 +554,7 @@ CSV
         expect(page).not_to have_content('error')
         click_link 'Specify'
         click_button 'Confirm'
-        click_button 'Insert Data'
+        expect { click_button 'Insert Data' }.to change { Trait.count }.by( 2 ).and change { Covariate.count }.by 2;
         expect(first("div.alert-success")).to have_content("Data from valid-test-data-with-traits-not-in-associations-table.csv was successfully uploaded.")
       end
 
@@ -581,7 +582,7 @@ CSV
         expect(page).not_to have_content('error')
         click_link 'Specify'
         click_button 'Confirm'
-        click_button 'Insert Data'
+        expect { click_button 'Insert Data' }.to change { Trait.count }.by( 2 ).and change { Covariate.count }.by 2;
         expect(first("div.alert-success")).to have_content("Data from valid-test-data.csv was successfully uploaded.")
       end
 
@@ -600,7 +601,7 @@ CSV
     click_button 'Upload'
     click_link 'Specify'
     click_button 'Confirm'
-    click_button 'Insert Data'
+    expect { click_button 'Insert Data' }.to change { Trait.count }.by( 2 ).and change { Covariate.count }.by 2;
     expect(first("div.alert-success")).to have_content("Data from blank_cells_in_notes_column.csv was successfully uploaded.")
   end
 
