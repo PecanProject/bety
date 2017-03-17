@@ -554,7 +554,9 @@ CSV
         expect(page).not_to have_content('error')
         click_link 'Specify'
         click_button 'Confirm'
-        expect { click_button 'Insert Data' }.to change { Trait.count }.by( 2 ).and change { Covariate.count }.by 2;
+        expect { click_button 'Insert Data' }.to change { Trait.count }.by(2)
+                                             .and change { Covariate.count }.by(2)
+                                             .and change { Entity.count }.by 1;     # The two rows in the file have the same entity name.
         expect(first("div.alert-success")).to have_content("Data from valid-test-data-with-traits-not-in-associations-table.csv was successfully uploaded.")
       end
 
@@ -582,7 +584,9 @@ CSV
         expect(page).not_to have_content('error')
         click_link 'Specify'
         click_button 'Confirm'
-        expect { click_button 'Insert Data' }.to change { Trait.count }.by( 2 ).and change { Covariate.count }.by 2;
+        expect { click_button 'Insert Data' }.to change { Trait.count }.by(2)
+                                             .and change { Covariate.count }.by(2)
+                                             .and change { Entity.count }.by 1;     # The two rows in the file have the same entity name.
         expect(first("div.alert-success")).to have_content("Data from valid-test-data.csv was successfully uploaded.")
       end
 
@@ -601,7 +605,9 @@ CSV
     click_button 'Upload'
     click_link 'Specify'
     click_button 'Confirm'
-    expect { click_button 'Insert Data' }.to change { Trait.count }.by( 2 ).and change { Covariate.count }.by 2;
+    expect { click_button 'Insert Data' }.to change { Trait.count }.by( 2 )
+                                         .and change { Covariate.count }.by(2)
+                                         .and change { Entity.count }.by 1;     # The two rows in the file have the same entity name.
     expect(first("div.alert-success")).to have_content("Data from blank_cells_in_notes_column.csv was successfully uploaded.")
   end
 
