@@ -2,7 +2,7 @@
 module ApplicationHelper
 
   def access_level(id)
-    access = ["", "Restricted", "Internal EBI & Collaborators", "External Researchers", "Public"]
+    access = ["", "Restricted", "Internal & Collaborators", "External Researchers", "Public"]
     return access[id.to_i]
   end
 

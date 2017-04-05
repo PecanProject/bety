@@ -54,7 +54,7 @@
           <% if field == "access_level" %>
           <%= label_tag "global_values_" + field, field %>
           <%= select_tag "global_values[access_level]",
-              options_for_select([['', 0], ['Restricted', 1], ['Internal EBI & Collaborators', 2], ['External Researcher', 3], ['Public', 4]],
+              options_for_select([['', 0], ['Restricted', 1], ['Internal & Collaborators', 2], ['External Researcher', 3], ['Public', 4]],
               @session[:global_values] &&
               @session[:global_values]["access_level"] || 0),
               size: "1"
