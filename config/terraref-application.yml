@@ -65,7 +65,9 @@ homepage_body:
 
   marked_up_block_text:
   
-     This is the trait database for the TERRA reference phenotyping project. We are developing reference datasets and software to advance the science of crop breeding. This database contains plant and plot-level trait data such as plant height, biomass, leaf area, transpiration, phenology, water use efficiency, and biomass yield. These are derived from a suite of sensors with unprecedented resolution that have been deployed on a variety of platforms. See the project website <a href="http://terraref.org">terraref.org</a> for more information about our project, including links to sensor data and information about our phenomics pipeline.
+     <p>This is the trait database for the TERRA reference phenotyping project. We are developing reference datasets and software to advance the science of crop breeding. This database contains plant and plot-level trait data such as plant height, biomass, leaf area, transpiration, phenology, water use efficiency, and biomass yield. These are derived from a suite of sensors with unprecedented resolution that have been deployed on a variety of platforms. See the project website <a href="http://terraref.org" target="_blank">terraref.org</a> for more information about our project, including links to sensor data and information about our phenomics pipeline.</p>
+
+     <p>Data are currently available for alpha user testing. For access, please <a href="https://goo.gl/forms/eYrhvMBj48haloni2" target="_blank">apply to our alpha user program</a>.</p>
 
   photo:
 

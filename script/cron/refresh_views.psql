@@ -1,0 +1,4 @@
+REFRESH MATERIALIZED VIEW traitsview_private;
+REFRESH MATERIALIZED VIEW yieldsview_private;
+REFRESH MATERIALIZED VIEW traits_and_yields_view_private;
+REFRESH MATERIALIZED VIEW traits_and_yields_view;

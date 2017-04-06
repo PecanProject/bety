@@ -75,7 +75,7 @@ feature 'CSV file upload works' do
       click_button 'Upload'
       click_link 'Specify'
       click_button 'Confirm'
-      click_button 'Insert Data'
+      expect { click_button 'Insert Data' }.to change { Yield.count }.by 1
       expect(first("div.alert-success")).to have_content("Data from fuzzily_matching_headings.csv was successfully uploaded.")
     end
 
