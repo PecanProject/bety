@@ -15,7 +15,7 @@
             </div>
             <% if current_user.page_access_level==1 %>
             <div class="four columns alpha">
-              <%= f.label :standard_name ,"CF Standard Name"%>
+              <%= f.label :standard_name ,"Standard Name"%>
               <%= f.text_field :standard_name, :class => "input-full" %>
             </div>
             <% end %>
@@ -25,7 +25,7 @@
             </div>
             <% if current_user.page_access_level==1 %>
             <div class="four columns alpha">
-              <%= f.label :standard_units,"CF Standard Units" %>
+              <%= f.label :standard_units,"Standard Units" %>
               <%= f.text_field :standard_units, :class => "input-full" %>
             </div>
             <% end %>
