@@ -12,53 +12,80 @@ CREATE TABLE sites_cultivars (
 );
 
 CREATE OR REPLACE FUNCTION check_correct_cultivar()
-  RETURNS TRIGGER AS $$
+  RETURNS TRIGGER AS  $body$
 DECLARE
     required_cultivar_id bigint;
+    required_specie_id bigint;
 BEGIN
-    IF (NEW.site_id IS NOT NULL) THEN
-        SELECT cultivar_id FROM sites_cultivars WHERE site_id = NEW.site_id INTO required_cultivar_id;
-        IF (required_cultivar_id IS NOT NULL) THEN
-            IF (NEW.cultivar_id IS NULL) THEN
-                IF (OLD.cultivar_id IS NOT NULL AND OLD.cultivar_id != required_cultivar_id) THEN
-                    RAISE NOTICE 'The existing value of cultivar_id is not consistent with the value specified for site_id and no new value of cultivar_id was specified.%', '';
-                    RETURN NULL;
-                ELSE
-                    NEW.cultivar_id = required_cultivar_id;
-                END IF;
-            ELSIF (NEW.cultivar_id != required_cultivar_id) THEN
-                RAISE NOTICE 'The proposed new value of cultivar_id is not consistent with the value specified for site_id.%', '';
+    SELECT cultivar_id FROM sites_cultivars WHERE site_id = NEW.site_id INTO required_cultivar_id;
+    IF (required_cultivar_id IS NOT NULL) THEN
+        SELECT specie_id FROM cultivars WHERE id = required_cultivar_id INTO required_specie_id;
+    ELSE
+        SELECT specie_id FROM cultivars WHERE id = NEW.cultivar_id INTO required_specie_id;
+    END IF;
+    IF (required_cultivar_id IS NULL) THEN
+        IF (NEW.cultivar_id IS NULL) THEN
+            NULL;
+        ELSIF (NEW.specie_id IS NULL) THEN
+            NEW.specie_id := required_specie_id;
+        ELSIF (NEW.specie = required_specie_id) THEN
+            NULL;
+        ELSE
+            RAISE NOTICE 'The species id % is not consistent with the cultivar id %.', NEW.specie_id, NEW.cultivar_id;
+            RETURN NULL;
+        END IF;
+    ELSE
+        IF (NEW.cultivar_id IS NULL) THEN
+            IF (NEW.specie_id IS NULL) THEN
+                NEW.cultivar_id := required_cultivar_id;
+                NEW.specie_id := required_specie_id;
+            ELSIF (NEW.specie_id = required_specie_id) THEN
+                NEW.cultivar_id := required_cultivar_id;
+            ELSE
+                RAISE NOTICE 'The species id % is not consistent with the cultivar id %.  It should be %.', NEW.specie_id, required_cultivar_id, required_specie_id;
                 RETURN NULL;
             END IF;
+        ELSIF (NEW.cultivar_id = required_cultivar_id) THEN
+            IF (NEW.specie_id IS NULL) THEN
+                NEW.specie_id := required_specie_id;
+            ELSIF (NEW.specie_id != required_specie_id) THEN
+                RAISE NOTICE 'The species id % is not consistent with the cultivar id %.  It should be %.', NEW.specie_id, NEW.cultivar_id, required_specie_id;
+                RETURN NULL;
+            END IF;
+        ELSE
+            RAISE NOTICE 'The value of cultivar_id (%) is not consistent with the value % specified for site_id %.', NEW.cultivar_id, required_cultivar_id, NEW.site_id;
+            RETURN NULL;
         END IF;
     END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$body$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS ensure_correct_cultivar_for_site ON traits;
 CREATE TRIGGER ensure_correct_cultivar_for_site
-    BEFORE INSERT OR UPDATE ON traits
+    BEFORE INSERT OR UPDATE OF site_id, cultivar_id, specie_id ON traits
     FOR EACH ROW EXECUTE PROCEDURE check_correct_cultivar();
 
 
 
 
 CREATE OR REPLACE FUNCTION set_correct_cultivar()
-  RETURNS TRIGGER AS $$
+  RETURNS TRIGGER AS $body$
 DECLARE
     required_cultivar_id bigint;
 BEGIN
     IF (EXISTS(SELECT 1 FROM traits WHERE site_id = NEW.site_id AND cultivar_id != NEW.cultivar_id)) THEN
-        RAISE NOTICE 'Some existing traits have cultivar_id values insconsistent with this change.%', '';
+        RAISE NOTICE 'Some existing traits have cultivar_id values inconsistent with this change.%', '';
         RETURN NULL;
     ELSE
         UPDATE traits SET cultivar_id = NEW.cultivar_id WHERE site_id = NEW.site_id;
     END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$body$ LANGUAGE plpgsql;
 
 
+DROP TRIGGER IF EXISTS set_correct_cultivar_for_site ON sites_cultivars;
 CREATE TRIGGER set_correct_cultivar_for_site
     BEFORE INSERT OR UPDATE ON sites_cultivars
     FOR EACH ROW EXECUTE PROCEDURE set_correct_cultivar();
