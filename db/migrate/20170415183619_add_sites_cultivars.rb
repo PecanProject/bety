@@ -28,7 +28,7 @@ BEGIN
             NULL;
         ELSIF (NEW.specie_id IS NULL) THEN
             NEW.specie_id := required_specie_id;
-        ELSIF (NEW.specie = required_specie_id) THEN
+        ELSIF (NEW.specie_id = required_specie_id) THEN
             NULL;
         ELSE
             RAISE NOTICE 'The species id % is not consistent with the cultivar id %.', NEW.specie_id, NEW.cultivar_id;
