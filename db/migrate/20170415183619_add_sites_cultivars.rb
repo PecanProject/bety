@@ -31,8 +31,7 @@ BEGIN
         ELSIF (NEW.specie_id = required_specie_id) THEN
             NULL;
         ELSE
-            RAISE NOTICE 'The species id % is not consistent with the cultivar id %.', NEW.specie_id, NEW.cultivar_id;
-            RETURN NULL;
+            RAISE EXCEPTION 'The species id % is not consistent with the cultivar id %.', NEW.specie_id, NEW.cultivar_id;
         END IF;
     ELSE
         IF (NEW.cultivar_id IS NULL) THEN
@@ -42,19 +41,16 @@ BEGIN
             ELSIF (NEW.specie_id = required_specie_id) THEN
                 NEW.cultivar_id := required_cultivar_id;
             ELSE
-                RAISE NOTICE 'The species id % is not consistent with the cultivar id %.  It should be %.', NEW.specie_id, required_cultivar_id, required_specie_id;
-                RETURN NULL;
+                RAISE EXCEPTION 'The species id % is not consistent with the cultivar id %.  It should be %.', NEW.specie_id, required_cultivar_id, required_specie_id;
             END IF;
         ELSIF (NEW.cultivar_id = required_cultivar_id) THEN
             IF (NEW.specie_id IS NULL) THEN
                 NEW.specie_id := required_specie_id;
             ELSIF (NEW.specie_id != required_specie_id) THEN
-                RAISE NOTICE 'The species id % is not consistent with the cultivar id %.  It should be %.', NEW.specie_id, NEW.cultivar_id, required_specie_id;
-                RETURN NULL;
+                RAISE EXCEPTION 'The species id % is not consistent with the cultivar id %.  It should be %.', NEW.specie_id, NEW.cultivar_id, required_specie_id;
             END IF;
         ELSE
-            RAISE NOTICE 'The value of cultivar_id (%) is not consistent with the value % specified for site_id %.', NEW.cultivar_id, required_cultivar_id, NEW.site_id;
-            RETURN NULL;
+            RAISE EXCEPTION 'The value of cultivar_id (%) is not consistent with the value % specified for site_id %.', NEW.cultivar_id, required_cultivar_id, NEW.site_id;
         END IF;
     END IF;
     RETURN NEW;
@@ -75,8 +71,7 @@ DECLARE
     required_cultivar_id bigint;
 BEGIN
     IF (EXISTS(SELECT 1 FROM traits WHERE site_id = NEW.site_id AND cultivar_id != NEW.cultivar_id)) THEN
-        RAISE NOTICE 'Some existing traits have cultivar_id values inconsistent with this change.%', '';
-        RETURN NULL;
+        RAISE EXCEPTION 'Some existing traits have cultivar_id values inconsistent with this change.%', '';
     ELSE
         UPDATE traits SET cultivar_id = NEW.cultivar_id WHERE site_id = NEW.site_id;
     END IF;
