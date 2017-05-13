@@ -341,7 +341,7 @@ CSV
       attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_complete_data.csv') # full path is required if using selenium
       click_button 'Upload'
       click_link 'Specify'
-      expect(page).not_to have_content("cultivar")
+      expect(page.document.find('.content')).not_to have_content("cultivar")
     end
 
     context "A citation has been selected but rounding has not been specified" do
