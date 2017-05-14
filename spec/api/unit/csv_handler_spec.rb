@@ -36,7 +36,7 @@ RSpec.describe "Api::CsvHandler" do
       doc_as_string = %q(
       <trait-data-set>
         <trait mean="1.4" access_level="4">
-          <site sitename="Aliartos, Greece"/>
+          <site sitename="University of Nevada Biological Sciences Center"/>
           <species scientificname="Abarema jupunba"/>
           <treatment name="observational"></treatment>
           <method name="test"></method>
