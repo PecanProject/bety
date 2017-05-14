@@ -1,6 +1,12 @@
 require 'spec_helper'
 
+RSpec.configure do |config|
+  config.fixture_path = "#{::Rails.root}/test/fixtures"
+end
+
 RSpec.describe "Site-Cultivar-Species invariants" do
+
+  fixtures(:traits)
 
   context "A new trait is being inserted" do
 

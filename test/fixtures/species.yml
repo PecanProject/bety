@@ -20,3 +20,7 @@ test_species_for_bulk_upload_rounding:
   species: Saccharum 
   scientificname: "Saccharum officinarum"
   commonname: "perennial ryegrass"
+
+test_species_for_site_cultivar_consistency:
+  id: 938
+  scientificname: 'Panicum virgatum'
