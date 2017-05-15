@@ -52,23 +52,23 @@ feature 'Citation features work' do
 
     it 'should allow adding a related site', js: true do
       click_link 'View Related Sites'
-      fill_in 'search_sites', with: 'UK'
+      fill_in 'search_sites', with: 'GB'
       expect(page).to have_content '+' # ensure link is there to click
       click_link '+'
       click_button 'Update'
       # reopen related sites listing
       expect(page).to have_content 'View Related Sites' # ensure link is there to click
       click_link 'View Related Sites'
-      expect(page).to have_content 'United Kingdom'
+      expect(page).to have_content 'GB'
 
       # now do clean-up:
-      fill_in 'search_sites', with: 'UK'
+      fill_in 'search_sites', with: 'GB'
       click_link 'X'
       click_button 'Update'
       # reopen related sites listing
       expect(page).to have_content 'View Related Sites' # ensure link is there to click
       click_link 'View Related Sites'
-      expect(page).not_to have_content 'UK'
+      expect(page).not_to have_content 'GB'
 
   
     end

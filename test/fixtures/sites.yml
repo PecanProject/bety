@@ -23,7 +23,7 @@ test_trait_site:
   id: 4
   city: ""
   state: ""
-  country: "UK"
+  country: "GB"
   sitename: "A test site having no single time zone: United Kingdom"
   
 test_site_2:
