@@ -11,6 +11,12 @@ CREATE TABLE sites_cultivars (
     updated_at timestamp(6) without time zone DEFAULT utc_now()
 );
 
+CREATE TRIGGER update_sites_cultivars_timestamp
+    BEFORE UPDATE ON sites_cultivars
+    FOR EACH ROW
+EXECUTE PROCEDURE update_timestamp();
+
+
 CREATE OR REPLACE FUNCTION check_correct_cultivar()
   RETURNS TRIGGER AS  $body$
 DECLARE
