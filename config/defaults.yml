@@ -21,7 +21,7 @@ admin_email: "admin@example.com" # a test
 
 citation_license_copyright_markup:
 
-  <p>David LeBauer, Rob Kooper, Patrick Mulrooney, Scott Rohde, Dan Wang, 
+  <p>LeBauer, David, Rob Kooper, Patrick Mulrooney, Scott Rohde, Dan Wang, 
   Stephen Long, Michael Dietze, (2017). BETYdb: A yield, trait, and ecosystem 
   service database applied to second‐generation bioenergy feedstock production.
   GCB Bioenergy. doi:10.1111/gcbb.12420</p>
