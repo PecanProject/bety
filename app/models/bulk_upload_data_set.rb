@@ -411,15 +411,16 @@ class BulkUploadDataSet
     @validation_summary[:field_list_errors] = []
     @csv_warnings = []
 
-    # This sets @traits_in_heading, @required_covariates, and @allowed_covariates.
+    # This sets @traits_in_heading, @trait_names_in_heading,
+    # @required_covariates, and @allowed_covariates:
     get_trait_and_covariate_info
 
     if yield_data?
-      if !@traits_in_heading.empty?
+      if !@trait_names_in_heading.empty?
         @validation_summary[:field_list_errors] << 'If you have a "yield" column, you can not also have column names matching recognized trait variable names.'
       end
     else
-      if @traits_in_heading.empty?
+      if @trait_names_in_heading.empty?
         @validation_summary[:field_list_errors] << 'In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'
       elsif !@unmatched_covariates.empty?
         @validation_summary[:field_list_errors] << "The following heading names correspond to covariates but the heading contains no corresponding trait variable name: #{@unmatched_covariates.join(", ")}"
@@ -440,7 +441,7 @@ class BulkUploadDataSet
     end
 
     # Don't allow stat information in trait uploads having more than one trait variable
-    if @headers.include?('SE') && @traits_in_heading.size > 1
+    if @headers.include?('SE') && @trait_names_in_heading.size > 1
       @validation_summary[:field_list_errors] << 'Standard Error statistics are not supported with uploads containing multiple trait variable columns.'
     end
 
@@ -469,7 +470,7 @@ class BulkUploadDataSet
 
     ignored_columns = []
     @headers.each do |field_name|
-      if !(RECOGNIZED_COLUMNS + @traits_in_heading + @allowed_covariates).include? field_name
+      if !(RECOGNIZED_COLUMNS + @trait_names_in_heading + @allowed_covariates).include? field_name
         ignored_columns << field_name
       end
     end
@@ -699,7 +700,7 @@ class BulkUploadDataSet
             if trait_data?
               get_trait_and_covariate_info
             end
-            if trait_data? && (@traits_in_heading + @allowed_covariates).include?(column[:fieldname])
+            if trait_data? && (@trait_names_in_heading + @allowed_covariates).include?(column[:fieldname])
               column[:validation_result] = Valid.new # reset below if we find otherwise
 
               begin
@@ -1259,7 +1260,7 @@ class BulkUploadDataSet
 
     # A list of recognized trait variable names in the heading; a trait variable
     # is recognized only if it is in the trait_covariate_associations table
-    @traits_in_heading = relevant_associations.collect { |a| a.trait_variable.name }.uniq
+    @trait_names_in_heading = relevant_associations.collect { |a| a.trait_variable.name }.uniq
 
     # A list of Variable objects corresponding to all the covariates required by
     # the some member of the set of trait variables in the data set.
@@ -1282,18 +1283,20 @@ class BulkUploadDataSet
 
     # Add in any unrecognized headings that correspond to a trait variable
     # even if they aren't in the trait_covariate_associations_table:
-    all_heading_variables = Variable.all.collect { |v| v.name }.select do |var_name|
+    all_heading_variables = Variable.all.select do |variable|
       (@headers - RECOGNIZED_COLUMNS)
-        .include?(var_name)
+        .include?(variable.name)
     end
-    @traits_in_heading += (all_heading_variables - @traits_in_heading)
 
+    all_heading_variable_names = all_heading_variables.map(&:name)
 
+    @trait_names_in_heading += (all_heading_variable_names - @trait_names_in_heading)
 
     # Ignore any variables corresponding to covariates of traits in
     # the heading:
-    @traits_in_heading -= @allowed_covariates
+    @trait_names_in_heading -= @allowed_covariates
 
+    @traits_in_heading = all_heading_variables.select { |v| @trait_names_in_heading.include?(v.name) }
 
     # It is an error if there still any "covariate only" variable
     # names in the @trait_variables list:
@@ -1302,7 +1305,7 @@ class BulkUploadDataSet
       a.covariate_variable.name
     }.uniq
 
-    @unmatched_covariates = (@traits_in_heading & reserved_covariate_variables)
+    @unmatched_covariates = (@trait_names_in_heading & reserved_covariate_variables)
 
   end
 
@@ -1345,6 +1348,13 @@ class BulkUploadDataSet
         covariate_hash[c.name] = c.id
       end
       @heading_variable_info[tv.id] = { name: tv.name, covariates: covariate_hash }
+    end
+
+    # Now add standalone traits:
+    @traits_in_heading.each do |v|
+      if !@heading_variable_info.keys.include?(v.id)
+        @heading_variable_info[v.id] = { name: v.name, covariates: {} }
+      end
     end
 
   end
@@ -1628,21 +1638,18 @@ class BulkUploadDataSet
 
     @mapped_data = Array.new
     if trait_data?
+      get_trait_and_covariate_info # sets @traits_in_heading, @trait_names_in_heading and @allowed_covariates
+      recognized_columns = RECOGNIZED_COLUMNS + @trait_names_in_heading + @allowed_covariates
       get_variables_in_heading # sets @heading_variable_info
       trait_columns = Trait.columns.collect { |column| column.name }
     else # yield data
+      recognized_columns = RECOGNIZED_COLUMNS
       yield_columns = Yield.columns.collect { |column| column.name }
     end
     @data.each do |csv_row|
       csv_row_as_hash = csv_row.to_hash
 
       # remove irrelevant data from row:
-      if trait_data?
-        get_trait_and_covariate_info # sets @traits_in_heading and @allowed_covariates
-        recognized_columns = RECOGNIZED_COLUMNS + @traits_in_heading + @allowed_covariates
-      else
-        recognized_columns = RECOGNIZED_COLUMNS
-      end
       csv_row_as_hash.keep_if do |key, value|
         recognized_columns.include? key
       end
