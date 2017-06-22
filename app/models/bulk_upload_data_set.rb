@@ -1091,20 +1091,23 @@ class BulkUploadDataSet
             # The :is_first_trait_of_csv_row key marks the first of a group of
             # rows that should belong to the same entity.  Each of these rows
             # should get the same entity_id value.
-            if !row.has_key?("entity") || row["entity"].blank?
-              # If the row doesn't specify an entity name, create a new,
-              # nameless entity for all the traits in this row:
-              e = Entity.create!
-            else
-              # Otherwise, re-use the named entity if it exists, or create a new
+            if row.has_key?("entity") && !row["entity"].blank?
+              # Re-use the named entity if it exists, or create a new
               # one with the specified name:
               begin
                 e = existing_entity?(row["entity"])
               rescue MissingReferenceException => e
                 e = Entity.create!({ name: row["entity"]})
               end
+              current_entity_id = e.id
+            elsif @trait_names_in_heading.size > 1
+              # If the row doesn't specify an entity name, create a new,
+              # nameless entity for all the traits in this row:
+              e = Entity.create!
+              current_entity_id = e.id
+            else # don't make unnamed entites if there is only one trait per row
+              current_entity_id = nil
             end
-            current_entity_id = e.id
           end
           
           row["entity_id"] = current_entity_id
