@@ -30,7 +30,7 @@ class TraitsAndYieldsView < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ scientificname commonname trait
                       trait_description city sitename author
-                      citation_year }
+                      citation_year cultivar entity }
 
 
 
@@ -77,10 +77,16 @@ class TraitsAndYieldsView < ActiveRecord::Base
     scientificname 'scientificname'
     commonname 'commonname'
     genus 'genus'
+    cultivar 'cultivar'
     author 'author'
     citation_year 'citation_year'
     treatment 'treatment'
     pretty_date 'date'
+    date 'date'
+    time 'time'
+    month 'month'
+    year 'year'
+    raw_date 'raw_date'
     dateloc 'dateloc'
     trait 'trait'
     mean 'mean' do |num|
@@ -101,6 +107,8 @@ class TraitsAndYieldsView < ActiveRecord::Base
       end
     end
     notes 'notes'
+    entity 'entity'
+    method_name 'method'
   end
 
 

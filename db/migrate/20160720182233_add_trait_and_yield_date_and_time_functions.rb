@@ -4,6 +4,78 @@ class AddTraitAndYieldDateAndTimeFunctions < ActiveRecord::Migration
     # Use "%q" so that backspashes are taken literally (except when doubled).
     execute %q{
 
+CREATE OR REPLACE FUNCTION effective_time_zone(
+    site_id bigint
+) RETURNS text AS $body$
+DECLARE
+    SITE_OR_UTC_TIMEZONE text;
+BEGIN
+    SELECT time_zone FROM sites WHERE id = site_id INTO SITE_OR_UTC_TIMEZONE;
+    /* If no rows or a row with NULL time_zone is returned, the effective time zone should be UTC. */
+    RETURN COALESCE(SITE_OR_UTC_TIMEZONE, 'UTC');
+END;
+$body$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION site_or_utc_date(
+    date timestamp,
+    effective_time_zone text
+) RETURNS timestamp AS $body$
+DECLARE
+    SITE_OR_UTC_TIMEZONE text;
+    SITE_OR_UTC_DATE timestamp;
+BEGIN
+    /* Interpret the date column as being UTC (not server time!), then convert it site time (if determined) or UTC.
+       Note that "date || ' UTC'" is NULL if date is NULL (unlike CONCAT(date, ' UTC)', which is ' UTC' if date is NULL.
+       This is what we want. */
+    SELECT CAST((date::text || ' UTC') AS timestamp with time zone) AT TIME ZONE effective_time_zone INTO SITE_OR_UTC_DATE;
+
+    RETURN SITE_OR_UTC_DATE;
+END;
+$body$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION site_or_utc_year(
+    date timestamp,
+    dateloc numeric(4,2),
+    site_id bigint
+) RETURNS int AS $body$
+DECLARE
+    SITE_OR_UTC_TIMEZONE text;
+    SITE_OR_UTC_DATE timestamp;
+    SITE_OR_UTC_YEAR int;
+BEGIN
+    SELECT effective_time_zone(site_id) INTO SITE_OR_UTC_TIMEZONE;
+    SELECT site_or_utc_date(date, SITE_OR_UTC_TIMEZONE) INTO SITE_OR_UTC_DATE;
+    IF dateloc IN (8, 7, 6, 5.5, 5) THEN
+        SELECT EXTRACT(YEAR FROM SITE_OR_UTC_DATE) INTO SITE_OR_UTC_YEAR;
+        RETURN SITE_OR_UTC_YEAR;
+    END IF;
+    RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+    
+
+CREATE OR REPLACE FUNCTION site_or_utc_month(
+    date timestamp,
+    dateloc numeric(4,2),
+    site_id bigint
+) RETURNS int AS $body$
+DECLARE
+    SITE_OR_UTC_TIMEZONE text;
+    SITE_OR_UTC_DATE timestamp;
+    SITE_OR_UTC_MONTH int;
+BEGIN
+    SELECT effective_time_zone(site_id) INTO SITE_OR_UTC_TIMEZONE;
+    SELECT site_or_utc_date(date, SITE_OR_UTC_TIMEZONE) INTO SITE_OR_UTC_DATE;
+    IF dateloc IN (6, 5.5, 5, 96, 95) THEN
+        SELECT EXTRACT(MONTH FROM SITE_OR_UTC_DATE) INTO SITE_OR_UTC_MONTH;
+        RETURN SITE_OR_UTC_MONTH;
+    END IF;
+    RETURN NULL;
+END;
+$body$ LANGUAGE plpgsql;
+    
+
 CREATE OR REPLACE FUNCTION pretty_date(
     date timestamp,
     dateloc numeric(4,2),
@@ -18,21 +90,14 @@ DECLARE
     SITE_OR_UTC_DATE timestamp;
 BEGIN
 
-    IF site_id IS NULL THEN
-        SITE_OR_UTC_TIMEZONE := 'UTC';
-    ELSE
-        SELECT COALESCE(time_zone, 'UTC') FROM sites WHERE id = site_id INTO SITE_OR_UTC_TIMEZONE;
-    END IF;
+    SELECT effective_time_zone(site_id) INTO SITE_OR_UTC_TIMEZONE;
 
     TIMEZONE_DESIGNATION := '';
-    IF timeloc = 9 AND dateloc IN (5, 6, 8, 95, 96) THEN
+    IF date IS NOT NULL AND timeloc = 9 AND dateloc IN (5, 5.5, 6, 8, 95, 96) THEN
         TIMEZONE_DESIGNATION := FORMAT(' (%s)', SITE_OR_UTC_TIMEZONE);
     END IF;
 
-    /* Interpret the date column as being UTC (not server time!), then convert it site time (if determined) or UTC.
-       Note that "date || ' UTC'" is NULL if date is NULL (unlike CONCAT(date, ' UTC'), which is ' UTC' if date is NULL).
-       This is what we want. */
-    SELECT CAST((date::text || ' UTC') AS timestamp with time zone) AT TIME ZONE SITE_OR_UTC_TIMEZONE INTO SITE_OR_UTC_DATE;
+    SELECT site_or_utc_date(date, SITE_OR_UTC_TIMEZONE) INTO SITE_OR_UTC_DATE;
 
     CASE extract(month FROM SITE_OR_UTC_DATE)
         WHEN 1 THEN
@@ -104,14 +169,10 @@ DECLARE
 BEGIN
 
 
-    IF site_id IS NULL THEN
-        SITE_OR_UTC_TIMEZONE := 'UTC';
-    ELSE
-        SELECT COALESCE(time_zone, 'UTC') FROM sites WHERE id = site_id INTO SITE_OR_UTC_TIMEZONE;
-    END IF;
+    SELECT COALESCE(time_zone, 'UTC') FROM sites WHERE id = site_id INTO SITE_OR_UTC_TIMEZONE;
 
     TIMEZONE_DESIGNATION := '';
-    IF timeloc != 9 THEN
+    IF date IS NOT NULL AND timeloc != 9 THEN
         TIMEZONE_DESIGNATION := FORMAT(' (%s)', SITE_OR_UTC_TIMEZONE);
     END IF;
 
@@ -188,7 +249,28 @@ DROP FUNCTION pretty_time(
     date timestamp,
     timeloc numeric(4,2),
     site_id bigint
-)
+);
+
+DROP FUNCTION effective_time_zone(
+    site_id bigint
+);
+
+DROP FUNCTION site_or_utc_date(
+    date timestamp,
+    effective_time_zone text
+);
+
+DROP FUNCTION site_or_utc_year(
+    date timestamp,
+    dateloc numeric(4,2),
+    site_id bigint
+);
+
+DROP FUNCTION site_or_utc_month(
+    date timestamp,
+    dateloc numeric(4,2),
+    site_id bigint
+);
 
     }
 

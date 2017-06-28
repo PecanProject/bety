@@ -63,3 +63,7 @@ trait_covariate_associations_016:
   trait_variable_id: '7'
   covariate_variable_id: '81'
   required: t
+trait_covariate_associations_017:
+  trait_variable_id: '404'
+  covariate_variable_id: '1'
+  required: f

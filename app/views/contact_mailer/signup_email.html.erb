@@ -4,14 +4,14 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1>Welcome to BETYdb, <%= @user[:name] %></h1>
+    <h1>Welcome to BETYdb, <%= user_name_or_login(@user) %></h1>
     <p>
-      You have successfully signed up as a new user of BETYdb.
-      Your username is <%= @user[:login] %>.<br>
-      Your API key is <%= @user[:apikey] %>.<br>
+      You have successfully signed up as a new user of BETYdb.<br>
+      Your username is <%= @user[:login] %>.
     </p>
     <p>
-      To login to the site, just follow this link: <%= @url %>.
+      To login to the site, just follow this link: <%= @url %>.<br>
+      You may view your API key by visiting <%= @users_url %>.
     </p>
     <p>Thanks for joining and have a great day!</p>
   </body>

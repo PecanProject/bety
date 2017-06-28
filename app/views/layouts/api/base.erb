@@ -16,7 +16,10 @@
       URI: request.url,
       timestamp: DateTime.now
     },
-    errors: @errors,
+
+    # Yajl seems to require converting Exceptions object to a string or it won't
+    #  display anything.
+    errors: controller.request.format == 'xml' ? @errors : @errors.to_s,
     warnings: @warnings,
   }
 

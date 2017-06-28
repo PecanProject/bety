@@ -4,7 +4,7 @@
     <species scientificname="Sorghum bicolor">
       <cultivar name="keller"/>
     </species>
-    <citation author="Adler"/>
+    <citation author="Abbate"/>
   </defaults>
 
   <trait access_level="4" mean="3.2">
@@ -29,7 +29,7 @@
     </trait>
 
     <trait access_level="3" mean="1.2">
-      <variable description="leaves year-1"/>
+      <variable description="number of leaves per plant"/>
     </trait>
 
   </trait-group>
@@ -42,9 +42,7 @@
 
     <stat name="SE" value="0.0030" sample_size="10"/>
 
-    <method name="CC">
-      <citation author="Biggs" year="2008"/><!-- or use citation-id on method element -->
-    </method><!-- or use method-id on trait element -->
+    <method name="CC"/>
 
     <site sitename="Aliartos"/>
 
@@ -57,7 +55,7 @@
       </covariate>
 
       <covariate level="1000">
-        <variable description="leaves year-1"/>
+        <variable description="number of leaves per plant"/>
       </covariate>
     </covariates>
   </trait>

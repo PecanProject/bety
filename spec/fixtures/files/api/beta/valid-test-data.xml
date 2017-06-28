@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <trait-data-set>
+  <entity name=""/>
   <defaults>
     <species scientificname="Saccharum officinarum">
       <cultivar name="s5-14"/>
     </species>
-    <citation author="Adler"/>
+    <citation author="Abbate"/>
   </defaults>
   <trait access_level="1" mean="10">
     <variable name="Vcmax"/>

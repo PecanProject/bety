@@ -158,5 +158,23 @@ feature 'Authorization:' do
 
   end
 
+  # Regression test for GitHub issue #411:
+  specify "Administrators should be able to add a site to a sitegroup", js:true do
+    login_test_user
+    visit '/sitegroups'
+    click_link 'New Site Group'
+    fill_in 'Name', with: 'new test site'
+    click_button 'Create'
+    click_button 'Edit Record'
+    click_link 'View Related Sites'
+    fill_in 'sitesearch', with: 'University'
+    find_link('+').click
+    find_link('X')
+    expect(page).to have_content 'X'
+    # cleanup:
+    find_link('X').click
+  end
+
+
 
 end

@@ -19,9 +19,9 @@
     <div class="span6">
       <div id="DataTables_Table_0_length" class="dataTables_length" style="width: 30%">
 
-      <label style="margin-left: 20px">
+      <label style="margin-left: 20px; position: relative; top: -2px">
         <%= check_box_tag :include_unchecked, "include_unchecked", !params[:include_unchecked].nil?
-        %> include unchecked records
+        %><span style="font-weight: bold; position: relative; top: 3px; left: 2px">Include Unchecked Records</span>
       </label>
 
       </div> <!-- id="DataTables_Table_0_length" -->
@@ -30,7 +30,7 @@
     <div class="span6">
       <div class="dataTables_filter" id="DataTables_Table_0_filter">
   		<label>Search: <%= text_field_tag :search, params[:search] %></label>
-        <button type="button" id="clear_search_terms" style="margin-right: 30px">Clear Search</button>
+        <button type="button" id="clear_search_terms" style="margin-right: 30px; position: relative; top: 2px">Clear Search</button>
         <div id="state_variables"><%= render 'state_variables' %></div>
       </div> <!-- id="DataTables_Table_0_filter" -->
     </div> <!-- class="span6" -->

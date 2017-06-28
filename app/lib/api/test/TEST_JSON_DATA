@@ -23,7 +23,7 @@
             {
               "citation": {
                 "attributes": {
-                  "author": "Adler"
+                  "author": "Abbate"
                 }
               }
             }
@@ -134,7 +134,7 @@
                   {
                     "variable": {
                       "attributes": {
-                        "description": "leaves year-1"
+                        "description": "number of leaves per plant"
                       }
                     }
                   }
@@ -242,7 +242,7 @@
                         {
                           "variable": {
                             "attributes": {
-                              "description": "leaves year-1"
+                              "description": "number of leaves per plant"
                             }
                           }
                         }

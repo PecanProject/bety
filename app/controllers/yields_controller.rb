@@ -146,6 +146,10 @@ class YieldsController < ApplicationController
 
     @yield.assign_attributes(params[:yield])
 
+    if params['assign_creator']
+      @yield.user_id = current_user.id
+    end
+
     respond_to do |format|
       # This save is a no-op unless Julian date was set:
       if @yield.save

@@ -4,7 +4,8 @@ module Api::TraitCreationSupport
 
   private
 
-  # Exception to signal document didn't validate against schema
+  # Exception to signal document didn't validate against schema or had other
+  # structural problems not captured by the schema constraints.
   class InvalidDocument < StandardError
   end
 
@@ -22,9 +23,11 @@ module Api::TraitCreationSupport
   end
 
   class NotFoundException < StandardError
-    def initialize(node, entity_name, selection_criteria)
+    def initialize(node, entity_name, selection_criteria,
+                   message = "No #{entity_name} could be found matching " +
+                             "#{selection_criteria}")
       node.set_attribute("error", "match not found")
-      super("No #{entity_name} could be found matching #{selection_criteria}")
+      super(message)
     end
   end
 
@@ -107,9 +110,8 @@ module Api::TraitCreationSupport
 
     if trait_group_node.xpath("boolean(entity)")
       entity_node = trait_group_node.xpath("entity").first
-      entity_attributes = attr_hash_2_where_hash(entity_node.attributes)
-      new_entity = Entity.create!(entity_attributes)
-      defaults[:entity_id] = new_entity.id
+      entity = get_or_create_entity(entity_node)
+      defaults[:entity_id] = entity.id
     end
 
     if trait_group_node.xpath("boolean(defaults)")
@@ -132,9 +134,14 @@ module Api::TraitCreationSupport
     defaults = defaults.clone
 
     if !defaults.has_key?(:entity_id)
-      # Make an anonymous singleton entity for this trait
-      new_entity = Entity.create!
-      defaults[:entity_id] = new_entity.id
+      # If this trait node has a specified entity, use it:
+      if trait_node.xpath("boolean(entity)")
+        entity_node = trait_node.xpath("entity").first
+        entity = get_or_create_entity(entity_node)
+        defaults[:entity_id] = entity.id
+      end
+      # Otherwise, do nothing; don't make an anonymous singleton entity for this
+      # trait.
     end
 
     column_values = merge_new_defaults(trait_node, defaults)
@@ -167,11 +174,17 @@ module Api::TraitCreationSupport
 
           column_values = get_foreign_keys(covariate_node) # get variable_id
 
-          column_values[:level] = covariate_node.attribute("level").value
+          if @lookup_errors.size == 0
 
-          column_values[:trait_id] = new_trait.id
+            # Only create a covariate if there were no lookup errors:
 
-          Covariate.create!(column_values)
+            column_values[:level] = covariate_node.attribute("level").value
+            
+            column_values[:trait_id] = new_trait.id
+
+            Covariate.create!(column_values)
+
+          end
 
         end
 
@@ -196,7 +209,7 @@ module Api::TraitCreationSupport
 
     defaults = defaults.clone
 
-    defaults.merge!(get_foreign_keys(element_node))
+    defaults.merge!(get_foreign_keys(element_node, defaults))
 
     set_datetime_defaults(element_node, defaults)
 
@@ -210,13 +223,25 @@ module Api::TraitCreationSupport
 
   def set_datetime_defaults(element_node, defaults)
 
-    if element_node.name == 'defaults' &&
-        element_node.has_attribute?("local_datetime") &&
-        !element_node.xpath("../*[local-name(.) != 'defaults']//site").empty?
+    if element_node.has_attribute?("local_datetime")
 
-      raise InvalidDateSpecification.new(element_node,
-                                         "You can't have a local_datetime attribute on a trait-group's defaults element if a trait or trait-group descendant sets (or re-sets) the site.",
-                                         "bad date specification; see error output")
+      if !defaults.has_key?(:site_id)
+        raise InvalidDateSpecification.new(element_node,
+                                           "You can't have a local_datetime attribute on a trait-group's defaults element if no default site has been specified.",
+                                           "bad date specification; see error output")
+      elsif Site.find(defaults[:site_id]).time_zone.nil?
+        raise InvalidDateSpecification.new(element_node,
+                                           "You can't have a local_datetime attribute on a trait-group's defaults element if the default site doesn't specify a time zone.",
+                                           "bad date specification; see error output")
+      end
+
+      if element_node.name == 'defaults' &&
+          !element_node.xpath("../*[local-name(.) != 'defaults']//site").empty?
+
+        raise InvalidDateSpecification.new(element_node,
+                                           "You can't have a local_datetime attribute on a trait-group's defaults element if a trait or trait-group descendant sets (or re-sets) the site.",
+                                           "bad date specification; see error output")
+      end
 
     end
 
@@ -232,7 +257,7 @@ module Api::TraitCreationSupport
           defaults[:timeloc] = 9
           # fill out the time portion with zeroes, but keep the "Z" at the end:
           date_string = date_string[0..-2] + "T00:00:00Z"
-        elsif !date_string.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d*)/) # sanity check; validation should already catch this
+        elsif !date_string.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/) # sanity check; validation should already catch this
           raise InvalidDateSpecification.new(element_node,
                                              "Date string #{date_string} has an unexpected format.")
         else
@@ -250,7 +275,7 @@ module Api::TraitCreationSupport
         defaults[:timeloc] = 9
         # fill out the time portion with zeroes
         date_string += "T00:00:00"
-      elsif !date_string.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)/) # sanity check; validation should already catch this
+      elsif !date_string.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$/) # sanity check; validation should already catch this
         raise InvalidDateSpecification.new(element_node,
                                            "Date string #{date_string} has an unexpected format.")
       else
@@ -310,15 +335,42 @@ module Api::TraitCreationSupport
 
   # Given an element node containing child elements corresponding to the
   # foreign-key columns in the traits table, look up the id to use for each
-  # foreign key.
-  def get_foreign_keys(parent_node)
+  # foreign key.  If `defaults` contains the key `:treatment_id`, then an
+  # `InvalidDocument` exception will be raised if `parent_node` has a `citation`
+  # child element.  An `InvalidDocument` exception will also be raised if
+  # `defaults` does not contains the key `:citation_id` and if `parent_node`
+  # contains a `treatment` element but not a `citation` element.
+  #
+  # TO DO: Enforce these constraints using RelaxNG, Schematron, or XSLT instead.
+  def get_foreign_keys(parent_node, defaults = {})
     id_hash = {}
+
+    treatment_node = nil # we set this in the block below (for later processing) if found
 
     parent_node.element_children.each do |child_node|
 
       entity_name = child_node.name
       if !["site", "species", "citation", "treatment", "variable", "method"].include? entity_name
         next
+      end
+
+      if entity_name == "treatment"
+
+        # Store this away for later processing outside the loop when we are sure
+        # to have captured the citation information:
+        treatment_node = child_node
+
+        next
+      end
+
+      # Catch cases where we try to set a new citation after defaulting the
+      # treatment:
+      if entity_name == "citation"
+        if !defaults[:treatment_id].nil?
+          @structure_validation_errors << ["You can't reset the citation after setting a treatment default."]
+          # TO DO: Enforce this constraint using RelaxNG, Schematron, or XSLT instead.
+          raise InvalidDocument
+        end
       end
 
       selection_criteria = attr_hash_2_where_hash(child_node.attributes)
@@ -369,6 +421,39 @@ module Api::TraitCreationSupport
 
     end # children.each
 
+    # Process treatment_node if set:
+    begin
+      if !treatment_node.nil?
+        if id_hash[:citation_id].nil?
+          if defaults[:citation_id].nil?
+            @structure_validation_errors << ["You can't specify a treatment without specifying a citation."]
+            # TO DO: Enforce this constraint using RelaxNG, Schematron, or XSLT instead.
+            raise InvalidDocument
+          else
+            citation_id = defaults[:citation_id]
+          end
+        else
+          citation_id = id_hash[:citation_id]
+        end
+
+        selection_criteria = attr_hash_2_where_hash(treatment_node.attributes)
+
+        matches = Treatment.where(selection_criteria).select { |t| t.citations.map(&:id).include?(citation_id) }
+
+        if matches.size == 0
+          raise NotFoundException.new(treatment_node, "treatment", selection_criteria)
+        elsif matches.size > 1
+          raise NotUniqueException.new(treatment_node, "treatment", selection_criteria)
+        end
+
+        id_hash[:treatment_id] = matches.first.id
+      end
+
+      # Catch exceptions outside the loop having to do with treatment lookup:
+    rescue NotFoundException, NotUniqueException => e
+      @lookup_errors << e.message
+    end
+
     return id_hash
   end
 
@@ -384,11 +469,11 @@ module Api::TraitCreationSupport
                     Nokogiri::XML::ParseOptions::STRICT))
 
     xsd.validate(doc).each do |error|
-      @schema_validation_errors << error.message
+      @structure_validation_errors << error.message
     end
 
-    if !@schema_validation_errors.blank?
-      raise InvalidDocument, @schema_validation_errors
+    if !@structure_validation_errors.blank?
+      raise InvalidDocument, @structure_validation_errors
     end
 
 
@@ -398,6 +483,35 @@ module Api::TraitCreationSupport
   # to one mapping attribute names to their value.
   def attr_hash_2_where_hash(h)
     Hash[h.map { |k, v| [k, v.value] }]
+  end
+
+  # Search the database for an entity whose data matches the attributes of
+  # entity_node and return the Rails object for it.  If none are found, create
+  # one and return the Rails object for that.  If multiple matches are found,
+  # raise a NotUniqueException.
+  def get_or_create_entity(entity_node)
+    entity_attributes = attr_hash_2_where_hash(entity_node.attributes)
+    name_hash = entity_attributes.select { |k, v| k == "name" }
+    matches = Entity.where(name_hash)
+    if matches.size == 0 || entity_attributes["name"].blank?
+      entity = Entity.create!(entity_attributes)
+    elsif matches.size > 1
+      raise NotUniqueException.new(entity_node, "entity", name_hash)
+    else
+      entity = matches.first
+      if !entity_attributes["notes"].nil? && entity.notes != entity_attributes["notes"]
+        # considered this a failed match
+        raise NotFoundException.new(entity_node, "entity", nil,
+                                    # custom message:
+                                    "The existing entity with name " +
+                                    "\"#{entity.name}\" has a conflicting " +
+                                    "value for notes.")
+      end
+    end
+    return entity
+  rescue NotFoundException, NotUniqueException => e
+    @lookup_errors << e.message
+    raise InvalidData
   end
 
 end

@@ -4,17 +4,9 @@ include AuthenticatedSystem
 class SearchController < ApplicationController
   helper_method :sort_column, :sort_direction
 
-  CREDITS = <<CREDITS
-LeBauer, David, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney, Gareth Scott Rohde, Dan Wang (2010).  \
-Biofuel Ecophysiological Traits and Yields Database (BETYdb), Energy Biosciences Institute, University of Illinois at Urbana-Champaign. \
-doi:10.13012/J8H41PB9 \
-All public data in BETYdb is made available under the Open Data Commons Attribution License (ODC-By) v1.0. \
-You are free to share, create, and adapt its contents. \
-Data with an access_level field and value <= 2 is is not covered by this license but may be available for use with consent.
-CREDITS
-  CREDITS.chomp!
+  CREDITS = ActionController::Base.helpers.strip_tags(CONFIG[:citation_license_copyright_markup])
 
-  CONTACT_EMAIL = "dlebauer@illinois.edu"
+  CONTACT_EMAIL = CONFIG[:admin_email]
 
 
   # Possible paramaters (params):
@@ -152,7 +144,7 @@ CREDITS
       format.xml  { render :xml => @results }
       format.csv do 
         header = CSV.generate do |csv|
-          csv << [ "# " + CREDITS ]
+          csv << [ "# Citation/License/Copyright:", CREDITS ]
           csv << [ "#" ]
           csv << [ "# Contact:", CONTACT_EMAIL ]
           csv << [ "#" ]

@@ -48,6 +48,20 @@
         </tbody>
       </table>
       <hr>
+      <% if !@upload_entities.empty? %>
+      <table>
+        <caption>Entities:</caption>
+        <thead>
+          <tr><th>Name</th><th>Parent</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <% @upload_entities.each do |c| %>
+          <tr><td><%= c.name %></td><td><%= c.parent && c.parent.name %></td><td><%= c.notes %></td></tr>
+          <% end %>
+        </tbody>
+      </table>
+      <hr>
+      <% end %>
       <table>
         <caption>Sites:</caption>
         <thead>

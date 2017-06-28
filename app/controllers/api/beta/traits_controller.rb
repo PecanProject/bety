@@ -55,7 +55,7 @@ class Api::Beta::TraitsController < Api::Beta::BaseController
 
     @new_trait_ids = []
 
-    @schema_validation_errors = []
+    @structure_validation_errors = []
     @lookup_errors = []
     @model_validation_errors = []
     @database_insertion_errors = []
@@ -72,7 +72,7 @@ class Api::Beta::TraitsController < Api::Beta::BaseController
   rescue InvalidDocument
 
     @errors = { }
-    @errors[:schema_validation_errors] = @schema_validation_errors
+    @errors[:schema_validation_errors] = @structure_validation_errors
 
     raise
 

@@ -411,16 +411,19 @@ class BulkUploadDataSet
     @validation_summary[:field_list_errors] = []
     @csv_warnings = []
 
-    # This sets @traits_in_heading, @required_covariates, and @allowed_covariates.
+    # This sets @traits_in_heading, @trait_names_in_heading,
+    # @required_covariates, and @allowed_covariates:
     get_trait_and_covariate_info
 
     if yield_data?
-      if !@traits_in_heading.empty?
+      if !@trait_names_in_heading.empty?
         @validation_summary[:field_list_errors] << 'If you have a "yield" column, you can not also have column names matching recognized trait variable names.'
       end
     else
-      if @traits_in_heading.empty?
+      if @trait_names_in_heading.empty?
         @validation_summary[:field_list_errors] << 'In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'
+      elsif !@unmatched_covariates.empty?
+        @validation_summary[:field_list_errors] << "The following heading names correspond to covariates but the heading contains no corresponding trait variable name: #{@unmatched_covariates.join(", ")}"
       else
         required_covariate_names = @required_covariates.collect { |c| c.name }
         covariate_names_not_in_heading = required_covariate_names - @headers
@@ -438,7 +441,7 @@ class BulkUploadDataSet
     end
 
     # Don't allow stat information in trait uploads having more than one trait variable
-    if @headers.include?('SE') && @traits_in_heading.size > 1
+    if @headers.include?('SE') && @trait_names_in_heading.size > 1
       @validation_summary[:field_list_errors] << 'Standard Error statistics are not supported with uploads containing multiple trait variable columns.'
     end
 
@@ -467,7 +470,7 @@ class BulkUploadDataSet
 
     ignored_columns = []
     @headers.each do |field_name|
-      if !(RECOGNIZED_COLUMNS + @traits_in_heading + @allowed_covariates).include? field_name
+      if !(RECOGNIZED_COLUMNS + @trait_names_in_heading + @allowed_covariates).include? field_name
         ignored_columns << field_name
       end
     end
@@ -478,8 +481,11 @@ class BulkUploadDataSet
 
   end
 
-  # A list of recognized column heading strings, excluding names of recognized trait and covariate variables.
-  RECOGNIZED_COLUMNS =  %w{yield citation_doi citation_author citation_year citation_title site species treatment access_level cultivar date n SE notes}
+  # A list of recognized column heading strings, excluding names of recognized
+  # trait and covariate variables.
+  RECOGNIZED_COLUMNS = %w{yield citation_doi citation_author citation_year
+                          citation_title site species treatment access_level
+                          cultivar date n SE notes entity}
 
   # We may eventually support this:
   #REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)(-(?<month>\d\d)(-(?<day>\d\d))?)?$/
@@ -685,12 +691,16 @@ class BulkUploadDataSet
 
             # This is ignored for now until we have the citation information.
 
+          when "entity"
+
+            # accept anything
+
           else # either a trait or covariate variable name or will be ignored
 
             if trait_data?
               get_trait_and_covariate_info
             end
-            if trait_data? && (@traits_in_heading + @allowed_covariates).include?(column[:fieldname])
+            if trait_data? && (@trait_names_in_heading + @allowed_covariates).include?(column[:fieldname])
               column[:validation_result] = Valid.new # reset below if we find otherwise
 
               begin
@@ -896,6 +906,32 @@ class BulkUploadDataSet
     upload_sites
   end
 
+  # Returns the list of named Entities used by the data set.
+  def get_upload_entities
+    @data.rewind
+
+    entity_names = []
+    if @headers.include?("entity")
+      @data.each do |row|
+        if !row["entity"].blank?
+          entity_names << row["entity"]
+        end
+      end
+    end
+    distinct_entity_names = entity_names.uniq
+    upload_entities = []
+    distinct_entity_names.each do |entity_name|
+      begin
+        upload_entities <<  existing_entity?(entity_name)
+      rescue MissingReferenceException => e
+        # We never save this model; it only exists so that the view has a
+        # uniform way of display both existing entities and new ones.
+        upload_entities << Entity.new({ name: entity_name + " (NEW)"})
+      end
+    end
+    upload_entities
+  end
+
   # Returns the list of Species used by the data set, or the Species specified
   # globally if species information was not included in the upload file.  Raises
   # a RuntimeError if no match is found for some species in the data set.  Used
@@ -1051,16 +1087,36 @@ class BulkUploadDataSet
         insertion_data.each do |row|
           # Each row may contain some meta-data, which we have to process and
           # delete before we create a new trait row from it.
-          if row[:new_entity]
-            # The :new_entity key marks the first of a group of rows that should
-            # belong to the same entity.  Each of these rows should get the same
-            # entity_id value.
-            e = Entity.create!
-            current_entity_id = e.id
-            row.delete(:new_entity)
+          if row[:is_first_trait_of_csv_row]
+            # The :is_first_trait_of_csv_row key marks the first of a group of
+            # rows that should belong to the same entity.  Each of these rows
+            # should get the same entity_id value.
+            if row.has_key?("entity") && !row["entity"].blank?
+              # Re-use the named entity if it exists, or create a new
+              # one with the specified name:
+              begin
+                e = existing_entity?(row["entity"])
+              rescue MissingReferenceException => e
+                e = Entity.create!({ name: row["entity"]})
+              end
+              current_entity_id = e.id
+            elsif @trait_names_in_heading.size > 1
+              # If the row doesn't specify an entity name, create a new,
+              # nameless entity for all the traits in this row:
+              e = Entity.create!
+              current_entity_id = e.id
+            else # don't make unnamed entites if there is only one trait per row
+              current_entity_id = nil
+            end
           end
-          row[:entity_id] = current_entity_id
+          
+          row["entity_id"] = current_entity_id
+
+          row.delete(:is_first_trait_of_csv_row)
+          row.delete("entity")
+
           covariate_info = row.delete("covariate_info")
+
           t = Trait.create!(row)
           covariate_info.each do |covariate_attributes|
             covariate_attributes[:trait_id] = t.id
@@ -1207,7 +1263,7 @@ class BulkUploadDataSet
 
     # A list of recognized trait variable names in the heading; a trait variable
     # is recognized only if it is in the trait_covariate_associations table
-    @traits_in_heading = relevant_associations.collect { |a| a.trait_variable.name }.uniq
+    @trait_names_in_heading = relevant_associations.collect { |a| a.trait_variable.name }.uniq
 
     # A list of Variable objects corresponding to all the covariates required by
     # the some member of the set of trait variables in the data set.
@@ -1223,6 +1279,37 @@ class BulkUploadDataSet
     # with some member of the set of trait variables in the data set and that
     # are optional for each such variable.
     @optional_covariates = @allowed_covariates - @required_covariates.map { |cov_ob| cov_ob.name }
+
+
+
+
+
+    # Add in any unrecognized headings that correspond to a trait variable
+    # even if they aren't in the trait_covariate_associations_table:
+    all_heading_variables = Variable.all.select do |variable|
+      (@headers - RECOGNIZED_COLUMNS)
+        .include?(variable.name)
+    end
+
+    all_heading_variable_names = all_heading_variables.map(&:name)
+
+    @trait_names_in_heading += (all_heading_variable_names - @trait_names_in_heading)
+
+    # Ignore any variables corresponding to covariates of traits in
+    # the heading:
+    @trait_names_in_heading -= @allowed_covariates
+
+    @traits_in_heading = all_heading_variables.select { |v| @trait_names_in_heading.include?(v.name) }
+
+    # It is an error if there still any "covariate only" variable
+    # names in the @trait_variables list:
+    reserved_covariate_variables =
+      TraitCovariateAssociation.all.collect { |a|
+      a.covariate_variable.name
+    }.uniq
+
+    @unmatched_covariates = (@trait_names_in_heading & reserved_covariate_variables)
+
   end
 
   # Using the trait_covariate_associations table and the column headings in the
@@ -1264,6 +1351,13 @@ class BulkUploadDataSet
         covariate_hash[c.name] = c.id
       end
       @heading_variable_info[tv.id] = { name: tv.name, covariates: covariate_hash }
+    end
+
+    # Now add standalone traits:
+    @traits_in_heading.each do |v|
+      if !@heading_variable_info.keys.include?(v.id)
+        @heading_variable_info[v.id] = { name: v.name, covariates: {} }
+      end
     end
 
   end
@@ -1385,6 +1479,15 @@ class BulkUploadDataSet
   end
   memoize :existing_cultivar?
 
+  # Returns a +Entity+ object whose +name+ attribute matches +name+.  If
+  # multiple matches are found, a +NonUniquenessException+ is raised, and if no
+  # match is found, a +MissingReferenceException+ is raised.
+  def existing_entity?(name)
+    return existing?(Entity, "name", name, "entity")
+  end
+  memoize :existing_entity?
+
+
   # Given the Hash <tt>args[:input_hash]</tt> containing possible keys
   # "citation_doi", "citation_author", "citation_year", "citation_title",
   # "site", "species", "treatment", and "cultivar", look up the corresponding
@@ -1406,7 +1509,8 @@ class BulkUploadDataSet
     # up the cultivar, and put treatment after citation_doi and
     # citation_author because we need to look up the treatment_id by
     # the treatment name AND the citation.
-    id_lookups = ["citation_doi", "citation_author", "site", "species", "treatment", "cultivar"]
+    id_lookups = ["citation_doi", "citation_author", "site", "species",
+                  "treatment", "cultivar", "entity"]
 
     id_lookups.each do |key|
       if !specified_values.keys.include?(key)
@@ -1537,21 +1641,18 @@ class BulkUploadDataSet
 
     @mapped_data = Array.new
     if trait_data?
+      get_trait_and_covariate_info # sets @traits_in_heading, @trait_names_in_heading and @allowed_covariates
+      recognized_columns = RECOGNIZED_COLUMNS + @trait_names_in_heading + @allowed_covariates
       get_variables_in_heading # sets @heading_variable_info
       trait_columns = Trait.columns.collect { |column| column.name }
     else # yield data
+      recognized_columns = RECOGNIZED_COLUMNS
       yield_columns = Yield.columns.collect { |column| column.name }
     end
     @data.each do |csv_row|
       csv_row_as_hash = csv_row.to_hash
 
       # remove irrelevant data from row:
-      if trait_data?
-        get_trait_and_covariate_info # sets @traits_in_heading and @allowed_covariates
-        recognized_columns = RECOGNIZED_COLUMNS + @traits_in_heading + @allowed_covariates
-      else
-        recognized_columns = RECOGNIZED_COLUMNS
-      end
       csv_row_as_hash.keep_if do |key, value|
         recognized_columns.include? key
       end
@@ -1589,9 +1690,11 @@ class BulkUploadDataSet
         @mapped_data << csv_row_as_hash
       elsif trait_data?
 
-        new_entity = true
+        first_trait_of_row = true
         @heading_variable_info.each_key do |trait_variable_id|
-          # For each row of @data, that is, for each row of the input file, there will be a row added to the traits table--hence one item added to @mapped_data--for each trait variable occurring in the heading.
+          # For each row of @data, that is, for each row of the input file,
+          # there will be a row added to the traits table--hence one item added
+          # to @mapped_data--for each trait variable occurring in the heading.
 
 
           # clone: we have to be more careful than for yields since we may use
@@ -1604,19 +1707,34 @@ class BulkUploadDataSet
           end
 
           # If this is the first item being added to @mapped_data for the
-          # current item of @data, mark it with the key +:new_entity+:
-          if new_entity
-            row_data[:new_entity] = true
-            new_entity = false
+          # current item of @data, mark it with the key
+          # +:is_first_trait_of_csv_row+:
+          if first_trait_of_row
+            row_data[:is_first_trait_of_csv_row] = true
+            first_trait_of_row = false
+          else
+            row_data[:is_first_trait_of_csv_row] = false
           end
 
           add_trait_specific_attributes(row_data, trait_variable_id)
 
           # Filter everything out of row_data that does not directly correspond
           # to a column of the traits table except for some meta-data which we
-          # are storing under the keys "covariate_info" and :new_entity:
+          # are storing under the keys "covariate_info", "entity", and
+          # :is_first_trait_of_csv_row:
           row_data.keep_if do |key, value|
-            trait_columns.include?(key) || key == "covariate_info" || key == :new_entity
+
+            trait_columns.include?(key) ||
+              key == "covariate_info" ||
+              key == :is_first_trait_of_csv_row ||
+              key == "entity"
+
+          end
+
+          # Treat blank cells in the notes column of the CSV file as
+          # empty strings, not NULLs.
+          if row_data[:notes] == nil
+            row_data[:notes] = ""
           end
 
           @mapped_data << row_data

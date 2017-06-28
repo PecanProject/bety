@@ -14,7 +14,7 @@
               <%= f.text_field :name, :class => "input-full" %>
             </div>
             <div class="four columns alpha">
-              <%= f.label :standard_name ,"CF Standard Name"%>
+              <%= f.label :standard_name ,"Standard Name"%>
               <%= f.text_field :standard_name, :class => "input-full" %>
             </div>
             <div class="four columns alpha">
@@ -22,7 +22,7 @@
               <%= f.text_field :units, :class => "input-full" %>
             </div>
             <div class="four columns alpha">
-              <%= f.label :standard_units,"CF Standard Units" %>
+              <%= f.label :standard_units,"Standard Units" %>
               <%= f.text_field :standard_units, :class => "input-full" %>
             </div>
             <div class="four columns alpha">
@@ -35,7 +35,7 @@
             </div>
             <div class="four columns alpha">
               <%= f.label :type %>
-              <%= f.select :type, ["", "plant trait","ecosystem","covariate","model","model-ED2","model-BioCro","model-Sipnet"] %>
+              <%= f.select :type, ["", "plant trait","ecosystem","covariate","model", "reflectance index", "model-ED2","model-BioCro","model-Sipnet"] %>
             </div>
           </div>
           <div class="eight columns alpha">

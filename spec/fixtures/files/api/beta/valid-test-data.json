@@ -23,7 +23,7 @@
             {
               "citation": {
                 "attributes": {
-                  "author": "Adler"
+                  "author": "Abbate"
                 }
               }
             }
@@ -37,6 +37,13 @@
             "mean": "10"
           },
           "children": [
+            {
+              "entity": {
+                "attributes": {
+                  "name": "photo 12345"
+                }
+              }
+            },
             {
               "variable": {
                 "attributes": {

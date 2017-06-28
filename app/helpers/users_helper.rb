@@ -90,8 +90,21 @@ module UsersHelper
     end
   end
 
-  def user_for_view(user)
-    user || "Unknown"
+  def user_for_view(user, edit = false)
+    user || user_assignment_markup(edit)
   end
+
+  private
+
+    def user_assignment_markup(edit)
+      if edit
+        markup = "This record has not been assigned a creator."
+        markup += "#{label_tag(:assign_creator, "Assign yourself")}"
+        markup += "#{check_box_tag(:assign_creator)}"
+      else
+        markup = "Unknown"
+      end
+      raw(markup)
+    end
 
 end

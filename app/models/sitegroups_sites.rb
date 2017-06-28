@@ -4,7 +4,7 @@ class SitegroupsSites < ActiveRecord::Base
   belongs_to :sitegroup
   belongs_to :site
 
-  validates_presence_of     :sitesgroup_id
+  validates_presence_of     :sitegroup_id
   validates_presence_of     :site_id
 
   comma do

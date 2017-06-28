@@ -1,0 +1,40 @@
+<div class="content">
+  <div class="container">
+    <div class="sixteen columns">
+      
+      <header>
+        <h1>Viewing Experiment</h1>
+      </header>
+
+      <dl class="dl-horizontal">
+        <dt>Name</dt>
+        <dd><%= @experiment.name %></dd>
+        <dt>Starting date</dt>
+        <dd><%= @experiment.start_date %></dd>
+        <dt>End date</dt>
+        <dd><%= @experiment.end_date %></dd>
+        <dt>Description</dt>
+        <dd><%= @experiment.description %></dd>
+        <dt>Design</dt>
+        <dd><%= @experiment.design %></dd>
+        <dt>Creator</dt>
+        <dd><%= @experiment.user.name %></dd>
+        <dt>Created on</dt>
+        <dd><%= @experiment.created_at.to_formatted_s(:long) + " " + Rails.application.config.time_zone %></dd>
+      </dl>
+
+      <div class="form-actions">
+        <div class="button-group">
+          <%= link_to( experiments_path ) do %>
+            <button class="button"><i class="icon-arrow-left"></i> All Records</button>
+          <% end %>
+          <%= link_to( edit_experiment_path(@experiment) ) do %>
+            <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>  
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+

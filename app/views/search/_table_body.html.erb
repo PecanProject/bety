@@ -20,6 +20,13 @@
                                  %><%= if t.city && !t.city.strip.empty?
                                        then raw("<em>(#{t.city})</em>") end %>
             <% end %>
+                             <%= if (t.sitename && !t.sitename.strip.empty? ||
+                                 t.city && !t.city.strip.empty?) &&
+                                 !t.lat.nil?
+                                 then raw("<br>") end
+                                 %><%= if !t.lat.nil?
+                                       then raw("#{t.lat.abs.round(2)}&deg;&nbsp;#{t.lat >= 0 ? "N" : "S"}, ") +
+                                            raw("#{t.lon.abs.round(2)}&deg;&nbsp;#{t.lon >= 0 ? "E" : "W"}") end %>
           </td>
           <!--
               <%
@@ -34,12 +41,23 @@
                                  <%
 =end %>
                                  -->
-          <td class="center"><%= t.lat ? t.lat.round(2) : nil  %></td>
-          <td class="center"><%= t.lon ? t.lon.round(2) : nil %></td>
           <td class="center"><%= t.pretty_date %></td>
+
+          <td class="center">
+            <%= t.date %>
+            <% if t.result_type == "traits" %>
+            <hr />
+            <%= t.time %>
+            <% end %>
+          </td>
+
           <td class="center"><%= link_to species_path(t.species_id.to_i) do %>
             <em><%= t.scientificname.to_s %></em>
             <%= if t.commonname && !t.commonname.strip.blank? then raw("<br>(" + t.commonname.strip + ")") end %>
+            <% end %>
+          </td>
+          <td class="center"><%= link_to cultivar_path(t.cultivar_id.to_i) do %>
+            <%= t.cultivar.to_s %>
             <% end %>
           </td>
           <td class="center"><%= link_to (t.result_type == "yields" ? yield_path(t.id) : trait_path(t.id)) do %>
@@ -54,6 +72,8 @@
 =end %>
           -->
           <td class="center"><%= "#{number_with_precision(t.mean, precision: 3, significant: true)} #{t.units}"  %></td>
+          <td class="center"><%= t.method_name  %></td>
+          <td class="center"><%= t.entity %></td>
           <!--
               <%
 =begin %>

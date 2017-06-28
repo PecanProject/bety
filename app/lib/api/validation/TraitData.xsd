@@ -88,11 +88,6 @@
     </xs:choice>
   </xs:complexType>
 
-  <xs:complexType name="entity">
-    <xs:attribute name="name" type="xs:string"/>
-    <xs:attribute name="notes" type="xs:string"/>
-  </xs:complexType>
-
   <xs:complexType name="default-trait-attribute-set">
     <xs:all>
       <xs:element name="site" type="site" minOccurs="0"/>
@@ -124,6 +119,8 @@
       <xs:element name="notes" type="xs:string" minOccurs="0"/>
 
       <xs:element name="covariates" type="covariates" minOccurs="0"/>
+
+      <xs:element name="entity" type="named_entity" minOccurs="0"/>
     </xs:all>
     <xs:attribute name="access_level" type="access-level"/>
     <xs:attribute name="utc_datetime" type="utc-datetime"/>
@@ -150,7 +147,7 @@
     <xs:union>
       <xs:simpleType>
         <xs:restriction base="xs:dateTime">
-          <xs:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}"/><!-- no time zone -->
+          <xs:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?"/><!-- no time zone -->
         </xs:restriction>
       </xs:simpleType>
       <xs:simpleType>

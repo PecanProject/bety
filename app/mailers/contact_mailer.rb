@@ -1,4 +1,6 @@
 class ContactMailer < ActionMailer::Base
+  helper :mailer
+
   def contact_email(email_params)
     @email_body = email_params[:body]
     @sender_name = email_params[:name]
@@ -21,9 +23,10 @@ class ContactMailer < ActionMailer::Base
          :date => Time.now)
   end
 
-  def signup_email(user, url)
+  def signup_email(user, url, users_url)
     @user = user
     @url = url
+    @users_url = users_url
 
     email_from = "#{@user[:name]} <#{@user[:email]}>"
 
@@ -36,10 +39,11 @@ class ContactMailer < ActionMailer::Base
          :date => Time.now)
   end
 
-  def apikey_email(user)
+  def apikey_email(user, users_url)
     @user = user
+    @users_url = users_url
     email_to = "#{@user[:name]} <#{@user[:email]}>"
-    email_from = "BETYdb: <#{CONFIG[:admin_email]}>"
+    email_from = "BETYdb <#{CONFIG[:admin_email]}>"
 
     mail(:to => email_to,
          :from => email_from,

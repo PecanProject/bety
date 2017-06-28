@@ -61,7 +61,10 @@ RSpec.configure do |config|
 
   if ENV["RAILS_DEBUG"] == "true"
     Bundler.require('debug')
-    Capybara.javascript_driver = :selenium
+    Capybara.register_driver :selenium_chrome do |app|
+      Capybara::Selenium::Driver.new(app, :browser => :chrome)
+    end
+    Capybara.javascript_driver = :selenium_chrome
   else
     Bundler.require('javascript_testing')
     Capybara.javascript_driver = :webkit
