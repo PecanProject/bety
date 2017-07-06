@@ -70,6 +70,15 @@ class Api::BaseController < ActionController::Base
       end
     end
 
+    if (model == Site) && (params.has_key? "containing")
+      lat_lon_text = params['containing']
+      lat_text, lon_text = lat_lon_text.split(',')
+      lat = lat_text.to_f
+      lon = lon_text.to_f
+
+      model = model.where("ST_CONTAINS(geometry, st_geomfromtext('POINT(#{lon.to_s} #{lat.to_s})', 4326))");
+    end
+
     # Do filtering by regexp matching first.  Note that fuzzy_match_restrictions
     # may modify where_params by removing key-value pairs corresponding to fuzzy
     # matches.
