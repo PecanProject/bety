@@ -108,7 +108,8 @@ describe "Trait" do
 
   describe "date and time semantics" do
     let(:sample_trait) do
-      Trait.create mean: 1, variable_id: 1, access_level: 1, site_id: 1
+      Trait.create mean: 1, variable_id: 1, access_level: 1, site_id:1,
+                   d_year: '', d_month: '', d_day: '', t_hour: '', t_minute: ''
     end
 
     describe "automatic dateloc setting" do
