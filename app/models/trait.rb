@@ -378,7 +378,7 @@ class Trait < ActiveRecord::Base
     else
       date_in_site_timezone.to_formatted_s(date_format) +
         # show the site timezone next to the date only if the time is unspecified or unknown
-        (timeloc == 9 && [5, 6, 8, 95, 96].include?(dateloc) ? " (#{site_timezone})" : "")
+        (timeloc == 9 && [5, 5.5, 6, 8, 95, 96].include?(dateloc) ? " (#{site_timezone})" : "")
     end
   end
 
