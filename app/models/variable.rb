@@ -17,7 +17,6 @@ class Variable < ActiveRecord::Base
   has_many :priors
   has_many :likelihoods
   has_many :traits
-  has_and_belongs_to_many :inputs
 
   # VALIDATION
 
