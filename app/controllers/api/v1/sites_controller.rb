@@ -1,3 +1,3 @@
-class Api::Beta::SitesController < Api::Beta::BaseController
+class Api::V1::SitesController < Api::V1::BaseController
   define_actions(Site)
 end

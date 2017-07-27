@@ -1,3 +1,3 @@
-class Api::Beta::ManagementsController < Api::Beta::BaseController
+class Api::V1::ManagementsController < Api::V1::BaseController
   define_actions(Management)
 end

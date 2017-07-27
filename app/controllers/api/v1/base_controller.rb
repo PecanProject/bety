@@ -1,4 +1,4 @@
-class Api::Beta::BaseController < Api::BaseController
+class Api::V1::BaseController < Api::BaseController
   include ApiAuthenticationSystem
 
   before_filter :set_content_type # IMPORTANT: Run this filter first!
@@ -31,10 +31,10 @@ class Api::Beta::BaseController < Api::BaseController
     # otherwise fall back on using the description found in the database.
     # TO-DO: Consider defining descriptions on the Model rather than on the Controller.
     short_description = self.get_short_description ||
-      Api::Beta::BaseController.get_table_description(model.table_name)
+      Api::V1::BaseController.get_table_description(model.table_name)
 
     self.resource_description do
-      api_versions "beta"
+      api_versions "v1"
       short short_description
     end
 

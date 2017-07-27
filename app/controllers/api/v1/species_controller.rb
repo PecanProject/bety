@@ -1,3 +1,3 @@
-class Api::Beta::SpeciesController < Api::Beta::BaseController
+class Api::V1::SpeciesController < Api::V1::BaseController
   define_actions(Specie)
 end

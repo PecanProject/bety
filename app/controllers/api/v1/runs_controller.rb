@@ -1,3 +1,3 @@
-class Api::Beta::RunsController < Api::Beta::BaseController
+class Api::V1::RunsController < Api::V1::BaseController
   define_actions(Run)
 end

@@ -1,3 +1,3 @@
-class Api::Beta::ModelsController < Api::Beta::BaseController
+class Api::V1::ModelsController < Api::V1::BaseController
   define_actions(Model)
 end

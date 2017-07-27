@@ -1,3 +1,3 @@
-class Api::Beta::TreatmentsController < Api::Beta::BaseController
+class Api::V1::TreatmentsController < Api::V1::BaseController
   define_actions(Treatment)
 end

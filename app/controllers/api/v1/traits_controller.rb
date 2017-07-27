@@ -1,7 +1,7 @@
 require 'yajl'
 
 
-class Api::Beta::TraitsController < Api::Beta::BaseController
+class Api::V1::TraitsController < Api::V1::BaseController
 
   include TraitCreationSupport
 

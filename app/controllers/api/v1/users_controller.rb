@@ -1,3 +1,3 @@
-class Api::Beta::UsersController < Api::Beta::BaseController
+class Api::V1::UsersController < Api::V1::BaseController
   define_actions(User)
 end

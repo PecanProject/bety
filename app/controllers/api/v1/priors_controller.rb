@@ -1,3 +1,3 @@
-class Api::Beta::PriorsController < Api::Beta::BaseController
+class Api::V1::PriorsController < Api::V1::BaseController
   define_actions(Prior)
 end

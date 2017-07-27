@@ -1,3 +1,3 @@
-class Api::Beta::SearchController < Api::Beta::BaseController
+class Api::V1::SearchController < Api::V1::BaseController
   define_actions(TraitsAndYieldsView)
 end
