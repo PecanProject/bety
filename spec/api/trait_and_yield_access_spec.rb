@@ -14,7 +14,7 @@ RSpec.describe "Trait GET API" do
 
         MESSAGE
 
-      get "/api/beta/traits.xml?key=#{apikey}&user_id=~#{CGI.escape("^[^#{User.find_by_apikey(apikey).id}]$")}"
+      get "/api/v1/traits.xml?key=#{apikey}&user_id=~#{CGI.escape("^[^#{User.find_by_apikey(apikey).id}]$")}"
 
       # make sure we got data back:
       expect(response.body).to match(%r{<data>})
@@ -36,7 +36,7 @@ RSpec.describe "Trait GET API" do
         themselves created it
         MESSAGE
 
-        get "/api/beta/traits/#{t.id}?key=#{apikey}"
+        get "/api/v1/traits/#{t.id}?key=#{apikey}"
 
         if User.find_by_apikey(apikey).id == t.user_id
           expect(response.body).to include('"trait"')
