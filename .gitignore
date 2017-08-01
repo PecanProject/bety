@@ -1,5 +1,6 @@
 .idea/
 .bundle/
+.yardoc/
 vendor/bundle
 log
 db_backups
