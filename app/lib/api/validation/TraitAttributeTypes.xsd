@@ -27,51 +27,62 @@
   </xs:complexType>
 
 
-  <xs:complexType name="site">
-    <xs:attribute name="id" type="xs:positiveInteger"/>
-    <xs:attribute name="city" type="normalizedString"/>
-    <xs:attribute name="state" type="normalizedString"/>
-    <xs:attribute name="country" type="normalizedString"/>
-    <xs:attribute name="sitename" type="normalizedString"/>
-  </xs:complexType>
+  <xs:element name="site">
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:positiveInteger"/>
+      <xs:attribute name="city" type="normalizedString"/>
+      <xs:attribute name="state" type="normalizedString"/>
+      <xs:attribute name="country" type="normalizedString"/>
+      <xs:attribute name="sitename" type="normalizedString"/>
+    </xs:complexType>
+  </xs:element>
 
-  <xs:complexType name="species">
-    <xs:sequence>
-      <xs:element name="cultivar" type="cultivar" minOccurs="0"/>
-    </xs:sequence>
-    <xs:attribute name="id" type="xs:positiveInteger"/>
-    <xs:attribute name="genus" type="normalizedString"/>
-    <xs:attribute name="species" type="normalizedString"/>
-    <xs:attribute name="scientificname" type="normalizedString"/>
-    <xs:attribute name="commonname" type="normalizedString"/>
-    <xs:attribute name="AcceptedSymbol" type="normalizedString"/>
-  </xs:complexType>
+  <xs:element name="species">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="cultivar" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:positiveInteger"/>
+      <xs:attribute name="genus" type="normalizedString"/>
+      <xs:attribute name="species" type="normalizedString"/>
+      <xs:attribute name="scientificname" type="normalizedString"/>
+      <xs:attribute name="commonname" type="normalizedString"/>
+      <xs:attribute name="AcceptedSymbol" type="normalizedString"/>
+    </xs:complexType>
+  </xs:element>
 
-  <xs:complexType name="citation">
-    <xs:attribute name="id" type="xs:positiveInteger"/>
-    <xs:attribute name="author" type="normalizedString"/>
-    <xs:attribute name="year" type="xs:gYear"/>
-    <xs:attribute name="title" type="normalizedString"/>
-    <xs:attribute name="doi" type="normalizedString"/>
-  </xs:complexType>
+  <xs:element name="citation">
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:positiveInteger"/>
+      <xs:attribute name="author" type="normalizedString"/>
+      <xs:attribute name="year" type="xs:gYear"/>
+      <xs:attribute name="title" type="normalizedString"/>
+      <xs:attribute name="doi" type="normalizedString"/>
+    </xs:complexType>
+  </xs:element>
 
-  <xs:complexType name="cultivar">
-    <xs:attribute name="id" type="xs:positiveInteger"/>
-    <xs:attribute name="name" type="normalizedString"/>
-  </xs:complexType>
+  <xs:element name="cultivar">
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:positiveInteger"/>
+      <xs:attribute name="name" type="normalizedString"/>
+    </xs:complexType>
+  </xs:element>
 
-  <xs:complexType name="treatment">
-    <xs:attribute name="id" type="xs:positiveInteger"/>
-    <xs:attribute name="name" type="normalizedString"/>
-    <xs:attribute name="control" type="xs:boolean"/>
-  </xs:complexType>
+  <xs:element name="treatment">
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:positiveInteger"/>
+      <xs:attribute name="name" type="normalizedString"/>
+      <xs:attribute name="control" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
 
-
-  <xs:complexType name="stat">
-    <xs:attribute name="name" type="stat-type" use="required"/>
-    <xs:attribute name="sample_size" type="xs:positiveInteger" use="required"/>
-    <xs:attribute name="value" type="xs:double" use="required"/>
-  </xs:complexType>
+  <xs:element name="stat">
+    <xs:complexType>
+      <xs:attribute name="name" type="stat-type" use="required"/>
+      <xs:attribute name="sample_size" type="xs:positiveInteger" use="required"/>
+      <xs:attribute name="value" type="xs:double" use="required"/>
+    </xs:complexType>
+  </xs:element>
 
   <xs:simpleType name="stat-type">
     <xs:restriction base="normalizedString">
@@ -85,30 +96,29 @@
   </xs:simpleType>
 
 
-  <xs:complexType name="variable">
-    <xs:attribute name="id" type="xs:positiveInteger"/>
-    <xs:attribute name="name" type="normalizedString"/>
-    <xs:attribute name="description" type="normalizedString"/>
-  </xs:complexType>
+  <xs:element name="variable">
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:positiveInteger"/>
+      <xs:attribute name="name" type="normalizedString"/>
+      <xs:attribute name="description" type="normalizedString"/>
+    </xs:complexType>
+  </xs:element>
 
+  <xs:attribute name="access_level">
+    <xs:simpleType>
+      <xs:restriction base="xs:positiveInteger">
+        <xs:minInclusive value="1"/>
+        <xs:maxInclusive value="4"/>
+        <xs:pattern value="\d"/>
+        <xs:whiteSpace value="preserve"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:attribute>
 
-  <xs:simpleType name="access-level">
-    <xs:restriction base="xs:positiveInteger">
-      <xs:minInclusive value="1"/>
-      <xs:maxInclusive value="4"/>
-      <xs:pattern value="\d"/>
-      <xs:whiteSpace value="preserve"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-
-  <xs:complexType name="method">
-    <xs:attribute name="name" type="normalizedString"/>
-  </xs:complexType>
-
-
-
-
-
+  <xs:element name="method">
+    <xs:complexType>
+      <xs:attribute name="name" type="normalizedString"/>
+    </xs:complexType>
+  </xs:element>
 
 </xs:schema>
