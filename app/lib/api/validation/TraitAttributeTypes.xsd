@@ -16,6 +16,7 @@
   </xs:simpleType>
 
 
+
   <xs:complexType name="named_entity">
     <xs:attribute name="name" use="required" type="non-empty-normalizedString"/>
     <xs:attribute name="notes" type="xs:string"/>
@@ -25,6 +26,7 @@
     <xs:attribute name="name" use="required" type="normalizedString"/>
     <xs:attribute name="notes" type="xs:string"/>
   </xs:complexType>
+
 
 
   <xs:element name="site">
@@ -40,7 +42,12 @@
   <xs:element name="species">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="cultivar" minOccurs="0"/>
+        <xs:element name="cultivar" minOccurs="0">
+          <xs:complexType>
+            <xs:attribute name="id" type="xs:positiveInteger"/>
+            <xs:attribute name="name" type="normalizedString"/>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
       <xs:attribute name="id" type="xs:positiveInteger"/>
       <xs:attribute name="genus" type="normalizedString"/>
@@ -61,13 +68,6 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="cultivar">
-    <xs:complexType>
-      <xs:attribute name="id" type="xs:positiveInteger"/>
-      <xs:attribute name="name" type="normalizedString"/>
-    </xs:complexType>
-  </xs:element>
-
   <xs:element name="treatment">
     <xs:complexType>
       <xs:attribute name="id" type="xs:positiveInteger"/>
@@ -76,26 +76,6 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="stat">
-    <xs:complexType>
-      <xs:attribute name="name" type="stat-type" use="required"/>
-      <xs:attribute name="sample_size" type="xs:positiveInteger" use="required"/>
-      <xs:attribute name="value" type="xs:double" use="required"/>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:simpleType name="stat-type">
-    <xs:restriction base="normalizedString">
-      <xs:enumeration value="SD"/>
-      <xs:enumeration value="SE"/>
-      <xs:enumeration value="MSE"/>
-      <xs:enumeration value="95%Cl"/>
-      <xs:enumeration value="LSD"/>
-      <xs:enumeration value="MSD"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-
   <xs:element name="variable">
     <xs:complexType>
       <xs:attribute name="id" type="xs:positiveInteger"/>
@@ -103,17 +83,6 @@
       <xs:attribute name="description" type="normalizedString"/>
     </xs:complexType>
   </xs:element>
-
-  <xs:attribute name="access_level">
-    <xs:simpleType>
-      <xs:restriction base="xs:positiveInteger">
-        <xs:minInclusive value="1"/>
-        <xs:maxInclusive value="4"/>
-        <xs:pattern value="\d"/>
-        <xs:whiteSpace value="preserve"/>
-      </xs:restriction>
-    </xs:simpleType>
-  </xs:attribute>
 
   <xs:element name="method">
     <xs:complexType>
