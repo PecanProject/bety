@@ -22,5 +22,23 @@ yardoc command.  This will allow for easily passing options on the
 command line.  Run "yardoc --help" for a list of options.
 
 DESCRIPTION
-  task :app => :yard
+  task :app => [:yard, 'doc/trait_data_xml_schema/TraitData.html']
 end
+
+file 'doc/trait_data_xml_schema/TraitData.html' => ['doc/trait_data_xml_schema', 'app/lib/api/validation/TraitData.xsd', 'app/lib/api/validation/AssociationLookupTypes.xsd'] do
+
+  main = Nokogiri.XML(File.read('app/lib/api/validation/TraitData.xsd'))
+  included = Nokogiri.XML(File.read('app/lib/api/validation/AssociationLookupTypes.xsd'))
+
+  # Combine the schema documents manually becuase xs3p.xsl doesn't
+  # handle XML Schema's <include> element:
+  main.root << included.root.children
+
+  stylesheet = Nokogiri::XSLT(File.read('lib/tasks/xs3p-1.1.5/xs3p.xsl'))
+
+  result = stylesheet.transform(main)
+
+  result.write_to(File.open('doc/trait_data_xml_schema/TraitData.html', 'w'))
+end
+
+directory 'doc/trait_data_xml_schema'
