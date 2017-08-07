@@ -46,6 +46,7 @@ group :development, :test do
   # include it in development in case we want to have access to
   # RSpec-specific generators.
   gem "rspec-rails", "~> 3.0"
+  gem "yard"
 end
 
 
