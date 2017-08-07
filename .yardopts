@@ -1,5 +1,10 @@
- --private
+--private
+--protected
+
 --output-dir doc/app
+
+--exclude lib/tasks
+
 --tag preconditions:"Preconditions"
 --tag postconditions:"Postconditions"
 --type-name-tag constant:"Constants this method uses"
