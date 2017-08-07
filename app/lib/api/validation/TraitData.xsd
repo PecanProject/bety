@@ -67,7 +67,7 @@
     </xs:documentation>
   </xs:annotation>
 
-  <xs:include schemaLocation="TraitAttributeTypes.xsd"/>
+  <xs:include schemaLocation="AssociationLookupTypes.xsd"/>
 
   <xs:element name="trait-data-set" substitutionGroup="trait-group"/>
 
