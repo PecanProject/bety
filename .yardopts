@@ -1,0 +1,15 @@
+--private
+--protected
+
+--output-dir doc/app
+
+--exclude lib/tasks
+
+--tag preconditions:"Preconditions"
+--tag postconditions:"Postconditions"
+--type-name-tag constant:"Constants this method uses"
+--type-name-tag used_instance_variable:"Instance variables this method uses before setting"
+--type-name-tag changed_instance_variable:"Instance variables set by this method"
+--tag calls:"Calls"
+--tag callers:"Called by"
+--tag side_effect:"Side effects"

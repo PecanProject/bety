@@ -4439,6 +4439,14 @@ ALTER TABLE ONLY pfts
 
 
 --
+-- Name: unique_site_id; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY sites_cultivars
+    ADD CONSTRAINT unique_site_id UNIQUE (site_id);
+
+
+--
 -- Name: unique_sync_host_id; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
