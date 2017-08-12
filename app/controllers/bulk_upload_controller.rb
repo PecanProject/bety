@@ -170,6 +170,8 @@ class BulkUploadController < ApplicationController
   #    meta-data added (provided there were no errors in the field list;
   #    otherwise, data validation is not done).
   #
+  # @calls {BulkUploadDataSet#check_header_list},
+  #   {BulkUploadDataSet#validate_csv_data}
   def display_csv_file
 
     uploaded_io = params["CSV file"]
@@ -294,6 +296,13 @@ class BulkUploadController < ApplicationController
   # associations will be made when the data is inserted.  An +Insesrt+ +Data+
   # button is displayed for the user to trigger the final step after visually
   # verifying the data.
+  #
+  # @calls {ensure_citation}, {BulkUploadDataSet#get_upload_sites},
+  #   {BulkUploadDataSet#get_upload_entities},
+  #   {BulkUploadDataSet#get_upload_species},
+  #   {BulkUploadDataSet#get_upload_citations},
+  #   {BulkUploadDataSet#get_upload_treatments},
+  #   {BulkUploadDataSet#get_upload_cultivars}
   def confirm_data
 
     begin
