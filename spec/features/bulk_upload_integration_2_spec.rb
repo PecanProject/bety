@@ -613,4 +613,17 @@ CSV
     expect(first("div.alert-success")).to have_content("Data from blank_cells_in_notes_column.csv was successfully uploaded.")
   end
 
+  # GitHub issue #452
+  pending "A file with an unmatched citation shouldn't yield a complaint about undefined method `empty?'" do
+    visit '/bulk_upload/start_upload'
+    attach_file 'CSV file', Rails.root.join('spec',
+                                            'fixtures',
+                                            'files',
+                                            'bulk_upload',
+                                            'data_validation',
+                                            'unmatched_citation_and_global_treatment.csv')
+    click_button 'Upload'
+    expect(page).not_to have_content('undefined method')
+  end
+
 end
