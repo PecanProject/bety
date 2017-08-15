@@ -301,10 +301,14 @@ class BulkUploadDataSet
   # +:css_class+, whose value is a CSS stylesheet class to assign to the HTML
   # element containing the summary message.
   #
-  # ==== Example
+  # @example If there are field list errors, +:field_list_errors+ will be the only key:
   #  {
-  #    :field_list_errors=>['In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'],
-  #    ""Date is invalid"=>{
+  #    :field_list_errors=>['In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.']
+  #  }
+  # @example Otherwise, the value of +:field_list_errors+ will be an empty list:
+  #  {
+  #    :field_list_errors=>[],
+  #    "Date is invalid"=>{
   #      :row_numbers=>[1],
   #      :css_class=>"invalid_date"
   #    },
@@ -570,6 +574,18 @@ class BulkUploadDataSet
   #   {file_includes_citation_info}
   #
   # @callers {BulkUploadController#display_csv_file}
+  #
+  # @return [void]
+  #
+  # @used_instance_variable @data [CSV]
+  # @used_instance_variable @trait_names_in_heading [Array<String>]
+  # @used_instance_variable @allowed_covariates [Array<String>]
+  # @used_instance_variable @optional_covariates [Array<String>]
+  # @used_instance_variable @headers [Array<String>]
+  # @used_instance_variable @session [Hash]
+  #
+  # @changed_instance_variable @validated_data [Array<Array<Hash>>]
+  # @changed_instance_variable @validation_summary [Hash]
   def validate_csv_data
     if field_list_error_count.nil?
       raise "check_header_list must be run before before calling validate_csv_data"
@@ -587,7 +603,7 @@ class BulkUploadDataSet
 
     if field_list_error_count > 0
       # just show the file without attempting to validate it
-      return @validated_data
+      return
     end
 
     @validated_data.each_with_index do |row, i|
@@ -889,12 +905,12 @@ class BulkUploadDataSet
 
     if file_includes_citation_info
       if !@headers.include?('site')
-        if Site.in_all_citations(@session[:citation_id_list]).empty?
+        if Site.in_all_citations(@session[:citation_id_list]).try(:empty?)
           @validation_summary["There are no sites common to all the citations in the file."] = { }
         end
       end
       if !@headers.include?('treatment')
-        if Treatment.in_all_citations(@session[:citation_id_list]).empty?
+        if Treatment.in_all_citations(@session[:citation_id_list]).try(:empty?)
           @validation_summary["There are no treatments common to all the citations in the file."] = { }
         end
       end

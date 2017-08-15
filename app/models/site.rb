@@ -205,9 +205,13 @@ EXISTS (
         WHERE cs.site_id = sites.id
             AND cs.citation_id = ?)
 CONDITION
-    sites = self.where({})
+    sites = nil
     citation_id_list.flatten.each do |citation_id|
-      sites = sites.where(where_condition, citation_id)
+      if sites.nil?
+        sites = self.where(where_condition, citation_id)
+      else
+        sites = sites.where(where_condition, citation_id)
+      end
     end
     return sites
   end
