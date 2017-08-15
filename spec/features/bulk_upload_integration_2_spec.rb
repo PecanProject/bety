@@ -614,7 +614,7 @@ CSV
   end
 
   # GitHub issue #452
-  pending "A file with an unmatched citation shouldn't yield a complaint about undefined method `empty?'" do
+  specify "A file with an unmatched citation shouldn't yield a complaint about undefined method `empty?'" do
     visit '/bulk_upload/start_upload'
     attach_file 'CSV file', Rails.root.join('spec',
                                             'fixtures',
