@@ -99,7 +99,7 @@ module BulkUploadHelper
   end
 
   def get_access_level(session)
-     [nil, 'Restricted', 'Internal EBI & Collaborators', 'External Researcher', 'Public'][session[:global_values][:access_level].to_i] rescue nil
+     [nil, 'Restricted', 'Internal & Collaborators', 'External Researcher', 'Public'][session[:global_values][:access_level].to_i] rescue nil
   end
 
 end
