@@ -66,6 +66,9 @@ GEM
     ffi (1.9.8)
     hike (1.2.3)
     i18n (0.7.0)
+    jbuilder (2.6.4)
+      activesupport (>= 3.0.0)
+      multi_json (>= 1.2)
     journey (1.0.4)
     json (1.8.3)
     json-schema (2.6.1)
@@ -202,6 +205,7 @@ DEPENDENCIES
   comma (= 3.0.4)
   database_cleaner
   dynamic_form
+  jbuilder
   json
   json-schema
   memoist
@@ -234,4 +238,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.14.5
+   1.15.3
