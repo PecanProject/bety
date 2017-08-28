@@ -85,6 +85,7 @@ GEM
     narray (0.6.0.4)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
+    oj (3.3.5)
     passenger (4.0.24)
       daemon_controller (>= 1.1.0)
       rack
@@ -212,6 +213,7 @@ DEPENDENCIES
   multi_json (= 1.3.6)
   narray (= 0.6.0.4)
   nokogiri
+  oj
   passenger
   pg
   prototype-rails

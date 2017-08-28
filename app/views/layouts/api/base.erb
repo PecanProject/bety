@@ -7,7 +7,7 @@
   if controller.request.format == 'xml'
     data_from_template = Hash.from_xml(yield)
   else # JSON
-    require 'yajl'
+    require 'oj'
     data_from_template = Yajl::Parser.parse(yield)
   end
 
@@ -49,6 +49,6 @@
   if controller.request.format == 'xml'
     raw(data_hash.to_xml)
   else
-    raw(Yajl::Encoder.new(pretty: true).encode(data_hash))
+    raw(Oj.dump(data_hash))
   end
 %>

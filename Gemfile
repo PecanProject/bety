@@ -23,6 +23,7 @@ gem 'dynamic_form'
 gem 'rabl'
 gem 'yajl-ruby'
 gem 'jbuilder'
+gem 'oj'
 
 # to-do: remove prototype dependencies so we no longer need this gem
 gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
