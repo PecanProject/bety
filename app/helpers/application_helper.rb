@@ -1,15 +1,11 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 
-  def access_level(id)
-    access = ["", "Restricted", "Internal EBI & Collaborators", "External Researchers", "Public"]
-    return access[id.to_i]
-  end
+  DATA_ACCESS_LEVELS = [ ["1. Restricted", 1], ["2. Internal & Collaborators", 2], ["3. External Researcher", 3], ["4. Public", 4] ]
+  ABBREVIATED_DATA_ACCESS_LEVELS = [ ["1. Restricted", 1], ["2. Internal", 2], ["3. External", 3], ["4. Public", 4] ]
+  DEFAULT_DATA_ACCESS_LEVEL = 3 # External Researcher
+  UNNUMBERED_DATA_ACCESS_LEVELS_WITH_BLANK = [ ["", 0], ["Restricted", 1], ["Internal & Collaborators", 2], ["External Researcher", 3], ["Public", 4] ]
 
-  def page_access_requirement(id)
-    access = ["", "Administrator", "Manager", "Creator", "Viewer"]
-    return access[id.to_i]
-  end
   # Checks if current treatment_id is in associated citations treatment
   # association.
   def treatment_check(ty)

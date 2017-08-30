@@ -48,8 +48,6 @@ class UsersController < ApplicationController
     else
       success = verify_recaptcha(:model => @user, :message => "Please re-enter the words from the image again.") && @user && @user.save
     end
-    page_access_level = ["", "Administrator", "Manager", "Creator", "Viewer"]
-    access_level = ["", "Restricted", "Internal EBI & Collaborators", "External Researchers", "Public"]
 
     if success && @user.errors.empty?
       if params[:user][:page_access_level].to_i < 4 or params[:user][:access_level].to_i < 3
