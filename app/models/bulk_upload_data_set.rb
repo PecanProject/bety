@@ -301,10 +301,14 @@ class BulkUploadDataSet
   # +:css_class+, whose value is a CSS stylesheet class to assign to the HTML
   # element containing the summary message.
   #
-  # ==== Example
+  # @example If there are field list errors, +:field_list_errors+ will be the only key:
   #  {
-  #    :field_list_errors=>['In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'],
-  #    ""Date is invalid"=>{
+  #    :field_list_errors=>['In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.']
+  #  }
+  # @example Otherwise, the value of +:field_list_errors+ will be an empty list:
+  #  {
+  #    :field_list_errors=>[],
+  #    "Date is invalid"=>{
   #      :row_numbers=>[1],
   #      :css_class=>"invalid_date"
   #    },
@@ -448,6 +452,10 @@ class BulkUploadDataSet
   # +csv_warnings+ and +validation_summary+.  (This method sets only the portion
   # of +validation_summary+ related to field list errors.)  Used by the
   # +display_csv_file+ action.
+  #
+  # @calls {get_trait_and_covariate_info}, {yield_data?}
+  #
+  # @callers {BulkUploadController#display_csv_file}
   def check_header_list
 
     @validation_summary = {}
@@ -559,6 +567,25 @@ class BulkUploadDataSet
   #                 This will always be an object of some class that includes
   #                 the ValidationResult module--that is, an instance of Valid,
   #                 Ignored, or some subclass of BulkUploadDataException.
+  #
+  # @calls {field_list_error_count}, {doi_of_existing_citation?},
+  #   {existing_site?}, {existing_species?}, {existing_cultivar?},
+  #   {get_trait_and_covariate_info}, {add_to_validation_summary},
+  #   {file_includes_citation_info}
+  #
+  # @callers {BulkUploadController#display_csv_file}
+  #
+  # @return [void]
+  #
+  # @used_instance_variable @data [CSV]
+  # @used_instance_variable @trait_names_in_heading [Array<String>]
+  # @used_instance_variable @allowed_covariates [Array<String>]
+  # @used_instance_variable @optional_covariates [Array<String>]
+  # @used_instance_variable @headers [Array<String>]
+  # @used_instance_variable @session [Hash]
+  #
+  # @changed_instance_variable @validated_data [Array<Array<Hash>>]
+  # @changed_instance_variable @validation_summary [Hash]
   def validate_csv_data
     if field_list_error_count.nil?
       raise "check_header_list must be run before before calling validate_csv_data"
@@ -576,7 +603,7 @@ class BulkUploadDataSet
 
     if field_list_error_count > 0
       # just show the file without attempting to validate it
-      return @validated_data
+      return
     end
 
     @validated_data.each_with_index do |row, i|
@@ -878,12 +905,12 @@ class BulkUploadDataSet
 
     if file_includes_citation_info
       if !@headers.include?('site')
-        if Site.in_all_citations(@session[:citation_id_list]).empty?
+        if Site.in_all_citations(@session[:citation_id_list]).try(:empty?)
           @validation_summary["There are no sites common to all the citations in the file."] = { }
         end
       end
       if !@headers.include?('treatment')
-        if Treatment.in_all_citations(@session[:citation_id_list]).empty?
+        if Treatment.in_all_citations(@session[:citation_id_list]).try(:empty?)
           @validation_summary["There are no treatments common to all the citations in the file."] = { }
         end
       end
@@ -917,6 +944,8 @@ class BulkUploadDataSet
   # Returns +true+ if the file contains citation information.  Even if a value
   # of +true+ is returned, the information can not be assumed to be complete
   # unless <tt>field_list_error_count()</tt> returns zero.
+  #
+  # @callers {validate_csv_data}
   def file_includes_citation_info
     @headers.include?("citation_author") || # only need to check one of citation_author, citation_year, and citation_title
       @headers.include?("citation_doi")
@@ -926,6 +955,8 @@ class BulkUploadDataSet
   # globally if site information was not included in the upload file.  Raises a
   # RuntimeError if no match is found for some site in the data set.  Used by
   # the +confirm_data+ action.
+  #
+  # @callers {BulkUploadController#confirm_data}
   def get_upload_sites
     @data.rewind
 
@@ -950,6 +981,8 @@ class BulkUploadDataSet
   end
 
   # Returns the list of named Entities used by the data set.
+  #
+  # @callers {BulkUploadController#confirm_data}
   def get_upload_entities
     @data.rewind
 
@@ -980,6 +1013,8 @@ class BulkUploadDataSet
   # a RuntimeError if no match is found for some species in the data set.  Used
   # by the +confirm_data+ action and as a helper method for
   # +get_upload_cultivars+.
+  #
+  # @callers {get_upload_cultivars}, {BulkUploadController#confirm_data}
   def get_upload_species
     @data.rewind
 
@@ -1007,6 +1042,8 @@ class BulkUploadDataSet
   # specified globally if cultivar information was not included in the upload
   # file.  Raises a RuntimeError if no match is found for some cultivar in the
   # data set.  Used by the +confirm_data+ action.
+  #
+  # @callers {BulkUploadController#confirm_data}
   def get_upload_cultivars
     @data.rewind
 
@@ -1054,6 +1091,8 @@ class BulkUploadDataSet
   # since the data file was uploaded--otherwise a one-item list consisting of
   # the Citation specified globally (if any) is returned, even if the file
   # contains citation information. Used by the +confirm_data+ action.
+  #
+  # @callers {BulkUploadController#confirm_data}
   def get_upload_citations
     @data.rewind
 
@@ -1071,6 +1110,8 @@ class BulkUploadDataSet
   # specified globally if treatment information was not included in the upload
   # file.  Raises a RuntimeError no match is found for some treatment in the
   # data set.  Used by the +confirm_data+ action.
+  #
+  # @callers {BulkUploadController#confirm_data}
   def get_upload_treatments
     @data.rewind
 
@@ -1185,6 +1226,8 @@ class BulkUploadDataSet
   # file, or +nil+ if +check_header_list+ has not yet been run.  Used by the
   # +make_validation_summary+ helper to determine if a section detailing field
   # list errors should be displayed.
+  #
+  # @callers {validate_csv_data}, {total_error_count}
   def field_list_error_count
     return nil if @validation_summary.nil?
 
@@ -1196,6 +1239,8 @@ class BulkUploadDataSet
   # run but +validate_csv_data+ has not, 0 will be returned.  Used by the
   # +make_validation_summary+ helper to determine if a section detailing data
   # value errors should be displayed.
+  #
+  # @callers {total_error_count}
   def data_value_error_count
     return nil if @validation_summary.nil?
 
@@ -1208,6 +1253,10 @@ class BulkUploadDataSet
   # +check_header_list+ has been run, only the count of field list errors will
   # be included in the total.  Used by the +display_csv_file+ template (via the
   # +make_validation_summary+ helper) to display the number of errors found.
+  #
+  # @calls {field_list_error_count}, {data_value_error_count}
+  #
+  # @callers {file_has_fatal_errors}
   def total_error_count
     return nil if @validation_summary.nil?
 
@@ -1219,6 +1268,10 @@ class BulkUploadDataSet
   # +display_csv_file+ template, both directly (to determine if forward wizard
   # links should be shown) and via the +make_validation_summary+ helper (to
   # determine if an error summary should be displayed).
+  #
+  # @calls {total_error_count}
+  #
+  # @callers {BulkUploadController#display_csv_file}
   def file_has_fatal_errors
     return nil if @validation_summary.nil?
 
@@ -1362,6 +1415,8 @@ class BulkUploadDataSet
   # Using the trait_covariate_associations table and the column headings in the
   # upload file, find relevant information about the trait and covariate
   # variables for this upload.
+  #
+  # @callers {check_header_list}
   def get_trait_and_covariate_info
 
     # A list of TraitCovariateAssociation objects corresponding to trait
@@ -1441,6 +1496,8 @@ class BulkUploadDataSet
   #                     }
   #       }
   # }
+  #
+  # @callers {get_insertion_data}
   def get_variables_in_heading
 
     # A list of TraitCovariateAssociation objects corresponding to trait
@@ -1474,6 +1531,8 @@ class BulkUploadDataSet
   # "normalized" means leading and trailing space is trimmed, internal sequences
   # of spaces are converted to a single space, and, if +preserve_case+ is
   # +false+ (the default), the value is converted to lower case.
+  #
+  # @callers {existing?}, {existing_citation}
   def sql_columnref_to_normalized_columnref(col, preserve_case = false)
     if !preserve_case
       col = "LOWER(#{col})"
@@ -1488,6 +1547,10 @@ class BulkUploadDataSet
   # database value before a match is attempted.  If no match was found, a
   # +MissingReferenceException+ is raised.  If multiple matches were found, a
   # +NonUniquenessException+ is raised.
+  #
+  # @callers {existing_species?}, {existing_site?},
+  #   {existing_treatment?}, {doi_of_existing_citation?}
+  #   {existing_cultivar?}, {existing_entity?}
   def existing?(model_class_or_relation, match_column_name, raw_value, table_entity_name)
     matches = model_class_or_relation.where(["#{sql_columnref_to_normalized_columnref(match_column_name)} = :stored_value",
                                              { stored_value: raw_value.downcase }])
@@ -1504,6 +1567,8 @@ class BulkUploadDataSet
   # Returns a +Species+ object whose +scientificname+ attribute matches +name+.
   # If multiple matches are found, a +NonUniquenessException+ is raised, and if
   # no match is found, a +MissingReferenceException+ is raised.
+  #
+  # @calls {existing?}
   def existing_species?(name)
     name.sub!(' x ', " \u00d7 ") # normalize ' x ' to hybrid symbol
     return existing?(Specie, "scientificname", name, "species")
@@ -1513,6 +1578,8 @@ class BulkUploadDataSet
   # Returns a +Site+ object whose +sitename+ attribute matches +name+.  If
   # multiple matches are found, a +NonUniquenessException+ is raised, and if no
   # match is found, a +MissingReferenceException+ is raised.
+  #
+  # @calls {existing?}
   def existing_site?(name)
     return existing?(Site, "sitename", name, "site")
   end
@@ -1523,6 +1590,8 @@ class BulkUploadDataSet
   # the citation having that id.  If multiple matches are found, a
   # +NonUniquenessException+ is raised, and if no match is found, a
   # +MissingReferenceException+ is raised.
+  #
+  # @calls {existing?}
   def existing_treatment?(name, citation_id = nil)
     if citation_id.nil?
       # match against any treatment
@@ -1537,6 +1606,8 @@ class BulkUploadDataSet
   # Returns a +Citation+ object whose +doi+ attribute matches +doi+.  If
   # multiple matches are found, a +NonUniquenessException+ is raised, and if no
   # match is found, a +MissingReferenceException+ is raised.
+  #
+  # @calls {existing?}
   def doi_of_existing_citation?(doi)
     return existing?(Citation, "doi", doi, "citation")
   end
@@ -1577,6 +1648,8 @@ class BulkUploadDataSet
   # corresponding species.  If multiple matches are found, a
   # +NonUniquenessException+ is raised, and if no match is found, a
   # +MissingReferenceException+ is raised.
+  #
+  # @calls {existing?}
   def existing_cultivar?(name, species_id = nil)
     if species_id.nil?
       existing?(Cultivar, "name", name, "cultivar")
@@ -1589,6 +1662,8 @@ class BulkUploadDataSet
   # Returns a +Entity+ object whose +name+ attribute matches +name+.  If
   # multiple matches are found, a +NonUniquenessException+ is raised, and if no
   # match is found, a +MissingReferenceException+ is raised.
+  #
+  # @calls {existing?}
   def existing_entity?(name)
     return existing?(Entity, "name", name, "entity")
   end
@@ -1624,6 +1699,8 @@ class BulkUploadDataSet
   #
   # @return [Hash] The return value is identical to the (modified)
   #   Hash <code>args[:input_hash]</code>.
+  #
+  # @callers {get_insertion_data}
   def lookup_and_add_ids(args)
     specified_values = args[:input_hash]
     validation_errors = args[:error_list]
@@ -1748,6 +1825,8 @@ class BulkUploadDataSet
   #   one trait or yield instance.
   #
   # @todo Make @mapped_data a local variable.
+  #
+  # @callers {insert_data}
   def get_insertion_data
 
     # Get interactively-specified values, or set to empty hash if nil; since we
@@ -1902,6 +1981,8 @@ class BulkUploadDataSet
   # the number of significant digits stored in
   # <tt>@session["rounding"]["vars"]</tt>, and stores the result in the "mean"
   # key.
+  #
+  # @callers {get_insertion_data}
   def add_yield_specific_attributes(csv_row_as_hash)
 
     # apply rounding to the yield
@@ -1929,6 +2010,8 @@ class BulkUploadDataSet
   # giving the database id of the covariate variable, and +:level+, giving the
   # value of that covariate, rounded to the number of significant digits
   # specified by the user and stored in <tt>@session["rounding"]["vars"]</tt>.
+  #
+  # @callers {get_insertion_data}
   def add_trait_specific_attributes(row_data, trait_variable_id)
 
     associated_trait_info = @heading_variable_info[trait_variable_id]
@@ -1965,6 +2048,8 @@ class BulkUploadDataSet
   # add the key along with the subkey +:css_class+ with value
   # +e.result_css_class+ and subkey +:row_number+ initialized to a one-item
   # Array containing +row_number+.
+  #
+  # @callers {validate_csv_data}
   def add_to_validation_summary(e, row_number)
     key = e.summary_message
     if @validation_summary.has_key? key
@@ -1978,11 +2063,15 @@ class BulkUploadDataSet
   end
 
   # Returns +true+ if the uploaded file contains yield data.
+  #
+  # @callers {check_header_list}, {get_insertion_data}, {insert_data}
   def yield_data?
     @is_yield_data
   end
 
   # Returns +true+ if the uploaded file contains trait data.
+  #
+  # @callers {check_header_list}, {get_insertion_data}
   def trait_data?
     !@is_yield_data
   end
