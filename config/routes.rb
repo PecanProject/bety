@@ -267,11 +267,12 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
       [:citations, :covariates, :cultivars, :dbfiles, :ensembles, :entities,
        :experiments, :formats, :inputs, :likelihoods, :machines,
        :managements, :methods, :mimetypes, :models, :modeltypes, :pfts,
-       :posteriors, :priors, :runs, :search, :sites, :species, :traits,
+       :posteriors, :priors, :runs, :sites, :species, :traits,
        :treatments, :users, :variables, :yields
       ].each do |model|
         resources model, only: [:index, :show]
       end
+      resources :search, only: :index
       resources :traits, only: :create
     end
   end
