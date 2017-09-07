@@ -1,10 +1,13 @@
-# Define the "yard" task:
-YARD::Rake::YardocTask.new do |t|
-  # Most options are set in the .yardopts file under the Rails root
-  # directory rather than here.
+# This test is needed because we don't load YARD in all environments:
+if defined? YARD
+  # Define the "yard" task:
+  YARD::Rake::YardocTask.new do |t|
+    # Most options are set in the .yardopts file under the Rails root
+    # directory rather than here.
 
-  # Uncomment this to get a report of all undocumented methods:
-  # t.stats_options = ['--list-undoc']
+    # Uncomment this to get a report of all undocumented methods:
+    # t.stats_options = ['--list-undoc']
+  end
 end
 
 # Make the doc:app task run yardoc instead of RDoc:
