@@ -7,10 +7,7 @@ EXPOSE 3000
 # environment variables used
 ENV LOCAL_SERVER=99 \
     REMOTE_SERVERS="0 1 2 5" \
-    DATABASE="bety" \
-    OWNER="bety" \
-    PASSWORD="bety" \
-    RAILS_ENV="production"
+    RAILS_ENV="production" 
 
 # Install dependencies
 RUN apt-get update \
