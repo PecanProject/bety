@@ -1,6 +1,6 @@
 
 # rails application database config
-development:
+production:
   adapter: postgis
   encoding: utf8
   reconnect: false
@@ -8,5 +8,5 @@ development:
   pool: 5
   username: postgres
   password: bety
-  host:
-  port:
+  host: postgres
+  port: 5432
