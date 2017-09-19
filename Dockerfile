@@ -20,7 +20,6 @@ RUN apt-get update \
         netcat \
         postgresql-client \
     && rm -rf /var/lib/apt/lists/*
-#        sudo
 
 # change to working directory
 WORKDIR /home/bety
