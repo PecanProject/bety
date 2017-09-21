@@ -13,7 +13,7 @@ class AddSitegroups < ActiveRecord::Migration
     change_column :sitegroups, :id, :integer, :limit => 8
     # fix the counter for inserting new records
     execute %{
-        SELECT setval('sitegroups_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+        SELECT setval('sitegroups_id_seq', GREATEST(1, 1 + CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
         ALTER TABLE sitegroups
             ALTER COLUMN created_at SET DEFAULT utc_now(),
             ALTER COLUMN updated_at SET DEFAULT utc_now(),
@@ -31,7 +31,7 @@ class AddSitegroups < ActiveRecord::Migration
     change_column :sitegroups_sites, :id, :integer, :limit => 8
     # fix the counter for inserting new records and add foreign key constraints
     execute %{
-        SELECT setval('sitegroups_sites_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+        SELECT setval('sitegroups_sites_id_seq', GREATEST(1, 1 + CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
         ALTER TABLE sitegroups_sites
             ALTER COLUMN created_at SET DEFAULT utc_now(),
             ALTER COLUMN updated_at SET DEFAULT utc_now();
