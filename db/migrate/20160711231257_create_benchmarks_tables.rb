@@ -17,7 +17,7 @@ class CreateBenchmarksTables < ActiveRecord::Migration
       t.timestamps
     end
     execute %{
-      SELECT setval('benchmarks_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+      SELECT setval('benchmarks_id_seq', GREATEST(1, 1 + CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmarks"
       ALTER COLUMN created_at SET DEFAULT utc_now(),
       ALTER COLUMN updated_at SET DEFAULT utc_now();
@@ -43,7 +43,7 @@ class CreateBenchmarksTables < ActiveRecord::Migration
       t.timestamps
     end
     execute %{
-      SELECT setval('metrics_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+      SELECT setval('metrics_id_seq', GREATEST(1, 1 + CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "metrics"
       ALTER COLUMN created_at SET DEFAULT utc_now(),
       ALTER COLUMN updated_at SET DEFAULT utc_now();
@@ -58,7 +58,7 @@ class CreateBenchmarksTables < ActiveRecord::Migration
       t.timestamps
     end
     execute %{
-      SELECT setval('reference_runs_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+      SELECT setval('reference_runs_id_seq', 1 + GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "reference_runs"
       ALTER COLUMN created_at SET DEFAULT utc_now(),
       ALTER COLUMN updated_at SET DEFAULT utc_now();
@@ -77,7 +77,7 @@ class CreateBenchmarksTables < ActiveRecord::Migration
       t.timestamps
     end
     execute %{
-      SELECT setval('benchmark_sets_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+      SELECT setval('benchmark_sets_id_seq', GREATEST(1, 1 + CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmark_sets"
       ALTER COLUMN created_at SET DEFAULT utc_now(),
       ALTER COLUMN updated_at SET DEFAULT utc_now();
@@ -94,7 +94,7 @@ class CreateBenchmarksTables < ActiveRecord::Migration
       t.timestamps
     end
     execute %{
-      SELECT setval('benchmarks_ensembles_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+      SELECT setval('benchmarks_ensembles_id_seq', GREATEST(1, 1 + CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmarks_ensembles"
       ALTER COLUMN created_at SET DEFAULT utc_now(),
       ALTER COLUMN updated_at SET DEFAULT utc_now();
@@ -120,7 +120,7 @@ class CreateBenchmarksTables < ActiveRecord::Migration
       t.timestamps
     end
     execute %{
-      SELECT setval('benchmarks_ensembles_scores_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+      SELECT setval('benchmarks_ensembles_scores_id_seq', GREATEST(1, 1 + CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmarks_ensembles_scores"
       ALTER COLUMN created_at SET DEFAULT utc_now(),
       ALTER COLUMN updated_at SET DEFAULT utc_now();
@@ -142,7 +142,7 @@ class CreateBenchmarksTables < ActiveRecord::Migration
       t.integer :metric_id, :limit => 8
     end
     execute %{
-      SELECT setval('benchmarks_metrics_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+      SELECT setval('benchmarks_metrics_id_seq', GREATEST(1, 1 + CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmarks_metrics"
       ADD CONSTRAINT "benchmarks_metrics_benchmark_id_fkey" 
         FOREIGN KEY ("benchmark_id") REFERENCES benchmarks("id")
@@ -158,7 +158,7 @@ class CreateBenchmarksTables < ActiveRecord::Migration
       t.integer :reference_run_id, :limit => 8
     end
     execute %{
-      SELECT setval('benchmarks_benchmarks_reference_runs_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+      SELECT setval('benchmarks_benchmarks_reference_runs_id_seq', GREATEST(1, 1 + CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmarks_benchmarks_reference_runs"
       ADD CONSTRAINT "benchmarks_benchmarks_reference_runs_benchmark_id_fkey" 
         FOREIGN KEY ("benchmark_id") REFERENCES benchmarks("id")
@@ -174,7 +174,7 @@ class CreateBenchmarksTables < ActiveRecord::Migration
       t.integer :reference_run_id, :limit => 8
     end  
     execute %{
-      SELECT setval('benchmark_sets_benchmark_reference_runs_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+      SELECT setval('benchmark_sets_benchmark_reference_runs_id_seq', GREATEST(1, 1 + CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
       ALTER TABLE "benchmark_sets_benchmark_reference_runs"
       ADD CONSTRAINT "benchmark_sets_benchmark_reference_runs_benchmark_set_id_fkey" 
         FOREIGN KEY ("benchmark_set_id") REFERENCES benchmark_sets("id")
