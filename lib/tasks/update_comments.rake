@@ -1,71 +1,73 @@
 namespace :bety do
 
-  # This is a subsidiary task.  It should be a prerequisite for any
-  # task that calls the table_2_model method.  It loads each model
-  # found in the app/models directory.
-  task :load_models => :environment do
-    Dir.foreach(Rails.root.join("app", "models")) do |f|
-      begin
-        if f =~ /.*\.rb$/
-          require f
+  namespace :db do
+    
+    # This is a subsidiary task.  It should be a prerequisite for any
+    # task that calls the table_2_model method.  It loads each model
+    # found in the app/models directory.
+    task :load_models => :environment do
+      Dir.foreach(Rails.root.join("app", "models")) do |f|
+        begin
+          if f =~ /.*\.rb$/
+            require f
+          end
+        rescue LoadError => e
+          puts e
         end
-      rescue LoadError => e
-        puts e
       end
     end
-  end
 
 
-  # Returns a Hash whose keys are all the tables having a Rails model
-  # and whose values are the model object itself.
-  def table_2_model
-    return Hash[ActiveRecord::Base.send(:descendants).collect{|model| [model.table_name, model]}]
-  end
+    # Returns a Hash whose keys are all the tables having a Rails model
+    # and whose values are the model object itself.
+    def table_2_model
+      return Hash[ActiveRecord::Base.send(:descendants).collect{|model| [model.table_name, model]}]
+    end
 
 
-  desc <<DESCRIPTION
+    desc <<DESCRIPTION
 Update database comments using the data in the YAML file db/data/database_comments.yaml.
 DESCRIPTION
-  task :update_comments => [ "rake:db:load_config", :load_models ] do
+    task :update_comments => [ "rake:db:load_config", :load_models ] do
 
-    begin
-      comments = YAML::load(File.open(Rails.root.join('db', 'data', 'database_comments.yaml')))
+      begin
+        comments = YAML::load(File.open(Rails.root.join('db', 'data', 'database_comments.yaml')))
 
-      config = ActiveRecord::Base.configurations[Rails.env]
-      connection = ActiveRecord::Base.establish_connection(config).connection
+        config = ActiveRecord::Base.configurations[Rails.env]
+        connection = ActiveRecord::Base.establish_connection(config).connection
 
-      table_2_model = Hash[ActiveRecord::Base.send(:descendants).collect{|model| [model.table_name, model]}]
+        table_2_model = Hash[ActiveRecord::Base.send(:descendants).collect{|model| [model.table_name, model]}]
 
 
-      comments.each_pair do |table, value|
+        comments.each_pair do |table, value|
 
-        if !connection.tables.include? table
-          puts "There is no table named \"#{table}\" ... skipping ..."
-          next
-        end
+          if !connection.tables.include? table
+            puts "There is no table named \"#{table}\" ... skipping ..."
+            next
+          end
 
-        value.each_pair do |key, comment|
-          if key == "table_comment"
-            connection.exec_query("COMMENT ON TABLE \"#{table}\" IS #{ActiveRecord::Base.sanitize(comment)}")
-          elsif table_2_model[table].column_names.include? key
-            connection.exec_query("COMMENT ON COLUMN \"#{table}\".\"#{key}\" IS #{ActiveRecord::Base.sanitize(comment)}")
-          else
-            puts "The \"#{table}\" table does not have a column named \"#{key}\" ... skipping ..."
+          value.each_pair do |key, comment|
+            if key == "table_comment"
+              connection.exec_query("COMMENT ON TABLE \"#{table}\" IS #{ActiveRecord::Base.sanitize(comment)}")
+            elsif table_2_model[table].column_names.include? key
+              connection.exec_query("COMMENT ON COLUMN \"#{table}\".\"#{key}\" IS #{ActiveRecord::Base.sanitize(comment)}")
+            else
+              puts "The \"#{table}\" table does not have a column named \"#{key}\" ... skipping ..."
+            end
           end
         end
+
+      rescue Psych::SyntaxError => e
+        puts e.inspect
+        puts e.message
+        exit
+      rescue PG::ConnectionBad => e
+        puts e.message
       end
-
-    rescue Psych::SyntaxError => e
-      puts e.inspect
-      puts e.message
-      exit
-    rescue PG::ConnectionBad => e
-      puts e.message
     end
-  end
 
 
-  desc <<DESCRIPTION
+    desc <<DESCRIPTION
 Dump the collection of database table and column comments as a YAML \
 file.
 
@@ -103,78 +105,80 @@ This tasks takes up to three arguments:
 
   Set this parameter to "true" to suppress error messages.
 DESCRIPTION
-  task :dump_comments, [:mode, :column_order, :quiet] => ["rake:db:load_config", :load_models, :environment ] do |t, args|
+    task :dump_comments, [:mode, :column_order, :quiet] => ["rake:db:load_config", :load_models, :environment ] do |t, args|
 
-    args.with_defaults(:mode => 'complete', :column_order => 'sql', :quiet => 'false')
+      args.with_defaults(:mode => 'complete', :column_order => 'sql', :quiet => 'false')
 
-    if !['minimal', 'complete'].include? args.mode
-      puts 'The first argument (mode) should be either "minimal" or "complete".'
-      exit
-    end
-
-    if !['alphabetical', 'sql'].include? args.column_order
-      puts 'The second argument (column_order) should be either "alphabetical" or "sql".'
-    end
-
-    if !['true', 'false'].include? args.quiet
-      puts "The third argument (quiet) should be either true or false."
-    end
-
-    # Get connection for the current environment:
-    config = ActiveRecord::Base.configurations[Rails.env]
-    connection = ActiveRecord::Base.establish_connection(config).connection
-
-    # main Hash
-    comment_hash = Hash.new
-
-    # iterate through all tables
-    connection.tables.sort.each do |table|
-
-      comment_hash_for_this_table = Hash.new
-
-      table_comment =  Utilities::SQLComments.get_table_description(table)
-
-      if args.mode == 'complete' || table_comment
-        comment_hash_for_this_table["table_comment"] = table_comment
+      if !['minimal', 'complete'].include? args.mode
+        puts 'The first argument (mode) should be either "minimal" or "complete".'
+        exit
       end
 
-      # Needed for getting column names:
-      model = table_2_model[table]
+      if !['alphabetical', 'sql'].include? args.column_order
+        puts 'The second argument (column_order) should be either "alphabetical" or "sql".'
+      end
 
-      if !model.nil?
+      if !['true', 'false'].include? args.quiet
+        puts "The third argument (quiet) should be either true or false."
+      end
 
-        table_has_comments = false
+      # Get connection for the current environment:
+      config = ActiveRecord::Base.configurations[Rails.env]
+      connection = ActiveRecord::Base.establish_connection(config).connection
 
-        column_names = model.column_names
+      # main Hash
+      comment_hash = Hash.new
 
-        if args.column_order == 'alphabetical'
-          column_names.sort!
+      # iterate through all tables
+      connection.tables.sort.each do |table|
+
+        comment_hash_for_this_table = Hash.new
+
+        table_comment =  Utilities::SQLComments.get_table_description(table)
+
+        if args.mode == 'complete' || table_comment
+          comment_hash_for_this_table["table_comment"] = table_comment
         end
 
-        column_names.each do |column|
+        # Needed for getting column names:
+        model = table_2_model[table]
 
-          column_comment = Utilities::SQLComments.get_column_comment(table, column)
+        if !model.nil?
 
-          table_has_comments ||= !column_comment.nil?
+          table_has_comments = false
 
-          if args.mode == 'complete' || column_comment
-            comment_hash_for_this_table[column] = column_comment
+          column_names = model.column_names
+
+          if args.column_order == 'alphabetical'
+            column_names.sort!
           end
 
-        end # column iteration
+          column_names.each do |column|
 
-      elsif args.quiet == 'false'
-        puts "Can't find a model for the table \"#{table}\" ... skipping column comments ..."
-      end
+            column_comment = Utilities::SQLComments.get_column_comment(table, column)
 
-      if comment_hash_for_this_table.keys.size > 0
-        comment_hash[table] = comment_hash_for_this_table
-      end
+            table_has_comments ||= !column_comment.nil?
 
-    end # table iteration
+            if args.mode == 'complete' || column_comment
+              comment_hash_for_this_table[column] = column_comment
+            end
 
-    File.write(Rails.root.join("db", "data", "database_comments.yaml.dump"), YAML.dump(comment_hash))
+          end # column iteration
 
-  end # dump_comments task
+        elsif args.quiet == 'false'
+          puts "Can't find a model for the table \"#{table}\" ... skipping column comments ..."
+        end
 
-end
+        if comment_hash_for_this_table.keys.size > 0
+          comment_hash[table] = comment_hash_for_this_table
+        end
+
+      end # table iteration
+
+      File.write(Rails.root.join("db", "data", "database_comments.yaml.dump"), YAML.dump(comment_hash))
+
+    end # dump_comments task
+
+  end # namespace db
+
+end # namespace bety
