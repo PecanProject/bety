@@ -112,17 +112,28 @@
   <!-- Primary Page Layout
   ================================================== -->
   <div class="header">
-	  <div class="container">
-		  <div class="sixteen columns">
-			  <h1 class="remove-bottom"><a href="/" class="org">Energy Biosciences Institute</a> <a href="/" class="site"><strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small></a></h1>
-			  <div id="header_user_name">
-		      <% if current_user != nil %>
-			      Logged in as: <%= current_user %>
-			    <% end %>
-		    </div>
-		
-		  </div>
-	  </div><!-- container -->
+    <div class="container">
+      <div class="sixteen columns">
+        <h1 class="remove-bottom">
+          <%= link_to(CONFIG[:organization].try(:[], :url),
+              {
+                  class: "org",
+                  style: "background: url(#{image_path(CONFIG[:organization].try(:[], :logo_file))}) top right no-repeat"
+              }) do
+                CONFIG[:organization].try(:[], :name)
+              end %>
+          <%= link_to(root_path, { class: "site" }) do
+              raw(CONFIG[:site_identification_markup])
+              end %>
+        </h1>
+        <div id="header_user_name">
+          <% if current_user != nil %>
+            Logged in as: <%= current_user %>
+          <% end %>
+        </div>
+
+      </div>
+    </div><!-- container -->
   </div>
 
 
@@ -166,9 +177,9 @@
 
             <li class="menu-docs"> <a>Docs</a>
               <ul class="sub-menu">
-                <li><%= link_to "Data Entry","https://www.authorea.com/users/5574/articles/6800/_show_article", :target =>"_blank" %></li>
-                <li><%= link_to "Data Access","https://authorea.com/users/5574/articles/7062/_show_article", :target =>"_blank" %>></li>
-                <li><%= link_to "Implementation","https://github.com/PecanProject/bety/wiki/The-Biofuel-Ecophysiological-Traits-and-Yields-Database", :target =>"_blank" %></li>
+                <li><%= link_to "Data Entry", "https://pecan.gitbooks.io/betydbdoc-dataentry/content/", :target =>"_blank" %></li>
+                <li><%= link_to "Data Access", "https://pecan.gitbooks.io/betydb-data-access/content/", :target =>"_blank" %>></li>
+                <li><%= link_to "Implementation", "https://pecan.gitbooks.io/betydb-documentation/content/", :target =>"_blank" %></li>
                 <li><%= link_to "Schema", schemas_path %>></li>
               </ul>
             </li>
@@ -193,11 +204,13 @@
               </li>
             <% end %>
 
+            <% if CONFIG[:show_crop_map_links] %>
             <li class="menu-modelio"><a>Model I/O</a>
               <ul class="sub-menu">
                 <li><%= link_to "Model Projections", :controller => "maps", :action => "location_yields" %></li>
               </ul>
             </li>
+            <% end %>
 
             <%# Show the Bulk Upload link if the user is authorized to use the Bulk Upload wizard. %>
             <% if authorized?("start_upload", "BulkUploadController") %>
@@ -250,48 +263,73 @@
   <div class="footer">
     <div class="container">
 
-		  <div class="row">
-			  <h2>Footer</h2>
-			  <div class="three columns alpha">
-				  <h3><strong>BETY</strong>db</h3>
-				  <ul class="unstyled">
-					  <li><%= link_to "Homepage", root_path %></li>
-                                          <li><%= link_to "Documentation","https://github.com/PecanProject/bety/wiki/The-Biofuel-Ecophysiological-Traits-and-Yields-Database", :target =>"_blank" %></li>
-					  <li><%= link_to "Maps & Data", maps_path %></li>
-				  </ul>
-			  </div>
-			  <div class="three columns">
-				  <h3><strong>Contact</strong> Us</h3>
-				  <ul class="unstyled">
-					  <li>&#9742; <%= CONFIG[:admin_phone] %></li>
-					  <li>&#9993; <%= CONFIG[:admin_email] %></li>
-					  <li><a class="github-button" href="https://github.com/pecanproject/bety" aria-label="BETYdb on GitHub">GitHub</a></li>
-					  <li><a href="https://gitter.im/PecanProject/bety?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Chat Room"></a></li>
-				  </ul>
-			  </div>
-			  <div class="six columns omega">
-				  <p>LeBauer, David, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney, Gareth Scott Rohde, Dan Wang (2010).
-                     <cite>Biofuel Ecophysiological Traits and Yields Database (BETYdb)</cite>,
-                     Energy Biosciences Institute, University of Illinois at Urbana-Champaign.
-                     doi:10.13012/J8H41PB9</p>
-                  <p>All public data in BETYdb is made available under the
-                     <a href="http://opendatacommons.org/licenses/by/1-0/">Open Data Commons Attribution License (ODC-By) v1.0.</a>
-                     You are free to share, create, and adapt its contents.
-                     Data with an access_level field and value &lt;= 2 is not covered by this license but may be available for use with consent.</p>
-				  <p>Copyright © 2010-2014 Energy Biosciences Institute</p>
-			  </div>
-		  </div>
-		  <hr />
-		  <div class="row">
-			  <div class="footnotes">
-				  <div class="four columns alpha"><a href="http://illinois.edu" title="University of Illinois at Urbana-Champaign" class="illinois">University of Illinois at Urbana-Champaign</a></div>
-				  <div class="four columns"><a href="http://www.berkeley.edu" title="University of California, Berkeley" class="berkeley">University of California, Berkeley</a></div>
-				  <div class="four columns"><a href="http://www.lbl.gov" title="Lawrence Berkeley National Laboratory (LBL)" class="lbl">Lawrence Berkeley National Laboratory</a></div>
-				  <div class="four columns omega"><a href="http://www.bp.com" title="British Petroleum (BP)" class="bp">British Petroleum (BP)</a></div>
-			  </div>
-		  </div>
-	  </div>
-	  <!-- container -->
+      <div class="row">
+        <h2>Footer</h2>
+        <div class="three columns alpha">
+          <h3><strong>BETY</strong>db</h3>
+          <ul class="unstyled">
+                      <li><%= link_to "Homepage", root_path %></li>
+                      <li><%= link_to "Documentation", "https://pecan.gitbooks.io/betydb-documentation/content/", :target =>"_blank" %></li>
+                      <% if CONFIG[:show_crop_map_links] %>
+                      <li><%= link_to "Maps & Data", maps_path %></li>
+                      <% end %>
+          </ul>
+        </div>
+        <div class="three columns">
+          <h3><strong>Contact</strong> Us</h3>
+          <ul class="unstyled">
+            <li>&#9742; <%= CONFIG[:admin_phone] %></li>
+            <li>&#9993; <%= CONFIG[:admin_email] %></li>
+            <li><a class="github-button" href="https://github.com/pecanproject/bety" aria-label="BETYdb on GitHub">GitHub</a></li>
+            <li><a href="https://gitter.im/PecanProject/bety?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Chat Room"></a></li>
+          </ul>
+        </div>
+        <div class="six columns omega" style="background: url(<%= image_path(CONFIG[:footer_background_image_file]) %>) top center no-repeat">
+          <%= raw(CONFIG[:citation_license_copyright_markup]) %>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="footnotes">
+        <% (sponsors = CONFIG[:sponsors]) &&
+          sponsors.each_with_index do |sponsor, i| %>
+          <div class="four columns
+                      <%= if i == 0
+                            "alpha"
+                          elsif i == sponsors.size - 1
+                            "omega"
+                          end %>">
+
+            <%= link_to(
+                sponsor[:URL],
+                {
+                title: sponsor[:title],
+                style: "background: url(#{image_path(sponsor[:logo_file])}) 0 0 no-repeat; width: #{sponsor[:width]}; #{sponsor[:additional_styling]}"
+                }
+                ) do
+                  sponsor[:text]
+                end %>
+          </div>
+        <% end %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="git_info">
+          <h3>Powered by <a href="https://github.com/PecanProject/bety">BETYdb</a></h3>
+          <div class="version_info">
+          <% if commit_is_tagged? %>
+          (<div class="first"><span class="identifier">Tag:</span><span class="value"><%= commit_tags %></span></div>
+          <div><span class="identifier">Branch:</span><span class="value"><%= commit_branch %></span></div>
+          <% else %>
+          (<div class="first"><span class="identifier">Branch:</span><span class="value"><%= commit_branch %></span></div>
+          <% end %>
+          <div><span class="identifier">Date:</span><span class="value"><%= commit_date %></span></div>
+          <div class="last"><span class="identifier">Checksum:</span><span class="value"><%= commit_checksum[0..6] %></span></div>)
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- container -->
   </div>
 
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
