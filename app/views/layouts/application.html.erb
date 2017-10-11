@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title><%= if @title then @title else "BETYdb: #{request.env['PATH_INFO']}" end %></title>
   <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />
-  <meta name="keywords" content="biofuel, biofuels, agriculture, pecan, pecanproject, miscanthus, switchgrass, willow, poplar, sugarcane, ecosystem, crop modeling" /> 
+  <meta name="keywords" content="biofuel, biofuels, agriculture, pecan, pecanproject, miscanthus, switchgrass, willow, poplar, sugarcane, ecosystem, crop modeling" />
   <meta name="description" content="Trait and yield data for crops and ecosystems" />
   <meta name="robots" content="index, follow" />
 
@@ -22,11 +22,11 @@
   <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
   <%= javascript_include_tag 'lazy/jquery-ui-1.10.4.min.js' %>
   <%= stylesheet_link_tag "jquery-ui-1.10.4.min" %>
-  
+
   <!--  It seems so far that everything works in 1.7.2.-->
 
   <!-- End of alternate sets -->
-  
+
   <%#= javascript_include_tag 'libs/jquery-1.6.2.min.js' %>
   <%= javascript_include_tag :all, :cache => "cache/all" %>
 
@@ -48,12 +48,12 @@
   <link rel="shortcut icon" href="/images/l/apple-touch-icon.png" />
   <!-- For everything else -->
   <link rel="shortcut icon" href="/favicon.ico" />
-  
+
   <!-- ############## ENDED verifying all JS imports from here ############## -->
-  
+
   <!--  This disables the use of $ as the jQuery alias-->
   <script> jQuery.noConflict(); </script>
-  
+
   <%= javascript_include_tag 'lazy/simple_search.js' %>
   <%= javascript_include_tag 'lazy/application.js' %>
 
@@ -67,7 +67,7 @@
     <%= javascript_include_tag 'lazy/map_search' %>
   <% end %>
 
-  <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />	
+  <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />
   <%= stylesheet_link_tag 'themes/default' %>
   <%= stylesheet_link_tag 'themes/alphacube' %>
 
@@ -82,7 +82,7 @@
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
   </script>
-  
+
   <!-- Maintain the order of the following CSS until we can gut the "scaffold" CSS -->
   <!-- Old CSS -->
   <%= stylesheet_link_tag "scaffold" %>
@@ -106,9 +106,9 @@
       table.moduletable-upevents { margin-left: 10px; padding-top:18px; }
     </style>
   <![endif]-->
-  
 
-  
+
+
   <!-- Primary Page Layout
   ================================================== -->
   <div class="header">
@@ -120,25 +120,25 @@
 			      Logged in as: <%= current_user %>
 			    <% end %>
 		    </div>
-		    
+		
 		  </div>
-	  </div><!-- container --> 
+	  </div><!-- container -->
   </div>
-  
-  
-  
-  
-  
-  <div class="nav">    
+
+
+
+
+
+  <div class="nav">
   <div class="container">
-	<div class="sixteen columns">
-	  <nav id="access" role="navigation">
+  <div class="sixteen columns">
+    <nav id="access" role="navigation">
         <div class="skip-link"><a href="#content">Skip to content</a></div>
         <div class="menu">
           <ul class="main-menu sf-menu clearfix">
             <li class="menu-home"><%= link_to "Home", root_path %></li>
-            
-            
+
+
             <% if current_user != nil %>
             <li class="menu-data"><a>Data</a>
               <ul class="sub-menu">
@@ -162,8 +162,8 @@
               </ul>
             </li>
             <% end %>
-            
-            
+
+
             <li class="menu-docs"> <a>Docs</a>
               <ul class="sub-menu">
                 <li><%= link_to "Data Entry","https://www.authorea.com/users/5574/articles/6800/_show_article", :target =>"_blank" %></li>
@@ -172,9 +172,9 @@
                 <li><%= link_to "Schema", schemas_path %>></li>
               </ul>
             </li>
-            
-            
-            
+
+
+
             <% if current_user != nil && current_user.page_access_level < 4 %>
               <li class="menu-new"><a>Runs</a>
                 <ul class="sub-menu">
@@ -192,7 +192,7 @@
                 </ul>
               </li>
             <% end %>
-            
+
             <li class="menu-modelio"><a>Model I/O</a>
               <ul class="sub-menu">
                 <li><%= link_to "Model Projections", :controller => "maps", :action => "location_yields" %></li>
@@ -203,32 +203,32 @@
             <% if authorized?("start_upload", "BulkUploadController") %>
             <li><%= link_to "Bulk Upload", controller: "bulk_upload", action: session[:bulk_upload_stage] || "start_upload" %></li>
             <% end %>
-            
+
             <% if current_user != nil %>
-              <li class="menu-login">                            
+              <li class="menu-login">
                 <%= link_to "Logout", logout_path %>
               </li>
             <% end %>
-            
-            
+
+
           </ul>
         </div>
       </nav><!-- #access -->
-			<hr />
-		</div>
-	</div><!-- container -->
-</div> 
-  
-  
+      <hr />
+    </div>
+  </div><!-- container -->
+</div>
+
+
   <% if controller_name != 'search' and !session['citation'].nil? and Citation.exists?(session['citation']) %>
     <h5 class="centered">Citation: <%= link_to Citation.find(session['citation']).author_year_title, citation_url( session['citation']) %> <%= link_to '[remove]', :controller => "application", :action => "remove_citation" %> </h5>
   <% elsif !session['citation'].nil? and !Citation.exists?(session['citation'])
        session['citation'] = nil
   %>
     <hr />
-    
+
   <% end %>
-  
+
   <% flash.each do |key, value| %>
     <%= content_tag(:div, class: "alert alert-#{key} fade in centered") do %>
       <div style="width:850px; margin:auto">
@@ -242,13 +242,13 @@
   <%end%>
 
   <%= yield  %>
-  
 
 
-  
-  
+
+
+
   <div class="footer">
-	  <div class="container">
+    <div class="container">
 
 		  <div class="row">
 			  <h2>Footer</h2>
@@ -291,9 +291,9 @@
 			  </div>
 		  </div>
 	  </div>
-	  <!-- container --> 
+	  <!-- container -->
   </div>
-  
+
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <!-- Commenting this out for now as it interferes with RSpec tests that use capybara-webkit: <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script> -->
 </body>
