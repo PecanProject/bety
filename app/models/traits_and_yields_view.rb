@@ -25,7 +25,7 @@ class TraitsAndYieldsView < ActiveRecord::Base
   extend AdvancedSearch
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ scientificname commonname trait
-                      trait_description method_type city sitename author
+                      trait_description method_name city sitename author
                       citation_year cultivar entity }
 
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).order("id asc") }
