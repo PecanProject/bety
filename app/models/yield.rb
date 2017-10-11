@@ -24,7 +24,6 @@ class Yield < ActiveRecord::Base
   validates_presence_of     :site_id
   validates_presence_of     :specie_id
   validates_presence_of     :treatment_id
-  validates_presence_of     :user_id
   validates_presence_of     :access_level
   validates_presence_of     :date
   

@@ -28,7 +28,7 @@ RSpec.describe "Api::CsvHandler" do
 
     let(:valid_data_doc) {
       File.open(Rails.root.join(
-                  "spec/fixtures/files/api/beta/valid-test-data.csv"
+                  "spec/fixtures/files/api/v1/valid-test-data.csv"
                 )).read
     }
 
@@ -36,7 +36,7 @@ RSpec.describe "Api::CsvHandler" do
       doc_as_string = %q(
       <trait-data-set>
         <trait mean="1.4" access_level="4">
-          <site sitename="Aliartos, Greece"/>
+          <site sitename="University of Nevada Biological Sciences Center"/>
           <species scientificname="Abarema jupunba"/>
           <treatment name="observational"></treatment>
           <method name="test"></method>
@@ -88,7 +88,7 @@ RSpec.describe "Api::CsvHandler" do
 
     let(:valid_data_doc) {
       File.open(Rails.root.join(
-                  "spec/fixtures/files/api/beta",
+                  "spec/fixtures/files/api/v1",
                   "valid-test-data-with-traits-not-in-associations-table.csv"
                 )).read
     }
@@ -143,7 +143,7 @@ RSpec.describe "Api::CsvHandler" do
 
     let(:invalid_data_doc) {
       File.open(Rails.root.join(
-                  "spec/fixtures/files/api/beta",
+                  "spec/fixtures/files/api/v1",
                   "test-data-with-invalid-extraneous-covariate.csv")).read
     }
 

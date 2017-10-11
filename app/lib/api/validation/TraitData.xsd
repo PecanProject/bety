@@ -67,109 +67,156 @@
     </xs:documentation>
   </xs:annotation>
 
-  <xs:include schemaLocation="TraitAttributeTypes.xsd"/>
+  <xs:include schemaLocation="AssociationLookupTypes.xsd"/>
 
-  <xs:element name="trait-data-set" type="trait-group"/>
+  <xs:element name="trait-data-set" substitutionGroup="trait-group"/>
 
-  <xs:complexType name="trait-group">
+
+  <xs:element name="trait-group">
+    <xs:complexType>
     <xs:choice>
       <xs:sequence>
         <xs:element name="entity" type="entity"/>
-        <xs:element name="defaults" type="default-trait-attribute-set" minOccurs="0"/>
-        <xs:element name="trait" type="trait" maxOccurs="unbounded"/>
+        <xs:element ref="defaults" minOccurs="0"/>
+        <xs:element ref="trait" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:sequence>
-        <xs:element name="defaults" type="default-trait-attribute-set" minOccurs="0"/>
+        <xs:element ref="defaults" minOccurs="0"/>
         <xs:choice maxOccurs="unbounded">
-          <xs:element name="trait-group" type="trait-group"/>
-          <xs:element name="trait" type="trait"/>
+          <xs:element ref="trait-group"/>
+          <xs:element ref="trait"/>
         </xs:choice>
       </xs:sequence>
     </xs:choice>
-  </xs:complexType>
+    </xs:complexType>
+  </xs:element>
 
-  <xs:complexType name="default-trait-attribute-set">
-    <xs:all>
-      <xs:element name="site" type="site" minOccurs="0"/>
-      <xs:element name="species" type="species" minOccurs="0"/>
-      <xs:element name="citation" type="citation" minOccurs="0"/>
-      <xs:element name="treatment" type="treatment" minOccurs="0"/>
-      <xs:element name="variable" type="variable" minOccurs="0"/>
-      <xs:element name="method" type="method" minOccurs="0"/>
-    </xs:all>
-    <xs:attribute name="access_level" type="access-level"/>
-    <xs:attribute name="utc_datetime" type="utc-datetime"/>
-    <xs:attribute name="local_datetime" type="local-datetime"/>
-  </xs:complexType>
+  <xs:element name="defaults">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="site" minOccurs="0"/>
+        <xs:element ref="species" minOccurs="0"/>
+        <xs:element ref="citation" minOccurs="0"/>
+        <xs:element ref="treatment" minOccurs="0"/>
+        <xs:element ref="variable" minOccurs="0"/>
+        <xs:element ref="method" minOccurs="0"/>
+      </xs:all>
+      <xs:attribute ref="access_level"/>
+      <xs:attribute ref="utc_datetime"/>
+      <xs:attribute ref="local_datetime"/>
+    </xs:complexType>
+  </xs:element>
 
-  <xs:complexType name="trait">
-    <xs:annotation>
-      <xs:documentation>This is just like the default-trait-attribute-set type
-      except that it also allows inclusion of "stat", "notes", and "covariates"
-      elements and requires the "mean" attribute.</xs:documentation>
-    </xs:annotation>
-    <xs:all>
-      <xs:element name="site" type="site" minOccurs="0"/>
-      <xs:element name="species" type="species" minOccurs="0"/>
-      <xs:element name="citation" type="citation" minOccurs="0"/>
-      <xs:element name="treatment" type="treatment" minOccurs="0"/>
-      <xs:element name="variable" type="variable" minOccurs="0"/>
-      <xs:element name="method" type="method" minOccurs="0"/>
-      <xs:element name="stat" type="stat" minOccurs="0"/>
-      <xs:element name="notes" type="xs:string" minOccurs="0"/>
+  <xs:element name="trait">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation>This is just like the default-trait-attribute-set type
+        except that it also allows inclusion of "stat", "notes", and "covariates"
+        elements and requires the "mean" attribute.</xs:documentation>
+      </xs:annotation>
+      <xs:all>
+        <xs:element ref="site" minOccurs="0"/>
+        <xs:element ref="species" minOccurs="0"/>
+        <xs:element ref="citation" minOccurs="0"/>
+        <xs:element ref="treatment" minOccurs="0"/>
+        <xs:element ref="variable" minOccurs="0"/>
+        <xs:element name="entity" type="named_entity" minOccurs="0"/>
+        <xs:element ref="method" minOccurs="0"/>
 
-      <xs:element name="covariates" type="covariates" minOccurs="0"/>
+        <xs:element name="covariates" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+              <xs:element ref="covariate"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
 
-      <xs:element name="entity" type="named_entity" minOccurs="0"/>
-    </xs:all>
-    <xs:attribute name="access_level" type="access-level"/>
-    <xs:attribute name="utc_datetime" type="utc-datetime"/>
-    <xs:attribute name="local_datetime" type="local-datetime"/>
-    <xs:attribute name="mean" use="required" type="xs:double"/>
-  </xs:complexType>
+        <xs:element ref="stat" minOccurs="0"/>
 
-  <xs:simpleType name="utc-datetime">
-    <xs:union>
-      <xs:simpleType>
-        <xs:restriction base="xs:dateTime">
-          <xs:pattern value=".*[0-9]Z"/>
-        </xs:restriction>
-      </xs:simpleType>
-      <xs:simpleType>
-        <xs:restriction base="xs:date">
-          <xs:pattern value=".*[0-9]Z"/>
-        </xs:restriction>
-      </xs:simpleType>
-    </xs:union>
+        <xs:element name="notes" type="xs:string" minOccurs="0"/>
+      </xs:all>
+      <xs:attribute ref="access_level"/>
+      <xs:attribute ref="utc_datetime"/>
+      <xs:attribute ref="local_datetime"/>
+      <xs:attribute name="mean" use="required" type="xs:double"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <xs:element name="covariate">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="variable"/>
+      </xs:sequence>
+      <xs:attribute name="level" use="required" type="xs:double"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="stat">
+    <xs:complexType>
+      <xs:attribute name="name" type="stat-type" use="required"/>
+      <xs:attribute name="sample_size" type="xs:positiveInteger" use="required"/>
+      <xs:attribute name="value" type="xs:double" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="stat-type">
+    <xs:restriction base="normalizedString">
+      <xs:enumeration value="SD"/>
+      <xs:enumeration value="SE"/>
+      <xs:enumeration value="MSE"/>
+      <xs:enumeration value="95%Cl"/>
+      <xs:enumeration value="LSD"/>
+      <xs:enumeration value="MSD"/>
+    </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="local-datetime">
-    <xs:union>
-      <xs:simpleType>
-        <xs:restriction base="xs:dateTime">
-          <xs:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?"/><!-- no time zone -->
-        </xs:restriction>
-      </xs:simpleType>
-      <xs:simpleType>
-        <xs:restriction base="xs:date">
-          <xs:pattern value="\d{4}-\d{2}-\d{2}"/><!-- no time zone -->
-        </xs:restriction>
-      </xs:simpleType>
-    </xs:union>
-  </xs:simpleType>
-
-  <xs:complexType name="covariates">
-    <xs:sequence maxOccurs="unbounded">
-      <xs:element name="covariate" type="covariate"/>
-    </xs:sequence>
-  </xs:complexType>
 
 
-  <xs:complexType name="covariate">
-    <xs:sequence>
-      <xs:element name="variable" type="variable"/>
-    </xs:sequence>
-    <xs:attribute name="level" use="required" type="xs:double"/>
-  </xs:complexType>
+  <xs:attribute name="access_level">
+    <xs:simpleType>
+      <xs:restriction base="xs:positiveInteger">
+        <xs:minInclusive value="1"/>
+        <xs:maxInclusive value="4"/>
+        <xs:pattern value="\d"/>
+        <xs:whiteSpace value="preserve"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:attribute>
+
+  <xs:attribute name="utc_datetime">
+    <xs:simpleType>
+      <xs:union>
+        <xs:simpleType>
+          <xs:restriction base="xs:dateTime">
+            <xs:pattern value=".*[0-9]Z"/>
+          </xs:restriction>
+        </xs:simpleType>
+        <xs:simpleType>
+          <xs:restriction base="xs:date">
+            <xs:pattern value=".*[0-9]Z"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:union>
+    </xs:simpleType>
+  </xs:attribute>
+
+  <xs:attribute name="local_datetime">
+    <xs:simpleType>
+      <xs:union>
+        <xs:simpleType>
+          <xs:restriction base="xs:dateTime">
+            <xs:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?"/><!-- no time zone -->
+          </xs:restriction>
+        </xs:simpleType>
+        <xs:simpleType>
+          <xs:restriction base="xs:date">
+            <xs:pattern value="\d{4}-\d{2}-\d{2}"/><!-- no time zone -->
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:union>
+    </xs:simpleType>
+  </xs:attribute>
 
 </xs:schema>

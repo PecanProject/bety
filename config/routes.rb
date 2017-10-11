@@ -247,18 +247,36 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
 
   # API
   namespace :api, defaults: { format: 'json' } do
-    namespace :beta do
+    namespace :v1 do
       [:citations, :covariates, :cultivars, :dbfiles, :ensembles, :entities,
        :experiments, :formats, :inputs, :likelihoods, :machines,
        :managements, :methods, :mimetypes, :models, :modeltypes, :pfts,
-       :posteriors, :priors, :runs, :search, :sites, :species, :traits,
+       :posteriors, :priors, :runs, :sites, :species, :traits,
        :treatments, :users, :variables, :yields
       ].each do |model|
         resources model, only: [:index, :show]
       end
+      resources :search, only: :index
       resources :traits, only: :create
     end
   end
+
+  # deprecated "beta" path (same as v1)
+  namespace :api, defaults: { format: 'json' } do
+    namespace :v1, path: :beta do
+      [:citations, :covariates, :cultivars, :dbfiles, :ensembles, :entities,
+       :experiments, :formats, :inputs, :likelihoods, :machines,
+       :managements, :methods, :mimetypes, :models, :modeltypes, :pfts,
+       :posteriors, :priors, :runs, :sites, :species, :traits,
+       :treatments, :users, :variables, :yields
+      ].each do |model|
+        resources model, only: [:index, :show]
+      end
+      resources :search, only: :index
+      resources :traits, only: :create
+    end
+  end
+
   match '/api', controller: 'api/base', action: 'bad_url'
   match '/api/*remainder', controller: 'api/base', action: 'bad_url'
 

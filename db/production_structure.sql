@@ -28,6 +28,58 @@ CREATE DOMAIN statnames AS text NOT NULL DEFAULT ''::text
 
 
 --
+-- Name: check_correct_cultivar(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION check_correct_cultivar() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    required_cultivar_id bigint;
+    required_specie_id bigint;
+BEGIN
+    SELECT cultivar_id FROM sites_cultivars WHERE site_id = NEW.site_id INTO required_cultivar_id;
+    IF (required_cultivar_id IS NOT NULL) THEN
+        SELECT specie_id FROM cultivars WHERE id = required_cultivar_id INTO required_specie_id;
+    ELSE
+        SELECT specie_id FROM cultivars WHERE id = NEW.cultivar_id INTO required_specie_id;
+    END IF;
+    IF (required_cultivar_id IS NULL) THEN
+        IF (NEW.cultivar_id IS NULL) THEN
+            NULL;
+        ELSIF (NEW.specie_id IS NULL) THEN
+            NEW.specie_id := required_specie_id;
+        ELSIF (NEW.specie_id = required_specie_id) THEN
+            NULL;
+        ELSE
+            RAISE EXCEPTION 'The species id % is not consistent with the cultivar id %.', NEW.specie_id, NEW.cultivar_id;
+        END IF;
+    ELSE
+        IF (NEW.cultivar_id IS NULL) THEN
+            IF (NEW.specie_id IS NULL) THEN
+                NEW.cultivar_id := required_cultivar_id;
+                NEW.specie_id := required_specie_id;
+            ELSIF (NEW.specie_id = required_specie_id) THEN
+                NEW.cultivar_id := required_cultivar_id;
+            ELSE
+                RAISE EXCEPTION 'The species id % is not consistent with the cultivar id %.  It should be %.', NEW.specie_id, required_cultivar_id, required_specie_id;
+            END IF;
+        ELSIF (NEW.cultivar_id = required_cultivar_id) THEN
+            IF (NEW.specie_id IS NULL) THEN
+                NEW.specie_id := required_specie_id;
+            ELSIF (NEW.specie_id != required_specie_id) THEN
+                RAISE EXCEPTION 'The species id % is not consistent with the cultivar id %.  It should be %.', NEW.specie_id, NEW.cultivar_id, required_specie_id;
+            END IF;
+        ELSE
+            RAISE EXCEPTION 'The value of cultivar_id (%) is not consistent with the value % specified for site_id %.', NEW.cultivar_id, required_cultivar_id, NEW.site_id;
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+
+--
 -- Name: check_for_references(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -805,6 +857,26 @@ BEGIN
         RAISE EXCEPTION 'The value of mean for trait % must be between % and %.', name, min::text, max::text;
     END IF;
     RETURN NEW ;
+END;
+$$;
+
+
+--
+-- Name: set_correct_cultivar(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION set_correct_cultivar() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    required_cultivar_id bigint;
+BEGIN
+    IF (EXISTS(SELECT 1 FROM traits WHERE site_id = NEW.site_id AND cultivar_id != NEW.cultivar_id)) THEN
+        RAISE EXCEPTION 'Some existing traits have cultivar_id values inconsistent with this change.%', '';
+    ELSE
+        UPDATE traits SET cultivar_id = NEW.cultivar_id WHERE site_id = NEW.site_id;
+    END IF;
+    RETURN NEW;
 END;
 $$;
 
@@ -2796,6 +2868,38 @@ COMMENT ON COLUMN sites.greenhouse IS 'Boolean: indicates if study was conducted
 
 
 --
+-- Name: sites_cultivars; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE sites_cultivars (
+    id bigint NOT NULL,
+    site_id bigint NOT NULL,
+    cultivar_id bigint NOT NULL,
+    created_at timestamp(6) without time zone DEFAULT utc_now(),
+    updated_at timestamp(6) without time zone DEFAULT utc_now()
+);
+
+
+--
+-- Name: sites_cultivars_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE sites_cultivars_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sites_cultivars_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE sites_cultivars_id_seq OWNED BY sites_cultivars.id;
+
+
+--
 -- Name: species_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -3916,6 +4020,13 @@ ALTER TABLE ONLY sitegroups_sites ALTER COLUMN id SET DEFAULT nextval('sitegroup
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY sites_cultivars ALTER COLUMN id SET DEFAULT nextval('sites_cultivars_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY trait_covariate_associations ALTER COLUMN id SET DEFAULT nextval('trait_covariate_associations_id_seq'::regclass);
 
 
@@ -4325,6 +4436,14 @@ ALTER TABLE ONLY cultivars
 
 ALTER TABLE ONLY pfts
     ADD CONSTRAINT unique_names_per_modeltype UNIQUE (name, modeltype_id);
+
+
+--
+-- Name: unique_site_id; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY sites_cultivars
+    ADD CONSTRAINT unique_site_id UNIQUE (site_id);
 
 
 --
@@ -4811,6 +4930,13 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: ensure_correct_cultivar_for_site; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER ensure_correct_cultivar_for_site BEFORE INSERT OR UPDATE OF site_id, cultivar_id, specie_id ON traits FOR EACH ROW EXECUTE PROCEDURE check_correct_cultivar();
+
+
+--
 -- Name: forbid_dangling_input_references; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -4912,6 +5038,13 @@ CREATE TRIGGER restrict_trait_range BEFORE INSERT OR UPDATE ON traits FOR EACH R
 COMMENT ON TRIGGER restrict_trait_range ON traits IS 'Trigger function to ensure values of mean in the traits table are
    within the range specified by min and max in the variables table.
    A NULL in the min or max column means "no limit".';
+
+
+--
+-- Name: set_correct_cultivar_for_site; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER set_correct_cultivar_for_site BEFORE INSERT OR UPDATE ON sites_cultivars FOR EACH ROW EXECUTE PROCEDURE set_correct_cultivar();
 
 
 --
@@ -5160,6 +5293,13 @@ CREATE TRIGGER update_sessions_timestamp BEFORE UPDATE ON sessions FOR EACH ROW 
 
 
 --
+-- Name: update_sites_cultivars_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_sites_cultivars_timestamp BEFORE UPDATE ON sites_cultivars FOR EACH ROW EXECUTE PROCEDURE update_timestamp();
+
+
+--
 -- Name: update_sites_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -5348,6 +5488,14 @@ ALTER TABLE ONLY cultivars_pfts
 --
 
 COMMENT ON CONSTRAINT cultivar_exists ON cultivars_pfts IS 'Ensure the referred-to cultivar exists, block its deletion if it is being used in a pft, and update the reference if the cultivar id number changes.';
+
+
+--
+-- Name: cultivar_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sites_cultivars
+    ADD CONSTRAINT cultivar_exists FOREIGN KEY (cultivar_id) REFERENCES cultivars(id) ON UPDATE CASCADE;
 
 
 --
@@ -5970,6 +6118,14 @@ COMMENT ON CONSTRAINT pft_exists ON pfts_species IS 'Ensure the referred-to pft 
 
 ALTER TABLE ONLY reference_runs
     ADD CONSTRAINT reference_runs_model_id_fkey FOREIGN KEY (model_id) REFERENCES models(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: site_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY sites_cultivars
+    ADD CONSTRAINT site_exists FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE;
 
 
 --

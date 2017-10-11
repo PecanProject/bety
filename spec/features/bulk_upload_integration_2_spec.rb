@@ -341,7 +341,7 @@ CSV
       attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_complete_data.csv') # full path is required if using selenium
       click_button 'Upload'
       click_link 'Specify'
-      expect(page).not_to have_content("cultivar")
+      expect(page.document.find('.content')).not_to have_content("cultivar")
     end
 
     context "A citation has been selected but rounding has not been specified" do
@@ -542,7 +542,6 @@ CSV
     describe "How parsing of variables in the heading works" do
 
       specify "A variable in the heading should be recognized even if it isn't in the trait_covariate_associations table" do
-        pending "A working implementation for the feature in issue #459"
         visit '/bulk_upload/start_upload'
         attach_file 'CSV file', Rails.root.join('spec',
                                                 'fixtures',
@@ -554,10 +553,13 @@ CSV
         expect(page).not_to have_content('error')
         click_link 'Specify'
         click_button 'Confirm'
-        expect { click_button 'Insert Data' }.to change { Trait.count }.by(2)
-                                             .and change { Covariate.count }.by(2)
-                                             .and change { Entity.count }.by 1;     # The two rows in the file have the same entity name.
-        expect(first("div.alert-success")).to have_content("Data from valid-test-data-with-traits-not-in-associations-table.csv was successfully uploaded.")
+        expect {
+          click_button 'Insert Data'
+          # Use this instead of sleep():
+          expect(first("div.alert-success")).to have_content("Data from valid-test-data-with-traits-not-in-associations-table.csv was successfully uploaded.")
+        }.to change { Trait.count }.by(2)
+               .and change { Covariate.count }.by(0)
+                      .and change { Entity.count }.by 1;     # The two rows in the file have the same entity name.
       end
 
       specify "If there is a covariate variable in the heading without there being a corresponding trait variable, the CSV file is invalid" do
@@ -609,6 +611,19 @@ CSV
                                          .and change { Covariate.count }.by(2)
                                          .and change { Entity.count }.by 1;     # The two rows in the file have the same entity name.
     expect(first("div.alert-success")).to have_content("Data from blank_cells_in_notes_column.csv was successfully uploaded.")
+  end
+
+  # GitHub issue #452
+  specify "A file with an unmatched citation shouldn't yield a complaint about undefined method `empty?'" do
+    visit '/bulk_upload/start_upload'
+    attach_file 'CSV file', Rails.root.join('spec',
+                                            'fixtures',
+                                            'files',
+                                            'bulk_upload',
+                                            'data_validation',
+                                            'unmatched_citation_and_global_treatment.csv')
+    click_button 'Upload'
+    expect(page).not_to have_content('undefined method')
   end
 
 end
