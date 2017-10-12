@@ -606,6 +606,10 @@ class BulkUploadDataSet
       return
     end
 
+    if trait_data?
+      get_trait_and_covariate_info
+    end
+
     @validated_data.each_with_index do |row, i|
       row_number = i + 1
 
@@ -767,9 +771,6 @@ class BulkUploadDataSet
 
           else # either a trait or covariate variable name or will be ignored
 
-            if trait_data?
-              get_trait_and_covariate_info
-            end
             if trait_data? && (@trait_names_in_heading + @allowed_covariates).include?(column[:fieldname])
               column[:validation_result] = Valid.new # reset below if we find otherwise
 

@@ -1,0 +1,611 @@
+---
+benchmark_sets:
+  table_comment: 
+benchmark_sets_benchmark_reference_runs:
+  table_comment: 
+benchmarks:
+  table_comment: 
+benchmarks_benchmarks_reference_runs:
+  table_comment: 
+benchmarks_ensembles:
+  table_comment: 
+benchmarks_ensembles_scores:
+  table_comment: 
+benchmarks_metrics:
+  table_comment: 
+citations:
+  table_comment: 
+  author: last name of first author
+  created_at: 
+  doi: Digital Object Identifier
+  id: 
+  journal: Journal name
+  pdf: link to pdf version of article
+  pg: page range of article
+  title: article title
+  updated_at: 
+  url: link to article url
+  user_id: 
+  vol: 
+  year: year of publication
+citations_sites:
+  table_comment: 
+  citation_id: 
+  created_at: 
+  id: 
+  site_id: 
+  updated_at: 
+citations_treatments:
+  table_comment: 
+  citation_id: 
+  created_at: 
+  id: 
+  treatment_id: 
+  updated_at: 
+covariates:
+  table_comment: 
+  created_at: 
+  id: 
+  level: Value of covariate, units are determined in variables table by the variable_id
+    foreign key.
+  n: 
+  stat: 
+  statname: 
+  trait_id: 
+  updated_at: 
+  variable_id: 
+cultivars:
+  table_comment: 
+  created_at: 
+  ecotype: An ecotype is a distinct variety adapted to a particular environment. Implemented
+    to distinguish 'upland' and 'lowland' Switchgrass cultivars.  Can also be used
+    to distinguish, e.g. species in temperate vs. tundra
+  id: 
+  name: Cultivar name given by breeder or reported in citation.
+  notes: 
+  previous_id: 
+  specie_id: 
+  updated_at: 
+cultivars_pfts:
+  table_comment: This table tells which cultivars are members of which pfts.  For
+    each row, the cultivar with id "cultivar_id" is a member of the pft with id "pft_id".
+current_posteriors:
+  table_comment: 
+dbfiles:
+  table_comment: 
+  container_id: 
+  container_type: this and container_id are part of a polymorphic relationship, specifies
+    table and primary key of that table
+  created_at: 
+  created_user_id: 
+  file_name: 
+  file_path: 
+  id: 
+  machine_id: 
+  md5: 
+  updated_at: 
+  updated_user_id: 
+ensembles:
+  table_comment: 
+  created_at: 
+  id: 
+  notes: 
+  runtype: 
+  updated_at: 
+  workflow_id: 
+entities:
+  table_comment: 
+  created_at: 
+  id: 
+  name: 
+  notes: 
+  parent_id: 
+  updated_at: 
+experiments:
+  table_comment: 
+  created_at: 
+  description: 
+  design: 
+  end_date: 
+  id: 
+  name: 
+  start_date: 
+  updated_at: 
+  user_id: 
+experiments_sites:
+  table_comment: 
+  created_at: 
+  experiment_id: 
+  id: 
+  site_id: 
+  updated_at: 
+experiments_treatments:
+  table_comment: 
+formats:
+  table_comment: 
+  created_at: 
+  header: 
+  id: 
+  mimetype_id: 
+  name: 
+  notes: 
+  skip: 
+  updated_at: 
+formats_variables:
+  table_comment: 
+  column_number: 
+  created_at: 
+  format_id: 
+  id: 
+  name: 
+  storage_type: 
+  unit: 
+  updated_at: 
+  variable_id: 
+inputs:
+  table_comment: 
+  access_level: 
+  created_at: 
+  end_date: 
+  format_id: 
+  id: 
+  name: 
+  notes: 
+  parent_id: 
+  raw: 
+  site_id: 
+  start_date: 
+  updated_at: 
+  user_id: 
+inputs_runs:
+  table_comment: 
+  created_at: 
+  id: 
+  input_id: 
+  run_id: 
+  updated_at: 
+likelihoods:
+  table_comment: 
+  created_at: 
+  id: 
+  input_id: 
+  loglikelihood: 
+  n_eff: 
+  residual: 
+  run_id: 
+  updated_at: 
+  variable_id: 
+  weight: 
+machines:
+  table_comment: 
+  created_at: 
+  hostname: 
+  id: 
+  sync_contact: 
+  sync_end: 
+  sync_host_id: 
+  sync_start: 
+  sync_url: 
+  updated_at: 
+managements:
+  table_comment: 
+  citation_id: 
+  created_at: 
+  date: Date on which management was conducted.
+  dateloc: Level of confidence in value given as date. See documentation for details.
+  id: 
+  level: Amount applied, not always required.
+  mgmttype: Type of management
+  notes: 
+  units: units, standardized for each management type.
+  updated_at: 
+  user_id: 
+managements_treatments:
+  table_comment: 
+  created_at: 
+  id: 
+  management_id: 
+  treatment_id: 
+  updated_at: 
+methods:
+  table_comment: 
+  citation_id: 
+  created_at: 
+  description: 
+  id: 
+  name: 
+  updated_at: 
+metrics:
+  table_comment: 
+mimetypes:
+  table_comment: 
+  id: 
+  type_string: 
+models:
+  table_comment: 
+  created_at: 
+  id: 
+  model_name: 
+  modeltype_id: 
+  parent_id: 
+  revision: 
+  updated_at: 
+modeltypes:
+  table_comment: 
+  created_at: 
+  id: 
+  name: 
+  updated_at: 
+  user_id: 
+modeltypes_formats:
+  table_comment: 
+  created_at: 
+  format_id: 
+  id: 
+  input: 
+  modeltype_id: 
+  required: 
+  tag: 
+  updated_at: 
+  user_id: 
+pfts:
+  table_comment: 
+  created_at: 
+  definition: Defines the creator and context under which the pft will be used.
+  id: 
+  modeltype_id: 
+  name: pft names are unique within a given model type.
+  parent_id: 
+  pft_type: 
+  updated_at: 
+pfts_priors:
+  table_comment: 
+  created_at: 
+  id: 
+  pft_id: 
+  prior_id: 
+  updated_at: 
+pfts_species:
+  table_comment: This table tells which species are members of which pfts.  For each
+    row, the species with id "specie_id" is a member of the pft with id "pft_id".
+  created_at: 
+  id: 
+  pft_id: 
+  specie_id: 
+  updated_at: 
+posterior_samples:
+  table_comment: 
+  created_at: 
+  id: Allows a posterior to be updated asynchronously (i.e. for a given PFT, not all
+    variables have to have the same posterior_id).
+  parent_id: 
+  pft_id: 
+  posterior_id: 
+  updated_at: 
+  variable_id: 
+posteriors:
+  table_comment: 
+  created_at: 
+  id: 
+  pft_id: 
+  updated_at: 
+posteriors_ensembles:
+  table_comment: 
+  created_at: 
+  ensemble_id: 
+  id: 
+  posterior_id: Allows analyst to more easily see the functional grouping of the different
+    sets of model runs used to generate a posterior.
+  updated_at: 
+priors:
+  table_comment: 
+  citation_id: 
+  created_at: 
+  distn: Name of the probability distribution, using R naming convention (e.g. 'beta','f',
+    'gamma', 'lnorm', 'norm', 'pois', 't', 'unif', 'weibull'.
+  id: 
+  n: number of observations used to specify prior.
+  notes: 
+  parama: First parameter for distribution, as specified by R.
+  paramb: Second parameter for distribution, as specified by R.
+  paramc: A third parameter, if required.
+  phylogeny: Used to note the group of plants for which the prior was specified, often
+    the group of plants represented by the data used to specify the prior.
+  updated_at: 
+  variable_id: 
+projects:
+  table_comment: 
+reference_runs:
+  table_comment: 
+runs:
+  table_comment: 
+  created_at: 
+  ensemble_id: 
+  finish_time: end of time period being simulated
+  finished_at: system time when run ends; can be null when record is created
+  id: 
+  model_id: 
+  outdir: 
+  outprefix: 
+  parameter_list: 
+  setting: 
+  site_id: 
+  start_time: beginning of time period being simulated
+  started_at: system time when run was started
+  updated_at: 
+schema_migrations:
+  table_comment: 
+sessions:
+  table_comment: 
+  created_at: 
+  data: 
+  id: 
+  session_id: 
+  updated_at: 
+sitegroups:
+  table_comment: 
+  created_at: 
+  id: 
+  name: 
+  public_access: 
+  updated_at: 
+  user_id: 
+sitegroups_sites:
+  table_comment: 
+  created_at: 
+  id: 
+  site_id: 
+  sitegroup_id: 
+  updated_at: 
+sites:
+  table_comment: 
+  city: Nearest city to site.
+  clay_pct: 
+  country: 
+  created_at: 
+  geometry: 
+  greenhouse: 'Boolean: indicates if study was conducted in a field (0) or greenhouse,
+    pot, or growth chamber (1)'
+  id: 
+  map: Mean Annual Precipitation (mm)
+  mat: Mean Annual Temperature (C)
+  notes: 
+  sand_pct: 
+  sitename: 
+  soil: Soil type, as described in documentation.
+  soilnotes: 
+  som: Depreciated
+  state: If in the United States, state in which study is conducted.
+  time_zone: 
+  updated_at: 
+  user_id: 
+sites_cultivars:
+  table_comment: 
+spatial_ref_sys:
+  table_comment: 
+species:
+  table_comment: 
+  AcceptedSymbol: 
+  ActiveGrowthPeriod: 
+  AdaptedCoarseSoils: 
+  AdaptedFineSoils: 
+  AdaptedMediumSoils: 
+  AfterHarvestRegrowthRate: 
+  AnaerobicTolerance: 
+  Bloat: 
+  BloomPeriod: 
+  C2N_Ratio: 
+  CaCO3Tolerance: 
+  Category: 
+  Class: 
+  ColdStratification: 
+  CommercialAvailability: 
+  CoppicePotential: 
+  Division: 
+  DroughtTolerance: 
+  Duration: 
+  FallConspicuous: 
+  Family: 
+  FamilyCommonName: 
+  FamilySymbol: 
+  FertilityRequirement: 
+  FireResistance: 
+  FireTolerance: 
+  FoliageTexture: 
+  FruitSeedPeriodBegin: 
+  FruitSeedPeriodEnd: 
+  GrowthForm: 
+  GrowthHabit: 
+  GrowthRate: 
+  HedgeTolerance: 
+  ITIS_TSN: 
+  Kingdom: 
+  KnownAllelopath: 
+  LeafRetention: 
+  Lifespan: 
+  LowGrowingGrass: 
+  MatureHeight: 
+  MaxHeight20Yrs: 
+  Max_PlantingDensity: 
+  MinFrostFreeDays: 
+  Min_PlantingDensity: 
+  MoistureUse: 
+  NationalWetlandIndicatorStatus: 
+  NativeStatus: 
+  NitrogenFixation: 
+  PLANTS_Floristic_Area: 
+  Precipitation_Maximum: 
+  Precipitation_Minimum: 
+  Propogated_by_BareRoot: 
+  Propogated_by_Bulbs: 
+  Propogated_by_Container: 
+  Propogated_by_Corms: 
+  Propogated_by_Cuttings: 
+  Propogated_by_Seed: 
+  Propogated_by_Sod: 
+  Propogated_by_Sprigs: 
+  Propogated_by_Tubers: 
+  RegionalWetlandIndicatorStatus: 
+  ResproutAbility: 
+  RootDepthMinimum: 
+  SalinityTolerance: 
+  SeedSpreadRate: 
+  SeedlingVigor: 
+  Seeds_per_Pound: 
+  ShadeTolerance: 
+  State: 
+  SubClass: 
+  SubDivision: 
+  SubKingdom: 
+  SuperDivision: 
+  Symbol: 
+  SynonymSymbol: 
+  TemperatureMinimum: 
+  commonname: 
+  created_at: 
+  genus: 
+  id: 
+  notes: 
+  pH_Maximum: 
+  pH_Minimum: 
+  scientificname: 
+  spcd: 
+  species: 
+  updated_at: 
+  xOrder: 
+trait_covariate_associations:
+  table_comment: 
+  covariate_variable_id: 
+  id: 
+  required: 
+  trait_variable_id: 
+traits:
+  table_comment: 
+  access_level: Level of access required to view data.
+  checked: accepts values [-1, 0, 1]. 0 is default, and means that data have not been
+    checked. 1 indicates that the data have been checked and are correct, -1 indicates
+    that data have been checked and found to be incorrect or suspicious, e.g. outside
+    of the acceptab
+  citation_id: Citation in which data was originally reported.
+  created_at: 
+  cultivar_id: Cultivar information, if any.
+  date: Date on which measurement was made.
+  date_day: 
+  date_month: 
+  date_year: 
+  dateloc: Level of confidence in date. See documentation.
+  entity_id: 
+  id: 
+  mean: Mean value of trait.
+  method_id: 
+  n: Number of experimental replicates used to estimate mean and statistical summary.
+  notes: 
+  site_id: Site at which measurement was taken.
+  specie_id: Species on which measurement was taken.
+  stat: Value of reported statistic.
+  statname: Name of reported statistic.
+  time: Time at which measurement was taken. Sometimes necessary, e.g. for photosynthesis
+    measurements.
+  time_hour: 
+  time_minute: 
+  timeloc: Level of confidence in time.
+  treatment_id: Experimental treatment identification. Required, can indicate observational
+    study.
+  updated_at: 
+  user_id: ID of user who entered data.
+  variable_id: 'Links to information in variables table that describes trait being
+    measured. '
+treatments:
+  table_comment: 
+  control: Boolean, indicates if treatment is a control or observational (1) or experimental
+    treatment (0).
+  created_at: 
+  definition: Description of treatment, e.g. levels of fertilizer applied, etc. This
+    information may be redundant with 'levels' information recorded in Managements
+    table.
+  id: 
+  name: Name of treatment, should be easy to associate with treatment name in original
+    study.
+  updated_at: 
+  user_id: 
+users:
+  table_comment: 
+  access_level: data to which user has access
+  apikey: 
+  area: 
+  city: 
+  country: 
+  created_at: 
+  crypted_password: 
+  email: email address
+  id: 
+  login: login id
+  name: User name
+  page_access_level: Determines the extent of data, if any, that user can edit.
+  postal_code: 
+  remember_token: 
+  remember_token_expires_at: 
+  salt: 
+  state_prov: 
+  updated_at: 
+variables:
+  table_comment: 
+  created_at: 
+  description: Description or definition of variable.
+  id: 
+  label: 
+  max: 
+  min: 
+  name: variable name, this is the name used by PEcAn and in other modeling contexts.
+  notes: 
+  standard_name: 
+  standard_units: 
+  type: 
+  units: units in which data must be entered.
+  updated_at: 
+workflows:
+  table_comment: 
+  advanced_edit: 
+  created_at: 
+  end_date: 
+  finished_at: 
+  folder: 
+  hostname: 
+  id: 
+  model_id: 
+  notes: 
+  params: 
+  site_id: 
+  start_date: 
+  started_at: 
+  updated_at: 
+  user_id: 
+yields:
+  table_comment: 
+  access_level: Level of access required to view data.
+  checked: accepts values [-1, 0, 1]. 0 is default, and means that data have not been
+    checked. 1 indicates that the data have been checked and are correct, -1 indicates
+    that data have been checked and found to be incorrect or suspicious, e.g. outside
+    of the acceptab
+  citation_id: Citation in which data originally reported.
+  created_at: 
+  cultivar_id: Cultivar information, if any.
+  date: Date on which crop was harvested.
+  date_day: 
+  date_month: 
+  date_year: 
+  dateloc: Level of confidence in harvest date. See documentation.
+  entity_id: 
+  id: 
+  mean: 'Mean yield reported. '
+  method_id: 
+  n: Number of replicates used to estimate mean and statistical summary.
+  notes: 
+  site_id: Site at which crop was harvested.
+  specie_id: Species for which yield was measured.
+  stat: Value of reported statistic.
+  statname: Name of reported statistic.
+  treatment_id: Experimental treatment identification. Required, can indicate observational
+    study.
+  updated_at: 
+  user_id: ID of user who entered data.

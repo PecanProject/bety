@@ -3,7 +3,7 @@ class SitesCultivarsUniqueness < ActiveRecord::Migration
     this_hostid = Machine.new.hostid
 
     execute %{
-      SELECT setval('sites_cultivars_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+      SELECT setval('sites_cultivars_id_seq', GREATEST(1, 1 + CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
 
       ALTER TABLE sites_cultivars ADD CONSTRAINT unique_site_id UNIQUE (site_id);
     }
