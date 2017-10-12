@@ -1,3 +1,5 @@
+require 'utilities/sql_comments.rb'
+
 class Api::V1::BaseController < Api::BaseController
   include ApiAuthenticationSystem
 
@@ -31,7 +33,7 @@ class Api::V1::BaseController < Api::BaseController
     # otherwise fall back on using the description found in the database.
     # TO-DO: Consider defining descriptions on the Model rather than on the Controller.
     short_description = self.get_short_description ||
-      Api::V1::BaseController.get_table_description(model.table_name)
+      Utilities::SQLComments::get_table_description(model.table_name)
 
     self.resource_description do
       api_versions "v1"
@@ -65,7 +67,8 @@ class Api::V1::BaseController < Api::BaseController
     DESC
     param_group :extra_parameters
     model.columns.each do |c|
-      param c.name, get_validation(model, c), desc: get_column_comment(model.table_name, c.name)
+      param c.name, get_validation(model, c),
+            desc: Utilities::SQLComments::get_column_comment(model.table_name, c.name)
     end
     define_method(:index) do
       @associations_mode = params["associations_mode"].try(:to_sym) || :count
@@ -143,32 +146,6 @@ class Api::V1::BaseController < Api::BaseController
 
     # For now, ignore validations:
     NO_CONSTRAINT
-
-  end
-
-
-  def self.get_column_comment(table_name, column_name)
-
-    query = <<-QUERY
-      SELECT d.description FROM pg_description d
-        JOIN information_schema.columns c
-          ON (c.table_schema = current_schema
-              AND (current_schema || '.' || c.table_name)::regclass =
-                   d.objoid AND c.ordinal_position = d.objsubid)
-        WHERE c.table_name = '#{table_name}' AND c.column_name = '#{column_name}'
-      QUERY
-
-    ActiveRecord::Base.connection.select_value(query)
-
-  end
-
-  def self.get_table_description(table_name)
-
-    query = <<-QUERY
-      SELECT obj_description('#{table_name}'::regclass, 'pg_class');
-    QUERY
-
-    ActiveRecord::Base.connection.select_value(query)
 
   end
 
