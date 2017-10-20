@@ -626,4 +626,75 @@ CSV
     expect(page).not_to have_content('undefined method')
   end
 
+
+  # GitHub issue #545
+  context "Tests for date support" do
+
+    context "Testing 'date-only' values" do
+      
+      before :all do
+        f = File.new("spec/tmp/file_with_missing_covariate_values.csv", "w")
+        f.write <<CSV
+SLA,canopy_layer,citation_author,citation_year,citation_title,site,treatment,date,species,access_level,method
+550,3,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1,test
+CSV
+        f.close
+      end
+
+      after :all do
+        File::delete("spec/tmp/file_with_missing_covariate_values.csv")
+      end
+
+      # This tests a long-standing bug whereby the date value inserted
+      # is the UTC time corresponding to midnight in Urbana on the
+      # date given in the CSV file.  It should be the value
+      # corresponding to midnight site time (if a site having a stored
+      # time zone is given) or midnight UTC time (if no site is given
+      # or if the site given has no stored time zone).
+      pending "The date inserted into the database should be the UTC time corresponding to 12am site time on the date specified" do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+        click_button 'Upload'
+        click_link 'Specify'
+        click_button 'Confirm'
+        click_button 'Insert Data'
+        
+        query =<<-QUERY
+        SELECT extract(HOUR FROM site_or_utc_date(date, effective_time_zone(site_id))) AS hour
+            FROM traits WHERE created_at > utc_now() - INTERVAL '2 seconds'
+      QUERY
+        expect(Trait.connection.exec_query(query).first['hour'].to_i).to eq(0)
+      end
+
+    end
+
+
+    context "Testing 'date-with-time-of-day' values" do
+      
+      before :all do
+        f = File.new("spec/tmp/file_with_missing_covariate_values.csv", "w")
+        f.write <<CSV
+SLA,canopy_layer,citation_author,citation_year,citation_title,site,treatment,date,species,access_level,method
+550,3,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31T14:30:24,Lolium perenne,1,test
+CSV
+        f.close
+      end
+
+      after :all do
+        File::delete("spec/tmp/file_with_missing_covariate_values.csv")
+      end
+
+      # This tests that dates of the form "YYYY-MM-DDTHH:MM:SS" will not result in an error.
+      pending "Giving a date that includes the time of day will not result in an error" do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+        click_button 'Upload'
+
+        expect(page).not_to have_content "Error"
+      end
+
+    end
+
+  end
+    
 end
