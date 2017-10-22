@@ -543,7 +543,7 @@ class BulkUploadDataSet
 
   # A regular expression used to verify that dates specified in the upload file
   # are in the required form YYYY-MM-DD.
-  REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)-(?<month>\d\d)-(?<day>\d\d)$/
+  REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)-(?<month>\d\d)-(?<day>\d\d)(T(?<hour>\d\d):(?<minute>\d\d):(?<second>\d\d))?$/
 
   # Given a CSV object (vis. "@data") whose lineno attribute equals 0, validate
   # the data it contains and store the results by setting the following
@@ -718,6 +718,10 @@ class BulkUploadDataSet
               year = match_data[:year]
               month = match_data[:month] || 1
               day = match_data[:day] || 1
+
+              hour = match_data[:hour] || 0
+              minute = match_data[:minute] || 0
+              second = match_data[:second] || 0
             end
 
             if year.nil?
@@ -1213,7 +1217,25 @@ class BulkUploadDataSet
 
           covariate_info = row.delete("covariate_info")
 
-          t = Trait.create!(row)
+          t = Trait.new
+
+          t.site_id = row['site_id']
+
+          # Modify each Trait class instance so that date strings are
+          # interpreted as being in the time zone of the trait site
+          # (or UTC, if the trait site time_zone column is null)
+          class <<t
+            def date=(value)
+              date = Time.use_zone(Site.find(site_id).time_zone || 'UTC') do
+                Time.zone.parse(value)
+              end
+              super(date)
+            end
+          end
+
+          t.assign_attributes(row)
+          t.save!
+          
           covariate_info.each do |covariate_attributes|
             covariate_attributes[:trait_id] = t.id
             Covariate.create!(covariate_attributes)
