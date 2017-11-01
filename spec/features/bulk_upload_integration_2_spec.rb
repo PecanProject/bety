@@ -620,7 +620,7 @@ CSV
 
     # GitHub issue #533
     # (The "fix" for issue $485 introduced this bug: all notes were being set to the empty string.)
-    pending "Non-empty notes values in a CSV file should be inserted into the database" do
+    specify "Non-empty notes values in a CSV file should be inserted into the database" do
       click_button 'Insert Data'
       query =<<-QUERY
           SELECT t.notes FROM traits t JOIN variables v ON v.id = t.variable_id
