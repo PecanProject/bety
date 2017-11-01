@@ -596,21 +596,42 @@ CSV
 
   end # context "Various scenarios involving the variable names in the heading of a trait upload file"
 
-  # GitHub issue #485
-  specify "A CSV file with a notes column should be able to leave cells in that column blank" do
-    visit '/bulk_upload/start_upload'
-    attach_file 'CSV file', Rails.root.join('spec',
-                                            'fixtures',
-                                            'files',
-                                            'bulk_upload',
-                                            'blank_cells_in_notes_column.csv')
-    click_button 'Upload'
-    click_link 'Specify'
-    click_button 'Confirm'
-    expect { click_button 'Insert Data' }.to change { Trait.count }.by( 2 )
-                                         .and change { Covariate.count }.by(2)
-                                         .and change { Entity.count }.by 1;     # The two rows in the file have the same entity name.
-    expect(first("div.alert-success")).to have_content("Data from blank_cells_in_notes_column.csv was successfully uploaded.")
+
+  context "Tests of notes column functionality" do
+    before :each do
+      visit '/bulk_upload/start_upload'
+      attach_file 'CSV file', Rails.root.join('spec',
+                                              'fixtures',
+                                              'files',
+                                              'bulk_upload',
+                                              'blank_cells_in_notes_column.csv')
+      click_button 'Upload'
+      click_link 'Specify'
+      click_button 'Confirm'
+    end
+
+    # GitHub issue #485
+    specify "A CSV file with a notes column should be able to leave cells in that column blank" do
+      expect { click_button 'Insert Data' }.to  change { Trait.count }.by(2)
+                                           .and change { Covariate.count }.by(2)
+                                           .and change { Entity.count }.by(1);  # The two rows in the file have the same entity name.
+      expect(first("div.alert-success")).to have_content("Data from blank_cells_in_notes_column.csv was successfully uploaded.")
+    end
+
+    # GitHub issue #533
+    # (The "fix" for issue $485 introduced this bug: all notes were being set to the empty string.)
+    pending "Non-empty notes values in a CSV file should be inserted into the database" do
+      click_button 'Insert Data'
+      query =<<-QUERY
+          SELECT t.notes FROM traits t JOIN variables v ON v.id = t.variable_id
+              JOIN sites s ON s.id = t.site_id
+              WHERE t.created_at > utc_now() - INTERVAL '2 seconds'
+              AND v.name = 'SLA'
+              AND s.sitename = 'University of Nevada Biological Sciences Center'
+      QUERY
+      expect(Trait.connection.exec_query(query).first["notes"]).to eq("This was from a western site")
+    end
+
   end
 
   # GitHub issue #452
