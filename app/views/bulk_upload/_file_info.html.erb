@@ -1,1 +1,1 @@
-Uploaded file: <%= File.basename(session[:csvpath]) %> (<%= session[:number_of_rows] %> rows)
+Uploaded file: <%= File.basename(session[:csvpath]) %> (<%= pluralize(session[:number_of_rows], 'row') %>)
