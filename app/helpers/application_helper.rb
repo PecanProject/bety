@@ -125,7 +125,8 @@ def commit_is_tagged?
 end
 
 def commit_tags
-  ref_names = `git log --pretty=format:"%d" -1`
+  e = ENV['BETY_GIT_TAGS']
+  ref_names = e.nil? || e.empty? ? `git log --pretty=format:"%d" -1` : e
   if /tag/.match(ref_names).nil?
     return ""
   end
@@ -141,13 +142,16 @@ def commit_tags
 end
 
 def commit_branch
-  `git rev-parse --abbrev-ref HEAD`
+  e = ENV['BETY_GIT_BRANCH']
+  e.nil? || e.empty? ? `git rev-parse --abbrev-ref HEAD` : e
 end
 
 def commit_checksum
-  `git log --pretty=format:"%H" -1`
+  e = ENV['BETY_GIT_CHECKSUM']
+  e.nil? || e.empty? ? `git log --pretty=format:"%H" -1` : e
 end
 
 def commit_date
-  `git log --pretty=format:"%ad" -1`
+  e = ENV['BETY_GIT_DATE']
+  e.nil? || e.empty? ? `git log --pretty=format:"%ad" -1` : e
 end
