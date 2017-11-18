@@ -67,7 +67,11 @@ homepage_body:
   
      <p>This is the trait database for the TERRA reference phenotyping project. We are developing reference datasets and software to advance the science of crop breeding. This database contains plant and plot-level trait data such as plant height, biomass, leaf area, transpiration, phenology, water use efficiency, and biomass yield. These are derived from a suite of sensors with unprecedented resolution that have been deployed on a variety of platforms. See the project website <a href="http://terraref.org" target="_blank">terraref.org</a> for more information about our project, including links to sensor data and information about our phenomics pipeline.</p>
 
-     <p>Data are currently available for alpha user testing. For access, please <a href="https://goo.gl/forms/eYrhvMBj48haloni2" target="_blank">apply to our alpha user program</a>.</p>
+     <p>Summaries of available data can be found on a separate website, <a href="https://traitvis.workbench.terraref.org/" target="_blank"></a>.</p>
+
+     <p>Data are currently available for beta user testing. For access, please <a href="https://terraref.org/beta" target="_blank">apply to our beta user program. When you sign up, be sure to indicate if you prefer to access data through this website, an R library or python module, via direct access to the PostgreSQL database or via API</a>.</p>
+
+     
 
   photo:
 
