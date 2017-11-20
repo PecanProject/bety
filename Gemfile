@@ -22,6 +22,8 @@ gem 'rails3-restful-authentication', '~> 3.0.1'
 gem 'dynamic_form'
 gem 'rabl'
 gem 'yajl-ruby'
+gem 'jbuilder'
+gem 'oj'
 
 # to-do: remove prototype dependencies so we no longer need this gem
 gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
@@ -52,7 +54,7 @@ end
 
 
 group :test do
-  # phasing out webrat:    
+  # phasing out webrat:
   # gem "webrat", "0.7.1"
   gem "capybara"
   gem "database_cleaner"
@@ -88,4 +90,3 @@ gem "json-schema" # needed by rspec_api_documentation
 
 gem "apipie-rails"
 gem "test-unit" # seems to be needed by apipie-rails and prototype-rails
-

@@ -64,9 +64,9 @@ if !root_object.nil?
       polymorphic_url(ob)
     else
       if ob.result_type =~ /traits/
-        trait_url(Trait.find(ob.id))
+        trait_url(ob.id)
       elsif ob.result_type =~ /yields/
-        yield_url(Yield.find(ob.id))
+        yield_url(ob.id)
       end
     end
   end
@@ -77,9 +77,9 @@ if !root_object.nil?
       edit_polymorphic_url(ob)
     else
       if ob.result_type =~ /traits/
-        edit_trait_url(Trait.find(ob.id))
+        edit_trait_url(ob.id)
       elsif ob.result_type =~ /yields/
-        edit_yield_url(Yield.find(ob.id))
+        edit_yield_url(ob.id)
       end
     end
   end
