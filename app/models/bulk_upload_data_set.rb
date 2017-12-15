@@ -1958,8 +1958,17 @@ class BulkUploadDataSet
 
       # dates are assumed always to be accurate to the day:
       csv_row_as_hash["dateloc"] = 5
-      # bulk upload doesn't handle time-of-day data:
-      csv_row_as_hash["timeloc"] = 9
+
+      # bulk upload doesn't handles "date only" dates and dates with time to the
+      # second; determine which:
+      if csv_row_as_hash["date"].length == 19
+        csv_row_as_hash["timeloc"] = 1
+      elsif csv_row_as_hash["date"].length == 10
+        csv_row_as_hash["timeloc"] = 9
+      else
+        # This is just a sanity check; we should never get here:
+        raise
+      end
 
       if yield_data?
         add_yield_specific_attributes(csv_row_as_hash)
