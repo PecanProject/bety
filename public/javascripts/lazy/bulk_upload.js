@@ -104,7 +104,7 @@ function create_select_function(autocompletion_widget_id) {
         // Save the selected values in the session, both for making
         // values "sticky" and for use by subsequent pages of the
         // wizard:
-        jQuery.post("/bulk_upload/store_trait_method_mapping_in_session",
+        jQuery.post(ROOT_URL + "/bulk_upload/store_trait_method_mapping_in_session",
                     {
                         "trait_name": event.target.id,
                         "method_info": {
