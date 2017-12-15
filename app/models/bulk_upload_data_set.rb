@@ -2022,8 +2022,8 @@ class BulkUploadDataSet
 
           # Treat blank cells in the notes column of the CSV file as
           # empty strings, not NULLs.
-          if row_data[:notes] == nil
-            row_data[:notes] = ""
+          if row_data["notes"] == nil
+            row_data["notes"] = ""
           end
 
           @mapped_data << row_data

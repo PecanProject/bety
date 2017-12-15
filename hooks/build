@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+docker build \
+    --build-arg BETY_GIT_TAGS="$(git log --pretty=format:%d -1)" \
+    --build-arg BETY_GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)" \
+    --build-arg BETY_GIT_CHECKSUM="$(git log --pretty=format:%H -1)" \
+    --build-arg BETY_GIT_DATE="$(git log --pretty=format:%ad -1)" \
+	-t $IMAGE_NAME \
+    .
