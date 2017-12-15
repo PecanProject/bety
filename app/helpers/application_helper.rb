@@ -70,7 +70,7 @@ end
 
 # Given a FormBuilder object `f`, a string `label`, an SQL table name
 # `table_name`, a symbol `id`, and a string `placeholder`, make an
-# autocompletion field with id "search_#{table_name}", an associated label with
+# autocompletion field with id `search_#{table_name}`, an associated label with
 # text `label`, and an associated hidden field that will use a parameter name
 # derived from `id`.  If given, the text of `display_value` will appear in the
 # autocompletion field.  Otherwise, an attempt is made to find text representing
@@ -81,6 +81,7 @@ end
 # In order that this be recognized as an autocompletion field, the template for
 # the page using this helper should include a "content_for" block of the form
 #
+# ```
 # <% content_for(:autocomplete_javascript) do %>
 #     <script type="text/javascript" charset="utf-8">
 #         var ROOT_URL = '<%= root_url %>';
@@ -92,9 +93,10 @@ end
 #                     <id of associated hidden field> },
 #             ...
 #         }
-#   </script>
-#   <%= javascript_include_tag 'lazy/autocomplete.js' %>
+#     </script>
+#     <%= javascript_include_tag 'lazy/autocomplete.js' %>
 # <% end %>
+# ```
 def autocompletion_field(f, label, table_name, id, placeholder, display_value = nil, autocompletion_class = "input-full")
   if display_value.nil?
     begin

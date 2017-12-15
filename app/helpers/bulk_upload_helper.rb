@@ -22,7 +22,7 @@ module BulkUploadHelper
         div << "<br>You can not upload your data set until #{@data_set.total_error_count > 1 ? "these are" : "this is"} corrected."
         raw div
       end
-      
+
       summary += content_tag :div, id: "error_explanation" do
         contents = raw ''
         if @data_set.field_list_error_count > 0
@@ -100,6 +100,21 @@ module BulkUploadHelper
 
   def get_access_level(session)
      [nil, 'Restricted', 'Internal EBI & Collaborators', 'External Researcher', 'Public'][session[:global_values][:access_level].to_i] rescue nil
+  end
+
+  # Given a trait name, return an autocompletion widget for selecting a method
+  # to go with the trait.  This will consist of an HTML label and an
+  # appropriately-named text field.
+  def method_autocompletion_field(trait_name)
+    # If a value was remembered in the session use it; otherwise nil:
+    display_value = session[:trait_to_method_mapping].try(:[], trait_name).try(:[], :method_name)
+
+    label_text = raw(trait_name + (' <span style="color: red; display: none" class="error">Click on an item in the completion list.</span>'))
+
+    (label_tag trait_name, label_text).
+      concat(text_field_tag(trait_name, display_value,
+                            placeholder: "Enter a method for this trait (optional)",
+                            class: "input-full"))
   end
 
 end

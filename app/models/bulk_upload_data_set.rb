@@ -216,23 +216,22 @@ class BulkUploadDataSet
   # +display_csv_data+ template.  It is list containing one item for each row of
   # the input file (excluding the heading row).  Each item is itself a list of
   # hashes, one hash for each column of the row.  Each hash has these keys:
-  # fieldname::
   #
-  #   The field name for the corresponding value (as given by the heading)
+  # fieldname
+  # : The field name for the corresponding value (as given by the heading)
   #
-  # data::
-  #   The value itself, except with nil values normalized to the empty string
+  # data
+  # : The value itself, except with nil values normalized to the empty string
   #
   # During validation, which is only performed if there are no errors in the
   # heading, this key is added:
   #
-  # validation_result::
-  #
-  #   This will always be an object of some class that includes the
+  # validation_result
+  # : This will always be an object of some class that includes the
   #   ValidationResult module--that is, an instance of Valid, Ignored,
   #   NotValidated, or some subclass of BulkUploadDataException.
   #
-  # ==== Example
+  # @example
   #  [
   #   [
   #    {
@@ -328,6 +327,9 @@ class BulkUploadDataSet
   # listing all columns specified in the upload file's header line that are not
   # recognized as significant.
   attr :csv_warnings
+
+  # @preconditions {get_variables_in_heading} has been called (which see).
+  attr :heading_variable_info
 
   # Validates +date_string+ to ensure it is in the required format and
   # represents a valid date that is not in the future.  If no exceptions are
@@ -1279,6 +1281,67 @@ class BulkUploadDataSet
     !total_error_count.zero?
   end
 
+  # Returns +true+ if the uploaded file contains trait data.
+  #
+  # @callers {check_header_list}, {get_insertion_data}
+  def trait_data?
+    !@is_yield_data
+  end
+
+  # Using the `trait_covariate_associations` table and the column headings in
+  # the upload file, construct a hash {heading_variable_info} whose keys are the
+  # ids of the trait variables occurring in the data set and whose values give
+  # the variable name and the associated covariates that occur in the data set.
+  #
+  # @example Sample value of {heading_variable_info}
+  #   {
+  #     15 => {
+  #              name: "SLA",
+  #              covariates: {
+  #                            "canopy_layer" => 80
+  #                          }
+  #           },
+  #      4 => {
+  #              name: "Vcmax",
+  #              covariates: {
+  #                            "canopy_layer" => 80,
+  #                            "leafT" => 81
+  #                          }
+  #            }
+  #   }
+  #
+  # @callers {get_insertion_data}, {BulkUploadController#choose_global_data_values}, {BulkUploadController#confirm_data}
+  def get_variables_in_heading
+
+    # A list of TraitCovariateAssociation objects corresponding to trait
+    # variable names occurring in the heading.  Used by get_insertion_data when
+    # the upload file has trait data.
+    relevant_associations = TraitCovariateAssociation.all.select { |a| @headers.include?(a.trait_variable.name) }
+    trait_variables = relevant_associations.collect { |a| a.trait_variable }.uniq
+
+    @heading_variable_info = {}
+
+    trait_variables.each do |tv|
+      covariates = relevant_associations.select { |a| a.trait_variable_id = tv.id && @headers.include?(a.covariate_variable.name) }.collect { |a| a.covariate_variable }
+      covariate_hash = {}
+      covariates.each do |c|
+        covariate_hash[c.name] = c.id
+      end
+      @heading_variable_info[tv.id] = { name: tv.name, covariates: covariate_hash }
+    end
+
+    # Now add standalone traits:
+    if @traits_in_heading.nil?
+      get_trait_and_covariate_info
+    end
+    @traits_in_heading.each do |v|
+      if !@heading_variable_info.keys.include?(v.id)
+        @heading_variable_info[v.id] = { name: v.name, covariates: {} }
+      end
+    end
+
+  end
+
 ####################################################################################################################################
   private
 
@@ -1472,58 +1535,6 @@ class BulkUploadDataSet
     }.uniq
 
     @unmatched_covariates = (@trait_names_in_heading & reserved_covariate_variables)
-
-  end
-
-  # Using the trait_covariate_associations table and the column headings in the
-  # upload file, construct a hash <tt>@heading_variable_info</tt> whose keys are
-  # the ids of the trait variables occurring in the data set and whose values
-  # give the variable name and the associated covariates that occur in the data
-  # set.
-  #
-  # ===Example
-  # {
-  #   15: {
-  #         name: "SLA",
-  #         covariates: {
-  #                       "canopy_layer" => 80
-  #                     }
-  #       },
-  #    4: {
-  #         name: "Vcmax",
-  #         covariates: {
-  #                       "canopy_layer" => 80,
-  #                       "leafT" => 81
-  #                     }
-  #       }
-  # }
-  #
-  # @callers {get_insertion_data}
-  def get_variables_in_heading
-
-    # A list of TraitCovariateAssociation objects corresponding to trait
-    # variable names occurring in the heading.  Used by +get_insertion_data+
-    # when the upload file has trait data.
-    relevant_associations = TraitCovariateAssociation.all.select { |a| @headers.include?(a.trait_variable.name) }
-    trait_variables = relevant_associations.collect { |a| a.trait_variable }.uniq
-
-    @heading_variable_info = {}
-
-    trait_variables.each do |tv|
-      covariates = relevant_associations.select { |a| a.trait_variable_id = tv.id && @headers.include?(a.covariate_variable.name) }.collect { |a| a.covariate_variable }
-      covariate_hash = {}
-      covariates.each do |c|
-        covariate_hash[c.name] = c.id
-      end
-      @heading_variable_info[tv.id] = { name: tv.name, covariates: covariate_hash }
-    end
-
-    # Now add standalone traits:
-    @traits_in_heading.each do |v|
-      if !@heading_variable_info.keys.include?(v.id)
-        @heading_variable_info[v.id] = { name: v.name, covariates: {} }
-      end
-    end
 
   end
 
@@ -1998,19 +2009,28 @@ class BulkUploadDataSet
   # Given the Hash +row_data+ which contains part of the information for a row
   # to be added to the +traits+ table, and given +trait_variable_id+, the id of
   # a trait variable in the upload file, add the following key-value pairs:
-  # ::
-  #    :+variable_id+ => +trait_variable_id+
   #
-  #    :+covariate_info+ => an Array of Hashes, one Hash for each covariate in
-  #    the upload file that is associated with this trait variable
+  #     "variable_id" => trait_variable_id
   #
-  #    :+mean+ => the rounded value of the trait variable whose id is
-  #    +trait_variable_id+
+  #     "mean" => the rounded value of the trait variable whose id is
+  #               trait_variable_id (as a String)
+  #
+  #     "covariate_info" => an Array of Hashes, one Hash for each covariate in
+  #                         the upload file that is associated with this trait
+  #                         variable
+  #
+  #     "method_id" => The id of the method the user chose to associate with
+  #                    this trait variable (as a String)
   #
   # The Hashes corresponding to each covariate have two keys: +:variable_id+,
   # giving the database id of the covariate variable, and +:level+, giving the
   # value of that covariate, rounded to the number of significant digits
   # specified by the user and stored in <tt>@session["rounding"]["vars"]</tt>.
+  #
+  # @param row_data [Hash]
+  # @param trait_variable_id [Fixnum]
+  #
+  # @used_instance_variable @heading_variable_info [Hash{Symbol => Hash}]
   #
   # @callers {get_insertion_data}
   def add_trait_specific_attributes(row_data, trait_variable_id)
@@ -2018,6 +2038,8 @@ class BulkUploadDataSet
     associated_trait_info = @heading_variable_info[trait_variable_id]
 
     row_data["variable_id"] = trait_variable_id
+
+    row_data["method_id"] = @session["trait_to_method_mapping"][associated_trait_info[:name]][:method_id]
 
     # store covariate information in a temporary key:
     row_data["covariate_info"] = []
@@ -2068,13 +2090,6 @@ class BulkUploadDataSet
   # @callers {check_header_list}, {get_insertion_data}, {insert_data}
   def yield_data?
     @is_yield_data
-  end
-
-  # Returns +true+ if the uploaded file contains trait data.
-  #
-  # @callers {check_header_list}, {get_insertion_data}
-  def trait_data?
-    !@is_yield_data
   end
 
 end
