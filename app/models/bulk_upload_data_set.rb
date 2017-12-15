@@ -85,6 +85,12 @@ class InconsistentCitationAndTreatmentException < BulkUploadDataException
   end
 end
 
+class MissingTimeZoneException < BulkUploadDataException
+  def initialize
+    super(:missing_time_zone, "Site has no assigned time zone")
+  end
+end
+
 
 class UnresolvableReferenceException < BulkUploadDataException
 end
@@ -347,7 +353,7 @@ class BulkUploadDataSet
       begin
         date = Date.new(year.to_i, month.to_i, day.to_i)
       rescue ArgumentError => e
-        raise InvalidDateException #"year: #{year}; month: #{month}; day: #{day}"
+        raise InvalidDateException
       else
         # Date is valid; but make sure the range is reasonable
 
@@ -519,6 +525,13 @@ class BulkUploadDataSet
       @validation_summary[:field_list_errors] << 'If you have a "cultivar" column, you must have a "species" column as well.'
     end
 
+    
+    # Issue warnings if needed:
+    
+    if @warn_about_deprecated_date_column
+      @csv_warnings << "The heading 'date' is deprecated.  Use 'local_datetime' instead."
+    end
+
     ignored_columns = []
     @headers.each do |field_name|
       if !(RECOGNIZED_COLUMNS + @trait_names_in_heading + @allowed_covariates).include? field_name
@@ -536,14 +549,14 @@ class BulkUploadDataSet
   # trait and covariate variables.
   RECOGNIZED_COLUMNS = %w{yield citation_doi citation_author citation_year
                           citation_title site species treatment access_level
-                          cultivar date n SE notes entity}
+                          cultivar date local_datetime n SE notes entity}
 
   # We may eventually support this:
   #REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)(-(?<month>\d\d)(-(?<day>\d\d))?)?$/
 
   # A regular expression used to verify that dates specified in the upload file
-  # are in the required form YYYY-MM-DD.
-  REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)-(?<month>\d\d)-(?<day>\d\d)(T(?<hour>\d\d):(?<minute>\d\d):(?<second>\d\d))?$/
+  # are of the form "YYYY-MM-DD", "YYYY-MM-DD HH:MM:SS", or "YYYY-MM-DDTHH:MM:SS".
+  REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)-(?<month>\d\d)-(?<day>\d\d)(?<includes_time>[ T](?<hour>\d\d):(?<minute>\d\d):(?<second>\d\d))?$/
 
   # Given a CSV object (vis. "@data") whose lineno attribute equals 0, validate
   # the data it contains and store the results by setting the following
@@ -669,6 +682,10 @@ class BulkUploadDataSet
 
             matching_site = existing_site?(column[:data])
 
+            if matching_site.time_zone.nil?
+              raise MissingTimeZoneException
+            end
+
           when "species"
 
             existing_species?(column[:data])
@@ -712,8 +729,8 @@ class BulkUploadDataSet
           when "date"
 
             # to-do: use self.validate_date here if possible
-            year = month = day = nil
-            REQUIRED_DATE_FORMAT.match column[:data] do |match_data|
+            year = month = day = hour = minute = second = nil
+            format_ok = REQUIRED_DATE_FORMAT.match column[:data] do |match_data|
               # to-do: set an appropriate dateloc value when day or month is not supplied
               year = match_data[:year]
               month = match_data[:month] || 1
@@ -724,18 +741,19 @@ class BulkUploadDataSet
               second = match_data[:second] || 0
             end
 
-            if year.nil?
+            if format_ok.nil?
               raise UnacceptableDateFormatException
             else
               # Make sure it's a valid date
               begin
-                date = Date.new(year.to_i, month.to_i, day.to_i)
+                date = Time.new(year.to_i, month.to_i, day.to_i,
+                                hour.to_i, minute.to_i, second.to_i)
               rescue ArgumentError => e
-                raise InvalidDateException #"year: #{year}; month: #{month}; day: #{day}"
+                raise InvalidDateException
               else
                 # Date is valid; but make sure the range is reasonable
 
-                if date > Date.today
+                if date > Time.now
                   raise FutureDateException
                 end
               end
@@ -1424,15 +1442,27 @@ class BulkUploadDataSet
   #
   # @todo Make this a class method.
   def normalize_heading(heading)
-    heading = heading.to_s.strip
+    heading = heading.strip
 
     if /^SE$/i.match heading
-      heading.upcase
+      heading.upcase!
     elsif Regexp.new("^(#{RECOGNIZED_COLUMNS.join('|')})$", Regexp::IGNORECASE).match heading
-      heading.downcase
-    else
-      heading
+      heading.downcase!
+    # else
+      # The heading is a variable name or is unrecognized; leave it alone.
     end
+
+    # The user should use heading 'local_datetime' for the date, but internally,
+    # we should convert this to the heading 'date'.
+    @warn_about_deprecated_date_column ||= false
+    if heading == "date"
+      @warn_about_deprecated_date_column = true
+    end
+    if heading == "local_datetime"
+      heading = "date"
+    end
+
+    return heading
   end
 
   # Using the trait_covariate_associations table and the column headings in the
