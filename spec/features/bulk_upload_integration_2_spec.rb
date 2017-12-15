@@ -670,9 +670,8 @@ CSV
       # is the UTC time corresponding to midnight in Urbana on the
       # date given in the CSV file.  It should be the value
       # corresponding to midnight site time (if a site having a stored
-      # time zone is given) or midnight UTC time (if no site is given
-      # or if the site given has no stored time zone).
-      pending "The date inserted into the database should be the UTC time corresponding to 12am site time on the date specified" do
+      # time zone is given).
+      specify "The date inserted into the database should be the UTC time corresponding to 12am site time on the date specified" do
         visit '/bulk_upload/start_upload'
         attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
         click_button 'Upload'
@@ -706,7 +705,7 @@ CSV
       end
 
       # This tests that dates of the form "YYYY-MM-DDTHH:MM:SS" will not result in an error.
-      pending "Giving a date that includes the time of day will not result in an error" do
+      specify "Giving a date that includes the time of day will not result in an error" do
         visit '/bulk_upload/start_upload'
         attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
         click_button 'Upload'
