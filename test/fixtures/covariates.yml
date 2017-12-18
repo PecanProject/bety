@@ -1,7 +1,7 @@
 test_covariate:
   trait_id: 1
   variable_id: 82
-  level: #<BigDecimal:2aaaabaaea30,'0.1E3',9(18)>
+  level: 100
   created_at: "2011-03-23 16:11:00"
   updated_at: "2011-03-24 16:11:00"
   n: NULL
