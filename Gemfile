@@ -21,7 +21,8 @@ gem "bootstrap-will_paginate"
 gem 'rails3-restful-authentication', '~> 3.0.1'
 gem 'dynamic_form'
 gem 'rabl'
-gem 'yajl-ruby'
+gem 'yajl-ruby', '~> 1.3.1'
+gem 'rubyzip', '~> 1.2.1'
 
 # to-do: remove prototype dependencies so we no longer need this gem
 gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
