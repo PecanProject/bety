@@ -65,7 +65,6 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
 
   resources :yieldsviews, :only => [:show]
   resources :workflows
-  resources :formats_variables
   resources :dbfiles do
     collection do
       get :no
@@ -89,9 +88,9 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   post '/feedback/feedback_email' => 'feedback#feedback_email'
   resources :formats do
     post :add_formats_variables, on: :collection
+    post :edit_formats_variables, on: :collection
+    post :rem_formats_variables, on: :member
   end
-  get 'formats/edit_formats_variables'
-  get '/formats/rem_formats_variables(/:id)' => 'formats#rem_formats_variables'
 
   resources :likelihoods
   resources :inputs do
