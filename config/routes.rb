@@ -277,36 +277,36 @@ BetyRails3::Application.routes.draw do
     end
   end
 
-  match '/api', controller: 'api/base', action: 'bad_url'
-  match '/api/*remainder', controller: 'api/base', action: 'bad_url'
+  match '/api', controller: 'api/base', action: 'bad_url', via: [:get, :post]
+  match '/api/*remainder', controller: 'api/base', action: 'bad_url', via: [:get, :post]
 
   get '/application/use_citation/:id', controller: 'application', action: 'use_citation'
   get '/application/remove_citation'
 
-  match '/maps' => 'maps#location_yields'
+  get '/maps' => 'maps#location_yields'
 
-  match '/ebi_forwarded' => 'sessions#ebi_forwarded', :as => :ebi_forwarded
+  get '/ebi_forwarded' => 'sessions#ebi_forwarded', :as => :ebi_forwarded
 
 
   root :to => "sessions#new"
 
-  match '/logout' => 'sessions#destroy', :as => :logout
-  match '/login' => 'sessions#new', :as => :login
-  match '/register' => 'users#create', :as => :register
-  match '/signup' => 'users#new', :as => :signup
+  get '/logout' => 'sessions#destroy', :as => :logout
+  get '/login' => 'sessions#new', :as => :login
+  post '/register' => 'users#create', :as => :register
+  get '/signup' => 'users#new', :as => :signup
 
   #route for 'static' content
   # RAILS3 commented out below and added next in order to get help bubble docs working
   # match '*path' => 'static#index'
-  match ':action' => 'static#:action'
+  get ':action' => 'static#:action'
 
   # add named routes for bulk_upload controller:
-  match '/bulk_upload/start_upload' => 'bulk_upload#start_upload', :as => :start_upload
-  match '/bulk_upload/display_csv_file', :as => :show_upload_file_contents
-  match '/bulk_upload/choose_global_citation', as: :choose_global_citation
-  match '/bulk_upload/choose_global_data_values', :as => :choose_global_data_values
-  match '/bulk_upload/confirm_data', :as => :bulk_upload_data_confirmation
-  match '/bulk_upload/insert_data', :as => :bulk_upload_data_insertion
+  get '/bulk_upload/start_upload' => 'bulk_upload#start_upload', :as => :start_upload
+  post '/bulk_upload/display_csv_file', :as => :show_upload_file_contents
+  get '/bulk_upload/choose_global_citation', as: :choose_global_citation
+  get '/bulk_upload/choose_global_data_values', :as => :choose_global_data_values
+  post '/bulk_upload/confirm_data', :as => :bulk_upload_data_confirmation
+  post '/bulk_upload/insert_data', :as => :bulk_upload_data_insertion
 
   # This seems a somewhat kludgy way to get 'link_to "CF Guidelines",
   # guidelines_path' to create a robust link (i.e., one that works even in
