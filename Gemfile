@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "3.2.22.2"
+gem "rails", "3.2.22.5"
 gem "prototype-rails" # needed for rails 3.1 and above until we phase out prototype
 gem "query_reviewer", "0.1.6"
 gem "nokogiri"
