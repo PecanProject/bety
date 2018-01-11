@@ -1,7 +1,7 @@
-# Load the rails application
+# Load the Rails application.
 require File.expand_path('../application', __FILE__)
 
-# Initialize the rails application
+# Initialize the Rails application.
 BetyRails3::Application.initialize!
 
 # config/initializers/bigint_primary_keys.rb
