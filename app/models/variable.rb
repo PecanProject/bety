@@ -25,7 +25,7 @@ class Variable < ActiveRecord::Base
   before_validation WhitespaceNormalizer.new([:description, :units, :name])
 
 
-  scope :all_order, order('name')
+  scope :all_order, -> { order('name') }
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 

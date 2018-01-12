@@ -27,7 +27,7 @@ class Yield < ActiveRecord::Base
   validates_presence_of     :access_level
   validates_presence_of     :date
   
-  scope :all_order, includes(:specie).order('species.genus, species.species')
+  scope :all_order, -> { includes(:specie).order('species.genus, species.species') }
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
   scope :citation, lambda { |citation|
