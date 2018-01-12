@@ -304,10 +304,10 @@ BetyRails3::Application.routes.draw do
 
   # add named routes for bulk_upload controller:
   get '/bulk_upload/start_upload' => 'bulk_upload#start_upload', :as => :start_upload
-  post '/bulk_upload/display_csv_file', :as => :show_upload_file_contents
+  match '/bulk_upload/display_csv_file', :as => :show_upload_file_contents, via: [:get, :post]
   get '/bulk_upload/choose_global_citation', as: :choose_global_citation
   get '/bulk_upload/choose_global_data_values', :as => :choose_global_data_values
-  post '/bulk_upload/confirm_data', :as => :bulk_upload_data_confirmation
+  match '/bulk_upload/confirm_data', :as => :bulk_upload_data_confirmation, via: [:get, :post]
   post '/bulk_upload/insert_data', :as => :bulk_upload_data_insertion
 
   # This seems a somewhat kludgy way to get 'link_to "CF Guidelines",

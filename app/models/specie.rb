@@ -70,7 +70,7 @@ TEXT
 
 
 
-  scope :all_order, order('genus, species')
+  scope :all_order, -> { order('genus, species') }
   scope :by_letter, lambda { |letter| where('genus like ?', letter + "%") }
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
