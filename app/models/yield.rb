@@ -1,4 +1,5 @@
 class Yield < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 

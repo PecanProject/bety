@@ -17,7 +17,7 @@ describe BulkUploadController, :type => :controller do
       it "should display an error when no file has been uploaded" do
 
         post 'display_csv_file', { 'new upload' => true }
-        assert_equal("No file chosen", session[:flash][:error] )
+        assert_equal("No file chosen", flash[:error] )
         assert_not_equal(200, response.status) # Since this is a redirect, we should get 302; this test is somewhat redundant in view of the next.
         assert_redirected_to '/bulk_upload/start_upload', "Failed to redirect when no file chosen"
       end
@@ -46,7 +46,7 @@ describe BulkUploadController, :type => :controller do
         session[:csvpath] = @file.path
         get 'start_upload'
         post 'display_csv_file', { 'CSV file' => nil }
-        assert_equal("No file chosen", session[:flash][:error])
+        assert_equal("No file chosen", flash[:error])
         assert_not_equal(200, response.status)
         assert_redirected_to '/bulk_upload/start_upload', "Failed to redirect when no file chosen"
       end
@@ -68,7 +68,7 @@ describe BulkUploadController, :type => :controller do
           session[:citation] = 1
           post 'display_csv_file', @form
           assert_nil session[:citation], "Failed to remove citation from session"
-          expect(session[:flash][:warning]).to match(/^Removing/i)
+          expect(flash[:warning]).to match(/^Removing/i)
         end
 
         it "should validate the file data" do
@@ -124,7 +124,7 @@ describe BulkUploadController, :type => :controller do
           @file = fixture_file_upload("/files/bulk_upload/invalid_file.csv", "text/csv")
           @form = { 'new upload' => true, "CSV file" => @file }
           post 'display_csv_file', @form
-          assert_not_nil session[:flash][:error], "Failed to display error message"
+          assert_not_nil flash[:error], "Failed to display error message"
           assert_redirected_to '/bulk_upload/start_upload', "Failed to redirect to start upload"
         end
       end
@@ -209,7 +209,7 @@ describe BulkUploadController, :type => :controller do
 
       @new_count = Yield.count
       assert_equal(1, @new_count - @count, "Failed to insert data")
-      assert_not_nil session[:flash][:success]
+      assert_not_nil flash[:success]
       assert_redirected_to '/bulk_upload/start_upload'
     end
   end

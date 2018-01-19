@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 class Specie < ActiveRecord::Base
+  attr_protected []
+
   require "comma"
   include Overrides
 

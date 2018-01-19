@@ -91,7 +91,6 @@ GEM
       rack
       rake (>= 0.8.1)
     pg (0.21.0)
-    power_assert (1.1.1)
     protected_attributes (1.1.4)
       activemodel (>= 4.0.1, < 5.0)
     prototype-rails (4.0.1)
@@ -167,8 +166,6 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
-    test-unit (3.2.7)
-      power_assert
     thor (0.20.0)
     thread_safe (0.3.6)
     trollop (2.1.2)
@@ -219,7 +216,6 @@ DEPENDENCIES
   safe_attributes
   seer (= 0.10.0)
   selenium-webdriver
-  test-unit
   trollop
   tzinfo
   will_paginate (= 3.0.4)

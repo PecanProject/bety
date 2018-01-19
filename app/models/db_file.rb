@@ -1,4 +1,5 @@
 class DBFile < ActiveRecord::Base
+  attr_protected []
 
   self.table_name = 'dbfiles'
   

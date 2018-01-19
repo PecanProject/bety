@@ -1,4 +1,5 @@
 class Cultivar < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 

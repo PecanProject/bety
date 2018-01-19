@@ -139,13 +139,6 @@ CSV
       expect(first("div.alert")).to have_content "No file chosen"
     end
 
-    specify 'Attempting to run the insert_data action without having uploaded a CSV file will cause a redirect to the start_upload page' do
-      visit '/bulk_upload/insert_data'
-
-      expect(first("header")).to have_content "New Bulk Upload"
-      expect(first("div.alert")).to have_content "No file chosen"
-    end
-
   end
 
 
@@ -187,12 +180,6 @@ CSV
 
       specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the choose_global_citation page' do
         visit '/bulk_upload/confirm_data'
-
-        expect(first("header")).to have_content "Choose a Citation"
-      end
-
-      specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the choose_global_citation page' do
-        visit '/bulk_upload/insert_data'
 
         expect(first("header")).to have_content "Choose a Citation"
       end
@@ -276,12 +263,6 @@ CSV
       expect(page).to have_content "Data Value Errors"
     end
 
-    specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the display_csv_file page' do
-      visit '/bulk_upload/insert_data'
-
-      expect(page).to have_content "Data Value Errors"
-    end
-
   end
 
   # Tests for RM issue #2525 (item 4 of update #2):
@@ -308,12 +289,6 @@ CSV
 
     specify 'Attempting to visit the confirm_data page without having specified missing information will cause a redirect to the choose_global_data_values page' do
       visit '/bulk_upload/confirm_data'
-
-      expect(first("header")).to have_content "Specify Upload Options and Global Values"
-    end
-
-    specify 'Attempting to call the insert_data action without having specified missing information will cause a redirect to the choose_global_data_values page' do
-      visit '/bulk_upload/insert_data'
 
       expect(first("header")).to have_content "Specify Upload Options and Global Values"
     end
@@ -379,15 +354,6 @@ CSV
         expect(first("div.alert")).to have_content "Removing linked citation since you have citation information in your data set"
         expect(first("header")).to have_content "Specify Upload Options and Global Value"
 
-      end
-
-      specify 'If you have a session citation and then visit the insert_data action, the session citation should be removed' +
-        "\n        and if you have not specified the amount of rounding, you should be returned to the \"choose global values\" page." do
-        visit '/bulk_upload/insert_data'
-
-        expect(first("header")).to have_content "Specify Upload Options and Global Value"
-        expect(page).not_to have_content "Citation: "
-        expect(first("div.alert")).to have_content "Removing linked citation since you have citation information in your data set"
       end
 
     end # context "A citation has been selected but rounding has not been specified"

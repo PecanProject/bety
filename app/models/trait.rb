@@ -1,4 +1,6 @@
 class Trait < ActiveRecord::Base
+  attr_protected []
+
   # Passed from controller for validation of ability
   attr_accessor :current_user
 

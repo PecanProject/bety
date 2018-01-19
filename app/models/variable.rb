@@ -1,4 +1,7 @@
 class Variable < ActiveRecord::Base
+  # Using "attr_protected []" doesn't remove protection for the "type" column,
+  # so we have to whitelist accessible columns instead:
+  attr_accessible :description, :units, :notes, :name, :standard_name, :standard_units, :label, :type
 
   # rename inheritance column from "type" so we can have "type" as the name of
   # an attribute:

@@ -1,6 +1,7 @@
 require 'whitespace_normalizer'
 
 class Citation < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 

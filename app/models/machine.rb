@@ -1,4 +1,6 @@
 class Machine < ActiveRecord::Base
+  attr_protected []
+
   include Overrides
 
   extend SimpleSearch

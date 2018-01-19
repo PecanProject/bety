@@ -1,4 +1,5 @@
 class Likelihood < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 

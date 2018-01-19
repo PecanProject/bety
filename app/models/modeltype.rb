@@ -1,4 +1,6 @@
 class Modeltype < ActiveRecord::Base
+  attr_protected []
+
   include Overrides
 
   extend SimpleSearch

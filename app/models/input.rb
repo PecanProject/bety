@@ -1,4 +1,5 @@
 class Input < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 

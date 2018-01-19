@@ -1,4 +1,5 @@
 class Covariate < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 

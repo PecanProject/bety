@@ -1,4 +1,5 @@
 class Site < ActiveRecord::Base
+  attr_protected []
 
   #--
   ### Module Usage ###

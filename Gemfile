@@ -80,7 +80,7 @@ end
 # Comment this out if you can't or don't wish to install capybara-webkit:
 
 group :production do
-#  gem "rmagick", "2.13.1"
+  #  gem "rmagick", "2.13.1"
   gem "passenger"
 end
 
@@ -90,5 +90,9 @@ gem "rspec_api_documentation"
 gem "json-schema" # needed by rspec_api_documentation
 
 gem "apipie-rails"
-gem "test-unit" # seems to be needed by apipie-rails and prototype-rails
+
+# Although it was previously noted that test-unit seems to be needed by
+# apipie-rails and prototype-rails, it interferes with routing specs, so we are
+# commenting it out for now.
+## gem "test-unit"
 

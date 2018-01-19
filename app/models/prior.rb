@@ -1,4 +1,5 @@
 class Prior < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 

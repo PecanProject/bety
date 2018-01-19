@@ -1,4 +1,5 @@
 class Pft < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 
