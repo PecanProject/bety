@@ -65,7 +65,7 @@ class Citation < ActiveRecord::Base
   # SCOPES
 
   scope :by_letter, lambda { |letter| where('author like ?', letter + "%") }
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   # CSV download default fields/field order

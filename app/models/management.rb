@@ -19,7 +19,7 @@ class Management < ActiveRecord::Base
   validates_numericality_of :level, unless: Proc.new { |a| a.level.blank? }
 
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do

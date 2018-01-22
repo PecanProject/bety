@@ -180,7 +180,9 @@ class TreatmentsController < ApplicationController
                           treatment_ids,
                           session["citation"] ]
           end
-          tts = Treatment.where(conditions).includes({:citations => {:sites => :citations} })
+          tts = Treatment.where(conditions).
+                  includes({:citations => {:sites => :citations} }).
+                  references({:citations => {:sites => :citations} })
 =begin # commenting out implementation of "Include all treatments in search?" checkbox
         end
 =end
@@ -193,7 +195,7 @@ class TreatmentsController < ApplicationController
         else
           conditions = []
         end
-        @other_treatments = Treatment.sorted_order("#{sort_column('citations', 'name')} #{sort_direction}").paginate :page => params[:page], :conditions => conditions
+        @other_treatments = Treatment.where(conditions).page(params[:page]).sorted_order("#{sort_column('citations', 'name')} #{sort_direction}")
       end
     else
       conditions = {}

@@ -13,7 +13,7 @@
     <div class="row" style="margin-bottom: 0px">
       <div class="one columns alpha">
         <%= hidden_field_tag 'id', formats_variable.id %>
-        <%= link_to "X", { :controller => :formats, :action => :rem_formats_variables, :id => formats_variable.id }, :confirm => 'Are you sure?', :remote => true %>
+        <%= link_to "X", { :controller => :formats, :action => :rem_formats_variables, :id => formats_variable.id }, data: { :confirm => 'Are you sure?' }, :remote => true %>
       </div>
       <div class="one columns">
         <%= submit_tag "save" %>

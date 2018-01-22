@@ -18,7 +18,7 @@ class Cultivar < ActiveRecord::Base
                     message: "has already been used for this species." }
   validates_presence_of :specie_id
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do

@@ -34,7 +34,7 @@ class Pft < ActiveRecord::Base
       uniqueness: { scope: :modeltype_id,
                     message: "has already been used with this Model." }
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do

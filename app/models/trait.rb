@@ -56,12 +56,12 @@ class Trait < ActiveRecord::Base
     end
   end
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
   scope :exclude_api, -> { where("checked != ?", "-1") }
   scope :citation, lambda { |citation|
     if citation.nil?
-      {}
+      all
     else
       where("citation_id = ?", citation)
     end

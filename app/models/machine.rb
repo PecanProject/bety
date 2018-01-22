@@ -12,7 +12,7 @@ class Machine < ActiveRecord::Base
       uniqueness: true,
       host: true
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   has_many :files, :class_name => 'DBFile'

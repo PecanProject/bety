@@ -29,11 +29,11 @@ class Yield < ActiveRecord::Base
   validates_presence_of     :date
   
   scope :all_order, -> { includes(:specie).order('species.genus, species.species') }
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
   scope :citation, lambda { |citation|
     if citation.nil?
-      {}
+      all
     else
       where("citation_id = ?", citation)
     end

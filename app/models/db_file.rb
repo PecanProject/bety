@@ -18,7 +18,7 @@ class DBFile < ActiveRecord::Base
                 message: "must begin with '/'." }
 
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   has_many :children, :class_name => "DBFile"

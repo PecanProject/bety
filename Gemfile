@@ -16,7 +16,7 @@ gem "ruby-graphviz", "1.0.8"
 gem "safe_attributes"
 gem "seer", "0.10.0"
 gem "tzinfo"
-gem "will_paginate", "3.0.4"
+gem "will_paginate"
 gem "bootstrap-will_paginate"
 gem 'rails3-restful-authentication', '~> 3.0.1'
 gem 'dynamic_form'
