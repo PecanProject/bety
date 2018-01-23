@@ -1,8 +1,8 @@
 # Be sure to restart your server when you modify this file.
 
-#BetyRails3::Application.config.session_store :cookie_store, key: '_bety_rails3_session'
+# Rails.application.config.session_store :cookie_store, key: '_bety_rails3_session'
 
 # Use the database for sessions instead of the cookie-based default,
 # which shouldn't be used to store highly confidential information
 # (create the session table with "rails generate session_migration")
-BetyRails3::Application.config.session_store :active_record_store, key: "_#{Rails.root.basename.to_s}_session_id"
+Rails.application.config.session_store :active_record_store, key: "_#{Rails.root.basename.to_s}_session_id"

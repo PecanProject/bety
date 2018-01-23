@@ -2,7 +2,7 @@
 require File.expand_path('../application', __FILE__)
 
 # Initialize the Rails application.
-BetyRails3::Application.initialize!
+Rails.application.initialize!
 
 # config/initializers/bigint_primary_keys.rb
 ActiveRecord::Base.establish_connection
