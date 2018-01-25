@@ -136,8 +136,6 @@ Rails.application.routes.draw do
       get :rem_pfts_priors
    end
   end
-  # TO-DO: eliminate this route after modifying the tests that use it:
-  get 'pfts/edit2_pfts_species(/:id)' => 'pfts#edit2_pfts_species' # for searching
 
   resources :managements do
     member do
