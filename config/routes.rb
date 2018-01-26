@@ -67,7 +67,6 @@ Rails.application.routes.draw do
 
   resources :yieldsviews, :only => [:show]
   resources :workflows
-  resources :formats_variables
   resources :dbfiles do
     collection do
       get :no
@@ -81,11 +80,6 @@ Rails.application.routes.draw do
   resources :machines
   resources :methods
   resources :ensembles
-  resources :raws do
-    collection do
-      get :download
-    end
-  end
 
   resources :entities
   post '/feedback/feedback_email' => 'feedback#feedback_email'
