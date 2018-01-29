@@ -8,10 +8,11 @@ class Cultivar < ActiveRecord::Base
 
   has_many :sites_cultivars, :class_name => "SitesCultivars"
   has_many :sites, :through => :sites_cultivars
-  belongs_to :specie
   
   has_many :traits
   has_many :yields
+  
+  belongs_to :specie
 
   validates :name,
       presence: true,
