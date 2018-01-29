@@ -1,7 +1,8 @@
 source "http://rubygems.org"
 
-gem "rails", "4.1.16"
-gem "prototype-rails" # needed for rails 3.1 and above until we phase out prototype
+gem "rails", "4.2.10"
+# needed for rails 3.1 and above until we phase out prototype:
+gem 'prototype-rails', github: 'rails/prototype-rails', branch: '4.2' # see https://github.com/rails/prototype-rails/issues/37
 gem "query_reviewer", "0.1.6"
 gem "nokogiri"
 gem "narray", "0.6.0.4"
