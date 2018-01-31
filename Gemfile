@@ -1,8 +1,8 @@
 source "http://rubygems.org"
 
-gem "rails", "4.2.10"
+gem "rails", "5.0.6"
 # needed for rails 3.1 and above until we phase out prototype:
-gem 'prototype-rails', github: 'rails/prototype-rails', branch: '4.2' # see https://github.com/rails/prototype-rails/issues/37
+## gem 'prototype-rails', github: 'rails/prototype-rails', branch: '4.2' # see https://github.com/rails/prototype-rails/issues/37
 gem "query_reviewer", "0.1.6"
 gem "nokogiri"
 gem "narray", "0.6.0.4"
@@ -10,7 +10,7 @@ gem "choice", "0.1.6"
 gem "comma", "3.0.4"
 gem "json"
 gem "rgeo", "~> 0.5.0"
-gem "multi_json", "1.3.6"
+gem "multi_json"
 gem "railroad", "0.5.0"
 gem "recaptcha", "0.3.4", :require => "recaptcha/rails"
 gem "ruby-graphviz", "1.0.8"
@@ -25,10 +25,10 @@ gem 'rabl'
 gem 'yajl-ruby', '~> 1.3.1'
 gem 'rubyzip', '~> 1.2.1'
 gem 'activerecord-session_store' # no longer part of Rails proper
-gem 'protected_attributes' # Use this until and unless we start using Strong Parameters.
+gem 'protected_attributes_continued' # Use this until and unless we start using Strong Parameters.
 
 # to-do: remove prototype dependencies so we no longer need this gem
-gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
+#gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
 
 gem 'memoist'
 

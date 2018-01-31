@@ -44,7 +44,7 @@ module ApplicationHelper
     title ||= column.titleize
     css_class = (column == sort_column) ? "current #{sort_direction}" : nil
     direction = (column == sort_column && sort_direction == "asc") ? "desc" : "asc"
-    link_to title, params.merge(:sort => column, :direction => direction, :page => nil), {:class => css_class}
+    link_to title, params.permit(:sort, :direction, :page, :_).merge(:sort => column, :direction => direction, :page => nil), {:class => css_class}
   end
 
   def format_stat(record)
@@ -65,7 +65,7 @@ end
 
 # Call this to make a link inside a form that submits the form.
 def link_to_submit(*args, &block)
-  link_to_function (block_given? ? capture(&block) : args[0]), "jQuery(this).closest('form').submit()", args.extract_options!
+  link_to (block_given? ? capture(&block) : args[0]), "#", args.extract_options!.merge(onclick: "jQuery(this).closest('form').submit(); return false")
 end
 
 # Given a FormBuilder object `f`, a string `label`, an SQL table name

@@ -117,7 +117,7 @@ class ApplicationController < ActionController::Base
     search_info += "\nsearch string: \"" + (params['search'] || "") + "\""
     search_info += "\nformat: " + (params['format'] || 'html')
     search_info += "\nSQL query: " + sql # method_object.call(arg).send(additional_method).to_sql
-    search_info += "\nall parameters: " + params.inspect
+    search_info += "\nall parameters: " + params.permit!.inspect
 
     logger.info(search_info)
 
