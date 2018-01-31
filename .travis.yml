@@ -24,7 +24,10 @@ cache:
 # install R: use r-packages-precise (https://cran.r-project.org/bin/linux/ubuntu/precise/) 
 # as source which is white listed (https://github.com/travis-ci/apt-source-whitelist/)
 addons:
-  postgresql: 9.4
+  postgresql: 9.5
+  apt:
+    packages:
+      - postgresql-9.5-postgis-2.3
   
 # notifications should go to gitter
 notifications:
