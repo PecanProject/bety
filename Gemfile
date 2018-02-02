@@ -82,7 +82,7 @@ end
 
 group :production do
   #  gem "rmagick", "2.13.1"
-  gem "passenger"
+  gem "passenger", "5.1.12"
 end
 
 # API-related Gems:
