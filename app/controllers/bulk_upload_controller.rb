@@ -173,7 +173,7 @@ class BulkUploadController < ApplicationController
   def display_csv_file
 
     uploaded_io = params["CSV file"]
-    if uploaded_io
+    if !uploaded_io.blank?
       # we got here via the "upload file" button
       @data_set = BulkUploadDataSet.new(session, uploaded_io)
     elsif session[:csvpath]

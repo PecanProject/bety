@@ -60,6 +60,7 @@ group :test do
   # gem "webrat", "0.7.1"
   gem "capybara"
   gem "database_cleaner"
+  gem "rails-controller-testing" # TO-DO: rewrite the specs that rely on this
 end
 
 # If you have difficulty installing or don't wish to install capybara-webkit,
