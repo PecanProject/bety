@@ -46,8 +46,13 @@ case $1 in
         ;;
     "server" )
         wait_for_postgres
-        echo "Start running BETY"
+        echo "Start running BETY (rails server)"
         exec rails s
+        ;;
+    "unicorn" )
+        wait_for_postgres
+        echo "Start running BETY (unicorn)"
+        exec bundle exec unicorn -c config/unicorn.rb
         ;;
     "help" )
         echo "initialize : create a new database and initialize with data from server 0"
