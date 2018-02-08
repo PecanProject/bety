@@ -1,0 +1,17 @@
+<% options = escape_javascript options_from_collection_for_select(@species, :id, :select_default) %>
+
+<% if params[:cont] == "species" %>
+  jQuery('#search_results').html(<%= @species %>)
+<% else %>
+  <% if @species.empty? == true %>
+    jQuery("<%= "#" + params[:cont] + "_specie_id" %>").html("<option value=''>There are no species that match your query.</option>")
+  <% else %>
+    jQuery("<%= "#" + params[:cont] + "_specie_id" %>").html('<%= options %>')
+  <% end %>
+<% end %>
+<% if params[:symbol].length > 3 %>
+    jQuery("#results").html("<h3>Search results for <%= sanitize(@query) %></h3>")
+<% else %>
+    jQuery("#results").html("<h3>Search must be longer then 3 characters</h3>")
+<% end %>
+

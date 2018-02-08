@@ -155,3 +155,23 @@ def commit_date
   e = ENV['BETY_GIT_DATE']
   e.nil? || e.empty? ? `git log --pretty=format:"%ad" -1` : e
 end
+
+# Replacement for the Prototype method of this name.
+def observe_field(element_id, **options)
+  raw(
+    %Q{<script>
+           jQuery(document).ready(function() {
+               jQuery("##{element_id.to_s}").bind("keyup", function() {
+                   var queryString = #{options[:with]}
+                   jQuery.post("#{url_for(options[:url])}" + '?' + queryString)
+               })
+           })
+       </script>}
+    ).html_safe
+end
+
+# Dummy method to replace Prototype method of this name.  Needs to be fleshed
+# out.
+def submit_to_remote(a, b, c)
+  'Create'
+end
