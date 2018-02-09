@@ -71,8 +71,7 @@ class InputsController < ApplicationController
 
     respond_to do |format|
       format.js {
-        @search = search
-        render layout: false
+        render layout: false, locals: { search: search }
       }
     end
   end

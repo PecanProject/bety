@@ -96,9 +96,10 @@ class PftsController < ApplicationController
       @species = Specie.where(search_cond).select("id, scientificname").page(params[:page])
     end
 
-    render :update do |page|
-      page.replace_html :index_table, :partial => "edit2_pfts_species_table"
-      page.replace_html :search_term, search
+    respond_to do |format|
+      format.js {
+        render layout: false, locals: { search: search }
+      }
     end
   end
 

@@ -158,17 +158,31 @@ end
 
 # Replacement for the Prototype method of this name.
 def observe_field(element_id, **options)
-  raw(
-    %Q{<script>
-           jQuery(document).ready(function() {
-               jQuery("##{element_id.to_s}").bind("keyup", function() {
-                   var queryString = #{options[:with]}
-                   var connector = "#{options[:url].has_key?(:id) ? '&' : '?'}"
-                   jQuery.post("#{url_for(options[:url])}" + connector + queryString)
-               })
-           })
-       </script>}
-    ).html_safe
+  # We assume options has either the key :url or the key :function (but not
+  # both).
+  if options.has_key? :url
+    url = url_for(options[:url])
+    connector = url.match(/\?/) ? '&' : '?'
+    raw(
+      %Q{<script>
+             jQuery(document).ready(function() {
+                 jQuery("##{element_id.to_s}").bind("keyup", function() {
+                     jQuery.post("#{url}" + "#{connector}" + #{options[:with]})
+                 })
+             })
+         </script>}
+      ).html_safe
+  else
+    raw(
+      %Q{<script>
+             jQuery(document).ready(function() {
+                 jQuery("##{element_id.to_s}").bind("keyup", function() {
+                     #{options[:function]}
+                 })
+             })
+         </script>}
+      ).html_safe
+  end
 end
 
 # Dummy method to replace Prototype method of this name.  Needs to be fleshed

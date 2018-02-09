@@ -1,4 +1,4 @@
 <% Rails.logger.debug "@files = #{@files.to_a}" %>
 jQuery('#files_index_table').html("<%= escape_javascript(render 'edit_inputs_files_table', files: @files, input: @input, searchparam: @searchparam) %>")
 
-jQuery('#files_search_term').html("<%= @search %>")
+jQuery('#files_search_term').html("<%= search %>")
