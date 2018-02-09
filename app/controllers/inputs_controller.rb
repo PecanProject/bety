@@ -69,9 +69,11 @@ class InputsController < ApplicationController
       @files = DBFile.where(search_cond).select("id, file_name").page(params[:page])
     end
 
-    render :update do |page|
-      page.replace_html :files_index_table, :partial => "edit_inputs_files_table"
-      page.replace_html :files_search_term, search
+    respond_to do |format|
+      format.js {
+        @search = search
+        render layout: false
+      }
     end
   end
 
