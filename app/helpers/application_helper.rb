@@ -163,7 +163,8 @@ def observe_field(element_id, **options)
            jQuery(document).ready(function() {
                jQuery("##{element_id.to_s}").bind("keyup", function() {
                    var queryString = #{options[:with]}
-                   jQuery.post("#{url_for(options[:url])}" + '?' + queryString)
+                   var connector = "#{options[:url].has_key?(:id) ? '&' : '?'}"
+                   jQuery.post("#{url_for(options[:url])}" + connector + queryString)
                })
            })
        </script>}
