@@ -58,7 +58,7 @@ end
 group :test do
   # phasing out webrat:    
   # gem "webrat", "0.7.1"
-  gem "capybara"
+  gem "capybara", "~> 2.8"
   gem "database_cleaner"
   gem "rails-controller-testing" # TO-DO: rewrite the specs that rely on this
 end
@@ -69,7 +69,7 @@ end
 #     bundle install --without javascript_testing
 #
 group :javascript_testing do
-  gem "capybara-webkit", "1.7.1"
+  gem "capybara-webkit", "~>1.7"
 end
 
 # This group is used by RSpec if the environment variable RAILS_DEBUG is set to
