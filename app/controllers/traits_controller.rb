@@ -254,11 +254,10 @@ class TraitsController < ApplicationController
     @trait = Trait.all_limited(current_user).find(params[:id])
     Covariate.find(params[:covariate]).destroy
     respond_to do |format|
-      format.html {
-        render :action =>"edit" do |page|
-          page.replace_html "edit_covariates_traits", :partial =>"edit_covariates_traits"
-        end
+      format.js {
+        render layout: false
       }
+      format.html { head :ok }
       format.xml  { head :ok }
       format.csv  { head :ok }
     end

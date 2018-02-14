@@ -1,0 +1,3 @@
+jQuery('#sites_index_table').html("<%= escape_javascript(render 'edit_sitegroups_sites_table', sitegroup: @sitegroup, sites: @sites, searchparam: @searchparam) %>")
+
+jQuery('#search_term').html("<%= search %>")

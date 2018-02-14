@@ -56,7 +56,7 @@ feature 'Sites index works' do
       it 'show allow adding new related citations', js: true do
         click_link 'View Related Citations'
         fill_in 'search_citations', with: 'Wood'
-        sleep 1
+        sleep 2 # 1 often isn't enough
         click_link '+'
         click_button 'Update'
         # reopen related citations listing

@@ -1,6 +1,7 @@
 <% options = escape_javascript options_from_collection_for_select(@species, :id, :select_default) %>
 
 <% if params[:cont] == "species" %>
+  // This branch may be obsolete.
   jQuery('#search_results').html(<%= @species %>)
 <% else %>
   <% if @species.empty? == true %>

@@ -184,9 +184,3 @@ def observe_field(element_id, **options)
       ).html_safe
   end
 end
-
-# Dummy method to replace Prototype method of this name.  Needs to be fleshed
-# out.
-def submit_to_remote(a, b, c)
-  'Create'
-end
