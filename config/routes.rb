@@ -86,7 +86,7 @@ Rails.application.routes.draw do
   resources :formats do
     post :add_formats_variables, on: :collection
   end
-  get 'formats/edit_formats_variables'
+  post 'formats/edit_formats_variables'
   get '/formats/rem_formats_variables(/:id)' => 'formats#rem_formats_variables'
 
   resources :likelihoods

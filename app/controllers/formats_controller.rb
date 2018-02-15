@@ -4,15 +4,14 @@ class FormatsController < ApplicationController
   helper_method :sort_column, :sort_direction
 
   def rem_formats_variables
-    @formats_variable = FormatsVariable.find(params[:id])
-    @format = @formats_variable.format
+    formats_variable = FormatsVariable.find(params[:id])
+    @format = formats_variable.format
+    formats_variable.destroy
 
-    render :update do |page|
-      if @formats_variable.destroy
-        page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
-      else
-        page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
-      end
+    respond_to do |format|
+      format.js {
+        render "edit_formats_variables", layout: false
+      }
     end
   end
 
@@ -23,8 +22,10 @@ class FormatsController < ApplicationController
     formats_variable.variable = Variable.find(params[:variable_id])
     formats_variable.save
 
-    render :update do |page|
-      page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
+    respond_to do |format|
+      format.js {
+        render "edit_formats_variables", layout: false
+      }
     end
   end
 
@@ -33,8 +34,10 @@ class FormatsController < ApplicationController
     @format = formats_variable.format
     formats_variable.update_attributes(params[:formats_variable])
 
-    render :update do |page|
-      page.replace_html 'edit_formats_variables', :partial => 'edit_formats_variables'
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
