@@ -24,6 +24,8 @@ describe TreatmentsController do
   # adjust the attributes here as well.
   let(:valid_attributes) { { name: "bogus" } }
 
+  let(:invalid_attribute_set) { { name: nil } }
+
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # TreatmentsController. Be sure to keep this updated too.
@@ -35,10 +37,10 @@ describe TreatmentsController do
   }
 
   describe "GET index" do
-    it "assigns all treatments as @treatments" do
-      treatment = Treatment.first
+    it "assigns all treatments associated with the session citation as @treatments" do
+      treatments = Citation.find(valid_session[:citation]).treatments
       get :index, {}, valid_session
-      expect(assigns(:treatments)).to eq([treatment])
+      expect(assigns(:treatments)).to eq(treatments)
     end
   end
 
@@ -89,14 +91,14 @@ describe TreatmentsController do
       it "assigns a newly created but unsaved treatment as @treatment" do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Treatment).to receive(:save).and_return(false)
-        post :create, {:treatment => {  }}, valid_session
+        post :create, {}, valid_session
         expect(assigns(:treatment)).to be_a_new(Treatment)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Treatment).to receive(:save).and_return(false)
-        post :create, {:treatment => {  }}, valid_session
+        post :create, {}, valid_session
         expect(response).to render_template("new")
       end
     end
@@ -132,7 +134,7 @@ describe TreatmentsController do
         treatment = Treatment.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Treatment).to receive(:save).and_return(false)
-        put :update, {:id => treatment.to_param, :treatment => {  }}, valid_session
+        put :update, {:id => treatment.to_param, :treatment => invalid_attribute_set}, valid_session
         expect(assigns(:treatment)).to eq(treatment)
       end
 
@@ -140,7 +142,7 @@ describe TreatmentsController do
         treatment = Treatment.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Treatment).to receive(:save).and_return(false)
-        put :update, {:id => treatment.to_param, :treatment => {  }}, valid_session
+        put :update, {:id => treatment.to_param, :treatment => invalid_attribute_set}, valid_session
         expect(response).to render_template("edit")
       end
     end
