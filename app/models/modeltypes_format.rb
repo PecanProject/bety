@@ -1,4 +1,6 @@
 class ModeltypesFormat < ActiveRecord::Base
+  attr_protected []
+
   validates :tag,
       presence: { message: "tag can't be blank" },
       format: { with: /\A[a-z]+\z/,
