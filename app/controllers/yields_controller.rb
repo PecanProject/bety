@@ -5,31 +5,46 @@ class YieldsController < ApplicationController
   require 'csv'
 
   def checked
-    y = Yield.all_limited(current_user).find(params[:id])
-    
-    y.checked = params[:y][:checked]
+    id = params[:id]
+    y = Yield.all_limited(current_user).find(id)
 
-    render :update do |page|
-      if y and y.save
-        page.replace_html 'checked_notify-'+y.id.to_s, "<br />Updated to #{y.checked}"
-      else 
-        page.replace_html 'checked_notify-'+y.id.to_s, "<br />Something went wrong, not updated!"
-      end
+    if y
+      y.checked = params[:y][:checked]
+    end
+
+    @element_id = "checked_notify-#{id}"
+    binding.pry
+    if y && y.save
+      @message = "<br />Updated to #{y.checked}"
+    else
+      @message = "<br />Something went wrong, not updated!"
+    end
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
   def access_level
 
     y = Yield.all_limited(current_user).find(params[:id])
-
     y.access_level = params[:yield][:access_level] if y
     
-    render :update do |page|
-      if y and y.save
-        page['access_level-'+y.id.to_s].visual_effect :pulsate
-      else 
-        page['access_level-'+y.id.to_s].visual_effect :shake
-      end
+
+    @element_id = "access_level-#{y.id}"
+
+    if y && y.save
+      @saved = true
+    else
+      @saved = false
+    end
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 

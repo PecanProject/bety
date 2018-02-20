@@ -163,11 +163,57 @@ def observe_field(element_id, **options)
   if options.has_key? :url
     url = url_for(options[:url])
     connector = url.match(/\?/) ? '&' : '?'
+    confirmation = options[:confirmation] || "true"
+    observed_event = options[:event_name] || "keyup"
     raw(
       %Q{<script>
+             var data_access_level = #{current_user.access_level};
              jQuery(document).ready(function() {
-                 jQuery("##{element_id.to_s}").bind("keyup", function() {
-                     jQuery.post("#{url}" + "#{connector}" + #{options[:with]})
+                 jQuery("##{element_id.to_s}").bind("focus", function() {
+                     previous = this.value;
+                 }).bind("#{observed_event}", function(event) {
+                     var newvalue = this.value;
+                     jQuery.ajax({
+                         type: "POST",
+                         url: "#{url}" + "#{connector}" + #{options[:with]},
+                         beforeSend: function() {
+                             var returnValue;
+                             if ("##{element_id.to_s}".search("access_level-") == 1) {
+                                 // We are dealing with an element having an id of the form "access_level-...":
+                                 if (data_access_level > newvalue) {
+                                     var confirmation_message = "Really " +
+                                         "change the access level of this " +
+                                         "trait to " + newvalue + "?  " +
+                                         "You will lose access to it if you " +
+                                         "do so.";
+                                     var answer = confirm(confirmation_message);
+                                     if (answer == false) {
+                                         jQuery("##{element_id.to_s}").val(previous);
+                                         jQuery("##{element_id.to_s}").addClass('alert-error', 500);
+                                         jQuery("##{element_id.to_s}").removeClass('alert-error', 500);
+                                     }
+                                     returnValue = answer;
+                                 }
+                                 else {
+                                     returnValue = true;
+                                 }
+                             }
+                             else {
+                                 // This is not an element that changes the
+                                 // access level.  Just allow it to be changed.
+                                 returnValue = true;
+                             }
+                             previous = jQuery("##{element_id.to_s}").val();
+                             return returnValue;
+
+                         },
+                         success: function() {
+                             if ("##{element_id.to_s}".search("access_level-") == 1 &&
+                                 data_access_level > newvalue) {
+                                 jQuery("##{element_id}").closest('tr').fadeOut(1000, function() { jQuery(this).remove(); });
+                             }
+                         }
+                     });
                  })
              })
          </script>}

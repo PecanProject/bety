@@ -11,6 +11,7 @@ class TraitsController < ApplicationController
 
       @trait = Trait.all_limited(current_user).
         includes([:specie,:variable,:cultivar,:treatment,:citation]).
+        references([:specie,:variable,:treatment,:citation]).
         where(%q{   species.scientificname LIKE :query
                  OR species.genus LIKE :query
                  OR species."AcceptedSymbol" LIKE :query
@@ -24,52 +25,71 @@ class TraitsController < ApplicationController
       @trait = nil
     end
 
-
-    render :update do |page|
-      if params[:symbol].length > 3
-        if @trait.length == 100
-          page.replace_html "results", "<h3>Search results for #{@query}. More then 100 results, please narrow your search.</h3>"
-        else
-          page.replace_html "results", "<h3>Search results for #{@query}</h3>"
-        end
+    if params[:symbol].length > 3
+      if @trait.length == 100
+        @message = "<h3>Search results for #{@query}. More then 100 results, please narrow your search.</h3>"
       else
-        page.replace_html "results", "<h3>Search must be longer then 3 characters</h3>"
+        @message = "<h3>Search results for #{@query}</h3>"
       end
-      if @trait.nil?
-        page.replace_html "#{params[:cont]}_trait_id", "<option value=''>There are no traits that match your query.</option>"
-      else
-        page.replace_html "#{params[:cont]}_trait_id", options_from_collection_for_select(@trait, :id, :select_default)
-      end
+    else
+      @message = "<h3>Search must be longer then 3 characters</h3>"
     end
 
+    if @trait.nil?
+      @options = "<option value=''>There are no traits that match your query.</option>"
+    else
+      @options = ActionController::Base.helpers.options_from_collection_for_select(@trait, :id, :select_default)
+    end
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
+    end
   end
 
   def access_level
 
     t = Trait.all_limited(current_user).find(params[:id])
-
+    t.current_user = current_user
     t.access_level = params[:trait][:access_level] if t
 
-    render :update do |page|
-      if t and t.save
-        page['access_level-'+t.id.to_s].visual_effect :pulsate
-      else
-        page['access_level-'+t.id.to_s].visual_effect :shake
-      end
+    @element_id = "access_level-#{t.id}"
+
+    if t && t.save
+      @saved = true
+    else
+      @saved = false
+    end
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
   def checked
-    t = Trait.all_limited(current_user).find(params[:id])
-    t.current_user = current_user
-    t.checked = params[:trait][:checked] if t
+    id = params[:id]
+    t = Trait.all_limited(current_user).find_by_id(id)
 
-    render :update do |page|
-      if t and t.save
-        page.replace_html 'checked_notify-'+t.id.to_s, "<br />Updated to #{t.checked}"
-      else
-        page.replace_html 'checked_notify-'+t.id.to_s, "<br />Something went wrong, not updated!"
-      end
+    if t
+      t.current_user = current_user
+      t.checked = params[:trait][:checked]
+    end
+
+    @element_id = "checked_notify-#{id}"
+
+    if t && t.save
+      @message = "<br />Updated to #{t.checked}"
+    else
+      @message = "<br />Something went wrong, not updated!"
+    end
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
