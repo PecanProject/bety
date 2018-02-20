@@ -1,6 +1,6 @@
 class SitegroupsController < ApplicationController
 
-  before_filter :login_required 
+  before_action :login_required
   helper_method :sort_column, :sort_direction
 
   def edit_sitegroups_sites

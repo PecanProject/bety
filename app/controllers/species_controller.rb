@@ -2,7 +2,7 @@
 # RAILS3 added above encoding (actually this is needed with Ruby 1.9.2)
 
 class SpeciesController < ApplicationController
-  before_filter :login_required, :except => [ :show ]
+  before_action :login_required, :except => [ :show ]
   helper_method :sort_column, :sort_direction
 
   require 'csv'

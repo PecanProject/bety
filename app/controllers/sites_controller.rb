@@ -1,5 +1,5 @@
 class SitesController < ApplicationController
-  before_filter :login_required, :except => [ :show ]
+  before_action :login_required, :except => [ :show ]
   helper_method :sort_column, :sort_direction
 
   layout 'application', :except => [ :map ]

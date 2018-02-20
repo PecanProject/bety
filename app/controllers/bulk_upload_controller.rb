@@ -38,12 +38,12 @@
 # of the session variable.
 class BulkUploadController < ApplicationController
 
-  before_filter :login_required
-  before_filter :record_stage
-  before_filter :clear_session_data, only: :start_upload
-  before_filter :valid_file_required, only: [ :choose_global_data_values, :confirm_data, :insert_data ]
+  before_action :login_required
+  before_action :record_stage
+  before_action :clear_session_data, only: :start_upload
+  before_action :valid_file_required, only: [ :choose_global_data_values, :confirm_data, :insert_data ]
 
-  after_filter :record_bulk_upload_citation
+  after_action :record_bulk_upload_citation
 
   private
 

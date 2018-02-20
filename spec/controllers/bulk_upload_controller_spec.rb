@@ -3,7 +3,7 @@ describe BulkUploadController, :type => :controller do
 
   class BulkUploadController
     # override the login requirement for testing:
-    before_filter :login_required, only: []
+    before_action :login_required, only: []
   end
 
   describe "display csv file" do
