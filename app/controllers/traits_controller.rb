@@ -229,7 +229,7 @@ class TraitsController < ApplicationController
               # these "saved" covariates are rolled back if any save errors occur
               saved_covariates << @covariate
             else
-              @trait.errors.add(:covariates, (@covariate.errors.get(:level))[0])
+              @trait.errors.add(:covariates, (@covariate.errors[:level])[0])
             end
           end
         end

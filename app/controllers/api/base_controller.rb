@@ -129,7 +129,7 @@ class Api::BaseController < ActionController::Base
     # remove these from where_params
     where_params.delete_if { |k, v| fuzzy_params.has_key?(k) }
 
-    kv_pairs = fuzzy_params.to_a
+    kv_pairs = fuzzy_params.to_unsafe_h.to_a
     
     where_clause_array = kv_pairs.map { |kv| "#{kv[0]}::text ~* ?" }
     where_clause = where_clause_array.join(" AND ")

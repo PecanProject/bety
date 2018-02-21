@@ -24,7 +24,7 @@ RSpec.describe "Trait insertion API:" do
 
         aggregate_failures "Insertion works correctly" do
           expect {
-            post "#{path}?key=3333333333333333333333333333333333333333", valid_data_doc
+            post "#{path}?key=3333333333333333333333333333333333333333", params: valid_data_doc
           }.to change { Trait.count }.by(num_new_traits)
             .and change { Entity.count }.by(num_new_entities)
             .and change { Covariate.count }.by(num_new_covariates)
@@ -51,7 +51,7 @@ RSpec.describe "Trait insertion API:" do
 
         aggregate_failures "Insertion fails without proper authorization" do
           expect {
-            post "#{path}?key=4444444444444444444444444444444444444444", valid_data_doc
+            post "#{path}?key=4444444444444444444444444444444444444444", params: valid_data_doc
           }.to change { Trait.count }.by(0)
             .and change { Entity.count }.by(0)
             .and change { Covariate.count }.by(0)
@@ -75,7 +75,7 @@ RSpec.describe "Trait insertion API:" do
     include_examples "format", "spec/fixtures/files/api/v1/valid-test-data.json", "JSON", "", "application/json"
 
     specify "Sending a malformed JSON document should return a Bad Request status" do
-      post "/api/v1/traits?key=3333333333333333333333333333333333333333", "{ no-closing-brace "
+      post "/api/v1/traits?key=3333333333333333333333333333333333333333", params: "{ no-closing-brace "
       aggregate_failures do
         expect(response.status).to eq 400
         expect(response.content_type).to eq "application/json"
@@ -93,7 +93,7 @@ RSpec.describe "Trait insertion API:" do
     include_examples "format", "spec/fixtures/files/api/v1/valid-test-data.xml", "XML", ".xml", "application/xml"
 
     specify "Sending a malformed XML document should return a Bad Request status" do
-      post "/api/v1/traits.xml?key=3333333333333333333333333333333333333333", "<no-closing-tag>"
+      post "/api/v1/traits.xml?key=3333333333333333333333333333333333333333", params: "<no-closing-tag>"
       aggregate_failures do
         expect(response.status).to eq 400
         expect(response.content_type).to eq "application/xml"
@@ -106,7 +106,7 @@ RSpec.describe "Trait insertion API:" do
     end
 
     specify "Sending an invalid XML document should return a Bad Request status" do
-      post "/api/v1/traits.xml?key=3333333333333333333333333333333333333333", "<xml-doc-not-conforming-to-schema/>"
+      post "/api/v1/traits.xml?key=3333333333333333333333333333333333333333", params: "<xml-doc-not-conforming-to-schema/>"
       aggregate_failures do
         expect(response.status).to eq 400
         expect(response.content_type).to eq "application/xml"
@@ -128,7 +128,7 @@ RSpec.describe "Trait insertion API:" do
 
       expect {
         post "/api/v1/traits.csv?key=3333333333333333333333333333333333333333",
-          File.open(Rails.root.join "spec/fixtures/files/api/v1/missing-meta-data.csv").read
+          params: File.open(Rails.root.join "spec/fixtures/files/api/v1/missing-meta-data.csv").read
       }.not_to change { Trait.count }
 
     end
@@ -137,7 +137,7 @@ RSpec.describe "Trait insertion API:" do
 
       expect {
         post "/api/v1/traits.csv?key=3333333333333333333333333333333333333333",
-          File.open(Rails.root.join "spec/fixtures/files/api/v1/missing-meta-data.csv").read
+          params: File.open(Rails.root.join "spec/fixtures/files/api/v1/missing-meta-data.csv").read
       }.not_to change { Entity.count }
 
     end
@@ -146,7 +146,7 @@ RSpec.describe "Trait insertion API:" do
 
       expect {
         post "/api/v1/traits.csv?key=3333333333333333333333333333333333333333",
-          File.open(Rails.root.join "spec/fixtures/files/api/v1/out-of-range-data.csv").read
+          params: File.open(Rails.root.join "spec/fixtures/files/api/v1/out-of-range-data.csv").read
       }.not_to change { Entity.count }
 
     end

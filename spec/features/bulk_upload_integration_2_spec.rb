@@ -447,7 +447,7 @@ CSV
                      : 30 # than for WebKit
         begin
           # Wrap while loops in timeout in case some deletion fails
-          timeout time_limit do
+          Timeout.timeout time_limit do
 
             # Remove covariates before traits because they refer to traits:
             visit '/covariates'

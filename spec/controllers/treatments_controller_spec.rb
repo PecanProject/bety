@@ -39,7 +39,7 @@ describe TreatmentsController do
   describe "GET index" do
     it "assigns all treatments associated with the session citation as @treatments" do
       treatments = Citation.find(valid_session[:citation]).treatments
-      get :index, {}, valid_session
+      get :index, params: {}, session: valid_session
       expect(assigns(:treatments)).to eq(treatments)
     end
   end
@@ -47,14 +47,14 @@ describe TreatmentsController do
   describe "GET show" do
     it "assigns the requested treatment as @treatment" do
       treatment = Treatment.create! valid_attributes
-      get :show, {:id => treatment.to_param}, valid_session
+      get :show, params: {:id => treatment.to_param}, session: valid_session
       expect(assigns(:treatment)).to eq(treatment)
     end
   end
 
   describe "GET new" do
     it "assigns a new treatment as @treatment" do
-      get :new, {}, valid_session
+      get :new, params: {}, session: valid_session
       expect(assigns(:treatment)).to be_a_new(Treatment)
     end
   end
@@ -62,7 +62,7 @@ describe TreatmentsController do
   describe "GET edit" do
     it "assigns the requested treatment as @treatment" do
       treatment = Treatment.create! valid_attributes
-      get :edit, {:id => treatment.to_param}, valid_session
+      get :edit, params: {:id => treatment.to_param}, session: valid_session
       expect(assigns(:treatment)).to eq(treatment)
     end
   end
@@ -71,18 +71,18 @@ describe TreatmentsController do
     describe "with valid params" do
       it "creates a new Treatment" do
         expect {
-          post :create, {:treatment => valid_attributes}, valid_session
+          post :create, params: {:treatment => valid_attributes}, session: valid_session
         }.to change(Treatment, :count).by(1)
       end
 
       it "assigns a newly created treatment as @treatment" do
-        post :create, {:treatment => valid_attributes}, valid_session
+        post :create, params: {:treatment => valid_attributes}, session: valid_session
         expect(assigns(:treatment)).to be_a(Treatment)
         expect(assigns(:treatment)).to be_persisted
       end
 
       it "redirects to the treatment index page" do
-        post :create, {:treatment => valid_attributes}, valid_session
+        post :create, params: {:treatment => valid_attributes}, session: valid_session
         expect(response).to redirect_to(action: :index)
       end
     end
@@ -91,14 +91,14 @@ describe TreatmentsController do
       it "assigns a newly created but unsaved treatment as @treatment" do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Treatment).to receive(:save).and_return(false)
-        post :create, {}, valid_session
+        post :create, params: {}, session: valid_session
         expect(assigns(:treatment)).to be_a_new(Treatment)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Treatment).to receive(:save).and_return(false)
-        post :create, {}, valid_session
+        post :create, params: {}, session: valid_session
         expect(response).to render_template("new")
       end
     end
@@ -112,19 +112,19 @@ describe TreatmentsController do
         # specifies that the Treatment created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        expect_any_instance_of(Treatment).to receive(:update_attributes).with({ "these" => "params" })
-        put :update, {:id => treatment.to_param, :treatment => { "these" => "params" }}, valid_session
+        expect_any_instance_of(Treatment).to receive(:update_attributes).with(ActionController::Parameters.new({ "these" => "params" }))
+        put :update, params: {:id => treatment.to_param, :treatment => { "these" => "params" }}, session: valid_session
       end
 
       it "assigns the requested treatment as @treatment" do
         treatment = Treatment.create! valid_attributes
-        put :update, {:id => treatment.to_param, :treatment => valid_attributes}, valid_session
+        put :update, params: {:id => treatment.to_param, :treatment => valid_attributes}, session: valid_session
         expect(assigns(:treatment)).to eq(treatment)
       end
 
       it "redirects to the treatment index page" do
         treatment = Treatment.create! valid_attributes
-        put :update, {:id => treatment.to_param, :treatment => valid_attributes}, valid_session
+        put :update, params: {:id => treatment.to_param, :treatment => valid_attributes}, session: valid_session
         expect(response).to redirect_to(treatments_path)
       end
     end
@@ -134,7 +134,7 @@ describe TreatmentsController do
         treatment = Treatment.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Treatment).to receive(:save).and_return(false)
-        put :update, {:id => treatment.to_param, :treatment => invalid_attribute_set}, valid_session
+        put :update, params: {:id => treatment.to_param, :treatment => invalid_attribute_set}, session: valid_session
         expect(assigns(:treatment)).to eq(treatment)
       end
 
@@ -142,7 +142,7 @@ describe TreatmentsController do
         treatment = Treatment.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Treatment).to receive(:save).and_return(false)
-        put :update, {:id => treatment.to_param, :treatment => invalid_attribute_set}, valid_session
+        put :update, params: {:id => treatment.to_param, :treatment => invalid_attribute_set}, session: valid_session
         expect(response).to render_template("edit")
       end
     end
@@ -152,13 +152,13 @@ describe TreatmentsController do
     it "destroys the requested treatment" do
       treatment = Treatment.create! valid_attributes
       expect {
-        delete :destroy, {:id => treatment.to_param}, valid_session
+        delete :destroy, params: {:id => treatment.to_param}, session: valid_session
       }.to change(Treatment, :count).by(-1)
     end
 
     it "redirects to the treatments list" do
       treatment = Treatment.create! valid_attributes
-      delete :destroy, {:id => treatment.to_param}, valid_session
+      delete :destroy, params: {:id => treatment.to_param}, session: valid_session
       expect(response).to redirect_to(treatments_path)
     end
   end
