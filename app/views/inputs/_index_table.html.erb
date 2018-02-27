@@ -34,7 +34,7 @@
             <%= link_to edit_input_path(input), :class => "button button-small", :alt => "edit" do %>
               <i class="icon-edit"></i>
             <% end %>
-            <%= link_to input, :method => :delete, :type => 'input', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
+            <%= link_to input, :method => :delete, :type => 'input', data: { :confirm => 'Are you sure?' }, :class=> 'button button-small button-danger', :alt => "delete" do %>
               <i class="icon-trash"></i> 
             <% end %>
     </td>

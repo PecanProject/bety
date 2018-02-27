@@ -35,7 +35,7 @@ feature 'User creation works' do
       fill_in 'user_password_confirmation', :with =>  'notmoney'
 
       click_button 'Sign up'
-      expect(page).to have_content("Password doesn't match confirmation")
+      expect(page).to have_content("Password confirmation doesn't match Password")
     end
   end
 end

@@ -1,20 +1,21 @@
-BetyRails3::Application.routes.draw do # RAILS3 |map| removed
+Rails.application.routes.draw do
   apipie
-  # The priority is based upon order of creation:
-  # first created -> highest priority.
+  # The priority is based upon order of creation: first created -> highest priority.
+  # See how all your routes lay out with "rake routes".
 
-  # Sample of regular route:
-  #   match 'products/:id' => 'catalog#view'
-  # Keep in mind you can assign values other than :controller and :action
+  # You can have the root of your site routed with "root"
+  # root 'welcome#index'
 
-  # Sample of named route:
-  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
-  # This route can be invoked with purchase_url(:id => product.id)
+  # Example of regular route:
+  #   get 'products/:id' => 'catalog#view'
 
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
+  # Example of named route that can be invoked with purchase_url(id: product.id)
+  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
+
+  # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 
-  # Sample resource route with options:
+  # Example resource route with options:
   #   resources :products do
   #     member do
   #       get 'short'
@@ -26,32 +27,33 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   #     end
   #   end
 
-  # Sample resource route with sub-resources:
+  # Example resource route with sub-resources:
   #   resources :products do
   #     resources :comments, :sales
   #     resource :seller
   #   end
 
-  # Sample resource route with more complex sub-resources
+  # Example resource route with more complex sub-resources:
   #   resources :products do
   #     resources :comments
   #     resources :sales do
-  #       get 'recent', :on => :collection
+  #       get 'recent', on: :collection
   #     end
   #   end
 
-  # Sample resource route within a namespace:
+  # Example resource route with concerns:
+  #   concern :toggleable do
+  #     post 'toggle'
+  #   end
+  #   resources :posts, concerns: :toggleable
+  #   resources :photos, concerns: :toggleable
+
+  # Example resource route within a namespace:
   #   namespace :admin do
   #     # Directs /admin/products/* to Admin::ProductsController
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
-
-  # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
-  # root :to => "welcome#index"
-
-  # See how all your routes lay out with "rake routes"
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
@@ -65,7 +67,6 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
 
   resources :yieldsviews, :only => [:show]
   resources :workflows
-  resources :formats_variables
   resources :dbfiles do
     collection do
       get :no
@@ -79,11 +80,6 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
   resources :machines
   resources :methods
   resources :ensembles
-  resources :raws do
-    collection do
-      get :download
-    end
-  end
 
   resources :entities
   post '/feedback/feedback_email' => 'feedback#feedback_email'
@@ -134,8 +130,6 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
       get :rem_pfts_priors
    end
   end
-  # TO-DO: eliminate this route after modifying the tests that use it:
-  get 'pfts/edit2_pfts_species(/:id)' => 'pfts#edit2_pfts_species' # for searching
 
   resources :managements do
     member do
@@ -277,36 +271,36 @@ BetyRails3::Application.routes.draw do # RAILS3 |map| removed
     end
   end
 
-  match '/api', controller: 'api/base', action: 'bad_url'
-  match '/api/*remainder', controller: 'api/base', action: 'bad_url'
+  match '/api', controller: 'api/base', action: 'bad_url', via: [:get, :post]
+  match '/api/*remainder', controller: 'api/base', action: 'bad_url', via: [:get, :post]
 
   get '/application/use_citation/:id', controller: 'application', action: 'use_citation'
   get '/application/remove_citation'
 
-  match '/maps' => 'maps#location_yields'
+  get '/maps' => 'maps#location_yields'
 
-  match '/ebi_forwarded' => 'sessions#ebi_forwarded', :as => :ebi_forwarded
+  get '/ebi_forwarded' => 'sessions#ebi_forwarded', :as => :ebi_forwarded
 
 
   root :to => "sessions#new"
 
-  match '/logout' => 'sessions#destroy', :as => :logout
-  match '/login' => 'sessions#new', :as => :login
-  match '/register' => 'users#create', :as => :register
-  match '/signup' => 'users#new', :as => :signup
+  get '/logout' => 'sessions#destroy', :as => :logout
+  get '/login' => 'sessions#new', :as => :login
+  post '/register' => 'users#create', :as => :register
+  get '/signup' => 'users#new', :as => :signup
 
   #route for 'static' content
   # RAILS3 commented out below and added next in order to get help bubble docs working
   # match '*path' => 'static#index'
-  match ':action' => 'static#:action'
+  get ':action' => 'static#:action'
 
   # add named routes for bulk_upload controller:
-  match '/bulk_upload/start_upload' => 'bulk_upload#start_upload', :as => :start_upload
-  match '/bulk_upload/display_csv_file', :as => :show_upload_file_contents
-  match '/bulk_upload/choose_global_citation', as: :choose_global_citation
-  match '/bulk_upload/choose_global_data_values', :as => :choose_global_data_values
-  match '/bulk_upload/confirm_data', :as => :bulk_upload_data_confirmation
-  match '/bulk_upload/insert_data', :as => :bulk_upload_data_insertion
+  get '/bulk_upload/start_upload' => 'bulk_upload#start_upload', :as => :start_upload
+  match '/bulk_upload/display_csv_file', :as => :show_upload_file_contents, via: [:get, :post]
+  get '/bulk_upload/choose_global_citation', as: :choose_global_citation
+  get '/bulk_upload/choose_global_data_values', :as => :choose_global_data_values
+  match '/bulk_upload/confirm_data', :as => :bulk_upload_data_confirmation, via: [:get, :post]
+  post '/bulk_upload/insert_data', :as => :bulk_upload_data_insertion
 
   # This seems a somewhat kludgy way to get 'link_to "CF Guidelines",
   # guidelines_path' to create a robust link (i.e., one that works even in

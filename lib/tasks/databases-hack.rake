@@ -1,3 +1,4 @@
+=begin
 # An incompatibility between the active-record-3.2.21 and
 # activerecord-postgis-adapter-0.6.6 rails3 rake files makes these
 # hacks necessary.
@@ -19,6 +20,7 @@
   set_psql_env(config_)
   `psql -U "#{config_["username"]}" -f #{::Rails.root}/db/#{::Rails.env}_structure.sql #{config_["database"]}`
 end
+=end
 
 # gems/activerecord-3.2.21/lib/active_record/railties/databases.rake:521
 # defines db:test:clone_structure with prerequisites db:structure:dump

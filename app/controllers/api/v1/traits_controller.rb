@@ -3,7 +3,7 @@ require 'yajl'
 
 class Api::V1::TraitsController < Api::V1::BaseController
 
-  include TraitCreationSupport
+  include Api::TraitCreationSupport
 
   define_actions(Trait)
 
