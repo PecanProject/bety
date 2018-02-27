@@ -7,7 +7,7 @@
     <th>File Path</th>
     <th>File Name</th>
   </tr>
-  <% @posterior.files.all(:limit => 100).each do |c| %>
+  <% @posterior.files.each do |c| %>
   <tr>
     <td><%=h c.machine_id %></td>
     <td><%=h c.file_path %></td>
