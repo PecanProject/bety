@@ -26,9 +26,13 @@ gem 'yajl-ruby', '~> 1.3.1'
 gem 'rubyzip', '~> 1.2.1'
 gem 'activerecord-session_store' # no longer part of Rails proper
 gem 'protected_attributes_continued' # Use this until and unless we start using Strong Parameters.
+gem 'sass-rails'
+gem 'coffee-rails'
+gem 'uglifier'
 
-# to-do: remove prototype dependencies so we no longer need this gem
-#gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
+
+# to-do: Use this Gem instead of adding the library to the assets directory.
+## gem 'jquery-rails'
 
 gem 'memoist'
 

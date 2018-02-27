@@ -96,8 +96,7 @@ line-height:normal;
 		bottom: 0;
 		right: 0;
 		height: 80px;
-		width: 80px;
-		background: url(../../stylesheets/images/resize.png); }
+		width: 80px; }
 
 
 	img {
@@ -250,7 +249,7 @@ Bootstrap Styles
 }
 
 .header {
-	background: #dfdfdf url("../images/bg-grain-grey.jpg") top left repeat;
+	background: #dfdfdf url(<%= asset_path("bg-grain-grey.jpg") %>) top left repeat;
 	text-shadow: 0px 1px 1px rgba(255,255,255,1);
 }
 .header h1 {
@@ -273,7 +272,7 @@ Bootstrap Styles
 	width: 100px;
 	text-align: right;
 	display: inline-block;
-	background: url(../images/logo-ebi.png) top right no-repeat;
+	background: url(<%= asset_path("logo-ebi.png") %>) top right no-repeat;
 	padding-right: 45px;
 	height: 46px;
 	padding-top: 4px;
@@ -300,7 +299,7 @@ Bootstrap Styles
 	color: #444;
 }
 body > .nav {
-	background: #505050 url("../images/bg-nav.jpg") top left repeat-x;
+	background: #505050 url(<%= asset_path("bg-nav.jpg") %>) top left repeat-x;
 	color: #fff;
 	height: 75px;
 	padding-top: 6px;
@@ -383,7 +382,7 @@ body > .nav {
 }
 .sidenav .active .icon-chevron-right,
 .sidenav .active a:hover .icon-chevron-right {
-  background-image: url(../images/glyphicons-halflings-white.png);
+  background-image: url(<%= asset_path("glyphicons-halflings-white.png") %>);
   opacity: 1;
 }
 .sidenav.affix {
@@ -463,7 +462,7 @@ border-bottom-color: transparent;
 	padding-top: 40px;
 	line-height: 13px;
 	font-size: 11px;
-	background: url("../images/logo-ebi-footer.jpg") top center no-repeat;
+	background: url(<%= asset_path("logo-ebi-footer.jpg") %>) top center no-repeat;
 }
 .footer .six.columns.omega p:first-child {
 	margin-bottom: 10px;
@@ -612,22 +611,22 @@ border-bottom-color: transparent;
 		  overflow: hidden;
 	  }
 	  .footer .footnotes a.illinois {
-		  background: url(../images/logo-illinois.png) 0 0 no-repeat;
+		  background: url(<%= asset_path("logo-illinois.png") %>) 0 0 no-repeat;
 		  width: 246px;
 	  
 	  }
 	  .footer .footnotes a.berkeley {
-		  background: url(../images/logo-berkeley.png) 0 0 no-repeat;
+		  background: url(<%= asset_path("logo-berkeley.png") %>) 0 0 no-repeat;
 		  width: 145px;
 		  margin-left: 20%;
 	  }
 	  .footer .footnotes a.lbl {
-		  background: url(../images/logo-lbl.png) 0 0 no-repeat;
+		  background: url(<%= asset_path("logo-lbl.png") %>) 0 0 no-repeat;
 		  width: 232px;
 	  
 	  }
 	  .footer .footnotes a.bp {
-		  background: url(../images/logo-bp.png) 0 0 no-repeat;
+		  background: url(<%= asset_path("logo-bp.png") %>) 0 0 no-repeat;
 		  width: 54px;
 		  margin-right: 40%;
 	  }

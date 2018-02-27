@@ -148,7 +148,7 @@ ul.sf-menu li li li:hover ul, ul.sf-menu li li li.sfHover ul{
         width: 12.5%; /* this will need to be adjusted for your needs */
         height: 69px;
 		background-color: transparent;
-    	background-image: url('../images/nav-separator.png');
+    	background-image: url(<%= asset_path('nav-separator.png') %>);
 		background-position: 0 0;
 		background-repeat: repeat-y;
     }
@@ -169,7 +169,7 @@ ul.sf-menu li li li:hover ul, ul.sf-menu li li li.sfHover ul{
     /* new style for drop list items */
     .main-menu li li {
         background: #000;
-    	background-image: url('../images/nav-separator.png');
+    	background-image: url(<%= asset_path('nav-separator.png') %>);
         background-repeat: repeat-y;
         clear: left;
         width: 100%;
@@ -227,31 +227,31 @@ ul.sf-menu li li li:hover ul, ul.sf-menu li li li.sfHover ul{
 		font-size: 14px;
     }
 	.main-menu li.menu-home > a {
-		background: transparent url(../images/nav-icon-home.png) 10px 41px no-repeat;
+		background: transparent url(<%= asset_path("nav-icon-home.png") %>) 10px 41px no-repeat;
 		padding-left: 23px;
 	}
 	.main-menu li.menu-docs > a {
-		background: transparent url(../images/nav-icon-docs.png) 10px 41px no-repeat;
+		background: transparent url(<%= asset_path("nav-icon-docs.png") %>) 10px 41px no-repeat;
 		padding-left: 23px;
 	}
 	.main-menu li.menu-maps > a {
-		background: transparent url(../images/nav-icon-maps.png) 10px 41px no-repeat;
+		background: transparent url(<%= asset_path("nav-icon-maps.png") %>) 10px 41px no-repeat;
 		padding-left: 23px;
 	}
 	.main-menu li.menu-data > a {
-		background: transparent url(../images/nav-icon-data.png) 10px 41px no-repeat;
+		background: transparent url(<%= asset_path("nav-icon-data.png") %>) 10px 41px no-repeat;
 		padding-left: 23px;
 	}
 	.main-menu li.menu-new > a {
-		background: transparent url(../images/nav-icon-new.png) 10px 41px no-repeat;
+		background: transparent url(<%= asset_path("nav-icon-new.png") %>) 10px 41px no-repeat;
 		padding-left: 23px;
 	}
 	.main-menu li.menu-admin > a {
-		background: transparent url(../images/nav-icon-admin.png) 10px 41px no-repeat;
+		background: transparent url(<%= asset_path("nav-icon-admin.png") %>) 10px 41px no-repeat;
 		padding-left: 23px;
 	}
 	.main-menu li.menu-login > a {
-		background: transparent url(../images/nav-icon-logout.png) 100% 41px no-repeat;
+		background: transparent url(<%= asset_path("nav-icon-logout.png") %>) 100% 41px no-repeat;
 		width: 84%;
 		padding-right: 23px;
 	}
