@@ -145,7 +145,7 @@ feature 'Authorization:' do
       visit "/sitegroups/#{id}/edit"
       fill_in 'Name', with: 'my new name'
       click_button 'Update'
-      expect(Sitegroup.find_all_by_name('my new name').count).to eq 1
+      expect(Sitegroup.where("name = 'my new name'").count).to eq 1
     end
 
     specify "should be able to delete private sitegroups created by other users" do

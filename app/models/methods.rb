@@ -1,4 +1,6 @@
 class Methods < ActiveRecord::Base
+  attr_protected []
+
   include Overrides
 
   extend SimpleSearch
@@ -17,7 +19,7 @@ class Methods < ActiveRecord::Base
 
 
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   def to_s

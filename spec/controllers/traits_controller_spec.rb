@@ -22,13 +22,13 @@ describe TraitsController do
     it 'should not return success message' do
 			trait = Trait.find_by_id('2')
 	    post :update,{:id =>trait.to_param,:trait => invalid_attr},session
-	    assert_not_equal(flash[:notice], "Trait was successfully updated.")
+	    assert_operator(flash[:notice], :!=, "Trait was successfully updated.")
 	  end
 
     it 'should return error message' do
 	    trait = Trait.find_by_id('2')
 	    post :update,{:id =>trait.to_param,:covariate => invalid_covariate},session
-	    assert_not_nil flash[:error]
+	    assert(!flash[:error].nil?)
 	  end
 	end
 

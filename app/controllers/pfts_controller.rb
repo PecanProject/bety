@@ -93,7 +93,7 @@ class PftsController < ApplicationController
       search = "Showing already related records"
       @species = @pft.specie.paginate :page => params[:page]
     else
-      @species = Specie.paginate :select => "id,scientificname", :page => params[:page], :conditions => search_cond
+      @species = Specie.where(search_cond).select("id, scientificname").page(params[:page])
     end
 
     render :update do |page|
