@@ -23,6 +23,7 @@ EXPOSE 8000
 
 # copy rest of the files
 COPY / /home/bety
+COPY /public/javascripts/cache/all.js-sample /home/bety/public/javascripts/cache/all.js
 COPY /docker/database.yml /home/bety/config/database.yml
 
 # download dump.bety and load.bety scripts and configure app
@@ -42,6 +43,7 @@ ENV LOCAL_SERVER=99 \
     REMOTE_SERVERS="0 1 2 5" \
     RAILS_ENV="production" \
     RAILS_RELATIVE_URL_ROOT="" \
+    SECRET_KEY_BASE="ThisIsNotReallySuchAGreatSecret" \
     UNICORN_WORKER_PROCESSES="3" \
     UNICORN_PORT="8000" \
     BETY_GIT_TAGS=${BETY_GIT_TAGS} \
