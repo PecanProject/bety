@@ -1,9 +1,8 @@
 source "http://rubygems.org"
 
-gem "rails", "5.0.6"
+gem "rails", "5.1.5"
 # needed for rails 3.1 and above until we phase out prototype:
 ## gem 'prototype-rails', github: 'rails/prototype-rails', branch: '4.2' # see https://github.com/rails/prototype-rails/issues/37
-gem "query_reviewer", "0.1.6"
 gem "nokogiri"
 gem "narray", "0.6.0.4"
 gem "choice", "0.1.6"
@@ -53,7 +52,10 @@ group :development, :test do
   gem "yard"
 end
 
-
+group :development, :test do
+  gem "pry-rails"
+  gem "pry-byebug"
+end
 
 group :test do
   # phasing out webrat:    
