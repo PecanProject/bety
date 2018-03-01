@@ -84,6 +84,10 @@ group :production do
   gem "passenger"
 end
 
+group :docker do
+  gem 'unicorn'
+end
+
 # API-related Gems:
 
 gem "rspec_api_documentation"
