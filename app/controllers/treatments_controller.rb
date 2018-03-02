@@ -107,12 +107,12 @@ class TreatmentsController < ApplicationController
     respond_to do |format|
       if @treatment.save
         flash[:notice] = 'Treatment was successfully updated.'
-        format.html { redirect_to :back }
+        format.html { redirect_back(fallback_location: root_path) }
         format.xml  { head :ok }
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { redirect_to :back }
+        format.html { redirect_back(fallback_location: root_path) }
         format.xml  { render :xml => @treatment.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @treatment.errors, :status => :unprocessable_entity }
         format.json  { render :json => @treatment.errors, :status => :unprocessable_entity }
