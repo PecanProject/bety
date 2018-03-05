@@ -54,7 +54,7 @@ feature 'Citation features work' do
       click_link 'View Related Sites'
       fill_in 'search_sites', with: 'GB'
       expect(page).to have_content '+' # ensure link is there to click
-      click_link '+'
+      first(:xpath, ".//tr[td[contains(string(.), 'GB')]]/td/a").click
       click_button 'Update'
       # reopen related sites listing
       expect(page).to have_content 'View Related Sites' # ensure link is there to click
@@ -62,8 +62,7 @@ feature 'Citation features work' do
       expect(page).to have_content 'GB'
 
       # now do clean-up:
-      fill_in 'search_sites', with: 'GB'
-      click_link 'X'
+      first(:xpath, ".//tr[td[contains(string(.), 'GB')]]/td/a").click
       click_button 'Update'
       # reopen related sites listing
       expect(page).to have_content 'View Related Sites' # ensure link is there to click

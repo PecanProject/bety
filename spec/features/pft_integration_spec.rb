@@ -82,6 +82,25 @@ feature 'Pfts features work works' do
       expect(page).to have_link 'Lolium perenne'
     end
 
+    # test for redmine bug #1935
+    context 'searching for species' do
+
+      it 'should find a searched-for existing species', js: true do
+        click_link "View Related Species"
+        expect(page).not_to have_link 'Abarema jupunba'
+        fill_in 'search', with: 'Abarema jupunba'
+        expect(page).to have_link 'Abarema jupunba'
+      end
+
+      it 'should not be case-sensitive', js: true do
+        click_link "View Related Species"
+        expect(page).not_to have_link 'Abarema jupunba'
+        fill_in 'search', with: 'ABAREMA JUPUNBA'
+        expect(page).to have_link 'Abarema jupunba'
+      end
+
+    end
+
 
     it 'should allow adding a new species', js: true do
       click_link "View Related Species"
@@ -109,34 +128,6 @@ feature 'Pfts features work works' do
 
   end
 
-  # test for redmine bug #1935
-  context 'searching for species' do
-
-    # TO-DO: Implement these tests the 'right' way, and then eliminate the route they depend upon.
-
-    it 'should find a searched-for existing species' do
-
-      # Couldn't get AJAX-triggered search to work here, so have to
-      # do it this way; the 'right' way to test this is to visit the
-      # edit pft page, view the related species, and type a search
-      # into the search box.
-
-      some_pft_id = Pft.first.id
-      visit "/pfts/edit2_pfts_species/#{some_pft_id}?search=Abarema+jupunba"
-      # The returned 'page' is actually the text of the Prototype "Element.update" calls.
-      expect(page).to have_content 'Abarema jupunba'
-    end
-
-    it 'should not be case-sensitive' do
-
-      # see not above
-      some_pft_id = Pft.first.id
-      visit "/pfts/edit2_pfts_species/#{some_pft_id}?search=ABAREMA+JUPUNBA"
-      # The returned 'page' is actually the text of the Prototype "Element.update" calls.
-      expect(page).to have_content 'Abarema jupunba'
-    end
-
-  end
 
   # test for redmine bug #1784
   it 'should not create a new PFT when the Back button is clicked' do

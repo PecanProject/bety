@@ -440,7 +440,7 @@ describe BulkUploadDataSet do
         @session.merge!({"rounding"=>{"vars"=>2}})
         @dataset = BulkUploadDataSet.new(@session)
         @insertion_data = @dataset.send("get_insertion_data")
-        assert_not_nil @insertion_data, "Failed to get insertion data"
+        assert(!@insertion_data.nil?, "Failed to get insertion data")
         @expected_data = {
           "access_level"=>"3",
           "date"=>"1984-07-14",

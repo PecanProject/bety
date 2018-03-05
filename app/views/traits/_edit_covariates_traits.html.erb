@@ -5,7 +5,7 @@
             <tr>
               <td><%= link_to_if c.variable, c.variable, c.variable %></td>
               <td><%= c.level %></td>
-              <td><%= link_to 'unlink',{:action =>:unlink_covariate, :id =>@trait.id, :covariate =>c }, :confirm => 'Are you sure?', :remote=>true %></td>
+              <td><%= link_to 'unlink',{:action =>:unlink_covariate, :id =>@trait.id, :covariate =>c }, data: { :confirm => 'Are you sure?' }, :remote=>true %></td>
               <td><%= link_to "edit", edit_covariate_path(c.id) %></td>
              </tr>
           <% end %>

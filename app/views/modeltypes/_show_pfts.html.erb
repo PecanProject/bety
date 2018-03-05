@@ -5,7 +5,7 @@
     <th>Name</th>
     <th>Description</th>
   </tr>
-  <% @modeltype.pfts.all(:limit => 100).each do |c| %>
+  <% @modeltype.pfts.each do |c| %>
   <tr>
     <td><%=h c.name %></td>
     <td><%=h c.definition %></td>

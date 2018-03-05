@@ -8,13 +8,13 @@
   <tr>
     <td>
     <% if @pft.specie.include?(species) %>
-      <%= link_to "X", { :controller => :pfts, :action => :edit2_pfts_species, :id => @pft.id, :species => species }, :confirm => 'Are you sure?', :remote => true,
+      <%= link_to "X", { :controller => :pfts, :action => :edit2_pfts_species, :id => @pft.id, :species => species }, data: { :confirm => 'Are you sure?' }, :remote => true,
                         :with => "'search='+Form.Element.getValue('search')",
                         :html => { :style => "text-decoration: none" } %>
 
 
     <% else %>
-      <%= link_to "+", { :controller => :pfts, :action => :edit2_pfts_species, :id => @pft.id, :species => species }, :confirm => 'Are you sure?', :remote => true,
+      <%= link_to "+", { :controller => :pfts, :action => :edit2_pfts_species, :id => @pft.id, :species => species }, data: { :confirm => 'Are you sure?' }, :remote => true,
                         :with => "'search='+Form.Element.getValue('search')",
                         :html => { :style => "text-decoration: none" } %>
 
