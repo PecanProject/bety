@@ -69,7 +69,7 @@ homepage_body:
 
      <p>Summaries of available data can be found on a separate website, <a href="https://traitvis.workbench.terraref.org/" target="_blank"></a>.</p>
 
-     <p>Data are currently available for beta user testing. For access, please <a href="https://terraref.org/beta" target="_blank">apply to our beta user program. When you sign up, be sure to indicate if you prefer to access data through this website, an R library or python module, via direct access to the PostgreSQL database or via API</a>.</p>
+     <p>Data are currently available for beta user testing. For access, please <a href="https://terraref.org/beta" target="_blank">apply to our beta user program</a>. When you sign up, be sure to indicate if you prefer to access data through this website, through an R library or python module, via direct access to the PostgreSQL database, or via API.</p>
 
      
 
