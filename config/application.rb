@@ -74,5 +74,8 @@ module BetyRails3
 #    config.action_view.javascript_expansions[:defaults] = ['prototype', 'effects']
     # Enable the asset pipeline
     # config.assets.enabled = true
+
+    # Do not swallow errors in after_commit/after_rollback callbacks.
+    config.active_record.raise_in_transactional_callbacks = true
   end
 end
