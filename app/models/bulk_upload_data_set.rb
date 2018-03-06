@@ -1833,7 +1833,7 @@ class BulkUploadDataSet
     # Get interactively-specified values, or set to empty hash if nil; since we
     # are going to alter interactively_specified_values, we use clone to make a
     # copy so that the session value remains as is.
-    interactively_specified_values = @session["global_values"].clone rescue {}
+    interactively_specified_values = @session["global_values"].clone rescue ActionController::Parameters.new
 
     # TO DO: decide if this code serves any useful purpose:
     # Double-check that all form fields are were non-empty:
@@ -1891,7 +1891,10 @@ class BulkUploadDataSet
       csv_row_as_hash.merge!(id_values)
 
       # Merge the global interactively-specified values into this row:
-      csv_row_as_hash.merge!(global_values)
+
+
+      # global_values.permit! if global_values.respond_to? :permit!
+      csv_row_as_hash.merge!(global_values.permit!)
 
       if csv_row_as_hash.has_key?("SE")
         # apply rounding to the standard error

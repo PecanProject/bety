@@ -24,8 +24,7 @@ class ApplicationController < ActionController::Base
       flash[:error] = e.message
     end
 
-
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   # Be sure to include AuthenticationSystem in Application Controller instead
@@ -170,7 +169,7 @@ class ApplicationController < ActionController::Base
     logger.info(e)
     match = e.message.match /The value of .*? for .*? .*? must be between .*? and .*?\./
     flash[:error] = match && match[0] || e.message
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   # Given a model class, a list of columns (attributes) of the model, and a
