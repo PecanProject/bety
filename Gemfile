@@ -29,9 +29,8 @@ gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier'
 
-
-# to-do: Use this Gem instead of adding the library to the assets directory.
-## gem 'jquery-rails'
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
 
 gem 'memoist'
 
