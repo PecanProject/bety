@@ -1891,9 +1891,7 @@ class BulkUploadDataSet
       csv_row_as_hash.merge!(id_values)
 
       # Merge the global interactively-specified values into this row:
-
-
-      # global_values.permit! if global_values.respond_to? :permit!
+      # To-Do: Be more specific about which values to permit.
       csv_row_as_hash.merge!(global_values.permit!)
 
       if csv_row_as_hash.has_key?("SE")
