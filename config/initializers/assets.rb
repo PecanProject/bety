@@ -16,4 +16,36 @@ Rails.application.config.assets.precompile += %w(
   lazy/feedback.js
   lazy/autocomplete.js
   lazy/bulk_upload.js
+
+  lazy/jquery-1.11.0
+  libs/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom
+  libs/jquery-migrate-1.2.1
+
+  lazy/jquery-1.7.2
+  lazy/jquery-ui-1.10.4.min
+
+  libs/jquery-1.6.2.min
+
+  cache/all
+
+  prototype
+  effects
+  bootstrap
+  controls
+  dragdrop
+  min
+  plugins
+  rails
+  script
+  window
+
+  libs/respond.min.js
+  libs/modernizr-2.0.6.min
+
+  lazy/simple_search
+  lazy/application
  )
+
+Rails.application.config.assets.paths <<
+  Rails.root.join("app", "assets", "stylesheets", "jquery-ui-1.10.4.custom",
+                  "css", "ui-lightness").to_s

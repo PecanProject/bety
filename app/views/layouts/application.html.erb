@@ -15,18 +15,18 @@
     <%= stylesheet_link_tag 'bulk_upload', media: 'all', 'data-turbolinks-track': 'reload' %>
   <% end %>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <%#= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 
   <!-- to do: reconcile these two sets of includes: -->
 
   <!-- Set One -->
-  <%#= javascript_include_tag 'lazy/jquery-1.11.0.js' %>
-  <%#= javascript_include_tag 'libs/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js' %>
-  <%#= javascript_include_tag 'libs/jquery-migrate-1.2.1.js' %>
+  <%= javascript_include_tag 'lazy/jquery-1.11.0.js' %>
+  <%= javascript_include_tag 'libs/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js' %>
+  <%= javascript_include_tag 'libs/jquery-migrate-1.2.1.js' %>
 
   <!-- Set Two -->
-  <%#= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
-  <%#= javascript_include_tag 'lazy/jquery-ui-1.10.4.min.js' %>
+  <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
+  <%= javascript_include_tag 'lazy/jquery-ui-1.10.4.min.js' %>
   <%#= stylesheet_link_tag "jquery-ui-1.10.4.min" %>
 
   <!--  It seems so far that everything works in 1.7.2.-->
@@ -37,18 +37,18 @@
 
   <!-- Since as of Rails 4, javascript_include_tag doesn't recognize the :all option, we have to do this: -->
   <% if Rails.env == "production" %>
-    <%#= javascript_include_tag "cache/all" %>
+    <%= javascript_include_tag "cache/all" %>
   <% else %>
-    <%#= javascript_include_tag 'prototype.js' %>
-    <%#= javascript_include_tag 'effects.js' %>
-    <%#= javascript_include_tag 'bootstrap.js' %>
-    <%#= javascript_include_tag 'controls.js' %>
-    <%#= javascript_include_tag 'dragdrop.js' %>
-    <%#= javascript_include_tag 'min.js' %>
-    <%#= javascript_include_tag 'plugins.js' %>
-    <%#= javascript_include_tag 'rails.js' %>
-    <%#= javascript_include_tag 'script.js' %>
-    <%#= javascript_include_tag 'window.js' %>
+    <%= javascript_include_tag 'prototype.js' %>
+    <%= javascript_include_tag 'effects.js' %>
+    <%= javascript_include_tag 'bootstrap.js' %>
+    <%= javascript_include_tag 'controls.js' %>
+    <%= javascript_include_tag 'dragdrop.js' %>
+    <%= javascript_include_tag 'min.js' %>
+    <%= javascript_include_tag 'plugins.js' %>
+    <%= javascript_include_tag 'rails.js' %>
+    <%= javascript_include_tag 'script.js' %>
+    <%= javascript_include_tag 'window.js' %>
     <%#= javascript_include_tag 'application.js' %>
   <% end %>
 
@@ -56,7 +56,7 @@
   <!--[if (lt IE 9) & (!IEMobile)]>
     <script src="js/libs/selectivizr-min.js"></script>
   <![endif]-->
-  <%#= javascript_include_tag 'libs/respond.min.js', 'libs/modernizr-2.0.6.min.js' %>
+  <%= javascript_include_tag 'libs/respond.min.js', 'libs/modernizr-2.0.6.min.js' %>
 
   <%= yield :autocomplete_javascript %>
 
@@ -76,8 +76,8 @@
   <!--  This disables the use of $ as the jQuery alias-->
   <script> jQuery.noConflict(); </script>
 
-  <%#= javascript_include_tag 'lazy/simple_search.js' %>
-  <%#= javascript_include_tag 'lazy/application.js' %>
+  <%= javascript_include_tag 'lazy/simple_search.js' %>
+  <%= javascript_include_tag 'lazy/application.js' %>
 
   <% if params[:controller] == 'sessions' %>
     <%= javascript_include_tag 'lazy/login' %>
