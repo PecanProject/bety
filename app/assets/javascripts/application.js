@@ -5,6 +5,9 @@
 //= require rails-ujs
 //= require jquery-ui
 
+// Remove conflicting definition of $ before loading Prototype:
+//= require noconflict
+
 // defines Form:
 //= require prototype
 

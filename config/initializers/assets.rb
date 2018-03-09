@@ -17,3 +17,7 @@ Rails.application.config.assets.precompile += %w(
   lazy/autocomplete.js
   lazy/bulk_upload.js
  )
+
+Rails.application.config.assets.paths <<
+  Rails.root.join("app", "assets", "stylesheets", "jquery-ui-1.10.4.custom",
+                  "css", "ui-lightness").to_s
