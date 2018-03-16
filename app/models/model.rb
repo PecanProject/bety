@@ -1,4 +1,5 @@
 class Model < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 
@@ -25,7 +26,7 @@ class Model < ActiveRecord::Base
   validates_format_of :model_name, with: /\A\S*\z/, message: "can't contain whitespace"
 
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do

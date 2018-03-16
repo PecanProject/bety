@@ -7,7 +7,7 @@
     <th>File Path</th>
     <th>File Name</th>
   </tr>
-  <% @input.files.all(:limit => 100).each do |c| %>
+  <% @input.files.each do |c| %>
   <tr>
     <td><%=h link_to_if c.machine, c.machine, c.machine %></td>
     <td><%=h c.file_path %></td>

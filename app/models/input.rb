@@ -1,4 +1,5 @@
 class Input < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 
@@ -30,7 +31,7 @@ class Input < ActiveRecord::Base
   validates_presence_of     :site_id
 
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   # Now that the access_level column of "inputs" has user-defined (domain) type
