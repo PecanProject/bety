@@ -1,4 +1,4 @@
-class CitationsSitesController < ApplicationController
+class SitesCultivarsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
 
   require 'csv'
@@ -6,7 +6,7 @@ class CitationsSitesController < ApplicationController
   # GET /sites
   # GET /sites.xml
   def index
-    params[:format] = 'xml' if params[:format].nil?
+    request.format = :xml if params[:format].nil?
 
     # We have a lot of params and they or may not have to be
     # passed as conditions this is my way of adding them to conditions
