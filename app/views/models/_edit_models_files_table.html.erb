@@ -8,12 +8,12 @@
     <tr>
       <td>
       <% if @model.files.include?(file) %>
-        <%= link_to "X", { :controller => :models, :action => :edit_models_files, :id => @model.id, :file => file, :search => @searchparam }, :confirm => 'Are you sure?', :remote => true,
+        <%= link_to "X", { :controller => :models, :action => :edit_models_files, :id => @model.id, :file => file, :search => @searchparam }, data: { :confirm => 'Are you sure?' }, :remote => true,
                           :html => { :style => "text-decoration: none" } %>
 
 
       <% else %>
-        <%= link_to "+", { :controller => :models, :action => :edit_models_files, :id => @model.id, :file => file, :search => @searchparam }, :confirm => 'Are you sure?', :remote => true,
+        <%= link_to "+", { :controller => :models, :action => :edit_models_files, :id => @model.id, :file => file, :search => @searchparam }, data: { :confirm => 'Are you sure?' }, :remote => true,
                           :html => { :style => "text-decoration: none" } %>
 
 

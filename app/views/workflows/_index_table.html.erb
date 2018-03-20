@@ -33,7 +33,7 @@
     <%# Workflows should not be edited through the rails application%>
 
     <%# Workflows can be destroyed through the rails application%>
-    <%= link_to workflow, :confirm => 'Are you sure?', :method => :delete, :class=>'button button-small button-danger' do %>
+    <%= link_to workflow, data: { :confirm => 'Are you sure?' }, :method => :delete, :class=>'button button-small button-danger' do %>
         <i class="icon-trash"></i>
     <% end %>
     </td>

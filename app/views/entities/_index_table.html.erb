@@ -29,7 +29,7 @@
 
 					  <!-- DELETE -->
 					  <% if current_user.page_access_level == 1 %>
-              <%= link_to entity, :method => :delete, :type => 'site', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
+              <%= link_to entity, :method => :delete, :type => 'site', :data => { :confirm => 'Are you sure?' }, :class=> 'button button-small button-danger', :alt => "delete" do %>
                 <i class="icon-trash"></i> 
               <% end %>
             <% end %>

@@ -6,7 +6,7 @@
     <th>File Name</th>
     <th>File Type</th>
   </tr>
-  <% @machine.files.all(:limit => 100).each do |c| %>
+  <% @machine.files.each do |c| %>
   <tr>
     <td><%=h c.file_path %></td>
     <td><%=h c.file_name %></td>

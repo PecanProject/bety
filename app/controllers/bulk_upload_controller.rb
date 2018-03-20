@@ -63,12 +63,10 @@ class BulkUploadController < ApplicationController
 
   # Clears all bulk-upload-related session data except the bulk_upload_stage.
   def clear_session_data
-    session.delete_if do |key|
-      # delete bulk-upload-related session data (except for :citation,
-      # which is "global"):
-      ["csvpath", "global_values", "rounding", "citation_id_list",
-      "number_of_rows", "valid_upload_file", "file_includes_citation_info",
-      "bulk_upload_citation"].include?(key)
+    ["csvpath", "global_values", "rounding", "citation_id_list",
+    "number_of_rows", "valid_upload_file", "file_includes_citation_info",
+    "bulk_upload_citation"].each do |key|
+      session.delete key
     end
   end
 
