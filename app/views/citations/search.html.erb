@@ -37,7 +37,7 @@
       <td><%= link_to 'Edit', edit_citation_path(citation) %></td>
     <% end %>
     <% if current_user.page_access_level == 1 %>
-      <td><%= link_to 'Destroy', citation, :confirm => 'Are you sure?', :method => :delete %></td>
+      <td><%= link_to 'Destroy', citation, data: { :confirm => 'Are you sure?' }, :method => :delete %></td>
     <% end %>
   </tr>
 <% end %>

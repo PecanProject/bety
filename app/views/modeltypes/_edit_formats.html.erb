@@ -12,7 +12,7 @@
     <div class="row" style="margin-bottom: 0px">
       <div class="one columns alpha">
         <%= hidden_field_tag 'id', modeltypes_format.id %>
-        <%= link_to "X", { :controller => :modeltypes, :action => :remove_modeltypes_format, :id => modeltypes_format.id }, :confirm => 'Are you sure?', :remote => true %>
+        <%= link_to "X", { :controller => :modeltypes, :action => :remove_modeltypes_format, :id => modeltypes_format.id }, data: { :confirm => 'Are you sure?' }, :remote => true %>
       </div>
       <div class="one columns">
         <%= submit_tag "update" %>

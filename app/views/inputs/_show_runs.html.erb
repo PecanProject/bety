@@ -7,7 +7,7 @@
     <th>Start Time</th>
     <th>Finish Time</th>
   </tr>
-  <% @input.runs.all(:limit => 100).each do |c| %>
+  <% @input.runs.each do |c| %>
   <tr>
     <td><%=h link_to_if c.model, c.model, c.model %></td>
     <td><%=h c.start_time %></td>

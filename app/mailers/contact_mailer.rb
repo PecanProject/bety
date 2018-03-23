@@ -71,7 +71,7 @@ class ContactMailer < ActionMailer::Base
   # users with page_access_level 1 together with the administration e-mail
   # address specified in the customization configuration file.
   def admins
-    admins = User.where(page_access_level: 1).map! do |attributes|
+    admins = User.where(page_access_level: 1).map do |attributes|
       "#{attributes.name} < #{attributes.email}>"
     end
     admins << CONFIG[:admin_email]

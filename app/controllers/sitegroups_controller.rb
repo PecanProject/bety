@@ -49,7 +49,7 @@ class SitegroupsController < ApplicationController
         @sites = @sitegroup.sites.paginate :page => params[:page]
       end
     else
-      @sites = Site.paginate :select => "*", :page => params[:page], :conditions => search_cond
+      @sites = Site.where(search_cond).paginate :page => params[:page]
     end
 
     render :update do |page|

@@ -49,7 +49,7 @@ class ModelsController < ApplicationController
         @files = @model.files.paginate :page => params[:page]
       end
     else
-      @files = DBFile.paginate :select => "id,file_name", :page => params[:page], :conditions => search_cond
+      @files = DBFile.where(search_cond).select("id,file_name").page(params[:page])
     end
 
     render :update do |page|
