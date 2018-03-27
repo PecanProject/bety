@@ -18,7 +18,7 @@
       <div id="forward">
         <% if @data_set.file_has_fatal_errors or @data_set.validated_data.size == 0 %>
            &nbsp;
-        <% elsif @data_set.need_interactively_specified_data %>
+        <% elsif @data_set.need_interactively_specified_data || @data_set.trait_data? %>
            <%= link_to "Specify Dataset-wide values >>", choose_global_data_values_path %>
         <% else %>
            <%= link_to "Specify Amount of Rounding >>", choose_global_data_values_path %>

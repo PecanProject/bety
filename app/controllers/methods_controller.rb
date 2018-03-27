@@ -1,7 +1,39 @@
+# coding: utf-8
 class MethodsController < ApplicationController
 
   before_filter :login_required 
   helper_method :sort_column, :sort_direction
+
+  # This action acts as a _source_ for the jQuery UI autocompletion widgets on
+  # the Bulk Upload "Specify Upload Options and Global Values" page.  It
+  # responds by sending a JSON string representing an Array of Hashes—one Hash
+  # for each row of the `methods` table such that the `name` column contains the
+  # text of the `:term` parameter.  (The value of the `:term` parameter is
+  # automatically set by the autocompletion widget to be the text of the search
+  # field.)  The matching is case-insensitive.  For each such row, the
+  # corresponding Hash will have keys `:label` and `:value` with values matching
+  # `methods.name` and `methods.id`, respectively.  In the special case that
+  # `:term` has length 0 or 1 and no matching rows are found, the returned Array
+  # will contain a Hash for each row of the table.  A special Hash `{ label:
+  # "[no value]", value: nil }` will always be prepended to the Array.
+  #
+  # @calls {search_model}
+  def bu_autocomplete
+    methods = search_model(Methods.order('name'), ["name"], params[:term])
+
+    methods = methods.to_a.map do |item|
+      {
+        label: item.name,
+        value: item.id
+      }
+    end
+
+    methods = methods.unshift({ label: "[no value]", value: nil })
+
+    respond_to do |format|
+      format.json { render :json => methods }
+    end
+  end
 
   # GET /methods
   # GET /methods.xml
