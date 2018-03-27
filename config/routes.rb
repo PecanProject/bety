@@ -85,9 +85,9 @@ Rails.application.routes.draw do
   post '/feedback/feedback_email' => 'feedback#feedback_email'
   resources :formats do
     post :add_formats_variables, on: :collection
+    post :edit_formats_variables, on: :collection
+    post :rem_formats_variables, on: :member
   end
-  get 'formats/edit_formats_variables'
-  get '/formats/rem_formats_variables(/:id)' => 'formats#rem_formats_variables'
 
   resources :likelihoods
   resources :inputs do
