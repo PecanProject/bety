@@ -5,7 +5,7 @@
     <th>Name</th>
     <th>Revision</th>
   </tr>
-  <% @modeltype.models.all(:limit => 100).each do |c| %>
+  <% @modeltype.models.each do |c| %>
   <tr>
     <td><%=h c.model_name %></td>
     <td><%=h c.revision %></td>

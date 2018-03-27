@@ -1,4 +1,5 @@
 class Entity < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 

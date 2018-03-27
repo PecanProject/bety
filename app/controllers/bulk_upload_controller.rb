@@ -74,12 +74,10 @@ class BulkUploadController < ApplicationController
   # @side_effect Deletes most bulk-upload-related key-value pairs from the
   #   session.
   def clear_session_data
-    session.delete_if do |key|
-      # delete bulk-upload-related session data (except for :citation,
-      # which is "global"):
-      ["csvpath", "global_values", "rounding", "citation_id_list",
-      "number_of_rows", "valid_upload_file", "file_includes_citation_info",
-      "bulk_upload_citation", "trait_to_method_mapping"].include?(key)
+    ["csvpath", "global_values", "rounding", "citation_id_list",
+    "number_of_rows", "valid_upload_file", "file_includes_citation_info",
+    "bulk_upload_citation", "trait_to_method_mapping"].each do |key|
+      session.delete key
     end
   end
 
