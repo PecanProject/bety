@@ -302,7 +302,7 @@ Rails.application.routes.draw do
   match '/bulk_upload/confirm_data', :as => :bulk_upload_data_confirmation, via: [:get, :post]
   post '/bulk_upload/insert_data', :as => :bulk_upload_data_insertion
 
-  match '/bulk_upload/store_trait_method_mapping_in_session'
+  post '/bulk_upload/store_trait_method_mapping_in_session'
 
   # This seems a somewhat kludgy way to get 'link_to "CF Guidelines",
   # guidelines_path' to create a robust link (i.e., one that works even in
