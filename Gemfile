@@ -96,7 +96,7 @@ end
 gem "rspec_api_documentation"
 gem "json-schema" # needed by rspec_api_documentation
 
-gem "apipie-rails"
+gem "apipie-rails", "0.5.6"
 
 # Although it was previously noted that test-unit seems to be needed by
 # apipie-rails and prototype-rails, it interferes with routing specs, so we are
