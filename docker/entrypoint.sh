@@ -20,11 +20,10 @@ function wait_for_postgres() {
 case $1 in
     "initialize" )
         wait_for_postgres
-        SERVER=$( echo ${REMOTE_SERVERS} | awk '{print $1}' )
-        echo "Create new database, initialized from server ${SERVER}"
+        echo "Create new database, initialized from all data."
         psql -h postgres -p 5432 -U postgres -c "CREATE ROLE bety WITH LOGIN CREATEDB NOSUPERUSER NOCREATEROLE PASSWORD 'bety'"
         psql -h postgres -p 5432 -U postgres -c "CREATE DATABASE bety WITH OWNER bety"
-        ./load.bety.sh -a "postgres" -d "bety" -p "-h postgres -p 5432" -o bety -c -u -g -m ${LOCAL_SERVER} -r ${SERVER}
+        ./load.bety.sh -a "postgres" -d "bety" -p "-h postgres -p 5432" -o bety -c -u -g -m ${LOCAL_SERVER} -r 0 -w https://ebi-forecast.igb.illinois.edu/pecan/dumpall/bety.tar.gz
         ;;
     "sync" )
         wait_for_postgres
@@ -41,21 +40,37 @@ case $1 in
         ;;
     "migrate" )
         wait_for_postgres
-        echo "Migrate databae."
+        echo "Migrate database."
         rake db:migrate SKIP_SCHEMASPY=YES
         ;;
     "server" )
         wait_for_postgres
-        echo "Start running BETY"
+        echo "Start running BETY (rails server)"
         exec rails s
         ;;
+    "unicorn" )
+        wait_for_postgres
+        echo "Start running BETY (unicorn)"
+        exec bundle exec unicorn -c config/unicorn.rb
+        ;;
+    "autoserver" )
+        wait_for_postgres
+        echo "Migrate database."
+        rake db:migrate SKIP_SCHEMASPY=YES
+        echo "Start running BETY (unicorn)"
+        exec bundle exec unicorn -c config/unicorn.rb
+        ;;
     "help" )
-        echo "initialize : create a new database and initialize with data from server 0"
+        echo "initialize : create a new database and initialize with all data from server 0"
         echo "sync       : synchronize database with remote servers ${REMOTE_SERVERS}"
         echo "dump       : dumps local database"
         echo "migrate    : migrates the database to a new version of bety"
-        echo "server     : runs the server"
+        echo "server     : runs the server (using rails server)"
+        echo "unicorn    : runs the server (using unicorn)"
+        echo "autoserver : runs the server (using unicorn) after running a migrate"
         echo "help       : this text"
+        echo ""
+        echo "Default is to run bety using unicorn. no automatic migrations."
         ;;
     * )
         exec "$@"
