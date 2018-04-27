@@ -47,7 +47,7 @@ class Api::BaseController < ActionController::Base
   # clause "key = value" is replaced by "key::text ~ value*", where "value*" is
   # "value" with the tilde removed.
   def query(model, params)
-    where_params = params.slice(*model.column_names)
+    where_params = params.permit!.to_hash.slice(*model.column_names)
 
     limit = nil
     if params.has_key? "limit"
