@@ -1,4 +1,7 @@
 # This file is used by Rack-based servers to start the application.
 
 require ::File.expand_path('../config/environment',  __FILE__)
-run BetyRails3::Application
+
+map (ENV['RAILS_RELATIVE_URL_ROOT'] || "") + "/" do
+    run BetyRails3::Application
+end

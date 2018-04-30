@@ -5,7 +5,9 @@ RUN apt-get update \
     && apt-get install --no-install-recommends -y \
         curl \
         git \
+        libgeos-dev \
         netcat \
+        nodejs \
         postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
@@ -23,8 +25,8 @@ EXPOSE 8000
 
 # copy rest of the files
 COPY / /home/bety
-COPY /public/javascripts/cache/all.js-sample /home/bety/public/javascripts/cache/all.js
 COPY /docker/database.yml /home/bety/config/database.yml
+COPY /docker/config.ru /home/bety/config.ru
 
 # download dump.bety and load.bety scripts and configure app
 RUN curl -LOs https://raw.githubusercontent.com/PecanProject/pecan/master/scripts/load.bety.sh \
