@@ -1,4 +1,5 @@
 FROM ruby:2.3
+MAINTAINER Max Burnette <mburnet2@illinois.edu>
 
 # Install dependencies
 RUN apt-get update \
