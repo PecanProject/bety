@@ -3,6 +3,7 @@ connection_info:
     user: bety
     password: bety
     dbname: bety
+    port: 5432
 
 correct_machine_id: 8
 

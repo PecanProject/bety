@@ -55,6 +55,9 @@ SIQ
     if !connection_hash.has_key? 'dbname'
       connection_hash[:dbname] = prompt("database to use", "bety")
     end
+    if !connection_hash.has_key? 'port'
+      connection_hash[:port] = prompt("port", "5432")
+    end
 
     begin
       super(connection_hash)
