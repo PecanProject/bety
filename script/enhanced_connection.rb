@@ -1,9 +1,11 @@
 require 'pp'
+require 'yaml'
 require_relative 'postgres_helpers'
 
 class EnhancedConnection < PG::Connection
 
   WrongMachineId = 99
+  ConnectionSpecFileName = 'connection_specification.yml'
 
   PublicTableQuery = <<PTQ
     SELECT table_name FROM information_schema.tables
@@ -23,26 +25,43 @@ SIQ
   # Initialize the connection, either from the YAML file
   # database_specification.yml if it exists or interactively from user input.
   def initialize
-    begin
-      require 'yaml'
-      connection_hash = YAML.load(File.new('database_specification.yml'))
-
-    rescue => e
-      puts e
-      puts connection_hash
-
-      host = prompt("database host", "localhost")
-      username = prompt("username", "bety")
-      password = prompt("password", "bety")
-      database = prompt("database to use", "bety")
-
-      connection_hash = { host: "#{host}",
-                          user: "#{username}",
-                          password: "#{password}",
-                          dbname: "#{database}" }
+    connection_hash = {}
+    
+    if File.exist?(ConnectionSpecFileName)
+      f = File.new(ConnectionSpecFileName)
+      begin
+        initialization_hash = YAML.load(f)
+        connection_hash = initialization_hash["connection_info"]
+        @machine_id = initialization_hash["correct_machine_id"]
+        @output_file_name = initialization_hash["output_file"]
+      rescue Psych::SyntaxError => e
+        puts e
+        puts "There is a syntax error in your connection specification file."
+        if prompt("Get connection info interactively?", "y") != "y"
+          exit
+        end
+      end
+    end
+    
+    if !connection_hash.has_key? 'host'
+      connection_hash[:host] = prompt("database host", "localhost")
+    end
+    if !connection_hash.has_key? 'user'
+      connection_hash[:user] = prompt("username", "bety")
+    end
+    if !connection_hash.has_key? 'password'
+      connection_hash[:password] = prompt("password", "bety")
+    end
+    if !connection_hash.has_key? 'dbname'
+      connection_hash[:dbname] = prompt("database to use", "bety")
     end
 
-    super(connection_hash)
+    begin
+      super(connection_hash)
+    rescue => e
+      puts "Couldn't connect using this connection specification:\n#{connection_hash.to_yaml}\n"
+      exit
+    end
   end
 
   # Set the id for the machine hosting the database being connected to.
@@ -141,13 +160,15 @@ SIQ
   # referring table has a bona fide foreign-key constraint and that constraint
   # is set to "cascade on update".
   def generate_sql_fix_statements
-    if @machine_id.nil?
+    if @machine_id.nil? || @machine_id == 99
       loop do
-        @machine_id = prompt("Enter the correct machine id for this database: ")
-
         begin
-          Integer(@machine_id)
-          break
+          @machine_id = Integer(prompt("Enter the correct machine id for this database: "))
+          if @machine_id == WrongMachineId
+            puts "#{WrongMachineId} is not a valid choice of machine id.  Please choose another."
+          else
+            break
+          end
         rescue ArgumentError
           puts "Invalid integer; try again"
         end
