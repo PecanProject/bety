@@ -20,6 +20,8 @@ PSQ
   SELECT sequence_name, last_value, is_called FROM %s
 SIQ
 
+  # Initialize the connection, either from the YAML file
+  # database_specification.yml if it exists or interactively from user input.
   def initialize
     begin
       require 'yaml'
@@ -43,19 +45,26 @@ SIQ
     super(connection_hash)
   end
 
+  # Set the id for the machine hosting the database being connected to.
   def set_correct_machine_id(id)
     @machine_id = id
   end
   
-  
+  # Return a list of "regular" public tables (that is, public tables that can be
+  # inserted into).
   def public_tables
     @public_tables || @public_tables = get_result_array_from_query(PublicTableQuery)
   end
 
+  # Return a list of public sequence objects, that is, sequence objects for
+  # public tables.  (In some cases, the corresponding table may no longer
+  # exist.)
   def public_sequences
     @public_sequences || @public_sequences = get_result_array_from_query(PublicSequenceQuery)
   end
 
+  # Returns a list of table--sequence-object pairs, one for each public table
+  # having a corresponding sequence object.
   def table_sequence_pairs
     if @pairs
       return @pairs
@@ -124,7 +133,13 @@ SIQ
     return @bad_id_info = bad_id_array
   end
 
-  # Write an SQL statement for each table
+  # For each table whose corresponding sequence object has the wrong value for
+  # last_value, write an SQL statement to update the sequence object so the it
+  # generates id numbers in the correct range.  Then, for each table having any
+  # id values in the wrong range, update the offending rows so that the id is in
+  # the correct range.  It is the user's responsibility to ensure that each
+  # referring table has a bona fide foreign-key constraint and that constraint
+  # is set to "cascade on update".
   def generate_sql_fix_statements
     if @machine_id.nil?
       loop do
@@ -142,7 +157,7 @@ SIQ
     loop do
       if @output_file_name.nil?
         loop do
-          @output_file_name = prompt("Enter output file name: ", "fix_ids.sql")
+          @output_file_name = prompt("Enter output file name: ", "fix_ids.psql")
           if @output_file_name.strip != ''
             break
           end
@@ -189,10 +204,18 @@ SIQ
              "(SELECT COALESCE(MAX(id), (#{@machine_id}E9::bigint + 1)) FROM #{table} WHERE id / 1E9::int = #{@machine_id}), " +
              "(SELECT EXISTS(SELECT 1 FROM #{table} WHERE ID / 1E9::int = #{@machine_id})));"
     end
+
+    bad_id_info.each do |row|
+      table = row[0]
+      f.puts "UPDATE #{table} SET id = nextval('#{table_name_to_sequence_name(table)}') WHERE id / 1E9::int = #{WrongMachineId};"
+    end
+
   end
   
   private
 
+  # Given a query with one item in its SELECT clause, return an array consisting
+  # of the column of values in the result.
   def get_result_array_from_query(query)
 
     block # wait for connection to be ready before sending query
