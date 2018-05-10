@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  # BETY rails frontend to the database
+  bety:
+    image: pecan/bety:unicorn
+    networks:
+      - bety
+    ports:
+      - 8000
+    environment:
+      - UNICORN_WORKER_PROCESSES=1
+      - SECRET_KEY_BASE=thisissomereallllllylongsecretkeyandshouldbelongerthanthis
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    deploy:
+      mode: replicated
+      restart_policy:
+        condition: any
+      placement:
+        constraints: [node.role == manager]
+
+  # postgresql + postgis to hold all the data
+  postgres:
+    image: mdillon/postgis:9.5
+    networks:
+      - bety
+    #ports:
+    #  - 5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    restart: unless-stopped
+    deploy:
+      mode: replicated
+      restart_policy:
+        condition: any
+      placement:
+        constraints: [node.role == worker]
+
+networks:
+  bety:
+
+volumes:
+  postgres:
+
