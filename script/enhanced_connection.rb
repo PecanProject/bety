@@ -231,12 +231,26 @@ SIQ
 
     bad_id_info.each do |row|
       table = row[0]
+      if ['inputs', 'models', 'posteriors'].include?(table)
+        drop_dbfiles_constraint(f, table.capitalize[0..-2])
+      end
       f.puts "UPDATE #{table} SET id = nextval('#{table_name_to_sequence_name(table)}') WHERE id / 1E9::int = #{WrongMachineId};"
+      if ['inputs', 'models', 'posteriors'].include?(table)
+        readd_dbfiles_constraint(f, table.capitalize[0..-2])
+      end
     end
 
   end
-  
+
   private
+
+  def drop_dbfiles_constraint(f, container_type)
+    f.puts "ALTER TABLE dbfiles DROP CONSTRAINT IF EXISTS valid_#{container_type.downcase}_refs;"
+  end
+
+  def readd_dbfiles_constraint(f, container_type)
+    f.puts "ALTER TABLE dbfiles ADD CONSTRAINT valid_#{container_type.downcase}_refs CHECK (container_type != '#{container_type}' OR container_id = ANY(get_#{container_type.downcase}_ids()));"
+  end
 
   # Given a query with one item in its SELECT clause, return an array consisting
   # of the column of values in the result.
