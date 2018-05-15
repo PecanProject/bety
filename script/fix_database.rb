@@ -26,8 +26,8 @@
 #
 # 5. Restore the BETYdb instance that was taken off line in step 1.
 #
-require_relative 'enhanced_connection'
+require_relative 'id_fixer'
 
-con = EnhancedConnection.new
+con = IdFixer.new
 
 con.generate_sql_fix_statements
