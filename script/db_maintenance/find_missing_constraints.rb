@@ -8,16 +8,29 @@ require_relative 'enhanced_connection'
 
 FkQuery = <<FK
 SELECT
-    tc.constraint_name, tc.table_name, kcu.column_name, 
-    ccu.table_name AS foreign_table_name,
-    ccu.column_name AS foreign_column_name 
-FROM 
-    information_schema.table_constraints AS tc 
-    JOIN information_schema.key_column_usage AS kcu
-      ON tc.constraint_name = kcu.constraint_name
-    JOIN information_schema.constraint_column_usage AS ccu
-      ON ccu.constraint_name = tc.constraint_name
-WHERE constraint_type = 'FOREIGN KEY'
+    c.conname AS constraint_name,
+    r.relname AS table_name,
+    a.attname AS column_name,
+    r2.relname AS foreign_table_name,
+    a2.attname AS foreign_column_name,
+    c.confupdtype,
+    c.confdeltype,
+    c.convalidated
+FROM
+    pg_namespace nc
+JOIN pg_constraint c
+    ON nc.oid = c.connamespace
+JOIN pg_class r /* referring table */
+    ON c.conrelid = r.oid
+JOIN pg_class r2 /* referred-to table */
+    ON c.confrelid = r2.oid
+JOIN pg_attribute a /* referring column */
+    ON a.attnum = ANY(c.conkey) AND c.conrelid = a.attrelid
+JOIN pg_attribute a2 /* referred-to column */
+    ON a2.attnum = ANY(c.confkey) AND c.confrelid = a2.attrelid
+WHERE
+    contype = 'f' /* foreign-key constraint */
+AND nc.nspname = 'public'; /* public constraint */
 FK
 
 
