@@ -1,39 +1,52 @@
-require 'pg'
+module PostgresHelpers
 
-# Convenience method for prompting.
-# Returns chomped response, or default if given and response is empty
-def prompt(prompt_string = "?", default = "")
-  print "#{prompt_string} (#{default}) "
-  response = gets
-  response.chomp!
-  return response == "" ? default : response
-end
+  ConnectionSpecFileName = 'connection_specification.yml'
 
-
-# Try to get connection information from a YAML file; otherwise, prompt for
-# host, username, password, and database name.  Return a connection object.
-def get_connection
-  begin
-    require 'yaml'
-    connection_hash = YAML.load(File.new('database_specification.yml'))
-
-    con = PG.connect(connection_hash)
-  rescue => e
-    puts e
-    puts connection_hash
-
-    host = prompt("database host", "localhost")
-    username = prompt("username", "bety")
-    password = prompt("password", "bety")
-    database = prompt("database to use", "bety")
-
-    connection_hash = { host: "#{host}",
-                        user: "#{username}",
-                        password: "#{password}",
-                        dbname: "#{database}" }
-    puts connection_hash
-
-    con = PG.connect(connection_hash)
+  # Convenience method for prompting.
+  # Returns chomped response, or default if given and response is empty
+  def prompt(prompt_string = "?", default = "")
+    print "#{prompt_string} (#{default}) "
+    response = gets
+    response.chomp!
+    return response == "" ? default : response
   end
-  con
+
+  def connection_hash
+    connection_hash = Hash.new
+
+    if File.exist?(ConnectionSpecFileName)
+      f = File.new(ConnectionSpecFileName)
+      begin
+        initialization_hash = YAML.load(f)
+        connection_hash = initialization_hash["connection_info"]
+        @machine_id = initialization_hash["correct_machine_id"]
+        @output_file_name = initialization_hash["output_file"]
+      rescue Psych::SyntaxError => e
+        puts e
+        puts "There is a syntax error in your connection specification file."
+        if prompt("Get connection info interactively?", "y") != "y"
+          exit
+        end
+      end
+    end
+
+    if !connection_hash.has_key? 'host'
+      connection_hash[:host] = prompt("database host", "localhost")
+    end
+    if !connection_hash.has_key? 'user'
+      connection_hash[:user] = prompt("username", "bety")
+    end
+    if !connection_hash.has_key? 'password'
+      connection_hash[:password] = prompt("password", "bety")
+    end
+    if !connection_hash.has_key? 'dbname'
+      connection_hash[:dbname] = prompt("database to use", "bety")
+    end
+    if !connection_hash.has_key? 'port'
+      connection_hash[:port] = prompt("port", "5432")
+    end
+
+    return connection_hash
+  end
+
 end
