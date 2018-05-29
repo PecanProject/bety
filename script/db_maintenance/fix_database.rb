@@ -28,7 +28,7 @@
 # 5. Restore the BETYdb instance that was taken off line in step 1.
 #
 
-USAGE_DETAILS = <<-EOS
+USAGE_DETAILS = <<'EOS'
 
 DESCRIPTION
 
@@ -36,10 +36,10 @@ This script generates a file of SQL statements to fix the sequence objects and
 table ids in the public schema of the specified BETYdb database.  It assumes id
 numbers were mis-allocated in the 99 billion range and that rows having ids in
 that range should be reassigned id numbers in the range appropriate to the
-machine specified by the user (see "correct_machine_id" below).
+machine specified by the user (see \"correct_machine_id\" below).
 
 Database connection information may either be specified in a YAML file
-"connection_information.yml" (see "connection_information.yml-sample" for an
+\"connection_information.yml\" (see \"connection_information.yml-sample\" for an
 example) or prompted for interactively.  The user should also specify the number
 of the target machine and the name of the file to write the SQL statements to.
 
@@ -51,7 +51,7 @@ Steps for using the script are as follows:
 
 3. Check that there are appropriate foreign-key constraints on all tables that
    refer to any table mentioned in any of the generated UPDATE statements.
-   These foreign-key constraints should use the "ON UPDATE CASCADE" clause.
+   These foreign-key constraints should use the \"ON UPDATE CASCADE\" clause.
 
 4. If the necessary constraints are present, run the SQL statements in the
    generated file.
@@ -64,14 +64,14 @@ CONNECTION SPECIFICATION
 The user should specify connection parameters for the database to be used.
 Specifically, the following must be specified:
 
-    host:     The host machine of the database (usually "localhost")
+    host:     The host machine of the database (usually \"localhost\")
     user:     The role name to use to connect to the database
     password: The password for the specified user
     dbname:   The name of the database being connected to
     port:     The port number used for the connection
 
-These may be specified in a YAML file named "connection_specification.yml"
-having top-level key "connection_info" and the above 5 items as sub-keys.  Any
+These may be specified in a YAML file named \"connection_specification.yml\"
+having top-level key \"connection_info\" and the above 5 items as sub-keys.  Any
 item not specified in the file will be prompted for.  (If the file doesn't
 exist, all items will be prompted for.)
 
@@ -79,9 +79,11 @@ OTHER SCRIPT PARAMETERS
 
 In addition to database connection parameters, the user must provide:
 
-    correct_machine_id:   The machine id for the machine using the specified
-    database output_file: The name of the file to which SQL statements should be
-                          written
+    correct_machine_id: The machine id for the machine using the specified
+                        database
+
+    output_file:        The name of the file to which SQL statements should be
+                        written
 
 These may be specified as top-level keys in the YAML file.  Otherwise, they are
 prompted for.
