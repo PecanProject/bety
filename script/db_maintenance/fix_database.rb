@@ -26,7 +26,7 @@
 #
 # 5. Restore the BETYdb instance that was taken off line in step 1.
 #
-require_relative 'id_fixer'
+require_relative 'lib/id_fixer'
 
 con = IdFixer.new
 

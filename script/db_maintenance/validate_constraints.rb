@@ -4,7 +4,7 @@
 # This script attempts to validate all existing CHECK and FOREIGN KEY
 # constraints and prints out the results of the attempt.
 
-require_relative 'enhanced_connection'
+require_relative 'lib/enhanced_connection'
 
 ConstraintQuery = <<FK
 SELECT

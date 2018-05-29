@@ -4,7 +4,7 @@
 # names of the form "xxx_id" and checking to see if there is an existing
 # corresponding foreign-key constraint.
 
-require_relative 'enhanced_connection'
+require_relative 'lib/enhanced_connection'
 
 FkQuery = <<FK
 SELECT
