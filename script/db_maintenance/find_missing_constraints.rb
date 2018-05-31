@@ -1,11 +1,108 @@
 #!/usr/bin/env ruby
+# coding: utf-8
+USAGE_DETAILS = <<'EOS'
 
-# This script attempts to find missing foreign-key constraints by finding column
-# names of the form "xxx_id" and checking to see if there is an existing
-# corresponding foreign-key constraint.
+DESCRIPTION
+
+This script attempts to find missing foreign-key constraints by finding column
+names of the form "xxx_id" and checking to see if there is an existing
+corresponding foreign-key constraint.  Certain columns with names of the form
+"xxx_id" that are known not to be foreign keys are filtered out.  A list of
+missing foreign-key constraints is printed to standard output.
+
+HOW TO USE
+
+Steps for using the script are as follows:
+
+1. (Optional) Write a YAML file called connection_information.yml in the same
+   directory where this script resides that contains database connection
+   information, the id number of the machine using the database, and the name of
+   a file to write SQL statements to.  See the CONNECTION SPECIFICATION and
+   OTHER SCRIPT PARAMETERS sections below.  You may use
+   connection_information.yml-sample as a model.  (The correct_machine_id and
+   output_file keys are not relevant to this script and will be ignored if
+   provided.)
+
+2. Run the script.  A list of missing foreign-key constraints will be printed to
+   standard output.
+
+CONNECTION SPECIFICATION
+
+The user should specify connection parameters for the database to be used.
+Specifically, the following must be specified:
+
+    host:     The host machine of the database (usually \"localhost\")
+    user:     The role name to use to connect to the database
+    password: The password for the specified user
+    dbname:   The name of the database being connected to
+    port:     The port number used for the connection
+
+These may be specified in a YAML file named \"connection_specification.yml\"
+having top-level key \"connection_info\" and the above 5 items as sub-keys.  Any
+item not specified in the file will be prompted for.  (If the file doesn't
+exist, all items will be prompted for.)
+  
+EOS
+
+## Parse command line
+
+begin
+  require 'trollop'
+rescue LoadError => e
+  puts 'Be sure you have run "bundle install" to install the "trollop" gem.'
+  puts 'You may have to prefix this script invocation with "bundle exec"'
+  puts
+  raise
+end
+
+opts = Trollop::options do
+  banner <<-EOS
+===========================
+find_missing_constraints.rb
+===========================
+
+Usage:
+       find_missing_constraints.rb [options]
+where [options] are:
+EOS
+  opt :help, "Show basic usage information"
+  opt :man, "Show complete usage instructions"
+end
+
+if opts[:man]
+
+  # modify some Trollop methods:
+  module Trollop
+    def self.parser
+      @last_parser
+    end
+
+    # allow Trollop::educate to take a stream parameter
+    def self.educate(stream)
+      @last_parser.educate(stream)
+    end
+  end
+
+  require 'stringio'
+
+  # add details to banner:
+  Trollop.parser.banner USAGE_DETAILS
+
+  # put the whole banner into a string buffer
+  sio = StringIO.new
+  Trollop.educate sio
+
+  # use the os's "less" command to display the usage manual
+  exec "echo \"#{sio.string}\" | less"
+end
 
 require_relative 'lib/enhanced_connection'
 
+# This query finds existing foreign-key constraints in the public namespace.
+# Although the SELECT clause has eight columns, only the table_name,
+# column_name, and foreign_table_name columns are used in this script.  The
+# other columns are there for reference, as they may prove useful in future
+# scripts.
 FkQuery = <<FK
 SELECT
     c.conname AS constraint_name,
@@ -62,12 +159,11 @@ needed_fk_info.each do |row|
   column_name = row["column_name"]
 
   # columns to ignore
-  if ['container_id',
-      'created_user_id',
-      'updated_user_id',
-      'previous_id',
-      'sync_host_id',
-      'session_id'].include? column_name
+  if ['container_id', # dbfile.container_id references are handled by trigger functions
+      'previous_id',  # cultivars.previous_id is a character string; it doesn't reference an id number
+      'sync_host_id', # machines.sync_host_id is not a reference
+      'session_id'    # sessions.session_id is a hex string identifying a session; it is not a reference
+     ].include? column_name
     next
   end
 
@@ -81,6 +177,8 @@ needed_fk_info.each do |row|
       'entities'
     when 'posteriors_samples_id'
       'posterior_samples'
+    when 'created_user_id', 'updated_user_id'
+      'users'
     when 'trait_variable_id', 'covariate_variable_id'
       'variables'
     else
@@ -104,7 +202,7 @@ needed_fk_info.each do |row|
     
   end
   if !found
-    puts "constraint for #{table_name}.#{column_name} not found"
+    puts "foreign-key constraint for #{table_name}.#{column_name} not found"
   end
   
 end
