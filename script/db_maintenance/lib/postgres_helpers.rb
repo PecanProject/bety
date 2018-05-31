@@ -12,15 +12,20 @@ module PostgresHelpers
   end
 
   def connection_hash
+
+    # default if file YAML file doesn't exist or is empty:
     connection_hash = Hash.new
 
     if File.exist?(ConnectionSpecFileName)
       f = File.new(ConnectionSpecFileName)
       begin
         initialization_hash = YAML.load(f)
-        connection_hash = initialization_hash["connection_info"]
-        @machine_id = initialization_hash["correct_machine_id"]
-        @output_file_name = initialization_hash["output_file"]
+        if initialization_hash
+          connection_hash = initialization_hash["connection_info"] || {}
+          @machine_id = initialization_hash["correct_machine_id"]
+          @output_file_name = initialization_hash["output_file"]
+        # else file is empty; get info interactively
+        end
       rescue Psych::SyntaxError => e
         puts e
         puts "There is a syntax error in your connection specification file."
