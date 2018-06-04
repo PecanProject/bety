@@ -22,7 +22,7 @@ SQL statement
 
     ALTER TABLE xxx VALIDATE CONSTRAINT yyy;
 
-where "yyy" is the name of the constraint and "xxx" is the name of the table it
+where \"yyy\" is the name of the constraint and \"xxx\" is the name of the table it
 applies to.  If validation fails, it will print out some information about the
 first found instance of an invalid row and go on to attempting to validate the
 next constraint.
@@ -35,17 +35,17 @@ if triggers on a table are temporarily disabled using a statement such as
 
     ALTER TABLE xxx DISABLE TRIGGER ALL;
 
-And then "bad" data is inserted before re-enabling the trigger.
+And then \"bad\" data is inserted before re-enabling the trigger.
 
 In order to validate such a constraint, we first have to mark it as NOT VALID by
 interacting with the convalidated column of the pg_constraints table: issuing an
-"ALTER TABLE xxx VALIDATE CONSTRAINT yyy;" statement on a constraint that is not
+\"ALTER TABLE xxx VALIDATE CONSTRAINT yyy;\" statement on a constraint that is not
 marked NOT VALID has no effect.  (Alternatively, we could drop and then re-add
 the constraint with the NOT VALID clause, but manipulating the pg_constraints
 table is much easier.)
 
 To validate even those constraints not marked NOT VALID, set the mode option to
-"revalidate".
+\"revalidate\".
 
 Restoring State
 
@@ -57,6 +57,12 @@ run will be restored to that state even if validation fails.
 To only restore NOT VALID constraints that validate, set the restore option to
 'not-valid'.  To restore constraints not marked NOT VALID but that don't
 validate, use option 'valid'.  To do no restoration at all, use option 'none'.
+
+List Mode
+
+To only list all the constraints of the types specified by the \"types\" option,
+use mode \"list\".  This will list each constraint of the designated type(s)—its
+name, the name of the table it applies to, and whether it is mareked NOT VALID.
 
 CONNECTION SPECIFICATION
 
@@ -99,7 +105,7 @@ where [options] are:
 EOS
   opt :help, "Show basic usage information"
   opt :man, "Show complete usage instructions"
-  opt :mode, "Either validate or revalidate", default: "validate"
+  opt :mode, "Either validate, revalidate, or list", default: "validate"
   opt :type, "Either 'check', 'foreign-key', or 'both'", default: "both"
   opt :restore, "Restore constraints marked as valid to that marking even if validation fails ('valid'); and/or restore constraints marked as not valid to that state even if validation succeeds ('not-valid'); to do no restoration, use 'none' and to restore both kinds of constraints, use 'all'", default: "all"
 end
@@ -131,7 +137,7 @@ if opts[:man]
   exec "echo \"#{sio.string}\" | less"
 end
 
-Trollop::die :mode, "mode must be 'validate' or 'revalidate'" if !["validate", "revalidate"].include? opts[:mode]
+Trollop::die :mode, "mode must be 'validate', 'revalidate', or 'list" if !["validate", "revalidate", "list"].include? opts[:mode]
 Trollop::die :type, "type must be 'check', 'foreign-key', or 'both'" if !["check", "foreign-key", "both"].include? opts[:type]
 Trollop::die :restore, "restore must be 'not-valid', 'valid', 'none', or 'all'" if !["not-valid", "valid", "none", "all"].include? opts[:restore]
 
@@ -149,7 +155,8 @@ FROM
     JOIN
         pg_class pc
     ON pc.oid = con.conrelid
-WHERE contype in ('c') order by relname;
+WHERE contype in (%s)
+ORDER BY table_name, contype, constraint_name;
 FK
 
 SetNotValid = <<SNV
@@ -161,10 +168,27 @@ WHERE
     conname = $1
 SNV
 
+SetValid = <<SV
+UPDATE
+    pg_constraint
+SET
+    convalidated = 't'
+WHERE
+    conname = $1
+SV
+
 
 con = EnhancedConnection.new
 
-con.send_query(ConstraintQuery)
+types = case opts[:type]
+        when "both"
+          "'c', 'f'"
+        when "check"
+          "'c'"
+        when "foreign-key"
+          "'f'"
+        end
+con.send_query(sprintf(ConstraintQuery, types))
 
 result = con.get_result
 
@@ -172,13 +196,36 @@ constraint_list = result.to_a
 
 constraint_list.each do |row|
 
+  validated = (row["validated"] == 't')
+
+  if opts[:mode] == "list"
+    printf("CONSTRAINT %s ON TABLE %s IS MARKED %s.\n", row["constraint_name"], row["table_name"], validated == 't' ? "valid" : "not valid")
+    next
+  end
+
+  if validated && opts[:mode] == "validate"
+    next
+  end
+
   con.exec_params(SetNotValid, [row["constraint_name"]])
 
   validation_statement = sprintf("ALTER TABLE \"%s\" VALIDATE CONSTRAINT \"%s\";", row["table_name"], row["constraint_name"])
   begin
     con.exec(validation_statement)
-    printf("✓ Successfully validated constraint %s.\n", row["constraint_name"])
+    printf("✓ Successfully validated constraint %s on table %s.\n", row["constraint_name"], row["table_name"])
+
+    # If restore option is 'not-valid' or 'all', restore the NOT VALID marker on
+    # this constraint even though it validated.
+    if !validated && ["all", "not-valid"].include?(opts[:restore])
+      con.exec_params(SetNotValid, [row["constraint_name"]])
+    end
   rescue => e
     puts "✗ " + e.to_s
+
+    # If the restore option is 'valid' or 'all', restore constraint to VALID
+    # even though it didn't validate.
+    if validated && ["all", "valid"].include?(opts[:restore])
+      con.exec_params(SetValid, [row["constraint_name"]])
+    end
   end
 end
