@@ -166,6 +166,8 @@ SET
     convalidated = 'f'
 WHERE
     conname = $1
+AND
+    (SELECT relname FROM pg_class t WHERE t.oid = conrelid) = $2
 SNV
 
 SetValid = <<SV
@@ -175,6 +177,8 @@ SET
     convalidated = 't'
 WHERE
     conname = $1
+AND
+    (SELECT relname FROM pg_class t WHERE t.oid = conrelid) = $2
 SV
 
 
@@ -207,7 +211,7 @@ constraint_list.each do |row|
     next
   end
 
-  con.exec_params(SetNotValid, [row["constraint_name"]])
+  con.exec_params(SetNotValid, [row["constraint_name"], row["table_name"]])
 
   validation_statement = sprintf("ALTER TABLE \"%s\" VALIDATE CONSTRAINT \"%s\";", row["table_name"], row["constraint_name"])
   begin
@@ -217,7 +221,7 @@ constraint_list.each do |row|
     # If restore option is 'not-valid' or 'all', restore the NOT VALID marker on
     # this constraint even though it validated.
     if !validated && ["all", "not-valid"].include?(opts[:restore])
-      con.exec_params(SetNotValid, [row["constraint_name"]])
+      con.exec_params(SetNotValid, [row["constraint_name"], row["table_name"]])
     end
   rescue => e
     puts "✗ " + e.to_s
