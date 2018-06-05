@@ -14,7 +14,7 @@ ALTER TABLE "runs" DROP CONSTRAINT "fk_runs_ensembles_1";
 ALTER TABLE "runs" ADD CONSTRAINT "fk_runs_ensembles_1" FOREIGN KEY ("ensemble_id") REFERENCES "ensembles" ("id") ON UPDATE CASCADE;
 
 ALTER TABLE "inputs" DROP CONSTRAINT "fk_inputs_inputs_1";
-ALTER TABLE "inputs" ADD CONSTRAINT "fk_inputs_inputs_1" FOREIGN KEY ("parent_id") REFERENCES "inputs" ("id") ON UPDATE CASCADE         not valid;
+ALTER TABLE "inputs" ADD CONSTRAINT "fk_inputs_inputs_1" FOREIGN KEY ("parent_id") REFERENCES "inputs" ("id") ON UPDATE CASCADE NOT VALID;
 
 ALTER TABLE "inputs_runs" DROP CONSTRAINT "fk_inputs_runs_inputs_1";
 ALTER TABLE "inputs_runs" ADD CONSTRAINT "fk_inputs_runs_inputs_1" FOREIGN KEY ("input_id") REFERENCES "inputs" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -54,20 +54,20 @@ ALTER TABLE "likelihoods" DROP CONSTRAINT "fk_likelihoods_runs_1";
 ALTER TABLE "likelihoods" ADD CONSTRAINT "fk_likelihoods_runs_1" FOREIGN KEY ("run_id") REFERENCES "runs" ("id") ON UPDATE CASCADE;
 
 ALTER TABLE "citations_sites" DROP CONSTRAINT "fk_citations_sites_sites_1";
-ALTER TABLE "citations_sites" ADD CONSTRAINT "fk_citations_sites_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") ON DELETE RESTRICT ON UPDATE CASCADE      not valid;
+ALTER TABLE "citations_sites" ADD CONSTRAINT "fk_citations_sites_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") ON DELETE RESTRICT ON UPDATE CASCADE NOT VALID;
 
 ALTER TABLE "inputs" DROP CONSTRAINT "fk_inputs_sites_1";
-ALTER TABLE "inputs" ADD CONSTRAINT "fk_inputs_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") ON UPDATE CASCADE                    not valid;
+ALTER TABLE "inputs" ADD CONSTRAINT "fk_inputs_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") ON UPDATE CASCADE NOT VALID;
 
 ALTER TABLE "runs" DROP CONSTRAINT "fk_runs_sites_1";
-ALTER TABLE "runs" ADD CONSTRAINT "fk_runs_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") ON UPDATE CASCADE                        not valid;
+ALTER TABLE "runs" ADD CONSTRAINT "fk_runs_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") ON UPDATE CASCADE NOT VALID;
 
 /* Only on terraref.ncsa.illinois.edu. */
 ALTER TABLE "traits" DROP CONSTRAINT IF EXISTS "fk_traits_sites_1";
 ALTER TABLE "traits" ADD CONSTRAINT "fk_traits_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") ON UPDATE CASCADE NOT VALID;
 
 ALTER TABLE "workflows" DROP CONSTRAINT "fk_workflows_sites_1";
-ALTER TABLE "workflows" ADD CONSTRAINT "fk_workflows_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") ON UPDATE CASCADE               not valid;
+ALTER TABLE "workflows" ADD CONSTRAINT "fk_workflows_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") ON UPDATE CASCADE NOT VALID;
 
 /* Only on terraref.ncsa.illinois.edu. */
 ALTER TABLE "yields" DROP CONSTRAINT IF EXISTS "fk_yields_sites_1";
@@ -165,7 +165,7 @@ ALTER TABLE "runs" DROP CONSTRAINT "fk_runs_ensembles_1";
 ALTER TABLE "runs" ADD CONSTRAINT "fk_runs_ensembles_1" FOREIGN KEY ("ensemble_id") REFERENCES "ensembles" ("id");
 
 ALTER TABLE "inputs" DROP CONSTRAINT "fk_inputs_inputs_1";
-ALTER TABLE "inputs" ADD CONSTRAINT "fk_inputs_inputs_1" FOREIGN KEY ("parent_id") REFERENCES "inputs" ("id")          not valid;
+ALTER TABLE "inputs" ADD CONSTRAINT "fk_inputs_inputs_1" FOREIGN KEY ("parent_id") REFERENCES "inputs" ("id") NOT VALID;
 
 ALTER TABLE "inputs_runs" DROP CONSTRAINT "fk_inputs_runs_inputs_1";
 ALTER TABLE "inputs_runs" ADD CONSTRAINT "fk_inputs_runs_inputs_1" FOREIGN KEY ("input_id") REFERENCES "inputs" ("id") ON DELETE CASCADE;
@@ -207,20 +207,20 @@ ALTER TABLE "likelihoods" DROP CONSTRAINT "fk_likelihoods_runs_1";
 ALTER TABLE "likelihoods" ADD CONSTRAINT "fk_likelihoods_runs_1" FOREIGN KEY ("run_id") REFERENCES "runs" ("id");
 
 ALTER TABLE "citations_sites" DROP CONSTRAINT "fk_citations_sites_sites_1";
-ALTER TABLE "citations_sites" ADD CONSTRAINT "fk_citations_sites_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") ON DELETE RESTRICT         not valid;
+ALTER TABLE "citations_sites" ADD CONSTRAINT "fk_citations_sites_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") ON DELETE RESTRICT NOT VALID;
 
 ALTER TABLE "inputs" DROP CONSTRAINT "fk_inputs_sites_1";
-ALTER TABLE "inputs" ADD CONSTRAINT "fk_inputs_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") not valid;
+ALTER TABLE "inputs" ADD CONSTRAINT "fk_inputs_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") NOT VALID;
 
 ALTER TABLE "runs" DROP CONSTRAINT "fk_runs_sites_1";
-ALTER TABLE "runs" ADD CONSTRAINT "fk_runs_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") not valid;
+ALTER TABLE "runs" ADD CONSTRAINT "fk_runs_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") NOT VALID;
 
 /* Only on terraref.ncsa.illinois.edu. */
 ALTER TABLE "traits" DROP CONSTRAINT IF EXISTS "fk_traits_sites_1";
 /* On terraref.ncsa.illinois.edu, add the constraint back outside of this migration. */
 
 ALTER TABLE "workflows" DROP CONSTRAINT "fk_workflows_sites_1";
-ALTER TABLE "workflows" ADD CONSTRAINT "fk_workflows_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") not valid;
+ALTER TABLE "workflows" ADD CONSTRAINT "fk_workflows_sites_1" FOREIGN KEY ("site_id") REFERENCES "sites" ("id") NOT VALID;
 
 /* Only on terraref.ncsa.illinois.edu. */
 ALTER TABLE "yields" DROP CONSTRAINT IF EXISTS "fk_yields_sites_1";
