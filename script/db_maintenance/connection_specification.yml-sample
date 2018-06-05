@@ -1,0 +1,10 @@
+connection_info:
+    host: localhost
+    user: bety
+    password: bety
+    dbname: bety
+    port: 5432
+
+correct_machine_id: 8
+
+output_file: fix_ids.psql
