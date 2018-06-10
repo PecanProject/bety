@@ -154,7 +154,8 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (12.3.0)
-    recaptcha (0.3.4)
+    recaptcha (4.8.0)
+      json
     rgeo (0.5.3)
     rgeo-activerecord (4.0.5)
       activerecord (~> 4.2)
@@ -241,7 +242,7 @@ DEPENDENCIES
   railroad (= 0.5.0)
   rails (= 4.2.10)
   rails3-restful-authentication (~> 3.0.1)
-  recaptcha (= 0.3.4)
+  recaptcha (= 4.8.0)
   rgeo (~> 0.5.0)
   rspec-rails (~> 3.0)
   rspec_api_documentation
