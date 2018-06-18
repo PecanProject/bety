@@ -9,6 +9,41 @@ SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 
+--
+-- Name: admin; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA admin;
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: postgis; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -979,9 +1014,43 @@ END;
 $$;
 
 
+SET search_path = admin, pg_catalog;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
+
+--
+-- Name: tz_world; Type: TABLE; Schema: admin; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tz_world (
+    gid integer NOT NULL,
+    tzid character varying(30),
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- Name: tz_world_gid_seq; Type: SEQUENCE; Schema: admin; Owner: -
+--
+
+CREATE SEQUENCE tz_world_gid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tz_world_gid_seq; Type: SEQUENCE OWNED BY; Schema: admin; Owner: -
+--
+
+ALTER SEQUENCE tz_world_gid_seq OWNED BY tz_world.gid;
+
+
+SET search_path = public, pg_catalog;
 
 --
 -- Name: benchmark_sets; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3827,6 +3896,17 @@ CREATE TABLE workflows (
 );
 
 
+SET search_path = admin, pg_catalog;
+
+--
+-- Name: gid; Type: DEFAULT; Schema: admin; Owner: -
+--
+
+ALTER TABLE ONLY tz_world ALTER COLUMN gid SET DEFAULT nextval('tz_world_gid_seq'::regclass);
+
+
+SET search_path = public, pg_catalog;
+
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
@@ -4029,6 +4109,18 @@ ALTER TABLE ONLY sites_cultivars ALTER COLUMN id SET DEFAULT nextval('sites_cult
 
 ALTER TABLE ONLY trait_covariate_associations ALTER COLUMN id SET DEFAULT nextval('trait_covariate_associations_id_seq'::regclass);
 
+
+SET search_path = admin, pg_catalog;
+
+--
+-- Name: tz_world_pkey; Type: CONSTRAINT; Schema: admin; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY tz_world
+    ADD CONSTRAINT tz_world_pkey PRIMARY KEY (gid);
+
+
+SET search_path = public, pg_catalog;
 
 --
 -- Name: benchmark_sets_benchmark_reference_runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
@@ -4501,6 +4593,17 @@ ALTER TABLE ONLY workflows
 ALTER TABLE ONLY yields
     ADD CONSTRAINT yields_pkey PRIMARY KEY (id);
 
+
+SET search_path = admin, pg_catalog;
+
+--
+-- Name: tz_world_geom_gist; Type: INDEX; Schema: admin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX tz_world_geom_gist ON tz_world USING gist (geom);
+
+
+SET search_path = public, pg_catalog;
 
 --
 -- Name: cultivar_pft_uniqueness; Type: INDEX; Schema: public; Owner: -; Tablespace: 
@@ -6146,4 +6249,126 @@ COMMENT ON CONSTRAINT species_exists ON pfts_species IS 'Ensure the referred-to 
 --
 -- PostgreSQL database dump complete
 --
+
+SET search_path TO "$user",public;
+
+INSERT INTO schema_migrations (version) VALUES ('1');
+
+INSERT INTO schema_migrations (version) VALUES ('20130104205059');
+
+INSERT INTO schema_migrations (version) VALUES ('20130104211901');
+
+INSERT INTO schema_migrations (version) VALUES ('20130104211946');
+
+INSERT INTO schema_migrations (version) VALUES ('20130109205535');
+
+INSERT INTO schema_migrations (version) VALUES ('20130222222929');
+
+INSERT INTO schema_migrations (version) VALUES ('20130425152503');
+
+INSERT INTO schema_migrations (version) VALUES ('20130624001504');
+
+INSERT INTO schema_migrations (version) VALUES ('20130629205658');
+
+INSERT INTO schema_migrations (version) VALUES ('20130707190720');
+
+INSERT INTO schema_migrations (version) VALUES ('20130717162614');
+
+INSERT INTO schema_migrations (version) VALUES ('20130813212131');
+
+INSERT INTO schema_migrations (version) VALUES ('20130829162053');
+
+INSERT INTO schema_migrations (version) VALUES ('20130830184559');
+
+INSERT INTO schema_migrations (version) VALUES ('20140418005637');
+
+INSERT INTO schema_migrations (version) VALUES ('20140422155957');
+
+INSERT INTO schema_migrations (version) VALUES ('20140423220457');
+
+INSERT INTO schema_migrations (version) VALUES ('20140506210037');
+
+INSERT INTO schema_migrations (version) VALUES ('20140515205254');
+
+INSERT INTO schema_migrations (version) VALUES ('20140521180349');
+
+INSERT INTO schema_migrations (version) VALUES ('20140604192901');
+
+INSERT INTO schema_migrations (version) VALUES ('20140610210928');
+
+INSERT INTO schema_migrations (version) VALUES ('20140617163304');
+
+INSERT INTO schema_migrations (version) VALUES ('20140621060009');
+
+INSERT INTO schema_migrations (version) VALUES ('20140623004229');
+
+INSERT INTO schema_migrations (version) VALUES ('20140624185610');
+
+INSERT INTO schema_migrations (version) VALUES ('20140708232320');
+
+INSERT INTO schema_migrations (version) VALUES ('20140729045640');
+
+INSERT INTO schema_migrations (version) VALUES ('20140904220035');
+
+INSERT INTO schema_migrations (version) VALUES ('20140904221818');
+
+INSERT INTO schema_migrations (version) VALUES ('20140909212759');
+
+INSERT INTO schema_migrations (version) VALUES ('20140915153555');
+
+INSERT INTO schema_migrations (version) VALUES ('20141009160121');
+
+INSERT INTO schema_migrations (version) VALUES ('20141208165401');
+
+INSERT INTO schema_migrations (version) VALUES ('20141211220550');
+
+INSERT INTO schema_migrations (version) VALUES ('20150202215147');
+
+INSERT INTO schema_migrations (version) VALUES ('20150202220519');
+
+INSERT INTO schema_migrations (version) VALUES ('20150213162341');
+
+INSERT INTO schema_migrations (version) VALUES ('20150313165132');
+
+INSERT INTO schema_migrations (version) VALUES ('20150521211114');
+
+INSERT INTO schema_migrations (version) VALUES ('20150624220952');
+
+INSERT INTO schema_migrations (version) VALUES ('20150624222656');
+
+INSERT INTO schema_migrations (version) VALUES ('20150625184958');
+
+INSERT INTO schema_migrations (version) VALUES ('20150904184512');
+
+INSERT INTO schema_migrations (version) VALUES ('20151007174432');
+
+INSERT INTO schema_migrations (version) VALUES ('20151011190026');
+
+INSERT INTO schema_migrations (version) VALUES ('20151014182146');
+
+INSERT INTO schema_migrations (version) VALUES ('20160303221049');
+
+INSERT INTO schema_migrations (version) VALUES ('20160412030352');
+
+INSERT INTO schema_migrations (version) VALUES ('20160523165531');
+
+INSERT INTO schema_migrations (version) VALUES ('20160617133217');
+
+INSERT INTO schema_migrations (version) VALUES ('20160711231257');
+
+INSERT INTO schema_migrations (version) VALUES ('20160720182233');
+
+INSERT INTO schema_migrations (version) VALUES ('20160930213737');
+
+INSERT INTO schema_migrations (version) VALUES ('20161003180105');
+
+INSERT INTO schema_migrations (version) VALUES ('20161005181021');
+
+INSERT INTO schema_migrations (version) VALUES ('20161129192658');
+
+INSERT INTO schema_migrations (version) VALUES ('20170118205944');
+
+INSERT INTO schema_migrations (version) VALUES ('20170415183619');
+
+INSERT INTO schema_migrations (version) VALUES ('20170712171513');
 
