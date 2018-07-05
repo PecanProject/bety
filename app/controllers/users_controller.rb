@@ -46,7 +46,7 @@ class UsersController < ApplicationController
     if Rails.env == "test"
       success = @user && @user.save
     else
-      success = verify_recaptcha(:model => @user, :message => "Please re-enter the words from the image again.") && @user && @user.save
+      success = verify_recaptcha(:model => @user) && @user && @user.save
     end
 
     if success && @user.errors.empty?

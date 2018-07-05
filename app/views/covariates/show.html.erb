@@ -1,32 +1,38 @@
-<p>
-  <b>Variable:</b>
-  <%= link_to_if @covariate.variable, @covariate.variable, @covariate.variable %>
-</p>
 
-<p>
-  <b>Species, trait, treatment, and citation associated with this covariate:</b>
-  <%= link_to_if @covariate.trait, @covariate.trait, @covariate.trait %>
-</p>
+<div class="content">
+    <div class= "container">
+      <div class = "sixteen columns">
+        <header>
+          <h1>Viewing Covariate</h1>
+        </header>
 
-<p>
-  <b>Level:</b>
-  <%= @covariate.level %>
-</p>
 
-<p>
-  <b>N:</b>
-  <%= @covariate.n %>
-</p>
-
-<p>
-  <b>Stat:</b>
-  <%= @covariate.stat %>
-</p>
-
-<p>
-  <b>Statname:</b>
-  <%= @covariate.statname %>
-</p>
+<dl class = "dl-horizontal">
+    <dt>Variable:</dt>
+    <dd><%= link_to_if @covariate.variable, @covariate.variable, @covariate.variable %></dd>
+    <dt>Level:</dt>
+    <dd><%= @covariate.level %></dd>
+    <dt>N:</dt>
+    <dd><%= @covariate.n %></dd>
+    <dt>Stat:</dt>
+    <dd><%= @covariate.stat %></dd>
+    <dt>Statname:</dt>
+    <dd><%= @covariate.statname %></dd>
+    <dt>Associated Trait:</dt>
+    <dd>
+      <%= link_to_if @covariate.trait, @covariate.trait, @covariate.trait %>
+      <dl>
+        <dt>Trait Variable:</dt>
+        <dd><%= link_to_if @covariate.trait.variable, @covariate.trait.variable, @covariate.trait.variable %></dd>
+        <dt>Trait Method:</dt>
+        <dd><%= link_to_if @covariate.trait.ebi_method, @covariate.trait.ebi_method, @covariate.trait.ebi_method %></dd>
+      </dl>
+    </dd>
+    <dt>Species:</dt>
+    <dd><%= link_to_if @covariate.trait.specie, @covariate.trait.specie, @covariate.trait.specie %></dd>
+    <dt>Citation:</dt>
+    <dd><%= link_to_if @covariate.trait.citation, @covariate.trait.citation, @covariate.trait.citation %></dd>
+  </dl>
 
 
 <div class="form-actions">
@@ -35,10 +41,11 @@
             <button class="button"><i class="icon-arrow-left"></i> All Records</button>
           <% end %>
           <%= link_to( edit_covariate_path(@covariate) ) do %>
-            <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>  
+            <button type="submit" class="button button-primary"><i class="icon-edit"></i> Edit Record</button>
           <% end %>
-          
+
         </div>
       </div>
-
-
+        </div>
+    </div>
+</div>

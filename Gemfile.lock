@@ -170,8 +170,9 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
-    recaptcha (0.3.4)
-    rgeo (0.5.0)
+    recaptcha (4.8.0)
+      json
+    rgeo (0.5.3)
     rgeo-activerecord (5.1.1)
       activerecord (~> 5.0)
       rgeo (~> 0.3)
@@ -280,7 +281,7 @@ DEPENDENCIES
   rails (= 5.1.5)
   rails-controller-testing
   rails3-restful-authentication (~> 3.0.1)
-  recaptcha (= 0.3.4)
+  recaptcha (= 4.8.0)
   rgeo (~> 0.5.0)
   rspec-rails (~> 3.0)
   rspec_api_documentation

@@ -5,7 +5,8 @@ class CitationsController < ApplicationController
 
   require 'csv'
 
-  # general autocompletion
+  # General autocompletion
+  # @calls {search_model}
   def autocomplete
     citations = search_model(Citation.order('author'), %w( author title ), params[:term])
 
