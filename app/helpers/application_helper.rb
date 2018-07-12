@@ -160,13 +160,15 @@ end
 
 # Replacement for the Prototype method of this name.
 def observe_field(element_id, **options)
+
+  observed_event = options[:event_name] || "keyup"
+
   # We assume options has either the key :url or the key :function (but not
   # both).
   if options.has_key? :url
     url = url_for(options[:url])
     connector = url.match(/\?/) ? '&' : '?'
     confirmation = options[:confirmation] || "true"
-    observed_event = options[:event_name] || "keyup"
     raw(
       %Q{<script>
              var data_access_level = #{current_user.access_level};
@@ -224,7 +226,7 @@ def observe_field(element_id, **options)
     raw(
       %Q{<script>
              jQuery(document).ready(function() {
-                 jQuery("##{element_id.to_s}").bind("keyup", function() {
+                 jQuery("##{element_id.to_s}").bind("#{observed_event}", function() {
                      #{options[:function]}
                  })
              })
