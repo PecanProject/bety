@@ -6,7 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module BetyRails3
+module BetyRails5
   class Application < Rails::Application
 
     # Enable Hash#deep_symbolize_keys method defined in lib/symbolize_helper.rb.
