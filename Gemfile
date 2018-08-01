@@ -84,11 +84,8 @@ group :debug do
   gem "pry"
 end
 
-# Comment this out if you can't or don't wish to install capybara-webkit:
-
 group :production do
-  #  gem "rmagick", "2.13.1"
-  gem "passenger", "5.1.12"
+  gem "passenger"
 end
 
 group :docker do
