@@ -1,5 +1,5 @@
 class PftsController < ApplicationController
-  before_filter :login_required
+  before_action :login_required
   helper_method :sort_column, :sort_direction
 
   require 'csv'
@@ -96,9 +96,10 @@ class PftsController < ApplicationController
       @species = Specie.where(search_cond).select("id, scientificname").page(params[:page])
     end
 
-    render :update do |page|
-      page.replace_html :index_table, :partial => "edit2_pfts_species_table"
-      page.replace_html :search_term, search
+    respond_to do |format|
+      format.js {
+        render layout: false, locals: { search: search }
+      }
     end
   end
 

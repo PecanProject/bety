@@ -1,6 +1,6 @@
 class InputsController < ApplicationController
 
-  before_filter :login_required
+  before_action :login_required
   helper_method :sort_direction, :sort_column
 
   # general autocompletion
@@ -69,9 +69,10 @@ class InputsController < ApplicationController
       @files = DBFile.where(search_cond).select("id, file_name").page(params[:page])
     end
 
-    render :update do |page|
-      page.replace_html :files_index_table, :partial => "edit_inputs_files_table"
-      page.replace_html :files_search_term, search
+    respond_to do |format|
+      format.js {
+        render layout: false, locals: { search: search }
+      }
     end
   end
 

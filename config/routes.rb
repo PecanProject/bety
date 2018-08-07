@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   apipie
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -55,15 +56,15 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id(.:format)))'
+  # routes for autocompletion actions used by the bulk upload wizard:
+  %w{citations cultivars sites species treatments}.each do |controller|
+    get "#{controller}/bu_autocomplete", controller: controller
+  end
 
-  # route for autocompletion actions used by the bulk upload wizard:
-  get ':controller/bu_autocomplete', action: 'bu_autocomplete'
-
-  # route for other autocompletion actions:
-  get ':controller/autocomplete', action: 'autocomplete'
+  # routes for other autocompletion actions:
+  %w{citations mimetypes inputs sites variables}.each do |controller|
+    get "#{controller}/autocomplete", controller: controller
+  end
 
   resources :yieldsviews, :only => [:show]
   resources :workflows

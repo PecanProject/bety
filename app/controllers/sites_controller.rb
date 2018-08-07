@@ -1,5 +1,5 @@
 class SitesController < ApplicationController
-  before_filter :login_required, :except => [ :show ]
+  before_action :login_required, :except => [ :show ]
   helper_method :sort_column, :sort_direction
 
   layout 'application', :except => [ :map ]
@@ -15,13 +15,16 @@ class SitesController < ApplicationController
 
     if exists
       @citation.sites.delete(@site)
+      @linking = false
     else
       @citation.sites<<@site
+      @linking = true
     end
 
-    render :update do |page|
-      page.replace_html "site-#{ @site.id }", ""
-      page.replace_html "linked", :partial => 'linked'
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 

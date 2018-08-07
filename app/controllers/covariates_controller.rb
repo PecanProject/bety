@@ -1,5 +1,5 @@
 class CovariatesController < ApplicationController
-  before_filter :login_required
+  before_action :login_required
   helper_method :sort_column, :sort_direction
 
   # GET /covariates

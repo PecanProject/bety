@@ -1,7 +1,7 @@
 # coding: utf-8
 class MethodsController < ApplicationController
 
-  before_filter :login_required 
+  before_action :login_required
   helper_method :sort_column, :sort_direction
 
   # This action acts as a _source_ for the jQuery UI autocompletion widgets on

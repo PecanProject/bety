@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title><%= if @title then @title else "BETYdb: #{request.env['PATH_INFO']}" end %></title>
   <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />
   <meta name="keywords" content="biofuel, biofuels, agriculture, pecan, pecanproject, miscanthus, switchgrass, willow, poplar, sugarcane, ecosystem, crop modeling" />
@@ -11,17 +11,23 @@
 
   <%= csrf_meta_tag %>
 
+  <% if params[:controller] == 'bulk_upload' %>
+    <%= stylesheet_link_tag 'bulk_upload', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <% end %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
   <!-- to do: reconcile these two sets of includes: -->
 
   <!-- Set One -->
-  <%= javascript_include_tag 'lazy/jquery-1.11.0.js' %>
-  <%= javascript_include_tag 'libs/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js' %>
-  <%= javascript_include_tag 'libs/jquery-migrate-1.2.1.js' %>
+  <%#= javascript_include_tag 'lazy/jquery-1.11.0.js' %>
+  <%#= javascript_include_tag 'libs/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js' %>
+  <%#= javascript_include_tag 'libs/jquery-migrate-1.2.1.js' %>
 
   <!-- Set Two -->
-  <%= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
-  <%= javascript_include_tag 'lazy/jquery-ui-1.10.4.min.js' %>
-  <%= stylesheet_link_tag "jquery-ui-1.10.4.min" %>
+  <%#= javascript_include_tag 'lazy/jquery-1.7.2.js' %>
+  <%#= javascript_include_tag 'lazy/jquery-ui-1.10.4.min.js' %>
+  <%#= stylesheet_link_tag "jquery-ui-1.10.4.min" %>
 
   <!--  It seems so far that everything works in 1.7.2.-->
 
@@ -31,26 +37,26 @@
 
   <!-- Since as of Rails 4, javascript_include_tag doesn't recognize the :all option, we have to do this: -->
   <% if Rails.env == "production" %>
-    <%= javascript_include_tag "cache/all" %>
+    <%#= javascript_include_tag "cache/all" %>
   <% else %>
-    <%= javascript_include_tag 'prototype.js' %>
-    <%= javascript_include_tag 'effects.js' %>
-    <%= javascript_include_tag 'bootstrap.js' %>
-    <%= javascript_include_tag 'controls.js' %>
-    <%= javascript_include_tag 'dragdrop.js' %>
-    <%= javascript_include_tag 'min.js' %>
-    <%= javascript_include_tag 'plugins.js' %>
-    <%= javascript_include_tag 'rails.js' %>
-    <%= javascript_include_tag 'script.js' %>
-    <%= javascript_include_tag 'window.js' %>
-    <%= javascript_include_tag 'application.js' %>
+    <%#= javascript_include_tag 'prototype.js' %>
+    <%#= javascript_include_tag 'effects.js' %>
+    <%#= javascript_include_tag 'bootstrap.js' %>
+    <%#= javascript_include_tag 'controls.js' %>
+    <%#= javascript_include_tag 'dragdrop.js' %>
+    <%#= javascript_include_tag 'min.js' %>
+    <%#= javascript_include_tag 'plugins.js' %>
+    <%#= javascript_include_tag 'rails.js' %>
+    <%#= javascript_include_tag 'script.js' %>
+    <%#= javascript_include_tag 'window.js' %>
+    <%#= javascript_include_tag 'application.js' %>
   <% end %>
 
   <!-- ############## BEGAN verifying all JS imports from here ############## -->
   <!--[if (lt IE 9) & (!IEMobile)]>
     <script src="js/libs/selectivizr-min.js"></script>
   <![endif]-->
-  <%= javascript_include_tag 'libs/respond.min.js', 'libs/modernizr-2.0.6.min.js' %>
+  <%#= javascript_include_tag 'libs/respond.min.js', 'libs/modernizr-2.0.6.min.js' %>
 
   <%= yield :autocomplete_javascript %>
 
@@ -68,10 +74,10 @@
   <!-- ############## ENDED verifying all JS imports from here ############## -->
 
   <!--  This disables the use of $ as the jQuery alias-->
-  <script> jQuery.noConflict(); </script>
 
-  <%= javascript_include_tag 'lazy/simple_search.js' %>
-  <%= javascript_include_tag 'lazy/application.js' %>
+
+  <%#= javascript_include_tag 'lazy/simple_search.js' %>
+  <%#= javascript_include_tag 'lazy/application.js' %>
 
   <% if params[:controller] == 'sessions' %>
     <%= javascript_include_tag 'lazy/login' %>
@@ -84,8 +90,8 @@
   <% end %>
 
   <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />
-  <%= stylesheet_link_tag 'themes/default' %>
-  <%= stylesheet_link_tag 'themes/alphacube' %>
+  <%#= stylesheet_link_tag 'themes/default' %>
+  <%#= stylesheet_link_tag 'themes/alphacube' %>
 
   <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -101,16 +107,16 @@
 
   <!-- Maintain the order of the following CSS until we can gut the "scaffold" CSS -->
   <!-- Old CSS -->
-  <%= stylesheet_link_tag "scaffold" %>
+  <%#= stylesheet_link_tag "scaffold" %>
   <!-- Redesign CSS -->
   <%= yield :schemaCSS %>
-  <%= stylesheet_link_tag "base", "grid", "layout", "dropdown", "tables", "demo" %>
+  <%#= stylesheet_link_tag "base", "grid", "layout", "dropdown", "tables", "demo" %>
 
-  <% if params[:controller] == 'bulk_upload' %>
-    <%= stylesheet_link_tag "bulk_upload" %>
-  <% end %>
+  <%# if params[:controller] == 'bulk_upload' %>
+    <%#= stylesheet_link_tag "bulk_upload" %>
+  <%# end %>
 
-  <%= stylesheet_link_tag "jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" %>
+  <%#= stylesheet_link_tag "jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" %>
 
 </head>
 
@@ -172,6 +178,7 @@
                 <li><%= link_to "Citations", citations_path %></li>
                 <li><%= link_to "Covariates", covariates_path %></li>
                 <li><%= link_to "Cultivars", cultivars_path %></li>
+                <li><%= link_to "Experiments", experiments_path %></li>
                 <li><%= link_to "Managements", managements_path %></li>
                 <% if current_user.page_access_level <= 2 %>
                   <li><%= link_to "Methods", methods_path %></li>

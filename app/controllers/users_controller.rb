@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
-  before_filter :login_required, :except => [:create,:new]
-  #before_filter :login_required
+  before_action :login_required, :except => [:create,:new]
+
   helper_method :sort_column, :sort_direction
 
   def index

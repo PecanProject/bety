@@ -1,6 +1,6 @@
 <div class="row">
   <% if covariate.errors.size >0 %>
-    <%= content_tag(:div, "<b>Error</b> : #{(covariate.errors.get(:level))[0]}".html_safe) %>
+    <%= content_tag(:div, "<b>Error</b> : #{(covariate.errors[:level])[0]}".html_safe) %>
   <% end %>
   <div class="three columns alpha">
     <%= label_tag :variable_id %>

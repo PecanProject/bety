@@ -98,8 +98,8 @@
 
 <%= observe_field("change_password",
                   :frequency => 1,
-                  :function => "var u = $('user_password'); u.disabled = !u.disabled;$('user_password_confirmation').disabled = u.disabled;") %>
-
+                  :event_name => "change",
+                  :function => "var u = jQuery('#user_password')[0]; u.disabled = !u.disabled; jQuery('#user_password_confirmation')[0].disabled = u.disabled;") %>
 
 
 

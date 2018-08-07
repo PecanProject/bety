@@ -58,7 +58,7 @@ feature 'Treatment features work' do
         click_link 'View Related Managements'
         page.select 'planting', from: 'management_id'
         click_button 'Select'
-        expect(page).to have_content 'planting'
+        expect(page.find('table table')).to have_content 'planting'
 
       # now do clean-up:
       page.find(:xpath, ".//table/tbody/tr[preceding-sibling::tr/th/text() = 'Type'][contains(td[last()], 'planting')]/td/a[text() = 'X']").click

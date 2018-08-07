@@ -2,7 +2,7 @@
 # RAILS3 added above encoding (actually this is needed with Ruby 1.9.2)
 
 class SpeciesController < ApplicationController
-  before_filter :login_required, :except => [ :show ]
+  before_action :login_required, :except => [ :show ]
   helper_method :sort_column, :sort_direction
 
   require 'csv'
@@ -51,29 +51,16 @@ class SpeciesController < ApplicationController
       @species = Specie.where('LOWER(scientificname) LIKE LOWER(:query) OR LOWER(genus) LIKE LOWER(:query) OR LOWER("AcceptedSymbol") LIKE LOWER(:query) OR LOWER(commonname) LIKE LOWER(:query)' +
                               ' OR LOWER(scientificname) LIKE LOWER(:query2) OR LOWER(genus) LIKE LOWER(:query2) OR LOWER("AcceptedSymbol") LIKE LOWER(:query2) OR LOWER(commonname) LIKE LOWER(:query2)', 
                               {:query => @query + "%", :query2 => "%" + @query + "%"}).limit(100).order("scientificname")
-      @species.uniq!
+      @species.distinct!
     else
-      @species = []
+      @species = Specie.none
     end
 
-    render :update do |page|
-      if params[:cont] == "species"
-        page.replace_html "search_results", :partial => 'search', :object => @species
-      else
-        if @species.empty?
-          page.replace_html "#{params[:cont]}_specie_id", "<option value=''>There are no species that match your query.</option>"
-        else
-          page.replace_html "#{params[:cont]}_specie_id", options_from_collection_for_select(@species, :id, :select_default)
-        end
-      end
-      if params[:symbol].length > 3
-        page.replace_html "results", "<h3>Search results for #{sanitize(@query)}</h3>"
-      else
-        page.replace_html "results", "<h3>Search must be longer then 3 characters</h3>"
-      end
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
-
-#    render :partial => 'species/species_search'
   end
 
 
