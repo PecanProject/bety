@@ -3,7 +3,7 @@ version: "3"
 services:
   # BETY rails frontend to the database
   bety:
-    image: pecan/bety:unicorn
+    image: pecan/bety:${BRANCH:-latest}
     networks:
       - bety
     ports:
@@ -14,12 +14,6 @@ services:
     depends_on:
       - postgres
     restart: unless-stopped
-    deploy:
-      mode: replicated
-      restart_policy:
-        condition: any
-      placement:
-        constraints: [node.role == manager]
 
   # postgresql + postgis to hold all the data
   postgres:
@@ -31,12 +25,6 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     restart: unless-stopped
-    deploy:
-      mode: replicated
-      restart_policy:
-        condition: any
-      placement:
-        constraints: [node.role == worker]
 
 networks:
   bety:
