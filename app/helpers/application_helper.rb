@@ -127,7 +127,7 @@ def commit_is_tagged?
 end
 
 def commit_tags
-  e = ENV['BETY_GIT_TAGS']
+  e = ENV['BETY_GIT_TAGS'].dup
   ref_names = e.nil? || e.empty? ? `git log --pretty=format:"%d" -1` : e
   if /tag/.match(ref_names).nil?
     return ""
