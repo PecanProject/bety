@@ -6,6 +6,12 @@ section for the next release.
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
 
+## [5.0.4] - 2018-10-11
+
+### Fixes
+
+- #600 : Error when starting BETY as docker container due to frozen variable.
+
 ## [5.0.3] - 2018-09-28
 
 ### Fixes
