@@ -128,7 +128,7 @@ end
 
 def commit_tags
   e = ENV['BETY_GIT_TAGS']
-  ref_names = e.nil? || e.empty? ? `git log --pretty=format:"%d" -1` : e
+  ref_names = e.nil? || e.empty? ? `git log --pretty=format:"%d" -1` : e.dup
   if /tag/.match(ref_names).nil?
     return ""
   end
