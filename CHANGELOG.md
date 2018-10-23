@@ -6,6 +6,12 @@ section for the next release.
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
 
+## [5.0.5] - 2018-10-23
+
+### Fixes
+
+- #603 : Restores Rails route to make method completion work in Bulk Upload Wizard
+
 ## [5.0.4] - 2018-10-11
 
 ### Fixes
