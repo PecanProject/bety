@@ -1,69 +1,67 @@
 {
-	"metadata": {
-		"access_right": "open",
-		"creators": [{
-				"affiliation": "University of Illinois",
-				"name": "Scott Rohde"
-			},
-			{
-				"name": "Carl Crott"
-			},
-			{
-				"affiliation": "University of Illinois",
-				"name": "David LeBauer"
-			},
-			{
-				"name": "Patrick Mulrooney"
-			},
-			{
-				"affiliation": "National Center for Supercomputing Applications",
-				"name": "Rob Kooper"
-			},
-			{
-				"name": "Jeremy Kemball"
-			},
-			{
-				"name": "Jimmy Chen"
-			},
-			{
-				"name": "Andrew Shirk"
-			},
-			{
-				"name": "Zhengqi Yang"
-			},
-			{
-				"affiliation": "National Center for Supercomputing Applications",
-				"name": "Max Burnette"
-			},
-			{
-				"name": "Haotian Jiang"
-			},
-			{
-				"name": "Yilin Dong"
-			},
-			{
-				"name": "Uday Saraf"
-			},
-			{
-				"affiliation": "Boston University",
-				"name": "Michael Dietze"
-			},
-			{
-				"name": "Chris Black"
-			}
-		],
-		"language": "eng",
-		"license": {
-			"id": "NCSA"
+	"access_right": "open",
+	"creators": [{
+			"affiliation": "University of Illinois",
+			"name": "Scott Rohde"
 		},
-		"references": [
-			"LeBauer, D., Kooper, R., Mulrooney, P., Rohde, S., Wang, D., Long, S. P., & Dietze, M. C. (2018). BETYdb: a yield, trait, and ecosystem service database applied to second\u2010generation bioenergy feedstock production. GCB Bioenergy, 10(1), 61-71",
-			"LeBauer, David, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney, Gareth Scott Rohde, Dan Wang (2010). Biofuel Ecophysiological Traits and Yields Database (BETYdb), Energy Biosciences Institute, University of Illinois at Urbana-Champaign. doi:10.13012/J8H41PB9"
-		],
-		"notes": "Development of BETYdb is supported by the National Science Foundation (ABI #1062547, ABI #1458021),  the Department of Energy (ARPA-E awards #DE-AR0000594 and DE-AR0000598), and the Energy Biosciences Institute.",
-		"resource_type": {
-			"title": "Software",
-			"type": "software"
+		{
+			"name": "Carl Crott"
+		},
+		{
+			"affiliation": "University of Illinois",
+			"name": "David LeBauer"
+		},
+		{
+			"name": "Patrick Mulrooney"
+		},
+		{
+			"affiliation": "National Center for Supercomputing Applications",
+			"name": "Rob Kooper"
+		},
+		{
+			"name": "Jeremy Kemball"
+		},
+		{
+			"name": "Jimmy Chen"
+		},
+		{
+			"name": "Andrew Shirk"
+		},
+		{
+			"name": "Zhengqi Yang"
+		},
+		{
+			"affiliation": "National Center for Supercomputing Applications",
+			"name": "Max Burnette"
+		},
+		{
+			"name": "Haotian Jiang"
+		},
+		{
+			"name": "Yilin Dong"
+		},
+		{
+			"name": "Uday Saraf"
+		},
+		{
+			"affiliation": "Boston University",
+			"name": "Michael Dietze"
+		},
+		{
+			"name": "Chris Black"
 		}
+	],
+	"language": "eng",
+	"license": {
+		"id": "NCSA"
+	},
+	"references": [
+		"LeBauer, D., Kooper, R., Mulrooney, P., Rohde, S., Wang, D., Long, S. P., & Dietze, M. C. (2018). BETYdb: a yield, trait, and ecosystem service database applied to second\u2010generation bioenergy feedstock production. GCB Bioenergy, 10(1), 61-71",
+		"LeBauer, David, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney, Gareth Scott Rohde, Dan Wang (2010). Biofuel Ecophysiological Traits and Yields Database (BETYdb), Energy Biosciences Institute, University of Illinois at Urbana-Champaign. doi:10.13012/J8H41PB9"
+	],
+	"notes": "Development of BETYdb is supported by the National Science Foundation (ABI #1062547, ABI #1458021),  the Department of Energy (ARPA-E awards #DE-AR0000594 and DE-AR0000598), and the Energy Biosciences Institute.",
+	"resource_type": {
+		"title": "Software",
+		"type": "software"
 	}
 }
