@@ -1,3 +1,4 @@
+# coding: utf-8
 module ApiAuthenticationSystem
   include AuthenticatedSystem
 
@@ -28,13 +29,15 @@ module ApiAuthenticationSystem
   def login_from_api_key
     key = params[:key]
     if key.nil?
-      u = User.find_by_login('guestuser')
+      u = User.find_by_login('guestuserx')
+      if u.nil?
+        @errors = "For key-less access to the API, you must set up the guest user account."
+      end
     else
-      u = User.find_by_apikey(params[:key]) || User.find_by_login('guestuser')
-    end
-
-    if u.nil?
-      @errors = "You must either use a valid API key or set up the guest user account."
+      u = User.find_by_apikey(params[:key])
+      if u.nil?
+        @errors = "Invalid API key.  To access the API as a guest user, omit the “key” parameter."
+      end
     end
 
     return u
