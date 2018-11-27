@@ -17,6 +17,8 @@ Rails.application.config.assets.precompile += %w(
   lazy/feedback.js
   lazy/autocomplete.js
   lazy/bulk_upload.js
+
+  mylibs/maps.js
  )
 
 Rails.application.config.assets.paths <<
