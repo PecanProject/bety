@@ -29,12 +29,12 @@ module ApiAuthenticationSystem
   def login_from_api_key
     key = params[:key]
     if key.nil?
-      u = User.find_by_login('guestuserx')
+      u = User.find_by_login('guestuser')
       if u.nil?
         @errors = "For key-less access to the API, you must set up the guest user account."
       end
     else
-      u = User.find_by_apikey(params[:key])
+      u = User.find_by_apikey(key)
       if u.nil?
         @errors = "Invalid API key.  To access the API as a guest user, omit the “key” parameter."
       end
