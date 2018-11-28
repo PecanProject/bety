@@ -1242,8 +1242,12 @@ class BulkUploadDataSet
           t.site_id = row['site_id']
 
           # Modify each Trait class instance so that date strings are
-          # interpreted as being in the time zone of the trait site
-          # (or UTC, if the trait site time_zone column is null)
+          # interpreted as being in the time zone of the trait site (or UTC, if
+          # the trait site time_zone column is null).  Note that in the Bulk
+          # Upload Wizard, the validation step will prevent reaching this code
+          # if a site without time zone is in the data file.  But nothing
+          # prevents a site without time zone from being specified
+          # interactively.
           class <<t
             def date=(value)
               date = Time.use_zone(Site.find(site_id).time_zone || 'UTC') do
@@ -1971,8 +1975,8 @@ class BulkUploadDataSet
       # dates are assumed always to be accurate to the day:
       csv_row_as_hash["dateloc"] = 5
 
-      # bulk upload doesn't handles "date only" dates and dates with time to the
-      # second; determine which:
+      # bulk upload handles "date only" dates and dates with time to the
+      # second and no other cases; determine which:
       if csv_row_as_hash["date"].length == 19
         csv_row_as_hash["timeloc"] = 1
       elsif csv_row_as_hash["date"].length == 10
