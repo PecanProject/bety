@@ -32,7 +32,7 @@ class CovariatesController < ApplicationController
     @covariate = Covariate.find(params[:id])
 
     if @covariate.trait.nil?
-      flash[:error] = 'This covariated is not associated with a trait!  Consider removing it.'
+      flash[:error] = 'This covariate is not associated with a trait!  Consider removing it.'
     end
 
     respond_to do |format|
