@@ -15,7 +15,7 @@ class CreateAttributesTable < ActiveRecord::Migration[5.1]
     reversible do |dir|
       dir.up do
         execute %{
-          SELECT setval('attributes_id_seq', GREATEST(1, 1 + CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+          SELECT setval('attributes_id_seq', 1 + CAST(1e9 * #{this_hostid}::int AS bigint), FALSE);
           ALTER TABLE "attributes"
             ALTER COLUMN created_at SET DEFAULT utc_now(),
             ALTER COLUMN updated_at SET DEFAULT utc_now(),
