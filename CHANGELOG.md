@@ -10,6 +10,7 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 ### Added
 
 - #505 : Added a new attributes table. This table allows to store through polymorphism any additional information with any row in any table. The value stored is a json document.
+- #597 : Moved `dump.bety.sh` and `load.bety.sh` from PEcAn to BETY.
 
 ## [5.0.4] - 2018-10-11
 
