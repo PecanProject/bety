@@ -12,6 +12,12 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 - #505 : Added a new attributes table. This table allows to store through polymorphism any additional information with any row in any table. The value stored is a json document.
 - #597 : Moved `dump.bety.sh` and `load.bety.sh` from PEcAn to BETY.
 
+## [5.0.5] - 2018-10-23
+
+### Fixes
+
+- #603 : Restores Rails route to make method completion work in Bulk Upload Wizard
+
 ## [5.0.4] - 2018-10-11
 
 ### Fixes

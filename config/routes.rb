@@ -57,7 +57,7 @@ Rails.application.routes.draw do
   #   end
 
   # routes for autocompletion actions used by the bulk upload wizard:
-  %w{citations cultivars sites species treatments}.each do |controller|
+  %w{citations cultivars methods sites species treatments}.each do |controller|
     get "#{controller}/bu_autocomplete", controller: controller
   end
 
