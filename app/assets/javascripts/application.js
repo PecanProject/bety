@@ -17,5 +17,8 @@
 // defines showHide
 //= require min
 
+// enables close button in "alert" divs:
+//= require script
+
 //= require lazy/simple_search
 //= require lazy/application
