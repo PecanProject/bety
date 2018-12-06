@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "5.1.5"
+gem "rails", "~> 5.1"
 # needed for rails 3.1 and above until we phase out prototype:
 ## gem 'prototype-rails', github: 'rails/prototype-rails', branch: '4.2' # see https://github.com/rails/prototype-rails/issues/37
 gem "nokogiri"
@@ -22,7 +22,7 @@ gem 'rails3-restful-authentication', '~> 3.0.1'
 gem 'dynamic_form'
 gem 'rabl'
 gem 'yajl-ruby', '~> 1.3.1'
-gem 'rubyzip', '~> 1.2.1'
+gem 'rubyzip', '>= 1.2.2'
 gem 'activerecord-session_store' # no longer part of Rails proper
 gem 'protected_attributes_continued' # Use this until and unless we start using Strong Parameters.
 gem 'sass-rails'
@@ -103,4 +103,3 @@ gem "apipie-rails", "0.5.6"
 # apipie-rails and prototype-rails, it interferes with routing specs, so we are
 # commenting it out for now.
 ## gem "test-unit"
-
