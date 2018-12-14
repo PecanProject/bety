@@ -36,7 +36,7 @@ PG_OPT=${PG_OPT:-""}
 #  5 - Wisconsin             - Ankur Desai
 #  6 - TERRA REF             - David LeBauer
 #  7 - TERRA test            - David LeBauer
-#  8 - TERRA MEPP            - David LeBauer
+#  8 - TERRA MEPP            - David Slater
 #  9 - University of Arizona - David LeBauer
 # 10 - Ghent                 - 
 # 99 - VM
