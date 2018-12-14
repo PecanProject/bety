@@ -66,6 +66,7 @@ group :test do
   gem "capybara", "~> 2.8"
   gem "database_cleaner"
   gem "rails-controller-testing" # TO-DO: rewrite the specs that rely on this
+  gem "factory_girl_rails", "~> 4.0"
 end
 
 # If you have difficulty installing or don't wish to install capybara-webkit,

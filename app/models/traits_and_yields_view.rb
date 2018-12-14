@@ -14,6 +14,10 @@ class TraitsAndYieldsView < ActiveRecord::Base
 #  attr_accessor :current_user
   self.table_name = 'traits_and_yields_view'
 
+
+  #--
+  ### Module Usage ###
+
   include ActiveModel::Serialization
 
   extend CoordinateSearch # provides coordinate_search
@@ -28,6 +32,10 @@ class TraitsAndYieldsView < ActiveRecord::Base
                       trait_description method_name city sitename author
                       citation_year cultivar entity }
 
+
+  #--
+  ### Scopes ###
+
   scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).order("id asc").references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(advanced_search(search)) }
   scope :checked, lambda { |checked_minimum| where("checked >= #{checked_minimum}") }
@@ -36,6 +44,12 @@ class TraitsAndYieldsView < ActiveRecord::Base
 
   # make NumberHelper available to use inside comma block:
   extend ActionView::Helpers::NumberHelper
+
+
+
+
+  #--
+  ### CSV Format ###
 
   comma do
     checked 'checked' do |num|
@@ -65,6 +79,7 @@ class TraitsAndYieldsView < ActiveRecord::Base
     author 'author'
     citation_year 'citation_year'
     treatment 'treatment'
+    pretty_date 'date'
     date 'date'
     time 'time'
     month 'month'
@@ -85,13 +100,31 @@ class TraitsAndYieldsView < ActiveRecord::Base
     stat 'stat' do |num|
       if num.nil? then
         "[missing]"
-      else 
+      else
         TraitsAndYieldsView.number_with_precision(num, precision: 3)#, significant: true)
-      end 
+      end
     end
     notes 'notes'
     entity 'entity'
     method_name 'method'
   end
+
+
+
+  #--
+  ### Presentation Methods ###
+
+  def pretty_date
+    if raw_date.nil?
+      '[unspecified]'
+    elsif result_type =~ /traits/
+      date_in_site_timezone.to_formatted_s(date_format) + " (#{site_timezone})"
+    else # for yields, don't mess with time zones
+      raw_date.to_time.to_formatted_s(date_format)
+    end
+  end
+
+  # provides date_in_site_timezone, date_format, and site_timezone
+  include DateTimeUtilityMethods
 
 end

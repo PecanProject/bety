@@ -33,14 +33,14 @@ feature 'Traits index works' do
     end
 
     it 'should allow creation of new traits', js:true do
-     # Create Citation association
-     visit '/citations'
-     first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
-     expect(page).to have_content 'Sites already associated with this citation'
+      # Create Citation association
+      visit '/citations'
+      first(:xpath,".//a[@alt='use' and contains(@href,'/use_citation/')]").click
+      expect(page).to have_content 'Sites already associated with this citation'
 
 
-     # Verify the trait creation
-     visit '/traits/new'
+      # Verify the trait creation
+      visit '/traits/new'
 
       expect(page).to have_content 'New Trait'
 
@@ -50,6 +50,7 @@ feature 'Traits index works' do
       fill_in 'trait_stat', :with => '7.76'
       fill_in 'trait_n', :with => '3'
       fill_in 'trait_notes', :with => 'Research Interwebs Papers Research Interwebs PapersResearch Interwebs PapersResearch Interwebs Papers' 
+      select('1: Aliartos, Greece - Aliartos, Greece', :from => 'trait[site_id]')
 
       click_button 'Create'
 

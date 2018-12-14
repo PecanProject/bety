@@ -34,15 +34,21 @@
         
         <div class="row">
           <div class="six columns alpha">
-            <%= f.label :date %>
-            <%= f.date_select :date,:defualt => nil, :order=> [:day, :month, :year], :add_month_numbers=> true, :include_blank=> true, :start_year=> 1800, :end_year=> Time.now.year %>
+            <fieldset>
+              <legend>Date</legend>
+              <%= f.select :d_year, (1800..Time.now.year).to_a, include_blank: true %>
+              <%= f.select :d_month, Trait::Seasons + Trait::Months.to_a, include_blank: true %>
+              <%= f.select :d_day, Trait::Days.to_a, include_blank: true %>
+            </fieldset>
           </div>
           <div class="two columns">
             <b>... OR ...</b>
           </div>
           <div class="eight columns omega">
-            <%= f.label "julian day (1-365)/year" %>
-            <%= text_field_tag "julianday" %> / <%= text_field_tag "julianyear" %>
+            <fieldset>
+              <legend>Julian Day (1&ndash;366) / Year</legend>
+              <%= f.text_field :julianday %> / <%= f.text_field :julianyear %>
+            </fieldset>
           </div>
         </div>
 
@@ -73,9 +79,6 @@
           <div class="eight columns alpha">
             <%= f.label :cultivar_id %>
             <%= f.select :cultivar_id, Cultivar.joins(:specie).order('species.scientificname').collect { |p| [ p.select_default, p.id ] }, { :include_blank => true}, :class => "input-full" %>
-            <br />
-            <%= f.label :dateloc, "Date Level of Confidence" %>
-            <%= f.select :dateloc, options_for_select($dateloc_drop.sort, f.object.dateloc || $dateloc_drop_default), :class => "input-full" %>
             <br />
             <%= f.label :access_level %>
             <%= f.select :access_level, ApplicationHelper::DATA_ACCESS_LEVELS, :class => "input-full" %>

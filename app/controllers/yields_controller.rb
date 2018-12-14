@@ -132,11 +132,7 @@ class YieldsController < ApplicationController
   # POST /yields.xml
   def create
 
-    set_default_date_fields(params)
-
     @yield = Yield.new(params[:yield])
-
-    maybe_set_from_julian_date(params)
 
     @yield.user_id = current_user.id
 
@@ -163,11 +159,7 @@ class YieldsController < ApplicationController
   def update
     @yield = Yield.all_limited(current_user).find(params[:id])
 
-    set_default_date_fields(params)
-
-    @yield.update_attributes(params[:yield])
-
-    maybe_set_from_julian_date(params)
+    @yield.assign_attributes(params[:yield])
 
     if params['assign_creator']
       @yield.user_id = current_user.id
@@ -202,41 +194,6 @@ class YieldsController < ApplicationController
       format.xml  { head :ok }
       format.csv  { head :ok }
     end
-  end
-
-  private
-
-  # If any piece of the date was given in the parameters, set any other pieces
-  # that may have been missing to default values.
-  def set_default_date_fields(params)
-    # If at least on of the date fields is non-blank, assign defaults to the others if they are blank:
-    if !(params[:yield]['date(1i)'].blank? and params[:yield]['date(2i)'].blank? and params[:yield]['date(3i)'].blank?)
-
-      # Default the empty fields.  In Rails 3.2, it seems we must do this explicitly.
-      params[:yield]['date(1i)'] = "9999" if params[:yield]['date(1i)'].blank? # year default
-      params[:yield]['date(2i)'] = "1"if params[:yield]['date(2i)'].blank? # month default
-      params[:yield]['date(3i)'] = "1"if params[:yield]['date(3i)'].blank? # day default
-
-    end
-  end
-
-  # If either parameter julianyear or julianday was set, update the yield date
-  # using these parameter values.
-  def maybe_set_from_julian_date(params)
-
-    # They can also enter the date in julian format, so if they do, overwrite
-    # the other date field:
-    if  !(params[:julianyear].blank? and params[:julianday].blank?)
-      params[:julianyear] = "9999" if params[:julianyear].blank? # year default
-      params[:julianday] = "1" if params[:julianday].blank? # day default
-
-      begin
-        @yield.date = Date.ordinal(params[:julianyear].to_f, params[:julianday].to_f)
-      rescue
-        flash[:error] = "Invalid values in Julian date fields were ignored"
-      end
-    end
-
   end
 
 end
