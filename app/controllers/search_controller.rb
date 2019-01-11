@@ -155,7 +155,7 @@ class SearchController < ApplicationController
         end
 
         str = header + @results.to_comma
-        send_data str, type: Mime::CSV,
+        send_data str, type: :csv,
         disposition: "attachment; filename=search_results.csv"
       end
       format.json  { render :json => @results }
