@@ -32,6 +32,11 @@ class DBFile < ActiveRecord::Base
     self[:created_user_id] = user_id
     self[:updated_user_id] = user_id
     if upload # Uploaded file
+      # check to see it is a valid filename
+      if upload.original_filename.match(/^[a-zA-Z0-9._\-]+$/).nil?
+        raise("Invalid filename \"#{upload.original_filename}\"")
+      end
+
       self[:file_name] =  upload.original_filename
       self[:md5] = Digest::MD5.file(upload.path).hexdigest
 

@@ -5,6 +5,11 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
+## Unreleased
+
+### Fixes
+
+- A fix for a critical vulnerability reported by Danny Rosseau at Carve Systems (www.carvesystems.com).
 
 ## [5.0.5] - 2018-10-23
 
