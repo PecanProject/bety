@@ -18,6 +18,7 @@
     <dd><%= @covariate.stat %></dd>
     <dt>Statname:</dt>
     <dd><%= @covariate.statname %></dd>
+    <% if @covariate.trait %>
     <dt>Associated Trait:</dt>
     <dd>
       <%= link_to_if @covariate.trait, @covariate.trait, @covariate.trait %>
@@ -32,6 +33,7 @@
     <dd><%= link_to_if @covariate.trait.specie, @covariate.trait.specie, @covariate.trait.specie %></dd>
     <dt>Citation:</dt>
     <dd><%= link_to_if @covariate.trait.citation, @covariate.trait.citation, @covariate.trait.citation %></dd>
+    <% end %>
   </dl>
 
 
