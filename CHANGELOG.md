@@ -14,6 +14,7 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 - #621 : A fix for a critical vulnerability reported by Danny Rosseau at Carve Systems (www.carvesystems.com).
 - #596 : Crop Model Maps links are broken
 - #605 : Allow for keyless API access (using guestuser access)
+- #618 : Can not download results of search as csv
 
 ## [5.0.5] - 2018-10-23
 
