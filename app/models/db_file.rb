@@ -34,7 +34,7 @@ class DBFile < ActiveRecord::Base
     if upload # Uploaded file
       # check to see it is a valid filename
       if upload.original_filename.match(/^[a-zA-Z0-9._\-]+$/).nil?
-        raise("Invalid filename \"#{upload.original_filename}\"")
+        raise("Invalid filename \"#{upload.original_filename}\"; filenames can only contain letters, numbers, periods and dashes.")
       end
 
       self[:file_name] =  upload.original_filename
