@@ -5,7 +5,7 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
-## Unreleased
+## [5.1.0] - 2019-01-14
 
 ### Fixes
 
