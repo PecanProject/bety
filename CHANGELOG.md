@@ -5,6 +5,12 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
+## Unreleased
+
+### Fixes
+
+- #551 : remove GUnload message from console on page change.
+
 ## [5.1.0] - 2019-01-14
 
 ### Fixes
