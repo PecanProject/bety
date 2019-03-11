@@ -6,18 +6,18 @@ case $1 in
         echo "Create new database, initialized from all data."
         psql -h postgres -p 5432 -U postgres -c "CREATE ROLE bety WITH LOGIN CREATEDB NOSUPERUSER NOCREATEROLE PASSWORD 'bety'"
         psql -h postgres -p 5432 -U postgres -c "CREATE DATABASE bety WITH OWNER bety"
-        ./load.bety.sh -a "postgres" -d "bety" -p "-h postgres -p 5432" -o bety -c -u -g -m ${LOCAL_SERVER} -r 0 -w https://ebi-forecast.igb.illinois.edu/pecan/dump/all/bety.tar.gz
+        ./script/load.bety.sh -a "postgres" -d "bety" -p "-h postgres -p 5432" -o bety -c -u -g -m ${LOCAL_SERVER} -r 0 -w https://ebi-forecast.igb.illinois.edu/pecan/dump/all/bety.tar.gz
         ;;
     "sync" )
         echo "Synchronize with servers ${REMOTE_SERVERS}"
         for r in ${REMOTE_SERVERS}; do
             echo "Synchronizing with server ${r}"
-            ./load.bety.sh -a "postgres" -d "bety" -p "-h postgres -p 5432" -o bety -r ${r}
+            ./script/load.bety.sh -a "postgres" -d "bety" -p "-h postgres -p 5432" -o bety -r ${r}
         done
         ;;
     "dump" )
         echo "Dump data from server ${LOCAL_SERVER}"
-        ./dump.bety.sh -d "bety" -p "-h postgres -p 5432 -U postgres" -m ${LOCAL_SERVER} -o dump
+        ./script/dump.bety.sh -d "bety" -p "-h postgres -p 5432 -U postgres" -m ${LOCAL_SERVER} -o dump
         ;;
     "migrate" )
         echo "Migrate database."

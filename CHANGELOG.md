@@ -5,11 +5,13 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
-## Unreleased
+## [Unreleased]
 
-### Fixes
+### Added
 
 - #551 : remove GUnload message from console on page change.
+- #505 : Added a new attributes table. This table allows to store through polymorphism any additional information with any row in any table. The value stored is a json document.
+- #597 : Moved `dump.bety.sh` and `load.bety.sh` from PEcAn to BETY.
 
 ## [5.1.0] - 2019-01-14
 
