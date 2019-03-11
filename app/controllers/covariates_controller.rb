@@ -31,6 +31,10 @@ class CovariatesController < ApplicationController
   def show
     @covariate = Covariate.find(params[:id])
 
+    if @covariate.trait.nil?
+      flash[:error] = 'This covariate is not associated with a trait!  Consider removing it.'
+    end
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @covariate }

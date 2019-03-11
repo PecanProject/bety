@@ -19,7 +19,6 @@ public/maps/*
 config/initializers/site_keys.rb
 .Rproj.user
 public/assets
-script/load.bety.sh
 
 # Ignore encrypted secrets key file.
 config/secrets.yml.key
