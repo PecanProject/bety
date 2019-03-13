@@ -44,7 +44,7 @@ while getopts c:d:hi:p:qst: opt; do
     DATABASE=$OPTARG
     ;;
   h)
-    echo "$0 [-c datalog] [-d database] [-h] [-i table names] [-p psql options] [-q] [-s] [-t tablename]"
+    echo "$0 [-c catalog] [-d database] [-h] [-i table names] [-p psql options] [-q] [-s] [-t tablename]"
     echo " -c catalog, database catalog name used to search for tables, default is bety"
     echo " -d database, default is bety"
     echo " -h this help page"
@@ -56,7 +56,7 @@ while getopts c:d:hi:p:qst: opt; do
     exit 0
     ;;
   i)
-    # We add spaces to assist in exact table name maching
+    # We add spaces to assist in exact table name matching
     IGNORETABLES=" ${OPTARG} "
     ;;
   p)
