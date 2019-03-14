@@ -29,11 +29,8 @@ COPY / /home/bety
 COPY /docker/database.yml /home/bety/config/database.yml
 COPY /docker/config.ru /home/bety/config.ru
 
-# download dump.bety and load.bety scripts and configure app
-RUN curl -LOs https://raw.githubusercontent.com/PecanProject/pecan/master/scripts/load.bety.sh \
-    && curl -LOs https://raw.githubusercontent.com/PecanProject/pecan/master/scripts/dump.bety.sh \
-    && chmod +x load.bety.sh dump.bety.sh \
-    && /bin/sed -e '/serve_static_assets/ s/false$/true/' -i config/environments/production.rb
+# configure app
+RUN /bin/sed -e '/serve_static_assets/ s/false$/true/' -i config/environments/production.rb
 
 # arguments that are added at the bottom of BETY
 ARG BETY_GIT_TAGS="unknown"
@@ -44,6 +41,8 @@ ARG BETY_GIT_DATE="unknown"
 # environment variables used
 ENV LOCAL_SERVER=99 \
     REMOTE_SERVERS="0 1 2 5" \
+    INITIALIZE_FLAGS="-g -u" \
+    INITIALIZE_URL="-w https://ebi-forecast.igb.illinois.edu/pecan/dump/all/bety.tar.gz" \
     RAILS_ENV="production" \
     RAILS_RELATIVE_URL_ROOT="" \
     SECRET_KEY_BASE="ThisIsNotReallySuchAGreatSecret" \
