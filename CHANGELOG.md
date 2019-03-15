@@ -5,6 +5,10 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
+## [Unreleased]
+
+- #643 : Moved `reindex.bety.sh` and `vacuum.bety.sh` scripts from PEcAn to BETY and provided access through entrypoint. 
+
 ## [5.2.0] - 2019-03-11
 
 ### Added
@@ -12,7 +16,6 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 - Ability to set the initialize URL in docker
 - #505 : Added a new attributes table. This table allows to store through polymorphism any additional information with any row in any table. The value stored is a json document.
 - #597 : Moved `dump.bety.sh` and `load.bety.sh` from PEcAn to BETY.
-- #643 : Moved `reindex.bety.sh` and `vacuum.bety.sh` scripts from PEcAn to BETY and provided access through entrypoint. 
 
 ## [5.1.0] - 2019-01-14
 
