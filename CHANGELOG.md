@@ -5,6 +5,10 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
+## [Unreleased]
+
+- #643 : Moved `reindex.bety.sh` and `vacuum.bety.sh` scripts from PEcAn to BETY and provided access through entrypoint. 
+
 ## [5.2.0] - 2019-03-11
 
 ### Added
