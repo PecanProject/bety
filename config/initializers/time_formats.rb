@@ -1,6 +1,6 @@
 module DateTimeConstants
-  Seasons = ['Season: MAN', 'Season: JJA', 'Season: SON', 'Season: DJF']
-  SeasonRepresentativeMonths = { 'Season: MAN' => 4, 'Season: JJA' => 7, 'Season: SON' => 10, 'Season: DJF' => 1 }
+  Seasons = ['Season: MAM', 'Season: JJA', 'Season: SON', 'Season: DJF']
+  SeasonRepresentativeMonths = { 'Season: MAM' => 4, 'Season: JJA' => 7, 'Season: SON' => 10, 'Season: DJF' => 1 }
   TimesOfDay = ['morning', 'mid-day', 'afternoon', 'night']
   TimesOfDayRepresentativeHours = { 'morning' => 9, 'mid-day' => 12, 'afternoon' => 15, 'night' => 0 }
 
