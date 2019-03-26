@@ -3,7 +3,10 @@ object @row => (@row.class.name == "Specie" ? :species : @row) # correct the obj
 if !root_object.nil?
 
   # Show all columns for this model
-  attributes *root_object.class.column_names.map(&:to_sym)
+  attributes *root_object.class.column_names.map(&:to_sym) +
+    (root_object.instance_of?(Trait) ? ['pretty_date', 'pretty_time']
+                                     : (root_object.instance_of?(Yield) ? ['pretty_date']
+                                                                        : []))
 
 
   # Now show information for associations

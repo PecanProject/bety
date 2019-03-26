@@ -168,6 +168,7 @@ Rails.application.routes.draw do
       get :linked
       get :rem_citations_sites
       get :add_citations_sites
+      get :get_timezone
     end
   end
 

@@ -9,6 +9,37 @@
     };
   </script>
   <%= javascript_include_tag 'lazy/autocomplete.js' %>
+  <script>
+    <% # Code for automatically adjusting timezone information when the trait site is changed. %>
+    <% # TO-DO: Factor this out into a .js file. %>
+    function update_timezone() {
+        tz = jQuery.ajax({
+            url: "<%= url_for( controller: "sites", action: "get_timezone") %>",
+            data: { id: this.value },
+            dataType: "text"
+        }).success(function (tz) {
+            if (tz.match("^UTC$")) {
+                jQuery('#time_label_descriptor').html("at site")
+                jQuery('#timezone').html("(no site selected)")
+            }
+            else if (tz.match("^UTC")) {
+                <% # A site was selected but no time zone information was stored for it. %>
+                jQuery('#time_label_descriptor').html("(UTC)")
+                jQuery('#timezone').html(tz)
+            }
+            else {
+                jQuery('#time_label_descriptor').html("at site")
+                jQuery('#timezone').html(tz)
+            }
+        });
+
+    };
+
+    jQuery(function () {
+        jQuery('#trait_site_id').on('change', update_timezone);
+    });
+  </script>
+
 <% end %>
 <div class="content">
   <div class="container " style="margin-left:100px; width:1260px">
@@ -64,35 +95,35 @@
               </div>
 
               <div class="row">
-                <div class="four columns alpha">
+                <div class="eight columns alpha">
                   <fieldset>
                     <legend>Date</legend>
-                    <%= f.select :date_year, [''] + (1800..Time.now.year).to_a %>
-                    <%= f.select :date_month, [''] + (1..12).to_a %>
-                    <%= f.select :date_day, [''] + (1..31).to_a %>
+                    <%= f.select :d_year, (1800..Time.now.year).to_a, include_blank: true %>
+                    <%= f.select :d_month, Trait::Seasons + Trait::Months.to_a, include_blank: true %>
+                    <%= f.select :d_day, Trait::Days.to_a, include_blank: true %>
                   </fieldset>
                 </div>
                 <div class="four columns">
-                  <%= f.label :dateloc, "Date Level of Confidence" %>
-                  <%= f.select :dateloc, options_for_select($dateloc_drop.sort, f.object.dateloc || $dateloc_drop_default) %>
-                </div>
-                <div class="four columns">
                   <fieldset>
-                    <legend>Time</legend>
-                    <%= f.select :time_hour, [''] + (0..23).to_a %>
-                    <%= f.select :time_minute, [''] + (0..59).to_a %>
+                    <legend>Time <span class="inherit" id="time_label_descriptor"><%= @trait.site.nil? || !@trait.site.time_zone.blank? ? "at site" : "(UTC)" %></span></legend>
+                    <%= f.select :t_hour, Trait::TimesOfDay + Trait::Hours.to_a.collect { |i| '%02i' % i }, include_blank: true %>
+                    <%= f.select :t_minute, Trait::Minutes.to_a.collect { |i| '%02i' % i }, include_blank: true %>
                   </fieldset>
                 </div>
                 <div class="four columns omega">
-                  <%= f.label :timeloc, "Time Level of Confidence" %>
-                  <%= f.select :timeloc, options_for_select($timeloc_drop.sort, f.object.timeloc || $timeloc_drop_default),{},:class => "input-full" %>
+                  <fieldset>
+                    <legend>Time Zone</legend>
+                    <span id="timezone"><%= @trait.site.nil?             ? "(no site selected)"
+                                          : @trait.site.time_zone.blank? ? "UTC - site time zone unknown"
+                                          :                                 @trait.site.time_zone          %></span>
+                  </fieldset>
                 </div>
               </div>
 
               <div class="row">
                 <div class="eight columns alpha">
                   <%= f.label :site_id %>
-                  <%= f.select :site_id, @citation.sites.collect { |p| [ p.select_default, p.id ] }, {}, :class => "input-full" %>
+                  <%= f.select :site_id, @citation.sites.collect { |p| [ p.select_default, p.id ] }, {include_blank: true}, :class => "input-full" %>
                 </div>
                 <div class="eight columns omega">
                   <%= f.label :treatment_id %>
