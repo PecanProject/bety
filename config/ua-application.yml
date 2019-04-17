@@ -1,0 +1,88 @@
+# To use this file for a University of Arizona BETYDb Web site:
+# 1. Copy this file to config/application.yml
+# 2. Replace the dummy value of rest_auth_site_key with the key appropriate to your site
+# 3. Make any other tweaks you deem appropriate
+# 4. Save the file and restart your BETYdb server
+
+# Contact Information
+admin_phone: "(520) 621-4381"
+admin_email: "dlebauer@email.arizona.edu"
+
+# Override this with a secret key to run a secure site:
+rest_auth_site_key: 'your site's secret key'
+
+schema_spy_settings:
+    java_executable: /usr/java/jre1.8.0_91/bin/java
+    postgresql_driver_jar_file: lib/tasks/jar/postgresql-9.4.1208.jre7.jar
+    settings_for_customized_documentation:
+        schema_spy_jar_file: lib/tasks/jar/schemaSpy.jar
+        output_directory: .
+        remove_root_dir_files: true
+
+organization:
+  name: "University of Arizona"
+  url: #{root_path}
+  logo_file: "ua-logo.png"
+
+site_identification_markup: "<strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small>"
+
+# Footer
+
+footer_background_image_file: "setaria.jpg"
+
+citation_license_copyright_markup:
+
+  '<p>LeBauer, David, Rob Kooper, Patrick Mulrooney, Scott Rohde, Dan Wang, 
+  Stephen Long, Michael Dietze, (2017). BETYdb: A yield, trait, and ecosystem 
+  service database applied to second‐generation bioenergy feedstock production.
+  GCB Bioenergy. doi:10.1111/gcbb.12420</p>
+
+  <p>All public data in BETYdb is made available under the <a
+  href="http://opendatacommons.org/licenses/by/1-0/">Open Data Commons
+  Attribution License (ODC-By) v1.0.</a> You are free to share, create, and
+  adapt its contents.  Data with an access_level field and value &lt;= 2 is not
+  covered by this license but may be available for use with consent.</p>
+
+  <p>Copyright © 2018-2019 University of Arizona</p>'
+
+sponsors:
+    - URL: https://www.arizona.edu/
+      title: "University of Arizona"
+      text: "University of Arizona"
+      logo_file: custom/ua-logo.png
+      width: 162px
+
+# Home Page
+
+homepage_heading: "Welcome to University of Arizona-hosted phenotype database"
+
+homepage_body:
+
+  lead_text:
+
+    The emerging biofuel industry may aid in reducing greenhouse gas emissions and
+    decreasing dependence on foreign oil importation.
+
+  marked_up_block_text:
+
+    How to develop and implement biofuel crops in an ecologically and economically
+    sustainable way requires evaluating the growth and functionality of biofuel
+    crops from the local scale to the regional scale. <strong
+    class="green">BETYdb</strong> has been developed to support research,
+    agriculture, and policy by synthesizing available information on potential
+    biofuel crops.
+
+  photo:
+
+    file: plant.jpg
+
+    alt_text:
+
+      Photo by someone
+
+  search_placeholder_text: "EX: Example plant"
+
+# Miscellaneous
+
+## This affects the home page, the menu, and the footer:
+show_crop_map_links: false
