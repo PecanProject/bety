@@ -114,7 +114,7 @@ GEM
     mustache (1.0.5)
     narray (0.6.0.4)
     nio4r (2.3.0)
-    nokogiri (1.8.2)
+    nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
     passenger (5.3.4)
       rack
