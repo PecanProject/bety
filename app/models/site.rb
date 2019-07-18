@@ -231,7 +231,7 @@ CONDITION
 
   def sitename_state_country
     output = ""
-    
+
     #city = city.chomp if !city.nil?
     if !sitename.blank?
       output += "#{sitename}"
@@ -261,6 +261,17 @@ CONDITION
   def autocomplete_label
     "#{sitename.squish} (#{city.squish}, #{!(state.nil? || state.empty?) ? " #{state.squish}," : ""} #{country.squish})"
   end
+
+  ### Class methods
+
+  def self.soil_classes
+
+    @soil_classes ||= ['clay', 'clay loam', 'loam', 'loamy sand', 'sand',
+                       'sandy clay', 'sandy clay loam', 'sandy loam',
+                       'silt', 'silt loam', 'silty clay', 'silty clay loam',
+                       'peat', 'bedrock', 'other']
+  end
+
 
   private
 

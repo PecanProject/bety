@@ -311,7 +311,7 @@
             <%= f.label :lon %>
             <%= geometry_aware_text_field(f, :lon, { class: "input-full" }) %>
             <%= f.label :soil %>
-            <%= f.select :soil, %w(sandloamy sandsandy loamsilt loamloamsandy clay loamsilty clay loamclay loamsandy claysilty clayclaypeat), { :include_blank => true }, :class => "input-full" %>
+            <%= f.select :soil, Site.soil_classes, { :include_blank => true }, :class => "input-full" %>
             
             <div class="two columns alpha">
               <%= f.label :clay_pct, "% Clay" %>
