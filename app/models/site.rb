@@ -269,7 +269,7 @@ CONDITION
     @soil_classes ||= ['clay', 'clay loam', 'loam', 'loamy sand', 'sand',
                        'sandy clay', 'sandy clay loam', 'sandy loam',
                        'silt', 'silt loam', 'silty clay', 'silty clay loam',
-                       'peat', 'bedrock', 'other']
+                       'peat', 'bedrock', 'other'].freeze
   end
 
 
