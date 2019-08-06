@@ -69,8 +69,10 @@ RSpec.configure do |config|
     Bundler.require('javascript_testing')
     Capybara.javascript_driver = :webkit
 
-    Capybara::Webkit.configure do |config|
-      config.block_unknown_urls
+    if defined?(Capybara::Webkit)
+      Capybara::Webkit.configure do |config|
+        config.block_unknown_urls
+      end
     end
 
     class Binding
