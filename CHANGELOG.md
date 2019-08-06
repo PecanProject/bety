@@ -10,6 +10,7 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 ### Fixes
 
 - Restores method assignment in Bulk Uploads
+- Fixed travis build
 
 ## [5.2.0] - 2019-03-11
 
