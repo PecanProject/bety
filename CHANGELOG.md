@@ -5,6 +5,12 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
+## [5.2.1] - 2019-08-06
+
+### Fixes
+
+- Restores method assignment in Bulk Uploads
+
 ## [5.2.0] - 2019-03-11
 
 ### Added
