@@ -42,6 +42,9 @@ notifications:
 services:
   - postgresql
 
+install:
+  - bundle install --jobs=3 --retry=3 --with docker --without "javascript_testing"
+
 before_script:
   - psql -U postgres -c "CREATE EXTENSION postgis"
   - psql -U postgres -c "CREATE USER bety WITH SUPERUSER CREATEDB UNENCRYPTED PASSWORD 'bety'";
