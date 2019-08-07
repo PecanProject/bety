@@ -35,7 +35,7 @@ docker run -e RAILS_RELATIVE_URL_ROOT="/bety" pecan/bety
 
 ## Documentation.
 
-* Technical Documentation: https://pecan.gitbooks.io/betydb-documentation/content/
-* Data Entry: https://pecan.gitbooks.io/betydbdoc-dataentry/content/
-* Data Access: https://pecan.gitbooks.io/betydb-data-access/content/
+* Technical Documentation: https://pecanproject.github.io/bety-documentation/technical/
+* Data Entry: https://pecanproject.github.io/bety-documentation/dataentry/
+* Data Access: https://pecan.gitbook.io/betydb-data-access/
  

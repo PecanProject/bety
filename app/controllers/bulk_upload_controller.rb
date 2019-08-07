@@ -121,7 +121,7 @@ class BulkUploadController < ApplicationController
       method_name: params["method_info"]["label"],
       method_id: params["method_info"]["value"]
     }
-    render(nothing: true)
+    render(body: nil)
   end
 
   # Step 1: Choose a file to upload.
