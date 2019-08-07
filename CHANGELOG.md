@@ -5,7 +5,7 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
-## [Unreleased]
+## [5.2.1] - 2019-08-07
 
 ### Added
 
@@ -19,7 +19,8 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 ### Fixed
 
 - Updated GEM list to fix security fixes as recommended by dependbot on GitHub.
-
+- Restores method assignment in Bulk Uploads
+- Fixed travis build
 
 ## [5.2.0] - 2019-03-11
 
