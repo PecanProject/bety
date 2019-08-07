@@ -7,10 +7,19 @@ sudo: false
 # versions of ruby to use
 # see the list at http://rubies.travis-ci.org/
 rvm:
+  - 2.2.10
   - 2.3.8
   - 2.4.6
   - 2.5.5
   - 2.6.3
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - rvm: 2.2.10
+    - rvm: 2.4.6
+    - rvm: 2.5.5
+    - rvm: 2.6.3
 
 # used for all ruby tasks to specify the database
 env:
