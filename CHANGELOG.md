@@ -7,6 +7,8 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 
 ## [5.2.1] - 2019-08-07
 
+Currently BETY does not compile correctly with any newer version of Ruby than 2.3. We are aware of this issue and tracking it #664.
+
 ### Added
 
 - #643 : Moved `reindex.bety.sh` and `vacuum.bety.sh` scripts from PEcAn to BETY and provided access through entrypoint. 
@@ -15,12 +17,13 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 
 - Documentation updates, now point to new [documentation location](https://pecanproject.github.io/bety-documentation/index.html)
 - #652 : Better list of soil choices
+- Ruby 2.3.8 is now default ruby when using RVM.
 
 ### Fixed
 
 - Updated GEM list to fix security fixes as recommended by dependbot on GitHub.
 - Restores method assignment in Bulk Uploads
-- Fixed travis build
+- Fixed travis build, testing with 2.2, 2.3, 2.4, 2.5 and 2.6 of Ruby. Right now only 2.2 and 2.3 pass.
 
 ## [5.2.0] - 2019-03-11
 
