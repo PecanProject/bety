@@ -15,7 +15,7 @@ This script was motivated by the need to repair a database where the id numbers
 for new rows were allocated in the wrong range—to be specific, they were
 allocated starting at 99000000001 rather than starting at the number
 corresponding to the id number of the machine where the database resides.  (See
-https://pecan.gitbook.io/betydb-documentation/betydb-system-administration/distributed-betydb#primary-key-allocations
+https://pecanproject.github.io/bety-documentation/technical/distributed-instances-of-betydb.html
 for a list of BETYdb instances and their corresponding primary key allocations.)
 
 When id numbers have been mis-allocated, three things must be done to repair the
