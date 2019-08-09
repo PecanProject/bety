@@ -7,7 +7,7 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 
 ## [5.2.1] - 2019-08-07
 
-Currently BETY does not compile correctly with any newer version of Ruby than 2.3. We are aware of this issue and tracking it #664.
+Currently the tested and recommended version of Ruby to be used with BETY is 2.3. BETY compiles and passes tests with 2.4 and 2.5 but have not been tested thoroughly. Currently BETY does not compile with Ruby 2.6 (see #667).
 
 ### Added
 
