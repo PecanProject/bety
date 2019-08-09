@@ -23,7 +23,8 @@ Currently BETY does not compile correctly with any newer version of Ruby than 2.
 
 - Updated GEM list to fix security fixes as recommended by dependbot on GitHub.
 - Restores method assignment in Bulk Uploads
-- Fixed travis build, testing with 2.2, 2.3, 2.4, 2.5 and 2.6 of Ruby. Right now only 2.2 and 2.3 pass.
+- Fixed travis build, testing with 2.2, 2.3, 2.4, 2.5 and 2.6 of Ruby.
+- Fixed errors when running BETY with 2.4 and 2.5
 
 ## [5.2.0] - 2019-03-11
 
