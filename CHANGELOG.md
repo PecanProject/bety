@@ -5,7 +5,9 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
-## [Unreleased]
+## [5.2.1] - 2019-08-07
+
+Currently the tested and recommended version of Ruby to be used with BETY is 2.3. BETY compiles and passes tests with 2.4 and 2.5 but have not been tested thoroughly. Currently BETY does not compile with Ruby 2.6 (see #667).
 
 ### Added
 
@@ -15,11 +17,14 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 
 - Documentation updates, now point to new [documentation location](https://pecanproject.github.io/bety-documentation/index.html)
 - #652 : Better list of soil choices
+- Ruby 2.3.8 is now default ruby when using RVM.
 
 ### Fixed
 
 - Updated GEM list to fix security fixes as recommended by dependbot on GitHub.
-
+- Restores method assignment in Bulk Uploads
+- Fixed travis build, testing with 2.2, 2.3, 2.4, 2.5 and 2.6 of Ruby.
+- Fixed errors when running BETY with 2.4 and 2.5
 
 ## [5.2.0] - 2019-03-11
 

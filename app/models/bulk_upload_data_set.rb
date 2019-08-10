@@ -1900,7 +1900,9 @@ class BulkUploadDataSet
     # Get interactively-specified values, or set to empty hash if nil; since we
     # are going to alter interactively_specified_values, we use clone to make a
     # copy so that the session value remains as is.
-    interactively_specified_values = @session["global_values"].clone rescue ActionController::Parameters.new
+    interactively_specified_values = @session.has_key?(:global_values) \
+                                     ? @session[:global_values].clone \
+                                     : ActionController::Parameters.new
 
     # TO DO: decide if this code serves any useful purpose:
     # Double-check that all form fields are were non-empty:
