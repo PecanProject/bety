@@ -7,7 +7,7 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 
 ## [5.2.1] - 2019-08-07
 
-Currently the tested and recommended version of Ruby to be used with BETY is 2.3. BETY compiles and passes tests with 2.4 and 2.5 but have not been tested thoroughly. Currently BETY does not compile with Ruby 2.6 (see #667).
+Currently the tested and recommended version of Ruby to be used with BETY is 2.3. BETY compiles and passes tests with 2.4, 2.5 and 2.6 but have not been tested thoroughly with these versions.
 
 ### Added
 
@@ -24,7 +24,8 @@ Currently the tested and recommended version of Ruby to be used with BETY is 2.3
 - Updated GEM list to fix security fixes as recommended by dependbot on GitHub.
 - Restores method assignment in Bulk Uploads
 - Fixed travis build, testing with 2.2, 2.3, 2.4, 2.5 and 2.6 of Ruby.
-- Fixed errors when running BETY with 2.4 and 2.5
+- Fixed errors when running BETY with 2.4, 2.5 and 2.6
+- #668 : show "not found" page for invalid citations.
 
 ## [5.2.0] - 2019-03-11
 
