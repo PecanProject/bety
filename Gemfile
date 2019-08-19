@@ -28,6 +28,7 @@ gem 'protected_attributes_continued' # Use this until and unless we start using 
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier'
+gem 'activemodel-serializers-xml' # no longer part of Rails proper as of Rails 5
 
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
