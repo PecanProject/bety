@@ -29,6 +29,10 @@ GEM
       globalid (>= 0.3.6)
     activemodel (5.1.5)
       activesupport (= 5.1.5)
+    activemodel-serializers-xml (1.0.2)
+      activemodel (> 5.x)
+      activesupport (> 5.x)
+      builder (~> 3.1)
     activerecord (5.1.5)
       activemodel (= 5.1.5)
       activesupport (= 5.1.5)
@@ -77,7 +81,8 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    comma (3.0.4)
+    comma (4.3.2)
+      activesupport (>= 4.2.0, < 6.1)
     concurrent-ruby (1.0.5)
     crass (1.0.4)
     database_cleaner (1.7.0)
@@ -251,6 +256,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activemodel-serializers-xml
   activerecord-postgis-adapter
   activerecord-session_store
   apipie-rails (= 0.5.6)
@@ -259,7 +265,7 @@ DEPENDENCIES
   capybara-webkit (~> 1.7)
   choice (= 0.1.6)
   coffee-rails
-  comma (= 3.0.4)
+  comma (~> 4.3.2)
   database_cleaner
   dynamic_form
   jquery-rails

@@ -5,6 +5,13 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
+## [Unreleased]
+
+### Fixes
+
+- #672 : Added activemodel-serializers-xml Gem to restore functionality of "original" API XML endpoints.
+- #674 : Upgraded comma Gem to restore CSV file downloads.
+
 ## [5.2.1] - 2019-08-07
 
 Currently the tested and recommended version of Ruby to be used with BETY is 2.3. BETY compiles and passes tests with 2.4, 2.5 and 2.6 but have not been tested thoroughly with these versions.
