@@ -22,7 +22,7 @@ gem 'rails3-restful-authentication', '~> 3.0.1'
 gem 'dynamic_form'
 gem 'rabl'
 gem 'yajl-ruby', '~> 1.3.1'
-gem 'rubyzip', '~> 1.2.1'
+gem 'rubyzip', '~> 1.2.2'
 gem 'activerecord-session_store' # no longer part of Rails proper
 gem 'protected_attributes_continued' # Use this until and unless we start using Strong Parameters.
 gem 'sass-rails'

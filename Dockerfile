@@ -41,6 +41,8 @@ ARG BETY_GIT_DATE="unknown"
 # environment variables used
 ENV LOCAL_SERVER=99 \
     REMOTE_SERVERS="0 1 2 5" \
+    INITIALIZE_FLAGS="-g -u" \
+    INITIALIZE_URL="-w https://ebi-forecast.igb.illinois.edu/pecan/dump/all/bety.tar.gz" \
     RAILS_ENV="production" \
     RAILS_RELATIVE_URL_ROOT="" \
     SECRET_KEY_BASE="ThisIsNotReallySuchAGreatSecret" \
