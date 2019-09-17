@@ -5,6 +5,10 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
+### [Develop]
+
+- #551 : remove GUnload message from console on page change.
+
 ## [5.2.1] - 2019-08-07
 
 Currently the tested and recommended version of Ruby to be used with BETY is 2.3. BETY compiles and passes tests with 2.4, 2.5 and 2.6 but have not been tested thoroughly with these versions.
@@ -31,7 +35,6 @@ Currently the tested and recommended version of Ruby to be used with BETY is 2.3
 
 ### Added
 
-- #551 : remove GUnload message from console on page change.
 - Ability to set the initialize URL in docker
 - #505 : Added a new attributes table. This table allows to store through polymorphism any additional information with any row in any table. The value stored is a json document.
 - #597 : Moved `dump.bety.sh` and `load.bety.sh` from PEcAn to BETY.
