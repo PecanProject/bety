@@ -92,7 +92,7 @@ homepage_body:
 # Miscellaneous
 
 ## This affects both the home page and the footer:
-show_crop_map_links: true
+show_crop_map_links: false
 
 # Override this with a secret key to run a secure site:
 rest_auth_site_key: 'thisisnotasecret'
