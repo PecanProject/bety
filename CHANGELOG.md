@@ -5,7 +5,7 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
-### [Develop]
+## [Unreleased]
 
 - #551 : remove GUnload message from console on page change.
 
