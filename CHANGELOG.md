@@ -8,9 +8,11 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 
 ## [5.2.2] - 2019-12-06
 
-Minor update to fix error with .zenodo.json; also includes a few security fixes
+This is a minor release and does not require and database updates
 
-
+### Changed
+- updated zenodo.json file to have a successful build and doi generated at zenodo
+- updated loofah and rubyzip gem to fix security issues
 
 ## [5.2.1] - 2019-08-07
 
