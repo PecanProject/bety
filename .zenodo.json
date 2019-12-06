@@ -64,7 +64,7 @@
 		"LeBauer, David, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney, Gareth Scott Rohde, Dan Wang (2010). Biofuel Ecophysiological Traits and Yields Database (BETYdb), Energy Biosciences Institute, University of Illinois at Urbana-Champaign. doi:10.13012/J8H41PB9"
 	],
 	"notes": "Development of BETYdb is supported by the National Science Foundation (ABI #1062547, ABI #1458021),  the Department of Energy (ARPA-E awards #DE-AR0000594 and DE-AR0000598), and the Energy Biosciences Institute.",
-	"resource_type": {
+	"upload_type": {
 		"title": "Software",
 		"type": "software"
 	}
