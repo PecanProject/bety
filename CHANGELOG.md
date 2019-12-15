@@ -5,7 +5,7 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
-## [5.2.3]
+## [Unreleased]
 
 - update doi links http://dx.doi.org --> https://doi.org
 
