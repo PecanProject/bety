@@ -1,4 +1,5 @@
 class Likelihood < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 
@@ -18,7 +19,7 @@ class Likelihood < ActiveRecord::Base
       { scope: [ :variable_id, :input_id ],
         message: "You can't use the same Run-Input-Variable combination twice." }
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do

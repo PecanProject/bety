@@ -15,7 +15,7 @@
     <td><%= specie.commonname %></td>
     <td><%= link_to 'Show', specie %></td>
     <td><%= link_to 'Edit', edit_species_path(specie) %></td>
-    <td><%= link_to 'Destroy', specie, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Destroy', specie, data: { :confirm => 'Are you sure?' }, :method => :delete %></td>
   </tr>
 <% end %>
 </table>

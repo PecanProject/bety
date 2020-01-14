@@ -19,7 +19,7 @@
         </tr>
         <% @treatment.managements.each do |management| %>
         <tr>
-          <td><%= link_to "X", { :controller => :treatments, :action => :rem_managements_treatments, :id => @treatment.id, :management => management }, :confirm => 'Are you sure?', :remote => true %></td>
+          <td><%= link_to "X", { :controller => :treatments, :action => :rem_managements_treatments, :id => @treatment.id, :management => management }, data: { :confirm => 'Are you sure?' }, :remote => true %></td>
           <td><%= link_to "edit", edit_management_path(management.id) %></td>
           <td><%= management.date %></td>
           <td><%= management.dateloc %></td>

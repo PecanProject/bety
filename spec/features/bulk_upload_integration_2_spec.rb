@@ -139,13 +139,6 @@ CSV
       expect(first("div.alert")).to have_content "No file chosen"
     end
 
-    specify 'Attempting to run the insert_data action without having uploaded a CSV file will cause a redirect to the start_upload page' do
-      visit '/bulk_upload/insert_data'
-
-      expect(first("header")).to have_content "New Bulk Upload"
-      expect(first("div.alert")).to have_content "No file chosen"
-    end
-
   end
 
 
@@ -187,12 +180,6 @@ CSV
 
       specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the choose_global_citation page' do
         visit '/bulk_upload/confirm_data'
-
-        expect(first("header")).to have_content "Choose a Citation"
-      end
-
-      specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the choose_global_citation page' do
-        visit '/bulk_upload/insert_data'
 
         expect(first("header")).to have_content "Choose a Citation"
       end
@@ -276,12 +263,6 @@ CSV
       expect(page).to have_content "Data Value Errors"
     end
 
-    specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the display_csv_file page' do
-      visit '/bulk_upload/insert_data'
-
-      expect(page).to have_content "Data Value Errors"
-    end
-
   end
 
   # Tests for RM issue #2525 (item 4 of update #2):
@@ -308,12 +289,6 @@ CSV
 
     specify 'Attempting to visit the confirm_data page without having specified missing information will cause a redirect to the choose_global_data_values page' do
       visit '/bulk_upload/confirm_data'
-
-      expect(first("header")).to have_content "Specify Upload Options and Global Values"
-    end
-
-    specify 'Attempting to call the insert_data action without having specified missing information will cause a redirect to the choose_global_data_values page' do
-      visit '/bulk_upload/insert_data'
 
       expect(first("header")).to have_content "Specify Upload Options and Global Values"
     end
@@ -379,15 +354,6 @@ CSV
         expect(first("div.alert")).to have_content "Removing linked citation since you have citation information in your data set"
         expect(first("header")).to have_content "Specify Upload Options and Global Value"
 
-      end
-
-      specify 'If you have a session citation and then visit the insert_data action, the session citation should be removed' +
-        "\n        and if you have not specified the amount of rounding, you should be returned to the \"choose global values\" page." do
-        visit '/bulk_upload/insert_data'
-
-        expect(first("header")).to have_content "Specify Upload Options and Global Value"
-        expect(page).not_to have_content "Citation: "
-        expect(first("div.alert")).to have_content "Removing linked citation since you have citation information in your data set"
       end
 
     end # context "A citation has been selected but rounding has not been specified"
@@ -481,7 +447,7 @@ CSV
                      : 30 # than for WebKit
         begin
           # Wrap while loops in timeout in case some deletion fails
-          timeout time_limit do
+          Timeout.timeout time_limit do
 
             # Remove covariates before traits because they refer to traits:
             visit '/covariates'
@@ -647,4 +613,74 @@ CSV
     expect(page).not_to have_content('undefined method')
   end
 
+
+  # GitHub issue #545
+  context "Tests for date support" do
+
+    context "Testing 'date-only' values" do
+      
+      before :all do
+        f = File.new("spec/tmp/file_with_missing_covariate_values.csv", "w")
+        f.write <<CSV
+SLA,canopy_layer,citation_author,citation_year,citation_title,site,treatment,date,species,access_level,method
+550,3,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1,test
+CSV
+        f.close
+      end
+
+      after :all do
+        File::delete("spec/tmp/file_with_missing_covariate_values.csv")
+      end
+
+      # This tests a long-standing bug whereby the date value inserted
+      # is the UTC time corresponding to midnight in Urbana on the
+      # date given in the CSV file.  It should be the value
+      # corresponding to midnight site time (if a site having a stored
+      # time zone is given).
+      specify "The date inserted into the database should be the UTC time corresponding to 12am site time on the date specified" do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+        click_button 'Upload'
+        click_link 'Specify'
+        click_button 'Confirm'
+        click_button 'Insert Data'
+        
+        query =<<-QUERY
+        SELECT extract(HOUR FROM site_or_utc_date(date, effective_time_zone(site_id))) AS hour
+            FROM traits WHERE created_at > utc_now() - INTERVAL '2 seconds'
+      QUERY
+        expect(Trait.connection.exec_query(query).first['hour'].to_i).to eq(0)
+      end
+
+    end
+
+
+    context "Testing 'date-with-time-of-day' values" do
+      
+      before :all do
+        f = File.new("spec/tmp/file_with_missing_covariate_values.csv", "w")
+        f.write <<CSV
+SLA,canopy_layer,citation_author,citation_year,citation_title,site,treatment,date,species,access_level,method
+550,3,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31T14:30:24,Lolium perenne,1,test
+CSV
+        f.close
+      end
+
+      after :all do
+        File::delete("spec/tmp/file_with_missing_covariate_values.csv")
+      end
+
+      # This tests that dates of the form "YYYY-MM-DDTHH:MM:SS" will not result in an error.
+      specify "Giving a date that includes the time of day will not result in an error" do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+        click_button 'Upload'
+
+        expect(page).not_to have_content "Error"
+      end
+
+    end
+
+  end
+    
 end

@@ -1,20 +1,17 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 
-# If you have a Gemfile, require the gems listed there, including any gems
+# Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
-if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
-  Bundler.require *Rails.groups(:assets => %w(development test))
-  # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)
-end
+Bundler.require(*Rails.groups)
 
-module BetyRails3
+module BetyRails5
   class Application < Rails::Application
 
     # Enable Hash#deep_symbolize_keys method defined in lib/symbolize_helper.rb.
+    # We may be able to remove lib/symbolize_helper.rb and use the
+    # deep_symbolize_keys method built into Rails 4.02 once we upgrade.
     require 'symbolize_helper'
     using SymbolizeHelper
 
@@ -35,6 +32,7 @@ module BetyRails3
 
     # RAILS3 - Added to get RESTful authentication working
     # http://stackoverflow.com/questions/7547281/rails-3-restful-authentication-uninitialized-constant-applicationcontrollera
+    # Also added non-standard path app/validators.
     config.autoload_paths << "#{Rails.root}/lib" << "#{Rails.root}/app/validators"
 
     # Only load the plugins named here, in the order given (default is alphabetical).
@@ -52,27 +50,29 @@ module BetyRails3
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    # Set this to avoid a Rails 3.2+ deprecation warning:
-    I18n.enforce_available_locales = true
-
-    # JavaScript files you want as :defaults (application.js is always included).
-    # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
-
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password, :password_authentication]
+    config.filter_parameters += [:password]
 
-    # Don't bother making schema.rb any more:
+    # Enable escaping HTML in JSON.
+    config.active_support.escape_html_entities_in_json = true
+
+    # Use SQL instead of Active Record's schema dumper when creating the database.
+    # This is necessary if your schema can't be completely dumped by the schema dumper,
+    # like if you have constraints or database-specific column types
     config.active_record.schema_format = :sql
 
+    # Enforce whitelist mode for mass assignment.
+    # This will create an empty whitelist of attributes available for mass-assignment for all models
+    # in your app. As such, your models will need to explicitly whitelist or blacklist accessible
+    # parameters by using an attr_accessible or attr_protected declaration.
+    # config.active_record.whitelist_attributes = true
+
     # Until we enable the assets pipeline, ensure the old behavior of javascript_include_tag(:all) with this:
-    config.action_view.javascript_expansions[:defaults] = ['prototype', 'effects']
+#    config.action_view.javascript_expansions[:defaults] = ['prototype', 'effects']
     # Enable the asset pipeline
     # config.assets.enabled = true
-
-    # Version of your assets, change this if you want to expire all your assets
-    # config.assets.version = '1.0'
   end
 end

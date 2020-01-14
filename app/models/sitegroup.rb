@@ -1,4 +1,6 @@
 class Sitegroup < ActiveRecord::Base
+  attr_protected []
+
   include Overrides
 
   extend SimpleSearch
@@ -8,7 +10,7 @@ class Sitegroup < ActiveRecord::Base
   before_validation WhitespaceNormalizer.new([:name])
   validates_presence_of :name
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :access, lambda { |user|
     if defined?(user.id).nil?
       where('public_access')

@@ -1,0 +1,93 @@
+DATABASE MAINTENANCE SCRIPTS
+----------------------------
+
+There are three scripts in this directory: find_missing_constraints.rb,
+fix_database.rb, and validate_constraints.rb.  Complete usage details for each
+is available by using the --help and --man options.
+
+This is a brief summary of the motivation for and the use of each script.
+
+
+fix_database.rb
+---------------
+
+This script was motivated by the need to repair a database where the id numbers
+for new rows were allocated in the wrong range—to be specific, they were
+allocated starting at 99000000001 rather than starting at the number
+corresponding to the id number of the machine where the database resides.  (See
+https://pecanproject.github.io/bety-documentation/technical/distributed-instances-of-betydb.html
+for a list of BETYdb instances and their corresponding primary key allocations.)
+
+When id numbers have been mis-allocated, three things must be done to repair the
+database:
+
+1. The sequence object for each public table should be set to start issuing new
+id numbers in the correct range.
+
+2. Existing rows having id numbers in the wrong range should be updated so that
+their id numbers are in the appropriate range.
+
+3. Foreign-key references to the updated ids should be updated to match.  This
+will happen automatically if the correct foreign-key constraints are in place.
+
+Running the script will output the SQL statements needed to effect these
+changes.  These SQL statements are then run against the database in question.
+IT IS UP TO THE USER TO ENSURE THAT THE NEEDED FOREIGN-KEY CONSTRAINTS ARE IN
+PLACE BEFORE RUNNING THESE SQL STATEMENTS.  If they are not, important
+information may be lost.  The script "find_missing_constraints.rb" may be used
+to check that all needed foreign-key constraints are present; if all is as it
+should be, running it should produce no output.  As of migration
+20180510184222_update_foreign_key_constraints.rb, all needed foreign-key
+constraints should be in place.
+
+The script has no command-line parameters.  Instead, configuration information
+is read from a YAML file named "connection_specification.yml" or may be provided
+interactively.
+
+
+find_missing_constraints.rb
+---------------------------
+
+This script looks at column names of each public table.  Outside of certain
+known exceptions, it assumes that each column with a name of the form "xxxxx_id"
+is a reference to the id column of some table (usually having a name
+corresponding to the pluralized form of "xxxxx").  It then checks that there is
+a corresponding foreign-key constraint and outputs a "not found" warning if
+there is not.
+
+Again, this script uses the "connection_specification.yml" file for
+configuration information.
+
+
+validate_constraints.rb
+-----------------------
+
+This script has a number of purposes, all having to do with checking that check
+constraints and/or foreign-key constraints are valid for existing data, or
+alternatively, simply listing these constraints.
+
+In "validate" mode, the script tries to validate all constraints that have been
+marked "NOT VALID".  It will report whether or not validation was successful.
+
+Normally, once a constraint has been validated, or if it was initially added
+without the "NOT VALID" clause, all existing data should comply with the
+constraint.  This is not always the case, however, as constraints may be
+temporarily disabled before adding or updating data.  Thus we also have a
+"revalidate" mode, which checks the validity of even those constraints that are
+not marked "NOT VALID".
+
+In "list" mode, all constraints of the specified types are listed.
+
+In the course of running the script, the valid/not-valid status of a constraint
+may change.  By default, the script will restore the status of each constraint
+to what it was before the script was run, even if this status does not
+accurately reflect the state of the database.  (For example, a constraint may be
+returned to "valid" status even if some existing data violates the constraint.)
+The idea is that we want to be able to get information about the database
+without changing it in any way.  This default "restore" rule may be overridden
+by using various values of the "restore" command-line parameter.
+
+Although this script has a number of command-line parameters, the database
+connection information is still provided using the
+"connection_specification.yml" or is provided interactively.
+

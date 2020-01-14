@@ -1,6 +1,6 @@
 class DbfilesController < ApplicationController
 
-  before_filter :login_required 
+  before_action :login_required
   helper_method :sort_column, :sort_direction
 
   require 'csv'
@@ -34,12 +34,12 @@ class DbfilesController < ApplicationController
     respond_to do |format|
       if dbfile.save
         flash[:notice] = "File unlinked"
-        format.html { redirect_to :back }
+        format.html { redirect_back(fallback_location: root_path) }
         format.xml  { render :xml => 'File unlinked' }
         format.json  { render :json => 'File unlinked' }
       else
         flash[:notice] = "File not removed"
-        format.html {redirect_to :back }
+        format.html {redirect_back(fallback_location: root_path) }
         format.xml  { render :xml => 'File not removed' }
         format.json  { render :json => 'File not removed' }
       end

@@ -41,7 +41,7 @@ module BulkUploadHelper
     sleep 1 # maybe not needed
     page.execute_script("jQuery('#autocomplete_citation').trigger('keydown', {keyCode: 40})")
     sleep 1 # necessary!
-    first("#ui-id-1 li.ui-menu-item a").click
+    first("#ui-id-1 li.ui-menu-item > *").click
     click_button "View Validation Results"
   end
 end
@@ -49,7 +49,7 @@ end
 module AutocompletionHelper
   def fill_autocomplete(field_id, options = {})
     fill_in field_id, :with => options[:with]
-    selector = "ul.ui-autocomplete a:contains('#{options[:select]}')"
+    selector = "ul.ui-autocomplete div:contains('#{options[:select]}')"
 
     # RSpec doesn't seem to recognize the :contains syntax for selectors
     #page.should have_selector selector

@@ -1,4 +1,5 @@
 class Site < ActiveRecord::Base
+  attr_protected []
 
   #--
   ### Module Usage ###
@@ -61,12 +62,12 @@ class Site < ActiveRecord::Base
   #--
   ### Scopes ###
 
-  scope :all_order, :order => 'country, state, city'
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :all_order, -> { order('country, state, city') }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
   scope :minus_already_linked, lambda {|citation|
     if citation.nil? || citation.sites.size == 0
-      {}
+      all
     else
       where("id not in (?)", citation.sites.collect(&:id))
     end
@@ -230,7 +231,7 @@ CONDITION
 
   def sitename_state_country
     output = ""
-    
+
     #city = city.chomp if !city.nil?
     if !sitename.blank?
       output += "#{sitename}"
@@ -260,6 +261,17 @@ CONDITION
   def autocomplete_label
     "#{sitename.squish} (#{city.squish}, #{!(state.nil? || state.empty?) ? " #{state.squish}," : ""} #{country.squish})"
   end
+
+  ### Class methods
+
+  def self.soil_classes
+
+    @soil_classes ||= ['clay', 'clay loam', 'loam', 'loamy sand', 'sand',
+                       'sandy clay', 'sandy clay loam', 'sandy loam',
+                       'silt', 'silt loam', 'silty clay', 'silty clay loam',
+                       'peat', 'bedrock', 'other'].freeze
+  end
+
 
   private
 

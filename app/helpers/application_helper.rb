@@ -44,7 +44,7 @@ module ApplicationHelper
     title ||= column.titleize
     css_class = (column == sort_column) ? "current #{sort_direction}" : nil
     direction = (column == sort_column && sort_direction == "asc") ? "desc" : "asc"
-    link_to title, params.merge(:sort => column, :direction => direction, :page => nil), {:class => css_class}
+    link_to title, params.permit(:sort, :direction, :page, :_).merge(:sort => column, :direction => direction, :page => nil), {:class => css_class}
   end
 
   def format_stat(record)
@@ -65,12 +65,12 @@ end
 
 # Call this to make a link inside a form that submits the form.
 def link_to_submit(*args, &block)
-  link_to_function (block_given? ? capture(&block) : args[0]), "jQuery(this).closest('form').submit()", args.extract_options!
+  link_to (block_given? ? capture(&block) : args[0]), "#", args.extract_options!.merge(onclick: "jQuery(this).closest('form').submit(); return false")
 end
 
 # Given a FormBuilder object `f`, a string `label`, an SQL table name
 # `table_name`, a symbol `id`, and a string `placeholder`, make an
-# autocompletion field with id "search_#{table_name}", an associated label with
+# autocompletion field with id `search_#{table_name}`, an associated label with
 # text `label`, and an associated hidden field that will use a parameter name
 # derived from `id`.  If given, the text of `display_value` will appear in the
 # autocompletion field.  Otherwise, an attempt is made to find text representing
@@ -81,6 +81,7 @@ end
 # In order that this be recognized as an autocompletion field, the template for
 # the page using this helper should include a "content_for" block of the form
 #
+# ```
 # <% content_for(:autocomplete_javascript) do %>
 #     <script type="text/javascript" charset="utf-8">
 #         var ROOT_URL = '<%= root_url %>';
@@ -92,9 +93,10 @@ end
 #                     <id of associated hidden field> },
 #             ...
 #         }
-#   </script>
-#   <%= javascript_include_tag 'lazy/autocomplete.js' %>
+#     </script>
+#     <%= javascript_include_tag 'lazy/autocomplete.js' %>
 # <% end %>
+# ```
 def autocompletion_field(f, label, table_name, id, placeholder, display_value = nil, autocompletion_class = "input-full")
   if display_value.nil?
     begin
@@ -126,7 +128,7 @@ end
 
 def commit_tags
   e = ENV['BETY_GIT_TAGS']
-  ref_names = e.nil? || e.empty? ? `git log --pretty=format:"%d" -1` : e
+  ref_names = e.nil? || e.empty? ? `git log --pretty=format:"%d" -1` : e.dup
   if /tag/.match(ref_names).nil?
     return ""
   end
@@ -154,4 +156,81 @@ end
 def commit_date
   e = ENV['BETY_GIT_DATE']
   e.nil? || e.empty? ? `git log --pretty=format:"%ad" -1` : e
+end
+
+# Replacement for the Prototype method of this name.
+def observe_field(element_id, **options)
+
+  observed_event = options[:event_name] || "keyup"
+
+  # We assume options has either the key :url or the key :function (but not
+  # both).
+  if options.has_key? :url
+    url = url_for(options[:url])
+    connector = url.match(/\?/) ? '&' : '?'
+    confirmation = options[:confirmation] || "true"
+    raw(
+      %Q{<script>
+             var data_access_level = #{current_user.access_level};
+             jQuery(document).ready(function() {
+                 jQuery("##{element_id.to_s}").bind("focus", function() {
+                     previous = this.value;
+                 }).bind("#{observed_event}", function(event) {
+                     var newvalue = this.value;
+                     jQuery.ajax({
+                         type: "POST",
+                         url: "#{url}" + "#{connector}" + #{options[:with]},
+                         beforeSend: function() {
+                             var returnValue;
+                             if ("##{element_id.to_s}".search("access_level-") == 1) {
+                                 // We are dealing with an element having an id of the form "access_level-...":
+                                 if (data_access_level > newvalue) {
+                                     var confirmation_message = "Really " +
+                                         "change the access level of this " +
+                                         "trait to " + newvalue + "?  " +
+                                         "You will lose access to it if you " +
+                                         "do so.";
+                                     var answer = confirm(confirmation_message);
+                                     if (answer == false) {
+                                         jQuery("##{element_id.to_s}").val(previous);
+                                         jQuery("##{element_id.to_s}").addClass('alert-error', 500);
+                                         jQuery("##{element_id.to_s}").removeClass('alert-error', 500);
+                                     }
+                                     returnValue = answer;
+                                 }
+                                 else {
+                                     returnValue = true;
+                                 }
+                             }
+                             else {
+                                 // This is not an element that changes the
+                                 // access level.  Just allow it to be changed.
+                                 returnValue = true;
+                             }
+                             previous = jQuery("##{element_id.to_s}").val();
+                             return returnValue;
+
+                         },
+                         success: function() {
+                             if ("##{element_id.to_s}".search("access_level-") == 1 &&
+                                 data_access_level > newvalue) {
+                                 jQuery("##{element_id}").closest('tr').fadeOut(1000, function() { jQuery(this).remove(); });
+                             }
+                         }
+                     });
+                 })
+             })
+         </script>}
+      ).html_safe
+  else
+    raw(
+      %Q{<script>
+             jQuery(document).ready(function() {
+                 jQuery("##{element_id.to_s}").bind("#{observed_event}", function() {
+                     #{options[:function]}
+                 })
+             })
+         </script>}
+      ).html_safe
+  end
 end

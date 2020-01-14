@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# so we can run script outside of docker hub
+IMAGE_NAME=${IMAGE_NAME:-"pecan/bety:latest"}
+
+# build the actual container
 docker build \
     --build-arg BETY_GIT_TAGS="$(git log --pretty=format:%d -1)" \
     --build-arg BETY_GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)" \

@@ -46,7 +46,7 @@
 					  <% end %>
 					  <!-- DELETE -->
 					  <% if current_user.page_access_level <= 2 or trait.user_id == current_user.id %>
-              <%= link_to trait, :method => :delete, :type => 'trait', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
+              <%= link_to trait, :method => :delete, :type => 'trait', :data => { :confirm => 'Are you sure?' }, :class=> 'button button-small button-danger', :alt => "delete" do %>
                 <i class="icon-trash"></i> 
               <% end %>
             <% end %>
@@ -80,9 +80,11 @@
    <%= observe_field("access_level-" + trait.id.to_s,
                   :frequency => 1,
                   :with => "'id=' + #{trait.id} + '&trait[access_level]=' + Form.Element.getValue('access_level-#{trait.id.to_s}')",
-                  :url => { :action => :access_level }) %>
+                  :url => { :action => :access_level },
+                  :event_name => "change") %>
    <%= observe_field("checked-" + trait.id.to_s,
                   :frequency => 1,
                   :with => "'id=' + #{trait.id} + '&trait[checked]=' + Form.Element.getValue('checked-#{trait.id.to_s}')",
-                  :url => { :action => :checked }) %>
+                  :url => { :action => :checked },
+                  :event_name => "change") %>
 <% end %>

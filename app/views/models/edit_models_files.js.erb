@@ -1,0 +1,3 @@
+jQuery('#files_index_table').html("<%= escape_javascript(render 'edit_models_files_table', files: @files, model: @model, searchparam: @searchparam) %>")
+
+jQuery('#files_search_term').html("<%= search %>")

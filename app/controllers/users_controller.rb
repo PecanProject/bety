@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
-  before_filter :login_required, :except => [:create,:new]
-  #before_filter :login_required
+  before_action :login_required, :except => [:create,:new]
+
   helper_method :sort_column, :sort_direction
 
   def index
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
     if Rails.env == "test"
       success = @user && @user.save
     else
-      success = verify_recaptcha(:model => @user, :message => "Please re-enter the words from the image again.") && @user && @user.save
+      success = verify_recaptcha(:model => @user) && @user && @user.save
     end
 
     if success && @user.errors.empty?

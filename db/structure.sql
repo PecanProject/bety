@@ -9,6 +9,41 @@ SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 
+--
+-- Name: admin; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA admin;
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: postgis; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -126,19 +161,20 @@ CREATE FUNCTION forbid_dangling_input_references() RETURNS trigger
 BEGIN
     IF
         OLD.id = SOME(SELECT container_id FROM dbfiles WHERE container_type = 'Input')
-        AND (TG_OP IN ('DELETE', 'TRUNCATE') OR NEW.id != OLD.id)
+        AND TG_OP = 'DELETE'
     THEN
-        RAISE NOTICE 'You can''t remove or change the id of the row with id % because it is referred to by some dbfile.', OLD.id;
+        RAISE NOTICE 'You can''t remove the row with id % because it is referred to by some dbfile.', OLD.id;
         RETURN NULL;
+    ELSIF
+        TG_OP = 'UPDATE'
+    THEN
+        RAISE NOTICE 'About to update container_id in rows of dbfiles table where container_type is Input.';
+        RAISE NOTICE 'For this to work, you should drop the "valid_input_refs" constraint before updating input ids and re-add it after you are done.';
+        UPDATE dbfiles SET container_id = NEW.id WHERE container_id = OLD.id AND container_type = 'Input';
+        RETURN NEW;
     END IF;
 
-    IF
-        TG_OP = 'DELETE'
-    THEN
-        RETURN OLD;
-    END IF;
-    
-    RETURN NEW; -- for UPDATEs
+    RETURN OLD;
 END;
 $$;
 
@@ -153,19 +189,20 @@ CREATE FUNCTION forbid_dangling_model_references() RETURNS trigger
 BEGIN
     IF
         OLD.id = SOME(SELECT container_id FROM dbfiles WHERE container_type = 'Model')
-        AND (TG_OP IN ('DELETE', 'TRUNCATE') OR NEW.id != OLD.id)
+        AND TG_OP = 'DELETE'
     THEN
-        RAISE NOTICE 'You can''t remove or change the id of the row with id % because it is referred to by some dbfile.', OLD.id;
+        RAISE NOTICE 'You can''t remove the row with id % because it is referred to by some dbfile.', OLD.id;
         RETURN NULL;
+    ELSIF
+        TG_OP = 'UPDATE'
+    THEN
+        RAISE NOTICE 'About to update container_id in rows of dbfiles table where container_type is Model.';
+        RAISE NOTICE 'For this to work, you should drop the "valid_model_refs" constraint before updating model ids and re-add it after you are done.';
+        UPDATE dbfiles SET container_id = NEW.id WHERE container_id = OLD.id AND container_type = 'Model';
+        RETURN NEW;
     END IF;
 
-    IF
-        TG_OP = 'DELETE'
-    THEN
-        RETURN OLD;
-    END IF;
-    
-    RETURN NEW; -- for UPDATEs
+    RETURN OLD;
 END;
 $$;
 
@@ -180,19 +217,20 @@ CREATE FUNCTION forbid_dangling_posterior_references() RETURNS trigger
 BEGIN
     IF
         OLD.id = SOME(SELECT container_id FROM dbfiles WHERE container_type = 'Posterior')
-        AND (TG_OP IN ('DELETE', 'TRUNCATE') OR NEW.id != OLD.id)
+        AND TG_OP = 'DELETE'
     THEN
-        RAISE NOTICE 'You can''t remove or change the id of the row with id % because it is referred to by some dbfile.', OLD.id;
+        RAISE NOTICE 'You can''t remove the row with id % because it is referred to by some dbfile.', OLD.id;
         RETURN NULL;
+    ELSIF
+        TG_OP = 'UPDATE'
+    THEN
+        RAISE NOTICE 'About to update container_id in rows of dbfiles table where container_type is Posterior.';
+        RAISE NOTICE 'For this to work, you should drop the "valid_posterior_refs" constraint before updating posterior ids and re-add it after you are done.';
+        UPDATE dbfiles SET container_id = NEW.id WHERE container_id = OLD.id AND container_type = 'Posterior';
+        RETURN NEW;
     END IF;
 
-    IF
-        TG_OP = 'DELETE'
-    THEN
-        RETURN OLD;
-    END IF;
-    
-    RETURN NEW; -- for UPDATEs
+    RETURN OLD;
 END;
 $$;
 
@@ -979,9 +1017,43 @@ END;
 $$;
 
 
+SET search_path = admin, pg_catalog;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
+
+--
+-- Name: tz_world; Type: TABLE; Schema: admin; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tz_world (
+    gid integer NOT NULL,
+    tzid character varying(30),
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- Name: tz_world_gid_seq; Type: SEQUENCE; Schema: admin; Owner: -
+--
+
+CREATE SEQUENCE tz_world_gid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tz_world_gid_seq; Type: SEQUENCE OWNED BY; Schema: admin; Owner: -
+--
+
+ALTER SEQUENCE tz_world_gid_seq OWNED BY tz_world.gid;
+
+
+SET search_path = public, pg_catalog;
 
 --
 -- Name: benchmark_sets; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -3827,6 +3899,17 @@ CREATE TABLE workflows (
 );
 
 
+SET search_path = admin, pg_catalog;
+
+--
+-- Name: gid; Type: DEFAULT; Schema: admin; Owner: -
+--
+
+ALTER TABLE ONLY tz_world ALTER COLUMN gid SET DEFAULT nextval('tz_world_gid_seq'::regclass);
+
+
+SET search_path = public, pg_catalog;
+
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
@@ -4029,6 +4112,18 @@ ALTER TABLE ONLY sites_cultivars ALTER COLUMN id SET DEFAULT nextval('sites_cult
 
 ALTER TABLE ONLY trait_covariate_associations ALTER COLUMN id SET DEFAULT nextval('trait_covariate_associations_id_seq'::regclass);
 
+
+SET search_path = admin, pg_catalog;
+
+--
+-- Name: tz_world_pkey; Type: CONSTRAINT; Schema: admin; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY tz_world
+    ADD CONSTRAINT tz_world_pkey PRIMARY KEY (gid);
+
+
+SET search_path = public, pg_catalog;
 
 --
 -- Name: benchmark_sets_benchmark_reference_runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
@@ -4502,6 +4597,17 @@ ALTER TABLE ONLY yields
     ADD CONSTRAINT yields_pkey PRIMARY KEY (id);
 
 
+SET search_path = admin, pg_catalog;
+
+--
+-- Name: tz_world_geom_gist; Type: INDEX; Schema: admin; Owner: -; Tablespace: 
+--
+
+CREATE INDEX tz_world_geom_gist ON tz_world USING gist (geom);
+
+
+SET search_path = public, pg_catalog;
+
 --
 -- Name: cultivar_pft_uniqueness; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
@@ -4940,21 +5046,21 @@ CREATE TRIGGER ensure_correct_cultivar_for_site BEFORE INSERT OR UPDATE OF site_
 -- Name: forbid_dangling_input_references; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER forbid_dangling_input_references BEFORE DELETE OR UPDATE ON inputs FOR EACH ROW EXECUTE PROCEDURE forbid_dangling_input_references();
+CREATE TRIGGER forbid_dangling_input_references BEFORE DELETE OR UPDATE OF id ON inputs FOR EACH ROW EXECUTE PROCEDURE forbid_dangling_input_references();
 
 
 --
 -- Name: forbid_dangling_model_references; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER forbid_dangling_model_references BEFORE DELETE OR UPDATE ON models FOR EACH ROW EXECUTE PROCEDURE forbid_dangling_model_references();
+CREATE TRIGGER forbid_dangling_model_references BEFORE DELETE OR UPDATE OF id ON models FOR EACH ROW EXECUTE PROCEDURE forbid_dangling_model_references();
 
 
 --
 -- Name: forbid_dangling_posterior_references; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER forbid_dangling_posterior_references BEFORE DELETE OR UPDATE ON posteriors FOR EACH ROW EXECUTE PROCEDURE forbid_dangling_posterior_references();
+CREATE TRIGGER forbid_dangling_posterior_references BEFORE DELETE OR UPDATE OF id ON posteriors FOR EACH ROW EXECUTE PROCEDURE forbid_dangling_posterior_references();
 
 
 --
@@ -5476,6 +5582,30 @@ ALTER TABLE ONLY benchmarks
 
 
 --
+-- Name: citation_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY benchmarks_ensembles
+    ADD CONSTRAINT citation_exists FOREIGN KEY (citation_id) REFERENCES citations(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: citation_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY metrics
+    ADD CONSTRAINT citation_exists FOREIGN KEY (citation_id) REFERENCES citations(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: citation_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY traits
+    ADD CONSTRAINT citation_exists FOREIGN KEY (citation_id) REFERENCES citations(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
 -- Name: cultivar_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5499,6 +5629,30 @@ ALTER TABLE ONLY sites_cultivars
 
 
 --
+-- Name: cultivar_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY traits
+    ADD CONSTRAINT cultivar_exists FOREIGN KEY (cultivar_id) REFERENCES cultivars(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: entity_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY traits
+    ADD CONSTRAINT entity_exists FOREIGN KEY (entity_id) REFERENCES entities(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: entity_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT entity_exists FOREIGN KEY (entity_id) REFERENCES entities(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
 -- Name: fk_citations_sites_citations_1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5511,7 +5665,7 @@ ALTER TABLE ONLY citations_sites
 --
 
 ALTER TABLE ONLY citations_sites
-    ADD CONSTRAINT fk_citations_sites_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id) ON DELETE RESTRICT;
+    ADD CONSTRAINT fk_citations_sites_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE ON DELETE RESTRICT NOT VALID;
 
 
 --
@@ -5527,7 +5681,7 @@ ALTER TABLE ONLY citations_treatments
 --
 
 ALTER TABLE ONLY citations_treatments
-    ADD CONSTRAINT fk_citations_treatments_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON DELETE CASCADE;
+    ADD CONSTRAINT fk_citations_treatments_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -5559,7 +5713,7 @@ ALTER TABLE ONLY cultivars
 --
 
 ALTER TABLE ONLY current_posteriors
-    ADD CONSTRAINT fk_current_posteriors_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id);
+    ADD CONSTRAINT fk_current_posteriors_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id) ON UPDATE CASCADE;
 
 
 --
@@ -5615,7 +5769,7 @@ ALTER TABLE ONLY dbfiles
 --
 
 ALTER TABLE ONLY ensembles
-    ADD CONSTRAINT fk_ensembles_workflows_1 FOREIGN KEY (workflow_id) REFERENCES workflows(id);
+    ADD CONSTRAINT fk_ensembles_workflows_1 FOREIGN KEY (workflow_id) REFERENCES workflows(id) ON UPDATE CASCADE;
 
 
 --
@@ -5667,6 +5821,14 @@ ALTER TABLE ONLY experiments_treatments
 
 
 --
+-- Name: fk_formats_mimetypes; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY formats
+    ADD CONSTRAINT fk_formats_mimetypes FOREIGN KEY (mimetype_id) REFERENCES mimetypes(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
 -- Name: fk_formats_variables_formats_1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5695,7 +5857,7 @@ ALTER TABLE ONLY inputs
 --
 
 ALTER TABLE ONLY inputs
-    ADD CONSTRAINT fk_inputs_inputs_1 FOREIGN KEY (parent_id) REFERENCES inputs(id);
+    ADD CONSTRAINT fk_inputs_inputs_1 FOREIGN KEY (parent_id) REFERENCES inputs(id) ON UPDATE CASCADE NOT VALID;
 
 
 --
@@ -5703,7 +5865,7 @@ ALTER TABLE ONLY inputs
 --
 
 ALTER TABLE ONLY inputs_runs
-    ADD CONSTRAINT fk_inputs_runs_inputs_1 FOREIGN KEY (input_id) REFERENCES inputs(id) ON DELETE CASCADE;
+    ADD CONSTRAINT fk_inputs_runs_inputs_1 FOREIGN KEY (input_id) REFERENCES inputs(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -5711,7 +5873,7 @@ ALTER TABLE ONLY inputs_runs
 --
 
 ALTER TABLE ONLY inputs_runs
-    ADD CONSTRAINT fk_inputs_runs_runs_1 FOREIGN KEY (run_id) REFERENCES runs(id) ON DELETE CASCADE;
+    ADD CONSTRAINT fk_inputs_runs_runs_1 FOREIGN KEY (run_id) REFERENCES runs(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -5719,7 +5881,7 @@ ALTER TABLE ONLY inputs_runs
 --
 
 ALTER TABLE ONLY inputs
-    ADD CONSTRAINT fk_inputs_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id);
+    ADD CONSTRAINT fk_inputs_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE NOT VALID;
 
 
 --
@@ -5735,7 +5897,7 @@ ALTER TABLE ONLY inputs
 --
 
 ALTER TABLE ONLY likelihoods
-    ADD CONSTRAINT fk_likelihoods_inputs_1 FOREIGN KEY (input_id) REFERENCES inputs(id);
+    ADD CONSTRAINT fk_likelihoods_inputs_1 FOREIGN KEY (input_id) REFERENCES inputs(id) ON UPDATE CASCADE;
 
 
 --
@@ -5743,7 +5905,7 @@ ALTER TABLE ONLY likelihoods
 --
 
 ALTER TABLE ONLY likelihoods
-    ADD CONSTRAINT fk_likelihoods_runs_1 FOREIGN KEY (run_id) REFERENCES runs(id);
+    ADD CONSTRAINT fk_likelihoods_runs_1 FOREIGN KEY (run_id) REFERENCES runs(id) ON UPDATE CASCADE;
 
 
 --
@@ -5775,7 +5937,7 @@ ALTER TABLE ONLY managements_treatments
 --
 
 ALTER TABLE ONLY managements_treatments
-    ADD CONSTRAINT fk_managements_treatments_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON DELETE CASCADE;
+    ADD CONSTRAINT fk_managements_treatments_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -5855,7 +6017,15 @@ ALTER TABLE ONLY pfts
 --
 
 ALTER TABLE ONLY pfts
-    ADD CONSTRAINT fk_pfts_pfts_1 FOREIGN KEY (parent_id) REFERENCES pfts(id);
+    ADD CONSTRAINT fk_pfts_pfts_1 FOREIGN KEY (parent_id) REFERENCES pfts(id) ON UPDATE CASCADE;
+
+
+--
+-- Name: fk_pfts_priors_pfts_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pfts_priors
+    ADD CONSTRAINT fk_pfts_priors_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
 
 
 --
@@ -5863,7 +6033,7 @@ ALTER TABLE ONLY pfts
 --
 
 ALTER TABLE ONLY posterior_samples
-    ADD CONSTRAINT fk_posterior_samples_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id);
+    ADD CONSTRAINT fk_posterior_samples_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id) ON UPDATE CASCADE;
 
 
 --
@@ -5879,7 +6049,7 @@ ALTER TABLE ONLY posterior_samples
 --
 
 ALTER TABLE ONLY posterior_samples
-    ADD CONSTRAINT fk_posterior_samples_posteriors_1 FOREIGN KEY (posterior_id) REFERENCES posteriors(id);
+    ADD CONSTRAINT fk_posterior_samples_posteriors_1 FOREIGN KEY (posterior_id) REFERENCES posteriors(id) ON UPDATE CASCADE;
 
 
 --
@@ -5895,7 +6065,7 @@ ALTER TABLE ONLY posterior_samples
 --
 
 ALTER TABLE ONLY posteriors_ensembles
-    ADD CONSTRAINT fk_posteriors_ensembles_ensembles_1 FOREIGN KEY (ensemble_id) REFERENCES ensembles(id) ON DELETE CASCADE;
+    ADD CONSTRAINT fk_posteriors_ensembles_ensembles_1 FOREIGN KEY (ensemble_id) REFERENCES ensembles(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -5903,7 +6073,7 @@ ALTER TABLE ONLY posteriors_ensembles
 --
 
 ALTER TABLE ONLY posteriors_ensembles
-    ADD CONSTRAINT fk_posteriors_ensembles_posteriors_1 FOREIGN KEY (posterior_id) REFERENCES posteriors(id) ON DELETE CASCADE;
+    ADD CONSTRAINT fk_posteriors_ensembles_posteriors_1 FOREIGN KEY (posterior_id) REFERENCES posteriors(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -5911,7 +6081,7 @@ ALTER TABLE ONLY posteriors_ensembles
 --
 
 ALTER TABLE ONLY posteriors
-    ADD CONSTRAINT fk_posteriors_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id);
+    ADD CONSTRAINT fk_posteriors_pfts_1 FOREIGN KEY (pft_id) REFERENCES pfts(id) ON UPDATE CASCADE;
 
 
 --
@@ -5943,7 +6113,7 @@ ALTER TABLE ONLY projects
 --
 
 ALTER TABLE ONLY runs
-    ADD CONSTRAINT fk_runs_ensembles_1 FOREIGN KEY (ensemble_id) REFERENCES ensembles(id);
+    ADD CONSTRAINT fk_runs_ensembles_1 FOREIGN KEY (ensemble_id) REFERENCES ensembles(id) ON UPDATE CASCADE;
 
 
 --
@@ -5959,7 +6129,7 @@ ALTER TABLE ONLY runs
 --
 
 ALTER TABLE ONLY runs
-    ADD CONSTRAINT fk_runs_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id);
+    ADD CONSTRAINT fk_runs_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE NOT VALID;
 
 
 --
@@ -6011,6 +6181,22 @@ ALTER TABLE ONLY trait_covariate_associations
 
 
 --
+-- Name: fk_traits_sites_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY traits
+    ADD CONSTRAINT fk_traits_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: fk_traits_treatments_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY traits
+    ADD CONSTRAINT fk_traits_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
 -- Name: fk_workflows_models_1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6023,7 +6209,7 @@ ALTER TABLE ONLY workflows
 --
 
 ALTER TABLE ONLY workflows
-    ADD CONSTRAINT fk_workflows_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id);
+    ADD CONSTRAINT fk_workflows_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE NOT VALID;
 
 
 --
@@ -6059,6 +6245,14 @@ ALTER TABLE ONLY yields
 
 
 --
+-- Name: fk_yields_sites_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT fk_yields_sites_1 FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
 -- Name: fk_yields_species_1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6071,7 +6265,7 @@ ALTER TABLE ONLY yields
 --
 
 ALTER TABLE ONLY yields
-    ADD CONSTRAINT fk_yields_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id);
+    ADD CONSTRAINT fk_yields_treatments_1 FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON UPDATE CASCADE;
 
 
 --
@@ -6080,6 +6274,22 @@ ALTER TABLE ONLY yields
 
 ALTER TABLE ONLY yields
     ADD CONSTRAINT fk_yields_users_1 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: method_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY traits
+    ADD CONSTRAINT method_exists FOREIGN KEY (method_id) REFERENCES methods(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: mimetype_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY formats
+    ADD CONSTRAINT mimetype_exists FOREIGN KEY (mimetype_id) REFERENCES mimetypes(id) ON UPDATE CASCADE NOT VALID;
 
 
 --
@@ -6113,6 +6323,22 @@ COMMENT ON CONSTRAINT pft_exists ON pfts_species IS 'Ensure the referred-to pft 
 
 
 --
+-- Name: pft_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pfts_priors
+    ADD CONSTRAINT pft_exists FOREIGN KEY (pft_id) REFERENCES pfts(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
+-- Name: prior_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pfts_priors
+    ADD CONSTRAINT prior_exists FOREIGN KEY (prior_id) REFERENCES priors(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
 -- Name: reference_runs_model_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6126,6 +6352,22 @@ ALTER TABLE ONLY reference_runs
 
 ALTER TABLE ONLY sites_cultivars
     ADD CONSTRAINT site_exists FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE;
+
+
+--
+-- Name: site_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY traits
+    ADD CONSTRAINT site_exists FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: site_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY yields
+    ADD CONSTRAINT site_exists FOREIGN KEY (site_id) REFERENCES sites(id) ON UPDATE CASCADE NOT VALID;
 
 
 --
@@ -6144,6 +6386,226 @@ COMMENT ON CONSTRAINT species_exists ON pfts_species IS 'Ensure the referred-to 
 
 
 --
+-- Name: species_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY traits
+    ADD CONSTRAINT species_exists FOREIGN KEY (specie_id) REFERENCES species(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: trait_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY covariates
+    ADD CONSTRAINT trait_exists FOREIGN KEY (trait_id) REFERENCES traits(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
+-- Name: treatment_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY traits
+    ADD CONSTRAINT treatment_exists FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: user_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY benchmarks_ensembles
+    ADD CONSTRAINT user_exists FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: user_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY benchmarks
+    ADD CONSTRAINT user_exists FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: user_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY benchmark_sets
+    ADD CONSTRAINT user_exists FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: user_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY benchmarks_ensembles_scores
+    ADD CONSTRAINT user_exists FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: user_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY metrics
+    ADD CONSTRAINT user_exists FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: user_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reference_runs
+    ADD CONSTRAINT user_exists FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: user_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY traits
+    ADD CONSTRAINT user_exists FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: user_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY treatments
+    ADD CONSTRAINT user_exists FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
+-- Name: variable_exists; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY traits
+    ADD CONSTRAINT variable_exists FOREIGN KEY (variable_id) REFERENCES variables(id) ON UPDATE CASCADE NOT VALID;
+
+
+--
 -- PostgreSQL database dump complete
 --
+
+SET search_path TO "$user",public;
+
+INSERT INTO schema_migrations (version) VALUES ('1');
+
+INSERT INTO schema_migrations (version) VALUES ('20130104205059');
+
+INSERT INTO schema_migrations (version) VALUES ('20130104211901');
+
+INSERT INTO schema_migrations (version) VALUES ('20130104211946');
+
+INSERT INTO schema_migrations (version) VALUES ('20130109205535');
+
+INSERT INTO schema_migrations (version) VALUES ('20130222222929');
+
+INSERT INTO schema_migrations (version) VALUES ('20130425152503');
+
+INSERT INTO schema_migrations (version) VALUES ('20130624001504');
+
+INSERT INTO schema_migrations (version) VALUES ('20130629205658');
+
+INSERT INTO schema_migrations (version) VALUES ('20130707190720');
+
+INSERT INTO schema_migrations (version) VALUES ('20130717162614');
+
+INSERT INTO schema_migrations (version) VALUES ('20130813212131');
+
+INSERT INTO schema_migrations (version) VALUES ('20130829162053');
+
+INSERT INTO schema_migrations (version) VALUES ('20130830184559');
+
+INSERT INTO schema_migrations (version) VALUES ('20140418005637');
+
+INSERT INTO schema_migrations (version) VALUES ('20140422155957');
+
+INSERT INTO schema_migrations (version) VALUES ('20140423220457');
+
+INSERT INTO schema_migrations (version) VALUES ('20140506210037');
+
+INSERT INTO schema_migrations (version) VALUES ('20140515205254');
+
+INSERT INTO schema_migrations (version) VALUES ('20140521180349');
+
+INSERT INTO schema_migrations (version) VALUES ('20140604192901');
+
+INSERT INTO schema_migrations (version) VALUES ('20140610210928');
+
+INSERT INTO schema_migrations (version) VALUES ('20140617163304');
+
+INSERT INTO schema_migrations (version) VALUES ('20140621060009');
+
+INSERT INTO schema_migrations (version) VALUES ('20140623004229');
+
+INSERT INTO schema_migrations (version) VALUES ('20140624185610');
+
+INSERT INTO schema_migrations (version) VALUES ('20140708232320');
+
+INSERT INTO schema_migrations (version) VALUES ('20140729045640');
+
+INSERT INTO schema_migrations (version) VALUES ('20140904220035');
+
+INSERT INTO schema_migrations (version) VALUES ('20140904221818');
+
+INSERT INTO schema_migrations (version) VALUES ('20140909212759');
+
+INSERT INTO schema_migrations (version) VALUES ('20140915153555');
+
+INSERT INTO schema_migrations (version) VALUES ('20141009160121');
+
+INSERT INTO schema_migrations (version) VALUES ('20141208165401');
+
+INSERT INTO schema_migrations (version) VALUES ('20141211220550');
+
+INSERT INTO schema_migrations (version) VALUES ('20150202215147');
+
+INSERT INTO schema_migrations (version) VALUES ('20150202220519');
+
+INSERT INTO schema_migrations (version) VALUES ('20150213162341');
+
+INSERT INTO schema_migrations (version) VALUES ('20150313165132');
+
+INSERT INTO schema_migrations (version) VALUES ('20150521211114');
+
+INSERT INTO schema_migrations (version) VALUES ('20150624220952');
+
+INSERT INTO schema_migrations (version) VALUES ('20150624222656');
+
+INSERT INTO schema_migrations (version) VALUES ('20150625184958');
+
+INSERT INTO schema_migrations (version) VALUES ('20150904184512');
+
+INSERT INTO schema_migrations (version) VALUES ('20151007174432');
+
+INSERT INTO schema_migrations (version) VALUES ('20151011190026');
+
+INSERT INTO schema_migrations (version) VALUES ('20151014182146');
+
+INSERT INTO schema_migrations (version) VALUES ('20160303221049');
+
+INSERT INTO schema_migrations (version) VALUES ('20160412030352');
+
+INSERT INTO schema_migrations (version) VALUES ('20160523165531');
+
+INSERT INTO schema_migrations (version) VALUES ('20160617133217');
+
+INSERT INTO schema_migrations (version) VALUES ('20160711231257');
+
+INSERT INTO schema_migrations (version) VALUES ('20160720182233');
+
+INSERT INTO schema_migrations (version) VALUES ('20160930213737');
+
+INSERT INTO schema_migrations (version) VALUES ('20161003180105');
+
+INSERT INTO schema_migrations (version) VALUES ('20161005181021');
+
+INSERT INTO schema_migrations (version) VALUES ('20161129192658');
+
+INSERT INTO schema_migrations (version) VALUES ('20170118205944');
+
+INSERT INTO schema_migrations (version) VALUES ('20170415183619');
+
+INSERT INTO schema_migrations (version) VALUES ('20170712171513');
+
+INSERT INTO schema_migrations (version) VALUES ('20180510184222');
 

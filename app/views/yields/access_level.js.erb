@@ -1,0 +1,7 @@
+<% if @saved %>
+  jQuery("#<%= @element_id %>").addClass('alert-success', 500)
+  jQuery("#<%= @element_id %>").removeClass('alert-success', 500)
+<% else %>
+  jQuery("#<%= @element_id %>").addClass('alert-error', 500)
+  jQuery("#<%= @element_id %>").removeClass('alert-error', 500)
+<% end %>

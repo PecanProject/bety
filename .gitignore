@@ -18,5 +18,7 @@ orig.public
 public/maps/*
 config/initializers/site_keys.rb
 .Rproj.user
+public/assets
 
-
+# Ignore encrypted secrets key file.
+config/secrets.yml.key
