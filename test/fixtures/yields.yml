@@ -5,7 +5,7 @@ test_yield:
   treatment_id: 1
   cultivar_id: 8
   date: "1998-11-15"
-  dateloc: #<BigDecimal:2aaaab890500,'0.6E1',9(18)>
+  dateloc: 6
   stat: NULL
   mean: '0.107E2'
   n: NULL

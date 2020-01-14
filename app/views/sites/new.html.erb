@@ -309,7 +309,7 @@
             <%= f.text_field :lon, :class => "input-full" %>
             <br /><br />
             <%= f.label :soil %>
-            <%= f.select :soil, %w(sandloamy sandsandy loamsilt loamloamsandy clay loamsilty clay loamclay loamsandy claysilty clayclaypeat), { :include_blank => true }, :class => "input-full" %>
+            <%= f.select :soil, Site.soil_classes, { :include_blank => true }, :class => "input-full" %>
             
             <div class="two columns alpha">
               <%= f.label :clay_pct, "% Clay" %>

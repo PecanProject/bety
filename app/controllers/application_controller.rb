@@ -24,8 +24,7 @@ class ApplicationController < ActionController::Base
       flash[:error] = e.message
     end
 
-
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   # Be sure to include AuthenticationSystem in Application Controller instead
@@ -117,7 +116,7 @@ class ApplicationController < ActionController::Base
     search_info += "\nsearch string: \"" + (params['search'] || "") + "\""
     search_info += "\nformat: " + (params['format'] || 'html')
     search_info += "\nSQL query: " + sql # method_object.call(arg).send(additional_method).to_sql
-    search_info += "\nall parameters: " + params.inspect
+    search_info += "\nall parameters: " + params.permit!.inspect
 
     logger.info(search_info)
 
@@ -170,13 +169,26 @@ class ApplicationController < ActionController::Base
     logger.info(e)
     match = e.message.match /The value of .*? for .*? .*? must be between .*? and .*?\./
     flash[:error] = match && match[0] || e.message
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
-  # Given a model class, a list of columns (attributes) of the model, and a
-  # search term, search the database table corresponding to the model and return
-  # objects for all rows that contain the text of the search term in any of the
-  # text of any of the given columns.
+  # Given a model class, a list of columns (attributes) of the model,
+  # and a search term, search the database table corresponding to the
+  # model and return objects for all rows that contain the text of the
+  # search term in the text of at least one of the given columns.  If
+  # the search string has fewer than two characters and no matches are
+  # found, or if +column_list+ is empty, return objects for _all_
+  # rows.
+  #
+  # @param model_class [#where, #scoped] Typically this will be either a
+  #   subclass of {ActiveRecord::Base} (e.g. {Citation}) or and instance of
+  #   {ActiveRecord::Relation} (e.g. {Citation.order('author')}).
+  # @param column_list [Array<String>] An array of names of columns in the table
+  #   corresponding to `model_class`.
+  # @param search_term [String]
+  #
+  # @return [ActiveRecord::Relation] This acts like an Array whose members are
+  #   instances of the model associated with `model_class`.
   def search_model(model_class, column_list, search_term)
     clauses = column_list.collect {|column_name| "LOWER(#{column_name}) LIKE LOWER(:match_string)"}
     where_clause = clauses.join(" OR ")
@@ -188,9 +200,6 @@ class ApplicationController < ActionController::Base
         # If the user has only typed one letter, just return everything so the
         # user can at least see some possible options.
         result_set = model_class.scoped
-      else
-        # Otherwise, let the user know there were no matches.
-        result_set = [ { label: "No matches", value: "" }]
       end
     end
     return result_set

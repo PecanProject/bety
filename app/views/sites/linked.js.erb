@@ -1,0 +1,7 @@
+jQuery("#site-<%= @site.id %>").remove()
+<% if @linking %>
+  jQuery("#linked").html("<%= escape_javascript(render "linked", citation: @citation) %>")
+<% end %>
+// (If unlinking, removing the site from the "linked sites" list is probably
+// sufficient even though this means we won't see the newly-unlinked sites in
+// the non-associated sites list right away.)

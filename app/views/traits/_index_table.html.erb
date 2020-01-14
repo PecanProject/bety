@@ -80,9 +80,11 @@
    <%= observe_field("access_level-" + trait.id.to_s,
                   :frequency => 1,
                   :with => "'id=' + #{trait.id} + '&trait[access_level]=' + Form.Element.getValue('access_level-#{trait.id.to_s}')",
-                  :url => { :action => :access_level }) %>
+                  :url => { :action => :access_level },
+                  :event_name => "change") %>
    <%= observe_field("checked-" + trait.id.to_s,
                   :frequency => 1,
                   :with => "'id=' + #{trait.id} + '&trait[checked]=' + Form.Element.getValue('checked-#{trait.id.to_s}')",
-                  :url => { :action => :checked }) %>
+                  :url => { :action => :checked },
+                  :event_name => "change") %>
 <% end %>

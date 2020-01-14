@@ -1,11 +1,12 @@
 class CitationsController < ApplicationController
 
-  before_filter :login_required 
+  before_action :login_required
   helper_method :sort_column, :sort_direction
 
   require 'csv'
 
-  # general autocompletion
+  # General autocompletion
+  # @calls {search_model}
   def autocomplete
     citations = search_model(Citation.order('author'), %w( author title ), params[:term])
 
@@ -122,7 +123,10 @@ class CitationsController < ApplicationController
   # GET /citations/1
   # GET /citations/1.xml
   def show
-    @citation = Citation.where(:id => params[:id]).includes(params[:include]).first
+    # find_by! throws an ActiveRecord::RecordNotFound exception if no citation
+    # with the given id exists so that we don't attempt to display a nil
+    # citation.
+    @citation = Citation.includes(params[:include]).find_by!(:id => params[:id])
 
     respond_to do |format|
       format.html # show.html.erb

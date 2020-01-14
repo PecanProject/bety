@@ -3,8 +3,8 @@ require 'utilities/sql_comments.rb'
 class Api::V1::BaseController < Api::BaseController
   include ApiAuthenticationSystem
 
-  before_filter :set_content_type # IMPORTANT: Run this filter first!
-  before_filter :login_required
+  before_action :set_content_type # IMPORTANT: Run this filter first!
+  before_action :login_required
 
   NO_CONSTRAINT = lambda { |value| true }
 

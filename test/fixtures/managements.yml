@@ -1,9 +1,9 @@
 test_management:
   citation_id: 1
   date: "2004-03-01"
-  dateloc: #<BigDecimal:2aaaabb26a80,'0.6E1',9(18)>
+  dateloc: 6
   mgmttype: "planting (plants / m2)"
-  level: #<BigDecimal:2aaaabb26940,'0.15E1',18(18)>
+  level: 1.5
   units: "trees/m2"
   notes: "two former agricultural fields with a total area of..."
   created_at: "2013-03-15 00:55:36"

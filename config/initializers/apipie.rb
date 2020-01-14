@@ -6,4 +6,6 @@ Apipie.configure do |config|
   # where is your API defined?
   config.api_controllers_matcher = "#{Rails.root}/app/controllers/api/v1/*.rb"
 
+  config.translate               = false
+  config.default_locale          = nil
 end

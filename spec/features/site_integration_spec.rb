@@ -56,7 +56,9 @@ feature 'Sites index works' do
       it 'show allow adding new related citations', js: true do
         click_link 'View Related Citations'
         fill_in 'search_citations', with: 'Wood'
-        sleep 1
+        # In Ruby 2.6 especially, merely filling in a field doesn't seem to
+        # trigger the needed keyup event, so do it manually:
+        find_field('search_citations').trigger(:keyup)
         click_link '+'
         click_button 'Update'
         # reopen related citations listing

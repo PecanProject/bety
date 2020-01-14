@@ -1,0 +1,15 @@
+jQuery('#edit_managements_treatments').html("<%= escape_javascript(render 'edit_managements_treatments', management: @management, treatment: @treatment) %>")
+
+<% if @management.persisted? %>
+  <% @management = @management.dup %>
+  jQuery('#new_management').slideUp(800);
+<% end %>
+
+jQuery('#new_management').html("<%= escape_javascript(render 'new_management', management: @management, treatment: @treatment) %>");
+
+jQuery('div.alert').detach();
+jQuery('div.nav').after("<%= escape_javascript(render 'alert', flash: flash) %>")
+
+jQuery('button.close').on('click', function(){
+  jQuery(this).closest('div.alert').hide();
+})

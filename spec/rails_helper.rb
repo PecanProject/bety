@@ -11,7 +11,7 @@ begin
   require 'capybara/rspec'
 rescue => e
   puts e.message
-  puts "Go to https://pecan.gitbooks.io/betydb-documentation/content/automated_tests.html for instructions on setting up the testing environment."
+  puts "Go to https://pecanproject.github.io/bety-documentation/technical/automated-tests.html for instructions on setting up the testing environment."
   exit
 end
 
@@ -69,8 +69,10 @@ RSpec.configure do |config|
     Bundler.require('javascript_testing')
     Capybara.javascript_driver = :webkit
 
-    Capybara::Webkit.configure do |config|
-      config.block_unknown_urls
+    if defined?(Capybara::Webkit)
+      Capybara::Webkit.configure do |config|
+        config.block_unknown_urls
+      end
     end
 
     class Binding

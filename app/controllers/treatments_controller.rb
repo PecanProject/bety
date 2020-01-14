@@ -1,7 +1,7 @@
 require 'will_paginate/array'
 
 class TreatmentsController < ApplicationController
-  before_filter :login_required, :except => [ :show ]
+  before_action :login_required, :except => [ :show ]
 
   helper_method :sort_column, :sort_direction
 
@@ -50,24 +50,17 @@ class TreatmentsController < ApplicationController
 
     @management = Management.new(params[:management])
 
-    render :update do |page|
-      if @management.save
-        @treatment.managements << @management
-        flash[:notice] = "Management was successfully created"
-        page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
+    if @management.save
+      @treatment.managements << @management
+      flash.now[:notice] = "Management was successfully created"
+    else
+      flash.now[:error] = "Management was not created"
+    end
 
-        # After we've added the newly-created management to the collection, we
-        # have to pass an unsaved copy of it to the 'new_management' partial so the
-        # form it contains doesn't try to to a PUT instead of a POST:
-        @management = @management.dup
-
-        page.replace_html 'new_management', :partial => 'new_management'
-        page.call 'showHide', 'new_management'
-      else
-        flash[:notice] = "Management was not created"
-        page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
-        page.replace_html 'new_management', :partial => 'new_management'
-      end
+    respond_to do |format|
+      format.js {
+        render layout: false, locals: { flash: flash }
+      }
     end
    end
 
@@ -75,12 +68,12 @@ class TreatmentsController < ApplicationController
     @treatment = Treatment.find(params[:id])
     @management = Management.find(params[:management])
 
-    render :update do |page|
-      if @management.treatments.delete(@treatment)
-        page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
-      else
-        page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
-      end
+    @management.treatments.delete(@treatment)
+
+    respond_to do |format|
+      format.js {
+        render "edit_managements_treatments", layout: false
+      }
     end
   end
 
@@ -88,16 +81,17 @@ class TreatmentsController < ApplicationController
 
     @treatment = Treatment.find(params[:id])
 
-    render :update do |page|
-      if !params[:management].nil?
-        params[:management][:id].each do |c|
-          next if c.empty?
-          @treatment.managements << Management.find(c)
-        end
-        page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
-      else
-        page.replace_html 'edit_managements_treatments', :partial => 'edit_managements_treatments'
+    if !params[:management].nil?
+      params[:management][:id].each do |c|
+        next if c.empty?
+        @treatment.managements << Management.find(c)
       end
+    end
+
+    respond_to do |format|
+      format.js {
+        render layout: false
+      }
     end
   end
 
@@ -113,12 +107,12 @@ class TreatmentsController < ApplicationController
     respond_to do |format|
       if @treatment.save
         flash[:notice] = 'Treatment was successfully updated.'
-        format.html { redirect_to :back }
+        format.html { redirect_back(fallback_location: root_path) }
         format.xml  { head :ok }
         format.csv  { head :ok }
         format.json  { head :ok }
       else
-        format.html { redirect_to :back }
+        format.html { redirect_back(fallback_location: root_path) }
         format.xml  { render :xml => @treatment.errors, :status => :unprocessable_entity }
         format.csv  { render :csv => @treatment.errors, :status => :unprocessable_entity }
         format.json  { render :json => @treatment.errors, :status => :unprocessable_entity }

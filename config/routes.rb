@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   apipie
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -55,15 +56,15 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id(.:format)))'
+  # routes for autocompletion actions used by the bulk upload wizard:
+  %w{citations cultivars methods sites species treatments}.each do |controller|
+    get "#{controller}/bu_autocomplete", controller: controller
+  end
 
-  # route for autocompletion actions used by the bulk upload wizard:
-  get ':controller/bu_autocomplete', action: 'bu_autocomplete'
-
-  # route for other autocompletion actions:
-  get ':controller/autocomplete', action: 'autocomplete'
+  # routes for other autocompletion actions:
+  %w{citations mimetypes inputs sites variables}.each do |controller|
+    get "#{controller}/autocomplete", controller: controller
+  end
 
   resources :yieldsviews, :only => [:show]
   resources :workflows
@@ -85,9 +86,9 @@ Rails.application.routes.draw do
   post '/feedback/feedback_email' => 'feedback#feedback_email'
   resources :formats do
     post :add_formats_variables, on: :collection
+    post :edit_formats_variables, on: :collection
+    post :rem_formats_variables, on: :member
   end
-  get 'formats/edit_formats_variables'
-  get '/formats/rem_formats_variables(/:id)' => 'formats#rem_formats_variables'
 
   resources :likelihoods
   resources :inputs do
@@ -303,6 +304,8 @@ Rails.application.routes.draw do
   get '/bulk_upload/choose_global_data_values', :as => :choose_global_data_values
   match '/bulk_upload/confirm_data', :as => :bulk_upload_data_confirmation, via: [:get, :post]
   post '/bulk_upload/insert_data', :as => :bulk_upload_data_insertion
+
+  post '/bulk_upload/store_trait_method_mapping_in_session'
 
   # This seems a somewhat kludgy way to get 'link_to "CF Guidelines",
   # guidelines_path' to create a robust link (i.e., one that works even in

@@ -1,4 +1,5 @@
 class Experiment < ActiveRecord::Base
+  attr_protected []
 
   extend SimpleSearch
 

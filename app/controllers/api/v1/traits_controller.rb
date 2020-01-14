@@ -38,7 +38,7 @@ class Api::V1::TraitsController < Api::V1::BaseController
     end
     create_from_xml_string(xml_data)
 
-    render status: 201, content_type: "application/xml"
+    render status: 201
 
   rescue Nokogiri::XML::SyntaxError, InvalidDocument, InvalidData,
     Yajl::ParseError, Api::CsvHandler::BadHeading
