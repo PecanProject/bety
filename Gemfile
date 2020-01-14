@@ -6,7 +6,7 @@ gem "rails", "5.1.5"
 gem "nokogiri"
 gem "narray", "0.6.0.4"
 gem "choice", "0.1.6"
-gem "comma", "3.0.4"
+gem "comma", "~> 4.3.2"
 gem "json"
 gem "rgeo", "~> 0.5.0"
 gem "multi_json"
@@ -28,6 +28,7 @@ gem 'protected_attributes_continued' # Use this until and unless we start using 
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'uglifier'
+gem 'activemodel-serializers-xml' # no longer part of Rails proper as of Rails 5
 
 gem 'jquery-rails'
 gem 'jquery-ui-rails'

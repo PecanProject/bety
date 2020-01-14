@@ -5,6 +5,12 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
+## [Unreleased]
+
+### Fixes
+
+- #672 : Added activemodel-serializers-xml Gem to restore functionality of "original" API XML endpoints.
+- #674 : Upgraded comma Gem to restore CSV file downloads.
 
 ## [5.2.2] - 2019-12-06
 
