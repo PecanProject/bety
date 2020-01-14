@@ -24,7 +24,7 @@
     <td><%= prior.notes %></td>
     <td><%= link_to 'Show', prior %></td>
     <td><%= link_to 'Edit', edit_prior_path(prior) %></td>
-    <td><%= link_to 'Destroy', prior, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Destroy', prior, data: { :confirm => 'Are you sure?' }, :method => :delete %></td>
   </tr>
 <% end %>
 </table>

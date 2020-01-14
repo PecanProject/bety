@@ -70,7 +70,7 @@
           </div>
           <div class="four columns omega">
             <%= f.label 'access_level', "Data Access Level*" %>
-            <%= f.select :access_level, [ ["1. Restricted", 1], ["2. Internal EBI & Collaborators", 2], ["3. External Researcher", 3], ["4. Public", 4] ] %>
+            <%= f.select :access_level, ApplicationHelper::DATA_ACCESS_LEVELS %>
           </div>
         </div>
 
@@ -98,8 +98,8 @@
 
 <%= observe_field("change_password",
                   :frequency => 1,
-                  :function => "var u = $('user_password'); u.disabled = !u.disabled;$('user_password_confirmation').disabled = u.disabled;") %>
-
+                  :event_name => "change",
+                  :function => "var u = jQuery('#user_password')[0]; u.disabled = !u.disabled; jQuery('#user_password_confirmation')[0].disabled = u.disabled;") %>
 
 
 

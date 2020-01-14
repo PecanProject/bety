@@ -139,13 +139,6 @@ CSV
       expect(first("div.alert")).to have_content "No file chosen"
     end
 
-    specify 'Attempting to run the insert_data action without having uploaded a CSV file will cause a redirect to the start_upload page' do
-      visit '/bulk_upload/insert_data'
-
-      expect(first("header")).to have_content "New Bulk Upload"
-      expect(first("div.alert")).to have_content "No file chosen"
-    end
-
   end
 
 
@@ -187,12 +180,6 @@ CSV
 
       specify 'Attempting to visit the confirm_data page without having choosen a citation will cause a redirect to the choose_global_citation page' do
         visit '/bulk_upload/confirm_data'
-
-        expect(first("header")).to have_content "Choose a Citation"
-      end
-
-      specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the choose_global_citation page' do
-        visit '/bulk_upload/insert_data'
 
         expect(first("header")).to have_content "Choose a Citation"
       end
@@ -276,12 +263,6 @@ CSV
       expect(page).to have_content "Data Value Errors"
     end
 
-    specify 'Attempting to call the insert_data action without having choosen a citation will cause a redirect to the display_csv_file page' do
-      visit '/bulk_upload/insert_data'
-
-      expect(page).to have_content "Data Value Errors"
-    end
-
   end
 
   # Tests for RM issue #2525 (item 4 of update #2):
@@ -312,12 +293,6 @@ CSV
       expect(first("header")).to have_content "Specify Upload Options and Global Values"
     end
 
-    specify 'Attempting to call the insert_data action without having specified missing information will cause a redirect to the choose_global_data_values page' do
-      visit '/bulk_upload/insert_data'
-
-      expect(first("header")).to have_content "Specify Upload Options and Global Values"
-    end
-
   end
 
   context "Various scenarios involving a file that requires no interactively-specified additional data" do
@@ -341,7 +316,7 @@ CSV
       attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_complete_data.csv') # full path is required if using selenium
       click_button 'Upload'
       click_link 'Specify'
-      expect(page).not_to have_content("cultivar")
+      expect(page.document.find('.content')).not_to have_content("cultivar")
     end
 
     context "A citation has been selected but rounding has not been specified" do
@@ -379,15 +354,6 @@ CSV
         expect(first("div.alert")).to have_content "Removing linked citation since you have citation information in your data set"
         expect(first("header")).to have_content "Specify Upload Options and Global Value"
 
-      end
-
-      specify 'If you have a session citation and then visit the insert_data action, the session citation should be removed' +
-        "\n        and if you have not specified the amount of rounding, you should be returned to the \"choose global values\" page." do
-        visit '/bulk_upload/insert_data'
-
-        expect(first("header")).to have_content "Specify Upload Options and Global Value"
-        expect(page).not_to have_content "Citation: "
-        expect(first("div.alert")).to have_content "Removing linked citation since you have citation information in your data set"
       end
 
     end # context "A citation has been selected but rounding has not been specified"
@@ -430,111 +396,291 @@ CSV
 
   end # context "Various scenarios involving a file that requires no interactively-specified additional data"
 
-  # Tests related to Redmine task #2556
-  context "A file with some missing optional covariate values has been uploaded" do
+  context "Various scenarios involving the variable names in the heading of a trait upload file" do
 
-    before :all do
-      f = File.new("spec/tmp/file_with_missing_covariate_values.csv", "w")
-      f.write <<CSV
+    # Tests related to Redmine task #2556
+    context "A file with some missing optional covariate values has been uploaded" do
+
+      before :all do
+        f = File.new("spec/tmp/file_with_missing_covariate_values.csv", "w")
+        f.write <<CSV
 SLA,canopy_layer,citation_author,citation_year,citation_title,site,treatment,date,species,access_level
 550,3,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
 540,,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
 460,2,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
 440,,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1
 CSV
-      f.close
-    end
+        f.close
+      end
 
-    after :all do
-      File::delete("spec/tmp/file_with_missing_covariate_values.csv")
-    end
+      after :all do
+        File::delete("spec/tmp/file_with_missing_covariate_values.csv")
+      end
 
-    it "should pass validation", js: true do
+      it "should pass validation", js: true do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+        click_button 'Upload'
+
+        expect(first("header")).to have_content "Uploaded file: file_with_missing_covariate_values.csv"
+        expect(current_path).to match(/display_csv_file/)
+        expect(page.body).not_to have_selector '#error_explanation'
+      end
+
+      it "should only insert two new covariate rows", js: true do
+
+        start_size = Covariate.all.size
+
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+        click_button 'Upload'
+        click_link 'Specify'
+        click_button "Confirm"
+        click_button "Insert"
+
+        sleep 1 # give time for insertion to complete
+        end_size = Covariate.all.size
+
+        # clean up:
+
+        time_limit = page.driver.is_a?(Capybara::Selenium::Driver) ? 90 # allow longer for Selenium driver
+                     : 30 # than for WebKit
+        begin
+          # Wrap while loops in timeout in case some deletion fails
+          Timeout.timeout time_limit do
+
+            # Remove covariates before traits because they refer to traits:
+            visit '/covariates'
+            # This relies on the covariates being sorted by id and the fact that the
+            # added covariates are assigned higher ids than the fixture covariates:
+            while all(:xpath, "//tbody/tr").size > start_size
+              # delete all covariates except the first
+              first(:xpath, "//tbody/tr[count(preceding-sibling::tr) >= #{start_size}]//a[@alt = 'delete']").click
+              # If we're using Selenium, we have to deal with the modal dialogue:
+              if page.driver.is_a? Capybara::Selenium::Driver
+                a = page.driver.browser.switch_to.alert
+                a.accept
+              end
+              sleep 1
+            end
+
+            # Removed traits before entities because they refer to entities:
+            visit '/traits'
+            # This relies on the fixtures setting the "checked" attribute to "passed" for them not to be deleted:
+            while all(:xpath, "//tbody/tr[not(td/select/option[@selected = 'selected']/text() = 'passed')]").size > 0
+              # delete all covariates except the first
+              first(:xpath, "//tbody/tr[not(td/select/option[@selected = 'selected']/text() = 'passed')]//a[@alt = 'delete']").click
+              # If we're using Selenium, we have to deal with the modal dialogue:
+              if page.driver.is_a? Capybara::Selenium::Driver
+                a = page.driver.browser.switch_to.alert
+                a.accept
+              end
+              sleep 1
+            end
+
+            visit '/entities'
+            # This relies on the fixures setting the "notes" attribute to "keepme" as a marker not to delete them:
+            while all(:xpath, "//tbody/tr[not(td/text() = 'keepme')]").size > 0
+              # delete all covariates except the first
+              first(:xpath, "//tbody/tr[not(td/text() = 'keepme')]//a[@alt = 'delete']").click
+              # If we're using Selenium, we have to deal with the modal dialogue:
+              if page.driver.is_a? Capybara::Selenium::Driver
+                a = page.driver.browser.switch_to.alert
+                a.accept
+              end
+              sleep 1
+            end
+
+          end # timeout
+
+        rescue Timeout::Error => e
+
+          raise "Clean-up stage timed out; reload fixture to clean up manually"
+
+        end # begin/rescue block
+
+        expect(end_size - start_size).to eq(2)
+
+      end
+
+    end # context "A file with some missing covariate values has been uploaded"
+
+    describe "How parsing of variables in the heading works" do
+
+      specify "A variable in the heading should be recognized even if it isn't in the trait_covariate_associations table" do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', Rails.root.join('spec',
+                                                'fixtures',
+                                                'files',
+                                                'bulk_upload',
+                                                'trait_variables_in_heading',
+                                                'valid-test-data-with-traits-not-in-associations-table.csv')
+        click_button 'Upload'
+        expect(page).not_to have_content('error')
+        click_link 'Specify'
+        click_button 'Confirm'
+        expect {
+          click_button 'Insert Data'
+          # Use this instead of sleep():
+          expect(first("div.alert-success")).to have_content("Data from valid-test-data-with-traits-not-in-associations-table.csv was successfully uploaded.")
+        }.to change { Trait.count }.by(2)
+               .and change { Covariate.count }.by(0)
+                      .and change { Entity.count }.by 1;     # The two rows in the file have the same entity name.
+      end
+
+      specify "If there is a covariate variable in the heading without there being a corresponding trait variable, the CSV file is invalid" do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', Rails.root.join('spec',
+                                                'fixtures',
+                                                'files',
+                                                'bulk_upload',
+                                                'trait_variables_in_heading',
+                                                'test-data-with-invalid-extraneous-covariate.csv')
+        click_button 'Upload'
+        expect(page).to have_content('error')
+      end
+
+      specify "Heading variables that are in the trait_covariate_associations table should be recognized as usual" do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', Rails.root.join('spec',
+                                                'fixtures',
+                                                'files',
+                                                'bulk_upload',
+                                                'trait_variables_in_heading',
+                                                'valid-test-data.csv')
+        click_button 'Upload'
+        expect(page).not_to have_content('error')
+        click_link 'Specify'
+        click_button 'Confirm'
+        expect { click_button 'Insert Data' }.to change { Trait.count }.by(2)
+                                             .and change { Covariate.count }.by(2)
+                                             .and change { Entity.count }.by 1;     # The two rows in the file have the same entity name.
+        expect(first("div.alert-success")).to have_content("Data from valid-test-data.csv was successfully uploaded.")
+      end
+
+    end # describe "How parsing of variables in the heading works"
+
+  end # context "Various scenarios involving the variable names in the heading of a trait upload file"
+
+
+  context "Tests of notes column functionality" do
+    before :each do
       visit '/bulk_upload/start_upload'
-      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
-      click_button 'Upload'
-
-      expect(first("header")).to have_content "Uploaded file: file_with_missing_covariate_values.csv"
-      expect(current_path).to match(/display_csv_file/)
-      expect(page.body).not_to have_selector '#error_explanation'
-    end
-
-    it "should only insert two new covariate rows", js: true do
-
-      start_size = Covariate.all.size
-
-      visit '/bulk_upload/start_upload'
-      attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+      attach_file 'CSV file', Rails.root.join('spec',
+                                              'fixtures',
+                                              'files',
+                                              'bulk_upload',
+                                              'blank_cells_in_notes_column.csv')
       click_button 'Upload'
       click_link 'Specify'
-      click_button "Confirm"
-      click_button "Insert"
+      click_button 'Confirm'
+    end
 
-      sleep 1 # give time for insertion to complete
-      end_size = Covariate.all.size
+    # GitHub issue #485
+    specify "A CSV file with a notes column should be able to leave cells in that column blank" do
+      expect { click_button 'Insert Data' }.to  change { Trait.count }.by(2)
+                                           .and change { Covariate.count }.by(2)
+                                           .and change { Entity.count }.by(1);  # The two rows in the file have the same entity name.
+      expect(first("div.alert-success")).to have_content("Data from blank_cells_in_notes_column.csv was successfully uploaded.")
+    end
 
-      # clean up:
+    # GitHub issue #533
+    # (The "fix" for issue $485 introduced this bug: all notes were being set to the empty string.)
+    specify "Non-empty notes values in a CSV file should be inserted into the database" do
+      click_button 'Insert Data'
+      query =<<-QUERY
+          SELECT t.notes FROM traits t JOIN variables v ON v.id = t.variable_id
+              JOIN sites s ON s.id = t.site_id
+              WHERE t.created_at > utc_now() - INTERVAL '2 seconds'
+              AND v.name = 'SLA'
+              AND s.sitename = 'University of Nevada Biological Sciences Center'
+      QUERY
+      expect(Trait.connection.exec_query(query).first["notes"]).to eq("This was from a western site")
+    end
 
-      time_limit = page.driver.is_a?(Capybara::Selenium::Driver) ? 90 # allow longer for Selenium driver
-                                                                 : 30 # than for WebKit
-      begin
-        # Wrap while loops in timeout in case some deletion fails
-        timeout time_limit do
+  end
 
-          # Remove covariates before traits because they refer to traits:
-          visit '/covariates'
-          # This relies on the covariates being sorted by id and the fact that the
-          # added covariates are assigned higher ids than the fixture covariates:
-          while all(:xpath, "//tbody/tr").size > start_size
-            # delete all covariates except the first
-            first(:xpath, "//tbody/tr[count(preceding-sibling::tr) >= #{start_size}]//a[@alt = 'delete']").click
-            # If we're using Selenium, we have to deal with the modal dialogue:
-            if page.driver.is_a? Capybara::Selenium::Driver
-              a = page.driver.browser.switch_to.alert
-              a.accept
-            end
-            sleep 1
-          end
+  # GitHub issue #452
+  specify "A file with an unmatched citation shouldn't yield a complaint about undefined method `empty?'" do
+    visit '/bulk_upload/start_upload'
+    attach_file 'CSV file', Rails.root.join('spec',
+                                            'fixtures',
+                                            'files',
+                                            'bulk_upload',
+                                            'data_validation',
+                                            'unmatched_citation_and_global_treatment.csv')
+    click_button 'Upload'
+    expect(page).not_to have_content('undefined method')
+  end
 
-          # Removed traits before entities because they refer to entities:
-          visit '/traits'
-          # This relies on the fixtures setting the "checked" attribute to "passed" for them not to be deleted:
-          while all(:xpath, "//tbody/tr[not(td/select/option[@selected = 'selected']/text() = 'passed')]").size > 0
-            # delete all covariates except the first
-            first(:xpath, "//tbody/tr[not(td/select/option[@selected = 'selected']/text() = 'passed')]//a[@alt = 'delete']").click
-            # If we're using Selenium, we have to deal with the modal dialogue:
-            if page.driver.is_a? Capybara::Selenium::Driver
-              a = page.driver.browser.switch_to.alert
-              a.accept
-            end
-            sleep 1
-          end
 
-          visit '/entities'
-          # This relies on the fixures setting the "notes" attribute to "keepme" as a marker not to delete them:
-          while all(:xpath, "//tbody/tr[not(td/text() = 'keepme')]").size > 0
-            # delete all covariates except the first
-            first(:xpath, "//tbody/tr[not(td/text() = 'keepme')]//a[@alt = 'delete']").click
-            # If we're using Selenium, we have to deal with the modal dialogue:
-            if page.driver.is_a? Capybara::Selenium::Driver
-              a = page.driver.browser.switch_to.alert
-              a.accept
-            end
-            sleep 1
-          end
+  # GitHub issue #545
+  context "Tests for date support" do
 
-        end # timeout
+    context "Testing 'date-only' values" do
+      
+      before :all do
+        f = File.new("spec/tmp/file_with_missing_covariate_values.csv", "w")
+        f.write <<CSV
+SLA,canopy_layer,citation_author,citation_year,citation_title,site,treatment,date,species,access_level,method
+550,3,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31,Lolium perenne,1,test
+CSV
+        f.close
+      end
 
-      rescue Timeout::Error => e
+      after :all do
+        File::delete("spec/tmp/file_with_missing_covariate_values.csv")
+      end
 
-        raise "Clean-up stage timed out; reload fixture to clean up manually"
-
-      end # begin/rescue block
-
-      expect(end_size - start_size).to eq(2)
+      # This tests a long-standing bug whereby the date value inserted
+      # is the UTC time corresponding to midnight in Urbana on the
+      # date given in the CSV file.  It should be the value
+      # corresponding to midnight site time (if a site having a stored
+      # time zone is given).
+      specify "The date inserted into the database should be the UTC time corresponding to 12am site time on the date specified" do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+        click_button 'Upload'
+        click_link 'Specify'
+        click_button 'Confirm'
+        click_button 'Insert Data'
+        
+        query =<<-QUERY
+        SELECT extract(HOUR FROM site_or_utc_date(date, effective_time_zone(site_id))) AS hour
+            FROM traits WHERE created_at > utc_now() - INTERVAL '2 seconds'
+      QUERY
+        expect(Trait.connection.exec_query(query).first['hour'].to_i).to eq(0)
+      end
 
     end
 
-  end # context "A file with some missing covariate values has been uploaded"
 
+    context "Testing 'date-with-time-of-day' values" do
+      
+      before :all do
+        f = File.new("spec/tmp/file_with_missing_covariate_values.csv", "w")
+        f.write <<CSV
+SLA,canopy_layer,citation_author,citation_year,citation_title,site,treatment,date,species,access_level,method
+550,3,Adams,1986,Quantum Yields of CAM Plants Measured by Photosynthetic O2 Exchange,University of Nevada Biological Sciences Center,observational,2002-10-31T14:30:24,Lolium perenne,1,test
+CSV
+        f.close
+      end
+
+      after :all do
+        File::delete("spec/tmp/file_with_missing_covariate_values.csv")
+      end
+
+      # This tests that dates of the form "YYYY-MM-DDTHH:MM:SS" will not result in an error.
+      specify "Giving a date that includes the time of day will not result in an error" do
+        visit '/bulk_upload/start_upload'
+        attach_file 'CSV file', File.join(Rails.root, 'spec/tmp/file_with_missing_covariate_values.csv')
+        click_button 'Upload'
+
+        expect(page).not_to have_content "Error"
+      end
+
+    end
+
+  end
+    
 end

@@ -64,7 +64,7 @@
           </div>
           <div class="four columns omega">
             <%= f.label 'access_level', "Data Access Level*" %>
-            <%= f.select :access_level, [ ["1.Restricted", 1], ["2.Internal EBI & Collaborators", 2], ["3.External Researcher", 3], ["4.Public", 4] ], :selected => 3 %>
+            <%= f.select :access_level, ApplicationHelper::DATA_ACCESS_LEVELS, :selected => ApplicationHelper::DEFAULT_DATA_ACCESS_LEVEL %>
           </div>
         </div>
 
@@ -76,7 +76,7 @@
         <em>* Any request for page access higher then Viewer or data access higher then External researcher must be approved by an administrator</em>
 
         <% if Rails.env != "test" %>
-          <%= recaptcha_tags ssl: true %>
+          <%= recaptcha_tags %>
         <% end %>
 
         <div class="form-actions">

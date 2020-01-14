@@ -12,7 +12,7 @@ class Ensemble < ActiveRecord::Base
   has_many :posteriors_ensembles, :class_name => "PosteriorsEnsembles"
   has_many :posteriors, :through => :posteriors_ensembles
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   validates_inclusion_of :runtype, :in => RUNTYPETYPES, :allow_blank => true

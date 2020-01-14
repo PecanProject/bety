@@ -1,4 +1,5 @@
 class Treatment < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 
@@ -34,10 +35,13 @@ class Treatment < ActiveRecord::Base
     control
   end
 
-  # Returns an Array containing all treatment names that are associated with
-  # every Citation whose id is in +citation_id_list+.  +citation_id_list+ may be
-  # given as a single Array, as multiple integer arguments, or as some
-  # combination of the two.
+  # Returns an Array containing all treatment names that are
+  # associated with every Citation whose id is in +citation_id_list+.
+  # +citation_id_list+ may be given as a single Array, as multiple
+  # integer arguments, or as some combination of the two.  Logically,
+  # if the list is empty, the return value should be a list of all
+  # treatment names.  But this is expensive, and so nil is returned
+  # instead in this case.
   def self.in_all_citations(*citation_id_list)
     where_condition = <<"CONDITION"
 EXISTS (

@@ -85,6 +85,12 @@ class InconsistentCitationAndTreatmentException < BulkUploadDataException
   end
 end
 
+class MissingTimeZoneException < BulkUploadDataException
+  def initialize
+    super(:missing_time_zone, "Site has no assigned time zone")
+  end
+end
+
 
 class UnresolvableReferenceException < BulkUploadDataException
 end
@@ -216,23 +222,22 @@ class BulkUploadDataSet
   # +display_csv_data+ template.  It is list containing one item for each row of
   # the input file (excluding the heading row).  Each item is itself a list of
   # hashes, one hash for each column of the row.  Each hash has these keys:
-  # fieldname::
   #
-  #   The field name for the corresponding value (as given by the heading)
+  # fieldname
+  # : The field name for the corresponding value (as given by the heading)
   #
-  # data::
-  #   The value itself, except with nil values normalized to the empty string
+  # data
+  # : The value itself, except with nil values normalized to the empty string
   #
   # During validation, which is only performed if there are no errors in the
   # heading, this key is added:
   #
-  # validation_result::
-  #
-  #   This will always be an object of some class that includes the
+  # validation_result
+  # : This will always be an object of some class that includes the
   #   ValidationResult module--that is, an instance of Valid, Ignored,
   #   NotValidated, or some subclass of BulkUploadDataException.
   #
-  # ==== Example
+  # @example
   #  [
   #   [
   #    {
@@ -301,10 +306,14 @@ class BulkUploadDataSet
   # +:css_class+, whose value is a CSS stylesheet class to assign to the HTML
   # element containing the summary message.
   #
-  # ==== Example
+  # @example If there are field list errors, +:field_list_errors+ will be the only key:
   #  {
-  #    :field_list_errors=>['In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'],
-  #    ""Date is invalid"=>{
+  #    :field_list_errors=>['In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.']
+  #  }
+  # @example Otherwise, the value of +:field_list_errors+ will be an empty list:
+  #  {
+  #    :field_list_errors=>[],
+  #    "Date is invalid"=>{
   #      :row_numbers=>[1],
   #      :css_class=>"invalid_date"
   #    },
@@ -325,6 +334,9 @@ class BulkUploadDataSet
   # recognized as significant.
   attr :csv_warnings
 
+  # @preconditions {get_variables_in_heading} has been called (which see).
+  attr :heading_variable_info
+
   # Validates +date_string+ to ensure it is in the required format and
   # represents a valid date that is not in the future.  If no exceptions are
   # raised, the date is valid.
@@ -343,7 +355,7 @@ class BulkUploadDataSet
       begin
         date = Date.new(year.to_i, month.to_i, day.to_i)
       rescue ArgumentError => e
-        raise InvalidDateException #"year: #{year}; month: #{month}; day: #{day}"
+        raise InvalidDateException
       else
         # Date is valid; but make sure the range is reasonable
 
@@ -354,24 +366,67 @@ class BulkUploadDataSet
     end
   end
 
-  # Instantiates an object representing the data in the file +uploaded_io+ (if
-  # provided) or in the file at <tt>session[:csvpath]</tt> (if uploaded_io was
-  # not given).
+  # Instantiates an object representing the data in the "upload
+  # file"---the file +uploaded_io+ (if provided) or in the file at
+  # <code>session[:csvpath]</code> (if +uploaded_io+ was not given).
   #
-  # If provided, the temporary file +uploaded_io+ is copied to a file at
-  # <tt>public/uploads/<uploaded_io.original_filename></tt>.  The location of
-  # this file is then stored in the session under the key +:csvpath+.
+  # If provided, the temporary file +uploaded_io+ is copied to a file
+  # at +public/uploads/<uploaded_io.original_filename>+ under the
+  # Rails root directory.  The location of this file is then stored in
+  # the session under the key +:csvpath+.
   #
-  # Prior to instantiation, the file is checked to ensure it is parseable as CSV
-  # and contains no blank lines.  If a blank line is found, a +RunError+ with
-  # message "Blank lines are not allowed." is raised and if the file is not
-  # parsable as CSV, a <tt>CSV::MalformedCSVError</tt> is raised.  Otherwise,
-  # the +headers+ attribute is set and the file's data is stored internally.
+  # Prior to instantiation, the file is checked to ensure it is
+  # parsable as CSV and contains no blank lines.  If a blank line is
+  # found, a +RunError+ with message "Blank lines are not allowed." is
+  # raised and if the file is not parsable as CSV, a
+  # <tt>CSV::MalformedCSVError</tt> is raised.  Otherwise, the
+  # {headers} attribute is set and the file's data is stored
+  # internally.
   #
-  # [session] The Hash object representing the current session, an instance of
-  #           ActionDispatch::Session::AbstractStore::SessionHash.
-  # [uploaded_io] An object representing the uploaded file, an instance of
-  #               <tt>ActionDispatch::Http::UploadedFile</tt> (default: nil).
+  # @param session [Hash]
+  #   An object representing the current session.
+  # @param uploaded_io [ActionDispatch::Http::UploadedFile, nil] An object
+  #   representing the uploaded file.
+  #
+  # @changed_instance_variable @data [CSV] an object corresponding to
+  #   the uploaded file, positioned to read the first line of data.
+  #   The +convert+ attribute of this object is set so that extraneous
+  #   space is removed from all data values except those in the
+  #   +notes+ column.
+  # @changed_instance_variable @headers [List] the CSV file's header
+  #   information.  All headings are normalized by removing extraneous
+  #   space and changing to the canonical case.
+  # @changed_instance_variable @is_yield_data [Boolean] Set to +true+
+  #   if the header line contains a heading for yield.
+  # @changed_instance_variable @session [Hash] This is set to the
+  #   value of the input parameter +session+.  Then the value for the
+  #   key +:number_of_rows+ is set to the number of data rows in the
+  #   CSV file.  If the +uploaded_io+ parameter was provided, the
+  #   value for the key +:csvpath+ is set to the path that the
+  #   uploaded file was copied to.
+  #
+  # @calls {store_file}, {read_data}
+  #
+  # @callers {BulkUploadController#insert_data} (and others)
+  #
+  # @raise [RuntimeError "csvpath is missing from the session"] if
+  #   +uploaded_io+ wasn't provided and <code>session[:csvpath]</code>
+  #   is nil.
+  # @raise [SystemCallError] if +uploaded_io+ is provided but the
+  #   uploaded file can't be moved to the +public/uploads+ directory.
+  #   The actual exception raised will be a subclass of
+  #   +SystemCallError+ having a name of the form +Errno::*+; the name
+  #   will depend on the operating system used and the nature of the
+  #   error.
+  # @raise [RuntimeError "Blank lines are not allowed."] if some line
+  #   of the upload file was blank.
+  # @raise [CSV::MalformedCSVError] if the upload file is not parsable
+  #   as CSV.
+  #
+  # @side_effect Moves upload file (if given).
+  #
+  # @todo Get rid of instance variable @unvalidated and instead pass
+  #   it as a parameter to read_data.
   def initialize(session, uploaded_io = nil)
 
     @session = session
@@ -405,22 +460,29 @@ class BulkUploadDataSet
   # +csv_warnings+ and +validation_summary+.  (This method sets only the portion
   # of +validation_summary+ related to field list errors.)  Used by the
   # +display_csv_file+ action.
+  #
+  # @calls {get_trait_and_covariate_info}, {yield_data?}
+  #
+  # @callers {BulkUploadController#display_csv_file}
   def check_header_list
 
     @validation_summary = {}
     @validation_summary[:field_list_errors] = []
     @csv_warnings = []
 
-    # This sets @traits_in_heading, @required_covariates, and @allowed_covariates.
+    # This sets @traits_in_heading, @trait_names_in_heading,
+    # @required_covariates, and @allowed_covariates:
     get_trait_and_covariate_info
 
     if yield_data?
-      if !@traits_in_heading.empty?
+      if !@trait_names_in_heading.empty?
         @validation_summary[:field_list_errors] << 'If you have a "yield" column, you can not also have column names matching recognized trait variable names.'
       end
     else
-      if @traits_in_heading.empty?
+      if @trait_names_in_heading.empty?
         @validation_summary[:field_list_errors] << 'In your CSV file, you must either have a "yield" column or you must have a column that matches the name of acceptable trait variable.'
+      elsif !@unmatched_covariates.empty?
+        @validation_summary[:field_list_errors] << "The following heading names correspond to covariates but the heading contains no corresponding trait variable name: #{@unmatched_covariates.join(", ")}"
       else
         required_covariate_names = @required_covariates.collect { |c| c.name }
         covariate_names_not_in_heading = required_covariate_names - @headers
@@ -438,7 +500,7 @@ class BulkUploadDataSet
     end
 
     # Don't allow stat information in trait uploads having more than one trait variable
-    if @headers.include?('SE') && @traits_in_heading.size > 1
+    if @headers.include?('SE') && @trait_names_in_heading.size > 1
       @validation_summary[:field_list_errors] << 'Standard Error statistics are not supported with uploads containing multiple trait variable columns.'
     end
 
@@ -465,9 +527,16 @@ class BulkUploadDataSet
       @validation_summary[:field_list_errors] << 'If you have a "cultivar" column, you must have a "species" column as well.'
     end
 
+    
+    # Issue warnings if needed:
+    
+    if @warn_about_deprecated_date_column
+      @csv_warnings << "The heading 'date' is deprecated.  Use 'local_datetime' instead."
+    end
+
     ignored_columns = []
     @headers.each do |field_name|
-      if !(RECOGNIZED_COLUMNS + @traits_in_heading + @allowed_covariates).include? field_name
+      if !(RECOGNIZED_COLUMNS + @trait_names_in_heading + @allowed_covariates).include? field_name
         ignored_columns << field_name
       end
     end
@@ -478,15 +547,18 @@ class BulkUploadDataSet
 
   end
 
-  # A list of recognized column heading strings, excluding names of recognized trait and covariate variables.
-  RECOGNIZED_COLUMNS =  %w{yield citation_doi citation_author citation_year citation_title site species treatment access_level cultivar date n SE notes}
+  # A list of recognized column heading strings, excluding names of recognized
+  # trait and covariate variables.
+  RECOGNIZED_COLUMNS = %w{yield citation_doi citation_author citation_year
+                          citation_title site species treatment access_level
+                          cultivar date local_datetime n SE notes entity}
 
   # We may eventually support this:
   #REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)(-(?<month>\d\d)(-(?<day>\d\d))?)?$/
 
   # A regular expression used to verify that dates specified in the upload file
-  # are in the required form YYYY-MM-DD.
-  REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)-(?<month>\d\d)-(?<day>\d\d)$/
+  # are of the form "YYYY-MM-DD", "YYYY-MM-DD HH:MM:SS", or "YYYY-MM-DDTHH:MM:SS".
+  REQUIRED_DATE_FORMAT = /^(?<year>\d\d\d\d)-(?<month>\d\d)-(?<day>\d\d)(?<includes_time>[ T](?<hour>\d\d):(?<minute>\d\d):(?<second>\d\d))?$/
 
   # Given a CSV object (vis. "@data") whose lineno attribute equals 0, validate
   # the data it contains and store the results by setting the following
@@ -510,6 +582,25 @@ class BulkUploadDataSet
   #                 This will always be an object of some class that includes
   #                 the ValidationResult module--that is, an instance of Valid,
   #                 Ignored, or some subclass of BulkUploadDataException.
+  #
+  # @calls {field_list_error_count}, {doi_of_existing_citation?},
+  #   {existing_site?}, {existing_species?}, {existing_cultivar?},
+  #   {get_trait_and_covariate_info}, {add_to_validation_summary},
+  #   {file_includes_citation_info}
+  #
+  # @callers {BulkUploadController#display_csv_file}
+  #
+  # @return [void]
+  #
+  # @used_instance_variable @data [CSV]
+  # @used_instance_variable @trait_names_in_heading [Array<String>]
+  # @used_instance_variable @allowed_covariates [Array<String>]
+  # @used_instance_variable @optional_covariates [Array<String>]
+  # @used_instance_variable @headers [Array<String>]
+  # @used_instance_variable @session [Hash]
+  #
+  # @changed_instance_variable @validated_data [Array<Array<Hash>>]
+  # @changed_instance_variable @validation_summary [Hash]
   def validate_csv_data
     if field_list_error_count.nil?
       raise "check_header_list must be run before before calling validate_csv_data"
@@ -527,7 +618,11 @@ class BulkUploadDataSet
 
     if field_list_error_count > 0
       # just show the file without attempting to validate it
-      return @validated_data
+      return
+    end
+
+    if trait_data?
+      get_trait_and_covariate_info
     end
 
     @validated_data.each_with_index do |row, i|
@@ -589,6 +684,10 @@ class BulkUploadDataSet
 
             matching_site = existing_site?(column[:data])
 
+            if matching_site.time_zone.nil?
+              raise MissingTimeZoneException
+            end
+
           when "species"
 
             existing_species?(column[:data])
@@ -632,26 +731,31 @@ class BulkUploadDataSet
           when "date"
 
             # to-do: use self.validate_date here if possible
-            year = month = day = nil
-            REQUIRED_DATE_FORMAT.match column[:data] do |match_data|
+            year = month = day = hour = minute = second = nil
+            format_ok = REQUIRED_DATE_FORMAT.match column[:data] do |match_data|
               # to-do: set an appropriate dateloc value when day or month is not supplied
               year = match_data[:year]
               month = match_data[:month] || 1
               day = match_data[:day] || 1
+
+              hour = match_data[:hour] || 0
+              minute = match_data[:minute] || 0
+              second = match_data[:second] || 0
             end
 
-            if year.nil?
+            if format_ok.nil?
               raise UnacceptableDateFormatException
             else
               # Make sure it's a valid date
               begin
-                date = Date.new(year.to_i, month.to_i, day.to_i)
+                date = Time.new(year.to_i, month.to_i, day.to_i,
+                                hour.to_i, minute.to_i, second.to_i)
               rescue ArgumentError => e
-                raise InvalidDateException #"year: #{year}; month: #{month}; day: #{day}"
+                raise InvalidDateException
               else
                 # Date is valid; but make sure the range is reasonable
 
-                if date > Date.today
+                if date > Time.now
                   raise FutureDateException
                 end
               end
@@ -685,12 +789,13 @@ class BulkUploadDataSet
 
             # This is ignored for now until we have the citation information.
 
+          when "entity"
+
+            # accept anything
+
           else # either a trait or covariate variable name or will be ignored
 
-            if trait_data?
-              get_trait_and_covariate_info
-            end
-            if trait_data? && (@traits_in_heading + @allowed_covariates).include?(column[:fieldname])
+            if trait_data? && (@trait_names_in_heading + @allowed_covariates).include?(column[:fieldname])
               column[:validation_result] = Valid.new # reset below if we find otherwise
 
               begin
@@ -825,12 +930,12 @@ class BulkUploadDataSet
 
     if file_includes_citation_info
       if !@headers.include?('site')
-        if Site.in_all_citations(@session[:citation_id_list]).empty?
+        if Site.in_all_citations(@session[:citation_id_list]).try(:empty?)
           @validation_summary["There are no sites common to all the citations in the file."] = { }
         end
       end
       if !@headers.include?('treatment')
-        if Treatment.in_all_citations(@session[:citation_id_list]).empty?
+        if Treatment.in_all_citations(@session[:citation_id_list]).try(:empty?)
           @validation_summary["There are no treatments common to all the citations in the file."] = { }
         end
       end
@@ -864,6 +969,8 @@ class BulkUploadDataSet
   # Returns +true+ if the file contains citation information.  Even if a value
   # of +true+ is returned, the information can not be assumed to be complete
   # unless <tt>field_list_error_count()</tt> returns zero.
+  #
+  # @callers {validate_csv_data}
   def file_includes_citation_info
     @headers.include?("citation_author") || # only need to check one of citation_author, citation_year, and citation_title
       @headers.include?("citation_doi")
@@ -873,6 +980,8 @@ class BulkUploadDataSet
   # globally if site information was not included in the upload file.  Raises a
   # RuntimeError if no match is found for some site in the data set.  Used by
   # the +confirm_data+ action.
+  #
+  # @callers {BulkUploadController#confirm_data}
   def get_upload_sites
     @data.rewind
 
@@ -896,11 +1005,41 @@ class BulkUploadDataSet
     upload_sites
   end
 
+  # Returns the list of named Entities used by the data set.
+  #
+  # @callers {BulkUploadController#confirm_data}
+  def get_upload_entities
+    @data.rewind
+
+    entity_names = []
+    if @headers.include?("entity")
+      @data.each do |row|
+        if !row["entity"].blank?
+          entity_names << row["entity"]
+        end
+      end
+    end
+    distinct_entity_names = entity_names.uniq
+    upload_entities = []
+    distinct_entity_names.each do |entity_name|
+      begin
+        upload_entities <<  existing_entity?(entity_name)
+      rescue MissingReferenceException => e
+        # We never save this model; it only exists so that the view has a
+        # uniform way of display both existing entities and new ones.
+        upload_entities << Entity.new({ name: entity_name + " (NEW)"})
+      end
+    end
+    upload_entities
+  end
+
   # Returns the list of Species used by the data set, or the Species specified
   # globally if species information was not included in the upload file.  Raises
   # a RuntimeError if no match is found for some species in the data set.  Used
   # by the +confirm_data+ action and as a helper method for
   # +get_upload_cultivars+.
+  #
+  # @callers {get_upload_cultivars}, {BulkUploadController#confirm_data}
   def get_upload_species
     @data.rewind
 
@@ -928,6 +1067,8 @@ class BulkUploadDataSet
   # specified globally if cultivar information was not included in the upload
   # file.  Raises a RuntimeError if no match is found for some cultivar in the
   # data set.  Used by the +confirm_data+ action.
+  #
+  # @callers {BulkUploadController#confirm_data}
   def get_upload_cultivars
     @data.rewind
 
@@ -975,6 +1116,8 @@ class BulkUploadDataSet
   # since the data file was uploaded--otherwise a one-item list consisting of
   # the Citation specified globally (if any) is returned, even if the file
   # contains citation information. Used by the +confirm_data+ action.
+  #
+  # @callers {BulkUploadController#confirm_data}
   def get_upload_citations
     @data.rewind
 
@@ -992,6 +1135,8 @@ class BulkUploadDataSet
   # specified globally if treatment information was not included in the upload
   # file.  Raises a RuntimeError no match is found for some treatment in the
   # data set.  Used by the +confirm_data+ action.
+  #
+  # @callers {BulkUploadController#confirm_data}
   def get_upload_treatments
     @data.rewind
 
@@ -1031,11 +1176,22 @@ class BulkUploadDataSet
     upload_treatments
   end
 
-  # Attempt to insert the data contained in the upload file into the appropriate
-  # tables of the database using any interactively-specified values and options
-  # the user may have chosen.  For yields, the only table added to is the yields
-  # table.  For traits, rows will be added to the traits table, the entities
-  # table, and if there are covariates, to the covariates table.
+  # Attempts to insert the data contained in the upload file into the
+  # appropriate tables of the database using any
+  # interactively-specified values and options the user may have
+  # chosen.  For yields, the only table added to is the yields table.
+  # For traits, rows will be added to the traits table, the entities
+  # table (if there is an entity column or there are two or more
+  # traits per row), and if there are covariates, to the covariates
+  # table.
+  #
+  # @calls {get_insertion_data}, {yield_data?}, {existing_entity?}
+  #
+  # @callers {BulkUploadController#insert_data}
+  #
+  # @side_effect If the method succeeds, rows will be added to the
+  #   yields table or to the traits table and possibly the covariates
+  #   and entities tables.
   def insert_data
     insertion_data = get_insertion_data
 
@@ -1051,17 +1207,59 @@ class BulkUploadDataSet
         insertion_data.each do |row|
           # Each row may contain some meta-data, which we have to process and
           # delete before we create a new trait row from it.
-          if row[:new_entity]
-            # The :new_entity key marks the first of a group of rows that should
-            # belong to the same entity.  Each of these rows should get the same
-            # entity_id value.
-            e = Entity.create!
-            current_entity_id = e.id
-            row.delete(:new_entity)
+          if row[:is_first_trait_of_csv_row]
+            # The :is_first_trait_of_csv_row key marks the first of a group of
+            # rows that should belong to the same entity.  Each of these rows
+            # should get the same entity_id value.
+            if row.has_key?("entity") && !row["entity"].blank?
+              # Re-use the named entity if it exists, or create a new
+              # one with the specified name:
+              begin
+                e = existing_entity?(row["entity"])
+              rescue MissingReferenceException => e
+                e = Entity.create!({ name: row["entity"]})
+              end
+              current_entity_id = e.id
+            elsif @trait_names_in_heading.size > 1
+              # If the row doesn't specify an entity name, create a new,
+              # nameless entity for all the traits in this row:
+              e = Entity.create!
+              current_entity_id = e.id
+            else # don't make unnamed entites if there is only one trait per row
+              current_entity_id = nil
+            end
           end
-          row[:entity_id] = current_entity_id
+          
+          row["entity_id"] = current_entity_id
+
+          row.delete(:is_first_trait_of_csv_row)
+          row.delete("entity")
+
           covariate_info = row.delete("covariate_info")
-          t = Trait.create!(row)
+
+          t = Trait.new
+
+          t.site_id = row['site_id']
+
+          # Modify each Trait class instance so that date strings are
+          # interpreted as being in the time zone of the trait site (or UTC, if
+          # the trait site time_zone column is null).  Note that in the Bulk
+          # Upload Wizard, the validation step will prevent reaching this code
+          # if a site without time zone is in the data file.  But nothing
+          # prevents a site without time zone from being specified
+          # interactively.
+          class <<t
+            def date=(value)
+              date = Time.use_zone(Site.find(site_id).time_zone || 'UTC') do
+                Time.zone.parse(value)
+              end
+              super(date)
+            end
+          end
+
+          t.assign_attributes(row)
+          t.save!
+          
           covariate_info.each do |covariate_attributes|
             covariate_attributes[:trait_id] = t.id
             Covariate.create!(covariate_attributes)
@@ -1075,6 +1273,8 @@ class BulkUploadDataSet
   # file, or +nil+ if +check_header_list+ has not yet been run.  Used by the
   # +make_validation_summary+ helper to determine if a section detailing field
   # list errors should be displayed.
+  #
+  # @callers {validate_csv_data}, {total_error_count}
   def field_list_error_count
     return nil if @validation_summary.nil?
 
@@ -1086,6 +1286,8 @@ class BulkUploadDataSet
   # run but +validate_csv_data+ has not, 0 will be returned.  Used by the
   # +make_validation_summary+ helper to determine if a section detailing data
   # value errors should be displayed.
+  #
+  # @callers {total_error_count}
   def data_value_error_count
     return nil if @validation_summary.nil?
 
@@ -1098,6 +1300,10 @@ class BulkUploadDataSet
   # +check_header_list+ has been run, only the count of field list errors will
   # be included in the total.  Used by the +display_csv_file+ template (via the
   # +make_validation_summary+ helper) to display the number of errors found.
+  #
+  # @calls {field_list_error_count}, {data_value_error_count}
+  #
+  # @callers {file_has_fatal_errors}
   def total_error_count
     return nil if @validation_summary.nil?
 
@@ -1109,18 +1315,104 @@ class BulkUploadDataSet
   # +display_csv_file+ template, both directly (to determine if forward wizard
   # links should be shown) and via the +make_validation_summary+ helper (to
   # determine if an error summary should be displayed).
+  #
+  # @calls {total_error_count}
+  #
+  # @callers {BulkUploadController#display_csv_file}
   def file_has_fatal_errors
     return nil if @validation_summary.nil?
 
     !total_error_count.zero?
   end
 
+  # Returns +true+ if the uploaded file contains trait data.
+  #
+  # @callers {check_header_list}, {get_insertion_data}
+  def trait_data?
+    !@is_yield_data
+  end
+
+  # Using the `trait_covariate_associations` table and the column headings in
+  # the upload file, construct a hash {heading_variable_info} whose keys are the
+  # ids of the trait variables occurring in the data set and whose values give
+  # the variable name and the associated covariates that occur in the data set.
+  #
+  # @example Sample value of {heading_variable_info}
+  #   {
+  #     15 => {
+  #              name: "SLA",
+  #              covariates: {
+  #                            "canopy_layer" => 80
+  #                          }
+  #           },
+  #      4 => {
+  #              name: "Vcmax",
+  #              covariates: {
+  #                            "canopy_layer" => 80,
+  #                            "leafT" => 81
+  #                          }
+  #            }
+  #   }
+  #
+  # @callers {get_insertion_data}, {BulkUploadController#choose_global_data_values}, {BulkUploadController#confirm_data}
+  def get_variables_in_heading
+
+    # A list of TraitCovariateAssociation objects corresponding to trait
+    # variable names occurring in the heading.  Used by get_insertion_data when
+    # the upload file has trait data.
+    relevant_associations = TraitCovariateAssociation.all.select { |a| @headers.include?(a.trait_variable.name) }
+    trait_variables = relevant_associations.collect { |a| a.trait_variable }.uniq
+
+    @heading_variable_info = {}
+
+    trait_variables.each do |tv|
+      covariates = relevant_associations.select { |a| a.trait_variable_id = tv.id && @headers.include?(a.covariate_variable.name) }.collect { |a| a.covariate_variable }
+      covariate_hash = {}
+      covariates.each do |c|
+        covariate_hash[c.name] = c.id
+      end
+      @heading_variable_info[tv.id] = { name: tv.name, covariates: covariate_hash }
+    end
+
+    # Now add standalone traits:
+    if @traits_in_heading.nil?
+      get_trait_and_covariate_info
+    end
+    @traits_in_heading.each do |v|
+      if !@heading_variable_info.keys.include?(v.id)
+        @heading_variable_info[v.id] = { name: v.name, covariates: {} }
+      end
+    end
+
+  end
+
 ####################################################################################################################################
   private
 
 
-  # Takes the file parameter submitted by the upload form, uploads the
-  # file, and store a reference to it in the session.
+  # Moves the uploaded file +uploaded_io+ to the +public/uploads+
+  # directory under the Rails root directory and stores a reference to
+  # the new location in the +@session+ Hash using key +:csvpath+.
+  #
+  # @param uploaded_io [ActionDispatch::Http::UploadedFile] An object
+  #   representing the uploaded file (default: nil).
+  #
+  # @changed_instance_variable @session [Hash] The value for the key
+  #   +:csvpath+ is set to the path that the uploaded file was copied
+  #   to.
+  #
+  # @callers {initialize}
+  #
+  # @raise [SystemCallError] if the uploaded file can't be moved to
+  #   the <code>public/uploads</code> directory.  The actual exception
+  #   raised will be a subclass of +SystemCallError+ having a name of
+  #   the form +Errno::*+; the name will depend on the operating
+  #   system used and the nature of the error.
+  #
+  # @side_effect Moves the upload file to the +public/uploads+
+  #   directory.
+  #
+  # @todo Return nil.
   def store_file(uploaded_io)
     file_storage_location = Rails.root.join('public', 'uploads', uploaded_io.original_filename)
     FileUtils.mv(uploaded_io.path, file_storage_location)
@@ -1128,15 +1420,34 @@ class BulkUploadDataSet
   end
 
 
-  # Uses:
-  #     @session[:csvpath], the path to the uploaded CSV file
-  # Sets:
-  #     @headers, the CSV file's header info.  All headings are normalized by
-  #         removing extraneous space and changing to the canonical case.
-  #     @data, a CSV object corresponding to the uploaded file, positioned to
-  #         read the first line after the header line.  The +convert+ attribute
-  #         of this object is set so that extraneous space is removed from all
-  #         data values except those in the +notes+ column.
+  # Reads the CSV file stored at <code>@session[:csvpath]</code> and
+  # parses it.
+  #
+  # @used_instance_variable @session [Hash] In particular, the path to
+  #   the uploaded CSV file, which is stored under the key +:csvpath+.
+  #
+  # @changed_instance_variable @session [Hash] The value for the key
+  #   +:number_of_rows+ is set to the number of data rows in the CSV
+  #   file.
+  # @changed_instance_variable @headers [Array] the CSV file's header
+  #   info.  All headings are normalized by removing extraneous space
+  #   and changing to the canonical case.
+  # @changed_instance_variable @data [CSV] an object corresponding to
+  #   the uploaded file, positioned to read the first line of data.
+  #   The +convert+ attribute of this object is set so that extraneous
+  #   space is removed from all data values except those in the
+  #   +notes+ column.
+  #
+  # @calls {normalize_heading}
+  #
+  # @callers {initialize}
+  #
+  # @raise [RuntimeError "Blank lines are not allowed."] if some line
+  #   of the file <code>@session[:csvpath]</code> was blank.
+  # @raise [CSV::MalformedCSVError] if the file
+  #   <code>session[:csvpath]</code> is not parsable as CSV.
+  #
+  # @todo Return nil.
   def read_data
 
     csvpath = @session[:csvpath]
@@ -1182,23 +1493,50 @@ class BulkUploadDataSet
   end
 
   # Change +heading+ to the canonical case and return it.  For "SE" this is
-  # upper case; for all other values in +RECOGNIZED_COLUMNS+ it is lower case.
+  # upper case; for all other values in {RECOGNIZED_COLUMNS} it is lower case.
   # Any other value of +heading+ is left unchanged.
+  #
+  # @param heading [String] The heading to normalize.
+  #
+  # @constant RECOGNIZED_COLUMNS [Array]
+  #
+  # @callers {read_data}
+  #
+  # @return [String] a copy of +heading+ with leading and trailing
+  #   whitespace removed.  Recognized columns (as determined by
+  #   membership in the array {RECOGNIZED_COLUMNS}) will be downcased
+  #   except for the heading "SE" which will be upcased.
+  #
+  # @todo Make this a class method.
   def normalize_heading(heading)
-    heading = heading.to_s.strip
+    heading = heading.strip
 
     if /^SE$/i.match heading
-      heading.upcase
+      heading.upcase!
     elsif Regexp.new("^(#{RECOGNIZED_COLUMNS.join('|')})$", Regexp::IGNORECASE).match heading
-      heading.downcase
-    else
-      heading
+      heading.downcase!
+    # else
+      # The heading is a variable name or is unrecognized; leave it alone.
     end
+
+    # The user should use heading 'local_datetime' for the date, but internally,
+    # we should convert this to the heading 'date'.
+    @warn_about_deprecated_date_column ||= false
+    if heading == "date"
+      @warn_about_deprecated_date_column = true
+    end
+    if heading == "local_datetime"
+      heading = "date"
+    end
+
+    return heading
   end
 
   # Using the trait_covariate_associations table and the column headings in the
   # upload file, find relevant information about the trait and covariate
   # variables for this upload.
+  #
+  # @callers {check_header_list}
   def get_trait_and_covariate_info
 
     # A list of TraitCovariateAssociation objects corresponding to trait
@@ -1207,7 +1545,7 @@ class BulkUploadDataSet
 
     # A list of recognized trait variable names in the heading; a trait variable
     # is recognized only if it is in the trait_covariate_associations table
-    @traits_in_heading = relevant_associations.collect { |a| a.trait_variable.name }.uniq
+    @trait_names_in_heading = relevant_associations.collect { |a| a.trait_variable.name }.uniq
 
     # A list of Variable objects corresponding to all the covariates required by
     # the some member of the set of trait variables in the data set.
@@ -1223,48 +1561,36 @@ class BulkUploadDataSet
     # with some member of the set of trait variables in the data set and that
     # are optional for each such variable.
     @optional_covariates = @allowed_covariates - @required_covariates.map { |cov_ob| cov_ob.name }
-  end
 
-  # Using the trait_covariate_associations table and the column headings in the
-  # upload file, construct a hash <tt>@heading_variable_info</tt> whose keys are
-  # the ids of the trait variables occurring in the data set and whose values
-  # give the variable name and the associated covariates that occur in the data
-  # set.
-  #
-  # ===Example
-  # {
-  #   15: {
-  #         name: "SLA",
-  #         covariates: {
-  #                       "canopy_layer" => 80
-  #                     }
-  #       },
-  #    4: {
-  #         name: "Vcmax",
-  #         covariates: {
-  #                       "canopy_layer" => 80,
-  #                       "leafT" => 81
-  #                     }
-  #       }
-  # }
-  def get_variables_in_heading
 
-    # A list of TraitCovariateAssociation objects corresponding to trait
-    # variable names occurring in the heading.  Used by +get_insertion_data+
-    # when the upload file has trait data.
-    relevant_associations = TraitCovariateAssociation.all.select { |a| @headers.include?(a.trait_variable.name) }
-    trait_variables = relevant_associations.collect { |a| a.trait_variable }.uniq
 
-    @heading_variable_info = {}
 
-    trait_variables.each do |tv|
-      covariates = relevant_associations.select { |a| a.trait_variable_id = tv.id && @headers.include?(a.covariate_variable.name) }.collect { |a| a.covariate_variable }
-      covariate_hash = {}
-      covariates.each do |c|
-        covariate_hash[c.name] = c.id
-      end
-      @heading_variable_info[tv.id] = { name: tv.name, covariates: covariate_hash }
+
+    # Add in any unrecognized headings that correspond to a trait variable
+    # even if they aren't in the trait_covariate_associations_table:
+    all_heading_variables = Variable.all.select do |variable|
+      (@headers - RECOGNIZED_COLUMNS)
+        .include?(variable.name)
     end
+
+    all_heading_variable_names = all_heading_variables.map(&:name)
+
+    @trait_names_in_heading += (all_heading_variable_names - @trait_names_in_heading)
+
+    # Ignore any variables corresponding to covariates of traits in
+    # the heading:
+    @trait_names_in_heading -= @allowed_covariates
+
+    @traits_in_heading = all_heading_variables.select { |v| @trait_names_in_heading.include?(v.name) }
+
+    # It is an error if there still any "covariate only" variable
+    # names in the @trait_variables list:
+    reserved_covariate_variables =
+      TraitCovariateAssociation.all.collect { |a|
+      a.covariate_variable.name
+    }.uniq
+
+    @unmatched_covariates = (@trait_names_in_heading & reserved_covariate_variables)
 
   end
 
@@ -1273,6 +1599,8 @@ class BulkUploadDataSet
   # "normalized" means leading and trailing space is trimmed, internal sequences
   # of spaces are converted to a single space, and, if +preserve_case+ is
   # +false+ (the default), the value is converted to lower case.
+  #
+  # @callers {existing?}, {existing_citation}
   def sql_columnref_to_normalized_columnref(col, preserve_case = false)
     if !preserve_case
       col = "LOWER(#{col})"
@@ -1287,6 +1615,10 @@ class BulkUploadDataSet
   # database value before a match is attempted.  If no match was found, a
   # +MissingReferenceException+ is raised.  If multiple matches were found, a
   # +NonUniquenessException+ is raised.
+  #
+  # @callers {existing_species?}, {existing_site?},
+  #   {existing_treatment?}, {doi_of_existing_citation?}
+  #   {existing_cultivar?}, {existing_entity?}
   def existing?(model_class_or_relation, match_column_name, raw_value, table_entity_name)
     matches = model_class_or_relation.where(["#{sql_columnref_to_normalized_columnref(match_column_name)} = :stored_value",
                                              { stored_value: raw_value.downcase }])
@@ -1303,6 +1635,8 @@ class BulkUploadDataSet
   # Returns a +Species+ object whose +scientificname+ attribute matches +name+.
   # If multiple matches are found, a +NonUniquenessException+ is raised, and if
   # no match is found, a +MissingReferenceException+ is raised.
+  #
+  # @calls {existing?}
   def existing_species?(name)
     name.sub!(' x ', " \u00d7 ") # normalize ' x ' to hybrid symbol
     return existing?(Specie, "scientificname", name, "species")
@@ -1312,6 +1646,8 @@ class BulkUploadDataSet
   # Returns a +Site+ object whose +sitename+ attribute matches +name+.  If
   # multiple matches are found, a +NonUniquenessException+ is raised, and if no
   # match is found, a +MissingReferenceException+ is raised.
+  #
+  # @calls {existing?}
   def existing_site?(name)
     return existing?(Site, "sitename", name, "site")
   end
@@ -1322,6 +1658,8 @@ class BulkUploadDataSet
   # the citation having that id.  If multiple matches are found, a
   # +NonUniquenessException+ is raised, and if no match is found, a
   # +MissingReferenceException+ is raised.
+  #
+  # @calls {existing?}
   def existing_treatment?(name, citation_id = nil)
     if citation_id.nil?
       # match against any treatment
@@ -1336,6 +1674,8 @@ class BulkUploadDataSet
   # Returns a +Citation+ object whose +doi+ attribute matches +doi+.  If
   # multiple matches are found, a +NonUniquenessException+ is raised, and if no
   # match is found, a +MissingReferenceException+ is raised.
+  #
+  # @calls {existing?}
   def doi_of_existing_citation?(doi)
     return existing?(Citation, "doi", doi, "citation")
   end
@@ -1376,6 +1716,8 @@ class BulkUploadDataSet
   # corresponding species.  If multiple matches are found, a
   # +NonUniquenessException+ is raised, and if no match is found, a
   # +MissingReferenceException+ is raised.
+  #
+  # @calls {existing?}
   def existing_cultivar?(name, species_id = nil)
     if species_id.nil?
       existing?(Cultivar, "name", name, "cultivar")
@@ -1385,28 +1727,60 @@ class BulkUploadDataSet
   end
   memoize :existing_cultivar?
 
-  # Given the Hash <tt>args[:input_hash]</tt> containing possible keys
-  # "citation_doi", "citation_author", "citation_year", "citation_title",
-  # "site", "species", "treatment", and "cultivar", look up the corresponding
-  # value in the relevant table and column of the database, find the id of the
-  # matching row, and add it to the hash under the keys "citation_id",
-  # "site_id", "species_id", "treatment_id", and "cultivar_id"
-  # (respectively). Any lookup errors are stored in the Array
-  # <tt>args[:error_list].</tt>
+  # Returns a +Entity+ object whose +name+ attribute matches +name+.  If
+  # multiple matches are found, a +NonUniquenessException+ is raised, and if no
+  # match is found, a +MissingReferenceException+ is raised.
   #
-  # This is called in two contexts: Once for the interactively specified data,
-  # and once for each data row of the CSV file.
+  # @calls {existing?}
+  def existing_entity?(name)
+    return existing?(Entity, "name", name, "entity")
+  end
+  memoize :existing_entity?
+
+
+  # Given the Hash +args+ having key +:input_hash+ whose value is
+  # itself a Hash containing possible keys "citation_doi",
+  # "citation_author", "citation_year", "citation_title", "site",
+  # "species", "treatment", "cultivar", and "entity", look up the
+  # corresponding value in the relevant table and column of the
+  # database, find the id of the matching row, and add it to the Hash
+  # under the keys "citation_id", "site_id", "species_id",
+  # "treatment_id", "cultivar_id", and "entity_id" (respectively). Any
+  # lookup errors are stored in the Array <tt>args[:error_list].</tt>
+  #
+  # This is called in two contexts---once for the interactively
+  # specified data, and once for each data row of the CSV file.
+  #
+  # @param args [Hash i/o] The value passed in should have key
+  #   +:input_hash+ whose value is in turn a Hash whose key-value
+  #   pairs correspond to key values in tables associated with the
+  #   traits and yields tables.  This method adds new key-value pairs
+  #   to that Hash corresponding to id values looked up in the
+  #   relevant tables.  +args+ should also have a key +:error_list+
+  #   whose passed-in value is an empty Array.  The method may add
+  #   error message Strings to this list.
+  #
+  # @todo Make +args+ an input-only parameter corresponding to what is
+  #   now <code>args[:input_hash]</code> and make the return value
+  #   responsible for returning both the modified Hash and the error
+  #   list.  Change the calling function accordingly.
+  #
+  # @return [Hash] The return value is identical to the (modified)
+  #   Hash <code>args[:input_hash]</code>.
+  #
+  # @callers {get_insertion_data}
   def lookup_and_add_ids(args)
     specified_values = args[:input_hash]
     validation_errors = args[:error_list]
 
     id_values = {}
 
-    # Put cultivar after species because we need the specie_id to look
-    # up the cultivar, and put treatment after citation_doi and
-    # citation_author because we need to look up the treatment_id by
-    # the treatment name AND the citation.
-    id_lookups = ["citation_doi", "citation_author", "site", "species", "treatment", "cultivar"]
+    # Put "cultivar" after "species" because we need the specie_id to
+    # look up the cultivar, and put "treatment" after "citation_doi"
+    # and "citation_author" because we need to look up the
+    # treatment_id by the treatment name AND the citation.
+    id_lookups = ["citation_doi", "citation_author", "site", "species",
+                  "treatment", "cultivar", "entity"]
 
     id_lookups.each do |key|
       if !specified_values.keys.include?(key)
@@ -1491,17 +1865,44 @@ class BulkUploadDataSet
 
   end
 
-  # Uses the global data values specified interactively by the user to convert
-  # @data to an Array of Hashes suitable for inserting into the traits or yields
-  # table.  Used by the +insert_data+ action.  In the case of trait uploads, the
-  # Hashes in the Array will also contain some meta-data used to handle
-  # insertions into and references to the entities and covariates tables.
+  # Uses the global data values specified interactively by the user to
+  # convert +@data+ to an Array of Hashes suitable for inserting into
+  # the traits or yields table.  Used by the +insert_data+ action.  In
+  # the case of trait uploads, the Hashes in the Array will also
+  # contain some meta-data used to handle insertions into and
+  # references to the entities and covariates tables.
+  #
+  # @used_instance_variable @session [Hash] The values stored under
+  #   the keys +"global_values"+, +:user_id+, +"citation"+, and
+  #   +"rounding"+ are used.
+  #
+  # @used_instance_variable @headers [Array] This is a list of
+  #   normalized headings found in the CSV file.
+  # @used_instance_variable @data [CSV] This represents the data being uploaded.
+  #
+  # @changed_instance_variable @traits_in_heading
+  # @changed_instance_variable @trait_names_in_heading
+  # @changed_instance_variable @allowed_covariates
+  #
+  # @calls {lookup_and_add_ids}, {trait_data?},
+  #   {get_trait_and_covariate_info}, {get_variables_in_heading},
+  #   {number_with_precision},{add_yield_specific_attributes},
+  #   {add_yield_specific_attributes}
+  #
+  # @return [Array] an Array of Hash objects, each of which represent
+  #   one trait or yield instance.
+  #
+  # @todo Make @mapped_data a local variable.
+  #
+  # @callers {insert_data}
   def get_insertion_data
 
     # Get interactively-specified values, or set to empty hash if nil; since we
     # are going to alter interactively_specified_values, we use clone to make a
     # copy so that the session value remains as is.
-    interactively_specified_values = @session["global_values"].clone rescue {}
+    interactively_specified_values = @session.has_key?(:global_values) \
+                                     ? @session[:global_values].clone \
+                                     : ActionController::Parameters.new
 
     # TO DO: decide if this code serves any useful purpose:
     # Double-check that all form fields are were non-empty:
@@ -1537,21 +1938,18 @@ class BulkUploadDataSet
 
     @mapped_data = Array.new
     if trait_data?
+      get_trait_and_covariate_info # sets @traits_in_heading, @trait_names_in_heading and @allowed_covariates
+      recognized_columns = RECOGNIZED_COLUMNS + @trait_names_in_heading + @allowed_covariates
       get_variables_in_heading # sets @heading_variable_info
       trait_columns = Trait.columns.collect { |column| column.name }
     else # yield data
+      recognized_columns = RECOGNIZED_COLUMNS
       yield_columns = Yield.columns.collect { |column| column.name }
     end
     @data.each do |csv_row|
       csv_row_as_hash = csv_row.to_hash
 
       # remove irrelevant data from row:
-      if trait_data?
-        get_trait_and_covariate_info # sets @traits_in_heading and @allowed_covariates
-        recognized_columns = RECOGNIZED_COLUMNS + @traits_in_heading + @allowed_covariates
-      else
-        recognized_columns = RECOGNIZED_COLUMNS
-      end
       csv_row_as_hash.keep_if do |key, value|
         recognized_columns.include? key
       end
@@ -1562,7 +1960,8 @@ class BulkUploadDataSet
       csv_row_as_hash.merge!(id_values)
 
       # Merge the global interactively-specified values into this row:
-      csv_row_as_hash.merge!(global_values)
+      # To-Do: Be more specific about which values to permit.
+      csv_row_as_hash.merge!(global_values.permit!)
 
       if csv_row_as_hash.has_key?("SE")
         # apply rounding to the standard error
@@ -1577,8 +1976,17 @@ class BulkUploadDataSet
 
       # dates are assumed always to be accurate to the day:
       csv_row_as_hash["dateloc"] = 5
-      # bulk upload doesn't handle time-of-day data:
-      csv_row_as_hash["timeloc"] = 9
+
+      # bulk upload handles "date only" dates and dates with time to the
+      # second and no other cases; determine which:
+      if csv_row_as_hash["date"].length == 19
+        csv_row_as_hash["timeloc"] = 1
+      elsif csv_row_as_hash["date"].length == 10
+        csv_row_as_hash["timeloc"] = 9
+      else
+        # This is just a sanity check; we should never get here:
+        raise
+      end
 
       if yield_data?
         add_yield_specific_attributes(csv_row_as_hash)
@@ -1589,9 +1997,11 @@ class BulkUploadDataSet
         @mapped_data << csv_row_as_hash
       elsif trait_data?
 
-        new_entity = true
+        first_trait_of_row = true
         @heading_variable_info.each_key do |trait_variable_id|
-          # For each row of @data, that is, for each row of the input file, there will be a row added to the traits table--hence one item added to @mapped_data--for each trait variable occurring in the heading.
+          # For each row of @data, that is, for each row of the input file,
+          # there will be a row added to the traits table--hence one item added
+          # to @mapped_data--for each trait variable occurring in the heading.
 
 
           # clone: we have to be more careful than for yields since we may use
@@ -1604,19 +2014,34 @@ class BulkUploadDataSet
           end
 
           # If this is the first item being added to @mapped_data for the
-          # current item of @data, mark it with the key +:new_entity+:
-          if new_entity
-            row_data[:new_entity] = true
-            new_entity = false
+          # current item of @data, mark it with the key
+          # +:is_first_trait_of_csv_row+:
+          if first_trait_of_row
+            row_data[:is_first_trait_of_csv_row] = true
+            first_trait_of_row = false
+          else
+            row_data[:is_first_trait_of_csv_row] = false
           end
 
           add_trait_specific_attributes(row_data, trait_variable_id)
 
           # Filter everything out of row_data that does not directly correspond
           # to a column of the traits table except for some meta-data which we
-          # are storing under the keys "covariate_info" and :new_entity:
+          # are storing under the keys "covariate_info", "entity", and
+          # :is_first_trait_of_csv_row:
           row_data.keep_if do |key, value|
-            trait_columns.include?(key) || key == "covariate_info" || key == :new_entity
+
+            trait_columns.include?(key) ||
+              key == "covariate_info" ||
+              key == :is_first_trait_of_csv_row ||
+              key == "entity"
+
+          end
+
+          # Treat blank cells in the notes column of the CSV file as
+          # empty strings, not NULLs.
+          if row_data["notes"] == nil
+            row_data["notes"] = ""
           end
 
           @mapped_data << row_data
@@ -1636,6 +2061,8 @@ class BulkUploadDataSet
   # the number of significant digits stored in
   # <tt>@session["rounding"]["vars"]</tt>, and stores the result in the "mean"
   # key.
+  #
+  # @callers {get_insertion_data}
   def add_yield_specific_attributes(csv_row_as_hash)
 
     # apply rounding to the yield
@@ -1650,24 +2077,37 @@ class BulkUploadDataSet
   # Given the Hash +row_data+ which contains part of the information for a row
   # to be added to the +traits+ table, and given +trait_variable_id+, the id of
   # a trait variable in the upload file, add the following key-value pairs:
-  # ::
-  #    :+variable_id+ => +trait_variable_id+
   #
-  #    :+covariate_info+ => an Array of Hashes, one Hash for each covariate in
-  #    the upload file that is associated with this trait variable
+  #     "variable_id" => trait_variable_id
   #
-  #    :+mean+ => the rounded value of the trait variable whose id is
-  #    +trait_variable_id+
+  #     "mean" => the rounded value of the trait variable whose id is
+  #               trait_variable_id (as a String)
+  #
+  #     "covariate_info" => an Array of Hashes, one Hash for each covariate in
+  #                         the upload file that is associated with this trait
+  #                         variable
+  #
+  #     "method_id" => The id of the method the user chose to associate with
+  #                    this trait variable (as a String)
   #
   # The Hashes corresponding to each covariate have two keys: +:variable_id+,
   # giving the database id of the covariate variable, and +:level+, giving the
   # value of that covariate, rounded to the number of significant digits
   # specified by the user and stored in <tt>@session["rounding"]["vars"]</tt>.
+  #
+  # @param row_data [Hash]
+  # @param trait_variable_id [Fixnum]
+  #
+  # @used_instance_variable @heading_variable_info [Hash{Symbol => Hash}]
+  #
+  # @callers {get_insertion_data}
   def add_trait_specific_attributes(row_data, trait_variable_id)
 
     associated_trait_info = @heading_variable_info[trait_variable_id]
 
     row_data["variable_id"] = trait_variable_id
+
+    row_data["method_id"] = @session["trait_to_method_mapping"][associated_trait_info[:name]][:method_id]
 
     # store covariate information in a temporary key:
     row_data["covariate_info"] = []
@@ -1699,6 +2139,8 @@ class BulkUploadDataSet
   # add the key along with the subkey +:css_class+ with value
   # +e.result_css_class+ and subkey +:row_number+ initialized to a one-item
   # Array containing +row_number+.
+  #
+  # @callers {validate_csv_data}
   def add_to_validation_summary(e, row_number)
     key = e.summary_message
     if @validation_summary.has_key? key
@@ -1712,13 +2154,10 @@ class BulkUploadDataSet
   end
 
   # Returns +true+ if the uploaded file contains yield data.
+  #
+  # @callers {check_header_list}, {get_insertion_data}, {insert_data}
   def yield_data?
     @is_yield_data
-  end
-
-  # Returns +true+ if the uploaded file contains trait data.
-  def trait_data?
-    !@is_yield_data
   end
 
 end

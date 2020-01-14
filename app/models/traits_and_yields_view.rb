@@ -25,10 +25,10 @@ class TraitsAndYieldsView < ActiveRecord::Base
   extend AdvancedSearch
   SEARCH_INCLUDES = %w{ }
   SEARCH_FIELDS = %w{ scientificname commonname trait
-                      trait_description city sitename author
+                      trait_description method_name city sitename author
                       citation_year cultivar entity }
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).order("id asc") }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).order("id asc").references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(advanced_search(search)) }
   scope :checked, lambda { |checked_minimum| where("checked >= #{checked_minimum}") }
 
@@ -69,6 +69,7 @@ class TraitsAndYieldsView < ActiveRecord::Base
     time 'time'
     month 'month'
     year 'year'
+    raw_date 'raw_date'
     dateloc 'dateloc'
     trait 'trait'
     mean 'mean' do |num|

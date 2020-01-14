@@ -1,4 +1,5 @@
 class Site < ActiveRecord::Base
+  attr_protected []
 
   #--
   ### Module Usage ###
@@ -19,6 +20,9 @@ class Site < ActiveRecord::Base
 
   has_many :sitegroups_sites, :class_name => "SitegroupsSites"
   has_many :sitegroups, :through =>  :sitegroups_sites
+
+  has_many :experiments_sites
+  has_many :experiments, :through =>  :experiments_sites
 
   has_many :yields
   has_many :traits
@@ -58,12 +62,12 @@ class Site < ActiveRecord::Base
   #--
   ### Scopes ###
 
-  scope :all_order, :order => 'country, state, city'
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :all_order, -> { order('country, state, city') }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
   scope :minus_already_linked, lambda {|citation|
     if citation.nil? || citation.sites.size == 0
-      {}
+      all
     else
       where("id not in (?)", citation.sites.collect(&:id))
     end
@@ -202,9 +206,13 @@ EXISTS (
         WHERE cs.site_id = sites.id
             AND cs.citation_id = ?)
 CONDITION
-    sites = self.where({})
+    sites = nil
     citation_id_list.flatten.each do |citation_id|
-      sites = sites.where(where_condition, citation_id)
+      if sites.nil?
+        sites = self.where(where_condition, citation_id)
+      else
+        sites = sites.where(where_condition, citation_id)
+      end
     end
     return sites
   end
@@ -223,7 +231,7 @@ CONDITION
 
   def sitename_state_country
     output = ""
-    
+
     #city = city.chomp if !city.nil?
     if !sitename.blank?
       output += "#{sitename}"
@@ -253,6 +261,17 @@ CONDITION
   def autocomplete_label
     "#{sitename.squish} (#{city.squish}, #{!(state.nil? || state.empty?) ? " #{state.squish}," : ""} #{country.squish})"
   end
+
+  ### Class methods
+
+  def self.soil_classes
+
+    @soil_classes ||= ['clay', 'clay loam', 'loam', 'loamy sand', 'sand',
+                       'sandy clay', 'sandy clay loam', 'sandy loam',
+                       'silt', 'silt loam', 'silty clay', 'silty clay loam',
+                       'peat', 'bedrock', 'other'].freeze
+  end
+
 
   private
 

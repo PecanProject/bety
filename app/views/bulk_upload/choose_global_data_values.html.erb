@@ -1,6 +1,23 @@
 <% content_for(:autocomplete_javascript) do %>
   <!-- bulk_upload.js needs to know the root -->
-  <script type="text/javascript" charset="utf-8">var ROOT_URL = '<%= root_url %>';</script>
+  <script type="text/javascript" charset="utf-8">
+  //<![CDATA[
+    /* bulk_upload.js expects root_url and bu_completion_fields to be set. */
+
+    var ROOT_URL = '<%= root_url %>';
+
+    <%
+       bu_completion_field_hash = {}
+       @heading_variable_info.each_pair do |key, value|
+         name = value[:name]
+         bu_completion_field_hash[name] = {
+           valid: true
+         }
+       end
+    %>
+    var bu_completion_fields = <%= raw(bu_completion_field_hash.to_json) %>;
+  //]]>
+  </script>
   <%= javascript_include_tag 'lazy/bulk_upload.js' %>
 <% end %>
 <div class="content">
@@ -54,9 +71,9 @@
           <% if field == "access_level" %>
           <%= label_tag "global_values_" + field, field %>
           <%= select_tag "global_values[access_level]",
-              options_for_select([['', 0], ['Restricted', 1], ['Internal EBI & Collaborators', 2], ['External Researcher', 3], ['Public', 4]],
+              options_for_select(ApplicationHelper::UNNUMBERED_DATA_ACCESS_LEVELS_WITH_BLANK,
               @session[:global_values] &&
-              @session[:global_values]["access_level"] || 0),
+              @session[:global_values]["access_level"] || 0), # default is 0 (blank) unless returning to page
               size: "1"
           %>
           <% else %>
@@ -71,6 +88,15 @@
         <% end %>
       </ul>
       <% end # Data-Set Wide Value specification block %>
+      <% if @data_set.trait_data? %>
+      <h2>Specify a Method for Each Trait</h2>
+      <ul>
+        <% @heading_variable_info.each_pair do |id, info_hash| %>
+          <% name = info_hash[:name] %>
+          <%= method_autocompletion_field(name) %>
+        <% end %>
+      </ul>
+      <% end %>
       <% end %>
 
     </div>

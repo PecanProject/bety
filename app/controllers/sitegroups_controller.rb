@@ -1,6 +1,6 @@
 class SitegroupsController < ApplicationController
 
-  before_filter :login_required 
+  before_action :login_required
   helper_method :sort_column, :sort_direction
 
   def edit_sitegroups_sites
@@ -49,12 +49,13 @@ class SitegroupsController < ApplicationController
         @sites = @sitegroup.sites.paginate :page => params[:page]
       end
     else
-      @sites = Site.paginate :select => "*", :page => params[:page], :conditions => search_cond
+      @sites = Site.where(search_cond).paginate :page => params[:page]
     end
 
-    render :update do |page|
-      page.replace_html :sites_index_table, :partial => "edit_sitegroups_sites_table"
-      page.replace_html :sites_search_term, search
+    respond_to do |format|
+      format.js {
+        render layout: false, locals: { search: search }
+      }
     end
   end
 

@@ -1,5 +1,5 @@
 class CitationsSitesController < ApplicationController
-  before_filter :login_required, :except => [ :show ]
+  before_action :login_required, :except => [ :show ]
 
   require 'csv'
 

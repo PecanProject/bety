@@ -1,0 +1,46 @@
+.no-padding {
+  margin: 0;
+}
+
+#appendedInputButton {
+  width: 222px;
+}
+#front_page_search_button {
+  padding: 6px 14px 7px;
+}
+
+#header_user_name {
+  float: right;
+  position: relative;
+  top: -10px;  
+}
+
+.final_paginate_row {
+  height: 50px;
+}
+
+.no-padding {
+  margin: 0;
+}
+
+.inline-table {
+  display: inline-table;
+}
+.inline-block {
+  display: inline-block;
+}
+
+#flash_notice {
+  background-color: #99FF66;
+  padding: 15px;
+} 
+
+.no-margin{
+  margin: 0;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+

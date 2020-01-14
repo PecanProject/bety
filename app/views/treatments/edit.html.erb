@@ -11,7 +11,7 @@
         <%= render 'edit_managements_treatments' %>
       </div>
       <hr />
-      <a style="text-decoration: none" href="#" onclick="showHide('new_management')" id="show_new_management">[+] Create New Management</a>
+      <a style="text-decoration: none" href="#" onclick="jQuery('#new_management').slideToggle(800)" id="show_new_management">[+] Create New Management</a>
       <br/>
       <div id="new_management" class="hidden notvisible">
         <%= render 'new_management' %>

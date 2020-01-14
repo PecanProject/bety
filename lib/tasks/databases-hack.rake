@@ -1,3 +1,4 @@
+=begin
 # An incompatibility between the active-record-3.2.21 and
 # activerecord-postgis-adapter-0.6.6 rails3 rake files makes these
 # hacks necessary.
@@ -19,16 +20,7 @@
   set_psql_env(config_)
   `psql -U "#{config_["username"]}" -f #{::Rails.root}/db/#{::Rails.env}_structure.sql #{config_["database"]}`
 end
-
-# gems/activerecord-3.2.21/lib/active_record/railties/databases.rake:521
-# defines db:test:clone_structure with prerequisites db:structure:dump
-# and db:test:load_structure and no actions.  The postgis adapter Gem
-# overrides this in
-# "gems/activerecord-postgis-adapter-0.6.6/lib/active_record/connection_adapters/postgis_adapter/rails3/databases.rake",
-# adding an action to set run the structure file directly.  This is
-# redundant, so we clear out that action.
-Rake::Task["db:test:clone_structure"].clear_actions
-
+=end
 
 # Add descriptions for test-database-related tasks:
 Rake::Task["db:test:load_structure"].add_description(<<DESC
@@ -36,15 +28,6 @@ Loads the test database with database structure defined in the file "db/<RAILS_E
 where RAILS_ENV is the current Rails environment.  It will first run
 db:test:purge to drop the test database (if it exists) and then
 recreate it.
-DESC
-)
-
-Rake::Task["db:test:clone_structure"].add_description(<<DESC
-Clones the structure of the current environment and then loads it into the test database.
-It will first run db:test:purge to drop the test database (if it exists) and
-recreate it.  Then it creates (or recreates) the structure.sql file for the
-current environment ("db/<RAILS_ENV>_structure.sql") and loads it into the test
-database.
 DESC
 )
 

@@ -21,10 +21,10 @@ admin_email: "admin@example.com" # a test
 
 citation_license_copyright_markup:
 
-  <p>LeBauer, David, Michael Dietze, Rob Kooper, Steven Long, Patrick Mulrooney,
-  Gareth Scott Rohde, Dan Wang (2010).  <cite>Biofuel Ecophysiological Traits
-  and Yields Database (BETYdb)</cite>, Energy Biosciences Institute, University
-  of Illinois at Urbana-Champaign.  doi:10.13012/J8H41PB9</p>
+  '<p>LeBauer, David, Rob Kooper, Patrick Mulrooney, Scott Rohde, Dan Wang, 
+  Stephen Long, Michael Dietze, (2017). BETYdb: A yield, trait, and ecosystem 
+  service database applied to second‐generation bioenergy feedstock production.
+  GCB Bioenergy. doi:10.1111/gcbb.12420</p>
 
   <p>All public data in BETYdb is made available under the <a
   href="http://opendatacommons.org/licenses/by/1-0/">Open Data Commons
@@ -32,7 +32,7 @@ citation_license_copyright_markup:
   adapt its contents.  Data with an access_level field and value &lt;= 2 is not
   covered by this license but may be available for use with consent.</p>
 
-  <p>Copyright © 2010-2014 Energy Biosciences Institute</p>
+  <p>Copyright © 2010-2014 Energy Biosciences Institute</p>'
 
 sponsors:
     - URL: http://illinois.edu
@@ -86,6 +86,8 @@ homepage_body:
 
       Photo by L. Brian Stauffer, provided by University of Illinois at
       Urbana-Champaign
+
+  search_placeholder_text: "EX: Panicum Nitrogen"
 
 # Miscellaneous
 

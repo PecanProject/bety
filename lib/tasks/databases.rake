@@ -15,6 +15,7 @@ file "script/load.bety.sh" do
   end
 end
 
+=begin
 # This is just like the original version except that if Rails.env is
 # "development", this version (unlike the original) doesn't try to create the
 # test database as well.
@@ -27,7 +28,7 @@ end
     ActiveRecord::Base.establish_connection(configs_for_environment.first)
   end
 end
-
+=end
 
 
 

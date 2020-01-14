@@ -61,7 +61,7 @@
 	    <div class="controls">
 	      <div class="input-append">
 
-		<input id="appendedInputButton" name="search" type="text" class="" placeholder="EX: Panicum Nitrogen" />
+		<input id="appendedInputButton" name="search" type="text" class="" placeholder="<%= CONFIG[:homepage_body].try(:[], :search_placeholder_text) %>" />
                 <%= link_to_submit raw('<i class="icon-search"></i>'), id: "front_page_search_button", class: "button" %>
               </div>
 	    </div>

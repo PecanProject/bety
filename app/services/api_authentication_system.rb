@@ -1,9 +1,14 @@
+# coding: utf-8
 module ApiAuthenticationSystem
   include AuthenticatedSystem
 
   # Override default access_denied action.
   def access_denied
-    @errors = "authenication failed"
+    if @errors
+      @errors = "authentication failed: " + @errors
+    else
+      @errors = "authentication failed"
+    end
     render status: 401
   end
 
@@ -17,6 +22,25 @@ module ApiAuthenticationSystem
     else
       false
     end
+  end
+
+  # Override "login_from_api_key" so that if no key is given or the given key is
+  # invalid, the user is logged in as the guest user.
+  def login_from_api_key
+    key = params[:key]
+    if key.nil?
+      u = User.find_by_login('guestuser')
+      if u.nil?
+        @errors = "For key-less access to the API, you must set up the guest user account."
+      end
+    else
+      u = User.find_by_apikey(key)
+      if u.nil?
+        @errors = "Invalid API key.  To access the API as a guest user, omit the “key” parameter."
+      end
+    end
+
+    return u
   end
 
 end

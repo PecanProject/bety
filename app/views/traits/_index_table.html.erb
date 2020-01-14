@@ -32,7 +32,7 @@
           <%= raw checked_status_list(trait) %>
           <% if current_user.access_level < trait.access_level || current_user.access_level = trait.access_level and trait.checked || trait.user_id == current_user.id || current_user.page_access_level <= 2%>
           <td class="center">
-           <%= select_tag "access_level-" + trait.id.to_s,options_for_select([["1.Restricted",1],['2.EBI',2],['3.External',3],['4.Public',4]],trait.access_level) %>
+           <%= select_tag "access_level-" + trait.id.to_s,options_for_select(ApplicationHelper::ABBREVIATED_DATA_ACCESS_LEVELS, trait.access_level) %>
           </td>
           <% end%>
 					<td class="center ">
@@ -46,7 +46,7 @@
 					  <% end %>
 					  <!-- DELETE -->
 					  <% if current_user.page_access_level <= 2 or trait.user_id == current_user.id %>
-              <%= link_to trait, :method => :delete, :type => 'trait', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
+              <%= link_to trait, :method => :delete, :type => 'trait', :data => { :confirm => 'Are you sure?' }, :class=> 'button button-small button-danger', :alt => "delete" do %>
                 <i class="icon-trash"></i> 
               <% end %>
             <% end %>
@@ -59,7 +59,7 @@
 	  </tbody>
 	</table>
   
-	<div class="row final_paginagte_row">
+	<div class="row final_paginate_row">
 	  <div class="span6">
 	    <div class="dataTables_info" id="DataTables_Table_0_info">
 			<%= page_entries_info @traits %></div>
@@ -80,9 +80,11 @@
    <%= observe_field("access_level-" + trait.id.to_s,
                   :frequency => 1,
                   :with => "'id=' + #{trait.id} + '&trait[access_level]=' + Form.Element.getValue('access_level-#{trait.id.to_s}')",
-                  :url => { :action => :access_level }) %>
+                  :url => { :action => :access_level },
+                  :event_name => "change") %>
    <%= observe_field("checked-" + trait.id.to_s,
                   :frequency => 1,
                   :with => "'id=' + #{trait.id} + '&trait[checked]=' + Form.Element.getValue('checked-#{trait.id.to_s}')",
-                  :url => { :action => :checked }) %>
+                  :url => { :action => :checked },
+                  :event_name => "change") %>
 <% end %>

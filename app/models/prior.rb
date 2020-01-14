@@ -1,4 +1,5 @@
 class Prior < ActiveRecord::Base
+  attr_protected []
 
   include Overrides
 
@@ -27,7 +28,7 @@ class Prior < ActiveRecord::Base
   validates_numericality_of :n, allow_nil: true, only_integer: true, greater_than_or_equal_to: 0
 
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do

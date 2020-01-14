@@ -1,4 +1,7 @@
 class Variable < ActiveRecord::Base
+  # Using "attr_protected []" doesn't remove protection for the "type" column,
+  # so we have to whitelist accessible columns instead:
+  attr_accessible :description, :units, :notes, :name, :standard_name, :standard_units, :label, :type
 
   # rename inheritance column from "type" so we can have "type" as the name of
   # an attribute:
@@ -17,7 +20,6 @@ class Variable < ActiveRecord::Base
   has_many :priors
   has_many :likelihoods
   has_many :traits
-  has_and_belongs_to_many :inputs
 
   # VALIDATION
 
@@ -26,8 +28,8 @@ class Variable < ActiveRecord::Base
   before_validation WhitespaceNormalizer.new([:description, :units, :name])
 
 
-  scope :all_order, order('name')
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :all_order, -> { order('name') }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   comma do

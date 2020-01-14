@@ -1,0 +1,274 @@
+/* Table of Content
+==================================================
+	#Main Navigation Dropdown
+	#Suckerfish Styling
+	#Media Queries */
+
+/* #Main Navigation Dropdown
+================================================== */
+
+/* clip skip link for screen readers */
+.skip-link {
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+	}
+#access {
+    overflow:visible;
+    z-index:100;
+	}
+/* get rid of padding and margin off all ul's (not sure about using * here, could be better) */
+.main-menu, .main-menu * {
+    margin:0;
+    padding:0;
+    list-style:none;
+	}
+/* position all dropdowns off screen */
+.main-menu ul {
+    position:absolute;
+    top:-999em;
+	}
+/* style the main nav list items */
+.main-menu li {
+    clear: left;
+    float:left;
+    position:relative;
+    width: 100%;	
+	}
+/* change the main nav list items on hover */ 
+.main-menu li:hover {
+    visibility:inherit; /* fixes IE7 'sticky bug' */
+	}
+/* style all the links */
+.main-menu a {
+	font-weight: bold;
+	color: #eee;
+    font-size: 12px;
+	-moz-text-shadow: 0 0 5px #000;
+	-webkit-text-shadow: 0 0 5px #000;
+	text-shadow: 0 0 5px #000;
+    display:block;
+    padding: 10px 0;
+    text-decoration: none;
+    text-indent: 10px;
+    width: 100%;
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+	}
+
+/* #Suckerfish Styling
+================================================== */
+.main-menu .hasDrop a{
+    width: 80%;
+	}
+/* style the first drop */
+.main-menu li li, .main-menu li li:hover{
+    background: none;
+    background-image: none;
+	line-height: 0;
+    border-top: 1px solid #252525; /*--Create bevel effect--*/  
+    border-bottom: 1px solid #444; /*--Create bevel effect--*/  
+	}
+/* add a larger text indent for the first drop links */
+.main-menu li li a {
+	text-shadow: none;
+	-moz-text-shadow: none;
+	-webkit-text-shadow: none;
+	background: #333;  
+	font-weight: normal;
+	font-size: 12px;
+	}
+.main-menu li li a:hover {
+	background-color: #111;
+	}
+/* position first drop */
+.sf-menu li:hover ul, .main-menu li.sfHover ul {
+    top:auto; /* match top ul list item height */
+    left: 0;
+    position:relative;
+	}
+/* make sure second drop is still off screen */
+ul.main-menu li:hover li ul{
+    position: absolute;
+    top:-999em;
+	}
+/* position second drop */
+ul.sf-menu li li:hover ul, ul.main-menu li li.sfHover ul{
+    left: 0;
+    top:auto;
+    position:relative;
+	}
+/* make sure third drop is still off screen */
+ul.sf-menu li li:hover li ul {
+    position: absolute;
+    top:-999em;
+	}
+/* position third drop */
+ul.sf-menu li li li:hover ul, ul.sf-menu li li li.sfHover ul{
+    left: 0;
+    top:auto;
+    position:relative;
+	}
+.main-menu a.menuDrop, .main-menu li.sfHover li a.menuDrop, .main-menu li li.sfHover li a.menuDrop{
+    display: block;
+    font: 0/0 a;
+    color:transparent;
+    height: 69px;
+    width: 11.5%;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+	}
+.js .main-menu li li{
+    position: relative;
+	}
+.sf-sub-indicator{
+    display: none;
+	}
+
+/* #Media Queries
+================================================== */
+@media only screen and (min-width: 480px) {
+	
+    /* set height so content isn't pushed down */
+    #access{
+        float: left;
+        height: 69px;
+        width: 100%;
+    }
+    /* set height so content isn't pushed down add z-index to keep drops above content */
+    .main-menu {
+        height: 69px;
+        z-index: 100;
+    }
+    /* restyle so main links are horizontally aligned */
+    .main-menu li {
+        clear: none;
+        width: 12.5%; /* this will need to be adjusted for your needs */
+        height: 69px;
+		background-color: transparent;
+    	background-image: url(<%= asset_path('nav-separator.png') %>);
+		background-position: 0 0;
+		background-repeat: repeat-y;
+    }
+	.main-menu li:hover, .main-menu > li.active {
+		-moz-box-shadow:    inset 0 0 20px #222;
+   		-webkit-box-shadow: inset 0 0 20px #222;
+   		box-shadow:         inset 0 0 20px #111;
+		background-color: #333;
+		background-color: rgba(0,0,0,0.15);
+	}
+	.main-menu li.menu-login {
+		float: right;
+		text-align: right;
+		padding-right: 10px;
+		width: 17%;
+		background-image: none;
+	}
+    /* new style for drop list items */
+    .main-menu li li {
+        background: #000;
+    	background-image: url(<%= asset_path('nav-separator.png') %>);
+        background-repeat: repeat-y;
+        clear: left;
+        width: 100%;
+		height: auto;
+    }
+	.main-menu li a {
+		height: 29px;
+        text-indent: 10px;
+        width: 100%;
+		padding-top: 40px;
+	}
+    /* reset text indent on all drop a tags and set the width to 100% */
+    .main-menu li li a, .main-menu li li li a, .main-menu li li li li a {
+        height: auto;
+		padding: 15px 0;
+    }
+    /* reposision and style the first drop */
+    .sf-menu li:hover ul, .main-menu li.sfHover ul {
+        left: auto;
+        position: absolute;
+        top: 69px;
+        width: 275%;
+        z-index: 100;
+		-moz-box-shadow:    0 0 10px rgba(0,0,0,0.55);
+   		-webkit-box-shadow: 0 0 10px rgba(0,0,0,0.55);
+   		box-shadow:         0 0 10px rgba(0,0,0,0.55);
+    }
+    /* reposision and style the second drop */
+    .sf-menu li li:hover ul, ul.main-menu li li.sfHover ul{
+        background: #000;
+        position: absolute;
+        top: -1px;
+        left:100%;
+    }
+    /* reposision and style the third drop */
+    .sf-menu li li li:hover ul, ul.main-menu li li li.sfHover ul{
+        background: #000;
+        position: absolute;
+        top: -1px;
+        left:100%;
+    }
+     .main-menu li a.menuDrop, .main-menu li.sfHover li a.menuDrop, .main-menu li li.sfHover li a.menuDrop{
+        height: 68px;
+        width: 30%;
+     }
+    .main-menu .hasDrop a{
+        width: 68%;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    /* bigger screen bigger font size and padding */
+    .main-menu a {
+        padding: 14px 0;
+		font-size: 14px;
+    }
+	.main-menu li.menu-home > a {
+		background: transparent url(<%= asset_path("nav-icon-home.png") %>) 10px 41px no-repeat;
+		padding-left: 23px;
+	}
+	.main-menu li.menu-docs > a {
+		background: transparent url(<%= asset_path("nav-icon-docs.png") %>) 10px 41px no-repeat;
+		padding-left: 23px;
+	}
+	.main-menu li.menu-maps > a {
+		background: transparent url(<%= asset_path("nav-icon-maps.png") %>) 10px 41px no-repeat;
+		padding-left: 23px;
+	}
+	.main-menu li.menu-data > a {
+		background: transparent url(<%= asset_path("nav-icon-data.png") %>) 10px 41px no-repeat;
+		padding-left: 23px;
+	}
+	.main-menu li.menu-new > a {
+		background: transparent url(<%= asset_path("nav-icon-new.png") %>) 10px 41px no-repeat;
+		padding-left: 23px;
+	}
+	.main-menu li.menu-admin > a {
+		background: transparent url(<%= asset_path("nav-icon-admin.png") %>) 10px 41px no-repeat;
+		padding-left: 23px;
+	}
+	.main-menu li.menu-login > a {
+		background: transparent url(<%= asset_path("nav-icon-logout.png") %>) 100% 41px no-repeat;
+		width: 84%;
+		padding-right: 23px;
+	}
+    li .sf-sub-indicator{
+        height: 68px;
+    }
+    li li .sf-sub-indicator{
+        background-position: 20px center;
+    }
+     .main-menu li a.menuDrop, .main-menu li.sfHover li a.menuDrop, .main-menu li li.sfHover li a.menuDrop{
+        width: 23%;
+     }
+    .main-menu .hasDrop a{
+        width: 74%;
+    }
+	 /* reposision and style the first drop */
+    .sf-menu li:hover ul, .main-menu li.sfHover ul {
+        width: 175%;
+    }
+}

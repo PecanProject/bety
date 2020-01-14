@@ -4,9 +4,9 @@ class AddIdToTable < ActiveRecord::Migration
 
     execute %{
       ALTER TABLE "cultivars_pfts" ADD "id" bigserial;
-      SELECT setval('cultivars_pfts_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+      SELECT setval('cultivars_pfts_id_seq', 1 + CAST(1e9 * #{this_hostid}::int AS bigint), FALSE);
       ALTER TABLE "trait_covariate_associations" ADD "id" bigserial;
-      SELECT setval('trait_covariate_associations_id_seq', GREATEST(1, CAST(1e9 * #{this_hostid}::int AS bigint)), FALSE);
+      SELECT setval('trait_covariate_associations_id_seq', 1 + CAST(1e9 * #{this_hostid}::int AS bigint), FALSE);
     }
   end
 

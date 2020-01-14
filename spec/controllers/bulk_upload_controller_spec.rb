@@ -3,7 +3,7 @@ describe BulkUploadController, :type => :controller do
 
   class BulkUploadController
     # override the login requirement for testing:
-    before_filter :login_required, only: []
+    before_action :login_required, only: []
   end
 
   describe "display csv file" do
@@ -16,17 +16,17 @@ describe BulkUploadController, :type => :controller do
 
       it "should display an error when no file has been uploaded" do
 
-        post 'display_csv_file', { 'new upload' => true }
-        assert_equal("No file chosen", session[:flash][:error] )
-        assert_not_equal(200, response.status) # Since this is a redirect, we should get 302; this test is somewhat redundant in view of the next.
+        post 'display_csv_file', params: { 'new upload' => true }
+        assert_equal("No file chosen", flash[:error] )
+        assert_operator(200, :!=, response.status) # Since this is a redirect, we should get 302; this test is somewhat redundant in view of the next.
         assert_redirected_to '/bulk_upload/start_upload', "Failed to redirect when no file chosen"
       end
 
       it "should create a data set when a well-formed CSV file is uploaded" do
 
         @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
-        post 'display_csv_file', { 'new upload' => true, "CSV file" => @file }
-        assert_not_nil assigns(:data_set)
+        post 'display_csv_file', params: { 'new upload' => true, "CSV file" => @file }
+        assert(!assigns(:data_set).nil?)
         assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset instance"
       end
 
@@ -35,8 +35,8 @@ describe BulkUploadController, :type => :controller do
 
         @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
         session[:csvpath] = @file.path
-        post 'display_csv_file', { 'new upload' => false }
-        assert_not_nil assigns(:data_set)
+        post 'display_csv_file', params: { 'new upload' => false }
+        assert(!assigns(:data_set).nil?)
         assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset instance"
       end
 
@@ -45,9 +45,9 @@ describe BulkUploadController, :type => :controller do
         @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
         session[:csvpath] = @file.path
         get 'start_upload'
-        post 'display_csv_file', { 'CSV file' => nil }
-        assert_equal("No file chosen", session[:flash][:error])
-        assert_not_equal(200, response.status)
+        post 'display_csv_file', params: { 'CSV file' => nil }
+        assert_equal("No file chosen", flash[:error])
+        assert_operator(200, :!=, response.status)
         assert_redirected_to '/bulk_upload/start_upload', "Failed to redirect when no file chosen"
       end
 
@@ -66,17 +66,17 @@ describe BulkUploadController, :type => :controller do
         it "should remove a linked citation when a file is uploaded that includes citation information" do
 
           session[:citation] = 1
-          post 'display_csv_file', @form
+          post 'display_csv_file', params: @form
           assert_nil session[:citation], "Failed to remove citation from session"
-          expect(session[:flash][:warning]).to match(/^Removing/i)
+          expect(flash[:warning]).to match(/^Removing/i)
         end
 
         it "should validate the file data" do
 
-          post 'display_csv_file', @form
+          post 'display_csv_file', params: @form
           @dataset = assigns(:data_set)
           @validated_data = @dataset.validated_data
-          assert_not_nil(@validated_data, "Failed to validate rows")
+          assert(!@validated_data.nil?, "Failed to validate rows")
         end
 
       end # "validation of a file with citation data"
@@ -95,36 +95,39 @@ describe BulkUploadController, :type => :controller do
         ## some error at the data insertion step if they have a null or wrong citation...
         it "should not allow visiting the 'choose_global_data_values' page without having choosen a citation" do
 
-          post 'display_csv_file', @form
+          post 'display_csv_file', params: @form
           session[:citation] = nil
           get 'choose_global_data_values'
-          assert_not_equal(200, response.status, "Failed to stop when no citation present")
+          assert_operator(200, :!=, response.status, "Failed to stop when no citation present")
 
         end
 
         it "should not allow visiting the 'choose_global_data_values' page when a citation inconsistent with the data set has been chosen" do
 
           session[:citation] = 4
-          post 'display_csv_file', @form
+          post 'display_csv_file', params: @form
           @dataset = assigns(:data_set)
           # Ensure the citation we set actually *is* inconsistent:
           assert(@dataset.validation_summary.has_key?("Site is inconsistent with citation") && 
                  @dataset.validation_summary["Site is inconsistent with citation"].size > 0,
                  "This citation is actually consistent with the sites given")
           get 'choose_global_data_values'
-          assert_not_equal(200, response.status, "Failed to stop when citation is wrong")
+          assert_operator(200, :!=, response.status, "Failed to stop when citation is wrong")
         end
 
       end
 
       # TODO: possibly test various kinds of invalid files and what messages result
       context "uploading an invalid csv file" do
-        it "should throw an error and redirect to the start_upload page" do
+        # This test tests for blank lines in the CSV file, which are no longer
+        # invalid in Ruby 2.6.  So we skip this test but keep it around for
+        # documentation.
+        it "should throw an error and redirect to the start_upload page", skip: true do
 
           @file = fixture_file_upload("/files/bulk_upload/invalid_file.csv", "text/csv")
           @form = { 'new upload' => true, "CSV file" => @file }
-          post 'display_csv_file', @form
-          assert_not_nil session[:flash][:error], "Failed to display error message"
+          post 'display_csv_file', params: @form
+          assert(!flash[:error].nil?, "Failed to display error message")
           assert_redirected_to '/bulk_upload/start_upload', "Failed to redirect to start upload"
         end
       end
@@ -139,13 +142,13 @@ describe BulkUploadController, :type => :controller do
       get 'start_upload'
       @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
       @form = { 'new upload' => true, "CSV file" => @file }
-      post 'display_csv_file', @form
+      post 'display_csv_file', params: @form
       get 'choose_global_data_values'
     end
 
     it "should return a new dataset" do
 
-      assert_not_nil assigns(:data_set)
+      assert(!assigns(:data_set).nil?)
       assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset"
     end
 
@@ -156,16 +159,16 @@ describe BulkUploadController, :type => :controller do
     before(:each) do
       get 'start_upload'
       @file = fixture_file_upload("/files/bulk_upload/rounding_demo.csv", "text/csv")
-      post 'display_csv_file', { 'new upload' => true, "CSV file" => @file }
+      post 'display_csv_file', params: { 'new upload' => true, "CSV file" => @file }
       get 'choose_global_data_values'
       @values ={ "global_values" => {}, "rounding" => { "yields" => "2" } }
       request.env["HTTP_REFERER"] = 'choose_global_data_values'
-      post 'confirm_data', @values
+      post 'confirm_data', params: @values
     end
 
     it "should return a new dataset" do
 
-      assert_not_nil assigns(:data_set)
+      assert(!assigns(:data_set).nil?)
       assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset"
     end
 
@@ -190,18 +193,18 @@ describe BulkUploadController, :type => :controller do
     before(:each) do
       @count = Yield.count
       @file = fixture_file_upload("/files/bulk_upload/sample_yields.csv", "text/csv")
-      post 'display_csv_file', { 'new upload' => true, "CSV file" => @file }
+      post 'display_csv_file', params: { 'new upload' => true, "CSV file" => @file }
       get 'choose_global_data_values'
       @values ={ "global_values" => {}, "rounding" => { "yields" => "2" } }
       request.env["HTTP_REFERER"] = 'choose_global_data_values'
-      post 'confirm_data', @values
+      post 'confirm_data', params: @values
       session[:user_id] = 1 # needed for the insertion step
       post 'insert_data'
     end
 
     it "should return a new dataset" do
 
-      assert_not_nil assigns(:data_set)
+      assert(!assigns(:data_set).nil?)
       assert_instance_of BulkUploadDataSet, assigns(:data_set), "Failed to return dataset"
     end
 
@@ -209,7 +212,7 @@ describe BulkUploadController, :type => :controller do
 
       @new_count = Yield.count
       assert_equal(1, @new_count - @count, "Failed to insert data")
-      assert_not_nil session[:flash][:success]
+      assert(!flash[:success].nil?)
       assert_redirected_to '/bulk_upload/start_upload'
     end
   end

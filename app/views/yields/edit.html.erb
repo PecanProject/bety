@@ -78,7 +78,7 @@
             <%= f.select :dateloc, options_for_select($dateloc_drop.sort, f.object.dateloc || $dateloc_drop_default), :class => "input-full" %>
             <br />
             <%= f.label :access_level %>
-            <%= f.select :access_level, [["1.Restricted",1],['2.EBI',2],['3.External',3],['4.Public',4]], :class => "input-full" %>
+            <%= f.select :access_level, ApplicationHelper::DATA_ACCESS_LEVELS, :class => "input-full" %>
           </div>
           <div class="eight columns omega">
             <%= f.label :notes %>
@@ -89,7 +89,7 @@
         <div class="row">
           <div class="four columns alpha">
             <label>Record Creator</label>
-            <%= user_for_view(@yield.user) %>
+            <%= user_for_view(@yield.user, edit = true) %>
           </div>
         </div>
 

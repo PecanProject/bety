@@ -1,5 +1,5 @@
 class CovariatesController < ApplicationController
-  before_filter :login_required
+  before_action :login_required
   helper_method :sort_column, :sort_direction
 
   # GET /covariates
@@ -30,6 +30,10 @@ class CovariatesController < ApplicationController
   # GET /covariates/1.xml
   def show
     @covariate = Covariate.find(params[:id])
+
+    if @covariate.trait.nil?
+      flash[:error] = 'This covariate is not associated with a trait!  Consider removing it.'
+    end
 
     respond_to do |format|
       format.html # show.html.erb

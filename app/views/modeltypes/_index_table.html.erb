@@ -30,7 +30,7 @@
           <% end %>
           <!-- DELETE -->
           <% if current_user.page_access_level == 1 %>
-          <%= link_to modeltype, :method => :delete, :type => 'modeltype', :confirm => 'Are you sure?', :class=> 'button button-small button-danger', :alt => "delete" do %>
+          <%= link_to modeltype, :method => :delete, :type => 'modeltype', data: { :confirm => 'Are you sure?' }, :class=> 'button button-small button-danger', :alt => "delete" do %>
           <i class="icon-trash"></i> 
           <% end %>
           <% end %>
@@ -41,7 +41,7 @@
 
 </table>
 
-<div class="row final_paginagte_row">
+<div class="row final_paginate_row">
   <div class="span6">
     <div class="dataTables_info" id="DataTables_Table_0_info">
       <%= page_entries_info @models %>

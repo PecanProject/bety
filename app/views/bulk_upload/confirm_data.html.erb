@@ -8,7 +8,7 @@
       <%= form_tag(bulk_upload_data_insertion_path, method: "post", multipart: true) do %>
       <div id="process_container">
         <div id="back">
-          <% if @data_set.need_interactively_specified_data %>
+          <% if @data_set.need_interactively_specified_data || @data_set.trait_data? %>
           <%= link_to "<< Specify Dataset-wide values", choose_global_data_values_path %>
           <% else %>
           <%= link_to "<< Specify Amount of Rounding", choose_global_data_values_path %>
@@ -23,6 +23,20 @@
           <%= submit_tag "Insert Data >>" %>
         </div>
       </div>
+      <% end %>
+      <% if @data_set.trait_data? %>
+      <h2 class="directive">Review the following list of traits and their corresponding covariates and methods</h2>
+      <table><thead><tr><th>Plant Trait</th><th>Method</th><th>Covariates</th></tr></thead>
+        <tbody>
+        <% session["trait_to_method_mapping"].each_pair do |trait_name, method_info| %>
+        <tr>
+          <td><%= trait_name %></td>
+          <td><%= method_info[:method_name] %></td>
+          <td><%= @variable_to_covariates_mapping[trait_name].join(", ") %></td>
+        </tr>
+        <% end %>
+        </tbody>
+      </table>
       <% end %>
       <h2 class="directive">Review the following upload specifications to ensure they are correct:</h2>
       <ul>
@@ -48,6 +62,20 @@
         </tbody>
       </table>
       <hr>
+      <% if !@upload_entities.empty? %>
+      <table>
+        <caption>Entities:</caption>
+        <thead>
+          <tr><th>Name</th><th>Parent</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <% @upload_entities.each do |c| %>
+          <tr><td><%= c.name %></td><td><%= c.parent && c.parent.name %></td><td><%= c.notes %></td></tr>
+          <% end %>
+        </tbody>
+      </table>
+      <hr>
+      <% end %>
       <table>
         <caption>Sites:</caption>
         <thead>

@@ -1,4 +1,5 @@
 class DBFile < ActiveRecord::Base
+  attr_protected []
 
   self.table_name = 'dbfiles'
   
@@ -17,7 +18,7 @@ class DBFile < ActiveRecord::Base
                 message: "must begin with '/'." }
 
 
-  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES) }
+  scope :sorted_order, lambda { |order| order(order).includes(SEARCH_INCLUDES).references(SEARCH_INCLUDES) }
   scope :search, lambda { |search| where(simple_search(search)) }
 
   has_many :children, :class_name => "DBFile"
@@ -31,6 +32,11 @@ class DBFile < ActiveRecord::Base
     self[:created_user_id] = user_id
     self[:updated_user_id] = user_id
     if upload # Uploaded file
+      # check to see it is a valid filename
+      if upload.original_filename.match(/^[a-zA-Z0-9._\-]+$/).nil?
+        raise("Invalid filename \"#{upload.original_filename}\"; filenames can only contain letters, numbers, periods, underscores, and dashes.")
+      end
+
       self[:file_name] =  upload.original_filename
       self[:md5] = Digest::MD5.file(upload.path).hexdigest
 

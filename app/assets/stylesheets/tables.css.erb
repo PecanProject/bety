@@ -1,0 +1,745 @@
+/* Tables */
+
+#treatments_container .dataTables_wrapper {
+  width: 100%;  
+}
+
+#treatments_container .padded_sides_20px {
+  padding: 0 20px
+}
+
+
+
+/* Allow borders on tbodys of treatemeht listings: */
+#treatments_container .treatment_listing {
+  border-collapse: collapse
+}
+/* Each treatment--managements-listing pair of table rows is now in its own
+   tbody.  This marks them off more clearly: */
+#treatments_container .treatment_listing thead {
+  border-top: double 5px #999;
+}
+#treatments_containter .treatment_listing tbody {
+    border-bottom: double 5px #999;
+}
+
+
+
+.dataTables_wrapper {
+	position: relative;
+	clear: both;
+	zoom: 1; /* Feeling sorry for IE */
+	margin-bottom: 20px;
+}
+
+.dataTables_processing {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 250px;
+	height: 30px;
+	margin-left: -125px;
+	margin-top: -15px;
+	padding: 14px 0 2px 0;
+	border: 1px solid #ddd;
+	text-align: center;
+	color: #999;
+	font-size: 14px;
+	background-color: white;
+}
+
+.dataTables_length {
+	width: 40%;
+	float: left;
+}
+div.dataTables_length label {
+	float: left;
+	text-align: left;
+}
+div.dataTables_length select {
+	width: 75px;
+}
+
+.dataTables_filter {
+	float: right;
+	text-align: right;
+}
+div.dataTables_filter label {
+	float: right;
+}
+
+.dataTables_info {
+	float: left;
+	padding-top: 8px;
+}
+
+.dataTables_paginate {
+	float: right;
+	margin: 10px 0;
+	text-align: right;
+}
+
+/* Pagination nested */
+.paginate_disabled_previous, .paginate_enabled_previous,
+.paginate_disabled_next, .paginate_enabled_next {
+	height: 19px;
+	float: left;
+	cursor: pointer;
+	*cursor: hand;
+	color: #111 !important;
+}
+.paginate_disabled_previous:hover, .paginate_enabled_previous:hover,
+.paginate_disabled_next:hover, .paginate_enabled_next:hover {
+	text-decoration: none !important;
+}
+.paginate_disabled_previous:active, .paginate_enabled_previous:active,
+.paginate_disabled_next:active, .paginate_enabled_next:active {
+	outline: none;
+}
+
+.paginate_disabled_previous,
+.paginate_disabled_next {
+	color: #666 !important;
+}
+.paginate_disabled_previous, .paginate_enabled_previous {
+	padding-left: 23px;
+}
+.paginate_disabled_next, .paginate_enabled_next {
+	padding-right: 23px;
+	margin-left: 10px;
+}
+
+.paginate_disabled_previous {
+	background: url(<%= asset_path("back_disabled.png") %>) no-repeat top left;
+}
+
+.paginate_enabled_previous {
+	background: url(<%= asset_path("back_enabled.png") %>) no-repeat top left;
+}
+.paginate_enabled_previous:hover {
+	background: url(<%= asset_path("back_enabled_hover.png") %>) no-repeat top left;
+}
+
+.paginate_disabled_next {
+	background: url(<%= asset_path("forward_disabled.png") %>) no-repeat top right;
+}
+
+.paginate_enabled_next {
+	background: url(<%= asset_path("forward_enabled.png") %>) no-repeat top right;
+}
+.paginate_enabled_next:hover {
+	background: url(<%= asset_path("forward_enabled_hover.png") %>) no-repeat top right;
+}
+
+
+
+.dataTables_wrapper .row {
+	border: 1px solid #ddd;
+	margin: 0;
+	margin-top: -1px;
+	margin-bottom: -1px;
+	
+	
+	background-color: #f3f3f3;
+	background-image: -webkit-gradient(linear, 0 0%, 0 100%, from(#fdfdfd), to(#f3f3f3));
+	background-image: -webkit-linear-gradient(top, #fdfdfd 0%, #f3f3f3 100%);
+    background-image: -moz-linear-gradient(top, #fdfdfd 0%, #f3f3f3 100%);
+    background-image: -ms-linear-gradient(top, #fdfdfd 0%, #f3f3f3 100%);
+    background-image: -o-linear-gradient(top, #fdfdfd 0%, #f3f3f3 100%);
+    background-image: -linear-gradient(top, #fdfdfd 0%, #f3f3f3 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fdfdfd', endColorstr='#f3f3f3',GradientType=0 ); /* IE6-9 */
+}
+
+.dataTables_wrapper .row .dataTables_length {
+	margin: 15px 10px 5px;
+}
+.dataTables_wrapper .row .dataTables_length label {
+	font-weight: normal;
+}
+.dataTables_wrapper .row .dataTables_filter {
+	margin: 10px 10px 5px;
+}
+.dataTables_wrapper .row .dataTables_filter label {
+	font-weight: normal;
+}
+.dataTables_wrapper .row .dataTables_info {
+	margin: 7px 10px 0;
+	font-size: 90%;
+	color: #777;
+}
+
+.dataTables_wrapper .row .dataTables_paginate {
+	margin-right: 10px;
+	margin-bottom: 5px;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables display
+ */
+table.table {
+	margin: 0 auto 20px;
+	clear: both;
+	width: 100%;
+	max-width: none !important;
+	font-size: 90%;
+}
+.dataTables_wrapper table.table {
+	margin-bottom: 0;
+}
+
+table.table thead tr {
+	background-color: #efefef;
+	background-image: -webkit-gradient(linear, 0 0%, 0 100%, from(#fdfdfd), to(#eaeaea));
+	background-image: -webkit-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
+    background-image: -moz-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
+    background-image: -ms-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
+    background-image: -o-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
+    background-image: -linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fdfdfd', endColorstr='#eaeaea',GradientType=0 ); /* IE6-9 */
+}
+table.table thead th {
+	padding-right: 18px;
+	padding-bottom: 6px;
+	padding-top: 6px;
+	font-weight: bold;
+	white-space:pre;
+}
+
+table.table tfoot th {
+	padding-right: 18px;
+	padding-bottom: 10px;
+	border-top: 1px solid black;
+	font-weight: bold;
+}
+
+table.table tr.heading2 td {
+	border-bottom: 1px solid #aaa;
+}
+
+table.table td {
+}
+
+table.table td.center {
+	text-align: center;
+	vertical-align: middle;
+}
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables sorting
+ */
+
+table.table thead .sorting,
+table.table thead .sorting_asc,
+table.table thead .sorting_desc,
+table.table thead .sorting_asc_disabled,
+table.table thead .sorting_desc_disabled {
+	cursor: pointer;
+	*cursor: hand;
+}
+table.table .sorting_asc {
+	background: url(<%= asset_path("sort_asc.png") %>) no-repeat center right;
+	
+	color: #007eac;
+}
+
+table.table .sorting_desc {
+	background: url(<%= asset_path("sort_desc.png") %>) no-repeat center right;
+	
+	color: #007eac;
+}
+
+table.table .sorting {
+	background: url(<%= asset_path("sort_both.png") %>) no-repeat center right;
+}
+
+table.table .sorting_asc_disabled {
+	background: url(<%= asset_path("sort_asc_disabled.png") %>) no-repeat center right;
+}
+
+table.table .sorting_desc_disabled {
+	background: url(<%= asset_path("sort_desc_disabled.png") %>) no-repeat center right;
+}
+ 
+table.table thead th:active,
+table.table thead td:active {
+	outline: none;
+}
+table.table thead .sorting:hover,
+table.table thead .sorting_asc:hover,
+table.table thead .sorting_desc:hover {
+	color: #888;
+}
+
+table.table .sorting_disabled {
+}
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables row classes
+ 
+table.table tr.odd.gradeA {
+	background-color: #ddffdd;
+}
+
+table.table tr.even.gradeA {
+	background-color: #eeffee;
+}
+
+table.table tr.odd.gradeC {
+	background-color: #ddddff;
+}
+
+table.table tr.even.gradeC {
+	background-color: #eeeeff;
+}
+
+table.table tr.odd.gradeX {
+	background-color: #ffdddd;
+}
+
+table.table tr.even.gradeX {
+	background-color: #ffeeee;
+}
+
+table.table tr.odd.gradeU {
+	background-color: #ddd;
+}
+
+table.table tr.even.gradeU {
+	background-color: #eee;
+}
+
+*/
+table.table tr.odd {
+	background-color: #f9f9f9;
+}
+
+table.table tr.even {
+	background-color: #fff;
+}
+
+
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Misc
+ */
+ /* Scrolling */
+div.dataTables_scrollHead table {
+	margin-bottom: 0 !important;
+}
+
+div.dataTables_scrollHead table thead tr:last-child th:first-child,
+div.dataTables_scrollHead table thead tr:last-child td:first-child {
+}
+
+div.dataTables_scrollBody table {
+	border-top: none;
+	margin-bottom: 0 !important;
+}
+
+div.dataTables_scrollBody tbody tr:first-child th,
+div.dataTables_scrollBody tbody tr:first-child td {
+	border-top: none;
+}
+
+div.dataTables_scrollFoot table {
+	border-top: none;
+}
+.dataTables_scroll {
+	clear: both;
+}
+
+.dataTables_scrollBody {
+	*margin-top: -1px;
+	-webkit-overflow-scrolling: touch;
+}
+
+.table .top, .table .bottom {
+	padding: 15px;
+	background-color: #F5F5F5;
+	border: 1px solid #CCCCCC;
+}
+
+.table .top .dataTables_info {
+	float: none;
+}
+
+.clear {
+	clear: both;
+}
+
+.dataTables_empty {
+	text-align: center;
+}
+
+tfoot input {
+	margin: 0.5em 0;
+	width: 100%;
+	color: #444;
+}
+
+tfoot input.search_init {
+	color: #999;
+}
+
+td.group {
+	background-color: #d1cfd0;
+	border-bottom: 2px solid #A19B9E;
+	border-top: 2px solid #A19B9E;
+}
+
+td.details {
+	background-color: #d1cfd0;
+	border: 2px solid #A19B9E;
+}
+
+
+.example_alt_pagination div.dataTables_info {
+	width: 40%;
+}
+
+.paging_full_numbers {
+	width: 400px;
+	height: 22px;
+	line-height: 22px;
+}
+
+.paging_full_numbers a:active {
+	outline: none
+}
+
+.paging_full_numbers a:hover {
+	text-decoration: none;
+}
+
+.paging_full_numbers a.paginate_button,
+ 	.paging_full_numbers a.paginate_active {
+	border: 1px solid #aaa;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	padding: 2px 5px;
+	margin: 0 3px;
+	cursor: pointer;
+	*cursor: hand;
+	color: #333 !important;
+}
+
+.paging_full_numbers a.paginate_button {
+	background-color: #ddd;
+}
+
+.paging_full_numbers a.paginate_button:hover {
+	background-color: #ccc;
+	text-decoration: none !important;
+}
+
+.paging_full_numbers a.paginate_active {
+	background-color: #99B3FF;
+}
+
+table.table tr.even.row_selected td {
+	background-color: #B0BED9;
+}
+
+table.table tr.odd.row_selected td {
+	background-color: #9FAFD1;
+}
+
+
+/*
+ * Sorting classes for columns
+ */
+/* For the standard odd/even */
+tr.odd td.sorting_1 {
+	background-color: #f1f1f1;
+}
+
+tr.odd td.sorting_2 {
+	background-color: #DADCFF;
+}
+
+tr.odd td.sorting_3 {
+	background-color: #E0E2FF;
+}
+
+tr.even td.sorting_1 {
+	background-color: #f5f5f5;
+}
+
+tr.even td.sorting_2 {
+	background-color: #F2F3FF;
+}
+
+tr.even td.sorting_3 {
+	background-color: #F9F9FF;
+}
+
+
+/* For the Conditional-CSS grading rows */
+/*
+ 	Colour calculations (based off the main row colours)
+  Level 1:
+		dd > c4
+		ee > d5
+	Level 2:
+	  dd > d1
+	  ee > e2
+
+tr.odd.gradeA td.sorting_1 {
+	background-color: #c4ffc4;
+}
+
+tr.odd.gradeA td.sorting_2 {
+	background-color: #d1ffd1;
+}
+
+tr.odd.gradeA td.sorting_3 {
+	background-color: #d1ffd1;
+}
+
+tr.even.gradeA td.sorting_1 {
+	background-color: #d5ffd5;
+}
+
+tr.even.gradeA td.sorting_2 {
+	background-color: #e2ffe2;
+}
+
+tr.even.gradeA td.sorting_3 {
+	background-color: #e2ffe2;
+}
+
+tr.odd.gradeC td.sorting_1 {
+	background-color: #c4c4ff;
+}
+
+tr.odd.gradeC td.sorting_2 {
+	background-color: #d1d1ff;
+}
+
+tr.odd.gradeC td.sorting_3 {
+	background-color: #d1d1ff;
+}
+
+tr.even.gradeC td.sorting_1 {
+	background-color: #d5d5ff;
+}
+
+tr.even.gradeC td.sorting_2 {
+	background-color: #e2e2ff;
+}
+
+tr.even.gradeC td.sorting_3 {
+	background-color: #e2e2ff;
+}
+
+tr.odd.gradeX td.sorting_1 {
+	background-color: #ffc4c4;
+}
+
+tr.odd.gradeX td.sorting_2 {
+	background-color: #ffd1d1;
+}
+
+tr.odd.gradeX td.sorting_3 {
+	background-color: #ffd1d1;
+}
+
+tr.even.gradeX td.sorting_1 {
+	background-color: #ffd5d5;
+}
+
+tr.even.gradeX td.sorting_2 {
+	background-color: #ffe2e2;
+}
+
+tr.even.gradeX td.sorting_3 {
+	background-color: #ffe2e2;
+}
+
+tr.odd.gradeU td.sorting_1 {
+	background-color: #c4c4c4;
+}
+
+tr.odd.gradeU td.sorting_2 {
+	background-color: #d1d1d1;
+}
+
+tr.odd.gradeU td.sorting_3 {
+	background-color: #d1d1d1;
+}
+
+tr.even.gradeU td.sorting_1 {
+	background-color: #d5d5d5;
+}
+
+tr.even.gradeU td.sorting_2 {
+	background-color: #e2e2e2;
+}
+
+tr.even.gradeU td.sorting_3 {
+	background-color: #e2e2e2;
+}
+ */
+
+/*
+ * Row highlighting example
+ */
+.ex_highlight #example tbody tr.even:hover, #example tbody tr.even td.highlighted {
+	background-color: #ECFFB3;
+}
+
+.ex_highlight #example tbody tr.odd:hover, #example tbody tr.odd td.highlighted {
+	background-color: #E6FF99;
+}
+
+.ex_highlight_row #example tr.even:hover {
+	background-color: #ECFFB3;
+}
+
+.ex_highlight_row #example tr.even:hover td.sorting_1 {
+	background-color: #DDFF75;
+}
+
+.ex_highlight_row #example tr.even:hover td.sorting_2 {
+	background-color: #E7FF9E;
+}
+
+.ex_highlight_row #example tr.even:hover td.sorting_3 {
+	background-color: #E2FF89;
+}
+
+.ex_highlight_row #example tr.odd:hover {
+	background-color: #E6FF99;
+}
+
+.ex_highlight_row #example tr.odd:hover td.sorting_1 {
+	background-color: #D6FF5C;
+}
+
+.ex_highlight_row #example tr.odd:hover td.sorting_2 {
+	background-color: #E0FF84;
+}
+
+.ex_highlight_row #example tr.odd:hover td.sorting_3 {
+	background-color: #DBFF70;
+}
+
+
+/*
+ * KeyTable
+ */
+table.KeyTable td {
+	border: 3px solid transparent;
+}
+
+table.KeyTable td.focus {
+	border: 3px solid #3366FF;
+}
+
+table.table tr.gradeA {
+	background-color: #eeffee;
+}
+
+table.table tr.gradeC {
+	background-color: #ddddff;
+}
+
+table.table tr.gradeX {
+	background-color: #ffdddd;
+}
+
+table.table tr.gradeU {
+	background-color: #ddd;
+}
+
+
+/*
+ * TableTools styles
+ */
+.table tbody tr.active td,
+.table tbody tr.active th {
+	background-color: #438016;
+	color: white;
+}
+
+.table tbody tr.active:hover td,
+.table tbody tr.active:hover th {
+	background-color: #0075b0 !important;
+}
+
+.table-striped tbody tr.active:nth-child(odd) td,
+.table-striped tbody tr.active:nth-child(odd) th {
+	background-color: #017ebc;
+}
+
+table.DTTT_selectable tbody tr {
+	cursor: pointer;
+	*cursor: hand;
+}
+
+div.DTTT .btn {
+	color: #333 !important;
+	font-size: 12px;
+}
+
+div.DTTT .btn:hover {
+	text-decoration: none !important;
+}
+
+ul.DTTT_dropdown.dropdown-menu li:hover a {
+	background-color: #438016;
+	color: white !important;
+}
+
+/* TableTools information display */
+div.DTTT_print_info.modal {
+	height: 150px;
+	margin-top: -75px;
+	text-align: center;
+}
+
+div.DTTT_print_info h6 {
+	font-weight: normal;
+	font-size: 28px;
+	line-height: 28px;
+	margin: 1em;
+}
+
+div.DTTT_print_info p {
+	font-size: 14px;
+	line-height: 20px;
+}
+
+
+
+/*
+ * FixedColumns styles
+ */
+div.DTFC_LeftHeadWrapper table,
+div.DTFC_LeftFootWrapper table,
+table.DTFC_Cloned tr.even {
+	background-color: white;
+}
+
+div.DTFC_LeftHeadWrapper table {
+	margin-bottom: 0 !important;
+}
+
+div.DTFC_LeftBodyWrapper table {
+	border-top: none;
+	margin-bottom: 0 !important;
+}
+
+div.DTFC_LeftBodyWrapper tbody tr:first-child th,
+div.DTFC_LeftBodyWrapper tbody tr:first-child td {
+	border-top: none;
+}
+
+div.DTFC_LeftFootWrapper table {
+	border-top: none;
+}

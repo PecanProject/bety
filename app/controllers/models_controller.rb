@@ -1,6 +1,6 @@
 class ModelsController < ApplicationController
 
-  before_filter :login_required 
+  before_action :login_required
   helper_method :sort_column, :sort_direction
 
   def edit_models_files
@@ -49,12 +49,14 @@ class ModelsController < ApplicationController
         @files = @model.files.paginate :page => params[:page]
       end
     else
-      @files = DBFile.paginate :select => "id,file_name", :page => params[:page], :conditions => search_cond
+      @files = DBFile.where(search_cond).select("id,file_name").page(params[:page])
     end
 
-    render :update do |page|
-      page.replace_html :files_index_table, :partial => "edit_models_files_table"
-      page.replace_html :files_search_term, search
+
+    respond_to do |format|
+      format.js {
+        render layout: false, locals: { search: search }
+      }
     end
   end
 

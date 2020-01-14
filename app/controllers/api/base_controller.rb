@@ -7,7 +7,7 @@ class Api::BaseController < ActionController::Base
   protect_from_forgery with: :null_session
 
   #  before_action :destroy_session <-- Rails 4
-  before_filter :destroy_session
+  before_action :destroy_session
 
   def destroy_session
     request.session_options[:skip] = true
@@ -47,7 +47,7 @@ class Api::BaseController < ActionController::Base
   # clause "key = value" is replaced by "key::text ~ value*", where "value*" is
   # "value" with the tilde removed.
   def query(model, params)
-    where_params = params.slice(*model.column_names)
+    where_params = params.permit!.to_hash.slice(*model.column_names)
 
     limit = nil
     if params.has_key? "limit"
@@ -60,7 +60,7 @@ class Api::BaseController < ActionController::Base
     end
 
     # restrict traits and yields by access level
-    if model == Trait || model == Yield
+    if model == Trait || model == Yield || model == TraitsAndYieldsView
       model = model.all_limited(current_user)
     end
 
@@ -68,6 +68,15 @@ class Api::BaseController < ActionController::Base
 	  if current_user.page_access_level > 1
         model = model.where("id = #{current_user.id}")
       end
+    end
+
+    if (model == Site) && (params.has_key? "containing")
+      lat_lon_text = params['containing']
+      lat_text, lon_text = lat_lon_text.split(',')
+      lat = lat_text.to_f
+      lon = lon_text.to_f
+
+      model = model.where("ST_CONTAINS(geometry, st_geomfromtext('POINT(#{lon.to_s} #{lat.to_s})', 4326))");
     end
 
     # Do filtering by regexp matching first.  Note that fuzzy_match_restrictions
