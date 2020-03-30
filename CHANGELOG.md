@@ -11,6 +11,7 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 - update doi links http://dx.doi.org --> https://doi.org
 - #672 : Added activemodel-serializers-xml Gem to restore functionality of "original" API XML endpoints.
 - #674 : Upgraded comma Gem to restore CSV file downloads.
+- fixed functions to explicitly add public. to function call and table reference. (this will require a migration)
 
 ## [5.2.2] - 2019-12-06
 
