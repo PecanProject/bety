@@ -12,6 +12,9 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 - #672 : Added activemodel-serializers-xml Gem to restore functionality of "original" API XML endpoints.
 - #674 : Upgraded comma Gem to restore CSV file downloads.
 
+### Added
+- dockerfile to dump database in docker image for faster restore of database.
+
 ## [5.2.2] - 2019-12-06
 
 This is a minor release and does not require and database updates
