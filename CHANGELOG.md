@@ -11,6 +11,8 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 - update doi links http://dx.doi.org --> https://doi.org
 - #672 : Added activemodel-serializers-xml Gem to restore functionality of "original" API XML endpoints.
 - #674 : Upgraded comma Gem to restore CSV file downloads.
+- upgrade nokogiri to 1.10.8 (dependbot fix)
+
 
 ## [5.2.2] - 2019-12-06
 
