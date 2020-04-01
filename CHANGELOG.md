@@ -5,6 +5,18 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
+## Migrations
+
+Some of the changes require a migration. Depending on how you run BETY you can use one of the following options. No matter what, make sure you have a backup of your database before you do the migration, just in case.
+
+### Native Install
+
+You will need to install the latest version of BETY (or the version you want to migrate to), and run `rake db:migrate SKIP_SCHEMASPY=YES`.
+
+### Docker (with docker compose)
+
+In this case you can simply pull down the version you want, and run `docker-compose bety migrate`.
+
 ## [Unreleased]
 
 ### Fixes
