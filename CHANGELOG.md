@@ -8,6 +8,7 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 ## [Unreleased]
 
 - update doi links http://dx.doi.org --> https://doi.org
+- upgrade rake to 13.0.1 (dependbot fix)
 
 ## [5.2.2] - 2019-12-06
 
