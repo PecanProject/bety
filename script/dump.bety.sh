@@ -171,7 +171,6 @@ else
     echo "Dumping all items that have id    : ALL ITEMS"
   fi
 fi
-exit -1
 
 # find current schema version
 # following returns a triple:
