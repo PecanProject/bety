@@ -152,9 +152,15 @@ mkdir -p "${DUMPDIR}"
 chmod 777 "${DUMPDIR}"
 
 # compute range based on MYSITE
-if [ "${ALLDATA}" != "YES" ]; then
-  START_ID=$(( MYSITE * ID_RANGE + 1 ))
-  LAST_ID=$(( START_ID + ID_RANGE - 1 ))
+  if [ "${ALLDATA}" != "YES" ]; then
+  START_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_start FROM machines WHERE sync_host_id = ${MYSITE};" | xargs )
+  if [ -z "${START_ID}" ]; then
+    START_ID=$(( MYSITE * ID_RANGE + 1 ))
+  fi
+  LAST_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_end FROM machines WHERE sync_host_id = ${MYSITE};" | xargs )
+  if [ -z "${LAST_ID}" ]; then
+    LAST_ID=$(( START_ID + ID_RANGE - 2 ))
+  fi
   if [ "${QUIET}" != "YES" ]; then
     echo "Dumping all items that have id    : [${START_ID} - ${LAST_ID}]"
   fi

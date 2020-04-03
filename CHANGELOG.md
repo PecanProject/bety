@@ -23,6 +23,7 @@ In this case you can simply pull down the version you want, and run `docker-comp
 - #551 : remove GUnload message from console on page change.
 - #672 : Added activemodel-serializers-xml Gem to restore functionality of "original" API XML endpoints.
 - #674 : Upgraded comma Gem to restore CSV file downloads.
+- use actual information in database for load and dump scripts.
 - update doi links http://dx.doi.org --> https://doi.org
 - fixed functions to explicitly add public. to function call and table reference. (this will require a migration)
 - upgrade rake to 13.0.1 (dependbot fix)
