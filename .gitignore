@@ -20,5 +20,8 @@ config/initializers/site_keys.rb
 .Rproj.user
 public/assets
 
+docker-compose.override.yml
+docker-compose.override.yaml
+
 # Ignore encrypted secrets key file.
 config/secrets.yml.key
