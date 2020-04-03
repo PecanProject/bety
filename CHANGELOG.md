@@ -8,6 +8,7 @@ For more information about this file see also [Keep a Changelog](http://keepacha
 ## [Unreleased]
 
 ### Fixes
+- #551 : remove GUnload message from console on page change.
 - update doi links http://dx.doi.org --> https://doi.org
 - upgrade rake to 13.0.1 (dependbot fix)
 - #672 : Added activemodel-serializers-xml Gem to restore functionality of "original" API XML endpoints.
