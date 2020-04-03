@@ -5,4 +5,4 @@ psql -h postgres -p 5432 -U postgres -c "CREATE ROLE bety WITH LOGIN CREATEDB NO
  'bety'"
 
 # load database from dump
-pg_restore -c -C -v -h postgres -U postgres -d postgres -F c /betydb.dump
+pg_restore -c -C -v -h postgres -U postgres -d postgres -F c /db.dump

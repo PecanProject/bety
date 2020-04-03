@@ -21,10 +21,9 @@ echo "INF : will connect to ${POSTGRES}"
 #docker-compose down
 #docker volume rm bety_postgres
 
-#vi Dockerfile.init
-docker build --no-cache --network ${NETWORK} --tag pecan/betydb:latest .
-docker images pecan/betydb
+docker build --no-cache --network ${NETWORK} --tag pecan/db:latest .
+docker images pecan/db
 
 #docker-compose up -d postgres
 #sleep 10
-#docker run --network bety_bety -ti --rm pecan/betydb
+#docker run --network bety_bety -ti --rm pecan/db
