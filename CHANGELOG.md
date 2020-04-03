@@ -28,6 +28,9 @@ In this case you can simply pull down the version you want, and run `docker-comp
 - upgrade rake to 13.0.1 (dependbot fix)
 - upgrade nokogiri to 1.10.8 (dependbot fix)
 
+### Added
+- dockerfile to dump database in docker image for faster restore of database.
+
 ## [5.2.2] - 2019-12-06
 
 This is a minor release and does not require and database updates
