@@ -5,13 +5,32 @@ section for the next release.
 
 For more information about this file see also [Keep a Changelog](http://keepachangelog.com/) .
 
+## Migrations
+
+Some of the changes require a migration. Depending on how you run BETY you can use one of the following options. No matter what, make sure you have a backup of your database before you do the migration, just in case.
+
+### Native Install
+
+You will need to install the latest version of BETY (or the version you want to migrate to), and run `rake db:migrate SKIP_SCHEMASPY=YES`.
+
+### Docker (with docker compose)
+
+In this case you can simply pull down the version you want, and run `docker-compose bety migrate`.
+
 ## [Unreleased]
 
 ### Fixes
-- update doi links http://dx.doi.org --> https://doi.org
+- #551 : remove GUnload message from console on page change.
 - #672 : Added activemodel-serializers-xml Gem to restore functionality of "original" API XML endpoints.
 - #674 : Upgraded comma Gem to restore CSV file downloads.
 - use actual information in database for load and dump scripts.
+- update doi links http://dx.doi.org --> https://doi.org
+- fixed functions to explicitly add public. to function call and table reference. (this will require a migration)
+- upgrade rake to 13.0.1 (dependbot fix)
+- upgrade nokogiri to 1.10.8 (dependbot fix)
+
+### Added
+- dockerfile to dump database in docker image for faster restore of database.
 
 ## [5.2.2] - 2019-12-06
 
