@@ -46,9 +46,9 @@ jobs:
         run: |
           cp config/database.yml.gh config/database.yml
           bundle exec rails db:create
-          bundle exec rails db:migrate
-          # bundle exec rake db:structure:load
-          # bundle exec rake db:fixtures:load
+          # bundle exec rails db:migrate
+          bundle exec rake db:structure:load
+          bundle exec rake db:fixtures:load
           bundle exec rails test
           bundle exec rspec --tag ~js
 
@@ -65,7 +65,7 @@ jobs:
               if [ "${TAGS}" == "" ]; then
                   TAGS="${TMPVERSION}"
               else
-                  TAGS="${TAGS}, ${TMPVERSION}"
+                  TAGS="${TAGS},${TMPVERSION}"
               fi
               OLDVERSION="${TMPVERSION}"
               TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
@@ -74,7 +74,7 @@ jobs:
               TAGS="test"
           fi
           echo ${TAGS}
-          echo "::set-env name=TAGS::[ ${TAGS} ]"       
+          echo "::set-env name=TAGS::${TAGS}"       
       - uses: docker/build-push-action@v1
         with:
           repository: pecan/bety
