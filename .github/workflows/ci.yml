@@ -14,7 +14,7 @@ jobs:
           - 2.6
           # - 2.7
     services:
-      db:
+      postgres:
         image: mdillon/postgis:9.5
         ports: 
           - 5432:5432
@@ -51,3 +51,25 @@ jobs:
           # bundle exec rake db:fixtures:load
           bundle exec rails test
           bundle exec rspec --tag ~js
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          VERSION="5.2.0"
+          TAGS=""
+          TMPVERSION="${VERSION}"
+          OLDVERSION=""
+          while [ "$OLDVERSION" != "$TMPVERSION" ]; do
+              TAGS="${TAGS} ${TMPVERSION}"
+              OLDVERSION="${TMPVERSION}"
+              TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
+          done 
+          echo ${TAGS}
+          echo "::set-env name=TAGS::${TAGS}"       
+      - uses: docker/build-push-action@v1
+        with:
+          repository: pecan/bety
+          tags: ${{ env.TAGS }}
+          push: false
