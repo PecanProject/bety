@@ -1,0 +1,94 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: 
+          - 2.4
+          - 2.5
+          - 2.6
+          # - 2.7 is not supported, results in error
+    services:
+      postgres:
+        image: mdillon/postgis:9.5
+        ports: 
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Set up Ruby ${{ matrix.ruby }}
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: Install libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install libgeos-dev
+      - name: Install gems
+        run: |
+          gem install bundler -v 1.17.3
+          bundle config path vendor/bundle
+          bundle config without 'javascript_testing'
+          bundle config with 'docker'
+          bundle config
+          bundle install --jobs 4 --retry 3
+      - name: Build and test with Rake
+        env:
+          RAILS_ENV: test
+        run: |
+          cp config/database.yml.gh config/database.yml
+          psql -h localhost -U postgres -c "CREATE USER bety WITH SUPERUSER CREATEDB UNENCRYPTED PASSWORD 'bety'";
+          psql -h localhost -U postgres -c "DROP DATABASE IF EXISTS test;"
+          psql -h localhost -U postgres -c "CREATE DATABASE test WITH OWNER bety;"
+          psql -h localhost -U bety -d test -c "CREATE EXTENSION postgis;"
+          #bundle exec rails db:create
+          # bundle exec rails db:migrate
+          bundle exec rake db:structure:load
+          bundle exec rake db:fixtures:load
+          mkdir -p spec/tmp
+          bundle exec rails test
+          bundle exec rspec --tag ~js
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          VERSION="5.2.0"
+          TAGS=""
+          TMPVERSION="${VERSION}"
+          OLDVERSION=""
+          while [ "$OLDVERSION" != "$TMPVERSION" ]; do
+              if [ "${TAGS}" == "" ]; then
+                  TAGS="${TMPVERSION}"
+              else
+                  TAGS="${TAGS},${TMPVERSION}"
+              fi
+              OLDVERSION="${TMPVERSION}"
+              TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
+          done 
+          if [ "${TAGS}" == "" ]; then
+              TAGS="test"
+          fi
+          echo ${TAGS}
+          echo "::set-env name=TAGS::${TAGS}"       
+      - uses: docker/build-push-action@v1
+        with:
+          repository: pecan/bety
+          tags: ${{ env.TAGS }}
+          push: false
