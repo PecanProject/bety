@@ -1,0 +1,102 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby: 
+          - 2.4
+          - 2.5
+          - 2.6
+          # - 2.7
+    services:
+      db:
+        image: mdillon/postgis:9.5
+        ports: 
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Set up Ruby ${{ matrix.ruby }}
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: Install gems
+        run: |
+          gem install bundler -v 1.17.3
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+      - name: Build and test with Rake
+        env:
+          RAILS_ENV: test
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:migrate
+          # bundle exec rake db:structure:load
+          # bundle exec rake db:fixtures:load
+          bundle exec rails test
+          bundle exec rspec --tag ~js
+
+  test:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Set up Ruby ${{ matrix.ruby }}
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: Install gems
+        run: |
+          gem install bundler -v 1.17.3
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+      - name: Build and test with Rake
+        env:
+          DATABASE_URL: postgres://postgres:@localhost:5432/test
+          RAILS_ENV: test
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:migrate
+          bundle exec rails test
+          bundle exec rspec --tag ~js
+
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - name: Setup Ruby
+  #       uses: actions/setup-ruby@v1
+  #       with:
+  #         ruby-version: 2.6.3
+  #     - name: Build and run tests
+  #       env:
+  #         DATABASE_URL: postgres://postgres:@localhost:5432/test
+  #         REDIS_URL: redis://localhost:6379/0
+  #         RAILS_ENV: test
+  #         RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+  #       run: |
+  #         sudo apt-get -yqq install libpq-dev
+  #         gem install bundler
+  #         bundle install --jobs 4 --retry 3
+  #         bundle exec rails db:prepare
+  #         bundle exec rails test
