@@ -44,6 +44,7 @@ jobs:
         env:
           RAILS_ENV: test
         run: |
+          cp config/database.yml.gh config/database.yml
           bundle exec rails db:create
           bundle exec rails db:migrate
           # bundle exec rake db:structure:load
