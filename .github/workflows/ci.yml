@@ -35,20 +35,29 @@ jobs:
         uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+      - name: Install libraries
+        run: |
+          apt-get -y install libgeos-dev
       - name: Install gems
         run: |
           gem install bundler -v 1.17.3
           bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3 --with docker --without "javascript_testing"
+          bundle config set without 'javascript_testing'
+          bundle config set with 'docker'
+          bundle install --jobs 4 --retry 3
       - name: Build and test with Rake
         env:
           RAILS_ENV: test
         run: |
           cp config/database.yml.gh config/database.yml
-          bundle exec rails db:create
+          psql -U postgres -c "DROP DATABASE IF EXISTS test;"
+          psql -U postgres -c "CREATE DATABASE test WITH OWNER bety;"
+          psql -U postgres -d test -c "CREATE EXTENSION postgis;"
+          #bundle exec rails db:create
           # bundle exec rails db:migrate
           bundle exec rake db:structure:load
           bundle exec rake db:fixtures:load
+          mkdir -p spec/tmp
           bundle exec rails test
           bundle exec rspec --tag ~js
 
