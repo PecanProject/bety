@@ -53,7 +53,7 @@ jobs:
           cp config/database.yml.gh config/database.yml
           psql -h localhost -U postgres -c "CREATE USER bety WITH SUPERUSER CREATEDB UNENCRYPTED PASSWORD 'bety'";
           psql -h localhost -U postgres -c "DROP DATABASE IF EXISTS test;"
-          psql -h localhost -U bety -c "CREATE DATABASE test WITH OWNER bety;"
+          psql -h localhost -U postgres -c "CREATE DATABASE test WITH OWNER bety;"
           psql -h localhost -U bety -d test -c "CREATE EXTENSION postgis;"
           #bundle exec rails db:create
           # bundle exec rails db:migrate
