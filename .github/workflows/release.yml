@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - *
+    tags:
+      - '*'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          TMPVERSION="${GITHUB_REF#refs/tags/}"
+          TMPVERSION="${TMPVERSION#refs/heads/}"
+          VERSION="${TMPVERSION#v}"
+          TAGS=""
+          TMPVERSION="${VERSION}"
+          OLDVERSION=""
+          while [ "$OLDVERSION" != "$TMPVERSION" ]; do
+              if [ "${TAGS}" == "" ]; then
+                  TAGS="${TMPVERSION}"
+              else
+                  TAGS="${TAGS},${TMPVERSION}"
+              fi
+              OLDVERSION="${TMPVERSION}"
+              TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
+          done 
+          if [ "${TAGS}" == "" ]; then
+              TAGS="test"
+          fi
+          if [ "${TAGS}" == "master" ]; then
+              TAGS="latest"
+          fi
+          echo ${TAGS}
+          echo "::set-env name=TAGS::${TAGS}"       
+      - uses: docker/build-push-action@v1
+        with:
+          repository: pecan/bety
+          tags: ${{ env.TAGS }}
+          push: false
