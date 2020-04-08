@@ -37,7 +37,8 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
       - name: Install libraries
         run: |
-          apt-get -y install libgeos-dev
+          sudo apt-get update
+          sudo apt-get -y install libgeos-dev
       - name: Install gems
         run: |
           gem install bundler -v 1.17.3
