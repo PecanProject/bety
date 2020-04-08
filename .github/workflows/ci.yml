@@ -43,8 +43,9 @@ jobs:
         run: |
           gem install bundler -v 1.17.3
           bundle config path vendor/bundle
-          bundle config set without 'javascript_testing'
-          bundle config set with 'docker'
+          bundle config without 'javascript_testing'
+          bundle config with 'docker'
+          bundle config
           bundle install --jobs 4 --retry 3
       - name: Build and test with Rake
         env:
