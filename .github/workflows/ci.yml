@@ -10,9 +10,9 @@ jobs:
       matrix:
         ruby: 
           - 2.4
-          # - 2.5
-          # - 2.6
-          # - 2.7
+          - 2.5
+          - 2.6
+          - 2.7
     services:
       postgres:
         image: mdillon/postgis:9.5
@@ -51,9 +51,9 @@ jobs:
           RAILS_ENV: test
         run: |
           cp config/database.yml.gh config/database.yml
-          psql -U postgres -c "DROP DATABASE IF EXISTS test;"
-          psql -U postgres -c "CREATE DATABASE test WITH OWNER bety;"
-          psql -U postgres -d test -c "CREATE EXTENSION postgis;"
+          psql -h localhost -U postgres -c "DROP DATABASE IF EXISTS test;"
+          psql -h localhost -U postgres -c "CREATE DATABASE test WITH OWNER bety;"
+          psql -h localhost -U postgres -d test -c "CREATE EXTENSION postgis;"
           #bundle exec rails db:create
           # bundle exec rails db:migrate
           bundle exec rake db:structure:load
