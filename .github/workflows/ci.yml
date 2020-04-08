@@ -12,7 +12,7 @@ jobs:
           - 2.4
           - 2.5
           - 2.6
-          - 2.7
+          # - 2.7 is not supported, results in error
     services:
       postgres:
         image: mdillon/postgis:9.5
