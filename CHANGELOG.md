@@ -32,6 +32,7 @@ In this case you can simply pull down the version you want, and run `docker-comp
 ### Added
 - dockerfile to dump database in docker image for faster restore of database.
 - switched to github actions instead of Travis
+- cronjob on github actions to create pecan/db docker image nightly, will safe also with year-weak (i.e 2020-15)
 
 ## [5.2.2] - 2019-12-06
 
