@@ -18,7 +18,7 @@ jobs:
       - name: Login into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
       - name: Push image
-      - run: |
+        run: |
           # image all lowercase
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/bety
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
