@@ -27,7 +27,7 @@ jobs:
       - name: Login into registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-          echo "${{ secrets.DOCKERHUB }}" | docker login docker.pkg.github.com -u robkooper --password-stdin
+          echo "${{ secrets.DOCKERHUB }}" | docker login -u kooper --password-stdin
       - name: Push image
         run: |
           # image all lowercase
