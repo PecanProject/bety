@@ -13,32 +13,45 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Build image
+        run: docker build --tag image --file Dockerfile .
+      - name: Login into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+      - name: Push image
       - run: |
-          TMPVERSION="${GITHUB_REF#refs/tags/}"
-          TMPVERSION="${TMPVERSION#refs/heads/}"
-          VERSION="${TMPVERSION#v}"
-          TAGS=""
+          # image all lowercase
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/bety
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+
+          # all tags we will apply
           TMPVERSION="${VERSION}"
           OLDVERSION=""
+          TAGS=""
           while [ "$OLDVERSION" != "$TMPVERSION" ]; do
-              if [ "${TAGS}" == "" ]; then
-                  TAGS="${TMPVERSION}"
-              else
-                  TAGS="${TAGS},${TMPVERSION}"
-              fi
-              OLDVERSION="${TMPVERSION}"
-              TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
+            TAGS="${TAGS} ${TMPVERSION}"
+            OLDVERSION="${TMPVERSION}"
+            TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
           done 
           if [ "${TAGS}" == "" ]; then
-              TAGS="test"
+            TAGS="test"
           fi
           if [ "${TAGS}" == "master" ]; then
-              TAGS="latest"
+            TAGS="latest"
           fi
-          echo ${TAGS}
-          echo "::set-env name=TAGS::${TAGS}"       
-      - uses: docker/build-push-action@v1
-        with:
-          repository: pecan/bety
-          tags: ${{ env.TAGS }}
-          push: false
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          echo TAGS=$TAGS
+
+          # push all images
+          for T in $TAGS; do
+            docker tag image $IMAGE_ID:$T
+            docker push $IMAGE_ID:$T
+          done
