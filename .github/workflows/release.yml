@@ -8,6 +8,9 @@ on:
     tags:
       - '*'
 
+  pull_request:
+
+
 jobs:
   docker:
     runs-on: ubuntu-latest
