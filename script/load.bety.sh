@@ -238,27 +238,27 @@ fi
 
 # check the database for information first
 if [ -z "${DUMPURL}" ]; then
-  DUMPURL=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_url FROM machines WHERE sync_host_id = ${REMOTESITE};" | xargs )
+  DUMPURL=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_url FROM machines WHERE sync_host_id = ${REMOTESITE};" 2>/dev/null | xargs )
 fi
 if [ -z "${DUMPURL}" ]; then
   echo "Did not find a sync_url in database, please update database, or provide script with DUMPURL."
   exit -1
 fi
 
-MY_START_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_start FROM machines WHERE sync_host_id = ${MYSITE};" | xargs )
+MY_START_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_start FROM machines WHERE sync_host_id = ${MYSITE};" 2>/dev/null | xargs )
 if [ -z "${MY_START_ID}" ]; then
   MY_START_ID=$(( MYSITE * ID_RANGE + 1 ))
 fi
-MY_LAST_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_end FROM machines WHERE sync_host_id = ${MYSITE};" | xargs )
+MY_LAST_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_end FROM machines WHERE sync_host_id = ${MYSITE};" 2>/dev/null | xargs )
 if [ -z "${MY_LAST_ID}" ]; then
   MY_LAST_ID=$(( MY_START_ID + ID_RANGE - 2 ))
 fi
 
-REM_START_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_start FROM machines WHERE sync_host_id = ${REMOTESITE};" | xargs )
+REM_START_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_start FROM machines WHERE sync_host_id = ${REMOTESITE};" 2>/dev/null | xargs )
 if [ -z "${REM_START_ID}" ]; then
-  REM_START_ID=$(( MYSITE * ID_RANGE + 1 ))
+  REM_START_ID=$(( REMOTESITE * ID_RANGE + 1 ))
 fi
-REM_LAST_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_end FROM machines WHERE sync_host_id = ${REMOTESITE};" | xargs )
+REM_LAST_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_end FROM machines WHERE sync_host_id = ${REMOTESITE};" 2>/dev/null | xargs )
 if [ -z "${REM_LAST_ID}" ]; then
   REM_LAST_ID=$(( REM_START_ID + ID_RANGE - 2 ))
 fi
