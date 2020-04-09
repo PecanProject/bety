@@ -1,6 +1,16 @@
 name: CI
 
-on: push
+on:
+  push:
+    branches:
+      - master
+      - develop
+
+  tags:
+    - '*'
+
+
+  pull_requests:
 
 jobs:
   build:
@@ -68,27 +78,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          VERSION="5.2.0"
-          TAGS=""
-          TMPVERSION="${VERSION}"
-          OLDVERSION=""
-          while [ "$OLDVERSION" != "$TMPVERSION" ]; do
-              if [ "${TAGS}" == "" ]; then
-                  TAGS="${TMPVERSION}"
-              else
-                  TAGS="${TAGS},${TMPVERSION}"
-              fi
-              OLDVERSION="${TMPVERSION}"
-              TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
-          done 
-          if [ "${TAGS}" == "" ]; then
-              TAGS="test"
-          fi
-          echo ${TAGS}
-          echo "::set-env name=TAGS::${TAGS}"       
-      - uses: docker/build-push-action@v1
-        with:
-          repository: pecan/bety
-          tags: ${{ env.TAGS }}
-          push: false
+      - name: Build image
+        run: docker build --tag image --file Dockerfile .
