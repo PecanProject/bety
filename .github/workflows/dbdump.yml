@@ -26,7 +26,7 @@ jobs:
           psql -h localhost -U postgres -d bety -c "CREATE EXTENSION postgis;"
 
       - name: Sync with EBI
-        run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 0 -w https://ebi-forecast.igb.illinois.edu/pecan/dump/bety.tar.gz
+        run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 0 -c -w https://ebi-forecast.igb.illinois.edu/pecan/dump/bety.tar.gz
 
       - name: Sync with BU
         run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 1
