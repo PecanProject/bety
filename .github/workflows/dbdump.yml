@@ -1,14 +1,15 @@
 name: DB Dump
 
 on:
-  push:
-
   schedule:
     - cron: '0 0 * * *'
 
 jobs:
   sync:
+    if: github.repository == 'PecanProject/bety'
+
     runs-on: ubuntu-latest
+
     services:
       postgres:
         image: mdillon/postgis:9.5
