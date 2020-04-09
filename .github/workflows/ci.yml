@@ -6,9 +6,8 @@ on:
       - master
       - develop
 
-  tags:
-    - '*'
-
+    tags:
+      - '*'
 
   pull_requests:
 
