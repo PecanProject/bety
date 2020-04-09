@@ -25,7 +25,9 @@ jobs:
           --build-arg BETY_GIT_DATE="$(git log --pretty=format:%ad -1)" \
           --tag image --file Dockerfile .
       - name: Login into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.DOCKERHUB }}" | docker login docker.pkg.github.com -u robkooper --password-stdin
       - name: Push image
         run: |
           # image all lowercase
@@ -63,4 +65,6 @@ jobs:
           for T in $TAGS; do
             docker tag image $IMAGE_ID:$T
             docker push $IMAGE_ID:$T
+            docker tag image pecan/bety:$T
+            docker push pecan/bety:$T
           done
