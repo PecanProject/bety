@@ -31,6 +31,7 @@ In this case you can simply pull down the version you want, and run `docker-comp
 
 ### Added
 - dockerfile to dump database in docker image for faster restore of database.
+- switched to github actions instead of Travis
 
 ## [5.2.2] - 2019-12-06
 
