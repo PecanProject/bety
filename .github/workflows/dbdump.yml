@@ -1,0 +1,68 @@
+name: DB Dump
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  sync:
+    if: github.repository == 'PecanProject/bety'
+
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: mdillon/postgis:9.5
+        ports: 
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Database
+        run: |
+          psql -h localhost -U postgres -c "CREATE ROLE bety WITH LOGIN CREATEDB NOSUPERUSER NOCREATEROLE PASSWORD 'bety'"
+          psql -h localhost -U postgres -c "CREATE DATABASE bety WITH OWNER bety"
+          psql -h localhost -U postgres -d bety -c "CREATE EXTENSION postgis;"
+
+      - name: Sync with EBI
+        run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 0 -c -w https://ebi-forecast.igb.illinois.edu/pecan/dump/bety.tar.gz
+
+      - name: Sync with BU
+        run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 1
+
+      - name: Sync with BNL
+        run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 2 -w ftp://anon:anon@ftp.test.bnl.gov/outgoing/betydb/bety.tar.gz
+
+      - name: Sync with Wisconsin
+        run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 5 -w http://tree.aos.wisc.edu:6480/sync/dump/bety.tar.gz
+
+      - name: Dump Database
+        run: pg_dump -h localhost -U postgres -F c bety > initdb/db.dump
+
+      - name: Build Docker with Database dump
+        run: |
+          cd initdb
+          docker build --tag image --file Dockerfile .
+
+      - name: Login into registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+          if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" -a -n "${{ secrets.DOCKERHUB_PASSWORD }}"]; then
+            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          fi
+
+      - name: Push docker image
+        run: |
+          for T in $(date +'%Y-%V') 'latest'; do
+            docker tag image docker.pkg.github.com/${{ github.repository }}/db:$T
+            docker push docker.pkg.github.com/${{ github.repository }}/db:$T
+            if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" -a -n "${{ secrets.DOCKERHUB_PASSWORD }}"]; then
+              docker tag image pecan/db:$T
+              docker push pecan/db:$T
+            fi
+          done
