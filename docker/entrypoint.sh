@@ -15,6 +15,10 @@ case $1 in
             ./script/load.bety.sh -a "postgres" -d "bety" -p "-h postgres -p 5432" -o bety -r ${r}
         done
         ;;
+    "fix" )
+        echo "Fixing database ID"
+        ./script/load.bety.sh -a "postgres" -d "bety" -p "-h postgres -p 5432" -o bety -f -m ${LOCAL_SERVER}  -r -1
+        ;;
     "dump" )
         echo "Dump data from server ${LOCAL_SERVER}"
         ./script/dump.bety.sh -d "bety" -p "-h postgres -p 5432 -U postgres" -m ${LOCAL_SERVER} -o dump
