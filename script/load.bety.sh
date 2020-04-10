@@ -241,8 +241,10 @@ if [ -z "${DUMPURL}" ]; then
   DUMPURL=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_url FROM machines WHERE sync_host_id = ${REMOTESITE};" 2>/dev/null | xargs )
 fi
 if [ -z "${DUMPURL}" ]; then
-  echo "Did not find a sync_url in database, please update database, or provide script with DUMPURL."
-  exit -1
+  if [ "${FIXSEQUENCE}" != "YES" -o "${CREATE}" == "YES" ]; then
+    echo "Did not find a sync_url in database, please update database, or provide script with DUMPURL."
+    exit -1
+  fi
 fi
 
 MY_START_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_start FROM machines WHERE sync_host_id = ${MYSITE};" 2>/dev/null | xargs )
@@ -454,25 +456,11 @@ if [ "${USERS}" == "YES" ]; then
   echo "SELECT count(id) FROM users WHERE login='carya';" >&3 && read RESULT <&4
   if [ ${RESULT} -eq 0 ]; then
     echo "SELECT nextval('users_id_seq');" >&3 && read ID <&4
-    echo "INSERT INTO users (login, name, email, crypted_password, salt, city, state_prov, postal_code, country, area, access_level, page_access_level, created_at, updated_at, apikey, remember_token, remember_token_expires_at) VALUES ('carya', 'carya', 'betydb+${ID}@gmail.com', 'df8428063fb28d75841d719e3447c3f416860bb7', 'carya', 'Urbana', 'IL', '61801', 'USA', '', 1, 1, NOW(), NOW(), NULL, NULL, NULL);" >&3
+    $(dirname $0)/betyuser.sh "carya" "illinois" "carya" "betydb+${ID}@gmail.com" 1 1
     if [ "${QUIET}" != "YES" ]; then
       echo "Added carya with admin privileges with id=${ID}"
     fi
   fi
-
-  # add other users with specific rights
-  for f in 1 2 3 4; do
-    for g in 1 2 3 4; do
-      echo "SELECT count(id) FROM users WHERE login='carya${f}${g}';" >&3 && read RESULT <&4
-      if [ ${RESULT} -eq 0 ]; then
-        echo "SELECT nextval('users_id_seq');" >&3 && read ID <&4
-        echo "INSERT INTO users (login, name, email, crypted_password, salt, city, state_prov, postal_code, country, area, access_level, page_access_level, created_at, updated_at, apikey, remember_token, remember_token_expires_at) VALUES ('carya${f}${g}', 'carya${f}${g}', 'betydb+${ID}@gmail.com', 'df8428063fb28d75841d719e3447c3f416860bb7', 'carya', 'Urbana', 'IL', '61801', 'USA', '', $f, $g, NOW(), NOW(), NULL, NULL, NULL);" >&3
-        if [ "${QUIET}" != "YES" ]; then
-          echo "Added carya$f$g with access_level=$f and page_access_level=$g with id=${ID}"
-        fi
-      fi
-    done
-  done
 fi
 
 # Add guest user
@@ -481,7 +469,7 @@ if [ "${GUESTUSER}" == "YES" ]; then
   echo "SELECT count(id) FROM users WHERE login='guestuser';" >&3 && read RESULT <&4
   if [ ${RESULT} -eq 0 ]; then
     echo "SELECT nextval('users_id_seq');" >&3 && read ID <&4
-    echo "INSERT INTO users (login, name, email, crypted_password, salt, city, state_prov, postal_code, country, area, access_level, page_access_level, created_at, updated_at, apikey, remember_token, remember_token_expires_at) VALUES ('guestuser', 'guestuser', 'betydb+${ID}@gmail.com', '994363a949b6486fc7ea54bf40335127f5413318', 'bety', 'Urbana', 'IL', '61801', 'USA', '', 4, 4, NOW(), NOW(), NULL, NULL, NULL);" >&3
+    $(dirname $0)/betyuser.sh "guestuser" "guestuser" "guestuser" "betydb+${ID}@gmail.com" 4 4
     if [ "${QUIET}" != "YES" ]; then
       echo "Added guestuser with access_level=4 and page_access_level=4 with id=${ID}"
     fi

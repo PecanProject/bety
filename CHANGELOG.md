@@ -20,6 +20,7 @@ In this case you can simply pull down the version you want, and run `docker-comp
 ## [Unreleased]
 
 ### Fixes
+- #696 : actually now uses environment variable SECRET_KEY_BASE. If this was set, unset otherwise you can not login to BETY.
 - #551 : remove GUnload message from console on page change.
 - #672 : Added activemodel-serializers-xml Gem to restore functionality of "original" API XML endpoints.
 - #674 : Upgraded comma Gem to restore CSV file downloads.
@@ -30,6 +31,7 @@ In this case you can simply pull down the version you want, and run `docker-comp
 - upgrade nokogiri to 1.10.8 (dependbot fix)
 
 ### Added
+- script to add new users to bety
 - dockerfile to dump database in docker image for faster restore of database.
 - switched to github actions instead of Travis
 - cronjob on github actions to create pecan/db docker image nightly, will safe also with year-weak (i.e 2020-15)
