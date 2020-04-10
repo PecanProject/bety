@@ -64,7 +64,7 @@ jobs:
           for T in $TAGS; do
             docker tag image $IMAGE_ID:$T
             docker push $IMAGE_ID:$T
-            if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" -a -n "${{ secrets.DOCKERHUB_PASSWORD }}"]; then
+            if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" -a -n "${{ secrets.DOCKERHUB_PASSWORD }}" ]; then
               docker tag image pecan/bety:$T
               docker push pecan/bety:$T
             fi
