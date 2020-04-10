@@ -65,6 +65,10 @@ case $1 in
         echo "Start running BETY (unicorn)"
         exec bundle exec unicorn -c config/unicorn.rb
         ;;
+    "user" )
+        shift
+        ./script/betyuser.sh "$@"
+        ;;
     "help" )
         echo "initialize : create a new database and initialize with all data from server 0"
         echo "sync       : synchronize database with remote servers ${REMOTE_SERVERS}"
@@ -78,6 +82,7 @@ case $1 in
         echo "vacuum-all : maintenance: vaccum the entire database (not VACUUM FULL)"
         echo "vacuum-full: maintenance: full vaccum of the database. Specify rarely, if ever"
         echo "autoserver : runs the server (using unicorn) after running a migrate"
+        echo "user       : add a new user to BETY database"
         echo "help       : this text"
         echo ""
         echo "Default is to run bety using unicorn. no automatic migrations."
