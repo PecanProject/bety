@@ -58,9 +58,11 @@ jobs:
 
       - name: Push docker image
         run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/db
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           for T in $(date +'%Y-%V') 'latest'; do
-            docker tag image docker.pkg.github.com/${{ github.repository }}/db:$T
-            docker push docker.pkg.github.com/${{ github.repository }}/db:$T
+            docker tag image $IMAGE_ID:$T
+            docker push $IMAGE_ID:$T
             if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" -a -n "${{ secrets.DOCKERHUB_PASSWORD }}"]; then
               docker tag image pecan/db:$T
               docker push pecan/db:$T
