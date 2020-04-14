@@ -52,7 +52,7 @@ jobs:
       - name: Login into registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-          if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" -a -n "${{ secrets.DOCKERHUB_PASSWORD }}"]; then
+          if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" -a -n "${{ secrets.DOCKERHUB_PASSWORD }}" ]; then
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
           fi
 
@@ -63,7 +63,7 @@ jobs:
           for T in $(date +'%Y-%V') 'latest'; do
             docker tag image $IMAGE_ID:$T
             docker push $IMAGE_ID:$T
-            if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" -a -n "${{ secrets.DOCKERHUB_PASSWORD }}"]; then
+            if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" -a -n "${{ secrets.DOCKERHUB_PASSWORD }}" ]; then
               docker tag image pecan/db:$T
               docker push pecan/db:$T
             fi
