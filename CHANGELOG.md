@@ -19,6 +19,8 @@ In this case you can simply pull down the version you want, and run `docker-comp
 
 ## [Unreleased]
 
+## [5.3.0] - 2020-04-15
+
 ### Fixes
 - #696 : actually now uses environment variable SECRET_KEY_BASE. If this was set, unset otherwise you can not login to BETY.
 - #551 : remove GUnload message from console on page change.
