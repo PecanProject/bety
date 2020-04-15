@@ -152,9 +152,15 @@ mkdir -p "${DUMPDIR}"
 chmod 777 "${DUMPDIR}"
 
 # compute range based on MYSITE
-if [ "${ALLDATA}" != "YES" ]; then
-  START_ID=$(( MYSITE * ID_RANGE + 1 ))
-  LAST_ID=$(( START_ID + ID_RANGE - 1 ))
+  if [ "${ALLDATA}" != "YES" ]; then
+  START_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_start FROM machines WHERE sync_host_id = ${MYSITE};" | xargs )
+  if [ -z "${START_ID}" ]; then
+    START_ID=$(( MYSITE * ID_RANGE + 1 ))
+  fi
+  LAST_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_end FROM machines WHERE sync_host_id = ${MYSITE};" | xargs )
+  if [ -z "${LAST_ID}" ]; then
+    LAST_ID=$(( START_ID + ID_RANGE - 2 ))
+  fi
   if [ "${QUIET}" != "YES" ]; then
     echo "Dumping all items that have id    : [${START_ID} - ${LAST_ID}]"
   fi
@@ -209,7 +215,7 @@ fi
 if [ "${KEEPUSERS}" == "YES" ]; then
     psql ${PG_OPT} -t -q -d "${DATABASE}" -c "\COPY (SELECT * FROM ${USER_TABLES} WHERE ${LIMIT})  TO '${DUMPDIR}/users.csv' WITH (DELIMITER '	',  NULL '\\N', ESCAPE '\\', FORMAT CSV, ENCODING 'UTF-8')"
 else
-    psql ${PG_OPT} -t -q -d "${DATABASE}" -c "\COPY (SELECT id, CONCAT('user', id) AS login, CONCAT('user ' , id) AS name, CONCAT('betydb+', id, '@gmail.com') as email, 'Urbana' AS city,  'USA' AS country, '' AS area, '1234567890abcdef' AS crypted_password, 'BU' AS salt, NOW() AS created_at, NOW() AS updated_at, NULL as remember_token, NULL AS remember_token_expires_at, 3 AS access_level, 4 AS page_access_level, NULL AS apikey, 'IL' AS state_prov, '61801' AS postal_code FROM ${USER_TABLES} WHERE ${LIMIT}) TO '${DUMPDIR}/users.csv' WITH (DELIMITER '	',  NULL '\\N', ESCAPE '\\', FORMAT CSV, ENCODING 'UTF-8')"
+    psql ${PG_OPT} -t -q -d "${DATABASE}" -c "\COPY (SELECT id, CONCAT('user', id) AS login, CONCAT('user ' , id) AS name, CONCAT('betydb+', id, '@gmail.com') as email, '' AS city, '' AS country, '' AS area, '1234567890abcdef' AS crypted_password, 'SALT' AS salt, created_at, updated_at, NULL as remember_token, NULL AS remember_token_expires_at, 3 AS access_level, 4 AS page_access_level, NULL AS apikey, '' AS state_prov, '' AS postal_code FROM ${USER_TABLES} WHERE ${LIMIT}) TO '${DUMPDIR}/users.csv' WITH (DELIMITER '	',  NULL '\\N', ESCAPE '\\', FORMAT CSV, ENCODING 'UTF-8')"
 fi
 ADD=$( psql ${PG_OPT} -t -q -d "${DATABASE}" -c "SELECT count(*) FROM ${USER_TABLES} WHERE ${LIMIT};" | tr -d ' ' )
 if [ "${QUIET}" != "YES" ]; then
