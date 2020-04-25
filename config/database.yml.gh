@@ -4,5 +4,7 @@ test:
   reconnect: false
   database: test
   pool: 5
-  username: bety
-  password: bety
+  username: postgres
+  password: 
+  host: localhost
+  port: 5432

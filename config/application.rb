@@ -16,9 +16,9 @@ module BetyRails5
     using SymbolizeHelper
 
     # Define top-level Hash constant CONFIG by merging settings in defaults.yml and application.yml.
-    ::CONFIG = YAML.load(File.read(File.expand_path('../defaults.yml', __FILE__))).deep_symbolize_keys
+    ::CONFIG = YAML.load(ERB.new(File.read(File.expand_path('../defaults.yml', __FILE__))).result).deep_symbolize_keys
     if File.exists?(File.expand_path('../application.yml', __FILE__))
-      customizations = YAML.load(File.read(File.expand_path('../application.yml', __FILE__))).deep_symbolize_keys
+      customizations = YAML.load(ERB.new(File.read(File.expand_path('../application.yml', __FILE__))).result).deep_symbolize_keys
       ::CONFIG.update customizations
       ::CONFIG.merge! CONFIG.fetch(Rails.env, {})
     end

@@ -93,4 +93,4 @@ homepage_body:
 show_crop_map_links: true
 
 # Override this with a secret key to run a secure site:
-rest_auth_site_key: 'thisisnotasecret'
+rest_auth_site_key: <%= ENV["SECRET_KEY_BASE"] || 'thisisnotasecret' %>
