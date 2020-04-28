@@ -171,6 +171,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :sites_cultivars
+
   resources :citations do
     member do
       get :search_sites
