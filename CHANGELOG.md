@@ -19,6 +19,9 @@ In this case you can simply pull down the version you want, and run `docker-comp
 
 ## [Unreleased]
 
+### Changed
+- updated rails to 5.1.7
+
 ## [5.3.0] - 2020-04-15
 
 ### Fixes
