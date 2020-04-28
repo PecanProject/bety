@@ -45,7 +45,7 @@ gem "pg"
 gem "activerecord-postgis-adapter"
 
 
-gem "trollop" # for Rails scripts
+gem "optimist" # for Rails scripts
 
 
 group :development, :test do

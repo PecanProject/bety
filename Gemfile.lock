@@ -120,6 +120,7 @@ GEM
     nio4r (2.5.2)
     nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
+    optimist (3.0.1)
     passenger (6.0.4)
       rack
       rake (>= 0.8.1)
@@ -230,7 +231,6 @@ GEM
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
-    trollop (2.9.10)
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
@@ -271,6 +271,7 @@ DEPENDENCIES
   multi_json
   narray (= 0.6.0.4)
   nokogiri
+  optimist
   passenger
   pg
   protected_attributes_continued
@@ -292,7 +293,6 @@ DEPENDENCIES
   sass-rails
   seer (= 0.10.0)
   selenium-webdriver
-  trollop
   tzinfo
   uglifier
   unicorn
