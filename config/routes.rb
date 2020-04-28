@@ -291,7 +291,7 @@ Rails.application.routes.draw do
   get '/signup' => 'users#new', :as => :signup
 
   #route for 'static' content
-  get '*path' => 'static#index'
+  get '/static/*path' => 'static#index'
 
   # add named routes for bulk_upload controller:
   get '/bulk_upload/start_upload' => 'bulk_upload#start_upload', :as => :start_upload

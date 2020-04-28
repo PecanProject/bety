@@ -56,11 +56,6 @@ group :development, :test do
   gem "yard"
 end
 
-group :development, :test do
-  gem "pry-rails"
-  gem "pry-byebug"
-end
-
 group :test do
   # phasing out webrat:    
   # gem "webrat", "0.7.1"
@@ -83,6 +78,8 @@ end
 group :debug do
   gem "selenium-webdriver"
   gem "pry"
+  gem "pry-rails"
+  gem "pry-byebug"
 end
 
 group :production do
