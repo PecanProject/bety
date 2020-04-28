@@ -19,6 +19,9 @@ In this case you can simply pull down the version you want, and run `docker-comp
 
 ## [Unreleased]
 
+### Changed
+- removed static route, it was only used to render 404.
+
 ## [5.3.0] - 2020-04-15
 
 ### Fixes
