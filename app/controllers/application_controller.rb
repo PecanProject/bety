@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
   end
 
   def not_found
-    render :file => Rails.root.to_s + '/app/views/static/404', :formats => [:html], :layout => true, :status => 404
+    render :file => Rails.root.to_s + '/public/404', :formats => [:html], :layout => true, :status => 404
   end
  
   def sort_column(default_table = params[:controller],default_sort = 'id')
