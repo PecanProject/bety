@@ -10,7 +10,7 @@ services:
       - 8000
     environment:
       - UNICORN_WORKER_PROCESSES=1
-      - SECRET_KEY_BASE=thisissomereallllllylongsecretkeyandshouldbelongerthanthis
+      - SECRET_KEY_BASE=thisisnotasecret
     depends_on:
       - postgres
     restart: unless-stopped
