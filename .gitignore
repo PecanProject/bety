@@ -25,3 +25,6 @@ docker-compose.override.yaml
 
 # Ignore encrypted secrets key file.
 config/secrets.yml.key
+
+# Ignore db dump
+initdb/db.dump

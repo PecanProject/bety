@@ -3,25 +3,23 @@
 # start right job
 case $1 in
     "initialize" )
-        echo "Create new database, initialized from all data."
-        psql -h postgres -p 5432 -U postgres -c "CREATE ROLE bety WITH LOGIN CREATEDB NOSUPERUSER NOCREATEROLE PASSWORD 'bety'"
-        psql -h postgres -p 5432 -U postgres -c "CREATE DATABASE bety WITH OWNER bety"
-        ./script/load.bety.sh -a "postgres" -d "bety" -p "-h postgres -p 5432" -o bety -c ${INITIALIZE_FLAGS} -m ${LOCAL_SERVER} -r 0 ${INITIALIZE_URL}
+        echo "please use pecan/db image to initialize the database."
+        exit -1
         ;;
     "sync" )
         echo "Synchronize with servers ${REMOTE_SERVERS}"
         for r in ${REMOTE_SERVERS}; do
             echo "Synchronizing with server ${r}"
-            ./script/load.bety.sh -a "postgres" -d "bety" -p "-h postgres -p 5432" -o bety -r ${r}
+            ./script/load.bety.sh -a "${PGUSER}" -d "${BETYDATABASE}" -o ${BETYUSER} -r ${r}
         done
         ;;
     "fix" )
         echo "Fixing database ID"
-        ./script/load.bety.sh -a "postgres" -d "bety" -p "-h postgres -p 5432" -o bety -f -m ${LOCAL_SERVER}  -r -1
+        ./script/load.bety.sh -a "${PGUSER}" -d "${BETYDATABASE}" -o ${BETYUSER} -f -m ${LOCAL_SERVER}  -r -1
         ;;
     "dump" )
         echo "Dump data from server ${LOCAL_SERVER}"
-        ./script/dump.bety.sh -d "bety" -p "-h postgres -p 5432 -U postgres" -m ${LOCAL_SERVER} -o dump
+        ./script/dump.bety.sh -d "${BETYDATABASE}" -m ${LOCAL_SERVER} -o dump
         ;;
     "migrate" )
         echo "Migrate database."
@@ -29,11 +27,11 @@ case $1 in
         ;;
     "reindex" )
         echo "Reindexing database tables"
-        ./script/reindex.bety.sh -d "bety" -p "-h postgres -p 5432 -U postgres" 
+        ./script/reindex.bety.sh -d "${BETYDATABASE}" -p "-U ${BETYUSER}" 
         ;;
     "reindex-all" )
         echo "Reindexing entire database"
-        ./script/reindex.bety.sh -d "bety" -p "-h postgres -p 5432 -U postgres" -s
+        ./script/reindex.bety.sh -d "${BETYDATABASE}" -p "-U ${BETYUSER}" -s
         ;;
     "server" )
         echo "Start running BETY (rails server)"
@@ -49,15 +47,15 @@ case $1 in
         ;;
     "vacuum" )
         echo "Vacuuming database tables"
-        ./script/vacuum.bety.sh -d "bety" -p "-h postgres -p 5432 -U postgres" -s
+        ./script/vacuum.bety.sh -d "${BETYDATABASE}" -p "-U ${BETYUSER}" -s
         ;;
     "vacuum-all" )
         echo "Vacuuming entire database (not VACUUM FULL)"
-        ./script/vacuum.bety.sh -d "bety" -p "-h postgres -p 5432 -U postgres"
+        ./script/vacuum.bety.sh -d "${BETYDATABASE}" -p "-U ${BETYUSER}"
         ;;
-    "vacuum-full" )
+    "vacuum-full" )-p "-U ${BETYUSER}"
         echo "Full vacuuming of entire database: VACUUM FULL"
-        ./script/vacuum.bety.sh -d "bety" -p "-h postgres -p 5432 -U postgres" -f
+        ./script/vacuum.bety.sh -d "${BETYDATABASE}" -p "-U ${BETYUSER}" -f
         ;;
     "autoserver" )
         echo "Migrate database."
