@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  postgres:
+    ports:
+      - '5432:5432'
+  bety:
+    ports:
+      - '8000:8000'
+    volumes:
+    - ${PWD}:/home/bety
+    - ${PWD}/docker/database.yml:/home/bety/config/database.yml
+    - ${PWD}/docker/config.ru:/home/bety/config.ru
