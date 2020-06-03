@@ -22,6 +22,9 @@ In this case you can simply pull down the version you want, and run `docker-comp
 ### Fixes
 - Fixes to the docker build to fit in kubernetes helm chart.
 
+### Changed
+- removed static route, it was only used to render 404.
+
 ## [5.3.0] - 2020-04-15
 
 ### Fixes
