@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "5.1.5"
+gem "rails", "5.1.7"
 # needed for rails 3.1 and above until we phase out prototype:
 ## gem 'prototype-rails', github: 'rails/prototype-rails', branch: '4.2' # see https://github.com/rails/prototype-rails/issues/37
 gem "nokogiri"
@@ -45,7 +45,7 @@ gem "pg"
 gem "activerecord-postgis-adapter"
 
 
-gem "trollop" # for Rails scripts
+gem "optimist" # for Rails scripts
 
 
 group :development, :test do
@@ -54,11 +54,6 @@ group :development, :test do
   # RSpec-specific generators.
   gem "rspec-rails", "~> 3.0"
   gem "yard"
-end
-
-group :development, :test do
-  gem "pry-rails"
-  gem "pry-byebug"
 end
 
 group :test do
@@ -83,6 +78,8 @@ end
 group :debug do
   gem "selenium-webdriver"
   gem "pry"
+  gem "pry-rails"
+  gem "pry-byebug"
 end
 
 group :production do
