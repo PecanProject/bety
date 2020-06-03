@@ -35,8 +35,8 @@ jobs:
       - name: Sync with BU
         run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 1
 
-      #- name: Sync with BNL
-      #  run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 2 -w ftp://anon:anon@ftp.test.bnl.gov/outgoing/betydb/bety.tar.gz
+      - name: Sync with BNL
+        run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 2 -w ftp://anon:anon@ftp.test.bnl.gov/outgoing/betydb/bety.tar.gz
 
       #- name: Sync with Wisconsin
       #  run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 5 -w http://tree.aos.wisc.edu:6480/sync/dump/bety.tar.gz
