@@ -21,6 +21,7 @@ In this case you can simply pull down the version you want, and run `docker-comp
 
 ### Changed
 - removed static route, it was only used to render 404.
+- allow n=1 in bulk upload https://github.com/PecanProject/bety/pull/704
 
 ## [5.3.0] - 2020-04-15
 
