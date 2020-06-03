@@ -29,6 +29,10 @@ GEM
       globalid (>= 0.3.6)
     activemodel (5.1.5)
       activesupport (= 5.1.5)
+    activemodel-serializers-xml (1.0.2)
+      activemodel (> 5.x)
+      activesupport (> 5.x)
+      builder (~> 3.1)
     activerecord (5.1.5)
       activemodel (= 5.1.5)
       activesupport (= 5.1.5)
@@ -77,7 +81,8 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    comma (3.0.4)
+    comma (4.3.2)
+      activesupport (>= 4.2.0, < 6.1)
     concurrent-ruby (1.0.5)
     crass (1.0.5)
     database_cleaner (1.7.0)
@@ -108,14 +113,14 @@ GEM
     memoist (0.16.0)
     method_source (0.9.0)
     mini_mime (1.0.0)
-    mini_portile2 (2.3.0)
+    mini_portile2 (2.4.0)
     minitest (5.11.3)
     multi_json (1.13.1)
     mustache (1.0.5)
     narray (0.6.0.4)
     nio4r (2.3.0)
-    nokogiri (1.8.5)
-      mini_portile2 (~> 2.3.0)
+    nokogiri (1.10.8)
+      mini_portile2 (~> 2.4.0)
     passenger (5.3.4)
       rack
       rake (>= 0.8.1)
@@ -133,7 +138,7 @@ GEM
     public_suffix (3.0.2)
     rabl (0.13.1)
       activesupport (>= 2.3.14)
-    rack (2.0.7)
+    rack (2.0.8)
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
     railroad (0.5.0)
@@ -166,7 +171,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     raindrops (0.19.0)
-    rake (12.3.1)
+    rake (13.0.1)
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
@@ -251,6 +256,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activemodel-serializers-xml
   activerecord-postgis-adapter
   activerecord-session_store
   apipie-rails (= 0.5.6)
@@ -259,7 +265,7 @@ DEPENDENCIES
   capybara-webkit (~> 1.7)
   choice (= 0.1.6)
   coffee-rails
-  comma (= 3.0.4)
+  comma (~> 4.3.2)
   database_cleaner
   dynamic_form
   jquery-rails

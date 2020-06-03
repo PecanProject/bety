@@ -186,6 +186,9 @@ fi
 # this seems to be a good option always
 PG_OPT="${PG_OPT} -v ON_ERROR_ROLLBACK=on"
 
+# this value should be constant, do not change
+ID_RANGE=1000000000
+
 # list of all tables, schema_migrations is ignored since that
 # will be imported during creaton
 
@@ -224,29 +227,6 @@ MANY_TABLES="${MANY_TABLES} sitegroups_sites sites_cultivars trait_covariate_ass
 IGNORE_TABLES="sessions"
 SYSTEM_TABLES="schema_migrations spatial_ref_sys"
 
-# list where to download data from. This data should come
-# from the database. Same as mysite which should come from
-# the database as well.
-if [ -z "${DUMPURL}" ]; then
-  if [ "${REMOTESITE}" == "0" ]; then
-    DUMPURL="https://ebi-forecast.igb.illinois.edu/pecan/dump/bety.tar.gz"
-  elif [ "${REMOTESITE}" == "1" ]; then
-    DUMPURL="http://psql-pecan.bu.edu/sync/dump/bety.tar.gz"
-  elif [ "${REMOTESITE}" == "2" ]; then
-    DUMPURL="https://modex.bnl.gov/sync/dump/bety.tar.gz"
-  elif [ "${REMOTESITE}" == "5" ]; then  
-    DUMPURL="http://tree.aos.wisc.edu:6480/sync/dump/bety.tar.gz"
-  elif [ "${REMOTESITE}" == "6" ]; then
-    DUMPURL="https://terraref.ncsa.illinois.edu/bety/dump/bety6/bety.tar.gz"
-  else
-    echo "Don't know where to get data for site ${REMOTESITE}"
-    DUMPURL=""
-  fi
-fi
-
-# this value should be constant, do not change
-ID_RANGE=1000000000
-
 # before anything is done, check to make sure database exists
 if ! psql ${PG_OPT} ${PG_USER} -lqt | cut -d \| -f 1 | grep -w "^ *${DATABASE} *$" > /dev/null ; then
   echo "Database ${DATABASE} does not exist, please create it:"
@@ -254,6 +234,43 @@ if ! psql ${PG_OPT} ${PG_USER} -lqt | cut -d \| -f 1 | grep -w "^ *${DATABASE} *
   echo "  psql ${PG_OPT} ${PG_USER} -c \"CREATE ROLE ${OWNER} WITH LOGIN CREATEDB NOSUPERUSER NOCREATEROLE PASSWORD 'password'\""
   echo "  psql ${PG_OPT} ${PG_USER} -c \"CREATE DATABASE ${DATABASE} WITH OWNER ${OWNER}\""
   exit 1
+fi
+
+# check the database for information first
+if [ -z "${DUMPURL}" ]; then
+  DUMPURL=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_url FROM machines WHERE sync_host_id = ${REMOTESITE};" 2>/dev/null | xargs )
+fi
+if [ -z "${DUMPURL}" ]; then
+  if [ "${FIXSEQUENCE}" != "YES" -o "${CREATE}" == "YES" ]; then
+    echo "Did not find a sync_url in database, please update database, or provide script with DUMPURL."
+    exit -1
+  fi
+fi
+
+MY_START_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_start FROM machines WHERE sync_host_id = ${MYSITE};" 2>/dev/null | xargs )
+if [ -z "${MY_START_ID}" ]; then
+  MY_START_ID=$(( MYSITE * ID_RANGE + 1 ))
+fi
+MY_LAST_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_end FROM machines WHERE sync_host_id = ${MYSITE};" 2>/dev/null | xargs )
+if [ -z "${MY_LAST_ID}" ]; then
+  MY_LAST_ID=$(( MY_START_ID + ID_RANGE - 2 ))
+fi
+
+REM_START_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_start FROM machines WHERE sync_host_id = ${REMOTESITE};" 2>/dev/null | xargs )
+if [ -z "${REM_START_ID}" ]; then
+  REM_START_ID=$(( REMOTESITE * ID_RANGE + 1 ))
+fi
+REM_LAST_ID=$(psql ${PG_OPT} ${PG_USER} -q -d "${DATABASE}" -t -c "SELECT sync_end FROM machines WHERE sync_host_id = ${REMOTESITE};" 2>/dev/null | xargs )
+if [ -z "${REM_LAST_ID}" ]; then
+  REM_LAST_ID=$(( REM_START_ID + ID_RANGE - 2 ))
+fi
+
+if [ "${QUIET}" != "YES" ]; then
+  printf "URL with bety dump                 : ${DUMPURL}\n"
+  printf "Remote start ID                    : %11d\n" "${REM_START_ID}"
+  printf "Remote end ID                      : %11d\n" "${REM_LAST_ID}"
+  printf "Local start ID                     : %11d\n" "${MY_START_ID}"
+  printf "Local end ID                       : %11d\n" "${MY_LAST_ID}"
 fi
 
 # make output folder
@@ -324,12 +341,6 @@ if [ "${DUMPURL}" != "" ]; then
     fi
   fi
 fi
-
-# compute range based on {MY,REMOTE}SITE
-MY_START_ID=$(( MYSITE * ID_RANGE + 1 ))
-MY_LAST_ID=$(( MY_START_ID + ID_RANGE - 1 ))
-REM_START_ID=$(( REMOTESITE * ID_RANGE + 1 ))
-REM_LAST_ID=$(( REM_START_ID + ID_RANGE - 1 ))
 
 # common statement pieces used
 REM_WHERE="WHERE (id >= ${REM_START_ID} AND id <= ${REM_LAST_ID})"
@@ -445,25 +456,11 @@ if [ "${USERS}" == "YES" ]; then
   echo "SELECT count(id) FROM users WHERE login='carya';" >&3 && read RESULT <&4
   if [ ${RESULT} -eq 0 ]; then
     echo "SELECT nextval('users_id_seq');" >&3 && read ID <&4
-    echo "INSERT INTO users (login, name, email, crypted_password, salt, city, state_prov, postal_code, country, area, access_level, page_access_level, created_at, updated_at, apikey, remember_token, remember_token_expires_at) VALUES ('carya', 'carya', 'betydb+${ID}@gmail.com', 'df8428063fb28d75841d719e3447c3f416860bb7', 'carya', 'Urbana', 'IL', '61801', 'USA', '', 1, 1, NOW(), NOW(), NULL, NULL, NULL);" >&3
+    $(dirname $0)/betyuser.sh "carya" "illinois" "carya" "betydb+${ID}@gmail.com" 1 1
     if [ "${QUIET}" != "YES" ]; then
       echo "Added carya with admin privileges with id=${ID}"
     fi
   fi
-
-  # add other users with specific rights
-  for f in 1 2 3 4; do
-    for g in 1 2 3 4; do
-      echo "SELECT count(id) FROM users WHERE login='carya${f}${g}';" >&3 && read RESULT <&4
-      if [ ${RESULT} -eq 0 ]; then
-        echo "SELECT nextval('users_id_seq');" >&3 && read ID <&4
-        echo "INSERT INTO users (login, name, email, crypted_password, salt, city, state_prov, postal_code, country, area, access_level, page_access_level, created_at, updated_at, apikey, remember_token, remember_token_expires_at) VALUES ('carya${f}${g}', 'carya${f}${g}', 'betydb+${ID}@gmail.com', 'df8428063fb28d75841d719e3447c3f416860bb7', 'carya', 'Urbana', 'IL', '61801', 'USA', '', $f, $g, NOW(), NOW(), NULL, NULL, NULL);" >&3
-        if [ "${QUIET}" != "YES" ]; then
-          echo "Added carya$f$g with access_level=$f and page_access_level=$g with id=${ID}"
-        fi
-      fi
-    done
-  done
 fi
 
 # Add guest user
@@ -472,7 +469,7 @@ if [ "${GUESTUSER}" == "YES" ]; then
   echo "SELECT count(id) FROM users WHERE login='guestuser';" >&3 && read RESULT <&4
   if [ ${RESULT} -eq 0 ]; then
     echo "SELECT nextval('users_id_seq');" >&3 && read ID <&4
-    echo "INSERT INTO users (login, name, email, crypted_password, salt, city, state_prov, postal_code, country, area, access_level, page_access_level, created_at, updated_at, apikey, remember_token, remember_token_expires_at) VALUES ('guestuser', 'guestuser', 'betydb+${ID}@gmail.com', '994363a949b6486fc7ea54bf40335127f5413318', 'bety', 'Urbana', 'IL', '61801', 'USA', '', 4, 4, NOW(), NOW(), NULL, NULL, NULL);" >&3
+    $(dirname $0)/betyuser.sh "guestuser" "guestuser" "guestuser" "betydb+${ID}@gmail.com" 4 4
     if [ "${QUIET}" != "YES" ]; then
       echo "Added guestuser with access_level=4 and page_access_level=4 with id=${ID}"
     fi

@@ -1,0 +1,73 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+    tags:
+      - '*'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build image
+        run: |
+          docker build \
+          --build-arg BETY_GIT_TAGS="$(git log --pretty=format:%d -1)" \
+          --build-arg BETY_GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)" \
+          --build-arg BETY_GIT_CHECKSUM="$(git log --pretty=format:%H -1)" \
+          --build-arg BETY_GIT_DATE="$(git log --pretty=format:%ad -1)" \
+          --tag image --file Dockerfile .
+      - name: Login into registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+          if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" -a -n "${{ secrets.DOCKERHUB_PASSWORD }}" ]; then
+            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          fi
+      - name: Push image
+        run: |
+          # image all lowercase
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/bety
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^betydb_//')
+          
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+
+          # all tags we will apply
+          TMPVERSION="${VERSION}"
+          OLDVERSION=""
+          TAGS=""
+          while [ "$OLDVERSION" != "$TMPVERSION" ]; do
+            TAGS="${TAGS} ${TMPVERSION}"
+            OLDVERSION="${TMPVERSION}"
+            TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
+          done 
+          if [ "${TAGS}" == "" ]; then
+            TAGS="test"
+          fi
+          if [ "${TAGS}" == "master" ]; then
+            TAGS="latest"
+          fi
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          echo TAGS=$TAGS
+
+          # push all images
+          for T in $TAGS; do
+            docker tag image $IMAGE_ID:$T
+            docker push $IMAGE_ID:$T
+            if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" -a -n "${{ secrets.DOCKERHUB_PASSWORD }}" ]; then
+              docker tag image pecan/bety:$T
+              docker push pecan/bety:$T
+            fi
+          done
