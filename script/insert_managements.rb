@@ -227,15 +227,15 @@ end
 ## Parse command line
 
 begin
-  require 'trollop'
+  require 'optimist'
 rescue LoadError => e
-  puts 'Be sure you have run "bundle install" to install the "trollop" gem.'
+  puts 'Be sure you have run "bundle install" to install the "optimist" gem.'
   puts 'You may have to prefix this script invocation with "bundle exec"'
   puts
   raise
 end
 
-opts = Trollop::options do
+opts = Optimist::options do
   #version "..."
   banner <<-EOS
 =====================
@@ -255,13 +255,13 @@ end
 
 if opts[:man]
 
-  # modify some Trollop methods:
-  module Trollop
+  # modify some Optimist methods:
+  module Optimist
     def self.parser
       @last_parser
     end
 
-    # allow Trollop::educate to take a stream parameter
+    # allow Optimist::educate to take a stream parameter
     def self.educate(stream)
       @last_parser.educate(stream)
     end
@@ -270,23 +270,23 @@ if opts[:man]
   require 'stringio'
 
   # add details to banner:
-  Trollop.parser.banner USAGE_DETAILS
+  Optimist.parser.banner USAGE_DETAILS
 
   # put the whole banner into a string buffer
   sio = StringIO.new
-  Trollop.educate sio
+  Optimist.educate sio
 
   # use the os's "less" command to display the usage manual
   exec "echo \"#{sio.string}\" | less"
 end
 
 
-Trollop::die :login, "must be specified" if opts[:login].nil?
+Optimist::die :login, "must be specified" if opts[:login].nil?
 @user_login = User.find_by_login(opts[:login])
-Trollop::die "You must specify an input file" if ARGV.empty?
-Trollop::die "Too many command line arguments" if ARGV.size > 1
+Optimist::die "You must specify an input file" if ARGV.empty?
+Optimist::die "Too many command line arguments" if ARGV.size > 1
 csvpath = ARGV[0]
-Trollop::die "File \"#{csvpath}\" does not exist" unless File.exist?(csvpath)
+Optimist::die "File \"#{csvpath}\" does not exist" unless File.exist?(csvpath)
 
 ## Load Rails
 
