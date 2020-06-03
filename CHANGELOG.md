@@ -22,7 +22,7 @@ In this case you can simply pull down the version you want, and run `docker-comp
 ### Changed
 
 - removed static route, it was only used to render 404.
-- More clearly indicate method is optional in bulk upload https://github.com/PecanProject/bety/pull/705
+- [#705](https://github.com/PecanProject/bety/pull/705) : More clearly indicate method is optional in bulk upload
 
 ## [5.3.0] - 2020-04-15
 
