@@ -185,7 +185,7 @@ end
 
 class InvalidSampleSizeException < BulkUploadDataException
   def initialize
-    super(:invalid_sample_size, "n must be at least 2", "Invalid sample size (n)")
+    super(:invalid_sample_size, "n must be at least 1", "Invalid sample size (n)")
   end
 end
 
@@ -768,7 +768,7 @@ class BulkUploadDataSet
             rescue ArgumentError => e
               raise UnparsableSampleSizeException
             else
-              if n <= 1
+              if n < 1
                 raise InvalidSampleSizeException
               end
             end
