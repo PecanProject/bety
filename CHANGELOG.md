@@ -19,8 +19,13 @@ In this case you can simply pull down the version you want, and run `docker-comp
 
 ## [Unreleased]
 
+### Added
+- configuration to sync forks of BETY using https://github.com/wei/pull
+
 ### Fixes
 - Fixes to the docker build to fit in kubernetes helm chart.
+- Added Wisconsin back to database dump workflow
+- Catch exception when load.bety fails and cleans up /tmp folder
 
 ### Changed
 - updated rails to 5.1.7

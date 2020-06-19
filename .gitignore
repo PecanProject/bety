@@ -1,5 +1,6 @@
 .idea/
 .bundle/
+.gem/
 .yardoc/
 vendor/bundle
 log
@@ -20,6 +21,7 @@ config/initializers/site_keys.rb
 .Rproj.user
 public/assets
 
+.env
 docker-compose.override.yml
 docker-compose.override.yaml
 

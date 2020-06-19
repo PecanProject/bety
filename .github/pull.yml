@@ -1,0 +1,8 @@
+version: "1"
+rules:
+  - base: master
+    upstream: pecanproject:master
+    mergeMethod: none
+  - base: develop
+    upstream: pecanproject:develop
+    mergeMethod: none
