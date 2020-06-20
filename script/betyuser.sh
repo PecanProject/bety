@@ -18,12 +18,24 @@ SALT="${LOGIN}"
 
 COUNT=10
 
+if [ -z "$BETYUSER" ]; then
+  BETYUSER="bety"
+fi
+if [ -z "$BETYDATABASE" ]; then
+  BETYDATABASE="bety"
+fi
+if [ -n "$BETYPASSWORD" ]; then
+  PGPASSWORD="${BETYPASSWORD}"
+else
+  PGPASSWORD="bety"
+fi
+
 DIGEST="${SECRET_KEY_BASE}"
 for x in $(seq ${COUNT}); do
   DIGEST=$(echo -n "${DIGEST}--${SALT}--${PASSWORD}--${SECRET_KEY_BASE}" | sha1sum | awk '{print $1}')
 done
 
-psql -q -h postgres -U bety -t -c "INSERT INTO users (login, name, email, crypted_password, salt, access_level, page_access_level, created_at, updated_at) VALUES ('${LOGIN}', '${NAME}', '${EMAIL}', '${DIGEST}', '${SALT}', ${ACCESS}, ${PAGE}, NOW(), NOW())"
+psql -q -U ${BETYUSER} -d ${BETYDATABASE} -t -c "INSERT INTO users (login, name, email, crypted_password, salt, access_level, page_access_level, created_at, updated_at) VALUES ('${LOGIN}', '${NAME}', '${EMAIL}', '${DIGEST}', '${SALT}', ${ACCESS}, ${PAGE}, NOW(), NOW())"
 
 if [ $? == 0 ]; then
   echo "User ($LOGIN) has been added to database"

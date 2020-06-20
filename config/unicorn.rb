@@ -27,7 +27,7 @@ worker_processes ENV['UNICORN_WORKER_PROCESSES'].to_i
 listen "0.0.0.0:" + ENV['UNICORN_PORT']
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
-timeout 30
+timeout 60
 
 # By default, the Unicorn logger will write to stderr.
 # Additionally, some applications/frameworks log to stderr or stdout,

@@ -277,6 +277,11 @@ fi
 DUMPDIR="/tmp/$$"
 mkdir "${DUMPDIR}"
 
+# cleanup
+trap '
+  rm -rf ${DUMPDIR}
+' EXIT
+
 # download dump file and unpack
 if [ "${DUMPURL}" != "" ]; then
   curl ${CURL_OPTS} -s -L -o "${DUMPDIR}/dump.tar.gz" "${DUMPURL}"
