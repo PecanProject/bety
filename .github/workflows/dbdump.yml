@@ -1,6 +1,11 @@
 name: DB Dump
 
 on:
+  push:
+    branches:
+      - master
+      - develop
+
   schedule:
     - cron: '0 0 * * *'
 
@@ -42,7 +47,8 @@ jobs:
         run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 5 -w http://fen.aos.wisc.edu:6480/sync/dump/bety.tar.gz
 
       - name: Dump Database
-        run: pg_dump -h localhost -U postgres -F c bety > initdb/db.dump
+        run: |
+          docker exec postgres pg_dump -h localhost -U postgres -F c bety > initdb/db.dump
 
       - name: Build Docker with Database dump
         run: |
