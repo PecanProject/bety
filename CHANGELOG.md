@@ -26,6 +26,7 @@ In this case you can simply pull down the version you want, and run `docker-comp
 - Fixes to the docker build to fit in kubernetes helm chart.
 - Added Wisconsin back to database dump workflow
 - Catch exception when load.bety fails and cleans up /tmp folder
+- Fix problem with sendmail causing error on new user sign up https://github.com/PecanProject/bety/issues/677
 
 ### Changed
 
