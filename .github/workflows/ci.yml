@@ -67,7 +67,7 @@ jobs:
           psql -h localhost -U bety -d test -c "CREATE EXTENSION postgis;"
           #bundle exec rails db:create
           # bundle exec rails db:migrate
-          bundle exec rake db:structure:load
+          bundle exec rake db:schema:load
           bundle exec rake db:fixtures:load
           mkdir -p spec/tmp
           bundle exec rails test
