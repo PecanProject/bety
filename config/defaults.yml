@@ -4,16 +4,15 @@
 
 
 organization:
-  name: "Energy Biosciences Institute"
+  name: "Organization Name Here"
   url: #{root_path}
-  logo_file: "logo-ebi.png"
+#  logo_file: "logo-file-here.png"
 
-site_identification_markup: "<strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small>"
-
+site_identification_markup: "<strong>GENERIC</strong>db <small><strong>Generic PEcAn, Ecological, and/or Agronomic </strong>Database</small>"
 
 # Footer
 
-footer_background_image_file: "logo-ebi-footer.jpg"
+#footer_background_image_file: "logo-footer.jpg"
 
 ## Contact Information
 admin_phone: "(000) 000-0000"
@@ -21,62 +20,61 @@ admin_email: "admin@example.com" # a test
 
 citation_license_copyright_markup:
 
-  '<p>LeBauer, David, Rob Kooper, Patrick Mulrooney, Scott Rohde, Dan Wang, 
-  Stephen Long, Michael Dietze, (2017). BETYdb: A yield, trait, and ecosystem 
+  '
+  <p>Software: Scott Rohde, Carl Crott, David LeBauer, Patrick Mulrooney, 
+  Rob Kooper, Jeremy Kemball, Jimmy Chen, et al. pecanproject/bety: BETYdb. 
+  Zenodo, December 6, 2019. doi:10.5281/zenodo.593027</p>
+  
+  <p>LeBauer, David, Rob Kooper, Patrick Mulrooney, Scott Rohde, Dan Wang, 
+  Stephen Long, Michael Dietze, (2018). BETYdb: A yield, trait, and ecosystem 
   service database applied to second‐generation bioenergy feedstock production.
   GCB Bioenergy. doi:10.1111/gcbb.12420</p>
 
-  <p>All public data in BETYdb is made available under the <a
+  <p>All public data in this database is made available under the <a
   href="http://opendatacommons.org/licenses/by/1-0/">Open Data Commons
   Attribution License (ODC-By) v1.0.</a> You are free to share, create, and
   adapt its contents.  Data with an access_level field and value &lt;= 2 is not
   covered by this license but may be available for use with consent.</p>
 
-  <p>Copyright © 2010-2014 Energy Biosciences Institute</p>'
+'
 
 sponsors:
-    - URL: http://illinois.edu
-      title: "University of Illinois at Urbana-Champaign"
-      text: "University of Illinois at Urbana-Champaign"
+    - URL: http://example.com
+      title: "Sponsor 1"
+      text: "Sponsor 1"
       logo_file: logo-illinois.png
       width: 246px
-    - URL: http://www.berkeley.edu
-      title: "University of California, Berkeley"
-      text: "University of California, Berkeley"
+    - URL: http://example.com
+      title: "Sponsor 2"
+      text: "Sponsor 2"
       logo_file: logo-berkeley.png
       width: 145px
       additional_styling: "margin-left: 20%"
-    - URL: http://www.lbl.gov
-      title: "Lawrence Berkeley National Laboratory (LBL)"
-      text: "Lawrence Berkeley National Laboratory"
+    - URL: http://example.com
+      title: "Sponsor 3"
+      text: "Sponsor 3"
       logo_file: logo-lbl.png
       width: 232px
-    - URL: http://www.bp.com
-      title: "British Petroleum (BP)"
-      text: "British Petroleum (BP)"
+    - URL: http://example.com
+      title: "Sponsor 4"
+      text: "Sponsor 4"
       logo_file: logo-bp.png
       width: 54px
       additional_styling: "margin-right: 40%"
 
 # Home Page
 
-homepage_heading: "Welcome to BETYdb"
+homepage_heading: "Welcome to A Generic Database"
 
 homepage_body:
 
   lead_text:
 
-    The emerging biofuel industry may aid in reducing greenhouse gas emissions and
-    decreasing dependence on foreign oil importation.
+    This is a generic instance of the BETYdb database. The site administrator needs to configure the defaults.yml file
 
   marked_up_block_text:
 
-    How to develop and implement biofuel crops in an ecologically and economically
-    sustainable way requires evaluating the growth and functionality of biofuel
-    crops from the local scale to the regional scale. <strong
-    class="green">BETYdb</strong> has been developed to support research,
-    agriculture, and policy by synthesizing available information on potential
-    biofuel crops.
+    This database stores data related to agricultural and ecological research.
 
   photo:
 
