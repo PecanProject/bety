@@ -4,3 +4,4 @@ log/*
 tmp/*
 public/maps/*
 vendor
+initdb/db.dump

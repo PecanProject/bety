@@ -2,9 +2,9 @@
   <!-- bulk_upload.js needs to know the root -->
   <script type="text/javascript" charset="utf-8">
   //<![CDATA[
-    /* bulk_upload.js expects root_url and bu_completion_fields to be set. */
+    /* bulk_upload.js expects ROOT_URL and bu_completion_fields to be set. */
 
-    var ROOT_URL = '<%= root_url %>';
+    var ROOT_URL = '<%= CONFIG[:root_url] || root_url %>';
 
     <%
        bu_completion_field_hash = {}
@@ -89,7 +89,7 @@
       </ul>
       <% end # Data-Set Wide Value specification block %>
       <% if @data_set.trait_data? %>
-      <h2>Specify a Method for Each Trait</h2>
+      <h2>Specify a Method for Each Trait (Optional) </h2>
       <ul>
         <% @heading_variable_info.each_pair do |id, info_hash| %>
           <% name = info_hash[:name] %>

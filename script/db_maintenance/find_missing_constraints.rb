@@ -47,15 +47,15 @@ EOS
 ## Parse command line
 
 begin
-  require 'trollop'
+  require 'optimist'
 rescue LoadError => e
-  puts 'Be sure you have run "bundle install" to install the "trollop" gem.'
+  puts 'Be sure you have run "bundle install" to install the "optimist" gem.'
   puts 'You may have to prefix this script invocation with "bundle exec"'
   puts
   raise
 end
 
-opts = Trollop::options do
+opts = Optimist::options do
   banner <<-EOS
 ===========================
 find_missing_constraints.rb
@@ -71,13 +71,13 @@ end
 
 if opts[:man]
 
-  # modify some Trollop methods:
-  module Trollop
+  # modify some Optimist methods:
+  module Optimist
     def self.parser
       @last_parser
     end
 
-    # allow Trollop::educate to take a stream parameter
+    # allow Optimist::educate to take a stream parameter
     def self.educate(stream)
       @last_parser.educate(stream)
     end
@@ -86,11 +86,11 @@ if opts[:man]
   require 'stringio'
 
   # add details to banner:
-  Trollop.parser.banner USAGE_DETAILS
+  Optimist.parser.banner USAGE_DETAILS
 
   # put the whole banner into a string buffer
   sio = StringIO.new
-  Trollop.educate sio
+  Optimist.educate sio
 
   # use the os's "less" command to display the usage manual
   exec "echo \"#{sio.string}\" | less"

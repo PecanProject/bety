@@ -1,6 +1,11 @@
 name: DB Dump
 
 on:
+  push:
+    branches:
+      - master
+      - develop
+
   schedule:
     - cron: '0 0 * * *'
 
@@ -39,10 +44,12 @@ jobs:
         run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 2 -w ftp://anon:anon@ftp.test.bnl.gov/outgoing/betydb/bety.tar.gz
 
       - name: Sync with Wisconsin
-        run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 5 -w http://tree.aos.wisc.edu:6480/sync/dump/bety.tar.gz
+        run: script/load.bety.sh -a "postgres" -p "-h localhost" -d "bety" -o bety -m 99 -r 5 -w http://fen.aos.wisc.edu:6480/sync/dump/bety.tar.gz
 
       - name: Dump Database
-        run: pg_dump -h localhost -U postgres -F c bety > initdb/db.dump
+        run: |
+          PG=$(docker ps | awk '/postgis/ { print $1 }')
+          docker exec ${PG} pg_dump -h localhost -U postgres -F c bety > initdb/db.dump
 
       - name: Build Docker with Database dump
         run: |

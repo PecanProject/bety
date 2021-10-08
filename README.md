@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/4469/PecanProject/bety.svg)](https://zenodo.org/badge/latestdoi/4469/PecanProject/bety)
 
-[![Build Status](https://github.com/PecanProject/bety/workflows/CI/badge.svg)(https://github.com/PecanProject/bety/actions?query=workflow%3ACI)
+[![Build Status](https://github.com/PecanProject/bety/workflows/CI/badge.svg)](https://github.com/PecanProject/bety/actions?query=workflow%3ACI)
 
 [![Slack](https://img.shields.io/badge/slack-login-brightgreen.svg)](https://pecanproject.slack.com/) 
 [![Slack](https://img.shields.io/badge/slack-join_chat-brightgreen.svg)](https://publicslack.com/slacks/pecanproject/invites/new) 
@@ -18,7 +18,20 @@ To get started with BETY you can use the docker-compose.yml file included. This 
 
 ```
 docker-compose -p bety up -d postgres
-docker run --rm --network bety_bety pecan/bety initialize
+docker run --rm --network bety_bety pecan/db
+```
+
+If you want to change the id of the database, you can use:
+
+```
+docker-compose run -e LOCAL_SERVER=77 bety fix
+```
+
+To add initial users you can use the following commands (this will add the guestuser as well as the carya demo user)
+
+```
+docker-compose run bety user 'guestuser' 'guestuser' 'Guest User' 'betydb@gmail.com' 1 1"
+docker-compose run bety user 'carya' 'illinois' 'Demo User' 'betydb@gmail.com' 1 1"
 ```
 
 Once bety finishes inializing the database, or to restart BETY, you can bring up the all the containers using:

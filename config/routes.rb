@@ -290,11 +290,6 @@ Rails.application.routes.draw do
   post '/register' => 'users#create', :as => :register
   get '/signup' => 'users#new', :as => :signup
 
-  #route for 'static' content
-  # RAILS3 commented out below and added next in order to get help bubble docs working
-  # match '*path' => 'static#index'
-  get ':action' => 'static#:action'
-
   # add named routes for bulk_upload controller:
   get '/bulk_upload/start_upload' => 'bulk_upload#start_upload', :as => :start_upload
   match '/bulk_upload/display_csv_file', :as => :show_upload_file_contents, via: [:get, :post]

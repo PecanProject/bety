@@ -84,7 +84,7 @@ end
 # ```
 # <% content_for(:autocomplete_javascript) do %>
 #     <script type="text/javascript" charset="utf-8">
-#         var ROOT_URL = '<%= root_url %>';
+#         var ROOT_URL = '<%= CONFIG[:root_url] || root_url %>';
 #         var completion_fields = {
 #             <id of autocompletion field>: {
 #                 controller:
