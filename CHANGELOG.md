@@ -21,6 +21,7 @@ In this case you can simply pull down the version you want, and run `docker-comp
 
 ### Added
 - configuration to sync forks of BETY using https://github.com/wei/pull
+- configuration to set root_url
 
 ### Fixes
 - Fixes to the docker build to fit in kubernetes helm chart.
