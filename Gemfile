@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "5.1.7"
+gem "rails", "5.2.4.5"
 # needed for rails 3.1 and above until we phase out prototype:
 ## gem 'prototype-rails', github: 'rails/prototype-rails', branch: '4.2' # see https://github.com/rails/prototype-rails/issues/37
 gem "nokogiri"
