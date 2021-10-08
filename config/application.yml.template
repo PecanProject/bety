@@ -1,4 +1,14 @@
 # All Settings
+
+## Most sites won't need to set this because the URL helper "root_url"
+## (which is the fallback if this config variable isn't set) gets set
+## to the correct path.  The only known case where things fall apart
+## is when a proxy server to a Docker instance of BETYdb redirects
+## HTTP requests to HTTPS.  The Docker instance sets root_url to a URL
+## having the HTTP protocol, and for XHRs, the browser blocks the
+## request before the server has a chance to rewrite it.
+root_url: https://example.com/betyroot
+
 organization:
   name: "My Organization Name"
   url: #{root_path}

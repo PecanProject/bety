@@ -2,7 +2,7 @@
   <!-- autocomplete.js needs a `completion_fields` object describing the
   autocompletion fields on the page and needs to know the Rails root -->
   <script type="text/javascript" charset="utf-8">
-    var ROOT_URL = '<%= root_url %>';
+    var ROOT_URL = '<%= CONFIG[:root_url] || root_url %>';
     var completion_fields = {
       "search_mimetypes": { controller: "mimetypes",
                             hidden_field_id: "form_mimetype_id" }
