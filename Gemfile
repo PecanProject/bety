@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "5.1.7"
+gem "rails", "5.2.4.5"
 # needed for rails 3.1 and above until we phase out prototype:
 ## gem 'prototype-rails', github: 'rails/prototype-rails', branch: '4.2' # see https://github.com/rails/prototype-rails/issues/37
 gem "nokogiri"
@@ -8,7 +8,7 @@ gem "narray", "0.6.0.4"
 gem "choice", "0.1.6"
 gem "comma", "~> 4.3.2"
 gem "json"
-gem "rgeo", "~> 0.5.0"
+gem "rgeo"
 gem "multi_json"
 gem "railroad", "0.5.0"
 gem "recaptcha", "4.8.0", :require => "recaptcha/rails"
