@@ -17,7 +17,7 @@ You will need to install the latest version of BETY (or the version you want to 
 
 In this case you can simply pull down the version you want, and run `docker-compose bety migrate`.
 
-## [Unreleased]
+## [5.3.1] - 2021-10-07
 
 ### Added
 - configuration to sync forks of BETY using https://github.com/wei/pull
