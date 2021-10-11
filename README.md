@@ -30,8 +30,8 @@ docker-compose run -e LOCAL_SERVER=77 bety fix
 To add initial users you can use the following commands (this will add the guestuser as well as the carya demo user)
 
 ```
-docker-compose run bety user 'guestuser' 'guestuser' 'Guest User' 'betydb@gmail.com' 1 1"
-docker-compose run bety user 'carya' 'illinois' 'Demo User' 'betydb@gmail.com' 1 1"
+docker-compose run bety user 'guestuser' 'guestuser' 'Guest User' 'betydb@gmail.com' 4 4
+docker-compose run bety user 'carya' 'illinois' 'Demo User' 'betydb@gmail.com' 1 1
 ```
 
 Once bety finishes inializing the database, or to restart BETY, you can bring up the all the containers using:
