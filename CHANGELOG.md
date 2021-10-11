@@ -17,6 +17,11 @@ You will need to install the latest version of BETY (or the version you want to 
 
 In this case you can simply pull down the version you want, and run `docker-compose bety migrate`.
 
+## [5.4.1] - 2021-10-10
+
+### Changed
+- sprockets will now also parse custom folder
+
 ## [5.4.0] - 2021-10-07
 
 ### Added

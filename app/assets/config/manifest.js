@@ -14,3 +14,4 @@
 // = link mylibs/maps.js
 //
 // = link_directory ../images
+// = link_directory ../images/custom
