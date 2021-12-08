@@ -5,8 +5,8 @@
 # 4. Save the file and restart your BETYdb server
 
 # Contact Information
-admin_phone: "(217) 300-0266"
-admin_email: "dlebauer@illinois.edu"
+admin_phone: "(520) 621-4381"
+admin_email: "dlebauer@arizona.edu"
 
 # Override this with a secret key to run a secure site:
 rest_auth_site_key: 'your site's secret key'
@@ -21,11 +21,11 @@ schema_spy_settings:
         remove_root_dir_files: true
 
 organization:
-  name: "TERRA Ref"
+  name: ""
   url: #{root_path}
   logo_file: "custom/terraref-logo.png"
 
-site_identification_markup: "<strong>BETY</strong>db <small><strong>TERRA REF Phenotype</strong> Database</small>"
+site_identification_markup: "<strong>BETY</strong>db <small><strong>TERRA-REF Phenotype</strong> Database</small>"
 
 
 # Footer
@@ -34,10 +34,7 @@ footer_background_image_file: "custom/mac_sorghum.jpg"
 
 citation_license_copyright_markup:
 
-  <p>The TERRA Reference phenotyping data will be public no later than November 2018. At that point, 
-  data will be available within two days of collection. Until then, data access may be granted by request, 
-  but with embargo terms described in our  
-  <a href="https://github.com/terraref/documentation/blob/master/user/data_release_policy.md">data release policy</a></p>
+  <p>The TERRA Reference phenotyping data is being published and is being released on a rolling basis, based in part on requests.
 
 sponsors:
     - URL: https://arpa-e.energy.gov/
@@ -65,21 +62,25 @@ homepage_body:
 
   marked_up_block_text:
   
-     <p>This is the trait database for the TERRA reference phenotyping project. We are developing reference datasets and software to advance the science of crop breeding. This database contains plant and plot-level trait data such as plant height, biomass, leaf area, transpiration, phenology, water use efficiency, and biomass yield. These are derived from a suite of sensors with unprecedented resolution that have been deployed on a variety of platforms. See the project website <a href="http://terraref.org" target="_blank">terraref.org</a> for more information about our project, including links to sensor data and information about our phenomics pipeline.</p>
+     <p>This is the trait database for the TERRA-REF phenotyping project. 
+     TERRA-REF developed reference datasets and software to advance the science of crop breeding. 
+     This database contains plant and plot-level trait data such as plant height, biomass, leaf area, transpiration, phenology, water use efficiency, and biomass yield, 
+     as well as experimental metadata, plot polygons, and genotype information. 
+     Trait (phenotype) data include both hand measured and sensor derived measurements
+     See the project website <a href="http://terraref.org" target="_blank">terraref.org</a> for more information about our project, 
+     including links to sensor data, information about our phenomics pipeline, and documentation.</p>
 
-     <p>Summaries of available data can be found on a separate website, <a href="https://traitvis.workbench.terraref.org/" target="_blank">traitvis.workbench.terraref.org</a>.</p>
+     <p>Summaries of available data can be found on a separate website, <a href="https://terraref.org/traitvis" target="_blank">https://terraref.org/traitvis</a>.</p>
 
-     <p>Data are currently available for beta user testing. For access, please <a href="https://terraref.org/beta" target="_blank">apply to our beta user program</a>. When you sign up, be sure to indicate if you prefer to access data through this website, through an R library or python module, via direct access to the PostgreSQL database, or via API.</p>
-
-     
+     <p>Published data are on Dryad. This database can also be accessed via the R traits package, a local copy of the database, or via the BETYdb or BrAPI APIs.</p>     
 
   photo:
 
-    file: https://www.danforthcenter.org/images/default-source/blog/dji_0034.jpg
+    file: https://terraref.org/sites/terraref.org/files/TERRA-REF-Scanner.jpg
 
     alt_text:
 
-      Photo of the Lemnatec Field Scanner by Rick Ward, University of Arizona's Maricopa Agricultural Center
+      Photo of the Lemnatec Field Scanner with Sorghum. Credit: Rick Ward
 
   search_placeholder_text: "EX: Sorghum MAC"
 
