@@ -13,7 +13,7 @@ site_identification_markup: "<strong>PEcAn</strong>db <small><strong>The PEcAn</
 
 # Footer
 
-footer_background_image_file: "logo-ebi-footer.jpg"
+footer_background_image_file: "https://energybiosciencesinstitute.org/wp-content/themes/ebi/assets/logo.png"
 
 ## Contact Information
 admin_phone: "(000) 000-0000"
@@ -22,7 +22,7 @@ admin_email: "admin@example.com" # a test
 citation_license_copyright_markup:
 
   '<p>LeBauer, David, Rob Kooper, Patrick Mulrooney, Scott Rohde, Dan Wang, 
-  Stephen Long, Michael Dietze, (2017). BETYdb: A yield, trait, and ecosystem 
+  Stephen Long, Michael Dietze, (201). BETYdb: A yield, trait, and ecosystem 
   service database applied to second‐generation bioenergy feedstock production.
   GCB Bioenergy. doi:10.1111/gcbb.12420</p>
 
@@ -70,12 +70,10 @@ homepage_body:
 
   marked_up_block_text:
 
-    How to develop and implement biofuel crops in an ecologically and economically
-    sustainable way requires evaluating the growth and functionality of biofuel
-    crops from the local scale to the regional scale. <strong
-    class="green">BETYdb</strong> has been developed to support research,
-    agriculture, and policy by synthesizing available information on potential
-    biofuel crops.
+    This is an unconfigured instance of the BETYdb website that 
+    provides an interface to a BETYdb database that is running somewhere.
+    The website maintainer should edit the application.yml.template file found in the 
+    config directory.
 
   photo:
 
