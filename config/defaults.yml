@@ -4,11 +4,11 @@
 
 
 organization:
-  name: "Energy Biosciences Institute"
+  name: "Organization Name Here"
   url: #{root_path}
   logo_file: "logo-ebi.png"
 
-site_identification_markup: "<strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small>"
+site_identification_markup: "<strong>PEcAn</strong>db <small><strong>The PEcAn</strong>Database</small>"
 
 
 # Footer
@@ -60,14 +60,13 @@ sponsors:
 
 # Home Page
 
-homepage_heading: "Welcome to BETYdb"
+homepage_heading: "Welcome to someones unconfigured instance of BETYdb"
 
 homepage_body:
 
   lead_text:
 
-    The emerging biofuel industry may aid in reducing greenhouse gas emissions and
-    decreasing dependence on foreign oil importation.
+    This database supports research.
 
   marked_up_block_text:
 
@@ -92,7 +91,7 @@ homepage_body:
 # Miscellaneous
 
 ## This affects both the home page and the footer:
-show_crop_map_links: true
+show_crop_map_links: false
 
 # Override this with a secret key to run a secure site:
 rest_auth_site_key: <%= ENV["SECRET_KEY_BASE"] || 'thisisnotasecret' %>
