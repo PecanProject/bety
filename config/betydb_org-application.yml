@@ -1,28 +1,24 @@
-# This file provides some default values so that the application will work even
-# if you don't make an application.yml configuration file.  But a real site
-# should always override these defaults to provide meaningful values!
-
+# All Settings
 
 organization:
-  name: "Organization Name Here"
+  name: "Energy Biosciences Institute"
   url: #{root_path}
-  logo_file: "logo-ebi.png"
+  logo_file: "logo-ebi.png" 
 
-site_identification_markup: "<strong>PEcAn</strong>db <small><strong>The PEcAn</strong>Database</small>"
-
+site_identification_markup: "<strong>BETY</strong>db <small><strong>Biofuel Ecophysiological Traits and Yields </strong>Database</small>"
 
 # Footer
 
-footer_background_image_file: "https://energybiosciencesinstitute.org/wp-content/themes/ebi/assets/logo.png"
+footer_background_image_file: "logo-ebi-footer.jpg"
 
 ## Contact Information
-admin_phone: "(000) 000-0000"
-admin_email: "admin@example.com" # a test
+admin_phone: "(520) 621-4381"
+admin_email: "dlebauer@arizona.edu" # a test
 
 citation_license_copyright_markup:
 
   '<p>LeBauer, David, Rob Kooper, Patrick Mulrooney, Scott Rohde, Dan Wang, 
-  Stephen Long, Michael Dietze, (2018). BETYdb: A yield, trait, and ecosystem 
+  Stephen Long, Michael Dietze, (2017). BETYdb: A yield, trait, and ecosystem 
   service database applied to second‐generation bioenergy feedstock production.
   GCB Bioenergy. doi:10.1111/gcbb.12420</p>
 
@@ -60,20 +56,25 @@ sponsors:
 
 # Home Page
 
-homepage_heading: "Welcome to someones unconfigured instance of BETYdb"
+homepage_heading: "Welcome to BETYdb"
 
 homepage_body:
 
   lead_text:
 
-    This database supports research.
+    BETYdb supports the synthesis and modeling of plants and ecosystems.
 
   marked_up_block_text:
 
-    This is an unconfigured instance of the BETYdb website that 
-    provides an interface to a BETYdb database that is running somewhere.
-    The website maintainer should edit the application.yml.template file found in the 
-    config directory.
+    <strong
+    class="green">BETYdb</strong> has been developed to support research,
+    agriculture, and policy by synthesizing available information on potential
+    biofuel crops. 
+    It is now used widely by the crop and ecosystem modeling communities.
+    The motivation for creating BETYdb was to develop biofuel crops
+    in an ecologically and economically sustainable way. This requires evaluating 
+    the growth and functionality of current and potential biomass crops from local
+    to global scales. 
 
   photo:
 
@@ -81,15 +82,21 @@ homepage_body:
 
     alt_text:
 
-      Photo by L. Brian Stauffer, provided by University of Illinois at
-      Urbana-Champaign
-
-  search_placeholder_text: "EX: Panicum Nitrogen"
+      Photo by L. Brian Stauffer, 
+      provided by University of Illinois at Urbana-Champaign
 
 # Miscellaneous
 
-## This affects both the home page and the footer:
+## This affects both the home page and the footer. Mostly used to turn off maps of crop model predictions that are in betydb.org:
 show_crop_map_links: false
 
 # Override this with a secret key to run a secure site:
-rest_auth_site_key: <%= ENV["SECRET_KEY_BASE"] || 'thisisnotasecret' %>
+rest_auth_site_key: 'your secret key'
+
+# Note: If your site is not public (e.g., you are a developer), it is better
+# to use the default site key and not override it here.  This is because if you
+# use the default site key, the caryaXX and guestuser account passwords will
+# work out of the box.
+
+production:
+    rest_auth_site_key: 'some moderately long, unpredictable text'
