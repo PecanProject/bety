@@ -405,8 +405,18 @@ trap '
 # 3) load new data
 # 4) set last inserted item in my range
 # 5) enable constraints on this table
+PREV_SPLIT=""
 for T in ${EMPTY_TABLES} ${CLEAN_TABLES} ${CHECK_TABLES} ${MANY_TABLES}; do
-  # start
+  # Start
+  if [ "${PREV_SPLIT}" != "" ]; then
+    if [ "${QUIET}" != "YES" ]; then
+      echo "Cleaning up previous split: ${PREV_SPLIT}"
+    fi
+    rm ${DUMPDIR}/${PREV_SPLIT}????.csv
+    PREV_SPLIT=""
+  fi
+
+  # start upload process
   echo "BEGIN;" >&3
   echo "ALTER TABLE ${T} DISABLE TRIGGER ALL;" >&3
 
@@ -421,8 +431,9 @@ for T in ${EMPTY_TABLES} ${CLEAN_TABLES} ${CHECK_TABLES} ${MANY_TABLES}; do
 	T_SIZE=`cat ${DUMPDIR}/${T}.csv | wc -l`
 	if [ "${T_SIZE}" -gt "${SPLIT_FILE_MAX}" ]; then
 	  if [ "${QUIET}" != "YES" ]; then
-	    echo "splitting input ${DUMPDIR}/${T}.csv"
+	    echo "splitting input ${DUMPDIR}/${T}.csv - ${T_SIZE} lines (${SPLIT_FILE_MAX} limit, ${SPLIT_FILE_SIZE} split lines)"
 	  fi
+	  PREV_SPLIT="${T}"
 	  RES=`pushd ${DUMPDIR} && split -d -a 4 --additional-suffix=.csv -l ${SPLIT_FILE_SIZE} ${DUMPDIR}/${T}.csv ${T} && popd`
 	  IDX=0
 	  FOUND=true
