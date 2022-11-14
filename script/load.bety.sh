@@ -431,7 +431,7 @@ for T in ${EMPTY_TABLES} ${CLEAN_TABLES} ${CHECK_TABLES} ${MANY_TABLES}; do
 	T_SIZE=`cat ${DUMPDIR}/${T}.csv | wc -l`
 	if [ "${T_SIZE}" -gt "${SPLIT_FILE_MAX}" ]; then
 	  if [ "${QUIET}" != "YES" ]; then
-	    echo "splitting input ${DUMPDIR}/${T}.csv - ${T_SIZE} lines (${SPLIT_FILE_MAX} limit, ${SPLIT_FILE_SIZE} split lines)"
+	    echo "splitting input ${DUMPDIR}/${T}.csv - ${T_SIZE} lines (${SPLIT_FILE_MAX} limit, ${SPLIT_FILE_SIZE} per split)"
 	  fi
 	  PREV_SPLIT="${T}"
 	  RES=`pushd ${DUMPDIR} && split -d -a 4 --additional-suffix=.csv -l ${SPLIT_FILE_SIZE} ${DUMPDIR}/${T}.csv ${T} && popd`
