@@ -62,6 +62,7 @@ jobs:
       - name: Build and test with Rake
         env:
           RAILS_ENV: test
+          POSTGRES_PASSWORD: bety
         run: |
           cp config/database.yml.gh config/database.yml
           psql -h localhost -U postgres -c "CREATE USER bety WITH SUPERUSER CREATEDB PASSWORD 'bety'";
