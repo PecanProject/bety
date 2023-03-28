@@ -24,6 +24,8 @@ jobs:
     services:
       postgres:
         image: ${{ matrix.postgres_image }}
+        env:
+          POSTGRES_PASSWORD: bety
         ports: 
           - 5432:5432
         options: >-
