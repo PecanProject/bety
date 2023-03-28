@@ -5,6 +5,6 @@ test:
   database: test
   pool: 5
   username: postgres
-  password: 
+  password: bety
   host: localhost
   port: 5432
