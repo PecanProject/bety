@@ -19,27 +19,27 @@ jobs:
       matrix:
         ruby: 
           - 2.7
-        postgres_images:
-          - image: mdillon/postgis:9.5
-          - image: mdillon/postgis:11
-          - image: postgis/postgis:12.3.3
-        postgres_ports:
-          - 5432
-          - 5433
-          - 5434
+        postgres_image:
+          - mdillon/postgis:9.5
+          - mdillon/postgis:11
+          - postgis/postgis:12.3.3
     services:
       postgres:
-        image: ${{ matrix.postgres_images.image }}
+        image: ${{ matrix.postgres_image }}
         ports: 
-          - ${{ matrix.postgres_ports.port }}:5432
+          - ${{ job.services.postgres.ports[0] }}:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v1
+      - name: Set port number
+        run: echo "PORT_NUMBER=$(((RANDOM % 30000) + 1024))" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Restore cache
+        uses: actions/cache@v1
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ matrix.ruby}}-${{ hashFiles('**/Gemfile.lock') }}
