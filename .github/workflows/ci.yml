@@ -18,21 +18,27 @@ jobs:
       fail-fast: false
       matrix:
         ruby: 
-          - 2.5
-          - 2.6
-          # - 2.7 is not supported, results in error
+          - 2.7
+          - 3.0
+        postgres:
+          - image: mdillon/postgis:9.5
+            port: 5432
+          - image: mdillon/postgis:11
+            port: 5433
+          - image: postgis/postgis:12.3.3
+            port: 5434
     services:
       postgres:
-        image: mdillon/postgis:9.5
+        image: ${{ matrix.postgres.image }}
         ports: 
-          - 5432:5432
+          - ${{ matrix.postgres.port }}::5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/cache@v1
         with:
           path: vendor/bundle
@@ -75,6 +81,6 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Build image
         run: docker build --tag image --file Dockerfile .
