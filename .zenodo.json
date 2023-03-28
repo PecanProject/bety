@@ -58,7 +58,7 @@
    ],
    "language":"eng",
    "license":{ 
-      "id":"NCSA"
+      "id":"BSD 3-Clause"
    },
    "references":[ 
       "LeBauer, D., Kooper, R., Mulrooney, P., Rohde, S., Wang, D., Long, S. P., & Dietze, M. C. (2018). BETYdb: a yield, trait, and ecosystem service database applied to second\u2010generation bioenergy feedstock production. GCB Bioenergy, 10(1), 61-71",
