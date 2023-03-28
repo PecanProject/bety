@@ -75,7 +75,6 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/
-      @v2
+      - uses: actions/@v2
       - name: Build image
         run: docker build --tag image --file Dockerfile .
