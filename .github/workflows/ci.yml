@@ -20,7 +20,7 @@ jobs:
         ruby: 
           - 2.7
           - 3.0
-        postgres:
+        postgres_images:
           - image: mdillon/postgis:9.5
             port: 5432
           - image: mdillon/postgis:11
@@ -29,9 +29,9 @@ jobs:
             port: 5434
     services:
       postgres:
-        image: ${{ matrix.postgres.image }}
+        image: ${{ matrix.postgres_images.image }}
         ports: 
-          - ${{ matrix.postgres.port }}::5432
+          - ${{ matrix.postgres_images.port }}:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
