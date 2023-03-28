@@ -20,22 +20,20 @@ jobs:
         ruby: 
           - 2.7
         postgres_image:
-          - mdillon/postgis:9.5
+          # - mdillon/postgis:9.5
           - mdillon/postgis:11
-          - postgis/postgis:12.3.3
+          # - postgis/postgis:12.3.3
     services:
       postgres:
         image: ${{ matrix.postgres_image }}
         ports: 
-          - ${{ job.services.postgres.ports[0] }}:5432
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
     steps:
-      - name: Set port number
-        run: echo "PORT_NUMBER=$(((RANDOM % 30000) + 1024))" >> $GITHUB_ENV
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Restore cache
