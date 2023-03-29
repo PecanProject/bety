@@ -21,6 +21,7 @@ jobs:
           - 2.7
         postgres_image:
           - postgis/postgis:12-3.3
+          - kartoza/postgis:15-3.3
     services:
       postgres:
         image: ${{ matrix.postgres_image }}
