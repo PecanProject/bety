@@ -17,6 +17,19 @@ You will need to install the latest version of BETY (or the version you want to 
 
 In this case you can simply pull down the version you want, and run `docker-compose bety migrate`.
 
+## [5.x] -
+
+### Changed
+
+- License changed from UIUC/NCSA to BSD 3-Clause [#748](https://github.com/PecanProject/bety/pull/758). 
+  The licenses are functionally the same, but BSD 3-Clause is more widely recognized. 
+  This change is consistent with moving R packages in PEcAn project to BSD 3-Clause to comply with CRAN requirements.  
+- Updated GitHub actions to test and use supported versions of Rails (v2.7) and Postgres (12.3.3) [#753](https://github.com/PecanProject/bety/pull/753)
+  - **Important** Users who use the docker-compose file will need to either: 
+    - dump the database first and then reload because this involves a database version upgrade
+    - switch the postgres image back to mdillon/postgis:9.5. This is not recommended because postgres v9.5 is no longer supported.
+
+
 ## [5.4.1] - 2021-10-10
 
 ### Changed
