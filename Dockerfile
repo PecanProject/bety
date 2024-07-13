@@ -1,4 +1,4 @@
-FROM ruby:2.7
+FROM ruby:3.1
 LABEL maintainer="Max Burnette <mburnet2@illinois.edu>, Rob Kooper <kooper@illinois.edu>"
 
 # arguments that are added at the bottom of BETY
@@ -34,7 +34,7 @@ RUN apt-get update \
         curl \
         git \
         libgeos-dev \
-        netcat \
+        netcat-openbsd \
         nodejs \
         postgresql-client \
     && rm -rf /var/lib/apt/lists/* \
@@ -46,7 +46,7 @@ WORKDIR /home/bety
 
 # install gems (allowing for caching)
 COPY --chown=bety /Gemfile* /home/bety/
-RUN gem install bundler -v 1.17.3 \
+RUN gem install bundler -v 2.3 \
     && bundle config path vendor/bundle \
     && bundle config without 'test development production debug javascript_testing' \
     && bundle config with 'docker' \

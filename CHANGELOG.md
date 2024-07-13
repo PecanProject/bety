@@ -28,7 +28,7 @@ In this case you can simply pull down the version you want, and run `docker-comp
   - **Important** Users who use the docker-compose file will need to either: 
     - dump the database first and then reload because this involves a database version upgrade
     - switch the postgres image back to mdillon/postgis:9.5. This is not recommended because postgres v9.5 is no longer supported.
-
+- Using ruby 3.1 as base
 
 ## [5.4.1] - 2021-10-10
 
