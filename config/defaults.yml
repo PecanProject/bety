@@ -12,8 +12,10 @@ site_identification_markup: "<strong>PEcAn</strong>db <small><strong>The PEcAn</
 
 
 # Footer
-
 footer_background_image_file: "https://energybiosciencesinstitute.org/wp-content/themes/ebi/assets/logo.png"
+
+# google analyitics
+google_analytics_id: <%= ENV["GOOGLE_ANALYTICS_ID"] || 'G-0000000000' %>
 
 ## Contact Information
 admin_phone: "(000) 000-0000"

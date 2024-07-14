@@ -35,9 +35,9 @@ jobs:
           --health-retries 5
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Restore cache
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ matrix.ruby}}-${{ hashFiles('**/Gemfile.lock') }}
@@ -77,10 +77,3 @@ jobs:
           mkdir -p spec/tmp
           bundle exec rails test
           bundle exec rspec --tag ~js
-
-  docker:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build image
-        run: docker build --tag image --file Dockerfile .

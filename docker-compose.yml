@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   # BETY rails frontend to the database
   bety:
@@ -11,6 +9,7 @@ services:
     environment:
       - UNICORN_WORKER_PROCESSES=1
       - SECRET_KEY_BASE=thisisnotasecret
+      - GOOGLE_ANALYTICS_ID=G-0000000000
     depends_on:
       - postgres
     restart: unless-stopped
@@ -18,8 +17,8 @@ services:
   # postgresql + postgis to hold all the data
   postgres:
     image: postgis/postgis:12-3.3
-    env:
-      POSTGRES_PASSWORD: bety
+    environment:
+      POSTGRES_PASSWORD: postgres
     networks:
       - bety
     #ports:
@@ -33,4 +32,3 @@ networks:
 
 volumes:
   postgres:
-

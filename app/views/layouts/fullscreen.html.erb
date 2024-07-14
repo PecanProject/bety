@@ -20,23 +20,16 @@
   <% end %>
 
   <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=no" />
+  <!-- Google Analytics (GA5)  tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= CONFIG[:google_analytics_id] %>"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-  <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script> 
-  <% end %>
-
-  <meta name="verify-v1" content="T7Z0mdC+KbUOu+J0CJ6oBySKYz1WUJQJLH0BOtUn1QA=" />	
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-30952394-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-
+    gtag('config', '<%= CONFIG[:google_analytics_id] %>');
   </script>
+
 </head>
 <body style="height:100%">
       <%= yield  %>

@@ -93,18 +93,15 @@
   <%#= stylesheet_link_tag 'themes/default' %>
   <%#= stylesheet_link_tag 'themes/alphacube' %>
 
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-30952394-1']);
-    _gaq.push(['_trackPageview']);
+  <!-- Google Analytics (G4)  tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= CONFIG[:google_analytics_id] %>"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
+    gtag('config', '<%= CONFIG[:google_analytics_id] %>');
   </script>
-
   <!-- Maintain the order of the following CSS until we can gut the "scaffold" CSS -->
   <!-- Old CSS -->
   <%#= stylesheet_link_tag "scaffold" %>
