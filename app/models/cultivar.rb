@@ -7,9 +7,12 @@ class Cultivar < ActiveRecord::Base
   SEARCH_INCLUDES = %w{ specie }
   SEARCH_FIELDS = %w{ species.scientificname cultivars.previous_id cultivars.name cultivars.ecotype cultivars.notes }
 
+  has_many :sites_cultivars, :class_name => "SitesCultivars"
+  has_many :sites, :through => :sites_cultivars
+  
   has_many :traits
   has_many :yields
-
+  
   belongs_to :specie
 
   validates :name,

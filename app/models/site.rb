@@ -23,6 +23,9 @@ class Site < ActiveRecord::Base
 
   has_many :experiments_sites
   has_many :experiments, :through =>  :experiments_sites
+  
+  has_many :sites_cultivars, :class_name => "SitesCultivars"
+  has_many :cultivars, :through =>  :sites_cultivars
 
   has_many :yields
   has_many :traits
