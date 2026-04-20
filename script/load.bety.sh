@@ -80,6 +80,12 @@ GUESTUSER=${GUESTUSER:-"NO"}
 # additional options for curl
 CURL_OPTS=${CURL_OPTS:-""}
 
+# additional options for splitting large files
+# Maximum size before splitting
+SPLIT_FILE_MAX=${SPLIT_FILE_MAX:-200000}
+# Size of split files
+SPLIT_FILE_SIZE=${SPLIT_FILE_SIZE:-10000}
+
 # Log file
 LOG=${LOG:-"$PWD/dump/sync.log"}
 
@@ -92,6 +98,9 @@ while getopts a:cd:efghkl:m:o:p:qr:tuw: opt; do
   case $opt in
   a)
     PG_USER="$OPTARG"
+    ;;
+  b)
+    SPLIT_FILE_MAX="$OPTARG"
     ;;
   c)
     CREATE="YES"
@@ -109,8 +118,9 @@ while getopts a:cd:efghkl:m:o:p:qr:tuw: opt; do
     GUESTUSER="YES"
     ;;
   h)
-    echo "$0 [-a postgres] [-c] [-d database] [-e] [-f] [-g] [-h] [-l logfile] [-m my siteid] [-o owner] [-p psql options] [-r remote siteid] [-t] [-u]"
+    echo "$0 [-a postgres] [-b split max] [-c] [-d database] [-e] [-f] [-g] [-h] [-l logfile] [-m my siteid] [-o owner] [-p psql options] [-r remote siteid] [-s split size] [-t] [-u]"
     echo " -a access database as this user, this is NOT the owner of the database, often this is postgres"
+    echo " -b maximum input lines before input file is split, default $SPLIT_FILE_MAX lines (see -s)"
     echo " -c create database, THIS WILL ERASE THE CURRENT DATABASE, default is NO"
     echo " -d database, default is bety"
     echo " -e empty database, default is NO"
@@ -124,6 +134,7 @@ while getopts a:cd:efghkl:m:o:p:qr:tuw: opt; do
     echo " -p additional psql command line options, default is empty"
     echo " -q should the import be quiet"
     echo " -r remote site id, default is 0 (EBI)"
+    echo " -s split lines per file, default $SPLIT_FILE_SIZE lines (when splitting input files) (see -b)"
     echo " -t keep temp folder, default is NO"
     echo " -u create carya users, this will create some default users"
     echo " -w use url to fetch data from instead of hardcoded url"
@@ -149,6 +160,9 @@ while getopts a:cd:efghkl:m:o:p:qr:tuw: opt; do
     ;;
   r)
     REMOTESITE="$OPTARG"
+    ;;
+  s)
+    SPLIT_FILE_SIZE="$OPTARG"
     ;;
   t)
     KEEPTMP="YES"
@@ -391,8 +405,18 @@ trap '
 # 3) load new data
 # 4) set last inserted item in my range
 # 5) enable constraints on this table
+PREV_SPLIT=""
 for T in ${EMPTY_TABLES} ${CLEAN_TABLES} ${CHECK_TABLES} ${MANY_TABLES}; do
-  # start
+  # Start
+  if [ "${PREV_SPLIT}" != "" ]; then
+    if [ "${QUIET}" != "YES" ]; then
+      echo "Cleaning up previous split: ${PREV_SPLIT}"
+    fi
+    rm ${DUMPDIR}/${PREV_SPLIT}????.csv
+    PREV_SPLIT=""
+  fi
+
+  # start upload process
   echo "BEGIN;" >&3
   echo "ALTER TABLE ${T} DISABLE TRIGGER ALL;" >&3
 
@@ -404,7 +428,27 @@ for T in ${EMPTY_TABLES} ${CLEAN_TABLES} ${CHECK_TABLES} ${MANY_TABLES}; do
     echo "SELECT COUNT(*) FROM ${T};" >&3 && read START <&4
     if [[ "${EMPTY}" == "NO" || ${EMPTY_TABLES} == *"$T"* ]]; then
       if [ -f "${DUMPDIR}/${T}.csv" ]; then
-        echo "\COPY ${T} FROM '${DUMPDIR}/${T}.csv' WITH (DELIMITER '	',  NULL '\\N', ESCAPE '\\', FORMAT CSV, ENCODING 'UTF-8')" >&3
+	T_SIZE=`cat ${DUMPDIR}/${T}.csv | wc -l`
+	if [ "${T_SIZE}" -gt "${SPLIT_FILE_MAX}" ]; then
+	  if [ "${QUIET}" != "YES" ]; then
+	    echo "splitting input ${DUMPDIR}/${T}.csv - ${T_SIZE} lines (${SPLIT_FILE_MAX} limit, ${SPLIT_FILE_SIZE} per split)"
+	  fi
+	  PREV_SPLIT="${T}"
+	  RES=`pushd ${DUMPDIR} && split -d -a 4 --additional-suffix=.csv -l ${SPLIT_FILE_SIZE} ${DUMPDIR}/${T}.csv ${T} && popd`
+	  IDX=0
+	  FOUND=true
+	  while [ "${FOUND}" = true ]; do
+	    SPLIT_FILE=`VAL=${IDX} ; printf -v VAL "${DUMPDIR}/${T}%04d.csv" $VAL; echo ${VAL}`
+	    if [ -e "${SPLIT_FILE}" ]; then
+              echo "\COPY ${T} FROM '${SPLIT_FILE}' WITH (DELIMITER '	',  NULL '\\N', ESCAPE '\\', FORMAT CSV, ENCODING 'UTF-8')" >&3
+	    else
+	      FOUND=false
+	    fi
+	    IDX=$((IDX+1))
+	  done
+	else
+          echo "\COPY ${T} FROM '${DUMPDIR}/${T}.csv' WITH (DELIMITER '	',  NULL '\\N', ESCAPE '\\', FORMAT CSV, ENCODING 'UTF-8')" >&3
+	fi
       fi
     fi
     echo "SELECT COUNT(*) FROM ${T};" >&3 && read END <&4
